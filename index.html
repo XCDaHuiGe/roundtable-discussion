@@ -1,630 +1,157 @@
 <!DOCTYPE html>
-<html class="dark" lang="zh-CN"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>AI Native Research OS V7.2 — 三层架构认知研究</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Space+Mono:wght@400;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "error": "#ffb4ab",
-                        "inverse-primary": "#ab3600",
-                        "secondary-fixed-dim": "#c9c6c5",
-                        "on-surface": "#e2e2e2",
-                        "surface-container-lowest": "#0d0e0f",
-                        "primary": "#ffb59c",
-                        "surface-bright": "#38393a",
-                        "surface-container-highest": "#333535",
-                        "on-tertiary-fixed-variant": "#474746",
-                        "outline-variant": "#5b4138",
-                        "on-tertiary": "#313030",
-                        "surface-container": "#1e2020",
-                        "background": "#0A0A0A",
-                        "surface-tint": "#ffb59c",
-                        "on-tertiary-fixed": "#1c1b1b",
-                        "on-primary-fixed-variant": "#832700",
-                        "on-tertiary-container": "#2c2c2c",
-                        "surface-container-low": "#1a1c1c",
-                        "on-background": "#e2e2e2",
-                        "surface-container-high": "#282a2b",
-                        "primary-fixed-dim": "#ffb59c",
-                        "on-primary-fixed": "#390c00",
-                        "tertiary-fixed": "#e5e2e1",
-                        "on-error": "#690005",
-                        "secondary-fixed": "#e5e2e1",
-                        "on-primary-container": "#561700",
-                        "surface-variant": "#333535",
-                        "secondary": "#c9c6c5",
-                        "secondary-container": "#4a4949",
-                        "on-secondary": "#313030",
-                        "outline": "#aa897f",
-                        "inverse-surface": "#e2e2e2",
-                        "tertiary-fixed-dim": "#c8c6c5",
-                        "tertiary-container": "#959393",
-                        "on-secondary-container": "#bab8b7",
-                        "on-primary": "#5c1900",
-                        "tertiary": "#c8c6c5",
-                        "primary-fixed": "#ffdbcf",
-                        "error-container": "#93000a",
-                        "inverse-on-surface": "#2f3131",
-                        "surface": "#121414",
-                        "on-surface-variant": "#e3bfb3",
-                        "primary-container": "#ff5f1f",
-                        "surface-dim": "#121414",
-                        "on-secondary-fixed": "#1c1b1b",
-                        "on-secondary-fixed-variant": "#474646",
-                        "on-error-container": "#ffdad6"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0px",
-                        "lg": "0px",
-                        "xl": "0px",
-                        "full": "9999px"
-                    },
-                    "spacing": {
-                        "margin-mobile": "1rem",
-                        "margin-desktop": "4rem",
-                        "grid-size": "32px",
-                        "unit": "4px",
-                        "gutter": "1.5rem"
-                    },
-                    "fontFamily": {
-                        "headline-lg": ["Anton", "sans-serif"],
-                        "subheader": ["Space Mono", "monospace"],
-                        "body-md": ["JetBrains Mono", "monospace"],
-                        "headline-lg-mobile": ["Anton", "sans-serif"],
-                        "display-lg": ["Anton", "sans-serif"],
-                        "label-sm": ["Space Mono", "monospace"]
-                    },
-                    "fontSize": {
-                        "headline-lg": ["48px", {"lineHeight": "110%", "letterSpacing": "0.01em", "fontWeight": "400"}],
-                        "subheader": ["18px", {"lineHeight": "140%", "fontWeight": "700"}],
-                        "body-md": ["14px", {"lineHeight": "160%", "fontWeight": "400"}],
-                        "headline-lg-mobile": ["36px", {"lineHeight": "110%", "fontWeight": "400"}],
-                        "display-lg": ["84px", {"lineHeight": "90%", "letterSpacing": "-0.02em", "fontWeight": "400"}],
-                        "label-sm": ["12px", {"lineHeight": "100%", "letterSpacing": "0.1em", "fontWeight": "500"}]
-                    }
-                },
-            },
-        }
-    </script>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>圆桌讨论 — AI Deep Discussion Roundtable</title>
 <style>
-        body {
-            background-color: #0A0A0A;
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 32px 32px;
-            color: #e2e2e2;
-        }
-        .glass-panel {
-            background: rgba(18, 20, 20, 0.7);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .orange-glow {
-            box-shadow: 0 0 20px rgba(255, 95, 31, 0.2);
-        }
-        .active-nav-indicator {
-            position: relative;
-        }
-        .active-nav-indicator::before {
-            content: '';
-            position: absolute;
-            left: -12px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 4px;
-            height: 4px;
-            background-color: #ff5f1f;
-        }
-        .tech-corner {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: #ff5f1f;
-        }
-        .stat-grid-5 {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-        }
-        @media (max-width: 768px) {
-            .stat-grid-5 { grid-template-columns: repeat(3, 1fr); }
-        }
-        @media (max-width: 480px) {
-            .stat-grid-5 { grid-template-columns: repeat(2, 1fr); }
-        }
-    </style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#0a0a0b;--paper:#f1efea;--accent:#c9a227;--glass:rgba(255,255,255,.04);--border:rgba(255,255,255,.06);--radius:8px}
+html{scroll-behavior:smooth}
+body{font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:var(--ink);color:var(--paper);line-height:1.7}
+
+/* Hero */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:8vh 6vw;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;top:50%;left:50%;width:600px;height:600px;background:radial-gradient(circle,rgba(201,162,39,.06) 0%,transparent 70%);transform:translate(-50%,-50%);pointer-events:none}
+.hero h1{font-size:clamp(2.5rem,7vw,5rem);font-weight:900;line-height:1.1;margin-bottom:2vh;letter-spacing:-.02em}
+.hero h1 span{color:var(--accent)}
+.hero p{font-size:clamp(.95rem,1.3vw,1.15rem);opacity:.6;max-width:560px;line-height:1.8}
+.hero .meta{margin-top:4vh;font-family:monospace;font-size:12px;opacity:.3;display:flex;gap:2em}
+.hero .scroll-hint{position:absolute;bottom:4vh;font-family:monospace;font-size:11px;opacity:.2;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:.2}50%{opacity:.5}}
+
+/* Sections */
+section{padding:10vh 6vw;max-width:1100px;margin:0 auto}
+.section-label{font-family:monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.35;margin-bottom:2vh}
+.section-title{font-size:clamp(1.5rem,3.5vw,2.5rem);font-weight:700;margin-bottom:4vh}
+
+/* Book Cards */
+.books{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:2vw}
+.book-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:3vh 2.5vw;transition:all .3s cubic-bezier(.25,.46,.45,.94);position:relative;overflow:hidden}
+.book-card:hover{border-color:rgba(201,162,39,.2);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.book-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),transparent);opacity:0;transition:opacity .3s}
+.book-card:hover::before{opacity:1}
+.book-card .book-tag{display:inline-block;padding:2px 10px;border-radius:12px;font-size:10px;font-family:monospace;letter-spacing:.05em;margin-bottom:1.5vh;background:rgba(201,162,39,.12);color:var(--accent)}
+.book-card h3{font-size:1.2rem;font-weight:700;margin-bottom:1vh}
+.book-card .book-author{font-size:.85rem;opacity:.4;margin-bottom:1.5vh}
+.book-card .book-stats{display:flex;gap:1.5em;font-family:monospace;font-size:11px;opacity:.35;margin-bottom:2vh}
+.book-card .book-desc{font-size:.88rem;opacity:.6;line-height:1.7;margin-bottom:2vh}
+.book-card .book-link{display:inline-flex;align-items:center;gap:6px;font-size:.85rem;color:var(--accent);text-decoration:none;font-weight:600;opacity:.8;transition:opacity .2s}
+.book-card .book-link:hover{opacity:1}
+.book-card .book-link::after{content:"→"}
+
+/* Features */
+.features{display:grid;grid-template-columns:repeat(auto-fill,min-width:240px,1fr);gap:2vw;margin-top:2vh}
+.feature{padding:2.5vh 2vw;border-left:2px solid var(--border);transition:border-color .3s}
+.feature:hover{border-color:var(--accent)}
+.feature h4{font-size:.95rem;font-weight:700;margin-bottom:.5vh}
+.feature p{font-size:.82rem;opacity:.5;line-height:1.7}
+
+/* Expert Grid */
+.experts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:1vh;margin-top:2vh}
+.expert-chip{text-align:center;padding:1.5vh .5vw;background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);font-size:.78rem;transition:all .2s}
+.expert-chip:hover{border-color:rgba(201,162,39,.2)}
+.expert-chip .e-name{font-weight:600;font-size:.82rem}
+.expert-chip .e-field{opacity:.35;font-size:.7rem;margin-top:2px}
+
+/* Version Badge */
+.ver-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-family:monospace;font-size:11px;background:rgba(201,162,39,.1);color:var(--accent);border:1px solid rgba(201,162,39,.15);margin-bottom:3vh}
+
+/* Footer */
+footer{padding:6vh 6vw;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:.82rem;opacity:.35;flex-wrap:wrap;gap:2vh}
+footer a{color:var(--accent);text-decoration:none}
+
+/* Responsive */
+@media(max-width:768px){.hero .meta{flex-direction:column;gap:.5em}section{padding:6vh 5vw}.books{grid-template-columns:1fr}}
+</style>
 </head>
-<body class="font-body-md text-body-md overflow-x-hidden">
-<!-- TopNavBar -->
-<nav class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-white/10">
-<div class="flex justify-between items-center px-margin-desktop py-4 max-w-full mx-auto">
-<div class="flex items-center gap-8">
-<span class="font-headline-lg text-[24px] text-primary tracking-tighter uppercase">蒸馏系统</span>
-<div class="hidden md:flex gap-6">
-<a class="font-subheader text-label-sm uppercase text-primary border-b border-primary pb-1" href="#portfolio">Works</a>
-<a class="font-subheader text-label-sm uppercase text-on-surface/60 hover:text-on-surface transition-colors" href="#features">Features</a>
-<a class="font-subheader text-label-sm uppercase text-on-surface/60 hover:text-on-surface transition-colors" href="#stack">Stack</a>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+<div class="ver-badge">V2.4 · 2026-05-25</div>
+<h1>圆桌<span>讨论</span></h1>
+<p>6位跨领域专家围绕一本书展开7轮深度交锋。<br>不蒸馏知识框架，只榨干认知增量。</p>
+<div class="meta">
+<span>40+ 专家库</span>
+<span>7轮交锋</span>
+<span>弹性多页</span>
+<span>自包含HTML</span>
 </div>
+<div class="scroll-hint">↓ 向下滚动查看书库</div>
 </div>
-<a href="https://github.com/XCDaHuiGe/book-distillation" target="_blank" class="flex items-center gap-2 border border-primary-container text-primary-container px-4 py-2 font-label-sm uppercase hover:bg-primary-container hover:text-black transition-all">
-<span class="material-symbols-outlined" style="font-size:16px;">code</span>
-        GitHub
-</a>
+
+<!-- Book Library -->
+<section id="books">
+<div class="section-label">Book Library</div>
+<div class="section-title">已讨论书目</div>
+<div class="books">
+
+<div class="book-card">
+<div class="book-tag">V2.4 · 35页</div>
+<h3>布鲁克林有棵树</h3>
+<div class="book-author">贝蒂·史密斯 · 1943</div>
+<div class="book-stats"><span>6专家</span><span>7轮</span><span>42发言</span><span>5洞见</span></div>
+<div class="book-desc">一棵天堂树长在贫民窟的酸性土壤里。弗兰西的故事不是向上流动，而是认知建构。马斯洛、塞利格曼、加缪、芒格、孔子、格拉德威尔六人交锋。</div>
+<a class="book-link" href="output/布鲁克林有棵树_圆桌洞见.html">查看洞见</a>
 </div>
-</nav>
-<main class="pt-24 min-h-screen">
-<!-- Hero Section -->
-<section class="relative px-margin-desktop grid grid-cols-12 gap-gutter items-center min-h-[80vh]">
-<div class="col-span-12 lg:col-span-7 z-10">
-<div class="inline-flex items-center gap-2 px-3 py-1 border border-primary-container text-primary-container font-label-sm uppercase mb-8">
-<span class="w-2 h-2 bg-primary-container animate-pulse"></span>
-                AI NATIVE RESEARCH OS • V7.2
-            </div>
-<h1 class="text-[64px] md:text-[84px] leading-[1.1] font-bold mb-8 tracking-tight">
-                融合 <span class="text-primary-container">10 个项目</span><br/>
-                重新定义<br/>
-                深度阅读
-            </h1>
-<p class="text-on-surface/60 max-w-xl mb-12 text-lg">
-                AI Native Research OS V7.2 — MapReduce三层架构 + 认知演化引擎。15+专家库真实专家圆桌博弈，60+页深度研究内参。
-            </p>
-<div class="flex flex-wrap gap-6">
-<a href="https://github.com/XCDaHuiGe/book-distillation" target="_blank" class="bg-primary-container text-black px-8 py-4 font-subheader uppercase flex items-center gap-3 active:scale-95 transition-transform hover:orange-glow">
-                    GitHub 仓库 <span class="material-symbols-outlined">arrow_forward</span>
-</a>
-<a href="#portfolio" class="border border-primary-container text-primary-container px-8 py-4 font-subheader uppercase flex items-center gap-3 hover:bg-primary-container/10 transition-colors">
-                    查看作品 <span class="material-symbols-outlined">south_east</span>
-</a>
+
+<div class="book-card">
+<div class="book-tag">V2.0 · 14页</div>
+<h3>遥远的救世主（天道）</h3>
+<div class="book-author">豆豆 · 2005</div>
+<div class="book-stats"><span>6专家</span><span>5轮</span><span>30发言</span><span>3洞见</span></div>
+<div class="book-desc">丁元英的"杀富济贫"实验，文化属性与强势文化的哲学交锋。尼采、韩非子、韦伯、阿伦特、查理·芒格、万维钢六人论战。</div>
+<a class="book-link" href="output/天道_圆桌洞见.html">查看洞见</a>
 </div>
-<div class="mt-16 flex items-center gap-8 text-on-surface/40 font-label-sm">
-<span class="uppercase tracking-widest">// STACK</span>
-<div class="flex gap-4">
-<span class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-primary-container"></span> Semantic Search</span>
-<span class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-secondary-container"></span> GraphRAG</span>
-<span class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-primary"></span> WebGL</span>
-</div>
-</div>
-</div>
-<div class="col-span-12 lg:col-span-5 relative mt-12 lg:mt-0">
-<div class="relative z-10 w-full aspect-square max-w-[500px] mx-auto">
-<img alt="3D Character" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIa8FYXRFNexiK2jtrXrPS7cUmcJG3Ir55UZgT5_ZNLsVNhQlgwybgFr_MIJrVbLjOqIGvs2IepuwP3Rx6YwyYsFn5FE-CenLwGvj-ghz95hb_eIcXvidSJGthMLtCmbSrj_o7fHERgO-85BSxnBYxSyQkGCUymbHyhl24UH5LL7WhxJ4YT5I_UTFVtkWOos_kQGRVNpMlR4JCQP-S18YvyBP2uIRTqAGAsmsIXW0acOypN4hnBHrPzeoGUXo1wFY0RLOIMNSo9g"/>
-<!-- Tech Details Floating -->
-<div class="absolute -right-4 top-1/4 glass-panel p-4 border-l-2 border-primary-container">
-<div class="text-on-surface/40 text-[10px] uppercase mb-1">REF_001</div>
-<div class="font-headline-lg text-lg text-primary-container">DISTILL</div>
-<div class="text-[10px] text-on-surface/40">phase: active</div>
-</div>
-<div class="absolute -left-8 bottom-1/4 glass-panel p-3 border-r-2 border-secondary-container text-right">
-<div class="text-on-surface/40 text-[10px] uppercase">core.rig /</div>
-<div class="w-12 h-1 bg-primary-container/30 mt-1 ml-auto">
-<div class="w-2/3 h-full bg-primary-container"></div>
-</div>
-</div>
-</div>
-<!-- Background Glow -->
-<div class="absolute inset-0 bg-primary-container/10 blur-[120px] rounded-full -z-10"></div>
+
 </div>
 </section>
-<!-- Stats -->
-<section class="px-margin-desktop py-24">
-<div class="stat-grid-5 gap-[1px] bg-white/5">
-<div class="glass-panel p-8 text-center border-none">
-<div class="text-on-surface/40 font-label-sm mb-4 uppercase tracking-[0.2em] border-b border-white/5 pb-2">Phases</div>
-<div class="text-[56px] font-headline-lg text-primary-container leading-none">05</div>
-<div class="font-subheader text-base uppercase mt-2">蒸馏阶段</div>
-</div>
-<div class="glass-panel p-8 text-center border-none">
-<div class="text-on-surface/40 font-label-sm mb-4 uppercase tracking-[0.2em] border-b border-white/5 pb-2">Agents</div>
-<div class="text-[56px] font-headline-lg text-primary leading-none">18</div>
-  <div class="font-subheader text-base uppercase mt-2">并行代理</div>
-</div>
-<div class="glass-panel p-8 text-center border-none">
-<div class="text-on-surface/40 font-label-sm mb-4 uppercase tracking-[0.2em] border-b border-white/5 pb-2">Modules</div>
-<div class="text-[56px] font-headline-lg text-secondary-fixed leading-none">08</div>
-<div class="font-subheader text-base uppercase mt-2">输出模块</div>
-</div>
-<div class="glass-panel p-8 text-center border-none">
-<div class="text-on-surface/40 font-label-sm mb-4 uppercase tracking-[0.2em] border-b border-white/5 pb-2">Themes</div>
-<div class="text-[56px] font-headline-lg text-primary-container leading-none">36</div>
-  <div class="font-subheader text-base uppercase mt-2">主题CSS</div>
-</div>
-<div class="glass-panel p-8 text-center border-none">
-<div class="text-on-surface/40 font-label-sm mb-4 uppercase tracking-[0.2em] border-b border-white/5 pb-2">Projects</div>
-<div class="text-[56px] font-headline-lg text-primary leading-none">07</div>
-<div class="font-subheader text-base uppercase mt-2">开源融合</div>
-</div>
-<div class="glass-panel p-8 text-center border-none">
-  <div class="text-on-surface/40 font-label-sm mb-4 uppercase tracking-[0.2em] border-b border-white/5 pb-2">Styles</div>
-  <div class="text-[56px] font-headline-lg text-primary-container leading-none">12</div>
-  <div class="font-subheader text-base uppercase mt-2">风格预设</div>
-</div>
+
+<!-- System Features -->
+<section id="features">
+<div class="section-label">System V2.4</div>
+<div class="section-title">圆桌讨论系统</div>
+<div class="features">
+<div class="feature"><h4>弹性多页布局</h4><p>每轮讨论 3-5 页：标题页留白、发言页每页 2-3 人、碰撞页独立。一个话题可以跨多页，不再拥挤。</p></div>
+<div class="feature"><h4>情节锚定机制</h4><p>每次发言必须引用书中具体情节，禁止脱离文本的纯抽象讨论。从情节出发推导观点，不是先有观点再找例子。</p></div>
+<div class="feature"><h4>独立碰撞页</h4><p>每轮必须有来回反驳：情节反驳、细节挑战、逻辑追问、框架质疑、反例引入。追求有价值的分歧。</p></div>
+<div class="feature"><h4>完整导航系统</h4><p>键盘（方向键/空格/PageUp/Down）、鼠标滚轮、触摸滑动、点击翻页、目录 TOC 侧边栏、导航圆点。</p></div>
+<div class="feature"><h4>CSS 自包含</h4><p>零外部依赖：不引用 Google Fonts、不引用 base.css。系统字体栈，响应式三档（桌面/平板/手机）。</p></div>
+<div class="feature"><h4>40+ 专家库</h4><p>跨 9 大领域：心理学、哲学、商业、经济、科学、历史、自助、科技、跨界。每位专家含理论+语料+立场。</p></div>
 </div>
 </section>
-<!-- Distillation Portfolio Section -->
-<section id="portfolio" class="px-margin-desktop py-24 relative">
-<div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-4">
-<div>
-<div class="text-primary-container font-label-sm uppercase tracking-widest mb-4 flex items-center gap-2">
-<span class="w-4 h-[1px] bg-primary-container"></span>
-                    Work Collection
-                </div>
-<h2 class="font-headline-lg text-headline-lg uppercase">最近蒸馏成果</h2>
-</div>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-<!-- Portfolio Item 1 (newest) -->
-<a href="穷查理宝典_精华内参.html" class="glass-panel group cursor-pointer overflow-hidden border-white/5 hover:border-primary-container/30 transition-all">
-<div class="aspect-[4/3] bg-surface-container-high relative overflow-hidden">
-<img alt="穷查理宝典" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" src="https://images.unsplash.com/photo-1504711434969-e33886168d8f?w=800&q=80"/>
-<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
-<div class="absolute top-4 left-4 z-20 px-2 py-1 bg-primary text-black font-label-sm uppercase">投资·思维</div>
-        <div class="absolute bottom-4 left-4 right-4 z-20">
-        <h3 class="font-subheader text-xl mb-1 group-hover:text-primary-container transition-colors">穷查理宝典</h3>
-        <div class="flex items-center gap-4 text-on-surface/40 text-[10px] uppercase font-label-sm">
-        <span>45页</span>
-<span class="w-1 h-1 bg-primary-container rounded-full"></span>
-<span>V7.2 认知研究</span>
-<span class="w-1 h-1 bg-primary-container rounded-full"></span>
-<span>芒格·30万字</span>
-</div>
-</div>
-</div>
-<div class="p-6">
-<p class="text-on-surface/60 text-sm line-clamp-2">芒格智慧箴言与私人书单——巴菲特+德鲁克+塔勒布+达利欧+卡尼曼+芒格本人6位专家圆桌博弈。置信度:0.78。</p>
-<div class="mt-4 flex justify-between items-center">
-<span class="text-[10px] text-on-surface/30 font-label-sm">REF:MUNGER_V7.2_01</span>
-<span class="material-symbols-outlined text-primary-container text-sm">arrow_outward</span>
-</div>
-</div>
-</a>
-<!-- Portfolio Item 2 -->
-<a href="底层逻辑_精华内参.html" class="glass-panel group cursor-pointer overflow-hidden border-white/5 hover:border-primary-container/30 transition-all">
-<div class="aspect-[4/3] bg-surface-container-high relative overflow-hidden">
-<img alt="底层逻辑" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" src="https://images.unsplash.com/photo-1504711434969-e33886168d8f?w=800&q=80"/>
-<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
-<div class="absolute top-4 left-4 z-20 px-2 py-1 bg-primary text-black font-label-sm uppercase">商业思维</div>
-        <div class="absolute bottom-4 left-4 right-4 z-20">
-        <h3 class="font-subheader text-xl mb-1 group-hover:text-primary-container transition-colors">底层逻辑</h3>
-        <div class="flex items-center gap-4 text-on-surface/40 text-[10px] uppercase font-label-sm">
-        <span>40页</span>
-<span class="w-1 h-1 bg-primary-container rounded-full"></span>
-<span>V7.2 认知研究</span>
-<span class="w-1 h-1 bg-primary-container rounded-full"></span>
-<span>刘润·20万字</span>
-</div>
-</div>
-</div>
-<div class="p-6">
-<p class="text-on-surface/60 text-sm line-clamp-2">刘润五条底层逻辑的认知深度研究——德鲁克+芒格+塔勒布+达利欧+卡尼曼5轮圆桌博弈。置信度:0.72。</p>
-<div class="mt-4 flex justify-between items-center">
-<span class="text-[10px] text-on-surface/30 font-label-sm">REF:BUSINESS_V7.2_01</span>
-<span class="material-symbols-outlined text-primary-container text-sm">arrow_outward</span>
-</div>
-</div>
-</a>
-<!-- Portfolio Item 2 -->
-<a href="遥远的救世主_v7.2_精华内参.html" class="glass-panel group cursor-pointer overflow-hidden border-white/5 hover:border-primary-container/30 transition-all">
-<div class="aspect-[4/3] bg-surface-container-high relative overflow-hidden">
-<img alt="遥远的救世主 V7.2" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80"/>
-<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
-<div class="absolute top-4 left-4 z-20 px-2 py-1 bg-primary text-black font-label-sm uppercase">认知研究 V7.2</div>
-        <div class="absolute bottom-4 left-4 right-4 z-20">
-        <h3 class="font-subheader text-xl mb-1 group-hover:text-primary-container transition-colors">遥远的救世主 V7.2</h3>
-        <div class="flex items-center gap-4 text-on-surface/40 text-[10px] uppercase font-label-sm">
-        <span>60页</span>
-<span class="w-1 h-1 bg-primary-container rounded-full"></span>
-<span>3层架构·MapReduce</span>
-<span class="w-1 h-1 bg-primary-container rounded-full"></span>
-<span>豆豆·34.8万字</span>
-</div>
-</div>
-</div>
-<div class="p-6">
-<p class="text-on-surface/60 text-sm line-clamp-2">V7.2 MapReduce架构：基础全景(9人物+8场景+6概念+6金句=30页) + 专家对话(5轮原文10页) + 认知演化(崩塌6+变异+涌现3=12页) + 收束(8页) = 60页。</p>
-<div class="mt-4 flex justify-between items-center">
-<span class="text-[10px] text-on-surface/30 font-label-sm">REF:COGNITIVE_EVOLUTION_V7.2</span>
-<span class="material-symbols-outlined text-primary-container text-sm">arrow_outward</span>
-</div>
-</div>
-</a>
-<!-- Portfolio Item 2 -->
-<a href="梦的解析_精华内参.html" class="glass-panel group cursor-pointer overflow-hidden border-white/5 hover:border-primary-container/30 transition-all">
-<div class="aspect-[4/3] bg-surface-container-high relative overflow-hidden">
-<img alt="梦的解析" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" src="https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=800&q=80"/>
-<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
-<div class="absolute top-4 left-4 z-20 px-2 py-1 bg-primary text-black font-label-sm uppercase">精神分析学</div>
-        <div class="absolute bottom-4 left-4 right-4 z-20">
-        <h3 class="font-subheader text-xl mb-1 group-hover:text-primary-container transition-colors">梦的解析</h3>
-        <div class="flex items-center gap-4 text-on-surface/40 text-[10px] uppercase font-label-sm">
-        <span>24页</span>
-<span class="w-1 h-1 bg-primary-container rounded-full"></span>
-<span>四大支柱</span>
-<span class="w-1 h-1 bg-primary-container rounded-full"></span>
-<span>弗洛伊德·1900</span>
-</div>
-</div>
-</div>
-<div class="p-6">
-<p class="text-on-surface/60 text-sm line-clamp-2">精神分析学奠基之作——梦是愿望的达成，梦是通往潜意识的皇道。圆桌深化：卡尼曼+叔本华+尼采三专家辩证。</p>
-<div class="mt-4 flex justify-between items-center">
-<span class="text-[10px] text-on-surface/30 font-label-sm">REF:PSYCHO_CLASSIC_01</span>
-<span class="material-symbols-outlined text-primary-container text-sm">arrow_outward</span>
-</div>
-</div>
-</a>
-<!-- Portfolio Item 2 -->
-<a href="精准学习_精华内参.html" class="glass-panel group cursor-pointer overflow-hidden border-white/5 hover:border-primary-container/30 transition-all">
-<div class="aspect-[4/3] bg-surface-container-high relative overflow-hidden">
-<img alt="精准学习" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&q=80"/>
-<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
-<div class="absolute top-4 left-4 z-20 px-2 py-1 bg-primary text-black font-label-sm uppercase">认知神经科学</div>
-        <div class="absolute bottom-4 left-4 right-4 z-20">
-        <h3 class="font-subheader text-xl mb-1 group-hover:text-primary-container transition-colors">精准学习</h3>
-        <div class="flex items-center gap-4 text-on-surface/40 text-[10px] uppercase font-label-sm">
-        <span>25页</span>
-<span class="w-1 h-1 bg-primary-container rounded-full"></span>
-<span>四大支柱</span>
-<span class="w-1 h-1 bg-primary-container rounded-full"></span>
-<span>斯坦尼斯拉斯·迪昂</span>
-</div>
-</div>
-</div>
-<div class="p-6">
-<p class="text-on-surface/60 text-sm line-clamp-2">脑奖获得者迪昂院士代表作——揭示学习的四大支柱：注意、主动参与、错误反馈、巩固，科学解读人脑如何学习。</p>
-<div class="mt-4 flex justify-between items-center">
-<span class="text-[10px] text-on-surface/30 font-label-sm">REF:NEURO_SCI_01</span>
-<span class="material-symbols-outlined text-primary-container text-sm">arrow_outward</span>
-</div>
-</div>
-</a>
-<!-- Portfolio Item 2 -->
-<a href="遥远的救世主_精华内参.html" class="glass-panel group cursor-pointer overflow-hidden border-white/5 hover:border-primary-container/30 transition-all">
-<div class="aspect-[4/3] bg-surface-container-high relative overflow-hidden">
-<img alt="遥远的救世主" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&q=80"/>
-<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
-<div class="absolute top-4 left-4 z-20 px-2 py-1 bg-primary-container text-black font-label-sm uppercase">文学·哲学（天道金·赛博朋克·37页）</div>
-        <div class="absolute bottom-4 left-4 right-4 z-20">
-        <h3 class="font-subheader text-xl mb-1 group-hover:text-primary-container transition-colors">遥远的救世主</h3>
-        <div class="flex items-center gap-4 text-on-surface/40 text-[10px] uppercase font-label-sm">
-        <span>37页</span>
-<span class="w-1 h-1 bg-primary-container rounded-full"></span>
-<span>文化属性</span>
-<span class="w-1 h-1 bg-primary-container rounded-full"></span>
-<span>天道金·赛博朋克</span>
-</div>
-</div>
-</div>
-<div class="p-6">
-<p class="text-on-surface/60 text-sm line-clamp-2">豆豆代表作·天道金霓虹赛博朋克风格——文化属性决定命运，世上没有救世主，37页电影级精华内参。</p>
-<div class="mt-4 flex justify-between items-center">
-<span class="text-[10px] text-on-surface/30 font-label-sm">REF:LIT_CLASSIC_01</span>
-<span class="material-symbols-outlined text-primary-container text-sm">arrow_outward</span>
-</div>
-</div>
-</a>
-<!-- Portfolio Item 2 -->
-<a href="申论写作八讲_精华内参.html" class="glass-panel group cursor-pointer overflow-hidden border-white/5 hover:border-primary-container/30 transition-all">
-<div class="aspect-[4/3] bg-surface-container-high relative overflow-hidden">
-<img alt="申论写作八讲" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800&q=80"/>
-<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
-<div class="absolute top-4 left-4 z-20 px-2 py-1 bg-secondary-container text-black font-label-sm uppercase">工具书</div>
-<div class="absolute bottom-4 left-4 right-4 z-20">
-<h3 class="font-subheader text-xl mb-1 group-hover:text-primary-container transition-colors">申论写作八讲</h3>
-<div class="flex items-center gap-4 text-on-surface/40 text-[10px] uppercase font-label-sm">
-<span>30页</span>
-<span class="w-1 h-1 bg-primary-container rounded-full"></span>
-<span>8讲</span>
-<span class="w-1 h-1 bg-primary-container rounded-full"></span>
-<span>17.5万字</span>
-</div>
-</div>
-</div>
-<div class="p-6">
-<p class="text-on-surface/60 text-sm line-clamp-2">将申论从"玄学"转化为可训练的工程技术。8大支柱、4项基本功、5大题型攻坚。</p>
-<div class="mt-4 flex justify-between items-center">
-<span class="text-[10px] text-on-surface/30 font-label-sm">REF:EXAM_BOOK_01</span>
-<span class="material-symbols-outlined text-primary-container text-sm">arrow_outward</span>
-</div>
-</div>
-</a>
-<!-- Portfolio Item 2 -->
-<a href="155规划纲要_精华内参.html" class="glass-panel group cursor-pointer overflow-hidden border-white/5 hover:border-primary-container/30 transition-all">
-<div class="aspect-[4/3] bg-surface-container-high relative overflow-hidden">
-<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
-<img alt="Fifteenth Five-Year Plan" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80"/>
-<div class="absolute top-4 left-4 z-20 px-2 py-1 bg-primary-container text-black font-label-sm uppercase">政策文件</div>
-<div class="absolute bottom-4 left-4 right-4 z-20">
-<h3 class="font-subheader text-xl mb-1 group-hover:text-primary-container transition-colors">十五五规划纲要</h3>
-<div class="flex items-center gap-4 text-on-surface/40 text-[10px] uppercase font-label-sm">
-<span>28页</span>
-<span class="w-1 h-1 bg-primary-container rounded-full"></span>
-<span>18篇</span>
-<span class="w-1 h-1 bg-primary-container rounded-full"></span>
-<span>62章</span>
-</div>
-</div>
-</div>
-<div class="p-6">
-<p class="text-on-surface/60 text-sm line-clamp-2">针对国家中长期战略部署的语义级重构，提取18大战略领域与40余项核心指标。</p>
-<div class="mt-4 flex justify-between items-center">
-<span class="text-[10px] text-on-surface/30 font-label-sm">REF:GOV_2025_A1</span>
-<span class="material-symbols-outlined text-primary-container text-sm">arrow_outward</span>
-</div>
-</div>
-</a>
-<!-- Portfolio Item 3 -->
-<a href="关键对话_精华内参.html" class="glass-panel group cursor-pointer overflow-hidden border-white/5 hover:border-primary-container/30 transition-all">
-<div class="aspect-[4/3] bg-surface-container-high relative overflow-hidden">
-<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
-<img alt="Crucial Conversations" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80"/>
-<div class="absolute top-4 left-4 z-20 px-2 py-1 bg-secondary-container text-black font-label-sm uppercase">商业</div>
-<div class="absolute bottom-4 left-4 right-4 z-20">
-<h3 class="font-subheader text-xl mb-1 group-hover:text-primary-container transition-colors">关键对话</h3>
-<div class="flex items-center gap-4 text-on-surface/40 text-[10px] uppercase font-label-sm">
-<span>40页</span>
-<span class="w-1 h-1 bg-primary-container rounded-full"></span>
-<span>7大技巧</span>
-<span class="w-1 h-1 bg-primary-container rounded-full"></span>
-<span>2大原则</span>
-</div>
-</div>
-</div>
-<div class="p-6">
-<p class="text-on-surface/60 text-sm line-clamp-2">拆解高难度沟通的底层逻辑，生成结构化的对话决策树与心理博弈图谱。</p>
-<div class="mt-4 flex justify-between items-center">
-<span class="text-[10px] text-on-surface/30 font-label-sm">REF:BIZ_BOOK_08</span>
-<span class="material-symbols-outlined text-primary-container text-sm">arrow_outward</span>
-</div>
-</div>
-</a>
-<!-- Portfolio Item 3 -->
-<a href="不要挑战人性_精华内参.html" class="glass-panel group cursor-pointer overflow-hidden border-white/5 hover:border-primary-container/30 transition-all">
-<div class="aspect-[4/3] bg-surface-container-high relative overflow-hidden">
-<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
-<img alt="Human Nature" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80"/>
-<div class="absolute top-4 left-4 z-20 px-2 py-1 bg-primary text-black font-label-sm uppercase">心理学</div>
-<div class="absolute bottom-4 left-4 right-4 z-20">
-<h3 class="font-subheader text-xl mb-1 group-hover:text-primary-container transition-colors">不要挑战人性</h3>
-<div class="flex items-center gap-4 text-on-surface/40 text-[10px] uppercase font-label-sm">
-<span>22页</span>
-<span class="w-1 h-1 bg-primary-container rounded-full"></span>
-<span>10大支柱</span>
-<span class="w-1 h-1 bg-primary-container rounded-full"></span>
-<span>9个洞见</span>
-</div>
-</div>
-</div>
-<div class="p-6">
-<p class="text-on-surface/60 text-sm line-clamp-2">深度剖析行为心理学背后的底层逻辑，将学术研究转化为可执行的行动指南。</p>
-<div class="mt-4 flex justify-between items-center">
-<span class="text-[10px] text-on-surface/30 font-label-sm">REF:PSY_RES_42</span>
-<span class="material-symbols-outlined text-primary-container text-sm">arrow_outward</span>
-</div>
-</div>
-</a>
-</div>
-<!-- Portfolio Item 7 -->
-<a href="梦的解析_精华内参.html" class="glass-panel group cursor-pointer overflow-hidden border-white/5 hover:border-primary-container/30 transition-all">
-<div class="aspect-[4/3] bg-surface-container-high relative overflow-hidden">
-<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
-<img alt="梦的解析" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" src="https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=800&q=80"/>
-<div class="absolute top-4 left-4 z-20 px-2 py-1 bg-primary text-black font-label-sm uppercase">心理学·经典</div>
-<div class="absolute bottom-4 left-4 right-4 z-20">
-<h3 class="font-subheader text-xl mb-1 group-hover:text-primary-container transition-colors">梦的解析</h3>
-<div class="flex items-center gap-4 text-on-surface/40 text-[10px] uppercase font-label-sm">
-<span>36页</span>
-<span class="w-1 h-1 bg-primary-container rounded-full"></span>
-<span>弗洛伊德</span>
-<span class="w-1 h-1 bg-primary-container rounded-full"></span>
-<span>潜意识</span>
-</div>
-</div>
-</div>
-<div class="p-6">
-<p class="text-on-surface/60 text-sm line-clamp-2">弗洛伊德里程碑式著作——潜入人类潜意识的冰山之底，解析梦境如何反映被压抑的欲望与冲突。</p>
-<div class="mt-4 flex justify-between items-center">
-<span class="text-[10px] text-on-surface/30 font-label-sm">REF:PSY_CLASSIC_02</span>
-<span class="material-symbols-outlined text-primary-container text-sm">arrow_outward</span>
-</div>
-</div>
-</a>
-<!-- Side Deco Image -->
-<div class="hidden xl:block absolute -right-24 top-1/2 -translate-y-1/2 opacity-20 pointer-events-none">
-<img alt="3D Deco" class="w-64 h-64 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIa8FYXRFNexiK2jtrXrPS7cUmcJG3Ir55UZgT5_ZNLsVNhQlgwybgFr_MIJrVbLjOqIGvs2IepuwP3Rx6YwyYsFn5FE-CenLwGvj-ghz95hb_eIcXvidSJGthMLtCmbSrj_o7fHERgO-85BSxnBYxSyQkGCUymbHyhl24UH5LL7WhxJ4YT5I_UTFVtkWOos_kQGRVNpMlR4JCQP-S18YvyBP2uIRTqAGAsmsIXW0acOypN4hnBHrPzeoGUXo1wFY0RLOIMNSo9g"/>
+
+<!-- Expert Library -->
+<section id="experts">
+<div class="section-label">Expert Library</div>
+<div class="section-title">专家阵容（部分）</div>
+<div class="experts-grid">
+<div class="expert-chip"><div class="e-name">马斯洛</div><div class="e-field">心理学</div></div>
+<div class="expert-chip"><div class="e-name">塞利格曼</div><div class="e-field">心理学</div></div>
+<div class="expert-chip"><div class="e-name">卡尼曼</div><div class="e-field">心理学</div></div>
+<div class="expert-chip"><div class="e-name">加缪</div><div class="e-field">哲学</div></div>
+<div class="expert-chip"><div class="e-name">尼采</div><div class="e-field">哲学</div></div>
+<div class="expert-chip"><div class="e-name">萨特</div><div class="e-field">哲学</div></div>
+<div class="expert-chip"><div class="e-name">芒格</div><div class="e-field">经济</div></div>
+<div class="expert-chip"><div class="e-name">塔勒布</div><div class="e-field">经济</div></div>
+<div class="expert-chip"><div class="e-name">孔子</div><div class="e-field">跨界</div></div>
+<div class="expert-chip"><div class="e-name">苏格拉底</div><div class="e-field">跨界</div></div>
+<div class="expert-chip"><div class="e-name">格拉德威尔</div><div class="e-field">自助</div></div>
+<div class="expert-chip"><div class="e-name">霍金</div><div class="e-field">科学</div></div>
+<div class="expert-chip"><div class="e-name">费曼</div><div class="e-field">科学</div></div>
+<div class="expert-chip"><div class="e-name">德鲁克</div><div class="e-field">商业</div></div>
+<div class="expert-chip"><div class="e-name">赫拉利</div><div class="e-field">科技</div></div>
+<div class="expert-chip"><div class="e-name">老子</div><div class="e-field">跨界</div></div>
 </div>
 </section>
-<!-- Feature Showcase -->
-<section id="features" class="px-margin-desktop py-24 border-t border-white/5 bg-surface-container-lowest/50">
-<div class="flex justify-between items-end mb-16">
-<div>
-<h2 class="font-headline-lg text-headline-lg mb-4">系统架构</h2>
-<p class="text-on-surface/60 max-w-md">通过模块化的流程设计，将阅读这种非线性行为转化为可复用、可优化的工程路径。</p>
-</div>
-<div class="text-primary-container font-label-sm">
-<span class="material-symbols-outlined align-middle mr-2">analytics</span>
-                DATA_PROCESSING_ACTIVE
-            </div>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-<div class="glass-panel p-6 border-l-4 border-l-primary-container hover:bg-white/5 transition-all">
-<div class="w-12 h-12 flex items-center justify-center bg-primary-container/10 mb-6">
-<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">terminal</span>
-</div>
-<h3 class="font-subheader text-lg uppercase mb-3 tracking-tight">多格式输入</h3>
-<p class="text-on-surface/40 text-sm leading-relaxed">支持 EPUB / PDF / DOCX / TXT / MD 等多种格式，自动识别章节结构。</p>
-</div>
-<div class="glass-panel p-6 border-l-4 border-l-secondary-container hover:bg-white/5 transition-all">
-<div class="w-12 h-12 flex items-center justify-center bg-secondary-container/10 mb-6">
-<span class="material-symbols-outlined text-secondary-container" style="font-variation-settings: 'FILL' 1;">psychology</span>
-</div>
-<h3 class="font-subheader text-lg uppercase mb-3 tracking-tight">多Agent蒸馏</h3>
-<p class="text-on-surface/40 text-sm leading-relaxed">Reader E快读采样 → Alpha/Beta/Delta+Epsilon/Gamma/Zeta 6-Agent串联蒸馏 + 红蓝对抗 + 三重校验。</p>
-</div>
-<div class="glass-panel p-6 border-l-4 border-l-primary hover:bg-white/5 transition-all">
-<div class="w-12 h-12 flex items-center justify-center bg-primary/10 mb-6">
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">hub</span>
-</div>
-<h3 class="font-subheader text-lg uppercase mb-3 tracking-tight">知识图谱</h3>
-<p class="text-on-surface/40 text-sm leading-relaxed">NetworkX 概念关系网络，支持图遍历与多跳推理检索，[[双链]] 交叉引用。</p>
-</div>
-<div class="glass-panel p-6 border-l-4 border-l-outline-variant hover:bg-white/5 transition-all">
-<div class="w-12 h-12 flex items-center justify-center bg-outline-variant/10 mb-6">
-<span class="material-symbols-outlined text-outline-variant" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
-</div>
-<h3 class="font-subheader text-lg uppercase mb-3 tracking-tight">WebGL 粒子背景</h3>
-<p class="text-on-surface/40 text-sm leading-relaxed">Canvas 粒子动画背景，自动适配 light/dark 主题，提升视觉沉浸感。</p>
-</div>
-<div class="glass-panel p-6 border-l-4 border-l-primary-container hover:bg-white/5 transition-all">
-  <div class="w-12 h-12 flex items-center justify-center bg-primary-container/10 mb-6">
-    <span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">mic</span>
-  </div>
-  <h3 class="font-subheader text-lg uppercase mb-3 tracking-tight">演讲者模式 + 绘图</h3>
-  <p class="text-on-surface/40 text-sm leading-relaxed">S 键开启演讲者模式查看备注；D 键开启画笔实时标注，多色可选。</p>
-</div>
-<div class="glass-panel p-6 border-l-4 border-l-secondary-container hover:bg-white/5 transition-all">
-  <div class="w-12 h-12 flex items-center justify-center bg-secondary-container/10 mb-6">
-    <span class="material-symbols-outlined text-secondary-container" style="font-variation-settings: 'FILL' 1;">grid_view</span>
-  </div>
-  <h3 class="font-subheader text-lg uppercase mb-3 tracking-tight">Slide Masters 布局</h3>
-  <p class="text-on-surface/40 text-sm leading-relaxed">10 种布局骨架 + 5 套主题色 + 12 种风格预设，编程式组合生成。</p>
-</div>
-</div>
-</section>
-<!-- CTA Section -->
-<section id="stack" class="px-margin-desktop py-32 text-center relative overflow-hidden">
-<div class="absolute inset-0 bg-primary-container/5 -z-10 skew-y-3 scale-110"></div>
-<div class="max-w-3xl mx-auto">
-<h2 class="text-[48px] md:text-[72px] font-headline-lg leading-none mb-8">从<span class="text-primary-container">阅读</span>到<br/><span class="text-primary-container">内化</span>，尽在蒸馏</h2>
-<div class="flex flex-col md:flex-row gap-6 justify-center mt-12">
-<a href="https://github.com/XCDaHuiGe/book-distillation" target="_blank" class="bg-primary-container text-black px-12 py-5 font-subheader uppercase hover:orange-glow transition-all">
-                GitHub 仓库
-            </a>
-<a href="https://github.com/XCDaHuiGe/book-distillation/stargazers" target="_blank" class="border border-white/20 px-12 py-5 font-subheader uppercase hover:bg-white hover:text-black transition-all">
-                给个 Star ⭐
-            </a>
-</div>
-</div>
-</section>
-</main>
+
 <!-- Footer -->
-<footer class="w-full py-12 bg-surface-container-lowest border-t border-white/5">
-<div class="flex flex-col md:flex-row justify-between items-center px-margin-desktop gap-gutter max-w-full mx-auto">
-<div class="flex flex-col items-center md:items-start gap-4">
-<span class="font-headline-lg text-headline-lg text-on-surface uppercase tracking-tighter">蒸馏系统</span>
-<span class="font-label-sm text-label-sm uppercase text-on-tertiary-container">© 2026 AI NATIVE RESEARCH OS V7.2. ALL RIGHTS RESERVED.</span>
-</div>
-<div class="flex gap-8">
-<a class="font-label-sm text-label-sm uppercase text-on-tertiary-container hover:text-primary transition-colors" href="https://github.com/XCDaHuiGe/book-distillation" target="_blank">GitHub</a>
-<a class="font-label-sm text-label-sm uppercase text-on-tertiary-container hover:text-primary transition-colors" href="https://github.com/XCDaHuiGe/book-distillation/stargazers" target="_blank">Star</a>
-<a class="font-label-sm text-label-sm uppercase text-on-tertiary-container hover:text-primary transition-colors" href="https://github.com/XCDaHuiGe/book-distillation/issues" target="_blank">Issues</a>
-</div>
-</div>
+<footer>
+<span>© 2026 圆桌讨论 · Roundtable Discussion</span>
+<span>SKILL V2.4 · 6专家 · 7轮交锋 · 弹性多页</span>
+<span><a href="https://github.com/XCDaHuiGe/roundtable-discussion" target="_blank">GitHub</a></span>
 </footer>
-</body></html>
+
+</body>
+</html>

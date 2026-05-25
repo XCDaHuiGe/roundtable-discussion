@@ -7,7 +7,7 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--ink:#0a0a0b;--paper:#f1efea;--accent:#c9a227;--red:#e94560;--blue:#3498db;--purple:#9b59b6;--orange:#f39c12;--green:#2ecc71;--brown:#d4a574;--radius:6px;--ease:cubic-bezier(.25,.46,.45,.94)}
-html,body{height:100%;overflow:hidden;font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:var(--ink);color:var(--paper)}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none;font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:var(--ink);color:var(--paper)}
 
 /* Deck */
 .deck{position:relative;width:100vw;height:100vh;overflow:hidden}
@@ -17,6 +17,9 @@ html,body{height:100%;overflow:hidden;font-family:"Noto Sans SC","PingFang SC","
 .slide::-webkit-scrollbar{width:4px}
 .slide::-webkit-scrollbar-track{background:transparent}
 .slide::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
+.slide.active{display:flex}
+/* Fallback: show first slide if JS fails */
+.slide:first-of-type{display:flex}
 .slide.active{display:flex}
 .slide.hero{justify-content:center;align-items:center;text-align:center;overflow:hidden}
 .slide.title-slide{justify-content:center;align-items:center;text-align:center}
@@ -546,7 +549,7 @@ html,body{height:100%;overflow:hidden;font-family:"Noto Sans SC","PingFang SC","
 <span>6位专家</span><span>·</span><span>7轮讨论</span><span>·</span><span>42次发言</span><span>·</span><span>5个核心洞见</span>
 </div>
 </div>
-</div>
+
 
 <!-- TOC Panel -->
 <div class="toc-backdrop" id="tocBackdrop"></div>
@@ -660,9 +663,12 @@ btnNext.addEventListener("click",function(e){e.stopPropagation();go(cur+1)});
 tocBackdrop.addEventListener("click",closeTOC);
 
 // Init
+// Safety: ensure deck exists
+if(!deck){document.body.innerHTML='<h1 style="color:red;padding:2rem">Error: #deck not found</h1>';return;}
 go(0);
 })();
 </script>
+</div>
 </div>
 </body>
 </html>

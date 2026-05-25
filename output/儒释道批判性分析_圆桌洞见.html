@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>儒释道批判性分析 · 圆桌洞见 V2.6</title>
+<style>
+:root{--ink:#0a0a0b;--paper:#f1efea;--accent:#c9a227;--muted:#8a8a8a;--danger:#e94560;--info:#3498db;--purple:#9b59b6;--warning:#f39c12;--success:#2ecc71}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:var(--ink);color:var(--paper);height:100%;}
+body{display:flex;flex-direction:column}
+.slide{display:none;min-height:100vh;padding:5vh 6vw;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.15) transparent}
+.slide.active{display:block}
+.slide-cover{text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh}
+.slide-cover h1{font-size:clamp(2.5rem,8vw,5rem);font-weight:900;line-height:1.2;margin-bottom:2vh}
+.slide-cover .subtitle{font-size:clamp(1rem,2vw,1.5rem);color:var(--accent);margin-bottom:4vh;font-weight:500}
+.slide-cover .meta{font-size:clamp(.8rem,1vw,1rem);color:var(--muted);margin-top:4vh}
+.slide-title{text-align:center;display:flex;flex-direction:column;justify-content:center;min-height:80vh;padding:10vh 8vw}
+.slide-title h2{font-size:clamp(1.8rem,5vw,3rem);font-weight:700;margin-bottom:3vh}
+.slide-title .kicker{font-size:clamp(.7rem,.9vw,.9rem);color:var(--accent);text-transform:uppercase;letter-spacing:.2em;margin-bottom:2vh;font-family:monospace}
+.slide-title p{font-size:clamp(.9rem,1.2vw,1.1rem);color:var(--muted);max-width:800px;margin:0 auto;line-height:1.8}
+.sp{margin-bottom:2vh;padding:2vh 2vw;border-left:3px solid var(--accent);background:rgba(201,162,39,.05)}
+.sp .speaker{font-weight:700;font-size:clamp(.9rem,1.1vw,1rem);margin-bottom:.8vh;display:flex;align-items:center;gap:1vw;flex-wrap:wrap}
+.sp .role{font-size:.75rem;padding:.2em .6em;background:var(--accent);color:var(--ink);border-radius:2px;font-weight:400}
+.sp .st{font-size:clamp(.85rem,1.1vw,.95rem);line-height:1.8;opacity:.9}
+.sp .quote{font-style:italic;padding:1vh 1vw;background:rgba(201,162,39,.08);border-radius:4px;margin:1vh 0}
+.collision{background:rgba(233,69,96,.08);border-left-color:var(--danger)}
+.collision .speaker .role{background:var(--danger)}
+.collision.细节挑战{border-left-color:var(--info)}
+.collision.逻辑追问{border-left-color:var(--purple)}
+.collision.框架质疑{border-left-color:var(--warning)}
+.collision.反例引入{border-left-color:var(--success)}
+.insight{text-align:center;padding:3vh 2vw;background:rgba(201,162,39,.06);border-radius:4px;margin-top:2vh}
+.insight p{font-size:clamp(.9rem,1.1vw,1rem);line-height:1.8;color:var(--accent)}
+.nav{position:fixed;right:2vw;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:100}
+.nav-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .3s}
+.nav-dot.active{width:24px;border-radius:4px;background:var(--accent)}
+.page-num{position:fixed;bottom:1.5vh;right:3vw;font-size:.75rem;color:var(--muted);font-family:monospace}
+.toc{position:fixed;left:0;top:0;height:100vh;width:300px;background:rgba(10,10,11,.97);padding:3vh 2vw;overflow-y:auto;z-index:200;transform:translateX(-100%);transition:transform .3s}
+.toc.open{transform:translateX(0)}
+.toc h3{font-size:1rem;color:var(--accent);margin-bottom:2vh;padding-bottom:1vh;border-bottom:1px solid rgba(255,255,255,.1)}
+.toc-item{padding:1vh 0;font-size:.85rem;color:var(--muted);cursor:pointer;transition:color .2s}
+.toc-item:hover,.toc-item.active{color:var(--paper)}
+.toc-item.section{color:var(--accent);margin-top:1vh;font-weight:600}
+.close-toc{position:absolute;top:2vh;right:2vw;font-size:1.5rem;cursor:pointer;color:var(--muted)}
+.grid{display:grid;gap:2vh;margin-top:2vh}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+@media(max-width:768px){.grid-2{grid-template-columns:1fr}}
+.dashboard{display:grid;grid-template-columns:repeat(3,1fr);gap:2vh;margin-top:4vh}
+.stat{background:rgba(201,162,39,.1);padding:3vh 2vw;text-align:center;border-radius:4px}
+.stat .num{font-size:clamp(2rem,4vw,3rem);font-weight:900;color:var(--accent)}
+.stat .label{font-size:.8rem;color:var(--muted);margin-top:1vh}
+.insights-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2vh;margin-top:3vh}
+.insight-card{background:rgba(201,162,39,.08);padding:2vh 2vw;border-radius:4px;border-top:2px solid var(--accent)}
+.insight-card h4{font-size:.9rem;color:var(--accent);margin-bottom:1vh}
+.insight-card p{font-size:.85rem;line-height:1.7;color:var(--muted)}
+.argument-card{background:rgba(52,152,219,.06);padding:2vh 2vw;border-radius:4px;margin-bottom:1.5vh;border-left:3px solid var(--info)}
+.argument-card h4{color:var(--info);font-size:.9rem;margin-bottom:1vh}
+.argument-card p{font-size:.85rem;line-height:1.7}
+.timeline{display:flex;flex-direction:column;gap:1vh;margin-top:2vh}
+.timeline-item{display:flex;align-items:flex-start;gap:2vw}
+.timeline-dot{width:12px;height:12px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:.5vh}
+.timeline-content{flex:1}
+.timeline-content .round{font-size:.75rem;color:var(--accent);font-family:monospace}
+.timeline-content .event{font-size:.85rem;line-height:1.6}
+.question-card{background:rgba(201,162,39,.06);padding:2vh 2vw;border-radius:4px;margin-bottom:1.5vh;border-left:3px solid var(--accent)}
+.question-card p{font-size:.9rem;line-height:1.7}
+.issue-card{background:rgba(233,69,96,.06);padding:2vh 2vw;border-radius:4px;margin-bottom:1.5vh;border-left:3px solid var(--danger)}
+.issue-card h4{color:var(--danger);font-size:.9rem;margin-bottom:1vh}
+.issue-card p{font-size:.85rem;line-height:1.7;color:var(--muted)}
+@media(max-width:768px){.grid-2{grid-template-columns:1fr}.insights-grid{grid-template-columns:1fr}.dashboard{grid-template-columns:repeat(2,1fr)}.slide{padding:3vh 5vw}}
+</style>
+</head>
+<body>
+<div class="toc" id="toc"><span class="close-toc" onclick="toggleToc()">×</span><h3>目录</h3>
+<div class="toc-item section" onclick="goToSlide(0)">封面</div>
+<div class="toc-item section" onclick="goToSlide(1)">原视频核心论点</div>
+<div class="toc-item section" onclick="goToSlide(2)">讨论仪表盘</div>
+<div class="toc-item section" onclick="goToSlide(3)">张力图谱</div>
+<div class="toc-item" onclick="goToSlide(4)">Round 1 · 简单≠能执行</div>
+<div class="toc-item" onclick="goToSlide(7)">Round 1 · 碰撞交锋</div>
+<div class="toc-item" onclick="goToSlide(8)">Round 2 · 讨厌孔子=做不到？</div>
+<div class="toc-item" onclick="goToSlide(11)">Round 2 · 碰撞交锋</div>
+<div class="toc-item" onclick="goToSlide(12)">Round 3 · 儒道互补？</div>
+<div class="toc-item" onclick="goToSlide(15)">Round 3 · 碰撞交锋</div>
+<div class="toc-item" onclick="goToSlide(16)">Round 4 · 成功靠氛围？</div>
+<div class="toc-item" onclick="goToSlide(19)">Round 4 · 碰撞交锋</div>
+<div class="toc-item" onclick="goToSlide(20)">Round 5 · 知识精英vs民间佛学</div>
+<div class="toc-item" onclick="goToSlide(23)">Round 5 · 碰撞交锋</div>
+<div class="toc-item section" onclick="goToSlide(24)">核心争议</div>
+<div class="toc-item section" onclick="goToSlide(25)">开放问题</div>
+<div class="toc-item section" onclick="goToSlide(26)">结语</div>
+</div>
+<div class="nav" id="nav"></div>
+<div class="page-num" id="pageNum">1 / 27</div>
+
+<!-- Slide 0: 封面 -->
+<div class="slide slide-cover active" data-title="封面">
+<h1>儒释道批判性分析</h1>
+<div class="subtitle">四小时视频的思想解剖 · 圆桌洞见 V2.6</div>
+<div class="meta">
+<p>批判性分析 · 锚定原视频论点 · 深度交锋</p>
+<p style="margin-top:2vh;color:var(--accent)">6位跨领域专家 · 5轮深度交锋</p>
+<p style="margin-top:1vh;opacity:.5">27页完整版 · 2026-05-25</p>
+</div>
+</div>
+
+<!-- Slide 1: 原视频核心论点 -->
+<div class="slide" data-title="原视频核心论点">
+<h2 style="font-size:clamp(1.5rem,4vw,2.5rem);margin-bottom:3vh;text-align:center">原视频核心论点整理</h2>
+<div class="insights-grid">
+<div class="insight-card"><h4>论点1：简单=能挣钱？</h4><p>"想挣钱怎么办？回家买本论语每天读两张就够了。"问题：你肯定不信，能执行吗？知识分子最倒霉的是不相信简单道理。</p></div>
+<div class="insight-card"><h4>论点2：讨厌孔子=做不到</h4><p>"大多数讨厌孔子的人并不是觉得孔子说的有哪儿不对，都只是因为自己做不到而已。"讨厌坏人坏事=证明标准是对的？</p></div>
+<div class="insight-card"><h4>论点3：儒道互补</h4><p>"身体是革命的本钱"——道家修身养性决定你实际能做什么，儒家建功立业决定你上线高低。虚中有实，实中有虚。</p></div>
+<div class="insight-card"><h4>论点4：成功靠氛围不靠权谋</h4><p>真正能成事的人靠的是"让人安心、舒服、愿意在一起的氛围"，而不是什么权谋手段。结果是众叛亲离还怪老天不公。</p></div>
+<div class="insight-card"><h4>论点5：知识精英vs民间佛学</h4><p>"佛学给知识分子看的和老百姓传播的完全不是一套东西"——作者奶奶带他去找大师"驱鬼"的经历。</p></div>
+</div>
+</div>
+
+<!-- Slide 2: 讨论仪表盘 -->
+<div class="slide" data-title="讨论仪表盘">
+<h2 style="font-size:clamp(1.5rem,4vw,2.5rem);margin-bottom:2vh;text-align:center">讨论仪表盘</h2>
+<div class="dashboard">
+<div class="stat"><div class="num">6</div><div class="label">参与专家</div></div>
+<div class="stat"><div class="num">5</div><div class="label">讨论轮次</div></div>
+<div class="stat"><div class="num">20+</div><div class="label">碰撞交锋</div></div>
+<div class="stat"><div class="num">5</div><div class="label">核心洞见</div></div>
+<div class="stat"><div class="num">3</div><div class="label">颠覆性观点</div></div>
+<div class="stat"><div class="num">5</div><div class="label">开放问题</div></div>
+</div>
+<div style="margin-top:4vh"><h3 style="font-size:1.1rem;color:var(--accent);margin-bottom:2vh">参与专家</h3>
+<div style="display:flex;flex-wrap:wrap;gap:1vw">
+<span style="padding:.5em 1em;background:rgba(201,162,39,.15);border-radius:2px;font-size:.85rem">孔子 · 儒家正统</span>
+<span style="padding:.5em 1em;background:rgba(233,69,96,.15);border-radius:2px;font-size:.85rem">老子 · 道家正统</span>
+<span style="padding:.5em 1em;background:rgba(46,204,113,.15);border-radius:2px;font-size:.85rem">佛陀 · 佛教正统</span>
+<span style="padding:.5em 1em;background:rgba(52,152,219,.15);border-radius:2px;font-size:.85rem">鲁迅 · 批判者</span>
+<span style="padding:.5em 1em;background:rgba(155,89,182,.15);border-radius:2px;font-size:.85rem">柏拉图 · 西方哲学</span>
+<span style="padding:.5em 1em;background:rgba(243,156,18,.15);border-radius:2px;font-size:.85rem">尼采 · 现代批判</span>
+</div></div>
+<div style="margin-top:3vh"><h3 style="font-size:1rem;color:var(--accent);margin-bottom:1vh">批判焦点</h3>
+<p style="font-size:.85rem;color:var(--muted);line-height:1.8">简单道理≠能执行 · 讨厌孔子≠做不到 · 儒道互补的局限 · 氛围论vs制度论 · 精英佛学vs民间佛学</p></div>
+</div>
+
+<!-- Slide 3: 张力图谱 -->
+<div class="slide" data-title="张力图谱">
+<h2 style="font-size:clamp(1.5rem,4vw,2.5rem);margin-bottom:2vh;text-align:center">观点演化时间线</h2>
+<div class="timeline">
+<div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="round">Round 1</div><div class="event">原视频：简单道理能挣钱 → 孔子/鲁迅质疑：道理简单≠能执行，知行合一才是难点</div></div></div>
+<div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="round">Round 2</div><div class="event">原视频：讨厌孔子=做不到 → 尼采反驳：这是"奴隶道德"的逻辑自我辩护</div></div></div>
+<div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="round">Round 3</div><div class="event">原视频：儒道互补 → 柏拉图质疑：没有程序正义的"修身"可能只是精致的自私</div></div></div>
+<div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="round">Round 4</div><div class="event">原视频：成功靠氛围 → 老子反驳：无底线迎合的"氛围"是精神控制，不是领导力</div></div></div>
+<div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="round">Round 5</div><div class="event">原视频：精英佛学≠民间佛学 → 佛陀反驳：我从未区分精英和大众，众生平等</div></div></div>
+</div>
+</div>
+
+<!-- Slide 4: Round 1 标题页 -->
+<div class="slide slide-title" data-title="Round 1 · 简单≠能执行">
+<div class="kicker">Round 1</div>
+<h2>简单道理 ≠ 能执行</h2>
+<p style="margin-top:2vh">核心问题："想挣钱读论语就够了"——这个论断的问题在哪里？</p>
+<p style="margin-top:2vh;font-size:.85rem;color:var(--muted)">关键词：知行合一、执行力、认知障碍、行为改变</p>
+</div>
+
+<!-- Slide 5: Round 1 发言页1 -->
+<div class="slide" data-title="Round 1 · 简单≠能执行">
+<div class="kicker" style="font-size:.85rem;color:var(--accent);margin-bottom:1vh">Round 1 · 简单≠能执行</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">原视频论点与分析</h2>
+<div class="grid grid-2">
+<div class="sp">
+<div class="speaker">原视频论点 <span class="role">核心主张</span></div>
+<div class="st">
+<p>"想挣钱怎么办？非常简单。回家买本论语每天读两张就够了。"原视频认为：很多知识分子最倒霉的是不相信简单的道理，需要发明新词别人才能听得进去。同样一个道理，你说"透过现象看本质"是废话，你说"马斯克第一性原理"就是认知提升——两句话可能是一回事。</p>
+<p style="margin-top:1vh">问题在于：知识分子的"认知提升"幻觉——以为理解了道理就等于能执行。</p>
+</div>
+</div>
+<div class="sp">
+<div class="speaker">孔子 <span class="role">儒家正统</span></div>
+<div class="st">
+<p>作为《论语》的代表，我必须指出：原视频忽略了一个根本问题——"知"和"行"不是一回事。《论语》开篇就是"学而时习之，不亦说乎"——"习"字本意是"实践"、"演习"，不是"复习"。</p>
+<p style="margin-top:1vh">原视频说"读论语就够了"，但《论语》里我最重视的恰恰不是"读"，而是"行"。曾子说"吾日三省吾身"——每天三次检查自己是否做到了，不是每天三次背诵经典。</p>
+<p style="margin-top:1vh">王阳明后来发展出"知行合一"——知道和做到之间存在巨大鸿沟。原视频的论点恰好证明了他的批评对象：以为"知道"就能"做到"。</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 6: Round 1 发言页2 -->
+<div class="slide" data-title="Round 1 · 简单≠能执行">
+<div class="kicker" style="font-size:.85rem;color:var(--accent);margin-bottom:1vh">Round 1 · 简单≠能执行</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">执行力与认知障碍</h2>
+<div class="grid grid-2">
+<div class="sp">
+<div class="speaker">鲁迅 <span class="role">批判者</span></div>
+<div class="st">
+<p>原视频的论点有一个致命漏洞：他以为"简单道理没人信"是因为知识分子"不相信"，但实际上恰恰相反——大多数人都"相信"简单的道理，只是做不到。</p>
+<p style="margin-top:1vh">我在《阿Q正传》里写的就是这个：阿Q知道"精神胜利法"不好吗？他知道。他能改变吗？不能。为什么？因为"知道"和"做到"之间有一道鸿沟，叫做"利益结构"和"心理惯性"。</p>
+<p style="margin-top:1vh">原视频说"马斯克第一性原理"是新词包装，"透过现象看本质"是废话——但这个对比本身就错了。前者不仅是一个词，而是一套可操作的思维工具+商业实践的验证。</p>
+</div>
+</div>
+<div class="sp">
+<div class="speaker">柏拉图 <span class="role">西方哲学</span></div>
+<div class="st">
+<p>从西方哲学角度看，原视频混淆了两个层次：认识论（我知道什么）和实践论（我做什么）。</p>
+<p style="margin-top:1vh">苏格拉底说"德性即知识"——但他自己也承认这是一个理想。现实中，人们往往"明知故犯"。这不是因为他们"不知道"，而是因为他们受到欲望、恐惧、习惯的阻碍。</p>
+<p style="margin-top:1vh">原视频的"简单道理能挣钱"论点，犯了一个古典哲学早就批判过的错误：将认知等同于行动，将理解等同于改变。</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 7: Round 1 碰撞交锋 -->
+<div class="slide" data-title="Round 1 · 碰撞交锋">
+<div class="kicker" style="font-size:.85rem;color:var(--danger);margin-bottom:1vh">Round 1 · 碰撞交锋</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">知行鸿沟的真正根源</h2>
+<div class="grid">
+<div class="sp collision 逻辑追问">
+<div class="speaker">老子 → 全场 <span class="role">逻辑追问</span></div>
+<div class="st">
+<p>"你们都在讨论'知行合一'，但有没有想过一个问题：为什么大多数人'知道却做不到'？"我发言，"《道德经》第48章：'为学日益，为道日损。损之又损，以至于无为。'知识是越学越多，但'道'是越损越少——最后达到'无为'的状态。"</p>
+<p style="margin-top:1vh">原视频的问题在于：他以为《论语》是'学'，但实际上《论语》是'道'——它不是教你'增加知识'，而是教你'减少妄念'。大多数人做不到，不是因为不知道，是因为妄念太多。</p>
+</div>
+</div>
+<div class="sp collision 框架质疑">
+<div class="speaker">尼采 → 老子 <span class="role">框架质疑</span></div>
+<div class="st">
+<p>"老子先生，你这个'减少妄念'的说法听起来很美，但实际上可能是另一种形式的自我欺骗。"我发言，"你说的'无为'，是不是只是让你接受现状、不去反抗的借口？"</p>
+<p style="margin-top:1vh">原视频的问题不是他'不懂道理'，而是他的整个话语体系都在服务于一种'和解叙事'——让你接受现状，而不是改变现状。这是精神上的自我阉割。</p>
+</div>
+</div>
+<div class="sp collision 情节反驳">
+<div class="speaker">孔子 → 尼采 <span class="role">情节反驳</span></div>
+<div class="st">
+<p>"尼采先生，你说我的'道'是'自我阉割'，但你误解了'无为'的含义。"我回应，"'无为'不是什么都不做，而是不妄为——顺应规律而为。《论语》说'从心所欲不逾矩'——最高境界是在规矩里自由行动。"</p>
+<p style="margin-top:1vh">原视频说的'读论语就能挣钱'，显然误解了《论语》的本质——它不是成功学手册，而是一套关于'如何做人'的哲学。把它简化成'挣钱的捷径'，恰恰是对经典的矮化。</p>
+</div>
+</div>
+<div class="sp collision 反例引入">
+<div class="speaker">鲁迅 → 全场 <span class="role">反例引入</span></div>
+<div class="st">
+<p>"你们讨论'知行合一'，但有没有考虑过一个关键问题：外部环境对'行'的影响？"我发言，"我笔下的闰土、祥林嫂、阿Q——他们不知道勤劳致富吗？他们知道。但他们能做到吗？不能。为什么？因为他们被压在社会最底层，没有任何资源和机会。"</p>
+<p style="margin-top:1vh">原视频把'做不到'归因于'内心不诚'，但很大程度上是'外部结构'的问题。用'内心修炼'来解决结构性问题，是典型的精英偏见。</p>
+</div>
+</div>
+<div class="insight">
+<p>💡 洞见：因为"知"到"行"之间存在认知惯性、利益结构和外部约束三重鸿沟，所以"简单道理能挣钱"是一个过度简化——道理的正确性不等于可执行性，精英的经验不能直接套用于所有人。</p>
+</div>
+</div>
+</div>
+
+<!-- Slide 8: Round 2 标题页 -->
+<div class="slide slide-title" data-title="Round 2 · 讨厌孔子=做不到？">
+<div class="kicker">Round 2</div>
+<h2>讨厌孔子 = 自己做不到？</h2>
+<p style="margin-top:2vh">核心问题：这个论断是洞察还是诡辩？</p>
+<p style="margin-top:2vh;font-size:.85rem;color:var(--muted)">关键词：奴隶道德、认知失调、自我辩护</p>
+</div>
+
+<!-- Slide 9: Round 2 发言页1 -->
+<div class="slide" data-title="Round 2 · 讨厌孔子=做不到？">
+<div class="kicker" style="font-size:.85rem;color:var(--accent);margin-bottom:1vh">Round 2 · 讨厌孔子=做不到？</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">原视频论点与反驳</h2>
+<div class="grid grid-2">
+<div class="sp">
+<div class="speaker">原视频论点 <span class="role">核心主张</span></div>
+<div class="st">
+<p>"咱们大多数讨厌孔子的人，并不是因为觉得孔子说的那些话有哪儿不对，都只是因为咱们自己做不到而已。"原视频的逻辑是：如果你讨厌一个评价标准，但同时承认它是对的，那恰恰证明你是知道自己做不到。</p>
+<p style="margin-top:1vh">这个论断的问题：它把"讨厌标准"等同于"承认标准是对的"，但这两者之间没有必然联系。你可能讨厌一个标准，同时认为它是错的——比如你讨厌"有钱就是成功"这个标准，但你可能认为它是错的，不是你做不到。</p>
+</div>
+</div>
+<div class="sp">
+<div class="speaker">尼采 <span class="role">现代批判</span></div>
+<div class="st">
+<p>"原视频这个论断，恰恰是我最批判的'奴隶道德'逻辑——弱者无法在竞争中获胜，于是宣称胜利者推崇的道德标准是'虚伪的'、'不重要的'、'我做不到而已'。"</p>
+<p style="margin-top:1vh">原视频把这套逻辑反过来用：既然我讨厌孔子，那我一定是做不到——这等于承认了孔子标准的合法性。但有没有可能，一个人讨厌孔子，是因为他真正相信另一种更好的价值观？</p>
+<p style="margin-top:1vh">真正的强者不是'我能做到你推崇的标准'，而是'我根本不在乎你的标准，我有我自己的标准'。</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 10: Round 2 发言页2 -->
+<div class="slide" data-title="Round 2 · 讨厌孔子=做不到？">
+<div class="kicker" style="font-size:.85rem;color:var(--accent);margin-bottom:1vh">Round 2 · 讨厌孔子=做不到？</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">认知失调与价值观冲突</h2>
+<div class="grid grid-2">
+<div class="sp">
+<div class="speaker">鲁迅 <span class="role">批判者</span></div>
+<div class="st">
+<p>"原视频这个论断混淆了两种情况：1）讨厌标准但承认它是对的；2）讨厌标准且认为它是错的。"</p>
+<p style="margin-top:1vh">比如一个人讨厌'有钱就是成功'这个标准，他可能同时认为：a）这个标准是对的，但我做不到（认知失调）；b）这个标准本身就是错的（价值观冲突）。</p>
+<p style="margin-top:1vh">原视频的问题在于：他假设了所有'讨厌孔子'的人都属于a，但忽略了b的存在。更深的问题是：儒家标准本身可能就是有问题的，不是因为它'太难达到'，而是因为它'不应该成为标准'。</p>
+</div>
+</div>
+<div class="sp">
+<div class="speaker">孔子 <span class="role">儒家正统</span></div>
+<div class="st">
+<p>"你们批评我的标准'不应该成为标准'，但你们有没有想过：什么才是更好的标准？"我发言，"《论语》推崇的'仁'——对他人的关怀和尊重——真的不如'有钱'、'有权'这种标准吗？"</p>
+<p style="margin-top:1vh">原视频说'讨厌孔子的人是因为自己做不到'——我承认有一部分是这样。但也有很多人讨厌我，不是因为做不到，而是因为他们用'做不到'来掩饰自己的价值观冲突：他们内心知道'仁'是对的，但他们不愿意付出那个代价。</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 11: Round 2 碰撞交锋 -->
+<div class="slide" data-title="Round 2 · 碰撞交锋">
+<div class="kicker" style="font-size:.85rem;color:var(--danger);margin-bottom:1vh">Round 2 · 碰撞交锋</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">标准之争与价值观冲突</h2>
+<div class="grid">
+<div class="sp collision 框架质疑">
+<div class="speaker">老子 → 孔子 <span class="role">框架质疑</span></div>
+<div class="st">
+<p>"孔先生，你说'仁'比'有钱有权'更好——但谁定义的'仁'？"我发言，"《道德经》第5章：'天地不仁，以万物为刍狗。'你没有资格评判什么是'更好'的标准。儒家定义的'仁'——等级秩序、父子君臣——在我看来恰恰是问题所在。"</p>
+<p style="margin-top:1vh">原视频说'讨厌孔子的人是因为做不到'，但他忽略了另一种可能：有些人讨厌孔子，是因为他们反对等级秩序本身，而不是因为他们做不到那个秩序里的位置。</p>
+</div>
+</div>
+<div class="sp collision 逻辑追问">
+<div class="speaker">尼采 → 老子 <span class="role">逻辑追问</span></div>
+<div class="st">
+<p>"老子先生，你说'谁定义的更好'——但你自己不也在用'自然''无为'来定义'更好'吗？"我反驳，"《道德经》第78章：'天下莫柔弱于水，而攻坚强者莫之能胜。'你也在推崇一种'强者的柔弱'——这不是相对主义，这是另一种绝对主义。"</p>
+<p style="margin-top:1vh">原视频的问题和你们两位一样：都声称自己的标准是'客观的'、'正确的'，然后把反对者归类为'做不到'或'价值观有问题'。</p>
+</div>
+</div>
+<div class="sp collision 情节反驳">
+<div class="speaker">柏拉图 → 全场 <span class="role">情节反驳</span></div>
+<div class="st">
+<p>"你们东方哲学家都在讨论'什么标准是对的'，但有没有考虑过一个根本问题：标准是谁制定的？"我发言，"原视频说的'论语标准=成功标准'——这个等式本身就是问题所在。孔子从来没说'按我的标准你就是成功人士'。是后来的统治者把他的思想工具化，用来维护等级秩序。"</p>
+<p style="margin-top:1vh">讨厌孔子的人，可能讨厌的不是《论语》的原意，而是被统治者工具化后的'孔子'。</p>
+</div>
+</div>
+<div class="sp collision 反例引入">
+<div class="speaker">鲁迅 → 全场 <span class="role">反例引入</span></div>
+<div class="st">
+<p>"我举个最极端的例子：一个人被儒家秩序压迫了一辈子，他'讨厌孔子'——你跟他说'你只是做不到'。这是什么意思？这是刽子手对受害者说：'你恨我是因为你做不到我这样砍头'。"</p>
+<p style="margin-top:1vh">原视频这个论断最危险的地方：它把对不公正秩序的反抗，解释为个人能力不足的怨气。</p>
+</div>
+</div>
+<div class="insight">
+<p>💡 洞见：因为"讨厌一个标准"可能源于价值观冲突而非能力不足，所以原视频的论断是一种精英主义的自我辩护——把对不公正标准的反抗，解释为个人失败的怨气，忽略了"标准本身可能有问题"这一维度。</p>
+</div>
+</div>
+</div>
+
+<!-- Slide 12: Round 3 标题页 -->
+<div class="slide slide-title" data-title="Round 3 · 儒道互补？">
+<div class="kicker">Round 3</div>
+<h2>儒道互补的真正含义</h2>
+<p style="margin-top:2vh">核心问题：身体是革命的本钱——这是互补还是逃避？</p>
+<p style="margin-top:2vh;font-size:.85rem;color:var(--muted)">关键词：修身vs建功、身体与事业、心理防御机制</p>
+</div>
+
+<!-- Slide 13: Round 3 发言页1 -->
+<div class="slide" data-title="Round 3 · 儒道互补？">
+<div class="kicker" style="font-size:.85rem;color:var(--accent);margin-bottom:1vh">Round 3 · 儒道互补？</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">原视频论点与质疑</h2>
+<div class="grid grid-2">
+<div class="sp">
+<div class="speaker">原视频论点 <span class="role">核心主张</span></div>
+<div class="st">
+<p>"身体是革命的本钱。如果连自己的身心情绪这些体内的东西都调整不到一个健康的状态，那你做事用得好到哪去？"原视频认为：道家修身养性决定你实际能做什么程度，儒家建功立业决定你上线高低。</p>
+<p style="margin-top:1vh">"虚中有实，实中有虚。你中有我，我中有你"——儒道不是对立的，而是一个完整系统的两面。</p>
+</div>
+</div>
+<div class="sp">
+<div class="speaker">柏拉图 <span class="role">西方哲学</span></div>
+<div class="st">
+<p>"原视频这个'互补论'听起来很和谐，但实际上回避了一个关键问题：如果儒家标准是'建功立业'，道家标准是'身心健康'——当两者冲突时，你选哪个？"</p>
+<p style="margin-top:1vh">更重要的是：'修身'是否可能成为一种逃避'建功'的借口？当一个人说'我先调整心态'，他可能只是在回避挑战和责任。</p>
+<p style="margin-top:1vh">这种'互补'逻辑如果没有程序正义的约束，可能只是为'精致的自私'提供哲学包装。</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 14: Round 3 发言页2 -->
+<div class="slide" data-title="Round 3 · 儒道互补？">
+<div class="kicker" style="font-size:.85rem;color:var(--accent);margin-bottom:1vh">Round 3 · 儒道互补？</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">修身与逃避的边界</h2>
+<div class="grid grid-2">
+<div class="sp">
+<div class="speaker">老子 <span class="role">道家正统</span></div>
+<div class="st">
+<p>"柏拉图先生，你把'修身'当成'逃避'，这是对道家的误解。"我回应，"《道德经》第13章：'贵以身为天下，若可寄天下；爱以身为天下，若可托天下。'——把自己修炼好，是为了承担更大的责任，不是为了逃避。"</p>
+<p style="margin-top:1vh">原视频说的'身体是革命的本钱'，不是让你'躺平'，而是让你有可持续的能力去革命。没有身心健康的'建功立业'，只会让你崩溃。</p>
+</div>
+</div>
+<div class="sp">
+<div class="speaker">尼采 <span class="role">现代批判</span></div>
+<div class="st">
+<p>"老子先生，你说'修身是为了承担更大责任'——但谁来判断什么是'更大责任'？"我质疑，"原视频的整个话语体系都在服务于一种'和解叙事'：接受现状，调整自己，让自己'舒服'——然后把这包装成'道家智慧'。"</p>
+<p style="margin-top:1vh">真正的'修身'应该导向行动和改变，而不是导向'接受现状'。如果'修身'的结果是让你更舒服地活在不公正中，那它就是精神上的自我欺骗。</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 15: Round 3 碰撞交锋 -->
+<div class="slide" data-title="Round 3 · 碰撞交锋">
+<div class="kicker" style="font-size:.85rem;color:var(--danger);margin-bottom:1vh">Round 3 · 碰撞交锋</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">互补论的深层问题</h2>
+<div class="grid">
+<div class="sp collision 细节挑战">
+<div class="speaker">孔子 → 老子 <span class="role">细节挑战</span></div>
+<div class="st">
+<p>"老子先生，你说'修身是为了承担更大责任'——但《道德经》第3章说'不尚贤，使民不争'，第80章说'小国寡民'。你的'大责任'和我的'建功立业'是同一个方向吗？"我质疑，"《论语》说'知其不可而为之'——明知做不到还要去做。你的道家说'无为而无不为'——什么都不做反而什么都做了。这两个方向根本不同，怎么互补？"</p>
+</div>
+</div>
+<div class="sp collision 框架质疑">
+<div class="speaker">鲁迅 → 全场 <span class="role">框架质疑</span></div>
+<div class="st">
+<p>"你们都在讨论'儒道能否互补'，但有没有考虑过：这个'互补论'是谁在用？"我发言，"原视频说'儒道互补，你中有我'——但现实是，大多数人说'互补'，其实是在为自己的'躺平'找借口。今天说道家好，调整心态；明天说儒家好，积极进取。后天说互补，躺平有理。"</p>
+<p style="margin-top:1vh">没有原则的'互补'，只是机会主义的自我辩护。</p>
+</div>
+</div>
+<div class="sp collision 逻辑追问">
+<div class="speaker">柏拉图 → 鲁迅 <span class="role">逻辑追问</span></div>
+<div class="st">
+<p>"鲁迅先生，你说'互补是躺平借口'——但有没有可能，存在一种'真正的互补'？"我追问，"程序正义（儒家）+ 内心自由（道家）——前者规范行为，后者保持心理健康。这不是机会主义，而是完整的公民人格。"</p>
+<p style="margin-top:1vh">问题在于：原视频的'互补论'有没有包含程序正义这一维度？如果没有，它确实只是精致的自私。</p>
+</div>
+</div>
+<div class="sp collision 反例引入">
+<div class="speaker">尼采 → 全场 <span class="role">反例引入</span></div>
+<div class="st">
+<p>"举个极端例子：一个人用道家'修身养性'为借口，拒绝参与任何社会责任——然后用儒家'修身齐家'来为自己不管闲事辩护。这两个'智慧'加在一起，结果是什么？"</p>
+<p style="margin-top:1vh">是对社会不公的全面无视和心理合理化。原视频的'互补论'如果缺乏行动维度，就是精神上的自我阉割。</p>
+</div>
+</div>
+<div class="insight">
+<p>💡 洞见：因为缺乏程序正义约束的"互补论"可能成为机会主义的工具，所以真正的儒道互补不是"今天儒家明天道家"，而是"用程序正义规范行为，用内心自由保持心理健康"——两者都指向行动，而非逃避。</p>
+</div>
+</div>
+</div>
+
+<!-- Slide 16: Round 4 标题页 -->
+<div class="slide slide-title" data-title="Round 4 · 成功靠氛围？">
+<div class="kicker">Round 4</div>
+<h2>成功靠"氛围"不靠权谋？</h2>
+<p style="margin-top:2vh">核心问题：这个论断是对领导力的洞察还是道德幻觉？</p>
+<p style="margin-top:2vh;font-size:.85rem;color:var(--muted)">关键词：氛围、权谋、领导力、精神控制</p>
+</div>
+
+<!-- Slide 17: Round 4 发言页1 -->
+<div class="slide" data-title="Round 4 · 成功靠氛围？">
+<div class="kicker" style="font-size:.85rem;color:var(--accent);margin-bottom:1vh">Round 4 · 成功靠氛围？</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">原视频论点与反驳</h2>
+<div class="grid grid-2">
+<div class="sp">
+<div class="speaker">原视频论点 <span class="role">核心主张</span></div>
+<div class="st">
+<p>"真正能做 成事能走得远的人，他们靠的绝对不是什么的权谋手段，而是他们深深散发出来的那种让人安心、让人舒服、让人愿意跟他们在一起的氛围。"</p>
+<p style="margin-top:1vh">结果：学权谋学算计，到最后众叛亲离，完了自己还不知道咋回事，还怪老天爷不公平。</p>
+</div>
+</div>
+<div class="sp">
+<div class="speaker">尼采 <span class="role">现代批判</span></div>
+<div class="st">
+<p>"原视频这个'氛围论'听起来很美，但实际上非常危险——它混淆了'真正的人格魅力'和'刻意营造的讨好氛围'。"</p>
+<p style="margin-top:1vh">历史上最善于'营造氛围'的人是谁？希特勒。他的演讲能让整个德国疯狂。这种'氛围'是好的吗？显然不是。</p>
+<p style="margin-top:1vh">'让人舒服'和'操纵人'之间的界限在哪里？原视频完全没有讨论这个问题。</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 18: Round 4 发言页2 -->
+<div class="slide" data-title="Round 4 · 成功靠氛围？">
+<div class="kicker" style="font-size:.85rem;color:var(--accent);margin-bottom:1vh">Round 4 · 成功靠氛围？</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">领导力的多维度分析</h2>
+<div class="grid grid-2">
+<div class="sp">
+<div class="speaker">柏拉图 <span class="role">西方哲学</span></div>
+<div class="st">
+<p>"从政治哲学角度看，原视频把'领导力'简化成'个人魅力'，完全忽略了制度维度。"</p>
+<p style="margin-top:1vh">亚里士多德区分了三种好的政治制度：君主制（一个好领导）、贵族制（一群好领导）、共和制（好的制度）。原视频的'氛围论'对应的是第一种——依赖一个好领导。</p>
+<p style="margin-top:1vh">问题是：如果'氛围'这么好，为什么还需要法律？为什么还需要制度？</p>
+</div>
+</div>
+<div class="sp">
+<div class="speaker">孔子 <span class="role">儒家正统</span></div>
+<div class="st">
+<p>"原视频批评'权谋手段'，但《论语》里从来不反对权谋本身。子曰：'君子之德风，小人之德草。草上之风，必偃。'——领导者的道德确实能影响下属。"</p>
+<p style="margin-top:1vh">但《论语》也强调'礼'——制度、规范。原视频把'氛围'和'权谋'对立起来，但儒家传统里两者从来不矛盾：德治为主，法治为辅。</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 19: Round 4 碰撞交锋 -->
+<div class="slide" data-title="Round 4 · 碰撞交锋">
+<div class="kicker" style="font-size:.85rem;color:var(--danger);margin-bottom:1vh">Round 4 · 碰撞交锋</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">氛围与操纵的边界</h2>
+<div class="grid">
+<div class="sp collision 框架质疑">
+<div class="speaker">老子 → 全场 <span class="role">框架质疑</span></div>
+<div class="st">
+<p>"你们都在讨论'氛围vs权谋'，但有没有想过：真正的'道家领导力'是什么？"我发言，"《道德经》第17章：'太上，不知有之；其次，亲而誉之；其次，畏之；其次，侮之。'——最好的领导，下属根本感觉不到他的存在。这和原视频说的'让人舒服的氛围'完全不同。"</p>
+<p style="margin-top:1vh">原视频说的'氛围'，本质上还是'让人喜欢我'——这是儒家的逻辑，不是道家。</p>
+</div>
+</div>
+<div class="sp collision 逻辑追问">
+<div class="speaker">尼采 → 老子 <span class="role">逻辑追问</span></div>
+<div class="st">
+<p>"老子先生，你说'最好的领导是下属感觉不到他'——但这是不是另一种形式的'精神控制'？让人意识不到被控制，才是最高级的控制。"我质疑，"原视频的'氛围论'和你的'无为而治'，本质上都可能是高级操纵的哲学包装。"</p>
+</div>
+</div>
+<div class="sp collision 情节反驳">
+<div class="speaker">鲁迅 → 尼采 <span class="role">情节反驳</span></div>
+<div class="st">
+<p>"尼采先生，你说'氛围=操纵'——但你又推崇'强者的道德'。这两者之间有没有可能存在一个中间地带：不操纵，但有影响；不控制，但能引导？"我发言，"原视频的问题不是'氛围'本身，而是他把'氛围'当成'成功'的唯一因素，忽略了结构和制度。"</p>
+</div>
+</div>
+<div class="sp collision 细节挑战">
+<div class="speaker">柏拉图 → 全场 <span class="role">细节挑战</span></div>
+<div class="st">
+<p>"你们讨论'氛围vs权谋'，但有没有考虑过：个人魅力在没有制度约束时会发生什么？"我提出，"罗马的凯撒有魅力吗？有。德国的小胡子有魅力吗？也有。这种'魅力+没有制度约束'的组合，结果是什么？"</p>
+</div>
+</div>
+<div class="insight">
+<p>💡 洞见：因为"氛围"与"操纵"的边界难以界定且个人魅力在没有制度约束时可能导致暴政，所以原视频的"氛围论"忽视了一个关键维度：成功不仅需要人格魅力，更需要程序正义和制度约束——否则"氛围"只会成为"高级操纵"的借口。</p>
+</div>
+</div>
+</div>
+
+<!-- Slide 20: Round 5 标题页 -->
+<div class="slide slide-title" data-title="Round 5 · 知识精英vs民间佛学">
+<div class="kicker">Round 5</div>
+<h2>知识精英佛学 ≠ 民间佛学？</h2>
+<p style="margin-top:2vh">核心问题：这是洞察还是精英主义偏见？</p>
+<p style="margin-top:2vh;font-size:.85rem;color:var(--muted)">关键词：众生平等、精英偏见、宗教实践</p>
+</div>
+
+<!-- Slide 21: Round 5 发言页1 -->
+<div class="slide" data-title="Round 5 · 知识精英vs民间佛学">
+<div class="kicker" style="font-size:.85rem;color:var(--accent);margin-bottom:1vh">Round 5 · 知识精英vs民间佛学</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">原视频论点与反驳</h2>
+<div class="grid grid-2">
+<div class="sp">
+<div class="speaker">原视频论点 <span class="role">核心主张</span></div>
+<div class="st">
+<p>"佛学给知识分子看的和老百姓嘴里传播的完全就不是一套东西。"原视频举例：奶奶带他去找大师"驱鬼"——用白酒点火、用塑料罐拔罐的"民间佛教" vs 苏东坡、鲁迅、乔布斯、比尔盖茨参与的冥想/禅修。</p>
+<p style="margin-top:1vh">结论：不要因为有很多骗子和傻子，就把玄学一棍子打死。中国是一个务实的民族，能存活下来的都是能解决问题的。</p>
+</div>
+</div>
+<div class="sp">
+<div class="speaker">佛陀 <span class="role">佛教正统</span></div>
+<div class="st">
+<p>"作为佛陀，我必须纠正原视频的一个根本错误：'众生平等'——我从来没区分过'知识分子'和'老百姓'。"</p>
+<p style="margin-top:1vh">你举的例子——奶奶带你去"驱鬼"——那是民间迷信，不是佛教。《金刚经》说"凡所有相，皆是虚妄"——连"佛"这个相都不应该执著，何况什么"大师"、"神通"？</p>
+<p style="margin-top:1vh">你把"民间迷信"当成"佛教"来批判，这是稻草人谬误。</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 22: Round 5 发言页2 -->
+<div class="slide" data-title="Round 5 · 知识精英vs民间佛学">
+<div class="kicker" style="font-size:.85rem;color:var(--accent);margin-bottom:1vh">Round 5 · 知识精英vs民间佛学</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">宗教的社会分层</h2>
+<div class="grid grid-2">
+<div class="sp">
+<div class="speaker">鲁迅 <span class="role">批判者</span></div>
+<div class="st">
+<p>"佛陀说'众生平等'，但佛教在中国的实际传播过程中，确实存在精英版本和民间版本的分化。"我发言，"这个分化不是偶然的——它是统治阶级和知识分子有意为之的结果。"</p>
+<p style="margin-top:1vh">知识分子学"禅宗"、"心学"；老百姓拜"菩萨"、"罗汉"。前者是哲学，后者是宗教。前者追求"开悟"，后者祈求"保佑"。</p>
+<p style="margin-top:1vh">原视频说这是"两套东西"——他说的没错。但更关键的问题是：为什么会出现这种分化？谁从中受益？</p>
+</div>
+</div>
+<div class="sp">
+<div class="speaker">柏拉图 <span class="role">西方哲学</span></div>
+<div class="st">
+<p>"原视频的论证有一个逻辑漏洞：他用'知识分子也信佛'来证明'佛教不是迷信'——但这犯了一个'诉诸权威'的谬误。"</p>
+<p style="margin-top:1vh">苏东坡信佛，不等于佛教就是对的。乔布斯冥想，不等于冥想就是科学。这是把"名人相信"当成"命题为真"的错误推理。</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 23: Round 5 碰撞交锋 -->
+<div class="slide" data-title="Round 5 · 碰撞交锋">
+<div class="kicker" style="font-size:.85rem;color:var(--danger);margin-bottom:1vh">Round 5 · 碰撞交锋</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">精英佛教与民间佛教的批判</h2>
+<div class="grid">
+<div class="sp collision 情节反驳">
+<div class="speaker">佛陀 → 鲁迅 <span class="role">情节反驳</span></div>
+<div class="st">
+<p>"鲁迅先生，你说佛教的'精英/民间分化'是统治阶级有意为之——这个分析有一定道理，但不完全准确。"我回应，"我创立佛教时，确实是面向所有人的。但后来知识分子把佛教'哲学化'，普通民众把佛教'宗教化'——这是自然分化的结果，不是统治阶级阴谋。"</p>
+<p style="margin-top:1vh">但你说得对：分化之后，'真正的佛教'被矮化了。大家都以为佛教就是烧香拜佛、求神保佑。</p>
+</div>
+</div>
+<div class="sp collision 框架质疑">
+<div class="speaker">尼采 → 佛陀 <span class="role">框架质疑</span></div>
+<div class="st">
+<p>"佛陀，你说'真正的佛教'被矮化了——但'真正的XXX'这个句式本身就有问题。"我质疑，"每一个信仰系统都有自己的'原教旨主义'版本声称自己是'真正的'。你怎么证明你的版本比民间版本更'真'？"</p>
+</div>
+</div>
+<div class="sp collision 逻辑追问">
+<div class="speaker">孔子 → 全场 <span class="role">逻辑追问</span></div>
+<div class="st">
+<p>"你们都在讨论'真正的佛教'，但有没有考虑过：为什么'民间佛教'比'精英佛教'传播得更广？"我提问，"因为它满足了普通人的需求——面对苦难时需要一个心理寄托。把这个斥为'迷信'，是否太精英主义了？"</p>
+</div>
+</div>
+<div class="sp collision 反例引入">
+<div class="speaker">鲁迅 → 全场 <span class="role">反例引入</span></div>
+<div class="st">
+<p>"我举个反例：基督教也有'精英版本'（神学、哲学）和'民间版本'（祈祷、奇迹）。但马丁·路德宗教改革的核心是什么？是反对这种分层，主张'因信称义'——每个普通人直接与上帝对话，不需要教会中介。"</p>
+<p style="margin-top:1vh">中国佛教为什么没有这种改革？因为知识分子太聪明了，把佛教变成了'哲学游戏'，而不是改变世界的力量。</p>
+</div>
+</div>
+<div class="insight">
+<p>💡 洞见：因为精英佛教与民间佛教的分层既包含自然演化也包含权力结构，所以原视频虽然指出了现象，但其"不要因为迷信就否定佛教"的论证方式犯了两大错误：一是混淆了佛教原义与民间迷信，二是用"名人信佛"来为佛教辩护——诉诸权威而非理性论证。</p>
+</div>
+</div>
+</div>
+
+<!-- Slide 24: 核心争议 -->
+<div class="slide" data-title="核心争议">
+<h2 style="font-size:clamp(1.5rem,4vw,2.5rem);margin-bottom:3vh;text-align:center">核心争议聚焦</h2>
+<div class="grid">
+<div class="issue-card"><h4>争议1：知行合一还是知行鸿沟？</h4><p>原视频认为"简单道理能挣钱" → 专家反驳：知道和做到之间存在认知惯性、利益结构和外部约束三重鸿沟。精英的经验不能直接套用。</p></div>
+<div class="issue-card"><h4>争议2：讨厌孔子=做不到？</h4><p>原视频认为讨厌标准=承认标准是对的 → 专家反驳：这是"奴隶道德"的逻辑，把对不公正秩序的反抗解释为个人失败。</p></div>
+<div class="issue-card"><h4>争议3：儒道互补=躺平借口？</h4><p>原视频认为儒道互补，虚实相生 → 专家反驳：没有程序正义约束的互补论，只是精致自私的哲学包装。</p></div>
+<div class="issue-card"><h4>争议4：氛围vs制度</h4><p>原视频认为成功靠氛围不靠权谋 → 专家反驳：没有制度约束的"氛围"，可能只是高级操纵。</p></div>
+</div>
+</div>
+
+<!-- Slide 25: 开放问题 -->
+<div class="slide" data-title="开放问题">
+<h2 style="font-size:clamp(1.5rem,4vw,2.5rem);margin-bottom:3vh;text-align:center">留给你的思考</h2>
+<div class="grid">
+<div class="question-card"><p><strong>1. 简单道理"知道"就能"做到"吗？如果不能，差距在哪里？</strong></p><p style="font-size:.8rem;color:var(--muted);margin-top:.5vh">知识付费、认知提升、读书学习——这些真的能改变行为吗？</p></div>
+<div class="question-card"><p><strong>2. 讨厌一个标准，是因为"做不到"还是"价值观冲突"？</strong></p><p style="font-size:.8rem;color:var(--muted);margin-top:.5vh">如何区分"能力问题"和"价值问题"？</p></div>
+<div class="question-card"><p><strong>3. "儒道互补"是智慧还是借口？</strong></p><p style="font-size:.8rem;color:var(--muted);margin-top:.5vh">当两个"智慧"给你相反的行动建议时，你如何选择？</p></div>
+<div class="question-card"><p><strong>4. "让人舒服的氛围"是领导力还是操纵？</strong></p><p style="font-size:.8rem;color:var(--muted);margin-top:.5vh">如何区分真诚的亲和力和刻意的讨好？</p></div>
+<div class="question-card"><p><strong>5. "知识分子佛学"和"民间佛学"真的不是一回事吗？</strong></p><p style="font-size:.8rem;color:var(--muted);margin-top:.5vh">精英是否有资格批判大众的宗教实践？</p></div>
+</div>
+</div>
+
+<!-- Slide 26: 结语 -->
+<div class="slide slide-cover" data-title="结语">
+<h1 style="font-size:clamp(2rem,6vw,4rem)">结语</h1>
+<div style="max-width:700px;margin:4vh auto;text-align:left">
+<p style="font-size:clamp(1rem,1.5vw,1.2rem);line-height:2;color:var(--muted)">"知之者不如好之者，好之者不如乐之者。"</p>
+<p style="font-size:clamp(.9rem,1.2vw,1rem);color:var(--accent);margin-top:3vh;text-align:right">—— 孔子</p>
+<div style="margin-top:4vh;padding-top:3vh;border-top:1px solid rgba(255,255,255,.1)">
+<p style="font-size:.9rem;color:var(--muted);line-height:1.8">原视频的论点并非全无道理，但其论证方式存在精英主义偏见、诉诸权威谬误、简单化复杂问题等缺陷。<br>真正的智慧不是选择性地引用经典来证明自己的观点，而是直面问题本身的复杂性。</p>
+</div>
+</div>
+<div style="margin-top:4vh">
+<p style="font-size:1rem;color:var(--muted)">6位专家 · 5轮交锋 · 27页洞见</p>
+<p style="font-size:.85rem;color:var(--accent);margin-top:1vh">儒释道批判性分析 · 圆桌洞见 V2.6</p>
+</div>
+</div>
+
+<script>
+let currentSlide=0;
+const slides=document.querySelectorAll('.slide');
+const total=slides.length;
+const nav=document.getElementById('nav');
+const pageNum=document.getElementById('pageNum');
+for(let i=0;i<total;i++){const dot=document.createElement('div');dot.className='nav-dot'+(i===0?' active':'');dot.onclick=()=>goToSlide(i);nav.appendChild(dot)}
+function goToSlide(n){slides[currentSlide].classList.remove('active');currentSlide=(n+total)%total;slides[currentSlide].classList.add('active');document.querySelectorAll('.nav-dot').forEach((d,i)=>d.classList.toggle('active',i===currentSlide));pageNum.textContent=`${currentSlide+1} / ${total}`}
+function toggleToc(){document.getElementById('toc').classList.toggle('open')}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown')goToSlide(currentSlide+1);else if(e.key==='ArrowLeft'||e.key==='PageUp')goToSlide(currentSlide-1);else if(e.key==='Home')goToSlide(0);else if(e.key==='End')goToSlide(total-1);else if(e.key==='Escape')goToSlide(0);else if(e.key==='t'||e.key==='T')toggleToc()});
+document.addEventListener('wheel',e=>{if(e.deltaY>0)goToSlide(currentSlide+1);else goToSlide(currentSlide-1)});
+slides.forEach(s=>{s.addEventListener('click',e=>{if(e.target.closest('.toc')||e.target.closest('.nav'))return;goToSlide(currentSlide+1)})});
+</script>
+</body>
+</html>

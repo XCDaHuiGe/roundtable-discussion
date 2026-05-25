@@ -1,9 +1,70 @@
-﻿---
+---
 name: roundtable-conference-v2
-description: "认知演化圆桌系统 V2.4。深度讨论导向，7轮全员交锋，锚定书中情节，每轮包含独立碰撞页，榨干每一滴认知增量。"
+description: "认知演化圆桌系统 V2.5。深度讨论导向，7轮全员交锋，锚定书中情节，每轮包含独立碰撞页，榨干每一滴认知增量。"
 ---
 
-# 圆桌会议 V2.4 — Deep Discussion Roundtable
+## 专家库同步规则 ★必读
+
+```
+【强制规则】每次开始圆桌讨论前必须执行：
+
+1. 检查 GitHub 更新
+   - 访问: https://github.com/XCDaHuiGe/expert-library
+   - 查看最新提交时间和内容
+
+2. 同步本地仓库（如有更新）
+   cd D:\vibe_coding\zhengliu\expert-library
+   git fetch origin
+   git pull origin main
+   git push origin master  # 如本地有领先提交
+
+3. 使用最新专家档案
+   - 必须从本地同步后的仓库读取专家信息
+   - 禁止使用过期的专家数据
+
+4. 同步检查清单
+   □ GitHub 最新提交时间
+   □ 本地仓库是否同步
+   □ 专家档案是否最新
+```
+
+## 内部闭环能力 ★
+
+本项目完全独立运行，不依赖外部服务。内置以下能力：
+
+| 能力 | 来源 | 说明 |
+|:---|:---|:---|
+| **HTML PPT 生成** | 内置 | 零依赖单HTML，支持35+主题 |
+| **动画效果** | 内置 | 20+ WebGL/CSS 动画效果 |
+| **响应式布局** | 内置 | 三档自适应（桌面/平板/手机） |
+| **导航系统** | 内置 | 键盘/鼠标/触摸/目录 TOC |
+
+### ppt-assets 资源
+
+```
+ppt-assets/
+├── base.css              → 基础样式框架
+├── fonts.css             → 字体配置
+├── semantic.css          → 语义组件
+├── runtime.js            → 运行时引擎
+├── animations/           → 动画效果（20+ fx）
+│   ├── animations.css
+│   ├── fx-runtime.js
+│   └── fx/              → 20+ WebGL/CSS 动画
+│       ├── starfield.js
+│       ├── matrix-rain.js
+│       ├── constellation.js
+│       └── ...
+└── themes/               → 主题样式（35+）
+    ├── cyberpunk-neon.css
+    ├── editorial-magazine.css
+    ├── nord.css
+    └── ...
+```
+
+---
+
+# 圆桌会议 V2.5 — Deep Discussion Roundtable
 
 > **核心定位：榨干每一滴认知增量**
 > **质量 = 情节锚定 × 论证深度 × 碰撞强度 × 洞见锐度**
@@ -306,9 +367,10 @@ CSS 自包含原则:
 | V2.1 | 全员发言、论证深度、碰撞强度 |
 | V2.2 | 情节锚定、独立碰撞页、300字硬性下限、因果推理洞见句 |
 | V2.4 | 排版规范、CSS自包含、响应式三档、滚动处理、碰撞页颜色标记 |
+| V2.5 | 新增专家库同步规则（每次工作前必须检查GitHub） |
 
 ---
 
-*版本：V2.4*
+*版本：V2.5*
 *更新时间：2026-05-25*
 *核心定位：锚定书中情节，榨干每一滴认知增量*

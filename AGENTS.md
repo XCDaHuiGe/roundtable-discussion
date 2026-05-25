@@ -9,8 +9,20 @@
    - 更新版本历史（如有版本变更）
 
 2. **更新 index.html**
-   - 在"已讨论书目"区域添加新的 book-card 卡片
-   - 包含：版本标签、书名、作者、统计数据、描述、查看链接
+   - 在"已讨论书目"区域 `<div class="books">` 开头添加新的 book-card 卡片
+   - 卡片结构：
+     ```html
+     <div class="book-card">
+     <div class="book-tag">V2.x · N页</div>
+     <h3>书名</h3>
+     <div class="book-author">作者 · 原著书名</div>
+     <div class="book-stats"><span>6专家</span><span>N轮</span><span>42发言</span><span>5洞见</span></div>
+     <div class="book-desc">简短描述，突出核心议题和参与专家</div>
+     <a class="book-link" href="output/书名_圆桌洞见.html">查看洞见</a>
+     </div>
+     ```
+   - 更新页脚版本号（如 V2.4 → V2.5）
+   - 新卡片应添加在现有卡片之前（最新优先）
 
 3. **提交并推送到 GitHub**
    ```

@@ -86,23 +86,23 @@ body{display:flex;flex-direction:column}
 <div class="toc-item section" onclick="goToSlide(2)">讨论仪表盘</div>
 <div class="toc-item section" onclick="goToSlide(3)">张力图谱</div>
 <div class="toc-item" onclick="goToSlide(4)">Round 1 · 简单≠能执行</div>
-<div class="toc-item" onclick="goToSlide(7)">Round 1 · 碰撞交锋</div>
-<div class="toc-item" onclick="goToSlide(10)">Round 2 · 讨厌孔子=做不到？</div>
-<div class="toc-item" onclick="goToSlide(13)">Round 2 · 碰撞交锋</div>
-<div class="toc-item" onclick="goToSlide(16)">Round 3 · 儒道能否互补？</div>
-<div class="toc-item" onclick="goToSlide(19)">Round 3 · 碰撞交锋</div>
-<div class="toc-item" onclick="goToSlide(22)">Round 4 · 氛围vs权谋</div>
-<div class="toc-item" onclick="goToSlide(25)">Round 4 · 碰撞交锋</div>
-<div class="toc-item" onclick="goToSlide(28)">Round 5 · 知识精英vs民间佛学</div>
-<div class="toc-item" onclick="goToSlide(31)">Round 5 · 碰撞交锋</div>
-<div class="toc-item" onclick="goToSlide(34)">Round 6 · 和解叙事的陷阱</div>
-<div class="toc-item" onclick="goToSlide(37)">Round 6 · 碰撞交锋</div>
-<div class="toc-item section" onclick="goToSlide(40)">核心洞见</div>
-<div class="toc-item section" onclick="goToSlide(41)">开放问题</div>
-<div class="toc-item section" onclick="goToSlide(42)">结语</div>
+<div class="toc-item" onclick="goToSlide(8)">Round 1 · 碰撞交锋</div>
+<div class="toc-item" onclick="goToSlide(11)">Round 2 · 讨厌孔子=做不到？</div>
+<div class="toc-item" onclick="goToSlide(15)">Round 2 · 碰撞交锋</div>
+<div class="toc-item" onclick="goToSlide(18)">Round 3 · 儒道能否互补？</div>
+<div class="toc-item" onclick="goToSlide(22)">Round 3 · 碰撞交锋</div>
+<div class="toc-item" onclick="goToSlide(25)">Round 4 · 氛围vs权谋</div>
+<div class="toc-item" onclick="goToSlide(29)">Round 4 · 碰撞交锋</div>
+<div class="toc-item" onclick="goToSlide(32)">Round 5 · 知识精英vs民间佛学</div>
+<div class="toc-item" onclick="goToSlide(36)">Round 5 · 碰撞交锋</div>
+<div class="toc-item" onclick="goToSlide(39)">Round 6 · 和解叙事的陷阱</div>
+<div class="toc-item" onclick="goToSlide(43)">Round 6 · 碰撞交锋</div>
+<div class="toc-item section" onclick="goToSlide(46)">核心洞见</div>
+<div class="toc-item section" onclick="goToSlide(47)">开放问题</div>
+<div class="toc-item section" onclick="goToSlide(48)">结语</div>
 </div>
 <div class="nav" id="nav"></div>
-<div class="page-num" id="pageNum">1 / 43</div>
+<div class="page-num" id="pageNum">1 / 49</div>
 
 <!-- Slide 0: 封面 -->
 <div class="slide slide-cover active" data-title="封面">
@@ -111,7 +111,7 @@ body{display:flex;flex-direction:column}
 <div class="meta">
 <p>批判性分析 · 锚定原视频论点 · 深度交锋</p>
 <p style="margin-top:2vh;color:var(--accent)">6位跨领域专家 · 6轮深度交锋</p>
-<p style="margin-top:1vh;opacity:.5">43页完整版 · 2026-05-25</p>
+<p style="margin-top:1vh;opacity:.5">48页完整版 · 2026-05-25</p>
 </div>
 </div>
 
@@ -1012,7 +1012,7 @@ for(let i=0;i<total;i++){const dot=document.createElement('div');dot.className='
 function goToSlide(n){slides[currentSlide].classList.remove('active');currentSlide=(n+total)%total;slides[currentSlide].classList.add('active');document.querySelectorAll('.nav-dot').forEach((d,i)=>d.classList.toggle('active',i===currentSlide));pageNum.textContent=`${currentSlide+1} / ${total}`}
 function toggleToc(){document.getElementById('toc').classList.toggle('open')}
 document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='PageDown')goToSlide(currentSlide+1);else if(e.key==='ArrowLeft'||e.key==='PageUp')goToSlide(currentSlide-1);else if(e.key==='Home')goToSlide(0);else if(e.key==='End')goToSlide(total-1);else if(e.key==='Escape')goToSlide(0);else if(e.key==='t'||e.key==='T')toggleToc()});
-let wheelTimer=null;document.addEventListener('wheel',e=>{if(wheelTimer)return;wheelTimer=setTimeout(()=>{wheelTimer=null},800);if(e.deltaY>0)goToSlide(currentSlide+1);else goToSlide(currentSlide-1)});
+let wheelTimer=null;document.addEventListener('wheel',e=>{const active=slides[currentSlide];const atTop=active.scrollTop<=1;const atBottom=active.scrollTop+active.clientHeight>=active.scrollHeight-2;const canScroll=(!atTop&&e.deltaY<0)||(!atBottom&&e.deltaY>0);if(canScroll)return;if(wheelTimer)return;wheelTimer=setTimeout(()=>{wheelTimer=null},600);if(e.deltaY>0)goToSlide(currentSlide+1);else goToSlide(currentSlide-1)});
 </script>
 </body>
 </html>

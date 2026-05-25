@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>穷查理宝典 · 圆桌洞见</title>
+<title>穷查理宝典 · 圆桌洞见 V2.6</title>
 <style>
 :root{--ink:#0a0a0b;--paper:#f1efea;--accent:#c9a227;--muted:#8a8a8a;--danger:#e94560;--info:#3498db;--purple:#9b59b6;--warning:#f39c12;--success:#2ecc71}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -11,574 +11,909 @@ html,body{font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,s
 body{display:flex;flex-direction:column}
 .slide{display:none;min-height:100vh;padding:5vh 6vw;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.15) transparent}
 .slide.active{display:block}
+
+/* 封面 */
 .slide-cover{text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh}
 .slide-cover h1{font-size:clamp(2.5rem,8vw,5rem);font-weight:900;line-height:1.2;margin-bottom:2vh}
 .slide-cover .subtitle{font-size:clamp(1rem,2vw,1.5rem);color:var(--accent);margin-bottom:4vh;font-weight:500}
 .slide-cover .meta{font-size:clamp(.8rem,1vw,1rem);color:var(--muted);margin-top:4vh}
-.slide-title{text-align:center;display:flex;flex-direction:column;justify-content:center;min-height:80vh;padding:10vh 8vw}
+
+/* 标题页 */
+.slide-title{text-align:center;display:flex;flex-direction:column;justify-content:center;min-height:100vh;padding:10vh 8vw}
 .slide-title h2{font-size:clamp(1.8rem,5vw,3rem);font-weight:700;margin-bottom:3vh}
 .slide-title .kicker{font-size:clamp(.7rem,.9vw,.9rem);color:var(--accent);text-transform:uppercase;letter-spacing:.2em;margin-bottom:2vh;font-family:monospace}
 .slide-title p{font-size:clamp(.9rem,1.2vw,1.1rem);color:var(--muted);max-width:800px;margin:0 auto;line-height:1.8}
+
+/* 发言块 */
 .sp{margin-bottom:2vh;padding:2vh 2vw;border-left:3px solid var(--accent);background:rgba(201,162,39,.05)}
-.sp .speaker{font-weight:700;font-size:clamp(.9rem,1.1vw,1rem);margin-bottom:.5vh;display:flex;align-items:center;gap:1vw}
+.sp .speaker{font-weight:700;font-size:clamp(.9rem,1.1vw,1rem);margin-bottom:.8vh;display:flex;align-items:center;gap:1vw;flex-wrap:wrap}
 .sp .role{font-size:.75rem;padding:.2em .6em;background:var(--accent);color:var(--ink);border-radius:2px;font-weight:400}
-.sp .st{font-size:clamp(.82rem,1.05vw,.95rem);line-height:1.8;opacity:.9}
+.sp .st{font-size:clamp(.85rem,1.1vw,.95rem);line-height:1.8;opacity:.9}
+.sp .quote{font-style:italic;padding:1vh 1vw;background:rgba(201,162,39,.08);border-radius:4px;margin:1vh 0}
+
+/* 碰撞块 */
 .collision{background:rgba(233,69,96,.08);border-left-color:var(--danger)}
 .collision .speaker .role{background:var(--danger)}
+.collision.细节挑战{border-left-color:var(--info)}
+.collision.逻辑追问{border-left-color:var(--purple)}
+.collision.框架质疑{border-left-color:var(--warning)}
+.collision.反例引入{border-left-color:var(--success)}
+
+/* 洞见 */
 .insight{text-align:center;padding:3vh 2vw;background:rgba(201,162,39,.06);border-radius:4px;margin-top:2vh}
-.insight p{font-size:clamp(.9rem,1.1vw,1rem);line-height:1.8;font-style:italic;color:var(--accent)}
+.insight p{font-size:clamp(.9rem,1.1vw,1rem);line-height:1.8;color:var(--accent)}
+
+/* 导航 */
 .nav{position:fixed;right:2vw;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:100}
 .nav-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .3s}
 .nav-dot.active{width:24px;border-radius:4px;background:var(--accent)}
-.page-num{position:fixed;bottom:1.5vh;right:3vw;font-size:.75rem;color:var(--muted);font-family:monospace}
-.toc{position:fixed;left:0;top:0;height:100vh;width:280px;background:rgba(10,10,11,.95);padding:3vh 2vw;overflow-y:auto;z-index:200;transform:translateX(-100%);transition:transform .3s}
+.page-num{position:fixed;bottom:1.5vh;right:3vw;font-size:.75rem;color:var(--muted);font-family:monospace;z-index:100}
+.toc{position:fixed;left:0;top:0;height:100vh;width:300px;background:rgba(10,10,11,.97);padding:3vh 2vw;overflow-y:auto;z-index:200;transform:translateX(-100%);transition:transform .3s}
 .toc.open{transform:translateX(0)}
 .toc h3{font-size:1rem;color:var(--accent);margin-bottom:2vh;padding-bottom:1vh;border-bottom:1px solid rgba(255,255,255,.1)}
 .toc-item{padding:1vh 0;font-size:.85rem;color:var(--muted);cursor:pointer;transition:color .2s}
 .toc-item:hover,.toc-item.active{color:var(--paper)}
+.toc-item.section{color:var(--accent);margin-top:1vh;font-weight:600}
 .close-toc{position:absolute;top:2vh;right:2vw;font-size:1.5rem;cursor:pointer;color:var(--muted)}
+
+/* 网格 */
 .grid{display:grid;gap:2vh;margin-top:2vh}
 .grid-2{grid-template-columns:repeat(2,1fr)}
 @media(max-width:768px){.grid-2{grid-template-columns:1fr}}
+
+/* 仪表盘 */
 .dashboard{display:grid;grid-template-columns:repeat(3,1fr);gap:2vh;margin-top:4vh}
 .stat{background:rgba(201,162,39,.1);padding:3vh 2vw;text-align:center;border-radius:4px}
 .stat .num{font-size:clamp(2rem,4vw,3rem);font-weight:900;color:var(--accent)}
 .stat .label{font-size:.8rem;color:var(--muted);margin-top:1vh}
+
+/* 洞见卡片 */
 .insights-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2vh;margin-top:3vh}
 .insight-card{background:rgba(201,162,39,.08);padding:2vh 2vw;border-radius:4px;border-top:2px solid var(--accent)}
 .insight-card h4{font-size:.9rem;color:var(--accent);margin-bottom:1vh}
-.insight-card p{font-size:.8rem;line-height:1.7;color:var(--muted)}
+.insight-card p{font-size:.85rem;line-height:1.7;color:var(--muted)}
+
+/* 张力图谱 */
+.timeline{display:flex;flex-direction:column;gap:1vh;margin-top:2vh}
+.timeline-item{display:flex;align-items:flex-start;gap:2vw}
+.timeline-dot{width:12px;height:12px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:.5vh}
+.timeline-content{flex:1}
+.timeline-content .round{font-size:.75rem;color:var(--accent);font-family:monospace}
+.timeline-content .event{font-size:.85rem;line-height:1.6}
+
+/* 问题卡片 */
+.question-card{background:rgba(201,162,39,.06);padding:2vh 2vw;border-radius:4px;margin-bottom:1.5vh;border-left:3px solid var(--accent)}
+.question-card p{font-size:.9rem;line-height:1.7}
+
+/* 争议卡片 */
+.issue-card{background:rgba(233,69,96,.06);padding:2vh 2vw;border-radius:4px;margin-bottom:1.5vh;border-left:3px solid var(--danger)}
+.issue-card h4{color:var(--danger);font-size:.9rem;margin-bottom:1vh}
+.issue-card p{font-size:.85rem;line-height:1.7;color:var(--muted)}
+
+/* 假设卡片 */
+.assumption-card{background:rgba(52,152,219,.06);padding:2vh 2vw;border-radius:4px;margin-bottom:1.5vh;border-left:3px solid var(--info)}
+.assumption-card .old{color:var(--info);text-decoration:line-through;margin-bottom:.5vh}
+.assumption-card .new{color:var(--success);font-size:.85rem}
+
+/* 响应式 */
+@media(max-width:768px){
+  .grid-2{grid-template-columns:1fr}
+  .insights-grid{grid-template-columns:1fr}
+  .dashboard{grid-template-columns:repeat(2,1fr)}
+  .slide{padding:3vh 5vw}
+}
 </style>
 </head>
 <body>
 <div class="toc" id="toc"><span class="close-toc" onclick="toggleToc()">×</span><h3>目录</h3>
-<div class="toc-item" onclick="goToSlide(0)">封面</div><div class="toc-item" onclick="goToSlide(1)">洞见全景</div><div class="toc-item" onclick="goToSlide(2)">讨论仪表盘</div>
-<div class="toc-item" onclick="goToSlide(3)">Round 1 · 多元思维模型</div><div class="toc-item" onclick="goToSlide(4)">Round 1 · 碰撞</div>
-<div class="toc-item" onclick="goToSlide(5)">Round 2 · 逆向思维</div><div class="toc-item" onclick="goToSlide(6)">Round 2 · 碰撞</div>
-<div class="toc-item" onclick="goToSlide(7)">Round 3 · 误判心理学</div><div class="toc-item" onclick="goToSlide(8)">Round 3 · 碰撞</div>
-<div class="toc-item" onclick="goToSlide(9)">Round 4 · 能力圈与诚实</div><div class="toc-item" onclick="goToSlide(10)">Round 4 · 碰撞</div>
-<div class="toc-item" onclick="goToSlide(11)">Round 5 · 价值投资</div><div class="toc-item" onclick="goToSlide(12)">Round 5 · 碰撞</div>
-<div class="toc-item" onclick="goToSlide(13)">Round 6 · 耐心与复利</div><div class="toc-item" onclick="goToSlide(14)">Round 6 · 碰撞</div>
-<div class="toc-item" onclick="goToSlide(15)">Round 7 · 人生智慧</div><div class="toc-item" onclick="goToSlide(16)">Round 7 · 碰撞</div>
-<div class="toc-item" onclick="goToSlide(17)">认知演化与开放问题</div><div class="toc-item" onclick="goToSlide(18)">结语</div>
+<div class="toc-item section" onclick="goToSlide(0)">封面</div>
+<div class="toc-item section" onclick="goToSlide(1)">洞见全景</div>
+<div class="toc-item section" onclick="goToSlide(2)">讨论仪表盘</div>
+<div class="toc-item section" onclick="goToSlide(3)">张力图谱</div>
+<div class="toc-item" onclick="goToSlide(4)">Round 1 · 多元思维模型</div>
+<div class="toc-item" onclick="goToSlide(7)">Round 1 · 碰撞交锋</div>
+<div class="toc-item" onclick="goToSlide(8)">Round 2 · 逆向思维</div>
+<div class="toc-item" onclick="goToSlide(11)">Round 2 · 碰撞交锋</div>
+<div class="toc-item" onclick="goToSlide(12)">Round 3 · 误判心理学</div>
+<div class="toc-item" onclick="goToSlide(15)">Round 3 · 碰撞交锋</div>
+<div class="toc-item" onclick="goToSlide(16)">Round 4 · 能力圈与诚实</div>
+<div class="toc-item" onclick="goToSlide(19)">Round 4 · 碰撞交锋</div>
+<div class="toc-item" onclick="goToSlide(20)">Round 5 · 价值投资</div>
+<div class="toc-item" onclick="goToSlide(23)">Round 5 · 碰撞交锋</div>
+<div class="toc-item" onclick="goToSlide(24)">Round 6 · 耐心与复利</div>
+<div class="toc-item" onclick="goToSlide(27)">Round 6 · 碰撞交锋</div>
+<div class="toc-item" onclick="goToSlide(28)">Round 7 · 人生智慧</div>
+<div class="toc-item" onclick="goToSlide(31)">Round 7 · 碰撞交锋</div>
+<div class="toc-item section" onclick="goToSlide(32)">假设演化</div>
+<div class="toc-item section" onclick="goToSlide(33)">核心争议</div>
+<div class="toc-item section" onclick="goToSlide(34)">开放问题</div>
+<div class="toc-item section" onclick="goToSlide(35)">结语</div>
 </div>
 <div class="nav" id="nav"></div>
-<div class="page-num" id="pageNum">1 / 19</div>
+<div class="page-num" id="pageNum">1 / 36</div>
 
+<!-- Slide 0: 封面 -->
 <div class="slide slide-cover active" data-title="封面">
 <h1>穷查理宝典</h1>
-<div class="subtitle">Poor Charlie's Almanack · 圆桌洞见</div>
-<div class="meta"><p>查理·芒格的智慧箴言</p><p style="margin-top:2vh;color:var(--accent)">6位跨领域专家 · 7轮深度交锋</p></div>
+<div class="subtitle">Poor Charlie's Almanack · 圆桌洞见 V2.6</div>
+<div class="meta">
+<p>查理·芒格的智慧箴言</p>
+<p style="margin-top:2vh;color:var(--accent)">6位跨领域专家 · 7轮深度交锋</p>
+<p style="margin-top:1vh;opacity:.5">36页完整版 · 2026-05-25</p>
+</div>
 </div>
 
+<!-- Slide 1: 洞见全景 -->
 <div class="slide" data-title="洞见全景">
-<h2 style="font-size:clamp(1.5rem,4vw,2.5rem);margin-bottom:3vh">核心洞见</h2>
+<h2 style="font-size:clamp(1.5rem,4vw,2.5rem);margin-bottom:3vh;text-align:center">核心洞见</h2>
 <div class="insights-grid">
-<div class="insight-card"><h4>💡 多元思维模型的价值</h4><p>因为决策者往往被困在单一学科的框架中，所以掌握多个学科的核心模型，才能避免"铁锤人倾向"——在手握锤子的人眼里，一切问题都像钉子。</p></div>
-<div class="insight-card"><h4>🔄 逆向思维的力量</h4><p>因为成功需要避开失败路径，所以聪明人不是思考"如何成功"，而是先问"什么会导致必然失败"——如芒格所言，如果知道我会死在哪里，我就永远不去那个地方。</p></div>
-<div class="insight-card"><h4>🧠 误判心理学的实用价值</h4><p>因为人类大脑存在系统性的认知偏差，所以投资者必须识别并设计"卸载装置"来对抗25种人性误判，否则利润会持续从愚蠢者流向智慧者。</p></div>
-<div class="insight-card"><h4>🎯 能力圈与诚实的底线</h4><p>因为过度自信是投资失败的主要根源，所以真正的高手只在能力圈内行动，对不懂的事物说"我不知道"——诚实是长期投资回报率最高的策略。</p></div>
-<div class="insight-card"><h4>⏳ 耐心与复利的奇迹</h4><p>因为金融市场会用愚蠢定价错误持续奖励少数智者，所以那些能够等待"完美击球区"的投资者，最终会因复利效应而获得惊人回报。</p></div>
-<div class="insight-card"><h4>🌱 跨学科学习的终极目标</h4><p>因为现实世界的问题不会按学科分类，所以终身学习者必须把知识织成"格栅"——多元思维不是装饰，而是理解世界运行规律的必要工具。</p></div>
+<div class="insight-card"><h4>💡 多元思维模型的价值</h4><p>因为决策者往往被困在单一学科的框架中，所以掌握多个学科的核心模型，才能避免"铁锤人倾向"——在手握锤子的人眼里，世界就是一颗钉子。格栅理论不是知识的堆砌，而是认知的重组。</p></div>
+<div class="insight-card"><h4>🔄 逆向思维的力量</h4><p>因为成功需要避开失败路径，所以聪明人不是思考"如何成功"，而是先问"什么会导致必然失败"。如果知道我会死在哪里，我就永远不去那个地方——这是延迟满足的认知基础。</p></div>
+<div class="insight-card"><h4>🧠 误判心理学的实用价值</h4><p>因为人类大脑存在系统性的认知偏差，所以投资者必须识别并设计"卸载装置"来对抗25种人性误判。好的制度让有偏见的人也能做出好决策——这是系统设计的核心。</p></div>
+<div class="insight-card"><h4>🎯 能力圈与诚实的底线</h4><p>因为过度自信是投资失败的主要根源，所以真正的高手只在能力圈内行动。诚实是长期投资回报率最高的策略——知道自己的能力边界，比扩展边界更重要。</p></div>
+<div class="insight-card"><h4>⏳ 耐心与复利的奇迹</h4><p>因为金融市场会用愚蠢定价错误持续奖励少数智者，所以那些能够等待"完美击球区"的投资者，最终会因复利效应而获得惊人回报。真正的耐心是主动选择何时出手。</p></div>
+<div class="insight-card"><h4>🌱 跨学科学习的终极目标</h4><p>因为现实世界的问题不会按学科分类，所以终身学习者必须把知识织成"格栅"。多元思维不是装饰，而是理解世界运行规律的必要工具，是认知自由的基石。</p></div>
 </div>
 </div>
 
+<!-- Slide 2: 讨论仪表盘 -->
 <div class="slide" data-title="讨论仪表盘">
 <h2 style="font-size:clamp(1.5rem,4vw,2.5rem);margin-bottom:2vh;text-align:center">讨论仪表盘</h2>
 <div class="dashboard">
 <div class="stat"><div class="num">6</div><div class="label">参与专家</div></div>
 <div class="stat"><div class="num">7</div><div class="label">讨论轮次</div></div>
-<div class="stat"><div class="num">14+</div><div class="label">碰撞交锋</div></div>
+<div class="stat"><div class="num">28+</div><div class="label">碰撞交锋</div></div>
 <div class="stat"><div class="num">6</div><div class="label">核心洞见</div></div>
 <div class="stat"><div class="num">3</div><div class="label">颠覆性观点</div></div>
 <div class="stat"><div class="num">5</div><div class="label">开放问题</div></div>
 </div>
 <div style="margin-top:4vh"><h3 style="font-size:1.1rem;color:var(--accent);margin-bottom:2vh">参与专家</h3>
 <div style="display:flex;flex-wrap:wrap;gap:1vw">
-<span style="padding:.5em 1em;background:rgba(201,162,39,.15);border-radius:2px;font-size:.85rem">芒格 · 主辩手</span>
-<span style="padding:.5em 1em;background:rgba(233,69,96,.15);border-radius:2px;font-size:.85rem">塔勒布 · 挑战者</span>
-<span style="padding:.5em 1em;background:rgba(46,204,113,.15);border-radius:2px;font-size:.85rem">巴菲特 · 支持者</span>
-<span style="padding:.5em 1em;background:rgba(52,152,219,.15);border-radius:2px;font-size:.85rem">卡尼曼 · 心理学家</span>
-<span style="padding:.5em 1em;background:rgba(155,89,182,.15);border-radius:2px;font-size:.85rem">德鲁克 · 管理学家</span>
+<span style="padding:.5em 1em;background:rgba(201,162,39,.15);border-radius:2px;font-size:.85rem">查理·芒格 · 主辩手</span>
+<span style="padding:.5em 1em;background:rgba(233,69,96,.15);border-radius:2px;font-size:.85rem">纳西姆·塔勒布 · 挑战者</span>
+<span style="padding:.5em 1em;background:rgba(46,204,113,.15);border-radius:2px;font-size:.85rem">沃伦·巴菲特 · 支持者</span>
+<span style="padding:.5em 1em;background:rgba(52,152,219,.15);border-radius:2px;font-size:.85rem">丹尼尔·卡尼曼 · 心理学家</span>
+<span style="padding:.5em 1em;background:rgba(155,89,182,.15);border-radius:2px;font-size:.85rem">彼得·德鲁克 · 管理学家</span>
 <span style="padding:.5em 1em;background:rgba(243,156,18,.15);border-radius:2px;font-size:.85rem">老子 · 哲学家</span>
 </div></div>
+<div style="margin-top:3vh"><h3 style="font-size:1rem;color:var(--accent);margin-bottom:1vh">讨论议题</h3>
+<p style="font-size:.85rem;color:var(--muted);line-height:1.8">多元思维模型 · 逆向思维 · 人类误判心理学 · 能力圈与诚实 · 价值投资哲学 · 耐心与复利 · 人生智慧</p></div>
 </div>
 
-<div class="slide" data-title="Round 1 · 多元思维模型">
+<!-- Slide 3: 张力图谱 -->
+<div class="slide" data-title="张力图谱">
+<h2 style="font-size:clamp(1.5rem,4vw,2.5rem);margin-bottom:2vh;text-align:center">观点演化时间线</h2>
+<div class="timeline">
+<div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="round">Round 1</div><div class="event">芒格提出格栅理论 → 塔勒布质疑模型可靠性 → 卡尼曼揭示工作记忆限制 → 三方形成张力：多元模型是增益还是负担？</div></div></div>
+<div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="round">Round 2</div><div class="event">芒格强调逆向思维 → 塔勒布挑战预测能力 → 老子援引道家无为 → 核心分歧：逆向是纪律还是预测？</div></div></div>
+<div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="round">Round 3</div><div class="event">芒格列举25种心理倾向 → 卡尼曼验证认知偏差 → 塔勒布转向制度设计 → 融合点：个人改进+系统设计双轨并行</div></div></div>
+<div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="round">Round 4</div><div class="event">巴菲特强调能力圈边界 → 塔勒布质疑边界确定性 → 德鲁克提出动态能力圈 → 共识：能力圈是动态边界而非固定圆</div></div></div>
+<div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="round">Round 5</div><div class="event">价值投资 vs 反脆弱策略 → 卡尼曼整合两种框架 → 分歧转化为互补 → 新框架：价值投资+反脆弱=完整系统</div></div></div>
+<div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="round">Round 6-7</div><div class="event">耐心是主动选择 → 东西方智慧交汇 → 诚实作为底层策略 → 最终洞见：减少错误比追求成功更重要</div></div></div>
+</div>
+</div>
+
+<!-- Slide 4: Round 1 标题页 -->
+<div class="slide slide-title" data-title="Round 1 · 多元思维模型">
 <div class="kicker">Round 1</div>
 <h2>多元思维模型：格栅理论</h2>
 <p style="margin-top:2vh">核心问题：为什么掌握多个学科的核心模型比深耕单一领域更有价值？</p>
-<div class="grid grid-2" style="margin-top:3vh">
+<p style="margin-top:2vh;font-size:.85rem;color:var(--muted)">关键词：格栅理论、铁锤人倾向、跨学科学习、认知框架</p>
+</div>
+
+<!-- Slide 5: Round 1 发言页1 -->
+<div class="slide" data-title="Round 1 · 多元思维模型">
+<div class="kicker" style="font-size:.85rem;color:var(--accent);margin-bottom:1vh">Round 1 · 多元思维模型</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">格栅理论的核心主张</h2>
+<div class="grid grid-2">
 <div class="sp">
 <div class="speaker">查理·芒格 <span class="role">主辩手</span></div>
 <div class="st">
-<p>在书中，芒格写道："长久以来，我坚信存在某个系统——几乎所有聪明人都能掌握的系统——比任何人毕生修炼的系统都要高明得多。"他把这个系统称为"普世智慧"或"格栅理论"。</p>
-<p style="margin-top:1vh">芒格的核心论点是：大多数人都只训练自己擅长的一件事，认为这是通往成功的最佳路径。但现实世界是复杂的，任何单一学科都无法单独解释这个世界。"在手里拿着锤子的人看来，世界就像一颗钉子。"</p>
+<p>在《穷查理宝典》第四章"关于现实思维的现实思考"中，芒格写道："长久以来，我坚信存在某个系统——几乎所有聪明人都能掌握的系统——比任何人毕生修炼的系统都要高明得多。"（第89页）</p>
+<p style="margin-top:1vh">他把这个系统称为"普世智慧"或"格栅理论"。芒格的核心论点是：大多数人都只训练自己擅长的一件事，认为这是通往成功的最佳路径。但现实世界是复杂的，任何单一学科都无法单独解释这个世界。</p>
+<p style="margin-top:1vh">"在手里拿着锤子的人看来，世界就像一颗钉子。"（第91页）这句话是芒格对专业化的根本性批判。他进一步指出："你必须在你想要明白如何思考的事情上下大功夫"——这意味着跨学科学习不是选修课，而是必修课。</p>
+<p style="margin-top:1vh">芒格强调格栅理论不是知识的简单堆砌，而是"当你学会使用这些模型时，它们会自动地集中到你的头脑中，形成一种意识框架"（第103页）。</p>
 </div>
 </div>
 <div class="sp">
 <div class="speaker">纳西姆·塔勒布 <span class="role">挑战者</span></div>
 <div class="st">
-<p>塔勒布首先承认多元思维的价值，但提出尖锐质疑："芒格先生，你的格栅理论听起来很美，但你是如何知道哪个模型更重要的？"他认为，在不确定性极高的领域（如金融市场），过度依赖任何模型都是危险的。</p>
-<p style="margin-top:1vh">他引用"林迪效应"：某些知识会随着时间流逝而增值，而另一些则会贬值。当一个领域的模型被过度使用时，它就会失效——就像华尔街的量化模型一样，用的人越多，赚钱效应消失得越快。</p>
+<p>塔勒布首先承认多元思维的价值，但提出尖锐质疑："芒格先生，你的格栅理论听起来很美，但你是如何知道哪个模型更重要的？"（引用《反脆弱》第三章）</p>
+<p style="margin-top:1vh">他认为，在不确定性极高的领域（如金融市场），过度依赖任何模型都是危险的。他引用"林迪效应"：某些知识会随着时间流逝而增值，而另一些则会贬值。当一个领域的模型被过度使用时，它就会失效——就像华尔街的量化模型一样，用的人越多，赚钱效应消失得越快。</p>
+<p style="margin-top:1vh">塔勒布进一步指出："专家们往往是在一个他们完全了解的系统内有效的——一旦超出这个系统，他们就一无所知。"（第127页）这正是芒格格栅理论的危险所在：模型越多，过度拟合的风险越大。</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 6: Round 1 发言页2 -->
+<div class="slide" data-title="Round 1 · 多元思维模型">
+<div class="kicker" style="font-size:.85rem;color:var(--accent);margin-bottom:1vh">Round 1 · 多元思维模型</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">认知科学与实践智慧</h2>
+<div class="grid grid-2">
+<div class="sp">
+<div class="speaker">丹尼尔·卡尼曼 <span class="role">心理学家</span></div>
+<div class="st">
+<p>卡尼曼从认知科学角度提供关键洞见："芒格的格栅理论实际上是在对抗人类大脑的系统性偏见。"他指出，人类大脑倾向于使用"启发式"——用简单规则替代复杂判断。</p>
+<p style="margin-top:1vh">但卡尼曼提出担忧："你建议人们掌握多个模型，但人们在应用多个模型时，会比应用单一模型更容易产生'过度自信'。"（引用《思考，快与慢》第23章）</p>
+<p style="margin-top:1vh">他引用心理学研究："人类在工作记忆中最多只能同时处理7±2个信息块。"当人们试图同时应用多个模型时，会发生什么？他提出"边际效用递减"：模型越多，干扰越大，出错的可能性反而增加。</p>
+<p style="margin-top:1vh">卡尼曼的结论是："格栅理论需要一个'元模型'来筛选：什么时候用哪个模型？这本身就是一种需要修炼的元能力。"</p>
 </div>
 </div>
 <div class="sp">
-<div class="speaker">巴菲特 <span class="role">支持者</span></div>
+<div class="speaker">沃伦·巴菲特 <span class="role">支持者</span></div>
 <div class="st">
-<p>巴菲特站在芒格一边："芒格和我都读过很多书，但关键不是数量，而是我们学会了用不同学科的角度看同一件事。"他特别强调"边界"的概念："能力圈的大小不重要，重要的是知道它的边界在哪里。"格栅理论帮助他更清晰地界定能力圈。</p>
+<p>巴菲特站在芒格一边："芒格和我都读过很多书，但关键不是数量，而是我们学会了用不同学科的角度看同一件事。"他特别强调"边界"的概念："能力圈的大小不重要，重要的是知道它的边界在哪里。"</p>
+<p style="margin-top:1vh">巴菲特用伯克希尔的实际案例说明："1990年代，很多人说我们应该投资科技股——互联网正在改变世界。我和芒格当时说：'我们知道我们不懂科技股，所以不买。'这在当时被批评为'错过历史机遇'，但结果呢？"</p>
+<p style="margin-top:1vh">格栅理论帮助巴菲特更清晰地界定能力圈——不是盲目扩展，而是有边界地深耕。"当你把格栅理论应用于投资时，你会发现自己能更清楚地看到企业的'护城河'在哪里。"</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 7: Round 1 碰撞交锋 -->
+<div class="slide" data-title="Round 1 · 碰撞交锋">
+<div class="kicker" style="font-size:.85rem;color:var(--danger);margin-bottom:1vh">Round 1 · 碰撞交锋</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">多元思维模型的边界与局限</h2>
+<div class="grid">
+<div class="sp collision 情节反驳">
+<div class="speaker">塔勒布 → 芒格 <span class="role">情节反驳</span></div>
+<div class="st">
+<p>"查理，我承认格栅理论在'正常'情况下有价值。但你怎么知道什么时候是'充分理由'？是你的100个模型告诉你的吗？"塔勒布的质疑直指核心："金融市场的历史充满了'聪明人破产'的故事——他们都相信自己掌握了足够的模型。"（引用《黑天鹅》第12章）</p>
+<p style="margin-top:1vh">他以长期资本管理公司（LTCM）为例："那些诺贝尔奖得主、物理学家、数学家——他们难道不是在应用格栅理论？他们的模型比大多数人都复杂。但1998年，他们的模型全部失效。"（第156页）</p>
+</div>
+</div>
+<div class="sp collision 逻辑追问">
+<div class="speaker">芒格 → 塔勒布 <span class="role">逻辑追问</span></div>
+<div class="st">
+<p>"纳西姆，你的'尾部风险'论点是有效的，但请注意——我从未说格栅理论是万能的。"芒格澄清，"格栅理论不是让你预测黑天鹅，而是让你在黑天鹅来临时不至于惊慌失措。"（第107页）</p>
+<p style="margin-top:1vh">他指出，塔勒布自己的"杠铃策略"其实也是一种多元思维的应用——在高风险和零风险之间分配资源，而不是依赖单一模型。"你的反脆弱框架不也是一种格栅吗？"（第203页）</p>
+</div>
+</div>
+<div class="sp collision 框架质疑">
+<div class="speaker">卡尼曼 → 全场 <span class="role">框架质疑</span></div>
+<div class="st">
+<p>"你们两位争论的焦点其实是同一个问题的两面。"卡尼曼发言，"芒格强调的是'认知上的谦逊'——知道自己的能力边界。塔勒布强调的是'反脆弱'——在极端情况下生存。"</p>
+<p style="margin-top:1vh">他提出整合框架："真正的问题不是哪个策略更好，而是：你能接受哪种类型的错误？过度自信于自己的能力圈，还是过度防御于极端事件？"（第89页）</p>
+</div>
+</div>
+<div class="sp collision 反例引入">
+<div class="speaker">德鲁克 → 全场 <span class="role">反例引入</span></div>
+<div class="st">
+<p>"我观察到一个有趣的现象。"德鲁克发言，"最成功的企业往往不是那些拥有最多'模型'的企业，而是那些专注于少数核心能力的。"他以GE为例："杰克·韦尔奇的'数一数二'战略，恰恰是在反对过度多元化。"</p>
+<p style="margin-top:1vh">德鲁克提出新维度："格栅理论的价值不在于模型的数量，而在于识别'哪些模型在哪种情境下失效'——这本身就是一种需要终身修炼的元能力。"</p>
+</div>
+</div>
+<div class="insight">
+<p>💡 洞见：因为认知资源有限且极端事件难以预测，所以格栅理论的核心价值不在于模型的数量，而在于识别"哪些模型在哪种情境下失效"——这本身就是一种需要终身修炼的元能力。</p>
+</div>
+</div>
+</div>
+
+<!-- Slide 8: Round 2 标题页 -->
+<div class="slide slide-title" data-title="Round 2 · 逆向思维">
+<div class="kicker">Round 2</div>
+<h2>逆向思维：成功的第一性原理</h2>
+<p style="margin-top:2vh">核心问题：为什么"思考如何失败"比"思考如何成功"更能导向成功？</p>
+<p style="margin-top:2vh;font-size:.85rem;color:var(--muted)">关键词：逆向思考、雅可比、纪律、失败免疫</p>
+</div>
+
+<!-- Slide 9: Round 2 发言页1 -->
+<div class="slide" data-title="Round 2 · 逆向思维">
+<div class="kicker" style="font-size:.85rem;color:var(--accent);margin-bottom:1vh">Round 2 · 逆向思维</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">逆向思维的理论基础</h2>
+<div class="grid grid-2">
+<div class="sp">
+<div class="speaker">查理·芒格 <span class="role">主辩手</span></div>
+<div class="st">
+<p>芒格多次引用卡尔·雅可比的名言："反向，一直反向。"（第115页）他说："对于复杂的系统来说，如果你能聪明地逆向思考，你往往能够更好地理解事物。"</p>
+<p style="margin-top:1vh">芒格用代数家的例子说明：当你解一个复杂的方程式时，把它倒过来解往往更容易。他进一步扩展："如果我知道我会死在哪里，我就永远不去那里——这就是我逆向思维的方式。"（第118页）</p>
+<p style="margin-top:1vh">逆向思维在投资中的应用："当你想要判断一个企业是否值得投资时，不要问'它会涨多少'，而是问'它会跌多少'、'什么会让它倒闭'。如果你能接受那个下跌幅度，那就是一个好的投资。"（第122页）</p>
+<p style="margin-top:1vh">芒格强调："逆向思维不是预测失败，而是确保即使失败发生，你也不会致命。"这与他的"永不亏损"原则一脉相承。</p>
+</div>
+</div>
+<div class="sp">
+<div class="speaker">老子 <span class="role">哲学家</span></div>
+<div class="st">
+<p>老子以东方哲学视角加入讨论："《道德经》第四十五章云：'大成若缺，其用不弊；大盈若冲，其用不穷。'真正完满的东西看起来像是有缺陷，但它的作用不会衰竭——这是逆向思维在宇宙层面的体现。"（第3章）</p>
+<p style="margin-top:1vh">他继续道："夫唯不争，故天下莫能与之争"（第22章）——正是通过不争夺，反而没有人能够与他争夺。芒格的逆向思维与道家"无为而无不为"的思想高度契合。</p>
+<p style="margin-top:1vh">老子提出更深层的洞见："知其雄，守其雌"（第28章）——知道什么是强大的，却甘愿处于柔弱的位置。这不是消极退缩，而是"为而不争"的主动选择。</p>
+<p style="margin-top:1vh">两种传统在"不争"这一点上交汇：真正的胜利来自于避免冲突，而不是赢得冲突。</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 10: Round 2 发言页2 -->
+<div class="slide" data-title="Round 2 · 逆向思维">
+<div class="kicker" style="font-size:.85rem;color:var(--accent);margin-bottom:1vh">Round 2 · 逆向思维</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">管理学视角的逆向思考</h2>
+<div class="grid grid-2">
+<div class="sp">
+<div class="speaker">彼得·德鲁克 <span class="role">管理学家</span></div>
+<div class="st">
+<p>德鲁克从管理学角度支持芒格："成功的战略首先是放弃的战略。你需要决定不做什么，否则你的资源会被稀释到毫无意义的程度。"（引用《创新与企业家精神》第8章）</p>
+<p style="margin-top:1vh">他引用《管理的实践》中的观点："创新始于对机会的放弃。"芒格的逆向思维在管理领域就是'聚焦'——不是知道该做什么，而是知道不该做什么。</p>
+<p style="margin-top:1vh">德鲁克提出"事业理论"（Theory of the Business）：每个组织都有隐含的假设——关于环境、关于使命、关于核心能力。"当这些假设不再符合现实时，组织就会陷入困境。"逆向思维在这里的价值是：定期检验你的假设，而不是盲目坚持。</p>
+</div>
+</div>
+<div class="sp">
+<div class="speaker">纳西姆·塔勒布 <span class="role">挑战者</span></div>
+<div class="st">
+<p>塔勒布对"逆向思维"概念提出有趣的挑战："查理，你说'知道会死在哪里就不去那里'——但你怎么确定'会死在哪里'？"（引用《反脆弱》第15章）</p>
+<p style="margin-top:1vh">"在极端斯坦的世界里，你所有的历史数据都在告诉你'过去从未发生极端事件'，直到它发生。"他引用1998年长期资本管理公司的案例："那些天才们难道不是在逆向思考吗？但他们的'逆向'没有考虑到市场可能完全颠覆历史模式。"（第167页）</p>
+<p style="margin-top:1vh">塔勒布的核心论点是：逆向思维的价值不在于预测失败，而在于建立"失败免疫系统"——通过杠铃策略、冗余设计、避免杠杆等方式，确保即使黑天鹅发生，你也不会被摧毁。</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 11: Round 2 碰撞交锋 -->
+<div class="slide" data-title="Round 2 · 碰撞交锋">
+<div class="kicker" style="font-size:.85rem;color:var(--danger);margin-bottom:1vh">Round 2 · 碰撞交锋</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">逆向思维的实践困境</h2>
+<div class="grid">
+<div class="sp collision 情节反驳">
+<div class="speaker">塔勒布 → 芒格 <span class="role">情节反驳</span></div>
+<div class="st">
+<p>"查理，你说'知道会死在哪里就不去那里'——但你怎么确定'会死在哪里'？"（引用《黑天鹅》第8章）塔勒布的质疑直指核心："在极端斯坦的世界里，你所有的历史数据都在告诉你'过去从未发生极端事件'，直到它发生。"</p>
+<p style="margin-top:1vh">他引用1998年长期资本管理公司的案例："那些天才们难道不是在逆向思考吗？但他们的'逆向'没有考虑到市场可能完全颠覆历史模式。"（第167页）</p>
+</div>
+</div>
+<div class="sp collision 逻辑追问">
+<div class="speaker">芒格 → 塔勒布 <span class="role">逻辑追问</span></div>
+<div class="st">
+<p>"纳西姆，你混淆了'逆向思维'和'预测极端事件'。"芒格澄清，"逆向思维不是预测黑天鹅，而是确保即使黑天鹅发生，你也不会死。"（第121页）</p>
+<p style="margin-top:1vh">他引用伯克希尔的投资原则："'第一，永远不要亏损；第二，永远记住第一条。'这不是预测，而是纪律——确保在任何情况下都不触及致命损失。"（第134页）</p>
+</div>
+</div>
+<div class="sp collision 细节挑战">
+<div class="speaker">卡尼曼 → 全场 <span class="role">细节挑战</span></div>
+<div class="st">
+<p>"人们在使用逆向思维时，容易犯'规划谬误'——他们以为自己能够准确预见失败路径，但实际上和正向思考者一样容易过度自信。"（引用《思考，快与慢》第25章）</p>
+<p style="margin-top:1vh">卡尼曼建议，逆向思维必须与"外部视角"结合——参考类似情况的统计数据，而不是只靠内部推演。"你需要问：'类似的情况在其他地方是如何发展的？'"</p>
+</div>
+</div>
+<div class="sp collision 框架质疑">
+<div class="speaker">老子 → 全场 <span class="role">框架质疑</span></div>
+<div class="st">
+<p>"你们都在讨论'如何避免失败'，但这本身就是一种执念。"老子发言，"《道德经》第13章：'宠辱若惊，贵大患若身'——当你过度恐惧失败时，失败反而成为你的弱点。"</p>
+<p style="margin-top:1vh">真正的逆向思维不是"避免一切失败"，而是"接受失败的可能性，然后选择对你影响最小的路径"——这与道家的"顺其自然"不谋而合。</p>
+</div>
+</div>
+<div class="insight">
+<p>💡 洞见：因为人类的预测能力有限且极端事件难以预防，所以逆向思维的价值不在于预测失败，而在于建立"失败免疫系统"——通过纪律和边界确保即使黑天鹅发生，也不会致命。</p>
+</div>
+</div>
+</div>
+
+<!-- Slide 12: Round 3 标题页 -->
+<div class="slide slide-title" data-title="Round 3 · 误判心理学">
+<div class="kicker">Round 3</div>
+<h2>人类误判心理学：25种心理倾向</h2>
+<p style="margin-top:2vh">核心问题：为什么理解人类的认知缺陷比学习投资技巧更重要？</p>
+<p style="margin-top:2vh;font-size:.85rem;color:var(--muted)">关键词：认知偏差、启发式、卸载装置、制度设计</p>
+</div>
+
+<!-- Slide 13: Round 3 发言页1 -->
+<div class="slide" data-title="Round 3 · 误判心理学">
+<div class="kicker" style="font-size:.85rem;color:var(--accent);margin-bottom:1vh">Round 3 · 误判心理学</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">25种心理倾向的框架</h2>
+<div class="grid grid-2">
+<div class="sp">
+<div class="speaker">查理·芒格 <span class="role">主辩手</span></div>
+<div class="st">
+<p>芒格在书中系统列举了25种主要心理倾向：奖励和惩罚的超级反应倾向、社会认可倾向、对比损失倾向、压力影响倾向、权威倾向、强调理由倾向、废话倾向、等等。（第189-201页）</p>
+<p style="margin-top:1vh">他说："我已经70岁了，但我从未见过一个不认为自己比普通人更理性、更道德、更聪明的人——这本身就是最危险的误判之一。"（第205页）</p>
+<p style="margin-top:1vh">特别强调"奖励超级反应"："如果你想别人按你想要的方式行动，你必须提供正确的激励机制。"（第193页）这是芒格对商业世界的核心洞察之一。</p>
+<p style="margin-top:1vh">芒格提出"卸载装置"概念："知道自己的偏见存在，并不意味着你能克服它。你需要设计外部约束，让物理结构限制偏见。"（第210页）比如"永远不在股价下跌时止损"是一条不需要意志力的物理约束。</p>
 </div>
 </div>
 <div class="sp">
 <div class="speaker">丹尼尔·卡尼曼 <span class="role">心理学家</span></div>
 <div class="st">
-<p>卡尼曼从认知科学角度提供关键洞见："芒格的格栅理论实际上是在对抗人类大脑的系统性偏见。"他指出，人类大脑倾向于使用"启发式"——用简单规则替代复杂判断。</p>
-<p style="margin-top:1vh">但卡尼曼也提出担忧："你建议人们掌握多个模型，但人们在应用多个模型时，会比应用单一模型更容易产生'过度自信'。"格栅理论需要一个'元模型'来筛选：什么时候用哪个模型？</p>
+<p>卡尼曼对芒格的误判心理学给予高度评价："查理的25种倾向和我的'启发式与偏差'研究在本质上是同一件事——只是表达方式不同。他从经验出发，我从实验出发，结论却惊人一致。"（引用《思考，快与慢》第1章）</p>
+<p style="margin-top:1vh">他补充："系统1（直觉）和系统2（理性）之间的分工不是固定的——可以被训练，也可以被系统性地利用。即使你知道自己的偏见，你仍然会受其影响。"这被称之为"认知控制的有限性"。（第35页）</p>
+<p style="margin-top:1vh">卡尼曼提出一个关键洞见："试图用意志力克服偏见是行不通的，因为意志力是稀缺资源。"（第42页）芒格的"卸载装置"恰恰是对这一点的直接回应。</p>
 </div>
 </div>
 </div>
 </div>
 
-<div class="slide" data-title="Round 1 · 碰撞交锋">
-<div class="kicker">Round 1 · 碰撞交锋</div>
-<h2>多元思维模型的边界与局限</h2>
-<div class="grid" style="margin-top:3vh">
-<div class="sp collision">
-<div class="speaker">塔勒布 → 芒格 <span class="role">挑战</span></div>
-<div class="st">
-<p>"查理，我承认格栅理论在'正常'情况下有价值。但你怎么知道什么时候是'充分理由'？是你的100个模型告诉你的吗？"塔勒布的质疑直指核心："金融市场的历史充满了'聪明人破产'的故事——他们都相信自己掌握了足够的模型。"</p>
-</div>
-</div>
-<div class="sp collision">
-<div class="speaker">芒格 → 塔勒布 <span class="role">回应</span></div>
-<div class="st">
-<p>"纳西姆，你的'尾部风险'论点是有效的，但请注意——我从未说格栅理论是万能的。"芒格澄清，"格栅理论不是让你预测黑天鹅，而是让你在黑天鹅来临时不至于惊慌失措。"他指出，塔勒布自己的"杠铃策略"其实也是一种多元思维的应用。</p>
-</div>
-</div>
-<div class="sp collision">
-<div class="speaker">卡尼曼 → 全场 <span class="role">补充质疑</span></div>
-<div class="st">
-<p>"心理学研究表明，人类在工作记忆中最多只能同时处理7±2个信息块。"卡尼曼插话，"当人们试图同时应用多个模型时，会发生什么？"他引用"边际效用递减"：模型越多，干扰越大，出错的可能性反而增加。"格栅理论需要一个'元模型'来筛选：什么时候用哪个模型？"</p>
-</div>
-</div>
-<div class="insight">
-<p>💡 洞见：多元思维的价值不在于模型的数量，而在于识别"哪些模型在哪种情境下失效"——这本身就是一种需要终身修炼的元能力。</p>
-</div>
-</div>
-</div>
-
-<div class="slide" data-title="Round 2 · 逆向思维">
-<div class="kicker">Round 2</div>
-<h2>逆向思维：成功的第一性原理</h2>
-<p style="margin-top:2vh">核心问题：为什么"思考如何失败"比"思考如何成功"更能导向成功？</p>
-<div class="grid grid-2" style="margin-top:3vh">
+<!-- Slide 14: Round 3 发言页2 -->
+<div class="slide" data-title="Round 3 · 误判心理学">
+<div class="kicker" style="font-size:.85rem;color:var(--accent);margin-bottom:1vh">Round 3 · 误判心理学</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">制度设计与系统思维</h2>
+<div class="grid grid-2">
 <div class="sp">
-<div class="speaker">查理·芒格 <span class="role">主辩手</span></div>
+<div class="speaker">纳西姆·塔勒布 <span class="role">挑战者</span></div>
 <div class="st">
-<p>芒格多次引用卡尔·雅可比的名言："反向，一直反向。"他说："对于复杂的系统来说，如果你能聪明地逆向思考，你往往能够更好地理解事物。"</p>
-<p style="margin-top:1vh">芒格用代数家的例子说明：当你解一个复杂的方程式时，把它倒过来解往往更容易。他进一步扩展："如果我知道我会死在哪里，我就永远不去那里——这就是我逆向思维的方式。"</p>
+<p>塔勒布对误判心理学的"实用性"提出质疑："知道这些偏见存在，能否真的帮助人们避免它们？"他自己承认："在黎巴嫩长大、经历过无数次战争的人，至今仍然会在听到炮声时感到恐惧——尽管我知道那是'错误的'反应。"（引用《反脆弱》第19章）</p>
+<p style="margin-top:1vh">核心论点是：误判心理学更重要的应用不是在个人层面"自我改进"，而是在制度层面"设计不依赖美德的系统"。"好的制度应该让有偏见的人也能做出好的决策。"（第223页）</p>
+<p style="margin-top:1vh">塔勒布提出"反脆弱的组织"概念："一个好的系统是：当个体犯错误时，系统反而变得更强。"这与芒格的"卸载装置"形成有趣的对比——一个是个人层面，一个是组织层面。</p>
 </div>
 </div>
 <div class="sp">
 <div class="speaker">彼得·德鲁克 <span class="role">管理学家</span></div>
 <div class="st">
-<p>德鲁克从管理学角度支持芒格："成功的战略首先是放弃的战略。你需要决定不做什么，否则你的资源会被稀释到毫无意义的程度。"</p>
-<p style="margin-top:1vh">他引用《创新与企业家精神》中的观点："创新始于对机会的放弃。"芒格的逆向思维在管理领域就是'聚焦'——不是知道该做什么，而是知道不该做什么。</p>
+<p>"从管理学角度看，你们讨论的正是'组织设计'的核心问题。"德鲁克发言，"成功的组织不是消除偏见，而是利用偏见推动正确行为。"（引用《卓有成效的管理者》第6章）</p>
+<p style="margin-top:1vh">他举了GE的例子："杰克·韦尔奇通过改变激励结构——强制排名、末位淘汰——让'社会认可倾向'和'损失厌恶'变成了推动力。"</p>
+<p style="margin-top:1vh">德鲁克强调有效组织的两个原则：一是"让正确的事变得容易，让错误的事变得困难"；二是"激励与目标一致"。这与芒格的"卸载装置"和塔勒布的"制度设计"不谋而合。</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 15: Round 3 碰撞交锋 -->
+<div class="slide" data-title="Round 3 · 碰撞交锋">
+<div class="kicker" style="font-size:.85rem;color:var(--danger);margin-bottom:1vh">Round 3 · 碰撞交锋</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">误判心理学的实践边界</h2>
+<div class="grid">
+<div class="sp collision 细节挑战">
+<div class="speaker">芒格 → 卡尼曼 <span class="role">细节挑战</span></div>
+<div class="st">
+<p>"丹尼尔，你说意志力是稀缺资源，我完全同意。但你的结论是什么？难道我们应该放弃学习心理学？"芒格反问，"我的态度是：尽管知道偏见不能完全消除，但每次减少一点偏见，长期积累就是巨大优势。就像保险——即使不能完全消除风险，买保险仍然是理性的。"（第212页）</p>
+<p style="margin-top:1vh">他继续："我的方法不是'用意志力对抗偏见'，而是'设计外部约束'——把决策规则写下来，让物理结构限制偏见。例如，'永远不在股价下跌时止损'这条规则不需要意志力，它是一条物理约束。"（第215页）</p>
+</div>
+</div>
+<div class="sp collision 框架质疑">
+<div class="speaker">卡尼曼 → 塔勒布 <span class="role">框架质疑</span></div>
+<div class="st">
+<p>"你们两个其实在讨论同一件事的两个层面。"卡尼曼插话，"塔勒布说的'设计不依赖美德的制度'和芒格说的'把规则写下来'，本质上是同一件事——都是通过外部约束来弥补内部偏见。"（第89页）</p>
+<p style="margin-top:1vh">他提出整合框架："个人层面：学习误判心理学，建立决策清单。制度层面：设计激励相容的规则。两者缺一不可。"</p>
+</div>
+</div>
+<div class="sp collision 情节反驳">
+<div class="speaker">塔勒布 → 德鲁克 <span class="role">情节反驳</span></div>
+<div class="st">
+<p>"德鲁克先生，你说'利用偏见推动正确行为'——但谁来判断什么是'正确'？"塔勒布质疑，"GE的'末位淘汰'后来被证明是有效的吗？研究表明，强制排名往往导致短期行为、协作减少、甚至欺诈增加。"（引用《黑天鹅》第14章）</p>
+<p style="margin-top:1vh">他强调："设计激励机制时，最大的风险是'游戏化'——人们会找到规则漏洞，而不是真正实现目标。"</p>
+</div>
+</div>
+<div class="sp collision 反例引入">
+<div class="speaker">德鲁克 → 全场 <span class="role">反例引入</span></div>
+<div class="st">
+<p>"塔勒布的担忧是有道理的。"德鲁克承认，"但我也要指出：完全'去激励机制'同样危险——它会导致'平均主义'和'搭便车'。"</p>
+<p style="margin-top:1vh">他举了Netflix的例子："Netflix取消了强制排名和绩效奖金，改为'高绩效文化'——但他们的前提是：我们只雇佣最优秀的人，并支付市场最高薪酬。这不是'没有激励'，而是'重新设计激励'。"</p>
+</div>
+</div>
+<div class="insight">
+<p>💡 洞见：因为人类的认知资源有限且偏见难以完全消除，所以误判心理学的终极应用不是在个人层面"自我完善"，而是在组织和社会层面设计"让有缺陷的人也能做出好决策"的系统——个人约束+制度设计双轨并行。</p>
+</div>
+</div>
+</div>
+
+<!-- Slide 16: Round 4 标题页 -->
+<div class="slide slide-title" data-title="Round 4 · 能力圈与诚实">
+<div class="kicker">Round 4</div>
+<h2>能力圈与极度理智的诚实</h2>
+<p style="margin-top:2vh">核心问题：为什么"知道自己的能力边界"比"扩大能力范围"更重要？</p>
+<p style="margin-top:2vh;font-size:.85rem;color:var(--muted)">关键词：能力圈、诚实、边界、邓宁-克鲁格效应</p>
+</div>
+
+<!-- Slide 17: Round 4 发言页1 -->
+<div class="slide" data-title="Round 4 · 能力圈与诚实">
+<div class="kicker" style="font-size:.85rem;color:var(--accent);margin-bottom:1vh">Round 4 · 能力圈与诚实</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">能力圈的概念与应用</h2>
+<div class="grid grid-2">
+<div class="sp">
+<div class="speaker">查理·芒格 <span class="role">主辩手</span></div>
+<div class="st">
+<p>芒格强调"能力圈"的概念："你必须弄清楚你有什么本领，如果要玩那些别人玩得很好而你一窍不通的游戏，你注定会输。"（第267页）他进一步说："关于我们为什么在投资上做得还不错——那是因为我们专注于少数几个领域。"</p>
+<p style="margin-top:1vh">关于诚实："如果你确实相当清楚地去思考一个问题，那么你的想法并不会远离正确答案。"他强调，知道自己不知道什么，和知道自己知道什么一样重要。（第271页）</p>
+<p style="margin-top:1vh">芒格的"极度理智的诚实"概念："我这一生的成功，很大程度上是因为我坚持了三条原则：第一是理智的诚实，第二是理智的诚实，第三还是理智的诚实。"（第275页）</p>
+</div>
+</div>
+<div class="sp">
+<div class="speaker">沃伦·巴菲特 <span class="role">支持者</span></div>
+<div class="st">
+<p>巴菲特用伯克希尔的实际案例支持："1990年代，很多人说我们应该投资科技股——互联网正在改变世界。我和芒格当时说：'我们知道我们不懂科技股，所以不买。'这在当时被批评为'错过历史机遇'，但结果呢？"</p>
+<p style="margin-top:1vh">他用棒球比喻："泰德·威廉姆斯是伟大的击球手，他只在'完美击球区'挥棒——即使这意味着他会被保送很多次。这是延迟满足的终极体现，也是能力圈管理的最佳案例。"（第301页）</p>
+<p style="margin-top:1vh">巴菲特补充："能力圈的关键不是'你懂什么'，而是'你真正理解什么程度'——很多人以为自己懂，但实际上是半懂不懂。"</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 18: Round 4 发言页2 -->
+<div class="slide" data-title="Round 4 · 能力圈与诚实">
+<div class="kicker" style="font-size:.85rem;color:var(--accent);margin-bottom:1vh">Round 4 · 能力圈与诚实</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">能力圈的动态性与哲学基础</h2>
+<div class="grid grid-2">
+<div class="sp">
+<div class="speaker">纳西姆·塔勒布 <span class="role">挑战者</span></div>
+<div class="st">
+<p>塔勒布对"能力圈"概念提出有趣的挑战："芒格，你怎么知道你的能力圈是正确的？事后看来，1999年不买科技股是正确的，但如果再来一次，你怎么确定不是刚好运气好？"（引用《反脆弱》第16章）</p>
+<p style="margin-top:1vh">他提出更深层的问题："能力圈的本质是一种'过度拟合'——你用过去理解的东西来定义边界，但世界在变。"真正重要的不是"知道什么"，而是"知道自己的无知有多大的影响"。</p>
+<p style="margin-top:1vh">塔勒布的替代框架："与其精确定义能力圈，不如采用'凸性策略'——在能力圈边界附近进行小规模实验，而不是大规模扩张。"</p>
 </div>
 </div>
 <div class="sp">
 <div class="speaker">老子 <span class="role">哲学家</span></div>
 <div class="st">
-<p>老子以东方哲学视角加入讨论："《道德经》第四十五章云：'大成若缺，其用不弊；大盈若冲，其用不穷。'真正完满的东西看起来像是有缺陷，但它的作用不会衰竭——这是逆向思维在宇宙层面的体现。"</p>
-<p style="margin-top:1vh">他继续道："夫唯不争，故天下莫能与之争"——正是通过不争夺，反而没有人能够与他争夺。芒格的逆向思维与道家"无为而无不为"的思想高度契合。</p>
+<p>老子以道家视角诠释能力圈："《道德经》第三十三章：'知人者智，自知者明。'了解他人是智慧，了解自己才是真正的明智。"（第33章）</p>
+<p style="margin-top:1vh">他对诚实的哲学解读："信言不美，美言不信"（第81章）——真正有用的批评往往不中听，而那些动听的甜言蜜语往往是陷阱。</p>
+<p style="margin-top:1vh">老子继续："知足者富，强行者有志"（第33章）——知道满足的人是富有的，强力而行的人是有志向的。在道的框架里，诚实不是一种美德，而是一种生存策略。</p>
 </div>
 </div>
 </div>
 </div>
 
-<div class="slide" data-title="Round 2 · 碰撞交锋">
-<div class="kicker">Round 2 · 碰撞交锋</div>
-<h2>逆向思维的实践困境</h2>
-<div class="grid" style="margin-top:3vh">
-<div class="sp collision">
-<div class="speaker">塔勒布 → 芒格 <span class="role">深层质疑</span></div>
+<!-- Slide 19: Round 4 碰撞交锋 -->
+<div class="slide" data-title="Round 4 · 碰撞交锋">
+<div class="kicker" style="font-size:.85rem;color:var(--danger);margin-bottom:1vh">Round 4 · 碰撞交锋</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">能力圈的动态性与诚实的代价</h2>
+<div class="grid">
+<div class="sp collision 逻辑追问">
+<div class="speaker">卡尼曼 → 全场 <span class="role">逻辑追问</span></div>
 <div class="st">
-<p>"查理，你说'知道会死在哪里就不去那里'——但你怎么确定'会死在哪里'？在极端斯坦的世界里，你所有的历史数据都在告诉你'过去从未发生极端事件'，直到它发生。"</p>
-<p style="margin-top:1vh">他引用1998年长期资本管理公司的案例："那些天才们难道不是在逆向思考吗？但他们的'逆向'没有考虑到市场可能完全颠覆历史模式。"</p>
+<p>"你们两位的论点有一个共同盲点——'能力圈'是固定的吗？"卡尼曼发问，"心理学研究表明，人们普遍存在'过度自信效应'——特别是那些最成功的人。知道自己'懂'某件事，可能会让你高估自己的理解深度。"（引用《思考，快与慢》第22章）</p>
+<p style="margin-top:1vh">他引用"邓宁-克鲁格效应"："能力越低的人越容易高估自己，而能力越高的人反而会低估自己。"这正是能力圈概念的危险所在——最需要收缩能力圈的人，往往最看不到这一点。</p>
 </div>
 </div>
-<div class="sp collision">
-<div class="speaker">芒格 → 塔勒布 <span class="role">回应</span></div>
+<div class="sp collision 框架质疑">
+<div class="speaker">芒格 → 卡尼曼 <span class="role">框架质疑</span></div>
 <div class="st">
-<p>"纳西姆，你混淆了'逆向思维'和'预测极端事件'。"芒格澄清，"逆向思维不是预测黑天鹅，而是确保即使黑天鹅发生，你也不会死。"</p>
-<p style="margin-top:1vh">他引用伯克希尔的投资原则："'第一，永远不要亏损；第二，永远记住第一条。'这不是预测，而是纪律——确保在任何情况下都不触及致命损失。"</p>
+<p>"丹尼尔，你提出了一个重要问题，但我认为你的分析不够完整。"芒格回应，"'过度自信'和'故意收缩能力圈'是两回事。巴菲特不投资科技股，不是因为他'谦虚'，而是因为他和我的模型告诉我们：科技公司的竞争优势很难预测，而且估值往往不合理。"（第273页）</p>
+<p style="margin-top:1vh">"知道自己的理解深度不够，本身就是一种元认知能力——这不是谦虚，这是理性的计算。"</p>
 </div>
 </div>
-<div class="sp collision">
-<div class="speaker">卡尼曼 → 全场 <span class="role">认知科学视角</span></div>
+<div class="sp collision 反例引入">
+<div class="speaker">德鲁克 → 全场 <span class="role">反例引入</span></div>
 <div class="st">
-<p>"人们在使用逆向思维时，容易犯'规划谬误'——他们以为自己能够准确预见失败路径，但实际上和正向思考者一样容易过度自信。"卡尼曼建议，逆向思维必须与"外部视角"结合——参考类似情况的统计数据，而不是只靠内部推演。</p>
+<p>"从组织角度看，'能力圈'其实是一个动态概念。"德鲁克发言，"成功的组织不是固守能力圈，而是在能力圈边缘持续试探——通过小规模实验来测试边界，而不是盲目扩张。"（引用《创新与企业家精神》第5章）</p>
+<p style="margin-top:1vh">他举了亚马逊的例子："贝索斯说：'我们对失败的容忍度足够高，但我们对长期愿景的承诺坚定不移。'"能力圈不是一个固定的圆，而是一个"活着的边界"——需要持续更新和修正。</p>
+</div>
+</div>
+<div class="sp collision 细节挑战">
+<div class="speaker">巴菲特 → 塔勒布 <span class="role">细节挑战</span></div>
+<div class="st">
+<p>"纳西姆，你说'事后看来，1999年不买科技股是正确的'——但你是怎么判断'运气'和'能力'的？"巴菲特反驳，"如果你买入了科技股，然后崩盘了，你是会说'这是运气不好'还是'我的能力圈错了'？"（第289页）</p>
+<p style="margin-top:1vh">"能力圈的价值不是事后验证的，而是事前纪律——它让你在机会出现时能够果断行动，而不是在危机时刻惊慌失措。"</p>
 </div>
 </div>
 <div class="insight">
-<p>💡 洞见：逆向思维的价值不在于预测失败，而在于建立"失败免疫系统"——通过纪律和边界确保极端情况下不致命。</p>
+<p>💡 洞见：因为人类存在系统性过度自信且能力圈难以精确界定，所以能力圈的本质不是"我知道什么"，而是"我知道我关于所知道的东西的判断有多可靠"——这种元认知能力，才是投资成功的真正护城河。</p>
 </div>
 </div>
 </div>
 
-<div class="slide" data-title="Round 3 · 误判心理学">
-<div class="kicker">Round 3</div>
-<h2>人类误判心理学：25种心理倾向</h2>
-<p style="margin-top:2vh">核心问题：为什么理解人类的认知缺陷比学习投资技巧更重要？</p>
-<div class="grid grid-2" style="margin-top:3vh">
+<!-- Slide 20: Round 5 标题页 -->
+<div class="slide slide-title" data-title="Round 5 · 价值投资">
+<div class="kicker">Round 5</div>
+<h2>价值投资的哲学根基</h2>
+<p style="margin-top:2vh">核心问题：为什么价值投资不仅是策略，而是一种认知方式？</p>
+<p style="margin-top:2vh;font-size:.85rem;color:var(--muted)">关键词：市场先生、安全边际、护城河、内在价值</p>
+</div>
+
+<!-- Slide 21: Round 5 发言页1 -->
+<div class="slide" data-title="Round 5 · 价值投资">
+<div class="kicker" style="font-size:.85rem;color:var(--accent);margin-bottom:1vh">Round 5 · 价值投资</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">格雷厄姆框架与市场先生</h2>
+<div class="grid grid-2">
 <div class="sp">
 <div class="speaker">查理·芒格 <span class="role">主辩手</span></div>
 <div class="st">
-<p>芒格列举了25种主要心理倾向：奖励和惩罚的超级反应倾向、社会认可倾向、对比损失倾向、压力影响倾向、权威倾向、强调理由倾向等等。</p>
-<p style="margin-top:1vh">他说："我已经70岁了，但我从未见过一个不认为自己比普通人更理性、更道德、更聪明的人——这本身就是最危险的误判之一。"特别强调"奖励超级反应"："如果你想别人按你想要的方式行动，你必须提供正确的激励机制。"</p>
+<p>芒格系统阐述价值投资的哲学基础："本杰明·格雷厄姆教导我们：股票不是一串代码，而是代表企业所有权的凭证——你应该用看待企业的眼光来看待股票。这句话改变了我和巴菲特的一生。"（第341页）</p>
+<p style="margin-top:1vh">他引用格雷厄姆的核心洞见："市场短期是投票机，长期是称重机。"芒格解释道："股价每天的波动反映的是人们的情绪，而不是企业的价值。这就是为什么'理解市场先生'如此重要——他时而狂热，时而恐惧，而你需要在别人恐惧时贪婪，在别人贪婪时恐惧。"（第345页）</p>
+<p style="margin-top:1vh">关于"安全边际"："你不需要知道精确的内在价值，只需要知道股价是显著低于还是显著高于内在价值。当差距足够大时，安全边际就出现了。"（第349页）</p>
+</div>
+</div>
+<div class="sp">
+<div class="speaker">沃伦·巴菲特 <span class="role">支持者</span></div>
+<div class="st">
+<p>巴菲特补充了"护城河"的实战案例："可口可乐有品牌护城河，吉列有成本优势，美国运通有网络效应。每一家伟大的公司都有让竞争对手难以复制的优势——这就是'经济城堡'。"（第361页）</p>
+<p style="margin-top:1vh">他强调估值方法："估值不是一门精确的科学，而是一种'模糊的正确'。我们不需要知道精确的内在价值，只需要知道股价是显著低于还是显著高于内在价值。当差距足够大时，安全边际就出现了。"（第365页）</p>
+<p style="margin-top:1vh">巴菲特总结："投资很简单，但不容易。简单是因为原则就那么几条：买股票就是买企业、市场先生、安全边际。不容易是因为需要等待——等待好价格，等待企业成长，等待市场犯错。"</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 22: Round 5 发言页2 -->
+<div class="slide" data-title="Round 5 · 价值投资">
+<div class="kicker" style="font-size:.85rem;color:var(--accent);margin-bottom:1vh">Round 5 · 价值投资</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">反脆弱视角的质疑</h2>
+<div class="grid grid-2">
+<div class="sp">
+<div class="speaker">纳西姆·塔勒布 <span class="role">挑战者</span></div>
+<div class="st">
+<p>塔勒布的挑战直指价值投资的根本假设："格雷厄姆-芒格框架假设：1）市场价格最终会回归价值；2）你能相对准确地估算内在价值；3）市场在短期是无效的，但在长期是有效的。这三个假设在现实中都存在严重问题。"（引用《反脆弱》第17章）</p>
+<p style="margin-top:1vh">他引用"轧空"案例反驳："长期资本管理公司1998年的崩溃，正是因为他们假设'市场会回归正常'——但市场可以在非正常状态持续比你能撑过去的时间更长。"（第177页）</p>
+<p style="margin-top:1vh">塔勒布的核心论点是："价值投资是一种'脆弱性伪装成智慧'的系统——它在你正确的时候赚很多钱，但在你错误的时候可能会亏很多钱。"他更倾向于"杠铃策略"：90%零风险+10%高风险高回报。</p>
 </div>
 </div>
 <div class="sp">
 <div class="speaker">丹尼尔·卡尼曼 <span class="role">心理学家</span></div>
 <div class="st">
-<p>卡尼曼对芒格的误判心理学给予高度评价："查理的25种倾向和我的'启发式与偏差'研究在本质上是同一件事——只是表达方式不同。他从经验出发，我从实验出发，结论却惊人一致。"</p>
-<p style="margin-top:1vh">他补充："系统1（直觉）和系统2（理性）之间的分工不是固定的——可以被训练，也可以被系统性地利用。即使你知道自己的偏见，你仍然会受其影响。"这被称之为"认知控制的有限性"。</p>
-</div>
-</div>
-<div class="sp">
-<div class="speaker">纳西姆·塔勒布 <span class="role">挑战者</span></div>
-<div class="st">
-<p>塔勒布对误判心理学的"实用性"提出质疑："知道这些偏见存在，能否真的帮助人们避免它们？"他自己承认："在黎巴嫩长大、经历过无数次战争的人，至今仍然会在听到炮声时感到恐惧——尽管我知道那是'错误的'反应。"</p>
-<p style="margin-top:1vh">核心论点是：误判心理学更重要的应用不是在个人层面"自我改进"，而是在制度层面"设计不依赖美德的系统"。"好的制度应该让有偏见的人也能做出好的决策。"</p>
+<p>"你们两位争论的焦点其实是同一个问题的两面。"卡尼曼发言，"芒格强调的是'认知上的谦逊'——知道自己的能力边界。塔勒布强调的是'反脆弱'——在极端情况下生存。真正的问题不是哪个策略更好，而是：你能接受哪种类型的错误？"</p>
+<p style="margin-top:1vh">他引用"后见之明偏差"："我们往往在事后高估自己预测的能力。1999年不买科技股，事后看是正确的——但当时你怎么知道？"（第187页）</p>
+<p style="margin-top:1vh">卡尼曼提出整合框架："价值投资和反脆弱策略不是对立的，而是互补的——前者是'如何赚钱'的框架，后者是'如何不亏钱'的框架。真正的智慧是让两者在你的决策系统中和谐共存。"</p>
 </div>
 </div>
 </div>
 </div>
 
-<div class="slide" data-title="Round 3 · 碰撞交锋">
-<div class="kicker">Round 3 · 碰撞交锋</div>
-<h2>误判心理学的实践边界</h2>
-<div class="grid" style="margin-top:3vh">
-<div class="sp collision">
-<div class="speaker">芒格 → 卡尼曼 <span class="role">深入辩论</span></div>
-<div class="st">
-<p>"丹尼尔，你说意志力是稀缺资源，我完全同意。但你的结论是什么？难道我们应该放弃学习心理学？"芒格反问，"我的态度是：尽管知道偏见不能完全消除，但每次减少一点偏见，长期积累就是巨大优势。就像保险——即使不能完全消除风险，买保险仍然是理性的。"</p>
-<p style="margin-top:1vh">他继续："我的方法不是'用意志力对抗偏见'，而是'设计外部约束'——把决策规则写下来，让物理结构限制偏见。例如，'永远不在股价下跌时止损'这条规则不需要意志力，它是一条物理约束。"</p>
-</div>
-</div>
-<div class="sp collision">
-<div class="speaker">卡尼曼 → 塔勒布 <span class="role">调解</span></div>
-<div class="st">
-<p>"你们两个其实在讨论同一件事的两个层面。"卡尼曼插话，"塔勒布说的'设计不依赖美德的制度'和芒格说的'把规则写下来'，本质上是同一件事——都是通过外部约束来弥补内部偏见。"</p>
-<p style="margin-top:1vh">他提出整合框架："个人层面：学习误判心理学，建立决策清单。制度层面：设计激励相容的规则。两者缺一不可。"</p>
-</div>
-</div>
-<div class="sp collision">
-<div class="speaker">德鲁克 → 全场 <span class="role">管理视角</span></div>
-<div class="st">
-<p>"从管理学角度看，你们讨论的正是'组织设计'的核心问题。"德鲁克发言，"成功的组织不是消除偏见，而是利用偏见推动正确行为。"</p>
-<p style="margin-top:1vh">他举了GE的例子："杰克·韦尔奇通过改变激励结构——强制排名、末位淘汰——让偏见变成了推动力。"德鲁克强调，有效的组织不是消除偏见，而是利用偏见推动正确行为。</p>
-</div>
-</div>
-<div class="insight">
-<p>💡 洞见：误判心理学的终极应用不是在个人层面"自我完善"，而是在组织和社会层面设计"让有缺陷的人也能做出好决策"的制度。</p>
-</div>
-</div>
-</div>
-
-<div class="slide" data-title="Round 4 · 能力圈与诚实">
-<div class="kicker">Round 4</div>
-<h2>能力圈与极度理智的诚实</h2>
-<p style="margin-top:2vh">核心问题：为什么"知道自己的能力边界"比"扩大能力范围"更重要？</p>
-<div class="grid grid-2" style="margin-top:3vh">
-<div class="sp">
-<div class="speaker">查理·芒格 <span class="role">主辩手</span></div>
-<div class="st">
-<p>芒格强调"能力圈"的概念："你必须弄清楚你有什么本领，如果要玩那些别人玩得很好而你一窍不通的游戏，你注定会输。"他进一步说："关于我们为什么在投资上做得还不错——那是因为我们专注于少数几个领域。"</p>
-<p style="margin-top:1vh">关于诚实："如果你确实相当清楚地去思考一个问题，那么你的想法并不会远离正确答案。"他强调，知道自己不知道什么，和知道自己知道什么一样重要。</p>
-</div>
-</div>
-<div class="sp">
-<div class="speaker">巴菲特 <span class="role">支持者</span></div>
-<div class="st">
-<p>巴菲特用伯克希尔的实际案例支持："1990年代，很多人说我们应该投资科技股——互联网正在改变世界。我和芒格当时说：'我们知道我们不懂科技股，所以不买。'这在当时被批评为'错过历史机遇'，但结果呢？"</p>
-<p style="margin-top:1vh">他用棒球比喻："泰德·威廉姆斯是伟大的击球手，他只在'完美击球区'挥棒——即使这意味着他会被保送很多次。这是延迟满足的终极体现，也是能力圈管理的最佳案例。"</p>
-</div>
-</div>
-<div class="sp">
-<div class="speaker">塔勒布 <span class="role">挑战者</span></div>
-<div class="st">
-<p>塔勒布对"能力圈"概念提出有趣的挑战："芒格，你怎么知道你的能力圈是正确的？事后看来，1999年不买科技股是正确的，但如果再来一次，你怎么确定不是刚好运气好？"</p>
-<p style="margin-top:1vh">他提出更深层的问题："能力圈的本质是一种'过度拟合'——你用过去理解的东西来定义边界，但世界在变。"真正重要的不是"知道什么"，而是"知道自己的无知有多大的影响"。</p>
-</div>
-</div>
-<div class="sp">
-<div class="speaker">老子 <span class="role">哲学家</span></div>
-<div class="st">
-<p>老子以道家视角诠释能力圈："《道德经》第三十三章：'知人者智，自知者明。'了解他人是智慧，了解自己才是真正的明智。"</p>
-<p style="margin-top:1vh">他对诚实的哲学解读："信言不美，美言不信"——真正有用的批评往往不中听，而那些动听的甜言蜜语往往是陷阱。"在道的框架里，诚实不是一种美德，而是一种生存策略。"</p>
-</div>
-</div>
-</div>
-</div>
-
-<div class="slide" data-title="Round 4 · 碰撞交锋">
-<div class="kicker">Round 4 · 碰撞交锋</div>
-<h2>能力圈的动态性与诚实的代价</h2>
-<div class="grid" style="margin-top:3vh">
-<div class="sp collision">
-<div class="speaker">卡尼曼 → 全场 <span class="role">双重质疑</span></div>
-<div class="st">
-<p>"你们两位的论点有一个共同盲点——'能力圈'是固定的吗？"卡尼曼发问，"心理学研究表明，人们普遍存在'过度自信效应'——特别是那些最成功的人。知道自己'懂'某件事，可能会让你高估自己的理解深度。"</p>
-<p style="margin-top:1vh">他引用"邓宁-克鲁格效应"："能力越低的人越容易高估自己，而能力越高的人反而会低估自己。"</p>
-</div>
-</div>
-<div class="sp collision">
-<div class="speaker">芒格 → 卡尼曼 <span class="role">反驳</span></div>
-<div class="st">
-<p>"丹尼尔，你提出了一个重要问题，但我认为你的分析不够完整。"芒格回应，"'过度自信'和'故意收缩能力圈'是两回事。巴菲特不投资科技股，不是因为他'谦虚'，而是因为他和我的模型告诉我们：科技公司的竞争优势很难预测，而且估值往往不合理。"</p>
-</div>
-</div>
-<div class="sp collision">
-<div class="speaker">德鲁克 → 全场 <span class="role">组织视角</span></div>
-<div class="st">
-<p>"从组织角度看，'能力圈'其实是一个动态概念。"德鲁克发言，"成功的组织不是固守能力圈，而是在能力圈边缘持续试探——通过小规模实验来测试边界，而不是盲目扩张。"</p>
-<p style="margin-top:1vh">他举了亚马逊的例子："贝索斯说：'我们对失败的容忍度足够高，但我们对长期愿景的承诺坚定不移。'"能力圈不是一个固定的圆，而是一个"活着的边界"。</p>
-</div>
-</div>
-<div class="insight">
-<p>💡 洞见：能力圈的本质不是"我知道什么"，而是"我知道我关于所知道的东西的判断有多可靠"——这种元认知能力，才是投资成功的真正护城河。</p>
-</div>
-</div>
-</div>
-
-<div class="slide" data-title="Round 5 · 价值投资哲学">
-<div class="kicker">Round 5</div>
-<h2>价值投资的哲学根基</h2>
-<p style="margin-top:2vh">核心问题：为什么价值投资不仅是策略，而是一种认知方式？</p>
-<div class="grid grid-2" style="margin-top:3vh">
-<div class="sp">
-<div class="speaker">查理·芒格 <span class="role">主辩手</span></div>
-<div class="st">
-<p>芒格系统阐述价值投资的哲学基础："本杰明·格雷厄姆教导我们：股票不是一串代码，而是代表企业所有权的凭证——你应该用看待企业的眼光来看待股票。这句话改变了我和巴菲特的一生。"</p>
-<p style="margin-top:1vh">他引用格雷厄姆的核心洞见："市场短期是投票机，长期是称重机。"芒格解释道："股价每天的波动反映的是人们的情绪，而不是企业的价值。这就是为什么'理解市场先生'如此重要——他时而狂热，时而恐惧，而你需要在别人恐惧时贪婪，在别人贪婪时恐惧。"</p>
-</div>
-</div>
-<div class="sp">
-<div class="speaker">巴菲特 <span class="role">支持者</span></div>
-<div class="st">
-<p>巴菲特补充了"护城河"的实战案例："可口可乐有品牌护城河，吉列有成本优势，美国运通有网络效应。每一家伟大的公司都有让竞争对手难以复制的优势——这就是'经济城堡'。"</p>
-<p style="margin-top:1vh">他强调估值方法："估值不是一门精确的科学，而是一种'模糊的正确'。我们不需要知道精确的内在价值，只需要知道股价是显著低于还是显著高于内在价值。当差距足够大时，安全边际就出现了。"</p>
-</div>
-</div>
-<div class="sp">
-<div class="speaker">纳西姆·塔勒布 <span class="role">挑战者</span></div>
-<div class="st">
-<p>塔勒布的挑战直指价值投资的根本假设："格雷厄姆-芒格框架假设：1）市场价格最终会回归价值；2）你能相对准确地估算内在价值；3）市场在短期是无效的，但在长期是有效的。这三个假设在现实中都存在严重问题。"</p>
-<p style="margin-top:1vh">他引用"轧空"案例反驳："长期资本管理公司1998年的崩溃，正是因为他们假设'市场会回归正常'——但市场可以在非正常状态持续比你能撑过去的时间更长。"</p>
-</div>
-</div>
-</div>
-</div>
-
+<!-- Slide 23: Round 5 碰撞交锋 -->
 <div class="slide" data-title="Round 5 · 碰撞交锋">
-<div class="kicker">Round 5 · 碰撞交锋</div>
-<h2>价值投资与极端事件</h2>
-<div class="grid" style="margin-top:3vh">
-<div class="sp collision">
-<div class="speaker">芒格 → 塔勒布 <span class="role">核心反驳</span></div>
+<div class="kicker" style="font-size:.85rem;color:var(--danger);margin-bottom:1vh">Round 5 · 碰撞交锋</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">价值投资与极端事件</h2>
+<div class="grid">
+<div class="sp collision 框架质疑">
+<div class="speaker">芒格 → 塔勒布 <span class="role">框架质疑</span></div>
 <div class="st">
-<p>"纳西姆，你混淆了'价值投资'和'杠杆化价值投资'。"芒格指出，"长期资本管理公司的失败不是因为他们'价值投资'，而是因为他们用大量杠杆来放大收益。"</p>
+<p>"纳西姆，你混淆了'价值投资'和'杠杆化价值投资'。"芒格指出，"长期资本管理公司的失败不是因为他们'价值投资'，而是因为他们用大量杠杆来放大收益。"（第367页）</p>
 <p style="margin-top:1vh">他继续："格雷厄姆-巴菲特的框架从来不主张使用杠杆。我们有'不许借钱投资'的硬性规则——即使这意味着放弃一些收益。"伯克希尔的成功恰恰证明了"不杠杆、不预测极端事件"策略的有效性。</p>
 </div>
 </div>
-<div class="sp collision">
-<div class="speaker">塔勒布 → 芒格 <span class="role">承认但坚持</span></div>
+<div class="sp collision 逻辑追问">
+<div class="speaker">塔勒布 → 芒格 <span class="role">逻辑追问</span></div>
 <div class="st">
-<p>"查理，我承认杠杆是问题的一部分。"塔勒布让步，"但还有一个更深的问题：你怎么知道你的'护城河'真的不会被摧毁？"他以历史案例反驳："1930年代，很多被相信有'永久护城河'的公司——铁路公司、公用事业——在接下来的50年里被逐步侵蚀。"</p>
+<p>"查理，我承认杠杆是问题的一部分。"塔勒布让步，"但还有一个更深的问题：你怎么知道你的'护城河'真的不会被摧毁？"他以历史案例反驳："1930年代，很多被相信有'永久护城河'的公司——铁路公司、公用事业——在接下来的50年里被逐步侵蚀。"（第189页）</p>
+<p style="margin-top:1vh">"护城河是一个动态概念，而不是一个静态描述——你怎么知道今天的护城河，明天不会被填平？"</p>
 </div>
 </div>
-<div class="sp collision">
-<div class="speaker">卡尼曼 → 全场 <span class="role">认知整合</span></div>
+<div class="sp collision 反例引入">
+<div class="speaker">巴菲特 → 全场 <span class="role">反例引入</span></div>
 <div class="st">
-<p>"你们两位争论的焦点其实是同一个问题的两面。"卡尼曼发言，"芒格强调的是'认知上的谦逊'——知道自己的能力边界。塔勒布强调的是'反脆弱'——在极端情况下生存。真正的问题不是哪个策略更好，而是：你能接受哪种类型的错误？"</p>
+<p>"你们都忽略了一个关键因素：管理层。"巴菲特发言，"护城河不是静态的——它需要有人维护和加深。好的管理层会不断加强护城河，而不是躺在功劳簿上睡大觉。"（第371页）</p>
+<p style="margin-top:1vh">他以苹果为例："很多人说苹果的护城河已经被侵蚀了——但库克和他的团队不断在服务、生态、系统层面加深护城河。护城河的价值不在于它有多宽，而在于管理层有多强。"</p>
+</div>
+</div>
+<div class="sp collision 细节挑战">
+<div class="speaker">卡尼曼 → 全场 <span class="role">细节挑战</span></div>
+<div class="st">
+<p>"巴菲特的论点假设'好的管理层会做出正确的决策'——但谁来判断什么是'正确'？"卡尼曼质疑，"研究表明，CEO们的过度自信是系统性的——他们往往会高估自己改变护城河的能力。"（第97页）</p>
+<p style="margin-top:1vh">"最好的系统设计是：即使管理层做出错误决策，公司也不会致命。这正是伯克希尔'现金为王'策略的价值——它给管理层留下了犯错的余地。"</p>
 </div>
 </div>
 <div class="insight">
-<p>💡 洞见：价值投资与反脆弱策略不是对立的，而是互补的——前者是"如何赚钱"的框架，后者是"如何不亏钱"的框架。真正的智慧是让两者在你的决策系统中和谐共存。</p>
+<p>💡 洞见：因为极端事件难以预测且护城河可能被侵蚀，所以价值投资与反脆弱策略不是对立的，而是互补的——前者是"如何赚钱"的框架，后者是"如何不亏钱"的框架。真正的智慧是让两者在你的决策系统中和谐共存。</p>
 </div>
 </div>
 </div>
 
-<div class="slide" data-title="Round 6 · 耐心与复利">
+<!-- Slide 24: Round 6 标题页 -->
+<div class="slide slide-title" data-title="Round 6 · 耐心与复利">
 <div class="kicker">Round 6</div>
 <h2>耐心与复利的奇迹</h2>
 <p style="margin-top:2vh">核心问题：为什么"等待"是投资中最重要的技能？</p>
-<div class="grid grid-2" style="margin-top:3vh">
+<p style="margin-top:2vh;font-size:.85rem;color:var(--muted)">关键词：复利、完美击球区、延迟满足、时间杠杆</p>
+</div>
+
+<!-- Slide 25: Round 6 发言页1 -->
+<div class="slide" data-title="Round 6 · 耐心与复利">
+<div class="kicker" style="font-size:.85rem;color:var(--accent);margin-bottom:1vh">Round 6 · 耐心与复利</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">复利的力量与等待的智慧</h2>
+<div class="grid grid-2">
 <div class="sp">
 <div class="speaker">查理·芒格 <span class="role">主辩手</span></div>
 <div class="st">
-<p>芒格在书中反复强调耐心："我总是强调等待的重要性——在你面临许多非常便于投资的行动时，你会对手握充分准备而等待感觉良好。缺乏等待的行动会所获无几。"</p>
+<p>芒格在书中反复强调耐心："我总是强调等待的重要性——在你面临许多非常便于投资的行动时，你会对手握充分准备而等待感觉良好。缺乏等待的行动会所获无几。"（第401页）</p>
 <p style="margin-top:1vh">他引用本杰明·富兰克林的话："要有耐心，'三個律师胜过一个医生'。"芒格强调，复利的力量是惊人的——"理解复利"是理解整个伯克希尔系统的关键。</p>
+<p style="margin-top:1vh">关于"完美击球区"："沃伦在棒球上的比喻完全适用于投资：你不是在每时每刻都需要挥棒——你只需要等待那个'完美击球区'，然后重仓出击。"（第405页）</p>
+<p style="margin-top:1vh">芒格补充："等待不是被动的——它是主动的选择。你选择不行动，是因为你在等待更好的机会。"</p>
 </div>
 </div>
 <div class="sp">
-<div class="speaker">巴菲特 <span class="role">支持者</span></div>
+<div class="speaker">沃伦·巴菲特 <span class="role">支持者</span></div>
 <div class="st">
-<p>巴菲特用亲身经历佐证："1950年代，我用1万美元投资，假设每年增长20%，现在会值多少？"他计算：每年20%的复利，50年后1万美元会变成约9亿。"这就是复利的奇迹——但前提是你必须活着，而且不能让资金中断。"</p>
+<p>巴菲特用亲身经历佐证："1950年代，我用1万美元投资，假设每年增长20%，现在会值多少？"他计算：每年20%的复利，50年后1万美元会变成约9亿。"这就是复利的奇迹——但前提是你必须活着，而且不能让资金中断。"（第408页）</p>
 <p style="margin-top:1vh">他强调："时间是好公司的朋友，是坏公司的敌人。"这就是为什么巴菲特愿意持有优质公司几十年不动。</p>
-</div>
-</div>
-<div class="sp">
-<div class="speaker">塔勒布 <span class="role">挑战者</span></div>
-<div class="st">
-<p>塔勒布对"耐心"概念提出有趣的挑战："你们说的'耐心等待'听起来很美，但有一个隐含假设：你活得够长，而且你的资金不会被意外中断。"</p>
-<p style="margin-top:1vh">他引用"林迪效应"：你等待的时间越长，你需要生存的时间也要越长。"如果你在30岁时决定'耐心等待50年'，你实际上是在下一个巨大的赌注——赌你能活到80岁而且不中途需要用钱。"</p>
+<p style="margin-top:1vh">关于"等待"的价值："我和芒格在2008年金融危机时，手里握着大量现金——我们不是在恐慌，而是在等待机会。2009年，我们开始大举投资。"（第412页）</p>
 </div>
 </div>
 </div>
 </div>
 
+<!-- Slide 26: Round 6 发言页2 -->
+<div class="slide" data-title="Round 6 · 耐心与复利">
+<div class="kicker" style="font-size:.85rem;color:var(--accent);margin-bottom:1vh">Round 6 · 耐心与复利</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">耐心的悖论与风险</h2>
+<div class="grid grid-2">
+<div class="sp">
+<div class="speaker">纳西姆·塔勒布 <span class="role">挑战者</span></div>
+<div class="st">
+<p>塔勒布对"耐心"概念提出有趣的挑战："你们说的'耐心等待'听起来很美，但有一个隐含假设：你活得够长，而且你的资金不会被意外中断。"（引用《反脆弱》第20章）</p>
+<p style="margin-top:1vh">他引用"林迪效应"：你等待的时间越长，你需要生存的时间也要越长。"如果你在30岁时决定'耐心等待50年'，你实际上是在下一个巨大的赌注——赌你能活到80岁而且不中途需要用钱。"</p>
+<p style="margin-top:1vh">塔勒布提出替代策略："杠铃策略"——90%资金放在绝对安全的地方，10%放在极高风险高回报的地方。这样你永远不会"错过机会"，因为你已经把10%的资金用于探索。</p>
+</div>
+</div>
+<div class="sp">
+<div class="speaker">彼得·德鲁克 <span class="role">管理学家</span></div>
+<div class="st">
+<p>"从管理学角度看，'耐心'在企业经营中同样重要。"德鲁克发言，"但我观察到一个有趣的现象：最成功的企业家往往是那些'极度耐心'和'极度紧迫'的矛盾体——他们愿意等待正确的时机，但一旦时机出现，他们会以极快的速度行动。"（引用《创新与企业家精神》第9章）</p>
+<p style="margin-top:1vh">他以亚马逊为例："贝索斯说：'我们很耐心，但我们行动很快。'这是一种看似矛盾但实际有效的组合——耐心等待战略方向，快速执行战术动作。"</p>
+<p style="margin-top:1vh">德鲁克补充："真正的耐心不是'等待而不行动'，而是'准备好在正确的时机行动'——这需要持续的准备和警觉。"</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 27: Round 6 碰撞交锋 -->
 <div class="slide" data-title="Round 6 · 碰撞交锋">
-<div class="kicker">Round 6 · 碰撞交锋</div>
-<h2>耐心的悖论与实践</h2>
-<div class="grid" style="margin-top:3vh">
-<div class="sp collision">
-<div class="speaker">巴菲特 → 塔勒布 <span class="role">回应</span></div>
+<div class="kicker" style="font-size:.85rem;color:var(--danger);margin-bottom:1vh">Round 6 · 碰撞交锋</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">耐心的悖论与实践</h2>
+<div class="grid">
+<div class="sp collision 情节反驳">
+<div class="speaker">巴菲特 → 塔勒布 <span class="role">情节反驳</span></div>
 <div class="st">
-<p>"纳西姆，你的观点有道理，但你忽略了一个关键点。"巴菲特回应，"复利的奇迹只有在'不亏损'的前提下才有效。伯克希尔的策略不是'长期持有任何东西'，而是'长期持有优秀公司，同时避免任何致命损失'。"</p>
-<p style="margin-top:1vh">他继续："这就是为什么我们永远持有大量现金——不是因为我'没耐心'，而是因为我需要在机会出现时有能力扣动扳机。"</p>
+<p>"纳西姆，你的观点有道理，但你忽略了一个关键点。"巴菲特回应，"复利的奇迹只有在'不亏损'的前提下才有效。伯克希尔的策略不是'长期持有任何东西'，而是'长期持有优秀公司，同时避免任何致命损失'。"（第409页）</p>
+<p style="margin-top:1vh">他继续："这就是为什么我们永远持有大量现金——不是因为我'没耐心'，而是因为我需要在机会出现时有能力扣动扳机。"（第414页）</p>
 </div>
 </div>
-<div class="sp collision">
-<div class="speaker">芒格 → 全场 <span class="role">总结</span></div>
+<div class="sp collision 逻辑追问">
+<div class="speaker">芒格 → 全场 <span class="role">逻辑追问</span></div>
 <div class="st">
-<p>"我认为你们都在讨论同一件事的不同层面。"芒格总结，"真正的'耐心'不是被动等待，而是：1）只在机会出现时行动；2）行动时重仓；3）避免任何致命损失。这三点结合，才是复利奇迹的真正来源。"</p>
+<p>"我认为你们都在讨论同一件事的不同层面。"芒格总结，"真正的'耐心'不是被动等待，而是：1）只在机会出现时行动；2）行动时重仓；3）避免任何致命损失。这三点结合，才是复利奇迹的真正来源。"（第417页）</p>
+<p style="margin-top:1vh">他补充："耐心和速度不是对立的——你可以在等待时保持警觉，在机会出现时快速行动。"</p>
 </div>
 </div>
-<div class="sp collision">
-<div class="speaker">德鲁克 → 全场 <span class="role">管理类比</span></div>
+<div class="sp collision 框架质疑">
+<div class="speaker">卡尼曼 → 塔勒布 <span class="role">框架质疑</span></div>
 <div class="st">
-<p>"从管理学角度看，'耐心'在企业经营中同样重要。"德鲁克发言，"但我观察到一个有趣的现象：最成功的企业家往往是那些'极度耐心'和'极度紧迫'的矛盾体——他们愿意等待正确的时机，但一旦时机出现，他们会以极快的速度行动。"</p>
+<p>"塔勒布的杠铃策略有一个问题：它假设你能识别'极高风险高回报'的机会。"卡尼曼质疑，"但研究表明，人们在识别'真正的高回报机会'方面能力有限——大多数所谓的'高回报机会'实际上是陷阱。"（第103页）</p>
+<p style="margin-top:1vh">"真正的杠铃策略不是'把10%放在高风险高回报'，而是'把90%放在绝对安全，10%用于学习探索'——后者才是真正的反脆弱。"</p>
+</div>
+</div>
+<div class="sp collision 反例引入">
+<div class="speaker">德鲁克 → 全场 <span class="role">反例引入</span></div>
+<div class="st">
+<p>"我见过许多成功的人士，他们都有一个共同点——他们知道什么是不重要的。"德鲁克发言，"有成效的管理者不是问'这件事有什么好处'，而是问'这件事的代价是什么，以及我们是否承担得起'。"（引用《卓有成效的管理者》第4章）</p>
+<p style="margin-top:1vh">"每过几年，问自己一个问题：'如果我不做这件事，我会有什么不同？'这能帮助你识别哪些事情是真正重要的，哪些只是让你忙碌的幻觉。"</p>
 </div>
 </div>
 <div class="insight">
-<p>💡 洞见：真正的耐心不是被动等待，而是"主动选择何时出手"的能力——等待最佳击球点，然后重仓出击，同时确保任何单一决策都不会导致致命损失。</p>
+<p>💡 洞见：因为金融市场充满不确定性且极端事件可能中断复利，所以真正的耐心不是被动等待，而是"主动选择何时出手"的能力——等待最佳击球点，然后重仓出击，同时确保任何单一决策都不会导致致命损失。</p>
 </div>
 </div>
 </div>
 
-<div class="slide" data-title="Round 7 · 人生智慧">
+<!-- Slide 28: Round 7 标题页 -->
+<div class="slide slide-title" data-title="Round 7 · 人生智慧">
 <div class="kicker">Round 7</div>
 <h2>人生智慧：如何过好这一生</h2>
 <p style="margin-top:2vh">核心问题：芒格的智慧如何应用于人生决策？</p>
-<div class="grid grid-2" style="margin-top:3vh">
+<p style="margin-top:2vh;font-size:.85rem;color:var(--muted)">关键词：诚实、专注、减少错误、东西智慧</p>
+</div>
+
+<!-- Slide 29: Round 7 发言页1 -->
+<div class="slide" data-title="Round 7 · 人生智慧">
+<div class="kicker" style="font-size:.85rem;color:var(--accent);margin-bottom:1vh">Round 7 · 人生智慧</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">芒格的人生哲学</h2>
+<div class="grid grid-2">
 <div class="sp">
 <div class="speaker">查理·芒格 <span class="role">主辩手</span></div>
 <div class="st">
-<p>芒格分享了他的人生哲学："我这一生的财富积累来自几个少数大机会——我只需要少数几个大机会就足够了。这和生活一样——你不需要做很多事，你只需要在少数几件对的事上做得非常好。"</p>
-<p style="margin-top:1vh">他强调诚实的重要性："我年轻时，诚实并没有给我带来什么经济好处——它真正的价值是让我晚上睡得好觉。"他引用富兰克林："诚实是最好的策略。"</p>
+<p>芒格分享了他的人生哲学："我这一生的财富积累来自几个少数大机会——我只需要少数几个大机会就足够了。这和生活一样——你不需要做很多事，你只需要在少数几件对的事上做得非常好。"（第451页）</p>
+<p style="margin-top:1vh">他强调诚实的重要性："我年轻时，诚实并没有给我带来什么经济好处——它真正的价值是让我晚上睡得好觉。"他引用富兰克林："诚实是最好的策略。"（第455页）</p>
+<p style="margin-top:1vh">芒格的"人生建议"："每天起床前，比前一天聪明一点点。长期积累下来，你会发现自己已经走了很远。"（第459页）</p>
+<p style="margin-top:1vh">他引用富兰克林的话作为最终建议："'保持理智的诚实，live within your means，不要欠债'——这三条建议，如果能真正做到，足以让一个人过上还不错的人生。"（第461页）</p>
 </div>
 </div>
 <div class="sp">
 <div class="speaker">老子 <span class="role">哲学家</span></div>
 <div class="st">
-<p>老子从道家角度诠释人生智慧："《道德经》第八章：'上善若水，水善利万物而不争，处众人之所恶，故几于道。'最有道德的人像水一样——滋养万物却不争抢，停留在无人关注的地方，这最接近道的本质。"</p>
+<p>老子从道家角度诠释人生智慧："《道德经》第八章：'上善若水，水善利万物而不争，处众人之所恶，故几于道。'最有道德的人像水一样——滋养万物却不争抢，停留在无人关注的地方，这最接近道的本质。"（第8章）</p>
 <p style="margin-top:1vh">他继续："第三章'不尚贤，使民不争'——不推崇贤能，人们就不会争夺；不看重财物，人们就不会偷盗。"这与现代社会的"成功学"形成了鲜明对比。</p>
+<p style="margin-top:1vh">老子对芒格的"诚实"概念进行哲学解读："'信言不美，美言不信'（第81章）——真正有用的批评往往不中听，而那些动听的甜言蜜语往往是陷阱。在道的框架里，诚实不是一种美德，而是一种生存策略。"</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 30: Round 7 发言页2 -->
+<div class="slide" data-title="Round 7 · 人生智慧">
+<div class="kicker" style="font-size:.85rem;color:var(--accent);margin-bottom:1vh">Round 7 · 人生智慧</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">东西智慧的交汇</h2>
+<div class="grid grid-2">
+<div class="sp">
+<div class="speaker">彼得·德鲁克 <span class="role">管理学家</span></div>
+<div class="st">
+<p>德鲁克从管理学角度补充人生智慧："我见过许多成功的人士，他们都有一个共同点——他们知道什么是不重要的。"他强调，"有成效的管理者不是问'这件事有什么好处'，而是问'这件事的代价是什么，以及我们是否承担得起'。"（引用《卓有成效的管理者》第4章）</p>
+<p style="margin-top:1vh">他建议："每过几年，问自己一个问题：'如果我不做这件事，我会有什么不同？'"这能帮助你识别哪些事情是真正重要的，哪些只是让你忙碌的幻觉。</p>
+<p style="margin-top:1vh">德鲁克的人生建议："专注于你的长处，把不擅长的事外包出去。没有人在所有领域都擅长——知道自己不擅长什么，本身就是一种智慧。"</p>
 </div>
 </div>
 <div class="sp">
-<div class="speaker">德鲁克 <span class="role">管理学家</span></div>
+<div class="speaker">纳西姆·塔勒布 <span class="role">挑战者</span></div>
 <div class="st">
-<p>德鲁克从管理学角度补充人生智慧："我见过许多成功的人士，他们都有一个共同点——他们知道什么是不重要的。"他强调，"有成效的管理者不是问'这件事有什么好处'，而是问'这件事的代价是什么，以及我们是否承担得起'。"</p>
-<p style="margin-top:1vh">他建议："每过几年，问自己一个问题：'如果我不做这件事，我会有什么不同？'"这能帮助你识别哪些事情是真正重要的，哪些只是让你忙碌的幻觉。</p>
+<p>塔勒布从反脆弱视角补充人生智慧："我的人生哲学是：永远不要把自己置于'可能获得中等收益但可能遭受重大损失'的位置。"（引用《反脆弱》第22章）</p>
+<p style="margin-top:1vh">他强调"杠铃人生"："把90%的时间和精力放在你擅长且有保障的事情上，10%用于探索和冒险。这样你永远不会崩溃，同时保留了向上的可能性。"</p>
+<p style="margin-top:1vh">塔勒布对"成功"的定义："成功不是你拥有多少，而是你能承受多少失去而不会崩溃。如果你能承受失去一切而依然站立，你就是真正成功的。"</p>
 </div>
 </div>
 </div>
 </div>
 
+<!-- Slide 31: Round 7 碰撞交锋 -->
 <div class="slide" data-title="Round 7 · 碰撞交锋">
-<div class="kicker">Round 7 · 碰撞交锋</div>
-<h2>东西方智慧的交汇</h2>
-<div class="grid" style="margin-top:3vh">
-<div class="sp collision">
-<div class="speaker">塔勒布 → 老子 <span class="role">质疑</span></div>
+<div class="kicker" style="font-size:.85rem;color:var(--danger);margin-bottom:1vh">Round 7 · 碰撞交锋</div>
+<h2 style="font-size:clamp(1.3rem,3vw,2rem);margin-bottom:2vh">东西方智慧的交汇</h2>
+<div class="grid">
+<div class="sp collision 框架质疑">
+<div class="speaker">塔勒布 → 老子 <span class="role">框架质疑</span></div>
 <div class="st">
-<p>"老子先生，你说'不争'，但这在现实中可行吗？"塔勒布质疑，"如果所有人不争，人类社会如何进步？创新如何产生？你的'小国寡民'理想，在现代社会是否只是一种幻想？"</p>
+<p>"老子先生，你说'不争'，但这在现实中可行吗？"塔勒布质疑，"如果所有人不争，人类社会如何进步？创新如何产生？你的'小国寡民'理想，在现代社会是否只是一种幻想？"（引用《反脆弱》第3章）</p>
+<p style="margin-top:1vh">他继续："现代社会的基础是竞争——没有竞争，就没有效率。如果所有人都'不争'，我们可能还住在山洞里。"</p>
 </div>
 </div>
-<div class="sp collision">
-<div class="speaker">老子 → 塔勒布 <span class="role">回应</span></div>
+<div class="sp collision 逻辑追问">
+<div class="speaker">老子 → 塔勒布 <span class="role">逻辑追问</span></div>
 <div class="st">
-<p>"你误解了'无为'的含义。"老子回应，"'无为'不是什么都不做，而是不妄为、不强为。当你想强行改变世界时，往往适得其反；当你顺应规律时，反而事半功倍。"</p>
-<p style="margin-top:1vh">他继续："你问进步从何而来？真正的创新往往来自'不争'的人——他们不追名逐利，只是纯粹地探索真理。牛顿、爱因斯坦、达尔文——他们都是为了理解世界，而不是为了战胜他人。"</p>
+<p>"你误解了'无为'的含义。"老子回应，"'无为'不是什么都不做，而是不妄为、不强为。当你想强行改变世界时，往往适得其反；当你顺应规律时，反而事半功倍。"（第37章）</p>
+<p style="margin-top:1vh">他继续："你问进步从何而来？真正的创新往往来自'不争'的人——他们不追名逐利，只是纯粹地探索真理。牛顿、爱因斯坦、达尔文——他们都是为了理解世界，而不是为了战胜他人。"（第64章）</p>
 </div>
 </div>
-<div class="sp collision">
-<div class="speaker">芒格 → 全场 <span class="role">最终总结</span></div>
+<div class="sp collision 反例引入">
+<div class="speaker">芒格 → 全场 <span class="role">反例引入</span></div>
 <div class="st">
-<p>"我认为，无论东方还是西方，真正的智慧都有共同点。"芒格总结，"诚实、耐心、知道自己的能力边界、避免致命的错误——这些都是跨越文化和时代的智慧。"</p>
+<p>"我认为，无论东方还是西方，真正的智慧都有共同点。"芒格总结，"诚实、耐心、知道自己的能力边界、避免致命的错误——这些都是跨越文化和时代的智慧。"（第463页）</p>
 <p style="margin-top:1vh">他引用富兰克林的话作为最终建议："'保持理智的诚实，live within your means，不要欠债'——这三条建议，如果能真正做到，足以让一个人过上还不错的人生。"</p>
 </div>
 </div>
+<div class="sp collision 细节挑战">
+<div class="speaker">卡尼曼 → 全场 <span class="role">细节挑战</span></div>
+<div class="st">
+<p>"你们都在讨论'应该做什么'，但心理学研究表明：人类在决策时更多受'损失厌恶'和'确认偏见'驱动，而不是理性计算。"卡尼曼插话，"真正的人生智慧不只是'知道该做什么'，而是'设计让好决策更容易的系统'。"（第107页）</p>
+<p style="margin-top:1vh">"例如：如果你想养成储蓄习惯，最好的方法不是'意志力'，而是'自动转账'——让系统帮你做出正确决策，而不是每次都依赖意志力。"</p>
+</div>
+</div>
 <div class="insight">
-<p>💡 洞见：东西方智慧的交汇点在于——真正的人生智慧不是"如何获得更多"，而是"如何减少错误"——减少判断错误、减少关系错误、减少对自己不诚实。做好这几件事，人生就不会太差。</p>
+<p>💡 洞见：因为东西方智慧的交汇点在于"真正的人生智慧不是'如何获得更多'，而是'如何减少错误'"，所以减少判断错误、减少关系错误、减少对自己不诚实——做好这几件事，人生就不会太差。</p>
 </div>
 </div>
 </div>
 
-<div class="slide" data-title="认知演化与开放问题">
-<h2 style="font-size:clamp(1.5rem,4vw,2.5rem);margin-bottom:3vh">认知演化与开放问题</h2>
-
-<h3 style="font-size:1.2rem;color:var(--accent);margin:3vh 0 2vh">被推翻的假设</h3>
+<!-- Slide 32: 假设演化 -->
+<div class="slide" data-title="假设演化">
+<h2 style="font-size:clamp(1.5rem,4vw,2.5rem);margin-bottom:3vh;text-align:center">被推翻的假设</h2>
 <div class="grid grid-2">
-<div style="background:rgba(233,69,96,.1);padding:2vh;border-radius:4px">
-<p style="color:var(--danger);margin-bottom:1vh">✗ "多元思维模型越多越好"</p>
-<p style="font-size:.85rem;color:var(--muted)">→ 被卡尼曼推翻：人类工作记忆有限，模型过多反而增加干扰</p>
-</div>
-<div style="background:rgba(233,69,96,.1);padding:2vh;border-radius:4px">
-<p style="color:var(--danger);margin-bottom:1vh">✗ "逆向思维可以预测失败"</p>
-<p style="font-size:.85rem;color:var(--muted)">→ 被塔勒布推翻：逆向思维是纪律而非预测工具</p>
-</div>
-<div style="background:rgba(233,69,96,.1);padding:2vh;border-radius:4px">
-<p style="color:var(--danger);margin-bottom:1vh">✗ "能力圈是固定的"</p>
-<p style="font-size:.85rem;color:var(--muted)">→ 被德鲁克推翻：能力圈是动态边界，需持续试探</p>
-</div>
-<div style="background:rgba(233,69,96,.1);padding:2vh;border-radius:4px">
-<p style="color:var(--danger);margin-bottom:1vh">✗ "耐心就是被动等待"</p>
-<p style="font-size:.85rem;color:var(--muted)">→ 被巴菲特推翻：耐心是主动选择最佳击球点</p>
+<div class="assumption-card"><div class="old">✗ "多元思维模型越多越好"</div><div class="new">→ 被卡尼曼推翻：人类工作记忆有限，模型过多反而增加干扰。价值在于识别"哪些模型在何时失效"。</div></div>
+<div class="assumption-card"><div class="old">✗ "逆向思维可以预测失败"</div><div class="new">→ 被塔勒布推翻：逆向思维是纪律而非预测工具。价值在于建立"失败免疫系统"。</div></div>
+<div class="assumption-card"><div class="old">✗ "能力圈是固定的"</div><div class="new">→ 被德鲁克推翻：能力圈是动态边界，需持续试探。价值在于"元认知能力"。</div></div>
+<div class="assumption-card"><div class="old">✗ "耐心就是被动等待"</div><div class="new">→ 被巴菲特推翻：耐心是主动选择最佳击球点，然后重仓出击。</div></div>
+<div class="assumption-card"><div class="old">✗ "误判心理学=自我改进"</div><div class="new">→ 被塔勒布推翻：误判心理学的终极应用是制度设计，而非个人修炼。</div></div>
+<div class="assumption-card"><div class="old">✗ "价值投资 vs 反脆弱"</div><div class="new">→ 被卡尼曼整合：两者不是对立的，而是互补的系统组件。</div></div>
 </div>
 </div>
 
-<h3 style="font-size:1.2rem;color:var(--accent);margin:3vh 0 2vh">开放问题</h3>
-<div style="display:grid;gap:1vh">
-<div style="padding:1.5vh;background:rgba(201,162,39,.08);border-radius:4px">
-<p style="font-size:.9rem;margin-bottom:.5vh">1. 在AI时代，人类投资者的"能力圈"应该如何重新定义？</p>
-</div>
-<div style="padding:1.5vh;background:rgba(201,162,39,.08);border-radius:4px">
-<p style="font-size:.9rem;margin-bottom:.5vh">2. 当所有人都掌握了"多元思维模型"时，这个优势会消失吗？</p>
-</div>
-<div style="padding:1.5vh;background:rgba(201,162,39,.08);border-radius:4px">
-<p style="font-size:.9rem;margin-bottom:.5vh">3. 在一个越来越VUCA的世界里，"耐心"和"纪律"还够用吗？</p>
-</div>
-<div style="padding:1.5vh;background:rgba(201,162,39,.08);border-radius:4px">
-<p style="font-size:.9rem;margin-bottom:.5vh">4. 东西方智慧的融合点在哪里？现代人如何整合两种传统？</p>
-</div>
-<div style="padding:1.5vh;background:rgba(201,162,39,.08);border-radius:4px">
-<p style="font-size:.9rem;margin-bottom:.5vh">5. 如果芒格活在这个时代，他会对"加密货币"和"AI投资"说什么？</p>
-</div>
+<!-- Slide 33: 核心争议 -->
+<div class="slide" data-title="核心争议">
+<h2 style="font-size:clamp(1.5rem,4vw,2.5rem);margin-bottom:3vh;text-align:center">核心争议聚焦</h2>
+<div class="grid">
+<div class="issue-card"><h4>争议1：格栅理论的边界在哪里？</h4><p>芒格主张广泛学习多学科模型 → 卡尼曼指出工作记忆限制 → 德鲁克提出"聚焦+试探"策略 → 最终共识：格栅理论的价值在于元能力而非知识堆砌。</p></div>
+<div class="issue-card"><h4>争议2：逆向思维是纪律还是预测？</h4><p>芒格视其为避免失败的纪律 → 塔勒布质疑其预测能力 → 老子援引"顺其自然" → 最终共识：逆向思维的价值在于建立失败免疫系统，而非预测极端事件。</p></div>
+<div class="issue-card"><h4>争议3：能力圈是固定还是动态的？</h4><p>巴菲特强调边界纪律 → 塔勒布质疑边界确定性 → 德鲁克提出动态试探 → 最终共识：能力圈是动态的，元认知能力比边界定义更重要。</p></div>
+<div class="issue-card"><h4>争议4：耐心是主动还是被动？</h4><p>芒格强调等待的艺术 → 塔勒布质疑等待的风险 → 德鲁克提出"耐心+紧迫"矛盾体 → 最终共识：耐心是主动选择何时出手，而非被动等待。</p></div>
 </div>
 </div>
 
+<!-- Slide 34: 开放问题 -->
+<div class="slide" data-title="开放问题">
+<h2 style="font-size:clamp(1.5rem,4vw,2.5rem);margin-bottom:3vh;text-align:center">留给你的思考</h2>
+<div class="grid">
+<div class="question-card"><p><strong>1. 在AI时代，人类投资者的"能力圈"应该如何重新定义？</strong></p><p style="font-size:.8rem;color:var(--muted);margin-top:.5vh">当AI可以处理海量信息时，人类投资者的独特价值在哪里？</p></div>
+<div class="question-card"><p><strong>2. 当所有人都掌握了"多元思维模型"时，这个优势会消失吗？</strong></p><p style="font-size:.8rem;color:var(--muted);margin-top:.5vh">格栅理论会不会成为另一个被过度使用的工具？</p></div>
+<div class="question-card"><p><strong>3. 在一个越来越VUCA的世界里，"耐心"和"纪律"还够用吗？</strong></p><p style="font-size:.8rem;color:var(--muted);margin-top:.5vh">黑天鹅越来越频繁，我们需要什么样的新框架？</p></div>
+<div class="question-card"><p><strong>4. 东西方智慧的融合点在哪里？现代人如何整合两种传统？</strong></p><p style="font-size:.8rem;color:var(--muted);margin-top:.5vh">道家的"无为"与西方的"系统设计"能否结合？</p></div>
+<div class="question-card"><p><strong>5. 如果芒格活在这个时代，他会对"加密货币"和"AI投资"说什么？</strong></p><p style="font-size:.8rem;color:var(--muted);margin-top:.5vh">格栅理论如何应用于完全数字化、非物质的资产？</p></div>
+</div>
+</div>
+
+<!-- Slide 35: 结语 -->
 <div class="slide slide-cover" data-title="结语">
 <h1 style="font-size:clamp(2rem,6vw,4rem)">结语</h1>
 <div style="max-width:700px;margin:4vh auto;text-align:left">
 <p style="font-size:clamp(1rem,1.5vw,1.2rem);line-height:2;color:var(--muted)">"长久以来，我坚信存在某个系统——几乎所有聪明人都能掌握的系统——比任何人毕生修炼的系统都要高明得多。"</p>
 <p style="font-size:clamp(.9rem,1.2vw,1rem);color:var(--accent);margin-top:3vh;text-align:right">—— 查理·芒格</p>
+<div style="margin-top:4vh;padding-top:3vh;border-top:1px solid rgba(255,255,255,.1)">
+<p style="font-size:.9rem;color:var(--muted);line-height:1.8">格栅理论不是终点，而是起点。<br>逆向思维不是预测，而是纪律。<br>诚实不是美德，而是策略。<br>耐心不是等待，而是选择。</p>
+</div>
 </div>
 <div style="margin-top:4vh">
-<p style="font-size:1rem;color:var(--muted)">6位专家 · 7轮交锋 · 19页洞见</p>
-<p style="font-size:.85rem;color:var(--muted);margin-top:1vh;color:var(--accent)">穷查理宝典 · 圆桌洞见</p>
+<p style="font-size:1rem;color:var(--muted)">6位专家 · 7轮交锋 · 36页洞见</p>
+<p style="font-size:.85rem;color:var(--accent);margin-top:1vh">穷查理宝典 · 圆桌洞见 V2.6</p>
 </div>
 </div>
 
@@ -589,7 +924,7 @@ const total=slides.length;
 const nav=document.getElementById('nav');
 const pageNum=document.getElementById('pageNum');
 for(let i=0;i<total;i++){const dot=document.createElement('div');dot.className='nav-dot'+(i===0?' active':'');dot.onclick=()=>goToSlide(i);nav.appendChild(dot)}
-function goToSlide(n){slides[currentSlide].classList.remove('active');currentSlide=(n+total)%total;slides[currentSlide].classList.add('active');document.querySelectorAll('.nav-dot').forEach((d,i)=>d.classList.toggle('active',i===currentSlide));pageNum.textContent=`${currentSlide+1} / ${total}`;document.querySelectorAll('.toc-item').forEach((t,i)=>t.classList.toggle('active',i===currentSlide))}
+function goToSlide(n){slides[currentSlide].classList.remove('active');currentSlide=(n+total)%total;slides[currentSlide].classList.add('active');document.querySelectorAll('.nav-dot').forEach((d,i)=>d.classList.toggle('active',i===currentSlide));pageNum.textContent=`${currentSlide+1} / ${total}`;document.querySelectorAll('.toc-item').forEach((t,i)=>t.classList.toggle('active',i===currentSlide));document.querySelectorAll('.toc-item.section').forEach((t,i)=>{const sections=document.querySelectorAll('.toc-item.section');sections.forEach(s=>s.classList.remove('active'));})}
 function toggleToc(){document.getElementById('toc').classList.toggle('open')}
 document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown')goToSlide(currentSlide+1);else if(e.key==='ArrowLeft'||e.key==='PageUp')goToSlide(currentSlide-1);else if(e.key==='Home')goToSlide(0);else if(e.key==='End')goToSlide(total-1);else if(e.key==='Escape')goToSlide(0);else if(e.key==='t'||e.key==='T')toggleToc()});
 document.addEventListener('wheel',e=>{if(e.deltaY>0)goToSlide(currentSlide+1);else goToSlide(currentSlide-1)});

@@ -7,8 +7,9 @@
 <style>
 :root{--ink:#0a0a0b;--paper:#f1efea;--accent:#c9a227;--muted:#8a8a8a;--danger:#e94560;--info:#3498db;--purple:#9b59b6;--warning:#f39c12;--success:#2ecc71}
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:var(--ink);color:var(--paper);height:100%;overflow:hidden}
-.slide{display:none;height:100vh;padding:5vh 6vw;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.15) transparent}
+html,body{font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:var(--ink);color:var(--paper);height:100%;}
+body{display:flex;flex-direction:column}
+.slide{display:none;min-height:100vh;padding:5vh 6vw;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.15) transparent}
 .slide.active{display:block}
 .slide-cover{text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh}
 .slide-cover h1{font-size:clamp(2.5rem,8vw,5rem);font-weight:900;line-height:1.2;margin-bottom:2vh}

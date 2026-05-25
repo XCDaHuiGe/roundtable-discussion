@@ -50,7 +50,7 @@
 <nav class="toc-panel" id="tocPanel"><div class="toc-title">目录导航</div><div id="tocList"></div></nav>
 <button class="nav-btn nav-prev disabled" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
 <button class="nav-btn nav-next" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
-<div class="page-indicator" id="pageIndicator"><span>1</span> / 24</div>
+<div class="page-indicator" id="pageIndicator"><span>1</span> / 18</div>
 <div class="scroll-hint">方向键 / 点击按钮翻页</div>
 <main class="pages-wrapper" id="pagesWrapper">
 
@@ -434,7 +434,7 @@
 <div class="anim-up conclusion-text"><strong>最根本的问题：</strong>和解叙事跳过了批判的步骤，直接要求接受。真正的智慧应该是：先让人看到不公正，然后再说接受还是改变——而不是从未意识到不公正。</div>
 <div class="anim-up conclusion-text" style="color:var(--gold);font-weight:700;margin-top:16px;">批判不是为了否定，而是为了更清醒地选择；接受不是为了逃避，而是看清边界后的主动选择。</div>
 <div style="margin-top:32px;padding-top:20px;border-top:1px solid var(--border)">
-<p style="font-size:13px;color:var(--muted)">6位专家 · 6轮交锋 · 24页完整版 · 2026-05-25</p>
+<p style="font-size:13px;color:var(--muted)">6位专家 · 6轮交锋 · 18页完整版 · 2026-05-25</p>
 </div>
 </div></div>
 
@@ -452,7 +452,7 @@ function init(){pages=document.querySelectorAll('.page');totalPages=pages.length
 {label:'六大核心洞见',page:15},{label:'开放问题',page:16},{label:'结语',page:17}];
 buildToc();updateUI();}
 function buildToc(){const list=document.getElementById('tocList');tocData.forEach(item=>{const el=document.createElement('div');el.className='toc-item';el.textContent=item.label;el.dataset.page=item.page;el.addEventListener('click',()=>{goToPage(item.page);closeToc()});list.appendChild(el)})}
-function goToPage(n){if(n<0||n>=totalPages||n===currentPage||isAnimating)return;isAnimating=true;const oldP=pages[currentPage],newP=pages[n],fw=n>currentPage;oldP.classList.remove('active');oldP.style.transform=fw?'translateX(-60px)':'translateX(60px)';oldP.style.opacity='0';newP.style.transform=fw?'translateX(60px)':'translateX(-60px)';newP.style.opacity='0';requestAnimationFrame(()=>{requestAnimationFrame(()=>{newP.classList.add('active')})});currentPage=n;updateUI();setTimeout(()=>{oldP.style.transform='';oldP.style.opacity='';isAnimating=false},650)}
+function goToPage(n){if(n<0||n>=totalPages||n===currentPage||isAnimating)return;isAnimating=true;const oldP=pages[currentPage],newP=pages[n],fw=n>currentPage;oldP.classList.remove('active');oldP.classList.add('exit-left');newP.style.transform=fw?'translateX(60px)':'translateX(-60px)';newP.classList.add('active');requestAnimationFrame(()=>{newP.style.transform=''});currentPage=n;updateUI();setTimeout(()=>{oldP.classList.remove('exit-left');isAnimating=false},650)}
 function updateUI(){const pct=((currentPage+1)/totalPages)*100;document.getElementById('progressBar').style.width=pct+'%';document.getElementById('pageIndicator').innerHTML='<span>'+(currentPage+1)+'</span> / '+totalPages;document.getElementById('prevBtn').classList.toggle('disabled',currentPage===0);document.getElementById('nextBtn').classList.toggle('disabled',currentPage===totalPages-1);document.querySelectorAll('.toc-item').forEach(el=>el.classList.toggle('active',parseInt(el.dataset.page)===currentPage))}
 function openToc(){document.getElementById('tocPanel').classList.add('open');document.getElementById('tocOverlay').classList.add('open')}
 function closeToc(){document.getElementById('tocPanel').classList.remove('open');document.getElementById('tocOverlay').classList.remove('open')}

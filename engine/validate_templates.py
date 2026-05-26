@@ -59,16 +59,20 @@ def validate_template(template_file: Path, template_id: str) -> dict:
         if not found:
             result["errors"].append(f"缺少: {name}")
     
-    # 检查导航（多种形式）
+    # 检查导航（多种形式，包括滚动式）
     nav_patterns = ["id=\"nav\"", "id=\"navDots\"", "class=\"nav-bar\"", 
-                   "class=\"bottom-nav\"", "class=\"nav-dots\""]
+                   "class=\"bottom-nav\"", "class=\"nav-dots\"", "id=\"navDots\""]
     has_nav = any(p in content for p in nav_patterns)
     result["checks"]["导航组件"] = has_nav
     if not has_nav:
         result["errors"].append("缺少导航组件")
     
-    # 检查翻页逻辑
-    has_pagination = "prevBtn" in content or "btnPrev" in content
+    # 检查翻页逻辑（滚动式模板不需要翻页按钮）
+    # 检查是否有滚动式设计：CSS 中定义 .section 类 + scrollIntoView
+    has_scroll_css = ".section{" in content or ".section " in content
+    has_scroll_js = "scrollIntoView" in content
+    is_scroll_template = has_scroll_css and has_scroll_js
+    has_pagination = "prevBtn" in content or "btnPrev" in content or is_scroll_template
     result["checks"]["翻页按钮"] = has_pagination
     if not has_pagination:
         result["errors"].append("缺少翻页按钮")

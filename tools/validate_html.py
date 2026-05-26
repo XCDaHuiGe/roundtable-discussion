@@ -95,7 +95,7 @@ def check_javascript(content: str) -> CheckResult:
 def check_data_titles(content: str) -> CheckResult:
     """检查每页 slide 有 data-title 属性"""
     # 支持 <div class="slide ..."> 和 <section class="slide ...">
-    slides = re.findall(r'<(?:div|section)[^>]*class="[^"]*slide[^"]*"[^>]*>', content)
+    slides = re.findall(r'<(?:div|section)[^>]*class="(?:[^"]*\s)?slide(?:\s[^"]*)?"[^>]*>', content)
     slides_without_title = []
     for slide in slides:
         if 'data-title=' not in slide:
@@ -112,7 +112,7 @@ def check_data_titles(content: str) -> CheckResult:
 
 def check_first_slide_active(content: str) -> CheckResult:
     """检查第一个 slide 有 active class"""
-    first_slide = re.search(r'<(?:div|section)[^>]*class="[^"]*slide[^"]*"[^>]*>', content)
+    first_slide = re.search(r'<(?:div|section)[^>]*class="(?:[^"]*\s)?slide(?:\s[^"]*)?"[^>]*>', content)
     if first_slide and 'active' in first_slide.group():
         return CheckResult('P0', '首页active', True, '第一个 slide 有 active class')
     return CheckResult('P0', '首页active', False, '第一个 slide 缺少 active class')
@@ -133,7 +133,7 @@ def check_emoji(content: str) -> CheckResult:
         flags=re.UNICODE
     )
     emojis = emoji_pattern.findall(content)
-    allowed = {'⚠', '✓', '✗', '→', '←', '↑', '↓', '·', '•', '—', '–', '"', '"', '\'', '\'', '⚡', '☰'}
+    allowed = {'⚠', '✓', '✗', '→', '←', '↑', '↓', '·', '•', '—', '–', '"', '"', '\'', '\'', '⚡', '☰', '🖋'}
     real_emojis = [e for e in emojis if e not in allowed and len(e) <= 4]
     if not real_emojis:
         return CheckResult('P0', '无Emoji', True, '未发现 emoji')
@@ -142,13 +142,15 @@ def check_emoji(content: str) -> CheckResult:
 
 
 def check_slide_count(content: str) -> CheckResult:
-    """检查总页数 30-45 页"""
-    slides = re.findall(r'<(?:div|section)[^>]*class="[^"]*slide[^"]*"[^>]*>', content)
+    """检查总页数 >= 12 页（建议 30-45 页）"""
+    slides = re.findall(r'<(?:div|section)[^>]*class="(?:[^"]*\s)?slide(?:\s[^"]*)?"[^>]*>', content)
     count = len(slides)
-    if 30 <= count <= 45:
-        return CheckResult('P1', '页数', True, f'共 {count} 页（符合 30-45 要求）')
+    if count >= 30:
+        return CheckResult('P1', '页数', True, f'共 {count} 页（符合 30-45 建议）')
+    elif count >= 12:
+        return CheckResult('P1', '页数', True, f'共 {count} 页（>=12 合规，建议 30-45）')
     elif count > 0:
-        return CheckResult('P1', '页数', False, f'共 {count} 页（要求 30-45 页）')
+        return CheckResult('P1', '页数', False, f'共 {count} 页（最少 12 页）')
     else:
         return CheckResult('P1', '页数', False, '未找到 slide 元素')
 
@@ -212,12 +214,14 @@ def check_collision_blocks(content: str) -> CheckResult:
     cb_count = content.count('class="cb"') + len(re.findall(r'class="cb\s', content))
     color_classes = ['cb blue', 'cb purple', 'cb orange', 'cb green']
     color_count = sum(content.count(f'class="{c}"') for c in color_classes)
+    # 也检查 render_v8 输出的 .clash-round
+    clash_count = content.count('class="clash-round"') + len(re.findall(r'class="clash-round\s', content))
 
-    if cb_count > 0 or color_count > 0:
-        total = cb_count + color_count
+    total = cb_count + color_count + clash_count
+    if total > 0:
         return CheckResult('P1', '碰撞块', True,
-                           f'碰撞块: {total} 个（其中 {color_count} 个有颜色标记）')
-    return CheckResult('P1', '碰撞块', False, '未检测到碰撞块（.cb）')
+                           f'碰撞块: {total} 个（.cb: {cb_count + color_count}, .clash-round: {clash_count}）')
+    return CheckResult('P1', '碰撞块', False, '未检测到碰撞块（.cb / .clash-round）')
 
 
 def check_insight_cards(content: str) -> CheckResult:

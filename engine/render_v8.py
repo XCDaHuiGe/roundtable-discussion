@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """圆桌会议V8级渲染引擎 - 从知识讨论到生存博弈"""
 
 import json
@@ -9,15 +9,16 @@ from typing import Dict, Any, List
 
 class RoundtableRendererV8:
     """V8级渲染器 - 支持深度内容结构"""
-    
-    def __init__(self, template_dir: str):
-        self.template_dir = template_dir
-        self.base_template = self._load_template("book-distillation-clean.html")
-    
-    def _load_template(self, filename: str) -> str:
-        path = os.path.join(self.template_dir, filename)
-        with open(path, 'r', encoding='utf-8') as f:
-            return f.read()
+
+    def __init__(self, template_path: str = None):
+        """
+        template_path: 完整模板文件路径。默认使用项目级 roundtable-template.html。
+        """
+        if template_path is None:
+            here = os.path.dirname(os.path.abspath(__file__))
+            template_path = os.path.join(here, "..", "assets", "roundtable-template.html")
+        with open(template_path, 'r', encoding='utf-8') as f:
+            self.base_template = f.read()
     
     def render_expert_card(self, expert: Dict) -> str:
         """渲染专家档案卡"""
@@ -75,6 +76,8 @@ class RoundtableRendererV8:
     
     def render_reality_case(self, case: Dict) -> str:
         """渲染现实案例"""
+        if not case:
+            return ""
         return f'''
       <div class="reality-case anim-in">
         <div class="case-header">
@@ -88,8 +91,10 @@ class RoundtableRendererV8:
     
     def render_cost_discussion(self, cost: Dict) -> str:
         """渲染代价讨论"""
+        if not cost:
+            return ""
         costs_html = ""
-        for c in cost['cost_analysis']:
+        for c in cost.get('cost_analysis', []):
             costs_html += f'''
           <div class="cost-item">
             <div class="cost-name neon-red">{c['cost']}</div>
@@ -119,8 +124,10 @@ class RoundtableRendererV8:
     
     def render_human_nature(self, human: Dict) -> str:
         """渲染人性层"""
+        if not human:
+            return ""
         examples_html = ""
-        for ex in human['real_examples']:
+        for ex in human.get('real_examples', []):
             examples_html += f'''
           <div class="example-item">• {ex}</div>'''
         
@@ -137,6 +144,8 @@ class RoundtableRendererV8:
     
     def render_cognitive_upgrade(self, upgrade: Dict) -> str:
         """渲染认知升级"""
+        if not upgrade:
+            return ""
         return f'''
       <div class="cognitive-upgrade anim-in">
         <div class="upgrade-comparison">
@@ -191,7 +200,7 @@ class RoundtableRendererV8:
         
         # 标题页
         slides.append(f'''
-  <div class="slide" data-title="Round {round_data['round_number']}: {round_data['topic']}">
+  <section class="slide" data-title="Round {round_data['round_number']}: {round_data['topic']}">
     <div class="slide-content">
       <div class="section-label anim-in">ROUND {round_data['round_number']}</div>
       <h2 class="quote-large anim-in anim-delay-1">{round_data['topic']}</h2>
@@ -200,13 +209,15 @@ class RoundtableRendererV8:
     </div>
     <div class="deck-footer">Round {round_data['round_number']} | {round_data['topic']}</div>
     <div class="slide-number">{str(slide_num).zfill(2)} / {total_slides}</div>
-  </div>''')
+  </section>''')
         slide_num += 1
         
         # Round1: 立场表达
-        stances_html = "\n".join([self.render_stance(s) for s in round_data['stances']])
-        slides.append(f'''
-  <div class="slide" data-title="R{round_data['round_number']} 立场">
+        stances = round_data.get('stances', [])
+        if stances:
+            stances_html = "\n".join([self.render_stance(s) for s in stances])
+            slides.append(f'''
+  <section class="slide" data-title="R{round_data['round_number']} 立场">
     <div class="slide-content">
       <div class="section-label anim-in">ROUND 1: STANCES</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
@@ -216,13 +227,15 @@ class RoundtableRendererV8:
     </div>
     <div class="deck-footer">Round {round_data['round_number']} | 立场</div>
     <div class="slide-number">{str(slide_num).zfill(2)} / {total_slides}</div>
-  </div>''')
-        slide_num += 1
+  </section>''')
+            slide_num += 1
         
         # Round2: 互相反驳
-        clashes_html = "\n".join([self.render_clash(c) for c in round_data['clash_rounds']])
-        slides.append(f'''
-  <div class="slide" data-title="R{round_data['round_number']} 碰撞">
+        clash_rounds = round_data.get('clash_rounds', [])
+        if clash_rounds:
+            clashes_html = "\n".join([self.render_clash(c) for c in clash_rounds])
+            slides.append(f'''
+  <section class="slide" data-title="R{round_data['round_number']} 碰撞">
     <div class="slide-content">
       <div class="section-label anim-in">ROUND 2: CLASH</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
@@ -232,13 +245,15 @@ class RoundtableRendererV8:
     </div>
     <div class="deck-footer">Round {round_data['round_number']} | 碰撞</div>
     <div class="slide-number">{str(slide_num).zfill(2)} / {total_slides}</div>
-  </div>''')
-        slide_num += 1
+  </section>''')
+            slide_num += 1
         
         # Round3: 现实案例
-        cases_html = "\n".join([self.render_reality_case(c) for c in round_data['reality_cases']])
-        slides.append(f'''
-  <div class="slide" data-title="R{round_data['round_number']} 案例">
+        reality_cases = round_data.get('reality_cases', [])
+        if reality_cases:
+            cases_html = "\n".join([self.render_reality_case(c) for c in reality_cases if c])
+            slides.append(f'''
+  <section class="slide" data-title="R{round_data['round_number']} 案例">
     <div class="slide-content">
       <div class="section-label anim-in">ROUND 3: REALITY</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
@@ -248,13 +263,15 @@ class RoundtableRendererV8:
     </div>
     <div class="deck-footer">Round {round_data['round_number']} | 案例</div>
     <div class="slide-number">{str(slide_num).zfill(2)} / {total_slides}</div>
-  </div>''')
-        slide_num += 1
+  </section>''')
+            slide_num += 1
         
         # Round4: 代价讨论
-        cost_html = self.render_cost_discussion(round_data['cost_discussion'])
-        slides.append(f'''
-  <div class="slide" data-title="R{round_data['round_number']} 代价">
+        cost_discussion = round_data.get('cost_discussion', {})
+        if cost_discussion:
+            cost_html = self.render_cost_discussion(cost_discussion)
+            slides.append(f'''
+  <section class="slide" data-title="R{round_data['round_number']} 代价">
     <div class="slide-content">
       <div class="section-label anim-in">ROUND 4: COST</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
@@ -262,13 +279,15 @@ class RoundtableRendererV8:
     </div>
     <div class="deck-footer">Round {round_data['round_number']} | 代价</div>
     <div class="slide-number">{str(slide_num).zfill(2)} / {total_slides}</div>
-  </div>''')
-        slide_num += 1
+  </section>''')
+            slide_num += 1
         
         # Round5: 人性层
-        human_html = self.render_human_nature(round_data['human_nature'])
-        slides.append(f'''
-  <div class="slide" data-title="R{round_data['round_number']} 人性">
+        human_nature = round_data.get('human_nature', {})
+        if human_nature:
+            human_html = self.render_human_nature(human_nature)
+            slides.append(f'''
+  <section class="slide" data-title="R{round_data['round_number']} 人性">
     <div class="slide-content">
       <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
@@ -276,13 +295,15 @@ class RoundtableRendererV8:
     </div>
     <div class="deck-footer">Round {round_data['round_number']} | 人性</div>
     <div class="slide-number">{str(slide_num).zfill(2)} / {total_slides}</div>
-  </div>''')
-        slide_num += 1
+  </section>''')
+            slide_num += 1
         
         # Round6: 认知升级
-        upgrade_html = self.render_cognitive_upgrade(round_data['cognitive_upgrade'])
-        slides.append(f'''
-  <div class="slide" data-title="R{round_data['round_number']} 升级">
+        cognitive_upgrade = round_data.get('cognitive_upgrade', {})
+        if cognitive_upgrade:
+            upgrade_html = self.render_cognitive_upgrade(cognitive_upgrade)
+            slides.append(f'''
+  <section class="slide" data-title="R{round_data['round_number']} 升级">
     <div class="slide-content">
       <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
@@ -290,8 +311,8 @@ class RoundtableRendererV8:
     </div>
     <div class="deck-footer">Round {round_data['round_number']} | 升级</div>
     <div class="slide-number">{str(slide_num).zfill(2)} / {total_slides}</div>
-  </div>''')
-        slide_num += 1
+  </section>''')
+            slide_num += 1
         
         return "\n".join(slides), slide_num
     
@@ -300,7 +321,19 @@ class RoundtableRendererV8:
         count = 1  # 封面
         count += 1  # 专家档案
         for r in data['rounds']:
-            count += 7  # 标题 + 立场 + 碰撞 + 案例 + 代价 + 人性 + 升级
+            count += 1  # 标题页
+            if r.get('stances'):
+                count += 1  # 立场
+            if r.get('clash_rounds'):
+                count += 1  # 碰撞
+            if r.get('reality_cases'):
+                count += 1  # 案例
+            if r.get('cost_discussion'):
+                count += 1  # 代价
+            if r.get('human_nature'):
+                count += 1  # 人性
+            if r.get('cognitive_upgrade'):
+                count += 1  # 升级
         count += 1  # 最终洞见
         count += 1  # 开放问题
         return count
@@ -313,7 +346,7 @@ class RoundtableRendererV8:
         
         # 封面
         slides.append(f'''
-  <div class="slide is-active" data-title="封面">
+  <section class="slide hero active" data-title="封面">
     <div class="slide-content hero-dark">
       <div class="section-label anim-in">ROUNDTABLE DISCUSSION V8.0</div>
       <h1 class="title-main anim-in anim-delay-1">{content['title']}</h1>
@@ -323,13 +356,13 @@ class RoundtableRendererV8:
     </div>
     <div class="deck-footer">{content['title']} | V8级圆桌讨论</div>
     <div class="slide-number">01 / {total_slides}</div>
-  </div>''')
+  </section>''')
         slide_num += 1
         
         # 专家档案
         experts_html = "\n".join([self.render_expert_card(e) for e in content['experts']])
         slides.append(f'''
-  <div class="slide" data-title="专家档案">
+  <section class="slide" data-title="专家档案">
     <div class="slide-content">
       <div class="section-label anim-in">EXPERT PROFILES</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
@@ -339,7 +372,7 @@ class RoundtableRendererV8:
     </div>
     <div class="deck-footer">专家档案</div>
     <div class="slide-number">{str(slide_num).zfill(2)} / {total_slides}</div>
-  </div>''')
+  </section>''')
         slide_num += 1
         
         # 各轮次
@@ -349,14 +382,14 @@ class RoundtableRendererV8:
         
         # 最终洞见
         slides.append(f'''
-  <div class="slide" data-title="最终洞见">
+  <section class="slide" data-title="最终洞见">
     <div class="slide-content">
       <div class="section-label anim-in">FINAL INSIGHT</div>
       <div class="quote-large anim-in anim-delay-1">{content['final_insight']}</div>
     </div>
     <div class="deck-footer">最终洞见</div>
     <div class="slide-number">{str(slide_num).zfill(2)} / {total_slides}</div>
-  </div>''')
+  </section>''')
         slide_num += 1
         
         # 开放问题
@@ -365,7 +398,7 @@ class RoundtableRendererV8:
             for i, q in enumerate(content['open_questions'])
         ])
         slides.append(f'''
-  <div class="slide" data-title="开放问题">
+  <section class="slide" data-title="开放问题">
     <div class="slide-content">
       <div class="section-label anim-in">OPEN QUESTIONS</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">留给读者的问题</h3>
@@ -373,51 +406,43 @@ class RoundtableRendererV8:
     </div>
     <div class="deck-footer">开放问题</div>
     <div class="slide-number">{str(slide_num).zfill(2)} / {total_slides}</div>
-  </div>''')
+  </section>''')
         
         slides_html = "\n".join(slides)
-        
-        # 替换模板
-        html = self.base_template
-        
-        # 删除模板中所有的slide（保留deck-container结构）
-        # 找到deck-container的开始位置
-        deck_match = re.search(r'<div class="deck-container"[^>]*>', html)
-        if deck_match:
-            deck_start = deck_match.end()
-            
-            # 找到第一个footer的位置（slide内容结束的标志）
-            footer_match = re.search(r'<div class="deck-footer"', html[deck_start:])
-            if footer_match:
-                # 删除从deck_start到第一个footer之间的所有内容（即所有slide）
-                delete_end = deck_start + footer_match.start()
-                html = html[:deck_start] + '\n' + slides_html + '\n' + html[delete_end:]
-            else:
-                # 如果找不到footer，直接在deck_start后插入
-                html = html[:deck_start] + '\n' + slides_html + '\n' + html[deck_start:]
-        
+
+        # 替换模板占位符
+        if '<!-- SLIDES_HERE -->' not in self.base_template:
+            raise ValueError("模板缺少 <!-- SLIDES_HERE --> 占位符")
+        html = self.base_template.replace('<!-- SLIDES_HERE -->', slides_html)
+        # 替换 title
+        html = re.sub(r'<title>[^<]*</title>',
+                      f'<title>{content["title"]} 圆桌洞见</title>', html, count=1)
         return html
 
 
-def render_from_json(json_path: str, output_path: str, template_dir: str):
-    """从JSON文件渲染HTML"""
+def render_from_json(json_path: str, output_path: str, template_path: str = None):
+    """从JSON文件渲染HTML。template_path 为 None 时使用默认模板。"""
     with open(json_path, 'r', encoding='utf-8-sig') as f:
         content = json.load(f)
-    
-    renderer = RoundtableRendererV8(template_dir)
+    # 剥离可能的 BOM 残留
+    if isinstance(content, dict) and 'title' in content:
+        content['title'] = content['title'].lstrip('\ufeff')
+
+    renderer = RoundtableRendererV8(template_path)
     html = renderer.render(content)
-    
+
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write(html)
-    
+
     print(f"Rendered: {output_path}")
     print(f"Size: {os.path.getsize(output_path)} bytes")
 
 
 if __name__ == "__main__":
     import sys
-    if len(sys.argv) != 4:
-        print("Usage: python render_v8.py <json_path> <output_path> <template_dir>")
+    if len(sys.argv) < 3:
+        print("Usage: python render_v8.py <json_path> <output_path> [template_path]")
         sys.exit(1)
-    
-    render_from_json(sys.argv[1], sys.argv[2], sys.argv[3])
+
+    template_path = sys.argv[3] if len(sys.argv) > 3 else None
+    render_from_json(sys.argv[1], sys.argv[2], template_path)

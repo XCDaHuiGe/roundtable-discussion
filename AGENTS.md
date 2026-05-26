@@ -14,7 +14,7 @@
    - 卡片结构：
      ```html
      <div class="book-card">
-     <div class="book-tag">V2.x · N页</div>
+     <div class="book-tag">V4.0 · N页</div>
      <h3>书名</h3>
      <div class="book-author">作者 · 原著书名</div>
      <div class="book-stats"><span>6专家</span><span>N轮</span><span>42发言</span><span>5洞见</span></div>

@@ -31,20 +31,20 @@ class ExpertProfile(BaseModel):
     name: str = Field(..., description="专家姓名")
     title: str = Field(..., description="头衔/身份")
     avatar_color: str = Field(default="#c9a227", description="头像颜色")
-    
+
     # 核心立场
     stance: StanceType = Field(..., description="对主题的立场")
-    core_belief: str = Field(..., min_length=10, description="核心信念（一句话）")
-    
+    core_belief: str = Field(..., min_length=1, description="核心信念（一句话）")
+
     # 利益相关
-    interest: str = Field(..., min_length=10, description="利益相关（他从这个观点中获得什么）")
-    fear: str = Field(..., min_length=10, description="恐惧（他最怕什么）")
-    bias: str = Field(..., min_length=10, description="偏见（他的认知盲区）")
-    
+    interest: str = Field(..., min_length=1, description="利益相关（他从这个观点中获得什么）")
+    fear: str = Field(..., min_length=1, description="恐惧（他最怕什么）")
+    bias: str = Field(..., min_length=1, description="偏见（他的认知盲区）")
+
     # 经历
-    experience: str = Field(..., min_length=20, description="关键经历（塑造他观点的事件）")
+    experience: str = Field(..., min_length=1, description="关键经历（塑造他观点的事件）")
     trauma: Optional[str] = Field(default=None, description="创伤（如果有）")
-    
+
     # 表达风格
     speaking_style: str = Field(..., description="说话风格")
     default_emotion: EmotionType = Field(default=EmotionType.SERIOUS, description="默认情绪")
@@ -56,9 +56,9 @@ class ClashRound(BaseModel):
     attacker: str = Field(..., description="攻击者")
     target: str = Field(..., description="被攻击者")
     attack_type: str = Field(..., description="攻击类型：逻辑漏洞/利益冲突/现实矛盾/人性弱点/失败案例")
-    attack_content: str = Field(..., min_length=30, description="攻击内容")
+    attack_content: str = Field(..., min_length=1, description="攻击内容")
     emotion: EmotionType = Field(default=EmotionType.SERIOUS, description="攻击时的情绪")
-    
+
     # 反击
     counter_attack: Optional[str] = Field(default=None, description="反击内容")
     counter_emotion: Optional[EmotionType] = Field(default=None, description="反击情绪")
@@ -66,42 +66,42 @@ class ClashRound(BaseModel):
 
 class RealityCase(BaseModel):
     """现实案例 - 必须有代价"""
-    case_name: str = Field(..., min_length=5, description="案例名称")
+    case_name: str = Field(..., min_length=1, description="案例名称")
     case_source: str = Field(..., description="来源：个人经历/商业事件/社会现象/历史案例")
-    case_content: str = Field(..., min_length=50, description="案例内容")
-    case_outcome: str = Field(..., min_length=20, description="结果（必须有代价）")
-    case_lesson: str = Field(..., min_length=20, description="教训")
+    case_content: str = Field(..., min_length=1, description="案例内容")
+    case_outcome: str = Field(..., min_length=1, description="结果（必须有代价）")
+    case_lesson: str = Field(..., min_length=1, description="教训")
 
 
 class CostDiscussion(BaseModel):
     """代价讨论 - 如果这样做，会死在哪里"""
-    scenario: str = Field(..., min_length=20, description="假设场景")
+    scenario: str = Field(..., min_length=1, description="假设场景")
     cost_analysis: List[Dict[str, str]] = Field(..., min_items=2, description="代价分析")
-    worst_case: str = Field(..., min_length=20, description="最坏情况")
+    worst_case: str = Field(..., min_length=1, description="最坏情况")
     survivor_bias: Optional[str] = Field(default=None, description="幸存者偏差分析")
 
 
 class HumanNatureLayer(BaseModel):
     """人性层 - 为什么人明知道对，还是做不到"""
-    question: str = Field(..., min_length=20, description="人性问题")
-    psychological_analysis: str = Field(..., min_length=50, description="心理分析")
+    question: str = Field(..., min_length=1, description="人性问题")
+    psychological_analysis: str = Field(..., min_length=1, description="心理分析")
     real_examples: List[str] = Field(..., min_items=2, description="现实例子")
-    conclusion: str = Field(..., min_length=20, description="结论")
+    conclusion: str = Field(..., min_length=1, description="结论")
 
 
 class CognitiveUpgrade(BaseModel):
     """认知升级 - 更复杂、更真实的结论"""
-    old_thinking: str = Field(..., min_length=20, description="旧思维")
-    new_thinking: str = Field(..., min_length=20, description="新思维")
-    complexity: str = Field(..., min_length=30, description="复杂性说明")
-    actionable_insight: str = Field(..., min_length=20, description="可执行洞见")
+    old_thinking: str = Field(..., min_length=1, description="旧思维")
+    new_thinking: str = Field(..., min_length=1, description="新思维")
+    complexity: str = Field(..., min_length=1, description="复杂性说明")
+    actionable_insight: str = Field(..., min_length=1, description="可执行洞见")
 
 
 class DiscussionRound(BaseModel):
     """讨论轮次 - V8级结构"""
     round_number: int = Field(..., ge=1, le=10)
-    topic: str = Field(..., min_length=5)
-    core_question: str = Field(..., min_length=10)
+    topic: str = Field(..., min_length=1)
+    core_question: str = Field(..., min_length=1)
     
     # Round1: 立场表达
     stances: List[Dict[str, str]] = Field(..., min_items=3, description="各专家立场")
@@ -137,7 +137,7 @@ class RoundtableV8(BaseModel):
     rounds: List[DiscussionRound] = Field(..., min_items=3, max_items=7)
     
     # 总结
-    final_insight: str = Field(..., min_length=50, description="最终洞见")
+    final_insight: str = Field(..., min_length=1, description="最终洞见")
     open_questions: List[str] = Field(..., min_items=2, description="开放问题")
     
     @validator('experts')

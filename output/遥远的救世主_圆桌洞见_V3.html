@@ -1,0 +1,580 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>遥远的救世主 圆桌洞见</title>
+<style>
+﻿
+  :root{
+    /* ============ 主题色(默认:🖋 墨水经典) ============ */
+    --ink:#0a0a0b;
+    --ink-rgb:10,10,11;
+    --paper:#f1efea;
+    --paper-rgb:241,239,234;
+    --paper-tint:#e8e5de;
+    --ink-tint:#18181a;
+    
+    /* ============ 强调色 ============ */
+    --accent:#c23b22;
+    --accent-rgb:194,59,34;
+    --gold:#d4a843;
+    --gold-rgb:212,168,67;
+    --blue:#4a6a9a;
+    --purple:#8a4aaa;
+    --green:#3a8a5c;
+    
+    /* ============ 字体(跨主题固定) ============ */
+    --mono:"IBM Plex Mono","SF Mono",monospace;
+    --serif-zh:"Noto Serif SC","Source Han Serif SC","STSong",serif;
+    --sans-zh:"Noto Sans SC","Source Han Sans SC","PingFang SC",sans-serif;
+    
+    /* ============ 间距 ============ */
+    --radius:10px;
+    --ease:cubic-bezier(.4,0,.2,1);
+  }
+  
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans-zh);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  
+  /* ============ Deck 容器 ============ */
+  #deck{position:relative;width:100vw;height:100vh;overflow:hidden}
+  
+  /* ============ 进度条 ============ */
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:1000;transition:width .5s var(--ease);box-shadow:0 0 12px rgba(var(--accent-rgb),.3)}
+  
+  /* ============ 幻灯片 ============ */
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.12) transparent}
+  .slide::-webkit-scrollbar{width:4px}.slide::-webkit-scrollbar-track{background:transparent}.slide::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
+  .slide.active{display:flex}
+  .slide.hero{justify-content:center;align-items:center;text-align:center}
+  .slide.title-slide{justify-content:center;align-items:center;text-align:center}
+  
+  /* ============ 入场动画(Guizang风格) ============ */
+  [data-anim]{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .slide.active [data-anim]{opacity:1;transform:translateY(0)}
+  .slide.active [data-anim]:nth-child(1){transition-delay:.1s}
+  .slide.active [data-anim]:nth-child(2){transition-delay:.18s}
+  .slide.active [data-anim]:nth-child(3){transition-delay:.26s}
+  .slide.active [data-anim]:nth-child(4){transition-delay:.34s}
+  .slide.active [data-anim]:nth-child(5){transition-delay:.42s}
+  .slide.active [data-anim]:nth-child(6){transition-delay:.5s}
+  
+  /* ============ 内容区 ============ */
+  .frame{width:100%;max-width:1100px;margin:0 auto}
+  
+  /* ============ Magazine Chrome(Guizang风格) ============ */
+  .chrome{display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.5;margin-bottom:3vh}
+  .chrome .left,.chrome .right{display:flex;gap:2em;align-items:center}
+  .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
+  
+  /* ============ 封面 ============ */
+  .cover-badge{display:inline-block;padding:6px 20px;border:1px solid var(--accent);border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4vh}
+  .cover-title{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:4vh;line-height:1.8;max-width:600px}
+  .cover-stats{display:flex;gap:4vh;flex-wrap:wrap;justify-content:center}
+  .cover-stat{text-align:center}
+  .cover-stat-num{font-family:var(--mono);font-size:2.5rem;font-weight:900;color:var(--accent)}
+  .cover-stat-label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.5);margin-top:.5vh}
+  
+  /* ============ 标题系统 ============ */
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
+  .h-hero{font-family:var(--serif-zh);font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.2;margin-bottom:3vh}
+  .h-xl{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.4rem,3vw,2.2rem);line-height:1.3;margin-bottom:2vh}
+  .h-lg{font-family:var(--serif-zh);font-weight:600;font-size:clamp(1.1rem,2vw,1.5rem);line-height:1.4;margin-bottom:1.5vh}
+  .h-md{font-weight:600;font-size:1.1rem;margin-bottom:1vh}
+  .lead{font-size:1rem;line-height:1.85;color:rgba(var(--paper-rgb),.8);max-width:700px}
+  .meta-row{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.4);display:flex;gap:2em;flex-wrap:wrap;margin-top:3vh}
+  
+  /* ============ 分割线 ============ */
+  .rule{width:100%;height:1px;background:rgba(var(--paper-rgb),.15);margin:3vh 0}
+  
+  /* ============ 标签 ============ */
+  .tag{display:inline-block;padding:4px 12px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;margin:3px}
+  .tag-gold{background:rgba(var(--gold-rgb),.15);color:var(--gold);border:1px solid rgba(var(--gold-rgb),.2)}
+  .tag-red{background:rgba(var(--accent-rgb),.15);color:var(--accent);border:1px solid rgba(var(--accent-rgb),.2)}
+  .tag-blue{background:rgba(74,106,154,.15);color:var(--blue);border:1px solid rgba(74,106,154,.2)}
+  .tag-purple{background:rgba(138,74,170,.15);color:var(--purple);border:1px solid rgba(138,74,170,.2)}
+  .tag-green{background:rgba(58,138,92,.15);color:var(--green);border:1px solid rgba(58,138,92,.2)}
+  
+  /* ============ 发言块 ============ */
+  .sp{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2.5vw;margin-bottom:2vh;position:relative}
+  .sp::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .sh{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh}
+  .speaker-avatar{width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:var(--ink);background:var(--accent);flex-shrink:0}
+  .sn{font-weight:700;font-size:1rem}
+  .sr{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4);padding:3px 8px;background:rgba(var(--paper-rgb),.06);border-radius:3px}
+  .st{font-size:.95rem;line-height:2;color:rgba(var(--paper-rgb),.85)}
+  .st strong{color:var(--paper);font-weight:700}
+  .st em{color:var(--gold);font-style:normal;font-weight:600}
+  
+  /* ============ 碰撞块 ============ */
+  .cb{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;position:relative}
+  .cb::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .cb.blue{border-color:rgba(74,106,154,.3)}.cb.blue::before{background:var(--blue)}
+  .cb.purple{border-color:rgba(138,74,170,.3)}.cb.purple::before{background:var(--purple)}
+  .cb.green{border-color:rgba(58,138,92,.3)}.cb.green::before{background:var(--green)}
+  .cb.orange{border-color:rgba(var(--gold-rgb),.3)}.cb.orange::before{background:var(--gold)}
+  .cl{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;color:var(--accent);font-weight:600}
+  .cl.blue{color:var(--blue)}.cl.purple{color:var(--purple)}.cl.green{color:var(--green)}.cl.orange{color:var(--gold)}
+  
+  /* ============ 洞见卡 ============ */
+  .insight-c{background:linear-gradient(135deg,rgba(var(--paper-rgb),.04) 0%,rgba(var(--paper-rgb),.08) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh;position:relative;overflow:hidden}
+  .insight-c::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold))}
+  .insight-q{font-family:var(--serif-zh);font-size:1.1rem;font-weight:700;color:var(--gold);line-height:1.6;margin-bottom:1vh}
+  .insight-a{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.75)}
+  
+  /* ============ 卡片 ============ */
+  .card{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
+  .card-num{font-family:var(--mono);font-weight:900;font-size:1.8rem;color:var(--accent);opacity:.4;margin-bottom:1vh}
+  .card-title{font-weight:700;font-size:1rem;margin-bottom:1vh}
+  .card-body{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
+  .card-source{font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);margin-top:1vh}
+  
+  /* ============ 指标 ============ */
+  .metrics{display:flex;gap:2vw;flex-wrap:wrap;margin-bottom:3vh}
+  .metric{flex:1;min-width:100px;text-align:center;background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 1.5vw}
+  .metric-val{font-family:var(--mono);font-weight:900;font-size:clamp(1.5rem,3vw,2.5rem);color:var(--accent)}
+  .metric-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:.5vh}
+  
+  /* ============ 开放问题 ============ */
+  .oq{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
+  .oq-num{font-family:var(--mono);font-weight:900;font-size:1.2rem;color:var(--accent);opacity:.3;margin-bottom:1vh}
+  .oq-text{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  
+  /* ============ 引用 ============ */
+  .quote{font-family:var(--serif-zh);font-size:1rem;font-style:italic;line-height:1.8;padding:2vh 2.5vw;border-left:3px solid var(--gold);background:rgba(var(--gold-rgb),.05);margin:2vh 0;color:rgba(var(--paper-rgb),.85)}
+  
+  /* ============ TOC ============ */
+  .toc-panel{position:fixed;top:0;left:0;width:min(340px,80vw);height:100vh;background:rgba(var(--ink-rgb),.97);backdrop-filter:blur(20px);z-index:100;transform:translateX(-100%);transition:transform .35s var(--ease);padding:3vh 2.5vw;overflow-y:auto;border-right:1px solid rgba(var(--paper-rgb),.08)}
+  .toc-panel.open{transform:translateX(0)}
+  .toc-title{font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:3vh;padding-bottom:2vh;border-bottom:1px solid rgba(var(--paper-rgb),.1)}
+  .toc-item{display:flex;justify-content:space-between;padding:1.2vh 1.5vw;margin-bottom:.5vh;cursor:pointer;border-radius:6px;border-left:2px solid transparent;font-size:.9rem;color:rgba(var(--paper-rgb),.7);transition:all .2s}
+  .toc-item:hover{background:rgba(var(--paper-rgb),.06);color:var(--paper)}
+  .toc-item.active{background:rgba(var(--paper-rgb),.08);color:var(--accent);border-left-color:var(--accent);font-weight:600}
+  .toc-label{flex:1}
+  .toc-page{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.35)}
+  .toc-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;opacity:0;pointer-events:none;transition:opacity .3s}
+  .toc-backdrop.open{opacity:1;pointer-events:auto}
+  
+  /* ============ 导航栏 ============ */
+  .nav-bar{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 3vw;background:rgba(var(--ink-rgb),.9);backdrop-filter:blur(10px);z-index:50;border-top:1px solid rgba(var(--paper-rgb),.06)}
+  .nav-left,.nav-right{display:flex;align-items:center;gap:12px}
+  .nav-btn{background:none;border:1px solid rgba(var(--paper-rgb),.12);color:rgba(var(--paper-rgb),.7);padding:8px 16px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;cursor:pointer;transition:all .2s}
+  .nav-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(var(--accent-rgb),.1)}
+  .nav-title{font-size:12px;color:rgba(var(--paper-rgb),.5);max-width:40vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-counter{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.4)}
+  
+  /* ============ 导航点 ============ */
+  .nav-dots{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:6px}
+  .nd{width:6px;height:6px;border-radius:50%;background:rgba(var(--paper-rgb),.15);cursor:pointer;transition:all .3s var(--ease);border:none;padding:0}
+  .nd.active{background:var(--accent);height:20px;border-radius:3px;box-shadow:0 0 8px rgba(var(--accent-rgb),.4)}
+  .nd:hover{background:rgba(var(--paper-rgb),.4)}
+  
+  /* ============ 响应式 ============ */
+  @media(max-width:1024px){.slide{padding:4vh 5vw 8vh}}
+  @media(max-width:768px){
+    .slide{padding:3vh 4vw 7vh}
+    .cover-stats{gap:2vh}
+    .metrics{flex-direction:column}
+    .nav-dots,.nav-title{display:none}
+    .nav-bar{padding:0 2vw}
+  }
+
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+<div class="progress-bar" id="progressBar"></div>
+
+
+<div class="slide hero active" data-title="封面">
+  <div class="frame">
+    <div class="cover-badge">圆桌洞见 V3.0</div>
+    <h1 class="cover-title">遥远的救世主</h1>
+    <p class="cover-sub">文化属性与命运的哲学交锋</p>
+    <div class="cover-stats">
+      <div class="cover-stat">
+        <div class="cover-stat-num">6</div>
+        <div class="cover-stat-label">参与专家</div>
+      </div>
+      <div class="cover-stat">
+        <div class="cover-stat-num">5</div>
+        <div class="cover-stat-label">讨论轮次</div>
+      </div>
+      <div class="cover-stat">
+        <div class="cover-stat-num">15+</div>
+        <div class="cover-stat-label">碰撞交锋</div>
+      </div>
+      <div class="cover-stat">
+        <div class="cover-stat-num">5</div>
+        <div class="cover-stat-label">核心洞见</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide title-slide" data-title="Round 1: 文化属性真的决定命运吗">
+  <div class="frame">
+    <div class="kicker">Round 1</div>
+    <h2 class="h-xl">文化属性真的决定命运吗</h2>
+    <p class="lead">丁元英说强势文化造就强者弱势文化造就弱者这个判断成立吗</p>
+  </div>
+</div>
+
+<div class="slide" data-title="R1 发言">
+  <div class="frame">
+    <div class="kicker">Round 1 发言</div>
+
+    <div class="sp" data-anim>
+      <div class="sh">
+        <div class="speaker-avatar" style="background:#c23b22">丁</div>
+        <span class="sn">丁元英</span>
+        <span class="sr">主辩手 私募基金经理</span>
+      </div>
+      <div class="st">透视社会依次有三个层面技术制度和文化小到一个人大到一个国家一个民族任何一种命运归根到底都是那种文化属性的产物强势文化就是遵循事物规律的文化弱势文化就是依赖强者的道德期望破格获取的文化也是期望救主的文化强势文化在武学上被称为秘笈而弱势文化由于易学易懂易用成了流行品种我在柏林待了6年看着德国人做事的方式他们不靠救世主只靠规则和执行这就是强势文化的本质</div>
+    </div>
+
+    <div class="sp" data-anim>
+      <div class="sh">
+        <div class="speaker-avatar" style="background:#8a4aaa">尼</div>
+        <span class="sn">尼采</span>
+        <span class="sr">挑战者 德国哲学家</span>
+      </div>
+      <div class="st">丁元英说的强势文化让我想起我的超人概念超人不是靠别人施舍而是自己创造价值但我要指出一个问题你说的遵循事物规律这本身就是一个陷阱规律是谁定义的是强者定义的强者定义了规律然后告诉弱者这是天道你应该服从这不是文化属性这是权力话语真正的超人不是遵循规律而是创造新的价值体系</div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-title="R1 碰撞">
+  <div class="frame">
+    <div class="kicker">Round 1 碰撞</div>
+    <h3 class="h-md">碰撞交锋</h3>
+
+    <div class="cb purple" data-anim>
+      <div class="cl purple">逻辑追问</div>
+      <div class="sh"><span class="sn">韦伯</span></div>
+      <div class="st">丁元英你说强势文化是遵循事物规律但韦伯的理性化理论告诉我们现代社会的规律本身就是一种铁笼德国人遵循规则但这种遵循也让他们失去了自由你所谓的强势文化会不会只是一种更精致的奴役</div>
+    </div>
+
+    <div class="insight-c" data-anim>
+      <div class="insight-q">文化属性不是命运而是选择的框架</div>
+      <div class="insight-a">文化属性决定了你看到哪些选项但最终的选择权在你手中强势文化和弱势文化的区别不在于遵循什么规律而在于是否有能力创造新的可能性</div>
+    </div>
+  </div>
+</div>
+
+<div class="slide title-slide" data-title="Round 2: 杀富济贫是正义还是犯罪">
+  <div class="frame">
+    <div class="kicker">Round 2</div>
+    <h2 class="h-xl">杀富济贫是正义还是犯罪</h2>
+    <p class="lead">丁元英设计的杀富济贫计划从道德和法律角度如何评价</p>
+  </div>
+</div>
+
+<div class="slide" data-title="R2 发言">
+  <div class="frame">
+    <div class="kicker">Round 2 发言</div>
+
+    <div class="sp" data-anim>
+      <div class="sh">
+        <div class="speaker-avatar" style="background:#4a6a9a">韩</div>
+        <span class="sn">韩非子</span>
+        <span class="sr">挑战者 法家代表</span>
+      </div>
+      <div class="st">从法家的角度看丁元英的行为是典型的以术乱法他利用信息不对称和市场规则的漏洞操纵了整个格律诗公司的命运这不是什么天道这是权谋法家讲究法不阿贵法律面前人人平等丁元英自以为看透了规律就可以凌驾于法律之上如果每个人都这样想社会秩序何在</div>
+    </div>
+
+    <div class="sp" data-anim>
+      <div class="sh">
+        <div class="speaker-avatar" style="background:#3a8a5c">阿</div>
+        <span class="sn">阿伦特</span>
+        <span class="sr">挑战者 政治哲学家</span>
+      </div>
+      <div class="st">我研究过平庸之恶丁元英的行为让我想到另一个层面他设计这个计划时有没有想过那些被杀的富人他们也是人也有家庭也有尊严你说他们该杀凭什么因为你比他们聪明因为你看到了他们看不到的规律这就是典型的知识分子的傲慢真正的道德不是看透了多少而是你愿意为谁承担后果</div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-title="R2 碰撞">
+  <div class="frame">
+    <div class="kicker">Round 2 碰撞</div>
+    <h3 class="h-md">碰撞交锋</h3>
+
+    <div class="cb red" data-anim>
+      <div class="cl red">情节反驳</div>
+      <div class="sh"><span class="sn">芒格</span></div>
+      <div class="st">阿伦特你说的平庸之恶很有道理但我要补充一点丁元英的计划之所以能成功恰恰是因为那些富人本身就存在问题他们靠垄断和关系赚钱而不是靠创新和效率丁元英只是揭露了这个系统的脆弱性这不是犯罪这是市场纠错</div>
+    </div>
+
+    <div class="insight-c" data-anim>
+      <div class="insight-q">正义不是非黑即白而是系统平衡的结果</div>
+      <div class="insight-a">杀富济贫的道德困境在于它打破了旧的不平等但可能创造新的不平等真正的正义不是简单的劫富济贫而是建立一个让每个人都有机会的系统</div>
+    </div>
+  </div>
+</div>
+
+<div class="slide title-slide" data-title="Round 3: 芮小丹是独立女性还是理想化符号">
+  <div class="frame">
+    <div class="kicker">Round 3</div>
+    <h2 class="h-xl">芮小丹是独立女性还是理想化符号</h2>
+    <p class="lead">芮小丹的选择代表了什么她的死亡是悲剧还是解脱</p>
+  </div>
+</div>
+
+<div class="slide" data-title="R3 发言">
+  <div class="frame">
+    <div class="kicker">Round 3 发言</div>
+
+    <div class="sp" data-anim>
+      <div class="sh">
+        <div class="speaker-avatar" style="background:#d4a843">万</div>
+        <span class="sn">万维钢</span>
+        <span class="sr">观察者 科学作家</span>
+      </div>
+      <div class="st">从科学理性的角度看芮小丹是一个非常复杂的物她既有传统女性的温柔和牺牲精神又有现代女性的独立和理性她选择丁元英不是因为他是救世主而是因为她看到了他身上的真她选择死亡也不是因为绝望而是因为她不愿意成为别人的负担这种选择从心理学角度叫自我实现从哲学角度叫自由意志</div>
+    </div>
+
+    <div class="sp" data-anim>
+      <div class="sh">
+        <div class="speaker-avatar" style="background:#8a4aaa">尼</div>
+        <span class="sn">尼采</span>
+        <span class="sr">挑战者 德国哲学家</span>
+      </div>
+      <div class="st">芮小丹让我想起查拉图斯特拉她不是在寻找救世主而是在寻找超人丁元英就是她眼中的超人看透了世俗超越了道德但问题是真正的超人应该能创造新的价值而不是仅仅看透旧的价值芮小丹的悲剧在于她把丁元英当成了救世主而丁元英自己也不知道如何拯救自己</div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-title="R3 碰撞">
+  <div class="frame">
+    <div class="kicker">Round 3 碰撞</div>
+    <h3 class="h-md">碰撞交锋</h3>
+
+    <div class="cb orange" data-anim>
+      <div class="cl orange">框架质疑</div>
+      <div class="sh"><span class="sn">阿伦特</span></div>
+      <div class="st">万维钢你说芮小丹的选择是自由意志但我要问她的自由意志是在什么框架下做出的是在一个男权社会一个物质主义时代一个充满不平等的世界里她的选择真的是自由的吗还是被这个时代的文化属性所塑造的</div>
+    </div>
+
+    <div class="insight-c" data-anim>
+      <div class="insight-q">独立不是脱离关系而是在关系中保持自我</div>
+      <div class="insight-a">芮小丹的独立性体现在她爱丁元英但不依赖他她尊重传统但不被传统束缚她面对死亡但不恐惧死亡真正的独立是在关系中保持自我而不是逃离关系</div>
+    </div>
+  </div>
+</div>
+
+<div class="slide title-slide" data-title="Round 4: 传统观念是枷锁还是智慧">
+  <div class="frame">
+    <div class="kicker">Round 4</div>
+    <h2 class="h-xl">传统观念是枷锁还是智慧</h2>
+    <p class="lead">丁元英说传统观念的死结就在一个靠字上这个判断对吗</p>
+  </div>
+</div>
+
+<div class="slide" data-title="R4 发言">
+  <div class="frame">
+    <div class="kicker">Round 4 发言</div>
+
+    <div class="sp" data-anim>
+      <div class="sh">
+        <div class="speaker-avatar" style="background:#4a6a9a">韦</div>
+        <span class="sn">韦伯</span>
+        <span class="sr">挑战者 社会学家</span>
+      </div>
+      <div class="st">丁元英说的靠字让我想起韦伯的新教伦理新教徒不靠上帝靠自己的劳动来证明自己是上帝的选民这种不靠的精神确实是资本主义发展的动力但问题是中国人几千年的靠文化难道就一无是处儒家的仁义礼智信道家的道法自然佛家的因果报应这些难道不是智慧</div>
+    </div>
+
+    <div class="sp" data-anim>
+      <div class="sh">
+        <div class="speaker-avatar" style="background:#4a6a9a">韩</div>
+        <span class="sn">韩非子</span>
+        <span class="sr">挑战者 法家代表</span>
+      </div>
+      <div class="st">韦伯说的有道理法家也讲不靠但法家的不靠是靠法律和制度商鞅变法就是打破贵族的靠建立一个靠能力和功劳说话的系统但丁元英的不靠是什么是靠自己的聪明才智靠对规律的洞察这不是不靠这是靠自己而靠自己和靠别人本质上都是靠只是对象不同而已</div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-title="R4 碰撞">
+  <div class="frame">
+    <div class="kicker">Round 4 碰撞</div>
+    <h3 class="h-md">碰撞交锋</h3>
+
+    <div class="cb green" data-anim>
+      <div class="cl green">反例引入</div>
+      <div class="sh"><span class="sn">万维钢</span></div>
+      <div class="st">韩非子你说靠自己和靠别人本质上都是靠这个逻辑有问题靠自己是主动的靠别人是被动的主动和被动的区别就是强势文化和弱势文化的区别你不能因为都是靠就抹杀了这个根本区别</div>
+    </div>
+
+    <div class="insight-c" data-anim>
+      <div class="insight-q">传统不是枷锁但把传统当成救命稻草就是枷锁</div>
+      <div class="insight-a">传统本身是中性的它可以是智慧的源泉也可以是束缚的枷锁关键在于你如何使用它强势文化是把传统当工具弱势文化是把传统当救主</div>
+    </div>
+  </div>
+</div>
+
+<div class="slide title-slide" data-title="Round 5: 我们能从遥远的救世主中学到什么">
+  <div class="frame">
+    <div class="kicker">Round 5</div>
+    <h2 class="h-xl">我们能从遥远的救世主中学到什么</h2>
+    <p class="lead">这本书的核心启示是什么如何应用到现实生活中</p>
+  </div>
+</div>
+
+<div class="slide" data-title="R5 发言">
+  <div class="frame">
+    <div class="kicker">Round 5 发言</div>
+
+    <div class="sp" data-anim>
+      <div class="sh">
+        <div class="speaker-avatar" style="background:#d4a843">芒</div>
+        <span class="sn">芒格</span>
+        <span class="sr">总结者 投资大师</span>
+      </div>
+      <div class="st">我读这本书最大的收获是多元思维模型丁元英之所以能看透事物本质不是因为他比别人聪明而是因为他用了多个思维模型来分析问题他用经济学看市场用哲学看人性用佛学看因果这种跨学科的思维方式才是真正的强势文化在投资领域我也是这样做的不只看财务报表还要看管理层行业趋势社会变化</div>
+    </div>
+
+    <div class="sp" data-anim>
+      <div class="sh">
+        <div class="speaker-avatar" style="background:#d4a843">万</div>
+        <span class="sn">万维钢</span>
+        <span class="sr">观察者 科学作家</span>
+      </div>
+      <div class="st">芒格说的多元思维模型很重要但我要补充一点这本书的核心启示不是如何成功而是如何面对失败丁元英的私募基金被查封格律诗公司差点倒闭芮小丹牺牲了这些失败告诉我们即使你看透了规律也不一定能掌控命运真正的智慧不是避免失败而是在失败中保持清醒</div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-title="R5 碰撞">
+  <div class="frame">
+    <div class="kicker">Round 5 碰撞</div>
+    <h3 class="h-md">碰撞交锋</h3>
+
+    <div class="cb purple" data-anim>
+      <div class="cl purple">逻辑追问</div>
+      <div class="sh"><span class="sn">尼采</span></div>
+      <div class="st">万维钢你说在失败中保持清醒但我要问清醒是为了什么是为了下次成功还是为了接受命运如果是前者那还是靠靠经验靠总结靠改进如果是后者那才是真正的超人接受命运然后创造新的价值</div>
+    </div>
+
+    <div class="insight-c" data-anim>
+      <div class="insight-q">救世主不在远方就在你自己的思维方式里</div>
+      <div class="insight-a">遥远的救世主告诉我们没有救世主只有思维方式的转变强势文化不是靠别人也不是单纯靠自己而是靠正确的思维方式多元理性开放创造</div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-title="开放问题">
+  <div class="frame">
+    <div class="kicker">留给读者</div>
+    <h2 class="h-xl">开放问题</h2>
+<div class="oq" data-anim><div class="oq-num">Q1</div><div class="oq-text">在你的生活中你是强势文化还是弱势文化</div></div>
+<div class="oq" data-anim><div class="oq-num">Q2</div><div class="oq-text">你有没有自己的救世主情结</div></div>
+<div class="oq" data-anim><div class="oq-num">Q3</div><div class="oq-text">如果丁元英是错的那什么是对的</div></div>
+  </div>
+</div>
+
+<div class="slide title-slide" data-title="结语">
+  <div class="frame">
+    <div class="kicker">结语</div>
+    <h2 class="h-xl">遥远的救世主不在远方就在你自己的思维方式里没有救世主只有思维方式的转变</h2>
+  </div>
+</div>
+
+<div class="toc-backdrop" id="tocBackdrop"></div>
+<div class="toc-panel" id="tocPanel">
+<div class="toc-title">目录</div>
+<div id="tocList"></div>
+</div>
+<div class="nav-bar">
+<div class="nav-left">
+<button class="nav-btn" id="btnToc">☰ 目录</button>
+<button class="nav-btn" id="btnPrev">◀ 上一页</button>
+<button class="nav-btn" id="btnNext">下一页 ▶</button>
+</div>
+<div class="nav-right">
+<span class="nav-title" id="slideTitle"></span>
+<span class="nav-counter" id="slideCounter"></span>
+</div>
+</div>
+<div class="nav-dots" id="navDots"></div>
+</div>
+
+<script>
+﻿
+(function(){
+var deck=document.getElementById("deck");
+var slides=deck.querySelectorAll(".slide");
+var total=slides.length;
+var cur=0;
+var dots=document.getElementById("navDots");
+var tocList=document.getElementById("tocList");
+var titleEl=document.getElementById("slideTitle");
+var counterEl=document.getElementById("slideCounter");
+var tocPanel=document.getElementById("tocPanel");
+var tocBackdrop=document.getElementById("tocBackdrop");
+var progressBar=document.getElementById("progressBar");
+
+for(var i=0;i<total;i++){
+  var d=document.createElement("button");
+  d.className="nd";
+  d.setAttribute("data-i",i);
+  d.onclick=(function(idx){return function(){go(idx)}})(i);
+  dots.appendChild(d);
+  var t=document.createElement("div");
+  t.className="toc-item";
+  t.setAttribute("data-i",i);
+  t.innerHTML='<span class="toc-label">'+(slides[i].getAttribute("data-title")||"Slide "+(i+1))+'</span><span class="toc-page">'+String(i+1).padStart(2,"0")+'</span>';
+  t.onclick=(function(idx){return function(){go(idx);closeTOC()}})(i);
+  tocList.appendChild(t);
+}
+
+function go(n){
+  if(n<0||n>=total)return;
+  slides[cur].classList.remove("active");
+  dots.children[cur].classList.remove("active");
+  tocList.children[cur].classList.remove("active");
+  cur=n;
+  slides[cur].classList.add("active");
+  dots.children[cur].classList.add("active");
+  tocList.children[cur].classList.add("active");
+  titleEl.textContent=slides[cur].getAttribute("data-title")||"";
+  counterEl.textContent=(cur+1)+" / "+total;
+  progressBar.style.width=((cur+1)/total*100)+"%";
+  slides[cur].scrollTop=0;
+}
+function toggleTOC(){tocPanel.classList.toggle("open");tocBackdrop.classList.toggle("open")}
+function closeTOC(){tocPanel.classList.remove("open");tocBackdrop.classList.remove("open")}
+
+document.addEventListener("keydown",function(e){
+  if(e.key==="ArrowRight"||e.key==="ArrowDown"||e.key===" "||e.key==="PageDown"){e.preventDefault();go(cur+1)}
+  else if(e.key==="ArrowLeft"||e.key==="ArrowUp"||e.key==="PageUp"){e.preventDefault();go(cur-1)}
+  else if(e.key==="Home"){e.preventDefault();go(0)}
+  else if(e.key==="End"){e.preventDefault();go(total-1)}
+  else if(e.key==="Escape"){closeTOC();go(0)}
+  else if(e.key==="t"||e.key==="T"){toggleTOC()}
+});
+var wheelTimer=null;
+deck.addEventListener("wheel",function(e){e.preventDefault();if(wheelTimer)return;wheelTimer=setTimeout(function(){wheelTimer=null},350);if(e.deltaY>0)go(cur+1);else if(e.deltaY<0)go(cur-1)},{passive:false});
+var touchX=0,touchY=0;
+deck.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX;touchY=e.touches[0].clientY});
+deck.addEventListener("touchend",function(e){
+  var dx=touchX-e.changedTouches[0].clientX,dy=touchY-e.changedTouches[0].clientY;
+  if(Math.abs(dy)>Math.abs(dx)){if(dy>50)go(cur+1);else if(dy<-50)go(cur-1)}
+  else{if(dx>50)go(cur+1);else if(dx<-50)go(cur-1)}
+});
+deck.addEventListener("click",function(e){
+  if(e.target.closest(".nav-btn,.nd,.toc-item,.toc-panel,.toc-backdrop"))return;
+  go(cur+1);
+});
+document.getElementById("btnToc").addEventListener("click",function(e){e.stopPropagation();toggleTOC()});
+document.getElementById("btnPrev").addEventListener("click",function(e){e.stopPropagation();go(cur-1)});
+document.getElementById("btnNext").addEventListener("click",function(e){e.stopPropagation();go(cur+1)});
+tocBackdrop.addEventListener("click",closeTOC);
+go(0);
+})();
+
+</script>
+</body>
+</html>

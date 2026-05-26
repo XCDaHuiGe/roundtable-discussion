@@ -5,37 +5,113 @@
       "name": "杂志墨水风格",
       "file": "template-v3-magazine.html",
       "description": "幻灯片式翻页，墨水经典深色主题，适合投资/文学类话题",
-      "theme": {
-        "bg": "#0a0a0b",
-        "accent": "#c23b22",
-        "gold": "#d4a843"
-      }
+      "origin": "original",
+      "theme": { "bg": "#0a0a0b", "accent": "#c23b22", "gold": "#d4a843" }
     },
     {
       "id": "v2-starry",
       "name": "深邃星空风格",
       "file": "template-v2-starry.html",
       "description": "单页滚动式，星空金色主题+圆桌可视化图示，适合科技/社会类话题",
-      "theme": {
-        "bg": "#0C0C0C",
-        "accent": "#D4A04A",
-        "clash": "#E85D3A",
-        "insight": "#4AAD8B"
-      }
+      "origin": "original",
+      "theme": { "bg": "#0C0C0C", "accent": "#D4A04A", "clash": "#E85D3A", "insight": "#4AAD8B" }
+    },
+    {
+      "id": "consulting-report",
+      "name": "咨询报告风格",
+      "file": "template-consulting-report.html",
+      "description": "深海军蓝+青色强调，行业研究报告风格，适合战略/投资/严肃分析",
+      "origin": "lieflat",
+      "theme": { "bg": "#1B2A4A", "accent": "#00A9F4", "green": "#4CAF50" }
+    },
+    {
+      "id": "editorial",
+      "name": "杂志编辑风格",
+      "file": "template-editorial.html",
+      "description": "杂志式文章结构，留白克制，优雅衬线字体，适合思想领导/品牌叙事",
+      "origin": "lieflat",
+      "theme": { "bg": "#d8d4cc", "accent": "#111", "paper": "#faf8f3" }
+    },
+    {
+      "id": "geek-report",
+      "name": "极客风格",
+      "file": "template-geek-report.html",
+      "description": "终端纸面技术风格，单色系，适合AI系统/技术分析/开发者教育",
+      "origin": "lieflat",
+      "theme": { "bg": "#252525", "accent": "#c9f044", "paper": "#e2deda" }
+    },
+    {
+      "id": "clean-review",
+      "name": "简约测评风格",
+      "file": "template-clean-review.html",
+      "description": "极简克制、清晰对比，适合竞品对比/产品测评/严肃分析",
+      "origin": "lieflat",
+      "theme": { "bg": "#ffffff", "accent": "#111", "gray": "#f5f5f5" }
+    },
+    {
+      "id": "rain-notes",
+      "name": "雨天手记风格",
+      "file": "template-rain-notes.html",
+      "description": "柔和纸感、安静动效，适合测评笔记/安静叙事/情感分析",
+      "origin": "lieflat",
+      "theme": { "bg": "#f5f5f0", "accent": "#6b8e9f", "paper": "#fffef9" }
+    },
+    {
+      "id": "sunrise",
+      "name": "日光风格",
+      "file": "template-sunrise.html",
+      "description": "暖调留白、优雅标题，适合品牌营销/生活方式/高级叙事",
+      "origin": "lieflat",
+      "theme": { "bg": "#fff8f0", "accent": "#e8a87c", "gold": "#d4a574" }
+    },
+    {
+      "id": "pixel-report",
+      "name": "黑底闪光风格",
+      "file": "template-pixel-report.html",
+      "description": "暗色网格、像素HUD，适合技术指标拆解/步骤说明",
+      "origin": "lieflat",
+      "theme": { "bg": "#0d0d0d", "accent": "#ff6b6b", "cyan": "#4ecdc4" }
+    },
+    {
+      "id": "dot-matrix",
+      "name": "点阵编辑风格",
+      "file": "template-dot-matrix.html",
+      "description": "点阵场、明暗变体、信号感，适合信号叙事/基准分析",
+      "origin": "lieflat",
+      "theme": { "bg": "#1a1a2e", "accent": "#e94560", "dot": "#16213e" }
+    },
+    {
+      "id": "story-field",
+      "name": "故事集风格",
+      "file": "template-story-field.html",
+      "description": "纪实影像、档案气质、电影感横向叙事，适合项目复盘/人物故事",
+      "origin": "lieflat",
+      "theme": { "bg": "#0f0f0f", "accent": "#c9a86c", "grain": "true" }
+    },
+    {
+      "id": "y2k-brand",
+      "name": "Y2K手册风格",
+      "file": "template-y2k-brand.html",
+      "description": "千禧网页、金属字、闪光、像素窗口，适合创作者品牌/社交账号",
+      "origin": "lieflat",
+      "theme": { "bg": "#000000", "accent": "#ff00ff", "chrome": "#c0c0c0" }
     }
   ],
   "selection": {
     "mode": "random",
-    "default": "v3-magazine",
+    "default": "consulting-report",
     "seed": null
   },
   "topic_matching": {
-    "投资": ["v3-magazine", "v2-starry"],
-    "哲学": ["v2-starry"],
-    "科技": ["v2-starry", "v3-magazine"],
-    "文学": ["v3-magazine", "v2-starry"],
-    "社会": ["v2-starry"],
-    "default": ["v3-magazine", "v2-starry"]
+    "投资": ["consulting-report", "clean-review", "v3-magazine"],
+    "哲学": ["editorial", "rain-notes", "v2-starry"],
+    "科技": ["geek-report", "pixel-report", "dot-matrix", "v2-starry"],
+    "AI": ["geek-report", "pixel-report", "consulting-report"],
+    "文学": ["editorial", "sunrise", "v3-magazine"],
+    "社会": ["dot-matrix", "editorial", "v2-starry"],
+    "情感": ["rain-notes", "sunrise", "story-field"],
+    "创意": ["y2k-brand", "editorial", "sunrise"],
+    "default": ["consulting-report", "editorial", "v3-magazine", "v2-starry"]
   },
   "usage_log": []
 }

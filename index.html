@@ -2,259 +2,1045 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>圆桌洞见 — AI Deep Discussion Roundtable</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>圆桌洞见 · Roundtable Insight</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+<script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--ink:#0a0a0b;--paper:#f1efea;--accent:#c9a227;--glass:rgba(255,255,255,.04);--border:rgba(255,255,255,.06);--radius:6px}
-html{scroll-behavior:smooth}
-body{font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:var(--ink);color:var(--paper);line-height:1.6}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* Hero */
-.hero{min-height:90vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:8vh 6vw;position:relative;overflow:hidden}
-.hero::before{content:"";position:absolute;top:50%;left:50%;width:600px;height:600px;background:radial-gradient(circle,rgba(201,162,39,.06) 0%,transparent 70%);transform:translate(-50%,-50%);pointer-events:none}
-.hero h1{font-size:clamp(2.5rem,7vw,5rem);font-weight:900;line-height:1.1;margin-bottom:1.5vh;letter-spacing:-.02em}
-.hero h1 span{color:var(--accent)}
-.hero p{font-size:clamp(.95rem,1.3vw,1.1rem);opacity:.55;max-width:560px;line-height:1.8}
-.hero .meta{margin-top:3vh;font-family:monospace;font-size:11px;opacity:.28;display:flex;gap:1.8em}
-.hero .scroll-hint{position:absolute;bottom:4vh;font-family:monospace;font-size:11px;opacity:.2;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:.2}50%{opacity:.5}}
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-card: #16161f;
+  --bg-card-hover: #1c1c28;
+  --text-primary: #f0f0f5;
+  --text-secondary: #8888a0;
+  --text-tertiary: #55556a;
+  --accent: #6c5ce7;
+  --accent-light: #a29bfe;
+  --accent-glow: rgba(108, 92, 231, 0.3);
+  --accent-secondary: #00cec9;
+  --accent-secondary-glow: rgba(0, 206, 201, 0.3);
+  --accent-warm: #fd79a8;
+  --border: rgba(255,255,255,0.06);
+  --border-hover: rgba(255,255,255,0.12);
+  --gradient-1: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  --gradient-2: linear-gradient(135deg, #00cec9, #81ecec);
+  --gradient-3: linear-gradient(135deg, #fd79a8, #fab1a0);
+  --gradient-hero: linear-gradient(160deg, #0a0a1a 0%, #1a0a2e 40%, #0a1a2e 70%, #0a0a1a 100%);
+}
 
-/* Sections */
-section{padding:8vh 6vw;max-width:1200px;margin:0 auto}
-.section-label{font-family:monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;opacity:.3;margin-bottom:1.5vh}
-.section-title{font-size:clamp(1.3rem,3vw,2rem);font-weight:700;margin-bottom:3vh}
+html { scroll-behavior: smooth; }
 
-/* Topic Cards — 4列紧凑 */
-.topics{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2vw}
-.topic-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:1.8vh 1.5vw;transition:all .25s cubic-bezier(.25,.46,.45,.94);position:relative;overflow:hidden;display:flex;flex-direction:column;gap:.6vh}
-.topic-card:hover{border-color:rgba(201,162,39,.18);transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,.25)}
-.topic-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),transparent);opacity:0;transition:opacity .25s}
-.topic-card:hover::before{opacity:1}
-.topic-card .topic-tag{display:inline-block;padding:1px 8px;border-radius:10px;font-size:9px;font-family:monospace;letter-spacing:.04em;background:rgba(201,162,39,.1);color:var(--accent);width:fit-content}
-.topic-card h3{font-size:.92rem;font-weight:700;line-height:1.4;flex:1}
-.topic-card .topic-author{font-size:.75rem;opacity:.35;margin-top:auto}
-.topic-card .topic-link{font-size:.75rem;color:var(--accent);text-decoration:none;opacity:.7;transition:opacity .2s;display:flex;align-items:center;gap:4px}
-.topic-card .topic-link:hover{opacity:1}
-.topic-card .topic-link::after{content:"→";font-size:.85em}
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
 
-/* Features */
-.features{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.5vw;margin-top:2vh}
-.feature{padding:2vh 1.5vw;border-left:2px solid var(--border);transition:border-color .3s}
-.feature:hover{border-color:var(--accent)}
-.feature h4{font-size:.9rem;font-weight:700;margin-bottom:.4vh}
-.feature p{font-size:.78rem;opacity:.45;line-height:1.6}
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
 
-/* Expert Grid */
-.experts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:.8vh;margin-top:2vh}
-.expert-chip{text-align:center;padding:1.2vh .4vw;background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);font-size:.72rem;transition:all .2s}
-.expert-chip:hover{border-color:rgba(201,162,39,.18)}
-.expert-chip .e-name{font-weight:600}
-.expert-chip .e-field{opacity:.3;font-size:.65rem;margin-top:1px}
+/* ===== NOISE OVERLAY ===== */
+.noise {
+  position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
 
-/* Version Badge */
-.ver-badge{display:inline-block;padding:3px 12px;border-radius:20px;font-family:monospace;font-size:10px;background:rgba(201,162,39,.1);color:var(--accent);border:1px solid rgba(201,162,39,.15);margin-bottom:2vh}
+/* ===== GRID BACKGROUND ===== */
+.grid-bg {
+  position: fixed; inset: 0; z-index: 0;
+  background-size: 60px 60px;
+  background-image:
+    linear-gradient(to right, rgba(108,92,231,0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(108,92,231,0.03) 1px, transparent 1px);
+  mask-image: radial-gradient(ellipse at 50% 50%, black 20%, transparent 70%);
+}
 
-/* Footer */
-footer{padding:5vh 6vw;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:.78rem;opacity:.3;flex-wrap:wrap;gap:1.5vh}
-footer a{color:var(--accent);text-decoration:none}
+/* ===== FLOATING ORBS ===== */
+.orb {
+  position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none;
+  animation: orbFloat 20s ease-in-out infinite;
+}
+.orb-1 { width: 500px; height: 500px; background: rgba(108,92,231,0.12); top: -100px; left: -100px; }
+.orb-2 { width: 400px; height: 400px; background: rgba(0,206,201,0.08); top: 200px; right: -100px; animation-delay: -7s; }
+.orb-3 { width: 600px; height: 600px; background: rgba(253,121,168,0.06); bottom: -200px; left: 30%; animation-delay: -14s; }
 
-/* Responsive */
-@media(max-width:1100px){.topics{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:768px){.hero .meta{flex-direction:column;gap:.4em}section{padding:6vh 5vw}.topics{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:480px){.topics{grid-template-columns:1fr}}
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -40px) scale(1.05); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+/* ===== NAV ===== */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: 0 48px; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(10,10,15,0.7);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s ease;
+}
+nav.scrolled { background: rgba(10,10,15,0.92); }
+
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 700; font-size: 15px; letter-spacing: -0.02em;
+}
+.nav-logo-icon {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: var(--gradient-1);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 800; color: white;
+}
+.nav-links { display: flex; gap: 32px; }
+.nav-links a {
+  font-size: 13px; color: var(--text-secondary); text-decoration: none;
+  transition: color 0.2s; font-weight: 500; letter-spacing: 0.02em;
+}
+.nav-links a:hover { color: var(--text-primary); }
+
+.nav-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; padding: 4px 10px; border-radius: 20px;
+  background: rgba(108,92,231,0.15); color: var(--accent-light);
+  border: 1px solid rgba(108,92,231,0.25); font-weight: 500;
+}
+
+/* ===== SECTION COMMON ===== */
+section { position: relative; z-index: 1; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+@media(min-width:768px){ .container { padding: 0 48px; } }
+
+.section-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--accent-light); margin-bottom: 16px; font-weight: 500;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.section-tag::before {
+  content: ''; width: 20px; height: 1px; background: var(--accent-light);
+}
+
+.section-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: clamp(28px, 4vw, 42px); font-weight: 700;
+  line-height: 1.3; letter-spacing: -0.02em; margin-bottom: 16px;
+}
+
+.section-desc {
+  font-size: 16px; color: var(--text-secondary); line-height: 1.7;
+  max-width: 560px;
+}
+
+/* ===== HERO ===== */
+.hero {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  background: var(--gradient-hero);
+}
+.hero-content { text-align: center; max-width: 900px; padding: 0 24px; position: relative; z-index: 2; }
+
+.hero-version {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; color: var(--accent-light); letter-spacing: 0.2em;
+  margin-bottom: 32px; font-weight: 500;
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: 8px 20px; border-radius: 30px;
+  background: rgba(108,92,231,0.1); border: 1px solid rgba(108,92,231,0.2);
+}
+.hero-version .dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--accent-secondary);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{ opacity:1; } 50%{ opacity:0.3; } }
+
+.hero h1 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: clamp(48px, 8vw, 96px);
+  font-weight: 900; letter-spacing: -0.03em;
+  line-height: 1.1; margin-bottom: 32px;
+  background: linear-gradient(135deg, #ffffff 0%, #e0e0f0 40%, #a29bfe 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: clamp(16px, 2vw, 20px);
+  color: var(--text-secondary); line-height: 1.8;
+  max-width: 640px; margin: 0 auto 48px;
+  font-weight: 300;
+}
+.hero-subtitle strong { color: var(--text-primary); font-weight: 500; }
+
+.hero-stats {
+  display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
+  margin-bottom: 56px;
+}
+.hero-stat {
+  text-align: center;
+}
+.hero-stat-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 36px; font-weight: 700;
+  background: var(--gradient-1);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-stat-label {
+  font-size: 12px; color: var(--text-tertiary); letter-spacing: 0.05em;
+  margin-top: 4px; font-weight: 500;
+}
+
+.hero-cta {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 36px; border-radius: 12px;
+  background: var(--gradient-1);
+  color: white; font-size: 14px; font-weight: 600;
+  text-decoration: none; cursor: pointer;
+  box-shadow: 0 8px 32px var(--accent-glow);
+  transition: all 0.3s ease; border: none;
+}
+.hero-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 48px var(--accent-glow);
+}
+
+.hero-github {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 24px; border-radius: 12px;
+  background: rgba(255,255,255,0.06);
+  color: var(--text-secondary); font-size: 14px; font-weight: 500;
+  text-decoration: none; margin-left: 16px;
+  border: 1px solid var(--border);
+  transition: all 0.3s ease;
+}
+.hero-github:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+  transform: translateY(-2px);
+}
+.hero-github .iconify:last-child { opacity: 0.5; }
+.hero-github:hover .iconify:last-child { opacity: 1; }
+
+@media(max-width:640px){
+  .hero-github { margin-left: 0; margin-top: 12px; }
+}
+
+.hero-scroll {
+  position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  color: var(--text-tertiary); font-size: 11px; letter-spacing: 0.1em;
+  animation: scrollBounce 2s ease-in-out infinite;
+}
+.hero-scroll .scroll-line {
+  width: 1px; height: 32px; position: relative; overflow: hidden;
+  background: rgba(255,255,255,0.1);
+}
+.hero-scroll .scroll-line::after {
+  content: ''; position: absolute; top: -100%; left: 0;
+  width: 1px; height: 100%; background: var(--accent-light);
+  animation: scrollDown 2s ease-in-out infinite;
+}
+@keyframes scrollDown { 0%{ top:-100%; } 100%{ top:100%; } }
+@keyframes scrollBounce { 0%,100%{ transform: translateX(-50%) translateY(0); } 50%{ transform: translateX(-50%) translateY(8px); } }
+
+/* ===== CAPABILITIES ===== */
+.capabilities { padding: 120px 0; position: relative; }
+
+.cap-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+  background: var(--border); border-radius: 20px; overflow: hidden;
+  margin-top: 56px;
+}
+@media(max-width:768px){ .cap-grid { grid-template-columns: 1fr; } }
+
+.cap-card {
+  background: var(--bg-secondary); padding: 40px 32px;
+  transition: all 0.4s ease; position: relative; overflow: hidden;
+}
+.cap-card:hover { background: var(--bg-card-hover); }
+.cap-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 2px; background: var(--gradient-1); opacity: 0;
+  transition: opacity 0.4s;
+}
+.cap-card:hover::before { opacity: 1; }
+
+.cap-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20px; font-size: 22px;
+  background: rgba(108,92,231,0.1); color: var(--accent-light);
+  border: 1px solid rgba(108,92,231,0.15);
+}
+.cap-card:nth-child(2) .cap-icon {
+  background: rgba(0,206,201,0.1); color: var(--accent-secondary);
+  border-color: rgba(0,206,201,0.15);
+}
+.cap-card:nth-child(3) .cap-icon {
+  background: rgba(253,121,168,0.1); color: var(--accent-warm);
+  border-color: rgba(253,121,168,0.15);
+}
+.cap-card:nth-child(4) .cap-icon {
+  background: rgba(253,121,168,0.1); color: var(--accent-warm);
+  border-color: rgba(253,121,168,0.15);
+}
+.cap-card:nth-child(5) .cap-icon {
+  background: rgba(0,206,201,0.1); color: var(--accent-secondary);
+  border-color: rgba(0,206,201,0.15);
+}
+.cap-card:nth-child(6) .cap-icon {
+  background: rgba(108,92,231,0.1); color: var(--accent-light);
+  border-color: rgba(108,92,231,0.15);
+}
+
+.cap-title {
+  font-size: 17px; font-weight: 700; margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+.cap-desc {
+  font-size: 14px; color: var(--text-secondary); line-height: 1.7;
+}
+
+/* ===== TOPIC LIBRARY ===== */
+.topics { padding: 120px 0; position: relative; }
+.topics-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, var(--bg-primary) 0%, rgba(16,8,32,0.5) 50%, var(--bg-primary) 100%);
+  z-index: -1;
+}
+
+.topic-list { margin-top: 56px; display: flex; flex-direction: column; gap: 1px; }
+
+.topic-item {
+  display: grid; grid-template-columns: auto 1fr auto;
+  align-items: center; gap: 24px;
+  padding: 24px 28px; background: var(--bg-secondary);
+  transition: all 0.3s ease; cursor: pointer;
+  text-decoration: none; color: inherit;
+  position: relative; overflow: hidden;
+}
+.topic-item:hover { background: var(--bg-card-hover); }
+.topic-item::after {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; background: var(--gradient-1); opacity: 0;
+  transition: opacity 0.3s;
+}
+.topic-item:hover::after { opacity: 1; }
+
+@media(max-width:768px){
+  .topic-item { grid-template-columns: 1fr; gap: 12px; }
+}
+
+.topic-meta {
+  display: flex; flex-direction: column; gap: 4px;
+  min-width: 100px;
+}
+.topic-version {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--accent-light); font-weight: 500;
+}
+.topic-pages {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--text-tertiary);
+}
+
+.topic-title {
+  font-size: 16px; font-weight: 600; line-height: 1.5;
+  letter-spacing: -0.01em;
+}
+.topic-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; padding: 3px 10px; border-radius: 4px;
+  font-weight: 600; letter-spacing: 0.05em; white-space: nowrap;
+}
+.tag-original { background: rgba(108,92,231,0.15); color: var(--accent-light); }
+.tag-frontier { background: rgba(253,121,168,0.15); color: var(--accent-warm); }
+.tag-book { background: rgba(0,206,201,0.15); color: var(--accent-secondary); }
+
+.topic-arrow {
+  font-size: 18px; color: var(--text-tertiary);
+  transition: all 0.3s;
+}
+.topic-item:hover .topic-arrow {
+  color: var(--accent-light); transform: translateX(4px);
+}
+
+/* ===== EXPERT LIBRARY ===== */
+.experts { padding: 120px 0; position: relative; }
+
+.expert-domains {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px; margin-top: 48px;
+}
+.domain-card {
+  background: var(--bg-secondary); border-radius: 14px;
+  padding: 20px; border: 1px solid var(--border);
+  transition: all 0.3s ease; cursor: default;
+  position: relative; overflow: hidden;
+}
+.domain-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+.domain-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 2px; opacity: 0; transition: opacity 0.3s;
+}
+.domain-card:hover::before { opacity: 1; }
+.domain-card:nth-child(3n+1)::before { background: var(--gradient-1); }
+.domain-card:nth-child(3n+2)::before { background: var(--gradient-2); }
+.domain-card:nth-child(3n)::before { background: var(--gradient-3); }
+
+.domain-icon {
+  font-size: 24px; margin-bottom: 12px;
+  display: flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: 10px;
+}
+.domain-card:nth-child(3n+1) .domain-icon { background: rgba(108,92,231,0.1); color: var(--accent-light); }
+.domain-card:nth-child(3n+2) .domain-icon { background: rgba(0,206,201,0.1); color: var(--accent-secondary); }
+.domain-card:nth-child(3n) .domain-icon { background: rgba(253,121,168,0.1); color: var(--accent-warm); }
+
+.domain-name { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+.domain-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--text-tertiary);
+}
+
+.expert-names {
+  margin-top: 48px; padding: 40px;
+  background: var(--bg-secondary); border-radius: 20px;
+  border: 1px solid var(--border);
+}
+.expert-names-title {
+  font-size: 13px; font-weight: 600; margin-bottom: 24px;
+  color: var(--text-secondary); letter-spacing: 0.05em;
+}
+.expert-flow {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.expert-chip {
+  font-size: 13px; padding: 6px 14px; border-radius: 8px;
+  background: rgba(255,255,255,0.04); color: var(--text-secondary);
+  border: 1px solid var(--border); transition: all 0.2s;
+  cursor: default; font-weight: 500;
+}
+.expert-chip:hover {
+  background: rgba(108,92,231,0.1); border-color: rgba(108,92,231,0.25);
+  color: var(--accent-light);
+}
+
+/* ===== PROCESS SECTION ===== */
+.process { padding: 120px 0; position: relative; }
+
+.process-flow {
+  margin-top: 56px; display: grid;
+  grid-template-columns: repeat(4, 1fr); gap: 0;
+  position: relative;
+}
+@media(max-width:768px){ .process-flow { grid-template-columns: 1fr; gap: 24px; } }
+
+.process-step {
+  text-align: center; padding: 32px 24px;
+  position: relative;
+}
+.process-step:not(:last-child)::after {
+  content: ''; position: absolute; top: 48px; right: -1px;
+  width: calc(100% - 96px); height: 1px;
+  background: linear-gradient(to right, var(--accent), transparent);
+  left: calc(50% + 48px); opacity: 0.3;
+}
+@media(max-width:768px){
+  .process-step:not(:last-child)::after { display: none; }
+}
+
+.process-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 48px; font-weight: 800; opacity: 0.08;
+  margin-bottom: 16px;
+}
+.process-step:hover .process-num { opacity: 0.15; }
+
+.process-label {
+  font-size: 15px; font-weight: 700; margin-bottom: 8px;
+}
+.process-detail {
+  font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  padding: 60px 0 40px; position: relative; z-index: 1;
+  border-top: 1px solid var(--border);
+}
+.footer-inner {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 24px;
+}
+.footer-left { display: flex; flex-direction: column; gap: 12px; }
+.footer-brand {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 18px; font-weight: 700;
+}
+.footer-copy { font-size: 12px; color: var(--text-tertiary); }
+.footer-tech {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--text-tertiary); letter-spacing: 0.05em;
+}
+
+.footer-right { display: flex; gap: 16px; align-items: center; }
+.footer-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--text-secondary); text-decoration: none;
+  padding: 8px 16px; border-radius: 8px;
+  border: 1px solid var(--border); transition: all 0.2s;
+}
+.footer-link:hover {
+  border-color: var(--accent); color: var(--accent-light);
+  background: rgba(108,92,231,0.05);
+}
+
+/* ===== REVEAL ANIMATION ===== */
+.reveal {
+  opacity: 0; transform: translateY(40px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible {
+  opacity: 1; transform: translateY(0);
+}
+
+/* ===== SCAN LINE ===== */
+.scan-line {
+  position: absolute; left: 0; right: 0; height: 1px;
+  background: linear-gradient(to right, transparent, var(--accent-glow), transparent);
+  animation: scanMove 8s ease-in-out infinite;
+  pointer-events: none; z-index: 0;
+}
+@keyframes scanMove {
+  0% { top: -2%; opacity: 0; }
+  10% { opacity: 0.5; }
+  90% { opacity: 0.5; }
+  100% { top: 102%; opacity: 0; }
+}
+
+/* ===== DIVIDER ===== */
+.section-divider {
+  width: 100%; height: 1px; position: relative;
+  background: var(--border); margin: 0 auto;
+}
+.section-divider::after {
+  content: ''; position: absolute; left: 50%; top: -1px;
+  width: 80px; height: 3px; transform: translateX(-50%);
+  background: var(--gradient-1); border-radius: 2px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:640px){
+  nav { padding: 0 16px; }
+  .nav-links { display: none; }
+  .hero-stats { gap: 24px; }
+  .hero-stat-num { font-size: 28px; }
+  .expert-domains { grid-template-columns: repeat(2, 1fr); }
+  .expert-names { padding: 24px; }
+  .footer-inner { flex-direction: column; text-align: center; align-items: center; }
+}
 </style>
 </head>
 <body>
 
-<!-- Hero -->
-<div class="hero">
-<div class="ver-badge">V5.0 · 2026-05-26</div>
-<h1>圆桌<span>洞见</span></h1>
-<p>给一个话题，系统自动从互联网挖掘真实素材，<br>6位跨领域专家展开3轮深度交锋，榨干认知增量。</p>
-<div class="meta">
-<span>57位专家库</span>
-<span>10大领域</span>
-<span>话题+书籍</span>
-<span>互联网自学习</span>
-</div>
-<div class="scroll-hint">↓ 向下滚动查看全部洞见</div>
-</div>
+<div class="noise"></div>
+<div class="grid-bg"></div>
 
-<!-- Topic Library -->
-<section id="topics">
-<div class="section-label">Topic Library · 话题库</div>
-<div class="section-title">已讨论话题（最新）</div>
-<div class="topics">
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">
+    <div class="nav-logo-icon">洞</div>
+    <span>圆桌洞见</span>
+  </div>
+  <div class="nav-links">
+    <a href="#capabilities">核心能力</a>
+    <a href="#topics">话题库</a>
+    <a href="#experts">专家库</a>
+    <a href="#process">流程</a>
+  </div>
+  <div class="nav-badge">V5.0</div>
+</nav>
 
-<div class="topic-card">
-<div class="topic-tag">V1.0 · 18页</div>
-<h3>「无用阶级」的诞生：AI接管工具理性后的工作意义重构</h3>
-<div class="topic-author">原创话题 · 2026-05-26</div>
-<a class="topic-link" href="output/无用阶级_工作意义_圆桌洞见.html">查看洞见</a>
-</div>
+<!-- HERO -->
+<section class="hero">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="scan-line"></div>
 
-<div class="topic-card">
-<div class="topic-tag">V1.0 · 18页</div>
-<h3>算法信用评分对人性的异化与金融资源分配</h3>
-<div class="topic-author">原创话题 · 2026-05-26</div>
-<a class="topic-link" href="output/算法信用_人性异化_圆桌洞见.html">查看洞见</a>
-</div>
+  <div class="hero-content">
+    <div class="hero-version">
+      <span class="dot"></span>
+      SYSTEM V5.0 · 2026-05-26
+    </div>
 
-<div class="topic-card">
-<div class="topic-tag">V1.0 · 30页</div>
-<h3>人机协同：投研新物种崛起与金融职场权力重构</h3>
-<div class="topic-author">原创话题 · 2026-05-26</div>
-<a class="topic-link" href="output/人机协同_投研重构_圆桌洞见.html">查看洞见</a>
-</div>
+    <h1>圆桌洞见</h1>
 
-<div class="topic-card">
-<div class="topic-tag">V1.0 · 18页</div>
-<h3>影视模因驱动的散户狂潮与AI情绪套利</h3>
-<div class="topic-author">原创话题 · 2026-05-26</div>
-<a class="topic-link" href="output/影视模因_散户狂潮_圆桌洞见.html">查看洞见</a>
-</div>
+    <p class="hero-subtitle">
+      给一个话题，系统自动从互联网挖掘真实素材，<br>
+      <strong>6位跨领域专家</strong>展开<strong>3轮深度交锋</strong>，榨干认知增量。
+    </p>
 
-<div class="topic-card">
-<div class="topic-tag">V1.0 · 21页</div>
-<h3>经典文学数据化解构与AI创作情感溢价的资本逻辑</h3>
-<div class="topic-author">原创话题 · 2026-05-26</div>
-<a class="topic-link" href="output/经典文学_AI创作_圆桌洞见.html">查看洞见</a>
-</div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">57</div>
+        <div class="hero-stat-label">专家库</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">10</div>
+        <div class="hero-stat-label">领域</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">3</div>
+        <div class="hero-stat-label">轮交锋</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">∞</div>
+        <div class="hero-stat-label">互联网学习</div>
+      </div>
+    </div>
 
-<div class="topic-card">
-<div class="topic-tag">V1.0 · 18页</div>
-<h3>科幻叙事如何制造科技投资泡沫与预言的自我实现</h3>
-<div class="topic-author">原创话题 · 2026-05-26</div>
-<a class="topic-link" href="output/科幻叙事_投资泡沫_圆桌洞见.html">查看洞见</a>
-</div>
+    <a href="#topics" class="hero-cta">
+      <span class="iconify" data-icon="lucide:arrow-down" data-width="16"></span>
+      探索全部洞见
+    </a>
+    <a href="https://github.com/XCDaHuiGe/roundtable-discussion" target="_blank" class="hero-github">
+      <span class="iconify" data-icon="lucide:github" data-width="18"></span>
+      <span>View on GitHub</span>
+      <span class="iconify" data-icon="lucide:external-link" data-width="14"></span>
+    </a>
+  </div>
 
-<div class="topic-card">
-<div class="topic-tag">V1.0 · 32页</div>
-<h3>虚构世界资产化：文学与电影IP在金融市场的证券化及监管</h3>
-<div class="topic-author">原创话题 · 2026-05-26</div>
-<a class="topic-link" href="output/虚构世界_资产化_圆桌洞见.html">查看洞见</a>
-</div>
-
-<div class="topic-card">
-<div class="topic-tag">V1.0 · 25页</div>
-<h3>黑天鹅时刻：量化算法与人类投资直觉的终极博弈</h3>
-<div class="topic-author">原创话题 · 2026-05-26</div>
-<a class="topic-link" href="output/黑天鹅_量化博弈_圆桌洞见.html">查看洞见</a>
-</div>
-
-<div class="topic-card">
-<div class="topic-tag">V1.0 · 12页</div>
-<h3>创意边际成本归零下的内容产业投资范式转移</h3>
-<div class="topic-author">原创话题 · 2026-05-26</div>
-<a class="topic-link" href="output/创意边际成本_内容投资_圆桌洞见.html">查看洞见</a>
-</div>
-
-<div class="topic-card">
-<div class="topic-tag">V1.0 · 28页</div>
-<h3>AI生成叙事对金融市场定价逻辑的颠覆</h3>
-<div class="topic-author">前沿话题 · 2026-05-26</div>
-<a class="topic-link" href="output/AI生成叙事_金融定价_圆桌洞见.html">查看洞见</a>
-</div>
-
-<div class="topic-card">
-<div class="topic-tag">V5.0 · 51页</div>
-<h3>段永平投资问答语录</h3>
-<div class="topic-author">段永平 · 2006-2025</div>
-<a class="topic-link" href="output/段永平投资问答语录_圆桌洞见.html">查看洞见</a>
-</div>
-
-<div class="topic-card">
-<div class="topic-tag">V3.0 · 16页</div>
-<h3>儒释道批判性分析</h3>
-<div class="topic-author">原创话题 · 2026-03</div>
-<a class="topic-link" href="output/儒释道批判性分析_圆桌洞见.html">查看洞见</a>
-</div>
-
-<div class="topic-card">
-<div class="topic-tag">V2.6 · 36页</div>
-<h3>穷查理宝典</h3>
-<div class="topic-author">查理·芒格 · Poor Charlie's</div>
-<a class="topic-link" href="output/穷查理宝典_圆桌洞见.html">查看洞见</a>
-</div>
-
-<div class="topic-card">
-<div class="topic-tag">V2.4 · 35页</div>
-<h3>布鲁克林有棵树</h3>
-<div class="topic-author">贝蒂·史密斯 · 1943</div>
-<a class="topic-link" href="output/布鲁克林有棵树_圆桌洞见.html">查看洞见</a>
-</div>
-
-<div class="topic-card">
-<div class="topic-tag">V2.0 · 14页</div>
-<h3>遥远的救世主（天道）</h3>
-<div class="topic-author">豆豆 · 2005</div>
-<a class="topic-link" href="output/天道_圆桌洞见.html">查看洞见</a>
-</div>
-
-</div>
+  <div class="hero-scroll">
+    <span>SCROLL</span>
+    <div class="scroll-line"></div>
+  </div>
 </section>
 
-<!-- System Features -->
-<section id="features">
-<div class="section-label">System V5.0</div>
-<div class="section-title">圆桌洞见 V5.0 核心能力</div>
-<div class="features">
-<div class="feature"><h4>话题→互联网素材</h4><p>用户给一个话题，系统自动从知乎+全网挖掘真实讨论素材，不再依赖用户提供内容。</p></div>
-<div class="feature"><h4>3轮深度交锋</h4><p>立场表达 → 互相攻击 → 认知整合。每轮必须有专家间的直接反驳，禁止各说各话。</p></div>
-<div class="feature"><h4>57位专家库</h4><p>10大领域：商业、心理学、哲学、科技、经济、历史、自助、科学、跨界、中文知识分子。</p></div>
-<div class="feature"><h4>互联网持续学习</h4><p>每次讨论后自动注入互联网新知识到专家档案，专家越用越强，形成进化闭环。</p></div>
-<div class="feature"><h4>多格式输出</h4><p>每份洞见为独立HTML幻灯片，支持键盘/触摸导航，零外部依赖。</p></div>
-<div class="feature"><h4>来源可追溯</h4><p>所有观点必须标注互联网来源，每个矛盾点来自真实争议，每个案例引用真实数据。</p></div>
-</div>
+<!-- CAPABILITIES -->
+<section class="capabilities" id="capabilities">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Core System</div>
+      <h2 class="section-title">圆桌洞见 V5.0 核心能力</h2>
+      <p class="section-desc">从话题到洞见，全自动认知榨取引擎。</p>
+    </div>
+
+    <div class="cap-grid reveal">
+      <div class="cap-card">
+        <div class="cap-icon">
+          <span class="iconify" data-icon="lucide:globe" data-width="22"></span>
+        </div>
+        <div class="cap-title">话题 → 互联网素材</div>
+        <div class="cap-desc">用户给一个话题，系统自动从知乎+全网挖掘真实讨论素材，不再依赖用户提供内容。</div>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">
+          <span class="iconify" data-icon="lucide:swords" data-width="22"></span>
+        </div>
+        <div class="cap-title">3轮深度交锋</div>
+        <div class="cap-desc">立场表达 → 互相攻击 → 认知整合。每轮必须有专家间的直接反驳，禁止各说各话。</div>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">
+          <span class="iconify" data-icon="lucide:users" data-width="22"></span>
+        </div>
+        <div class="cap-title">57位专家库</div>
+        <div class="cap-desc">10大领域：商业、心理学、哲学、科技、经济、历史、自助、科学、跨界、中文知识分子。</div>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">
+          <span class="iconify" data-icon="lucide:brain-circuit" data-width="22"></span>
+        </div>
+        <div class="cap-title">互联网持续学习</div>
+        <div class="cap-desc">每次讨论后自动注入互联网新知识到专家档案，专家越用越强，形成进化闭环。</div>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">
+          <span class="iconify" data-icon="lucide:presentation" data-width="22"></span>
+        </div>
+        <div class="cap-title">多格式输出</div>
+        <div class="cap-desc">每份洞见为独立HTML幻灯片，支持键盘/触摸导航，零外部依赖。</div>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">
+          <span class="iconify" data-icon="lucide:link" data-width="22"></span>
+        </div>
+        <div class="cap-title">来源可追溯</div>
+        <div class="cap-desc">所有观点必须标注互联网来源，每个矛盾点来自真实争议，每个案例引用真实数据。</div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- Expert Library -->
-<section id="experts">
-<div class="section-label">Expert Library · 专家库</div>
-<div class="section-title">57位专家阵容</div>
-<div class="experts-grid">
-<div class="expert-chip"><div class="e-name">巴菲特</div><div class="e-field">经济</div></div>
-<div class="expert-chip"><div class="e-name">芒格</div><div class="e-field">经济</div></div>
-<div class="expert-chip"><div class="e-name">塔勒布</div><div class="e-field">经济</div></div>
-<div class="expert-chip"><div class="e-name">达利欧</div><div class="e-field">经济</div></div>
-<div class="expert-chip"><div class="e-name">席勒</div><div class="e-field">经济</div></div>
-<div class="expert-chip"><div class="e-name">卡尼曼</div><div class="e-field">心理</div></div>
-<div class="expert-chip"><div class="e-name">津巴多</div><div class="e-field">心理</div></div>
-<div class="expert-chip"><div class="e-name">塞利格曼</div><div class="e-field">心理</div></div>
-<div class="expert-chip"><div class="e-name">尼采</div><div class="e-field">哲学</div></div>
-<div class="expert-chip"><div class="e-name">萨特</div><div class="e-field">哲学</div></div>
-<div class="expert-chip"><div class="e-name">加缪</div><div class="e-field">哲学</div></div>
-<div class="expert-chip"><div class="e-name">叔本华</div><div class="e-field">哲学</div></div>
-<div class="expert-chip"><div class="e-name">KK</div><div class="e-field">科技</div></div>
-<div class="expert-chip"><div class="e-name">库兹韦尔</div><div class="e-field">科技</div></div>
-<div class="expert-chip"><div class="e-name">赫拉利</div><div class="e-field">科技</div></div>
-<div class="expert-chip"><div class="e-name">吴军</div><div class="e-field">科技</div></div>
-<div class="expert-chip"><div class="e-name">柯林斯</div><div class="e-field">商业</div></div>
-<div class="expert-chip"><div class="e-name">德鲁克</div><div class="e-field">商业</div></div>
-<div class="expert-chip"><div class="e-name">稻盛和夫</div><div class="e-field">商业</div></div>
-<div class="expert-chip"><div class="e-name">窦文涛</div><div class="e-field">媒体</div></div>
-<div class="expert-chip"><div class="e-name">罗翔</div><div class="e-field">法学</div></div>
-<div class="expert-chip"><div class="e-name">刘润</div><div class="e-field">商业</div></div>
-<div class="expert-chip"><div class="e-name">李诞</div><div class="e-field">喜剧</div></div>
-<div class="expert-chip"><div class="e-name">梁文道</div><div class="e-field">文化</div></div>
-<div class="expert-chip"><div class="e-name">冯唐</div><div class="e-field">文学</div></div>
-<div class="expert-chip"><div class="e-name">吴晓波</div><div class="e-field">财经</div></div>
-<div class="expert-chip"><div class="e-name">项飙</div><div class="e-field">社会学</div></div>
-<div class="expert-chip"><div class="e-name">余华</div><div class="e-field">文学</div></div>
-<div class="expert-chip"><div class="e-name">许知远</div><div class="e-field">知识</div></div>
-<div class="expert-chip"><div class="e-name">苏格拉底</div><div class="e-field">哲学</div></div>
-<div class="expert-chip"><div class="e-name">老子</div><div class="e-field">哲学</div></div>
-<div class="expert-chip"><div class="e-name">孔子</div><div class="e-field">哲学</div></div>
-</div>
+<!-- TOPICS -->
+<section class="topics" id="topics">
+  <div class="topics-bg"></div>
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Topic Library</div>
+      <h2 class="section-title">话题库</h2>
+      <p class="section-desc">已讨论话题，持续扩展中。</p>
+    </div>
+
+    <div class="topic-list reveal">
+
+      <a class="topic-item" href="output/无用阶级_工作意义_圆桌洞见.html">
+        <div class="topic-meta">
+          <span class="topic-version">V1.0</span>
+          <span class="topic-pages">18 pages</span>
+        </div>
+        <div class="topic-title">「无用阶级」的诞生：AI接管工具理性后的工作意义重构</div>
+        <span class="topic-tag tag-original">原创话题</span>
+      </a>
+
+      <a class="topic-item" href="output/算法信用_人性异化_圆桌洞见.html">
+        <div class="topic-meta">
+          <span class="topic-version">V1.0</span>
+          <span class="topic-pages">18 pages</span>
+        </div>
+        <div class="topic-title">算法信用评分对人性的异化与金融资源分配</div>
+        <span class="topic-tag tag-original">原创话题</span>
+      </a>
+
+      <a class="topic-item" href="output/人机协同_投研重构_圆桌洞见.html">
+        <div class="topic-meta">
+          <span class="topic-version">V1.0</span>
+          <span class="topic-pages">30 pages</span>
+        </div>
+        <div class="topic-title">人机协同：投研新物种崛起与金融职场权力重构</div>
+        <span class="topic-tag tag-original">原创话题</span>
+      </a>
+
+      <a class="topic-item" href="output/影视模因_散户狂潮_圆桌洞见.html">
+        <div class="topic-meta">
+          <span class="topic-version">V1.0</span>
+          <span class="topic-pages">18 pages</span>
+        </div>
+        <div class="topic-title">影视模因驱动的散户狂潮与AI情绪套利</div>
+        <span class="topic-tag tag-original">原创话题</span>
+      </a>
+
+      <a class="topic-item" href="output/经典文学_AI创作_圆桌洞见.html">
+        <div class="topic-meta">
+          <span class="topic-version">V1.0</span>
+          <span class="topic-pages">21 pages</span>
+        </div>
+        <div class="topic-title">经典文学数据化解构与AI创作情感溢价的资本逻辑</div>
+        <span class="topic-tag tag-original">原创话题</span>
+      </a>
+
+      <a class="topic-item" href="output/科幻叙事_投资泡沫_圆桌洞见.html">
+        <div class="topic-meta">
+          <span class="topic-version">V1.0</span>
+          <span class="topic-pages">18 pages</span>
+        </div>
+        <div class="topic-title">科幻叙事如何制造科技投资泡沫与预言的自我实现</div>
+        <span class="topic-tag tag-original">原创话题</span>
+      </a>
+
+      <a class="topic-item" href="output/虚构世界_资产化_圆桌洞见.html">
+        <div class="topic-meta">
+          <span class="topic-version">V1.0</span>
+          <span class="topic-pages">32 pages</span>
+        </div>
+        <div class="topic-title">虚构世界资产化：文学与电影IP在金融市场的证券化及监管</div>
+        <span class="topic-tag tag-original">原创话题</span>
+      </a>
+
+      <a class="topic-item" href="output/黑天鹅_量化博弈_圆桌洞见.html">
+        <div class="topic-meta">
+          <span class="topic-version">V1.0</span>
+          <span class="topic-pages">25 pages</span>
+        </div>
+        <div class="topic-title">黑天鹅时刻：量化算法与人类投资直觉的终极博弈</div>
+        <span class="topic-tag tag-original">原创话题</span>
+      </a>
+
+      <a class="topic-item" href="output/创意边际成本_内容投资_圆桌洞见.html">
+        <div class="topic-meta">
+          <span class="topic-version">V1.0</span>
+          <span class="topic-pages">12 pages</span>
+        </div>
+        <div class="topic-title">创意边际成本归零下的内容产业投资范式转移</div>
+        <span class="topic-tag tag-original">原创话题</span>
+      </a>
+
+      <a class="topic-item" href="output/AI生成叙事_金融定价_圆桌洞见.html">
+        <div class="topic-meta">
+          <span class="topic-version">V1.0</span>
+          <span class="topic-pages">28 pages</span>
+        </div>
+        <div class="topic-title">AI生成叙事对金融市场定价逻辑的颠覆</div>
+        <span class="topic-tag tag-frontier">前沿话题</span>
+      </a>
+
+      <a class="topic-item" href="output/段永平投资问答语录_圆桌洞见.html">
+        <div class="topic-meta">
+          <span class="topic-version">V5.0</span>
+          <span class="topic-pages">51 pages</span>
+        </div>
+        <div class="topic-title">段永平投资问答语录</div>
+        <span class="topic-tag tag-book">书籍 · 2006-2025</span>
+      </a>
+
+      <a class="topic-item" href="output/儒释道批判性分析_圆桌洞见.html">
+        <div class="topic-meta">
+          <span class="topic-version">V3.0</span>
+          <span class="topic-pages">16 pages</span>
+        </div>
+        <div class="topic-title">儒释道批判性分析</div>
+        <span class="topic-tag tag-original">原创话题</span>
+      </a>
+
+      <a class="topic-item" href="output/穷查理宝典_圆桌洞见.html">
+        <div class="topic-meta">
+          <span class="topic-version">V2.6</span>
+          <span class="topic-pages">36 pages</span>
+        </div>
+        <div class="topic-title">穷查理宝典</div>
+        <span class="topic-tag tag-book">查理·芒格</span>
+      </a>
+
+      <a class="topic-item" href="output/布鲁克林有棵树_圆桌洞见.html">
+        <div class="topic-meta">
+          <span class="topic-version">V2.4</span>
+          <span class="topic-pages">35 pages</span>
+        </div>
+        <div class="topic-title">布鲁克林有棵树</div>
+        <span class="topic-tag tag-book">贝蒂·史密斯 · 1943</span>
+      </a>
+
+      <a class="topic-item" href="output/天道_圆桌洞见.html">
+        <div class="topic-meta">
+          <span class="topic-version">V2.0</span>
+          <span class="topic-pages">14 pages</span>
+        </div>
+        <div class="topic-title">遥远的救世主（天道）</div>
+        <span class="topic-tag tag-book">豆豆 · 2005</span>
+      </a>
+
+    </div>
+  </div>
 </section>
 
-<!-- Footer -->
+<!-- EXPERTS -->
+<section class="experts" id="experts">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Expert Library</div>
+      <h2 class="section-title">57位专家阵容</h2>
+      <p class="section-desc">10大领域，跨学科交锋产生认知化学反应。</p>
+    </div>
+
+    <div class="expert-domains reveal">
+      <div class="domain-card">
+        <div class="domain-icon">
+          <span class="iconify" data-icon="lucide:trending-up" data-width="20"></span>
+        </div>
+        <div class="domain-name">经济</div>
+        <div class="domain-count">5 experts</div>
+      </div>
+      <div class="domain-card">
+        <div class="domain-icon">
+          <span class="iconify" data-icon="lucide:brain" data-width="20"></span>
+        </div>
+        <div class="domain-name">心理学</div>
+        <div class="domain-count">3 experts</div>
+      </div>
+      <div class="domain-card">
+        <div class="domain-icon">
+          <span class="iconify" data-icon="lucide:sparkles" data-width="20"></span>
+        </div>
+        <div class="domain-name">哲学</div>
+        <div class="domain-count">7 experts</div>
+      </div>
+      <div class="domain-card">
+        <div class="domain-icon">
+          <span class="iconify" data-icon="lucide:cpu" data-width="20"></span>
+        </div>
+        <div class="domain-name">科技</div>
+        <div class="domain-count">4 experts</div>
+      </div>
+      <div class="domain-card">
+        <div class="domain-icon">
+          <span class="iconify" data-icon="lucide:briefcase" data-width="20"></span>
+        </div>
+        <div class="domain-name">商业</div>
+        <div class="domain-count">5 experts</div>
+      </div>
+      <div class="domain-card">
+        <div class="domain-icon">
+          <span class="iconify" data-icon="lucide:microphone" data-width="20"></span>
+        </div>
+        <div class="domain-name">媒体</div>
+        <div class="domain-count">1 expert</div>
+      </div>
+      <div class="domain-card">
+        <div class="domain-icon">
+          <span class="iconify" data-icon="lucide:scale" data-width="20"></span>
+        </div>
+        <div class="domain-name">法学</div>
+        <div class="domain-count">1 expert</div>
+      </div>
+      <div class="domain-card">
+        <div class="domain-icon">
+          <span class="iconify" data-icon="lucide:laugh" data-width="20"></span>
+        </div>
+        <div class="domain-name">喜剧</div>
+        <div class="domain-count">1 expert</div>
+      </div>
+      <div class="domain-card">
+        <div class="domain-icon">
+          <span class="iconify" data-icon="lucide:book-open" data-width="20"></span>
+        </div>
+        <div class="domain-name">文学</div>
+        <div class="domain-count">3 experts</div>
+      </div>
+      <div class="domain-card">
+        <div class="domain-icon">
+          <span class="iconify" data-icon="lucide:network" data-width="20"></span>
+        </div>
+        <div class="domain-name">跨界 / 知识分子</div>
+        <div class="domain-count">7 experts</div>
+      </div>
+    </div>
+
+    <div class="expert-names reveal">
+      <div class="expert-names-title">全部专家一览</div>
+      <div class="expert-flow">
+        <span class="expert-chip">巴菲特</span>
+        <span class="expert-chip">芒格</span>
+        <span class="expert-chip">塔勒布</span>
+        <span class="expert-chip">达利欧</span>
+        <span class="expert-chip">席勒</span>
+        <span class="expert-chip">卡尼曼</span>
+        <span class="expert-chip">津巴多</span>
+        <span class="expert-chip">塞利格曼</span>
+        <span class="expert-chip">尼采</span>
+        <span class="expert-chip">萨特</span>
+        <span class="expert-chip">加缪</span>
+        <span class="expert-chip">叔本华</span>
+        <span class="expert-chip">KK</span>
+        <span class="expert-chip">库兹韦尔</span>
+        <span class="expert-chip">赫拉利</span>
+        <span class="expert-chip">吴军</span>
+        <span class="expert-chip">柯林斯</span>
+        <span class="expert-chip">德鲁克</span>
+        <span class="expert-chip">稻盛和夫</span>
+        <span class="expert-chip">窦文涛</span>
+        <span class="expert-chip">罗翔</span>
+        <span class="expert-chip">刘润</span>
+        <span class="expert-chip">李诞</span>
+        <span class="expert-chip">梁文道</span>
+        <span class="expert-chip">冯唐</span>
+        <span class="expert-chip">吴晓波</span>
+        <span class="expert-chip">项飙</span>
+        <span class="expert-chip">余华</span>
+        <span class="expert-chip">许知远</span>
+        <span class="expert-chip">苏格拉底</span>
+        <span class="expert-chip">老子</span>
+        <span class="expert-chip">孔子</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process" id="process">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">How It Works</div>
+      <h2 class="section-title">从话题到洞见</h2>
+      <p class="section-desc">四步完成认知榨取，每一步都有强制对抗机制。</p>
+    </div>
+
+    <div class="process-flow reveal">
+      <div class="process-step">
+        <div class="process-num">01</div>
+        <div class="process-label">输入话题</div>
+        <div class="process-detail">任意话题或书籍，系统自动启动互联网素材挖掘</div>
+      </div>
+      <div class="process-step">
+        <div class="process-num">02</div>
+        <div class="process-label">6位专家就位</div>
+        <div class="process-detail">从57位专家库中智能匹配最相关的跨领域阵容</div>
+      </div>
+      <div class="process-step">
+        <div class="process-num">03</div>
+        <div class="process-label">3轮深度交锋</div>
+        <div class="process-detail">立场表达→互相攻击→认知整合，禁止各说各话</div>
+      </div>
+      <div class="process-step">
+        <div class="process-num">04</div>
+        <div class="process-label">洞见输出</div>
+        <div class="process-detail">独立HTML幻灯片，来源可追溯，知识自动回流</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
 <footer>
-<span>© 2026 圆桌洞见 · Roundtable Insight</span>
-<span>SKILL V5.0 · 57专家 · 10领域 · 话题+书籍双模式</span>
-<span><a href="https://github.com/XCDaHuiGe/roundtable-discussion" target="_blank">GitHub</a></span>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <div class="footer-brand">圆桌洞见</div>
+        <div class="footer-copy">© 2026 圆桌洞见 · Roundtable Insight</div>
+        <div class="footer-tech">SKILL V5.0 · 57专家 · 10领域 · 话题+书籍双模式</div>
+      </div>
+      <div class="footer-right">
+        <a href="https://github.com/XCDaHuiGe/roundtable-discussion" target="_blank" class="footer-link">
+          <span class="iconify" data-icon="lucide:github" data-width="16"></span>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </div>
 </footer>
+
+<script>
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+reveals.forEach(el => observer.observe(el));
+
+// Nav scroll effect
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+</script>
 
 </body>
 </html>

@@ -54,8 +54,8 @@ function generateCollision(collision) {
   const paragraphs = content.split('\n').filter(p => p.trim());
   let contentHtml = paragraphs.map(p => `<p style="margin-bottom:1.2vh;line-height:1.9">${escapeHtml(p)}</p>`).join('');
 
-  return `<div style="background:rgba(var(--accent-rgb),.06);border:1px solid rgba(var(--accent-rgb),.15);border-radius:var(--radius);padding:3vh 2.5vw;margin-top:2vh">
-    <div style="font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh;font-weight:700">⚡ 专家交锋</div>
+  return `<div class="cb" style="background:rgba(var(--accent-rgb),.06);border:1px solid rgba(var(--accent-rgb),.15);border-radius:var(--radius);padding:3vh 2.5vw;margin-top:2vh">
+    <div class="cl" style="font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh;font-weight:700">⚡ 专家交锋</div>
     <div style="font-family:var(--serif-zh);font-size:1.05rem;font-weight:600;margin-bottom:2vh;line-height:1.6">${escapeHtml(title)}</div>
     <div class="st">${contentHtml}</div>
   </div>`;

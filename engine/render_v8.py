@@ -12,7 +12,7 @@ class RoundtableRendererV8:
     
     def __init__(self, template_dir: str):
         self.template_dir = template_dir
-        self.base_template = self._load_template("book-distillation-template.html")
+        self.base_template = self._load_template("book-distillation-clean.html")
     
     def _load_template(self, filename: str) -> str:
         path = os.path.join(self.template_dir, filename)
@@ -379,10 +379,22 @@ class RoundtableRendererV8:
         
         # 替换模板
         html = self.base_template
+        
+        # 删除模板中所有的slide（保留deck-container结构）
+        # 找到deck-container的开始位置
         deck_match = re.search(r'<div class="deck-container"[^>]*>', html)
         if deck_match:
-            insert_pos = deck_match.end()
-            html = html[:insert_pos] + '\n' + slides_html + '\n' + html[insert_pos:]
+            deck_start = deck_match.end()
+            
+            # 找到第一个footer的位置（slide内容结束的标志）
+            footer_match = re.search(r'<div class="deck-footer"', html[deck_start:])
+            if footer_match:
+                # 删除从deck_start到第一个footer之间的所有内容（即所有slide）
+                delete_end = deck_start + footer_match.start()
+                html = html[:deck_start] + '\n' + slides_html + '\n' + html[delete_end:]
+            else:
+                # 如果找不到footer，直接在deck_start后插入
+                html = html[:deck_start] + '\n' + slides_html + '\n' + html[deck_start:]
         
         return html
 

@@ -835,9 +835,9 @@ html.light .speaker-overlay { background: rgba(245,240,230,0.95); }
     const prev = current;
     const dir = idx > prev ? 1 : -1;
     slides[prev].classList.remove('is-active');
-    slides[prev].classList.add(dir > 0 ? 'prev-slide' : '');
+    slides[prev].classList.add(dir > 0 ? 'prev-slide' : 'next-slide');
     slides[idx].classList.add('is-active');
-    setTimeout(() => { slides[prev].classList.remove('prev-slide'); }, 600);
+    setTimeout(() => { slides[prev].classList.remove('prev-slide'); slides[prev].classList.remove('next-slide'); }, 600);
     current = idx;
     updateUI();
   }
@@ -873,6 +873,8 @@ html.light .speaker-overlay { background: rgba(245,240,230,0.95); }
     switch(e.key) {
       case 'ArrowRight': case ' ': case 'PageDown': e.preventDefault(); next(); break;
       case 'ArrowLeft': case 'PageUp': e.preventDefault(); prev(); break;
+      case 'ArrowDown': e.preventDefault(); next(); break;
+      case 'ArrowUp': e.preventDefault(); prev(); break;
       case 'Home': e.preventDefault(); goTo(0); break;
       case 'End': e.preventDefault(); goTo(totalSlides - 1); break;
       case 't': case 'T':
@@ -888,13 +890,20 @@ html.light .speaker-overlay { background: rgba(245,240,230,0.95); }
     }
   });
 
-  let wheelTimer = null;
+  
+  // Click to advance (except on interactive elements)
+  document.addEventListener('click', e => {
+    if (e.target.closest('a, button, input, select, textarea, .nav-dot, .nav-controls, .speaker-overlay')) return;
+    if (e.clientX > window.innerWidth * 0.3) next();
+    else prev();
+  });
+let wheelTimer = null;
   document.addEventListener('wheel', e => {
     e.preventDefault();
     if (wheelTimer) return;
     wheelTimer = setTimeout(() => { wheelTimer = null; }, 600);
-    if (e.deltaY > 20) nextSlide();
-    else if (e.deltaY < -20) prevSlide();
+    if (e.deltaY > 20) next();
+    else if (e.deltaY < -20) prev();
   }, { passive: false });
 
   document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });

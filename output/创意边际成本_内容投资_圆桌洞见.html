@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>创意边际成本归零下的内容产业投资范式转移 圆桌洞见</title>
+<style>
+  :root{
+    /* ============ 主题色(默认:🖋 墨水经典) ============ */
+    --ink:#0a0a0b;
+    --ink-rgb:10,10,11;
+    --paper:#f1efea;
+    --paper-rgb:241,239,234;
+    --paper-tint:#e8e5de;
+    --ink-tint:#18181a;
+
+    /* ============ 强调色 ============ */
+    --accent:#c23b22;
+    --accent-rgb:194,59,34;
+    --gold:#d4a843;
+    --gold-rgb:212,168,67;
+    --blue:#4a6a9a;
+    --purple:#8a4aaa;
+    --green:#3a8a5c;
+    --cyan:#4a9a9a;
+    --orange:#d4843a;
+
+    /* ============ 字体(跨主题固定) ============ */
+    --mono:"IBM Plex Mono","SF Mono",monospace;
+    --serif-zh:"Noto Serif SC","Source Han Serif SC","STSong",serif;
+    --sans-zh:"Noto Sans SC","Source Han Sans SC","PingFang SC",sans-serif;
+
+    /* ============ 间距 ============ */
+    --radius:10px;
+    --ease:cubic-bezier(.4,0,.2,1);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans-zh);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+  /* ============ Deck 容器 ============ */
+  #deck{position:relative;width:100vw;height:100vh;overflow:hidden}
+
+  /* ============ 进度条 ============ */
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:1000;transition:width .5s var(--ease);box-shadow:0 0 12px rgba(var(--accent-rgb),.3)}
+
+  /* ============ 幻灯片 ============ */
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.12) transparent}
+  .slide::-webkit-scrollbar{width:4px}.slide::-webkit-scrollbar-track{background:transparent}.slide::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
+  .slide.active{display:flex}
+  .slide.hero{justify-content:center;align-items:center;text-align:center}
+  .slide.title-slide{justify-content:center;align-items:center;text-align:center}
+
+  /* ============ 入场动画(Guizang风格) ============ */
+  [data-anim]{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .slide.active [data-anim]{opacity:1;transform:translateY(0)}
+  .slide.active [data-anim]:nth-child(1){transition-delay:.1s}
+  .slide.active [data-anim]:nth-child(2){transition-delay:.18s}
+  .slide.active [data-anim]:nth-child(3){transition-delay:.26s}
+  .slide.active [data-anim]:nth-child(4){transition-delay:.34s}
+  .slide.active [data-anim]:nth-child(5){transition-delay:.42s}
+  .slide.active [data-anim]:nth-child(6){transition-delay:.5s}
+
+  /* ============ 内容区(book-distillation范式) ============ */
+  .frame{width:100%;max-width:1100px;margin:0 auto;flex:1;display:flex;flex-direction:column}
+  .slide-content{flex:1;display:flex;flex-direction:column}
+
+  /* ============ Magazine Chrome(Guizang风格) ============ */
+  .chrome{display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.5;margin-bottom:3vh}
+  .chrome .left,.chrome .right{display:flex;gap:2em;align-items:center}
+  .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
+
+  /* ============ 底部元数据(render_v8兼容) ============ */
+  .deck-footer{margin-top:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
+  .slide-number{position:absolute;bottom:2vh;right:3vw;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.35)}
+
+  /* ============ Section Label ============ */
+  .section-label{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
+
+  /* ============ 封面 ============ */
+  .cover-badge{display:inline-block;padding:6px 20px;border:1px solid var(--accent);border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4vh}
+  .cover-title{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:4vh;line-height:1.8;max-width:600px}
+  .cover-stats{display:flex;gap:4vh;flex-wrap:wrap;justify-content:center}
+  .cover-stat{text-align:center}
+  .cover-stat-num{font-family:var(--mono);font-size:2.5rem;font-weight:900;color:var(--accent)}
+  .cover-stat-label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.5);margin-top:.5vh}
+
+  /* ============ 封面标题(render_v8) ============ */
+  .hero-dark{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;flex:1}
+  .title-main{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .title-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:2vh;line-height:1.8}
+  .gold-line{width:80px;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));margin:3vh auto;border-radius:2px}
+
+  /* ============ 标题系统 ============ */
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
+  .h-hero{font-family:var(--serif-zh);font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.2;margin-bottom:3vh}
+  .h-xl{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.4rem,3vw,2.2rem);line-height:1.3;margin-bottom:2vh}
+  .h-lg{font-family:var(--serif-zh);font-weight:600;font-size:clamp(1.1rem,2vw,1.5rem);line-height:1.4;margin-bottom:1.5vh}
+  .h-md{font-weight:600;font-size:1.1rem;margin-bottom:1vh}
+  .lead{font-size:1rem;line-height:1.85;color:rgba(var(--paper-rgb),.8);max-width:700px}
+  .meta-row{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.4);display:flex;gap:2em;flex-wrap:wrap;margin-top:3vh}
+
+  /* ============ 大号引用(render_v8) ============ */
+  .quote-large{font-family:var(--serif-zh);font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:600;line-height:1.6;color:rgba(var(--paper-rgb),.9);max-width:800px;margin:0 auto}
+
+  /* ============ 分割线 ============ */
+  .rule{width:100%;height:1px;background:rgba(var(--paper-rgb),.15);margin:3vh 0}
+
+  /* ============ 标签 ============ */
+  .tag{display:inline-block;padding:4px 12px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;margin:3px}
+  .tag-gold{background:rgba(var(--gold-rgb),.15);color:var(--gold);border:1px solid rgba(var(--gold-rgb),.2)}
+  .tag-red{background:rgba(var(--accent-rgb),.15);color:var(--accent);border:1px solid rgba(var(--accent-rgb),.2)}
+  .tag-blue{background:rgba(74,106,154,.15);color:var(--blue);border:1px solid rgba(74,106,154,.2)}
+  .tag-purple{background:rgba(138,74,170,.15);color:var(--purple);border:1px solid rgba(138,74,170,.2)}
+  .tag-green{background:rgba(58,138,92,.15);color:var(--green);border:1px solid rgba(58,138,92,.2)}
+
+  /* ============ 霓虹强调色(render_v8) ============ */
+  .neon-gold{color:var(--gold)}.neon-red{color:var(--accent)}.neon-cyan{color:var(--cyan)}.neon-purple{color:var(--purple)}.neon-orange{color:var(--orange)}.neon-green{color:var(--green)}
+
+  /* ============ 网格系统 ============ */
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:2vh 2vw}
+  @media(max-width:768px){.grid-2{grid-template-columns:1fr}}
+
+  /* ============ 发言块(原生) ============ */
+  .sp{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2.5vw;margin-bottom:2vh;position:relative}
+  .sp::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .sh{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh}
+  .speaker-avatar{width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:var(--ink);background:var(--accent);flex-shrink:0}
+  .sn{font-weight:700;font-size:1rem}
+  .sr{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4);padding:3px 8px;background:rgba(var(--paper-rgb),.06);border-radius:3px}
+  .st{font-size:.95rem;line-height:2;color:rgba(var(--paper-rgb),.85)}
+  .st strong{color:var(--paper);font-weight:700}
+  .st em{color:var(--gold);font-style:normal;font-weight:600}
+
+  /* ============ 碰撞块(原生) ============ */
+  .cb{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;position:relative}
+  .cb::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .cb.blue{border-color:rgba(74,106,154,.3)}.cb.blue::before{background:var(--blue)}
+  .cb.purple{border-color:rgba(138,74,170,.3)}.cb.purple::before{background:var(--purple)}
+  .cb.green{border-color:rgba(58,138,92,.3)}.cb.green::before{background:var(--green)}
+  .cb.orange{border-color:rgba(var(--gold-rgb),.3)}.cb.orange::before{background:var(--gold)}
+  .cl{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;color:var(--accent);font-weight:600}
+  .cl.blue{color:var(--blue)}.cl.purple{color:var(--purple)}.cl.green{color:var(--green)}.cl.orange{color:var(--gold)}
+
+  /* ============ 洞见卡 ============ */
+  .insight-c{background:linear-gradient(135deg,rgba(var(--paper-rgb),.04) 0%,rgba(var(--paper-rgb),.08) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh;position:relative;overflow:hidden}
+  .insight-c::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold))}
+  .insight-q{font-family:var(--serif-zh);font-size:1.1rem;font-weight:700;color:var(--gold);line-height:1.6;margin-bottom:1vh}
+  .insight-a{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.75)}
+
+  /* ============ 卡片 ============ */
+  .card{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
+  .card-num{font-family:var(--mono);font-weight:900;font-size:1.8rem;color:var(--accent);opacity:.4;margin-bottom:1vh}
+  .card-title{font-weight:700;font-size:1rem;margin-bottom:1vh}
+  .card-body{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
+  .card-source{font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);margin-top:1vh}
+
+  /* ============ 专家卡片(render_v8) ============ */
+  .card-rise{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--green)}
+  .card-fall{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--accent)}
+  .speaker-header{display:flex;align-items:center;gap:16px;margin-bottom:2vh}
+  .speaker-name{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem}
+  .speaker-role{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:2px}
+  .expert-profile{display:flex;flex-direction:column;gap:1vh}
+  .profile-item{font-size:.9rem;line-height:1.7;color:rgba(var(--paper-rgb),.8)}
+  .profile-label{color:var(--gold);font-weight:600}
+
+  /* ============ 立场表达(render_v8) ============ */
+  .stance-item{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;border-left:3px solid var(--gold)}
+  .stance-expert{font-family:var(--serif-zh);font-weight:700;font-size:1rem;margin-bottom:1vh}
+  .stance-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 碰撞轮次(render_v8) ============ */
+  .clash-round{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;position:relative}
+  .clash-round::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .clash-header{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh;flex-wrap:wrap}
+  .clash-attacker{font-weight:700;font-size:1rem}
+  .clash-target{font-weight:700;font-size:1rem}
+  .clash-arrow{color:rgba(var(--paper-rgb),.3);font-size:1.2rem}
+  .clash-type{display:inline-block;padding:3px 10px;border-radius:3px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.5vh;font-weight:600}
+  .clash-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
+  .counter-attack{margin-top:2vh;padding-top:2vh;border-top:1px dashed rgba(var(--paper-rgb),.1)}
+  .counter-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .counter-content{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
+
+  /* ============ 攻击类型色 ============ */
+  .attack-logic{background:rgba(74,106,154,.15);color:var(--blue)}
+  .attack-interest{background:rgba(var(--accent-rgb),.15);color:var(--accent)}
+  .attack-reality{background:rgba(var(--gold-rgb),.15);color:var(--gold)}
+  .attack-human{background:rgba(138,74,170,.15);color:var(--purple)}
+  .attack-failure{background:rgba(58,138,92,.15);color:var(--green)}
+
+  /* ============ 现实案例(render_v8) ============ */
+  .reality-case{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--orange)}
+  .case-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5vh;flex-wrap:wrap;gap:8px}
+  .case-name{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem}
+  .case-source{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4)}
+  .case-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:1.5vh}
+  .case-outcome{font-size:.9rem;font-weight:600;margin-bottom:1vh}
+  .case-lesson{font-size:.9rem;font-weight:600}
+
+  /* ============ 代价讨论(render_v8) ============ */
+  .cost-discussion{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh}
+  .cost-scenario{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem;margin-bottom:2vh}
+  .cost-list{display:flex;flex-direction:column;gap:1.5vh;margin-bottom:2vh}
+  .cost-item{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:1.5vh 2vw;border-left:3px solid var(--accent)}
+  .cost-name{font-weight:700;font-size:.95rem;margin-bottom:.5vh}
+  .cost-analysis{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .worst-case{background:rgba(var(--accent-rgb),.08);border:1px solid rgba(var(--accent-rgb),.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
+  .worst-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .worst-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+  .survivor-bias{background:rgba(138,74,170,.08);border:1px solid rgba(138,74,170,.15);border-radius:6px;padding:2vh 2vw}
+  .survivor-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .survivor-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+
+  /* ============ 人性层(render_v8) ============ */
+  .human-nature{background:linear-gradient(135deg,rgba(var(--paper-rgb),.03) 0%,rgba(var(--paper-rgb),.06) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
+  .human-question{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem;margin-bottom:2vh;line-height:1.5}
+  .human-analysis{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:2vh}
+  .human-examples{margin-bottom:2vh}
+  .examples-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1vh;font-weight:600}
+  .example-item{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8);padding:.5vh 0}
+  .human-conclusion{font-size:.95rem;font-weight:600;line-height:1.7}
+
+  /* ============ 认知升级(render_v8) ============ */
+  .cognitive-upgrade{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
+  .upgrade-comparison{display:grid;grid-template-columns:1fr auto 1fr;gap:2vw;align-items:start;margin-bottom:2vh}
+  @media(max-width:768px){.upgrade-comparison{grid-template-columns:1fr}.upgrade-arrow{transform:rotate(90deg)}}
+  .old-thinking,.new-thinking{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:2vh 1.5vw}
+  .old-thinking{border-left:3px solid var(--accent)}
+  .new-thinking{border-left:3px solid var(--green)}
+  .thinking-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .thinking-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+  .upgrade-arrow{font-size:1.5rem;color:rgba(var(--paper-rgb),.3);display:flex;align-items:center;justify-content:center;padding-top:3vh}
+  .complexity{background:rgba(74,106,154,.08);border:1px solid rgba(74,106,154,.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
+  .complexity-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .complexity-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .actionable{background:rgba(var(--gold-rgb),.08);border:1px solid rgba(var(--gold-rgb),.15);border-radius:6px;padding:2vh 2vw}
+  .actionable-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .actionable-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 情绪样式 ============ */
+  .emotion-sarcasm{border-left:3px solid var(--purple);padding-left:12px;font-style:italic}
+  .emotion-helplessness{opacity:.75;font-style:italic}
+  .emotion-anger{color:var(--accent);font-weight:600}
+  .emotion-hesitation{opacity:.8;font-style:italic}
+  .emotion-self-deprecation{opacity:.7;font-style:italic}
+  .emotion-cold-laugh{color:var(--purple)}
+  .emotion-silence{opacity:.5;font-style:italic}
+  .emotion-serious{color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 指标 ============ */
+  .metrics{display:flex;gap:2vw;flex-wrap:wrap;margin-bottom:3vh}
+  .metric{flex:1;min-width:100px;text-align:center;background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 1.5vw}
+  .metric-val{font-family:var(--mono);font-weight:900;font-size:clamp(1.5rem,3vw,2.5rem);color:var(--accent)}
+  .metric-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:.5vh}
+
+  /* ============ 开放问题 ============ */
+  .oq{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
+  .oq-num{font-family:var(--mono);font-weight:900;font-size:1.2rem;color:var(--accent);opacity:.3;margin-bottom:1vh}
+  .oq-text{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .headline-item{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.85);padding:1.5vh 0;border-bottom:1px solid rgba(var(--paper-rgb),.06)}
+  .headline-item:last-child{border-bottom:none}
+  .headline-item strong{color:var(--gold);margin-right:8px}
+
+  /* ============ 引用 ============ */
+  .quote{font-family:var(--serif-zh);font-size:1rem;font-style:italic;line-height:1.8;padding:2vh 2.5vw;border-left:3px solid var(--gold);background:rgba(var(--gold-rgb),.05);margin:2vh 0;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ TOC ============ */
+  .toc-panel{position:fixed;top:0;left:0;width:min(340px,80vw);height:100vh;background:rgba(var(--ink-rgb),.97);backdrop-filter:blur(20px);z-index:100;transform:translateX(-100%);transition:transform .35s var(--ease);padding:3vh 2.5vw;overflow-y:auto;border-right:1px solid rgba(var(--paper-rgb),.08)}
+  .toc-panel.open{transform:translateX(0)}
+  .toc-title{font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:3vh;padding-bottom:2vh;border-bottom:1px solid rgba(var(--paper-rgb),.1)}
+  .toc-item{display:flex;justify-content:space-between;padding:1.2vh 1.5vw;margin-bottom:.5vh;cursor:pointer;border-radius:6px;border-left:2px solid transparent;font-size:.9rem;color:rgba(var(--paper-rgb),.7);transition:all .2s}
+  .toc-item:hover{background:rgba(var(--paper-rgb),.06);color:var(--paper)}
+  .toc-item.active{background:rgba(var(--paper-rgb),.08);color:var(--accent);border-left-color:var(--accent);font-weight:600}
+  .toc-label{flex:1}
+  .toc-page{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.35)}
+  .toc-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;opacity:0;pointer-events:none;transition:opacity .3s}
+  .toc-backdrop.open{opacity:1;pointer-events:auto}
+
+  /* ============ 导航栏 ============ */
+  .nav-bar{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 3vw;background:rgba(var(--ink-rgb),.9);backdrop-filter:blur(10px);z-index:50;border-top:1px solid rgba(var(--paper-rgb),.06)}
+  .nav-left,.nav-right{display:flex;align-items:center;gap:12px}
+  .nav-btn{background:none;border:1px solid rgba(var(--paper-rgb),.12);color:rgba(var(--paper-rgb),.7);padding:8px 16px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;cursor:pointer;transition:all .2s}
+  .nav-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(var(--accent-rgb),.1)}
+  .nav-title{font-size:12px;color:rgba(var(--paper-rgb),.5);max-width:40vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-counter{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.4)}
+
+  /* ============ 导航点 ============ */
+  .nav-dots{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:6px}
+  .nd{width:6px;height:6px;border-radius:50%;background:rgba(var(--paper-rgb),.15);cursor:pointer;transition:all .3s var(--ease);border:none;padding:0}
+  .nd.active{background:var(--accent);height:20px;border-radius:3px;box-shadow:0 0 8px rgba(var(--accent-rgb),.4)}
+  .nd:hover{background:rgba(var(--paper-rgb),.4)}
+
+  /* ============ 入场动画延迟(render_v8兼容) ============ */
+  .anim-in{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .slide.active .anim-in{opacity:1;transform:translateY(0)}
+  .slide.active .anim-in:nth-child(1){transition-delay:.1s}
+  .slide.active .anim-in:nth-child(2){transition-delay:.18s}
+  .slide.active .anim-in:nth-child(3){transition-delay:.26s}
+  .slide.active .anim-in:nth-child(4){transition-delay:.34s}
+  .slide.active .anim-in:nth-child(5){transition-delay:.42s}
+  .slide.active .anim-in:nth-child(6){transition-delay:.5s}
+  .anim-delay-1{transition-delay:.18s !important}
+  .anim-delay-2{transition-delay:.26s !important}
+  .anim-delay-3{transition-delay:.34s !important}
+  .anim-delay-4{transition-delay:.42s !important}
+  .anim-delay-5{transition-delay:.5s !important}
+  .anim-delay-6{transition-delay:.58s !important}
+
+  /* ============ 响应式 ============ */
+  @media(max-width:1024px){.slide{padding:4vh 5vw 8vh}}
+  @media(max-width:768px){
+    .slide{padding:3vh 4vw 7vh}
+    .cover-stats{gap:2vh}
+    .metrics{flex-direction:column}
+    .nav-dots,.nav-title{display:none}
+    .nav-bar{padding:0 2vw}
+  }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="slide hero title-slide" data-title="创意边际成本归零下的内容产业投资范式转移">
+  <div class="frame">
+    <div class="slide-content" style="justify-content:center;align-items:center;text-align:center">
+      <div class="cover-badge" data-anim>圆桌洞见</div>
+      <div class="cover-title" data-anim>创意边际成本归零下的内容产业投资范式转移</div>
+      <div class="cover-sub" data-anim>当一个人能以近乎零成本生产无限量叙事内容时，内容产业的投资逻辑发生了根本性转变</div>
+      <div class="gold-line" data-anim></div>
+      <div class="cover-stats" data-anim>
+        <div class="cover-stat">
+          <div class="cover-stat-num">6</div>
+          <div class="cover-stat-label">专家</div>
+        </div>
+        <div class="cover-stat">
+          <div class="cover-stat-num">3</div>
+          <div class="cover-stat-label">轮讨论</div>
+        </div>
+        <div class="cover-stat">
+          <div class="cover-stat-num">18</div>
+          <div class="cover-stat-label">发言</div>
+        </div>
+        <div class="cover-stat">
+          <div class="cover-stat-num">5</div>
+          <div class="cover-stat-label">洞见</div>
+        </div>
+      </div>
+      <div class="meta-row" data-anim>
+        <span>💼 刘润</span> · <span>📚 吴晓波</span> · <span>✍️ 余华</span> · <span>🎭 梁文道</span> · <span>🔮 凯文·凯利</span> · <span>😏 李诞</span>
+      </div>
+    </div>
+  </div>
+</div><div class="slide" data-title="核心洞见">
+  <div class="frame">
+    <div class="kicker" data-anim>KEY INSIGHTS</div>
+    <div class="h-xl" data-anim style="margin-bottom:4vh">核心洞见</div>
+    <div class="grid-2"><div class="insight-c" style="animation-delay:0s">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:2vh">
+        <span style="font-family:var(--mono);font-size:1.5rem;font-weight:900;color:var(--accent);opacity:.5">01</span>
+        <span style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);padding:3px 8px;background:rgba(var(--gold-rgb),.1);border-radius:3px">刘润</span>
+      </div>
+      <div class="insight-q">内容通货膨胀：筛选比生产更重要</div>
+      <div class="insight-a">当AI将内容生产的边际成本推向零，内容供给将从&quot;稀缺&quot;变成&quot;过剩&quot;。真正有价值的不是内容本身，而是内容的筛选和策展。谁能帮助用户在海量内容中找到&quot;值得看的&quot;，谁就掌控了新的流量入口。</div>
+    </div><div class="insight-c" style="animation-delay:0.1s">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:2vh">
+        <span style="font-family:var(--mono);font-size:1.5rem;font-weight:900;color:var(--accent);opacity:.5">02</span>
+        <span style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);padding:3px 8px;background:rgba(var(--gold-rgb),.1);border-radius:3px">凯文·凯利</span>
+      </div>
+      <div class="insight-q">原创的生态位分化</div>
+      <div class="insight-a">AI不会消灭创意产业，而是迫使其&quot;生态位分化&quot;：标准化内容被AI取代，人机协作成为主流，而那些基于独特生命体验的创作将变得更加稀缺和珍贵。</div>
+    </div><div class="insight-c" style="animation-delay:0.2s">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:2vh">
+        <span style="font-family:var(--mono);font-size:1.5rem;font-weight:900;color:var(--accent);opacity:.5">03</span>
+        <span style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);padding:3px 8px;background:rgba(var(--gold-rgb),.1);border-radius:3px">梁文道</span>
+      </div>
+      <div class="insight-q">信任成为新的护城河</div>
+      <div class="insight-a">当AI可以批量生产内容时，&quot;可信的作者&quot;将成为稀缺资源。内容平台的投资逻辑将从&quot;流量入口&quot;转向&quot;信任入口&quot;——谁能提供可信的、有意义的内容，谁就能获得更高的用户粘性。</div>
+    </div><div class="insight-c" style="animation-delay:0.30000000000000004s">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:2vh">
+        <span style="font-family:var(--mono);font-size:1.5rem;font-weight:900;color:var(--accent);opacity:.5">04</span>
+        <span style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);padding:3px 8px;background:rgba(var(--gold-rgb),.1);border-radius:3px">李诞</span>
+      </div>
+      <div class="insight-q">&quot;被理解&quot;是终极价值</div>
+      <div class="insight-a">用户不在乎AI还是人写的，不在乎平台用什么算法，只在乎&quot;爽不爽&quot;、&quot;被不被理解&quot;。AI时代的内容产业，无论形式如何变化，这个核心需求不会变。</div>
+    </div><div class="insight-c" style="animation-delay:0.4s">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:2vh">
+        <span style="font-family:var(--mono);font-size:1.5rem;font-weight:900;color:var(--accent);opacity:.5">05</span>
+        <span style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);padding:3px 8px;background:rgba(var(--gold-rgb),.1);border-radius:3px">余华</span>
+      </div>
+      <div class="insight-q">苦难叙事的不可替代性</div>
+      <div class="insight-a">AI可以模仿语言形式，但模仿不了真实的生命体验。苦难叙事的力量来自于作者将自己放进去的那份&quot;成本&quot;——这种东西，算法永远无法复制。</div>
+    </div></div>
+    <div class="deck-footer">5个颠覆认知的观点</div>
+  </div>
+</div><div class="slide" data-title="专家阵容">
+  <div class="frame">
+    <div class="kicker" data-anim>EXPERT PANEL</div>
+    <div class="h-xl" data-anim style="margin-bottom:4vh">专家阵容</div>
+    <div class="grid-2"><div class="card-rise" style="border-left-color:#E94560" data-anim>
+    <div class="speaker-header">
+      <div class="speaker-avatar" style="background:#E94560">💼</div>
+      <div>
+        <div class="speaker-name">刘润</div>
+        <div class="speaker-role">润米咨询创始人</div>
+      </div>
+    </div>
+  </div><div class="card-rise" style="border-left-color:#FF6B6B" data-anim>
+    <div class="speaker-header">
+      <div class="speaker-avatar" style="background:#FF6B6B">📚</div>
+      <div>
+        <div class="speaker-name">吴晓波</div>
+        <div class="speaker-role">财经作家</div>
+      </div>
+    </div>
+  </div><div class="card-rise" style="border-left-color:#4ECDC4" data-anim>
+    <div class="speaker-header">
+      <div class="speaker-avatar" style="background:#4ECDC4">✍️</div>
+      <div>
+        <div class="speaker-name">余华</div>
+        <div class="speaker-role">作家</div>
+      </div>
+    </div>
+  </div><div class="card-rise" style="border-left-color:#45B7D1" data-anim>
+    <div class="speaker-header">
+      <div class="speaker-avatar" style="background:#45B7D1">🎭</div>
+      <div>
+        <div class="speaker-name">梁文道</div>
+        <div class="speaker-role">文化评论人</div>
+      </div>
+    </div>
+  </div><div class="card-rise" style="border-left-color:#96CEB4" data-anim>
+    <div class="speaker-header">
+      <div class="speaker-avatar" style="background:#96CEB4">🔮</div>
+      <div>
+        <div class="speaker-name">凯文·凯利</div>
+        <div class="speaker-role">未来学家</div>
+      </div>
+    </div>
+  </div><div class="card-rise" style="border-left-color:#FFEAA7" data-anim>
+    <div class="speaker-header">
+      <div class="speaker-avatar" style="background:#FFEAA7">😏</div>
+      <div>
+        <div class="speaker-name">李诞</div>
+        <div class="speaker-role">脱口秀演员</div>
+      </div>
+    </div>
+  </div></div>
+    <div class="deck-footer">6位跨界专家，3轮深度交锋</div>
+  </div>
+</div><div class="slide title-slide" data-title="第1轮：边际成本归零：内容爆炸还是内容稀缺？">
+    <div class="frame">
+      <div class="hero-dark">
+        <div class="kicker" data-anim>ROUND 1</div>
+        <div class="h-hero" data-anim style="background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">边际成本归零：内容爆炸还是内容稀缺？</div>
+        <div class="quote-large" data-anim style="max-width:700px;margin-top:3vh">当AI将内容生产的边际成本推向零，字节跳动已经证明了这一点——推荐算法+UGC模式让内容无限供应。但麦肯锡说创意产业是AI最难颠覆的领域，因为&quot;情感真实性&quot;无法被复制。这是悖论还是伪命题？</div>
+      </div>
+    </div>
+  </div><div class="slide" data-title="第1轮：专家发言">
+    <div class="frame">
+      <div class="kicker" data-anim>ROUND 1 · 专家发言</div>
+      <div class="h-lg" data-anim style="margin-bottom:3vh">边际成本归零：内容爆炸还是内容稀缺？</div>
+      <div class="sp" style="border-left-color:#E94560">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#E94560">💼</div>
+      <div>
+        <div class="sn">刘润</div>
+        <div class="sr">润米咨询创始人</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 边际成本归零导致的是&quot;有效内容&quot;的稀缺，而非内容总量稀缺</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我用一个框架来分析这个问题：边际成本归零，改变的不是内容的供给量，而是内容的筛选成本。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">字节跳动为什么能赢？因为它没有自己做内容，而是做了一台&quot;内容筛选机&quot;。当内容供给趋向无限时，筛选就成了最有价值的环节。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">这就像工业革命后，服装的生产成本大幅下降，但顶级裁缝的收入反而更高了——因为穿什么已经不重要，选什么才重要。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">DeepSeek等AI工具让61.7%的职业作者开始使用AI协助写作，这意味着什么？意味着内容供给将经历一次&quot;通货膨胀&quot;——数量暴增，但质量的&quot;锚&quot;在哪儿？</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">真正稀缺的，是那些能帮助用户做选择的&quot;内容策展人&quot;和&quot;意义过滤器&quot;。</p></div>
+    <div style="margin-top:1.5vh;display:flex;flex-direction:column;gap:.5vh"><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;内容供给将经历通货膨胀&quot;"</div><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;筛选比生产更重要&quot;"</div></div>
+    <div style="margin-top:1.5vh;font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);letter-spacing:.05em">📌 字节跳动推荐算法模式 · DeepSeek职业作者使用率61.7%数据</div>
+  </div><div class="sp" style="border-left-color:#FF6B6B">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#FF6B6B">📚</div>
+      <div>
+        <div class="sn">吴晓波</div>
+        <div class="sr">财经作家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 历史规律表明：每次技术跃迁都伴随&quot;旧内容&quot;的消亡和&quot;新内容&quot;的诞生</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我研究了一百多年的商业史，有一个规律反复出现：每一次内容传播技术的革命，都会消灭一批&quot;旧内容&quot;，同时催生一批&quot;新内容&quot;。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">印刷术消灭了手抄本，但催生了报纸和小说。电视消灭了广播剧，但催生了电视剧。流媒体消灭了唱片，但催生了播客。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">现在的问题是：AI创作会消灭&quot;什么&quot;？</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">Rie Kudan凭借ChatGPT协助创作获得芥川奖，AI参与部分约占5%。这个案例很有意思——不是说AI取代了作家，而是AI成了作家的&quot;打字机&quot;。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">但我更关心的是：中国网络文学用户5.3亿，76%接触过AI参与创作的内容。这意味着什么？意味着**读者已经在用脚投票**。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">问题是：当读者习惯了AI辅助创作的内容，他们的审美标准会发生什么变化？这个变化，才是真正的&quot;范式转移&quot;。</p></div>
+    <div style="margin-top:1.5vh;display:flex;flex-direction:column;gap:.5vh"><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;每次技术革命都消灭旧内容、催生新内容&quot;"</div><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;读者已经在用脚投票&quot;"</div></div>
+    <div style="margin-top:1.5vh;font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);letter-spacing:.05em">📌 日本作家Rie Kudan获芥川奖案例 · 中国网络文学5.3亿用户数据 · 76%接触过AI创作内容</div>
+  </div><div class="sp" style="border-left-color:#4ECDC4">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#4ECDC4">✍️</div>
+      <div>
+        <div class="sn">余华</div>
+        <div class="sr">作家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 技术可以复制形式，但无法复制&quot;真实的苦难&quot;</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">你们都在谈效率、谈成本、谈规模。但作为一个写了三十年小说的人，我想问一个问题：</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">**《活着》可以被AI复制吗？**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">我知道DeepSeek可以模仿我的语言风格，写出&quot;像余华写的&quot;东西。但这重要吗？</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">《活着》的力量不在于语言，而在于语言背后的东西——福贵这个人物，是我见过无数个&quot;福贵&quot;之后才写出来的。那是真实的苦难的结晶，不是算法可以生成的。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">许三观卖血的时候，他的恐惧、他的体面、他对家庭的责任——这些东西，AI能理解吗？</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">不是说AI永远做不到。但至少现在，AI创作的内容，有一个共同的特点：**太干净了**。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">苦难是需要成本的。真正的苦难叙事，需要作者把自己的生命体验放进去。这就是为什么麦肯锡说创意产业是AI最难颠覆的领域——因为&quot;情感真实性&quot;无法被复制。</p></div>
+    <div style="margin-top:1.5vh;display:flex;flex-direction:column;gap:.5vh"><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;苦难是需要成本的&quot;"</div><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;AI创作的内容，太干净了&quot;"</div></div>
+    <div style="margin-top:1.5vh;font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);letter-spacing:.05em">📌 麦肯锡关于创意产业是AI最难颠覆领域的论断</div>
+  </div><div class="sp" style="border-left-color:#45B7D1">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#45B7D1">🎭</div>
+      <div>
+        <div class="sn">梁文道</div>
+        <div class="sr">文化评论人</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 边际成本归零恰恰暴露了&quot;消费意义&quot;的稀缺</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我想从另一个角度切入：当内容供给趋于无限时，**消费内容的注意力反而成了最稀缺的资源**。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">凯文·凯利在《必然》中说过：&quot;在信息丰富的世界里，唯一稀缺的资源就是人类的注意力。&quot;这句话在AI时代变得更加尖锐。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">但我想追问的是：人们需要&quot;更多内容&quot;，还是需要&quot;更有意义的内容&quot;？</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">我观察到一个现象：中国有5.3亿网络文学用户，但真正愿意为好故事付费的人，比例并不高。这意味着什么？</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">**大部分人消费的不是内容本身，而是消磨时间的方式。** 当内容供给从&quot;有限&quot;变成&quot;无限&quot;，这种消费模式会发生什么变化？</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">北京广播电视台的AI系统10分钟出新闻短视频，原来需要2人半天。这个效率提升很惊人。但问题是：这些短视频，有多少能真正留在观众的记忆里？</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">边际成本归零解决的是&quot;有没有&quot;的问题，但它解决不了&quot;值不值得记住&quot;的问题。</p></div>
+    <div style="margin-top:1.5vh;display:flex;flex-direction:column;gap:.5vh"><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;唯一稀缺的资源是人类的注意力&quot;"</div><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;大部分人消费的是消磨时间的方式&quot;"</div></div>
+    <div style="margin-top:1.5vh;font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);letter-spacing:.05em">📌 凯文·凯利《必然》 · 北京广播电视台AI系统效率数据</div>
+  </div><div class="sp" style="border-left-color:#96CEB4">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#96CEB4">🔮</div>
+      <div>
+        <div class="sn">凯文·凯利</div>
+        <div class="sr">未来学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ AI不会消灭创意产业，而是将其&quot;去商品化&quot;，让真正的创作者获得解放</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我认为你们把焦点放错了。AI不是在&quot;取代&quot;创意工作，而是在&quot;去商品化&quot;那些容易被标准化的创意工作。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">想想工业革命时期：当机器可以批量生产袜子的时候，手工编织的袜子反而变得更贵了、更有价值了。为什么？因为人们开始珍视&quot;人手做的&quot;这个属性。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">同样的逻辑会发生在内容产业。当AI可以生产标准化的内容时，&quot;人类创作&quot;本身就会成为一种稀缺属性。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">我提出的&quot;1000个铁杆粉丝&quot;理论在AI时代会更加重要。StoryOne工具可以将出版速度提升至传统方式的300倍，这听起来很可怕，但它恰恰证明了：**速度可以量化，但深度不行**。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">尤瓦尔·赫拉利说AI可能让数十亿人失去经济价值，但艺术创作是最后的防线。我部分同意——不是艺术创作不会被冲击，而是艺术创作会演变成一种新的形态。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">未来最有价值的内容创作者，不是和AI竞争的人，而是那些懂得如何与AI协作、同时保持独特人类视角的人。</p></div>
+    <div style="margin-top:1.5vh;display:flex;flex-direction:column;gap:.5vh"><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;AI在去商品化那些容易被标准化的创意工作&quot;"</div><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;1000个铁杆粉丝理论在AI时代更重要&quot;"</div></div>
+    <div style="margin-top:1.5vh;font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);letter-spacing:.05em">📌 StoryOne工具300倍效率数据 · 尤瓦尔·赫拉利关于艺术创作是最后防线的论断</div>
+  </div><div class="sp" style="border-left-color:#FFEAA7">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#FFEAA7">😏</div>
+      <div>
+        <div class="sn">李诞</div>
+        <div class="sr">脱口秀演员</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 你们都在替&quot;内容&quot;操心，但没人问&quot;观众&quot;真正想要什么</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我发现一个特别有意思的现象：你们这些老师、学者、专家，聊AI创作、聊边际成本、聊范式转移——但你们有没有问过一个普通观众，他们到底想要什么？</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">我告诉你一个秘密：**大部分人看内容，不是为了受教育，是为了消遣。**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">日本作家Rie Kudan用ChatGPT写了5%的内容，然后拿了芥川奖。5%。不是50%，是5%。这说明什么？</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">**说明读者/评委根本不在乎那5%是不是AI写的。**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">这不是对文学的贬低，这是对人类阅读需求的诚实描述。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">你们说&quot;情感真实性无法被复制&quot;，我同意。但问题是：**有多少读者在找&quot;情感真实性&quot;？**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">我的观察是：大多数人打开一个短视频，看完了，笑了，或者哭了一会儿，然后划走了。他们不会问&quot;这是不是AI写的&quot;，他们只会问&quot;好看吗&quot;。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">所以我的结论是：边际成本归零之后，内容产业的投资逻辑不是&quot;投什么内容&quot;，而是&quot;投什么情绪&quot;。</p></div>
+    <div style="margin-top:1.5vh;display:flex;flex-direction:column;gap:.5vh"><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;大部分人看内容是为了消遣，不是受教育&quot;"</div><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;投什么情绪比投什么内容更重要&quot;"</div></div>
+    <div style="margin-top:1.5vh;font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);letter-spacing:.05em">📌 Rie Kudan芥川奖案例 · 5%AI参与创作数据</div>
+  </div><div style="background:rgba(var(--accent-rgb),.06);border:1px solid rgba(var(--accent-rgb),.15);border-radius:var(--radius);padding:3vh 2.5vw;margin-top:2vh">
+    <div style="font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh;font-weight:700">⚡ 专家交锋</div>
+    <div style="font-family:var(--serif-zh);font-size:1.05rem;font-weight:600;margin-bottom:2vh;line-height:1.6">专家交锋：内容爆炸的尽头是&quot;意义通胀&quot;还是&quot;意义稀缺&quot;？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">刘润与余华的核心分歧：</p><p style="margin-bottom:1.2vh;line-height:1.9">刘润认为边际成本归零会导致&quot;有效内容的筛选&quot;成为核心价值，内容策展人将崛起。</p><p style="margin-bottom:1.2vh;line-height:1.9">余华则坚持&quot;苦难叙事&quot;这种需要真实生命体验的内容永远无法被替代，AI创作的内容&quot;太干净&quot;。</p><p style="margin-bottom:1.2vh;line-height:1.9">梁文道在一旁补充：&quot;你们说的其实是两个问题——刘润在谈内容传播的效率，余华在谈内容消费的意义。这两件事在AI时代会越来越分离：大多数人消费的是效率，只有少数人愿意为意义付费。&quot;</p><p style="margin-bottom:1.2vh;line-height:1.9">李诞打断：&quot;那问题是——谁是&#039;少数人&#039;？谁决定谁是&#039;少数人&#039;？&quot;</p></div>
+  </div>
+      <div class="deck-footer">第 1/3 轮 · 6 位专家发言</div>
+    </div>
+  </div><div class="slide title-slide" data-title="第2轮：AI创作：消解原创还是重构原创？">
+    <div class="frame">
+      <div class="hero-dark">
+        <div class="kicker" data-anim>ROUND 2</div>
+        <div class="h-hero" data-anim style="background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">AI创作：消解原创还是重构原创？</div>
+        <div class="quote-large" data-anim style="max-width:700px;margin-top:3vh">当DeepSeek等工具让AI写作在职业作者中使用率突破61.7%，&quot;原创&quot;这个概念本身受到了挑战。一个5%由ChatGPT参与创作的作品还能被称为&quot;原创&quot;吗？内容平台是否需要重新定义&quot;原创&quot;的价值？</div>
+      </div>
+    </div>
+  </div><div class="slide" data-title="第2轮：专家发言">
+    <div class="frame">
+      <div class="kicker" data-anim>ROUND 2 · 专家发言</div>
+      <div class="h-lg" data-anim style="margin-bottom:3vh">AI创作：消解原创还是重构原创？</div>
+      <div class="sp" style="border-left-color:#E94560">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#E94560">💼</div>
+      <div>
+        <div class="sn">刘润</div>
+        <div class="sr">润米咨询创始人</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ AI消解的不是&quot;原创&quot;，而是&quot;原创&quot;的&quot;护城河&quot;</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我用一个商业逻辑来分析&quot;原创&quot;的价值：</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">**所有的护城河，都是建立在&quot;稀缺性&quot;之上的。**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">在AI出现之前，&quot;原创内容&quot;的护城河是什么？是&quot;创作能力&quot;的稀缺——因为能写出好故事的人是少数。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">但现在，AI大幅降低了这个稀缺性。DeepSeek让61.7%的职业作者开始使用AI，这意味着&quot;原创&quot;不再是稀缺资源。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">那么，原来的&quot;原创护城河&quot;去哪儿了？</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">答案有两个方向：</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">**第一，往上游走**：稀缺的不再是&quot;创作能力&quot;，而是&quot;创意判断力&quot;——知道什么是好故事、为什么这个故事值得写、如何让故事触达正确的人。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">**第二，往下游走**：稀缺的是&quot;创作者的不可替代性&quot;——这个人是谁？他的生命经历是什么？他为什么而创作？这些AI无法复制的东西，反而成了新的护城河。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">日本作家Rie Kudan获奖后说，AI参与的部分约占5%。这个5%，恰恰说明了&quot;人机协作&quot;将成为新的创作范式——不是AI取代人，也不是人取代AI，而是人+AI&gt;单独的人和AI。</p></div>
+    <div style="margin-top:1.5vh;display:flex;flex-direction:column;gap:.5vh"><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;所有的护城河都建立在稀缺性之上&quot;"</div><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;人机协作将成为新的创作范式&quot;"</div></div>
+    <div style="margin-top:1.5vh;font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);letter-spacing:.05em">📌 DeepSeek职业作者使用率61.7% · Rie Kudan 5%AI参与创作数据</div>
+  </div><div class="sp" style="border-left-color:#FF6B6B">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#FF6B6B">📚</div>
+      <div>
+        <div class="sn">吴晓波</div>
+        <div class="sr">财经作家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 从商业史看，每次技术变革都重新定义&quot;原创&quot;的边界</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我研究商业史有一个心得：**&quot;原创&quot;从来都是一个动态概念，不同时代有不同的定义。**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">莫言写《红高粱》，是基于他山东高密的童年记忆。但马尔克斯写《百年孤独》，借鉴了卡彭铁尔的《回到黑暗中的脚步》——这是&quot;原创&quot;还是&quot;影响&quot;？</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">杜甫说&quot;读书破万卷，下笔如有神&quot;——这算不算AI时代&quot;prompt engineering&quot;的古代版本？</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">当印刷术发明的时候，手抄本时代的人会觉得印刷小说是&quot;工业化的垃圾&quot;。当有声电影发明的时候，默片时代的演员会觉得有声电影&quot;破坏了表演艺术&quot;。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">**每一代人都觉得自己的&quot;原创&quot;才是最纯正的，而新技术下的创作都是&quot;作弊&quot;。**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">但历史告诉我们：这个判断往往是错的。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">中国网络文学76%接触过AI参与创作的内容——这意味着什么？意味着&quot;原创&quot;的定义，正在被几亿读者和作者共同改写。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">与其焦虑&quot;原创消解了&quot;，不如问：&quot;新的原创形式是什么？&quot;</p></div>
+    <div style="margin-top:1.5vh;display:flex;flex-direction:column;gap:.5vh"><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;原创从来都是动态概念&quot;"</div><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;每一代人都觉得自己的原创才是最纯正的&quot;"</div></div>
+    <div style="margin-top:1.5vh;font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);letter-spacing:.05em">📌 中国网络文学76%接触AI创作数据</div>
+  </div><div class="sp" style="border-left-color:#4ECDC4">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#4ECDC4">✍️</div>
+      <div>
+        <div class="sn">余华</div>
+        <div class="sr">作家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 我可以接受AI作为&quot;打字机&quot;，但不能接受AI作为&quot;灵魂&quot;</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">你们说的都有道理，但我想说一个也许不太&quot;政治正确&quot;的观点：</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">**AI可以模仿我的语言，但模仿不了我的经历。**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">许三观的卖血，不是我查资料查出来的。那是我见过的人、经过的事、感受过的恐惧——这些东西，算法怎么学？</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">我年轻的时候在牙科诊所工作，拔过无数颗牙。那些病人的眼神、那些血的味道——这些经历进入了我的血液，成了我写作的一部分。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">AI可以分析一亿个&quot;苦难叙事&quot;的文本，然后生成一个&quot;苦难故事&quot;。但那不是苦难，那是**苦难的拟像**。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">就像塑料花和真花的区别：塑料花更漂亮、更耐久、更便宜。但它没有香味。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">Rie Kudan用ChatGPT写了5%，拿了芥川奖。我尊重这个奖项，也尊重她的诚实。但我想问：**那5%是什么？如果那5%是故事的核心——人物、情感、命运——那剩下的95%还是原创吗？**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">如果那5%只是文字润色，那没问题。但如果那5%是灵魂，那剩下的95%是什么？</p></div>
+    <div style="margin-top:1.5vh;display:flex;flex-direction:column;gap:.5vh"><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;AI可以模仿语言，但模仿不了经历&quot;"</div><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;苦难可以模仿，但苦难不是苦难&quot;"</div></div>
+    <div style="margin-top:1.5vh;font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);letter-spacing:.05em">📌 Rie Kudan芥川奖案例</div>
+  </div><div class="sp" style="border-left-color:#45B7D1">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#45B7D1">🎭</div>
+      <div>
+        <div class="sn">梁文道</div>
+        <div class="sr">文化评论人</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ AI对&quot;原创&quot;的冲击，本质上是对&quot;作者身份&quot;的冲击</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我想把这个问题带到更深一层：AI挑战的不只是&quot;原创内容&quot;，而是**&quot;作者&quot;这个概念本身**。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">罗兰·巴特说&quot;作者已死&quot;的时候，他指的是文本意义由读者决定。但AI时代，我们要面对的是更激进的问题：**如果一个文本的主要部分是由AI生成的，那&quot;作者&quot;是谁？**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">这不仅是法律问题，更是文化问题。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">我们为什么需要&quot;作者&quot;？因为作者代表了一种**责任和意义的锚点**。我们读余华的小说，不仅是在读一个故事，也是在与余华这个&quot;人&quot;对话。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">当AI可以批量生产&quot;像余华写的&quot;内容时，余华这个&quot;人&quot;的价值反而会更加凸显——因为他的不可替代性不在于他的文字，而在于他的生命本身。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">北京广播电视台的AI系统10分钟出新闻短视频。这解决了&quot;速度&quot;的问题，但没有解决&quot;信任&quot;的问题。观众为什么要信一个AI生成的新闻？</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">**AI时代，最稀缺的将是&quot;可信的作者&quot;。**</p></div>
+    <div style="margin-top:1.5vh;display:flex;flex-direction:column;gap:.5vh"><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;AI挑战的不只是原创内容，而是&#039;作者&#039;这个概念本身&quot;"</div><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;AI时代最稀缺的是&#039;可信的作者&#039;&quot;"</div></div>
+    <div style="margin-top:1.5vh;font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);letter-spacing:.05em">📌 北京广播电视台AI系统效率数据</div>
+  </div><div class="sp" style="border-left-color:#96CEB4">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#96CEB4">🔮</div>
+      <div>
+        <div class="sn">凯文·凯利</div>
+        <div class="sr">未来学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 原创将被重新定义为&quot;人机协作中的不可自动化部分&quot;</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我想用一个进化的视角来看这个问题。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">在生物学中，有一个概念叫&quot;生态位分化&quot;——当一个物种入侵时，原物物种不会灭绝，而是会找到新的生态位存活下来。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">AI对创意产业的冲击，也会导致类似的&quot;创意生态位分化&quot;：</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">**第一层（被AI替代）**：标准化、可量化的创意工作——新闻摘要、商业文案、套路化的小说情节。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">**第二层（人机协作）**：需要人类判断力和AI效率结合的工作——深度报道、复杂叙事、需要专业知识的内容。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">**第三层（人类专属）**：真正不可替代的创意——基于独特生命体验的艺术创作、开创性的文化突破、引领时代的审美创新。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">StoryOne工具可以将出版速度提升至300倍——但速度从来不是创意的核心价值。乔布斯没有因为微软速度快就被打败，爱因斯坦的论文不是因为写得最快而伟大。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">**未来最值钱的原创，将是那些&quot;只有这个人才能写出来&quot;的内容。**</p></div>
+    <div style="margin-top:1.5vh;display:flex;flex-direction:column;gap:.5vh"><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;原创将被重新定义为&#039;人机协作中的不可自动化部分&#039;&quot;"</div><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;速度从来不是创意的核心价值&quot;"</div></div>
+    <div style="margin-top:1.5vh;font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);letter-spacing:.05em">📌 StoryOne 300倍效率数据</div>
+  </div><div class="sp" style="border-left-color:#FFEAA7">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#FFEAA7">😏</div>
+      <div>
+        <div class="sn">李诞</div>
+        <div class="sr">脱口秀演员</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 你们都在定义&quot;好的原创&quot;，但观众只在乎&quot;有意思&quot;</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我发现一个特别有意思的悖论：</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">你们这些专家、学者、作家，聊了半天&quot;原创的价值&quot;、&quot;AI的局限&quot;——但你们有没有想过一个问题：**观众真的在乎这些吗？**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">Rie Kudan的书写了5%的AI内容，拿了芥川奖。然后呢？然后没有人在乎那5%是怎么来的。读者只在乎好看不好看。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">这就像我们做脱口秀：有人问我&quot;你的段子是你自己想的还是AI写的？&quot;我说&quot;是我自己想的&quot;——然后观众笑了。这个&quot;笑&quot;，跟段子是不是AI写的有关系吗？</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">**真正消解&quot;原创&quot;价值的，不是AI，是观众不在乎原创。**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">我的意思是：与其担心&quot;原创被消解&quot;，不如问&quot;什么样的内容在AI时代依然能让观众在乎&quot;。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">答案是：**能让观众感受到&quot;这是一个人写的&quot;的内容。**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">因为人们真正消费的，不是内容，是和一个&quot;人&quot;的连接。AI可以模仿文字，但模仿不了&quot;人气&quot;。</p></div>
+    <div style="margin-top:1.5vh;display:flex;flex-direction:column;gap:.5vh"><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;真正消解原创的，不是AI，是观众不在乎原创&quot;"</div><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;人们消费的不是内容，是和一个人的连接&quot;"</div></div>
+    <div style="margin-top:1.5vh;font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);letter-spacing:.05em">📌 Rie Kudan芥川奖案例</div>
+  </div><div style="background:rgba(var(--accent-rgb),.06);border:1px solid rgba(var(--accent-rgb),.15);border-radius:var(--radius);padding:3vh 2.5vw;margin-top:2vh">
+    <div style="font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh;font-weight:700">⚡ 专家交锋</div>
+    <div style="font-family:var(--serif-zh);font-size:1.05rem;font-weight:600;margin-bottom:2vh;line-height:1.6">专家交锋：&quot;原创&quot;的终点是消亡还是升华？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">余华与凯文·凯利的核心交锋：</p><p style="margin-bottom:1.2vh;line-height:1.9">余华坚持&quot;原创&quot;的核心是真实的生命体验，AI可以模仿形式但模仿不了经历。</p><p style="margin-bottom:1.2vh;line-height:1.9">凯文·凯利则认为&quot;原创&quot;会通过&quot;生态位分化&quot;找到新的定义，人类创意会往更高层次进化。</p><p style="margin-bottom:1.2vh;line-height:1.9">梁文道在一旁评论：&quot;余华说的是&#039;原创的内容&#039;，凯文·凯利说的是&#039;原创的生态位&#039;。这是两个层面的问题——内容会变，但人类对&#039;真实的人&#039;的渴望不会变。&quot;</p><p style="margin-bottom:1.2vh;line-height:1.9">李诞突然插话：&quot;等等，你们有没有想过——也许&#039;原创&#039;这个词本身就过时了？就像&#039;马车&#039;这个词，在汽车时代还有什么意义？&quot;</p><p style="margin-bottom:1.2vh;line-height:1.9">吴晓波点头：&quot;技术重新定义&#039;原创&#039;的边界，这是历史的常态。问题是：我们是在见证死亡，还是见证转型？&quot;</p></div>
+  </div>
+      <div class="deck-footer">第 2/3 轮 · 6 位专家发言</div>
+    </div>
+  </div><div class="slide title-slide" data-title="第3轮：内容平台投资逻辑：从流量到&quot;真实人味&quot;">
+    <div class="frame">
+      <div class="hero-dark">
+        <div class="kicker" data-anim>ROUND 3</div>
+        <div class="h-hero" data-anim style="background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">内容平台投资逻辑：从流量到&quot;真实人味&quot;</div>
+        <div class="quote-large" data-anim style="max-width:700px;margin-top:3vh">Netflix、字节跳动已经用推荐算法证明了内容分发的高效。但当内容供给从稀缺变成过剩，投资逻辑会发生什么转变？从&quot;用户时长&quot;到&quot;用户粘性&quot;，从&quot;流量&quot;到&quot;人味&quot;——这是内容产业的新大陆吗？</div>
+      </div>
+    </div>
+  </div><div class="slide" data-title="第3轮：专家发言">
+    <div class="frame">
+      <div class="kicker" data-anim>ROUND 3 · 专家发言</div>
+      <div class="h-lg" data-anim style="margin-bottom:3vh">内容平台投资逻辑：从流量到&quot;真实人味&quot;</div>
+      <div class="sp" style="border-left-color:#E94560">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#E94560">💼</div>
+      <div>
+        <div class="sn">刘润</div>
+        <div class="sr">润米咨询创始人</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 内容平台的投资逻辑正在经历&quot;从流量入口到信任入口&quot;的转移</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我用一个交易成本框架来分析内容平台的演变：</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">**第一阶段（稀缺时代）**：内容是稀缺资源，平台靠&quot;采购内容&quot;吸引用户。交易成本的核心是&quot;内容成本&quot;。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">**第二阶段（流量时代）**：内容供给增加，平台靠&quot;算法分发&quot;提升效率。交易成本的核心是&quot;注意力成本&quot;——如何在海量内容中让用户找到想看的。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">**第三阶段（AI时代）**：内容供给趋于无限，平台靠什么？答案两个字：**信任**。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">当AI可以生产无限内容时，用户面临的不再是&quot;找不到内容&quot;，而是&quot;不知道该信什么&quot;。这时候，**&quot;可信的内容来源&quot;就成为新的稀缺资源**。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">字节跳动靠推荐算法赢在了第二阶段。但第三阶段的竞争格局会完全不同——那些建立了&quot;信任护城河&quot;的平台，将获得更高的用户粘性和更低的获客成本。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">DeepSeek让61.7%的职业作者使用AI协助写作，这意味着：内容的&quot;生产能力&quot;将进一步普及，但&quot;判断能力&quot;和&quot;信任背书&quot;才是平台的护城河。</p></div>
+    <div style="margin-top:1.5vh;display:flex;flex-direction:column;gap:.5vh"><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;从流量入口到信任入口&quot;"</div><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;当内容供给无限时，信任成为新的稀缺资源&quot;"</div></div>
+    <div style="margin-top:1.5vh;font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);letter-spacing:.05em">📌 字节跳动推荐算法模式 · DeepSeek 61.7%职业作者使用率</div>
+  </div><div class="sp" style="border-left-color:#FF6B6B">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#FF6B6B">📚</div>
+      <div>
+        <div class="sn">吴晓波</div>
+        <div class="sr">财经作家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 内容产业的周期律：每一次技术跃迁都伴随着&quot;平台更替&quot;</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我研究商业史有一个铁律：**没有永远的平台，只有时代的企业。**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">看中国互联网三十年：</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">- 门户网站时代：新浪、搜狐、网易</p><p style="margin-bottom:1.2vh;line-height:1.9">- 搜索引擎时代：百度</p><p style="margin-bottom:1.2vh;line-height:1.9">- 社交媒体时代：微博、微信</p><p style="margin-bottom:1.2vh;line-height:1.9">- 短视频时代：抖音、快手</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">每一次更替的原因都一样：**用户行为变了，但平台没有跟上。**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">字节跳动为什么能崛起？因为它抓住了&quot;算法推荐&quot;这个变量，用机器代替人工编辑，实现了内容分发的工业化。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">但现在，新的变量出现了：**AI创作正在让内容供给从&#039;有限&#039;变成&#039;无限&#039;**。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">当内容本身不再是稀缺资源时，平台靠什么留住用户？</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">我的判断是：**&quot;人格化&quot;将成为新的护城河。**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">未来的内容平台，不只是&quot;内容分发商&quot;，而是&quot;人格连接商&quot;——让用户和一个&quot;真实的人&quot;建立情感连接，而不是和一堆&quot;算法推荐的内容&quot;建立关系。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">StoryOne工具300倍的出版效率，意味着内容供给将进一步爆炸。在内容海洋里，用户最需要的是一个&quot;可信的向导&quot;。</p></div>
+    <div style="margin-top:1.5vh;display:flex;flex-direction:column;gap:.5vh"><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;没有永远的平台，只有时代的企业&quot;"</div><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;人格化将成为新的护城河&quot;"</div></div>
+    <div style="margin-top:1.5vh;font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);letter-spacing:.05em">📌 字节跳动崛起案例 · StoryOne 300倍效率数据</div>
+  </div><div class="sp" style="border-left-color:#4ECDC4">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#4ECDC4">✍️</div>
+      <div>
+        <div class="sn">余华</div>
+        <div class="sr">作家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 真正的文学不需要平台，因为它在读者的心里</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我不太懂你们说的那些投资逻辑、平台战略。我只知道一件事：</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">**真正的好故事，是不需要平台的。**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">《活着》出版快三十年了。它在抖音上被推荐过吗？在字节跳动的算法里有加权吗？没有。但它一直在卖，一直在有人读。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">为什么？</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">因为《活着》解决了一个问题：**人为什么要活着。**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">这个问题，AI回答不了，算法推送不了，平台也替代不了。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">我不是说平台不重要。平台当然重要——它是让内容触达读者的渠道。但渠道不是内容，流量不是故事。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">北京广播电视台10分钟出短视频，效率很高。但你看完那些短视频之后，记得住什么？</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">**能让观众记住的内容，永远不是靠效率生产的，而是靠真实打动的。**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">我写许三观卖血，不是因为我想到了一个好故事，而是因为那个故事里有我认识的人、有我经历过的时代、有我无法回避的疼痛。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">这些东西，AI替代不了，算法也推荐不了。</p></div>
+    <div style="margin-top:1.5vh;display:flex;flex-direction:column;gap:.5vh"><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;真正的好故事不需要平台&quot;"</div><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;能让观众记住的内容，靠真实打动，不是靠效率&quot;"</div></div>
+    <div style="margin-top:1.5vh;font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);letter-spacing:.05em">📌 北京广播电视台AI系统效率数据</div>
+  </div><div class="sp" style="border-left-color:#45B7D1">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#45B7D1">🎭</div>
+      <div>
+        <div class="sn">梁文道</div>
+        <div class="sr">文化评论人</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ AI时代的内容消费，本质上是&quot;意义消费&quot;的回归</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我想从一个文化哲学的角度来看这个问题。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">过去二十年，内容产业经历了一个&quot;去意义化&quot;的过程——从深度阅读到碎片化消费，从&quot;读好书&quot;到&quot;刷短视频&quot;。这个过程的背后，是工业化逻辑对文化的渗透：**内容变成了产品，时间变成了流量。**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">但AI时代会发生什么？</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">**当AI可以批量生产&quot;去意义化&quot;的内容时，这种内容的价值就归零了。**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">这时候，真正的&quot;意义消费&quot;会回归——人们会重新开始寻找那些能回答&quot;人为什么活着&quot;的内容、能让他们感受到&quot;被理解&quot;的内容、能让他们说&quot;这就是我想说但说不出的话&quot;的内容。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">凯文·凯利说&quot;过滤比生产更重要&quot;。在北京广播电视台10分钟出短视频的时代，过滤的任务不是找&quot;更多的内容&quot;，而是找&quot;更有意义的内容&quot;。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">**未来的内容平台，需要重新学会&quot;做减法&quot;——不是让用户看到更多，而是让用户看到更好。**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">这不是商业模式的转型，是价值观的回归。</p></div>
+    <div style="margin-top:1.5vh;display:flex;flex-direction:column;gap:.5vh"><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;当AI可以批量生产去意义化的内容时，这种内容的价值归零&quot;"</div><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;未来需要的是做减法，不是做加法&quot;"</div></div>
+    <div style="margin-top:1.5vh;font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);letter-spacing:.05em">📌 凯文·凯利过滤理论 · 北京广播电视台AI系统</div>
+  </div><div class="sp" style="border-left-color:#96CEB4">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#96CEB4">🔮</div>
+      <div>
+        <div class="sn">凯文·凯利</div>
+        <div class="sr">未来学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 内容平台的下一个十年：将AI与&quot;人情味&quot;结合的&quot;混合智能&quot;模式</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我想用一个长期视角来看内容平台的演变。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">《必然》中我描述了12种必然趋势，其中&quot;知化&quot;和&quot;过滤&quot;在内容产业最为关键。AI负责&quot;知化&quot;——让内容创作和分发变得更加智能化；同时，&quot;过滤&quot;的需求在AI时代会更加突出。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">但我看到一个新趋势正在形成：**&quot;混合智能&quot;平台**。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">这种平台的核心逻辑是：</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">- **AI层**：负责效率、规模化、个性化推荐</p><p style="margin-bottom:1.2vh;line-height:1.9">- **人类层**：负责意义判断、情感连接、价值筛选</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">就像工业革命后，机器做制造、手工做艺术，两条线并行不悖。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">StoryOne工具300倍的出版效率，意味着AI层的效率已经接近极限。但这只是解决了&quot;有没有&quot;的问题。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">**真正的问题是：在内容供给无限的时代，什么样的平台能让用户觉得&quot;我在和一个人对话&quot;？**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">答案不是纯AI平台，也不是纯人工平台，而是两者的有机结合。未来的独角兽，将是那些懂得&quot;人机协作&quot;的平台。</p></div>
+    <div style="margin-top:1.5vh;display:flex;flex-direction:column;gap:.5vh"><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;未来的独角兽将是懂得人机协作的平台&quot;"</div><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;AI负责效率，人类负责意义&quot;"</div></div>
+    <div style="margin-top:1.5vh;font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);letter-spacing:.05em">📌 StoryOne 300倍效率数据 · 《必然》12种趋势</div>
+  </div><div class="sp" style="border-left-color:#FFEAA7">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#FFEAA7">😏</div>
+      <div>
+        <div class="sn">李诞</div>
+        <div class="sr">脱口秀演员</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 用户根本不关心平台，他们只关心&quot;爽不爽&quot;</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">你们聊了半天平台战略、AI逻辑、投资方向——我就问一个问题：**用户在乎这些吗？**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">用户不在乎字节跳动用什么算法，不在乎北京广播电视台用了什么AI系统，不在乎Netflix投了多少钱做内容。用户只在乎一件事：</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">**爽不爽。**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">这是一个特别简单的道理，但你们这些专家、学者、企业家，往往把它搞得特别复杂。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">余华的小说为什么卖得好？不是因为它有&quot;深度&quot;、有&quot;意义&quot;、有&quot;文学价值&quot;——是因为读者看完之后，觉得**被理解了**，觉得**没那么孤独了**。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">这种感觉，我做脱口秀也一样。观众为什么买票来看我？不是因为我说得有多深刻，是因为我让他们笑了，或者让他们觉得&quot;这个世界上还有一个人能懂我&quot;。</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">**AI时代的内容产业，投资逻辑应该围绕一个核心：如何让用户觉得&quot;被理解&quot;。**</p><p style="margin-bottom:1.2vh;line-height:1.9"></p><p style="margin-bottom:1.2vh;line-height:1.9">做到这一点，平台就能活。做不到，说什么都没用。</p></div>
+    <div style="margin-top:1.5vh;display:flex;flex-direction:column;gap:.5vh"><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;用户只在乎爽不爽&quot;"</div><div style="font-family:var(--serif-zh);font-size:.88rem;font-style:italic;color:var(--gold);padding-left:1vw;border-left:2px solid rgba(var(--gold-rgb),.4);margin-bottom:.5vh">"&quot;如何让用户觉得被理解，这是内容产业的终极问题&quot;"</div></div>
+    <div style="margin-top:1.5vh;font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);letter-spacing:.05em">📌 北京广播电视台AI系统</div>
+  </div><div style="background:rgba(var(--accent-rgb),.06);border:1px solid rgba(var(--accent-rgb),.15);border-radius:var(--radius);padding:3vh 2.5vw;margin-top:2vh">
+    <div style="font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh;font-weight:700">⚡ 专家交锋</div>
+    <div style="font-family:var(--serif-zh);font-size:1.05rem;font-weight:600;margin-bottom:2vh;line-height:1.6">专家交锋：内容产业是&quot;反脆弱&quot;的最后堡垒？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">六位专家的终极分歧：</p><p style="margin-bottom:1.2vh;line-height:1.9">**刘润** 认为内容产业会演变成&quot;信任经济&quot;，谁能建立信任护城河，谁就是下一个霸主。</p><p style="margin-bottom:1.2vh;line-height:1.9">**吴晓波** 认为&quot;人格化&quot;是新的护城河，平台需要从&quot;内容分发商&quot;转型为&quot;人格连接商&quot;。</p><p style="margin-bottom:1.2vh;line-height:1.9">**余华** 坚持&quot;真正的文学不需要平台&quot;——好故事自带生命力。</p><p style="margin-bottom:1.2vh;line-height:1.9">**梁文道** 认为这是&quot;意义消费&quot;的回归，是价值观的转型而非商业模式的变化。</p><p style="margin-bottom:1.2vh;line-height:1.9">**凯文·凯利** 提出&quot;混合智能&quot;模式——AI负责效率，人类负责意义。</p><p style="margin-bottom:1.2vh;line-height:1.9">**李诞** 最后总结：**&quot;你们说的都对。但用户只在乎&#039;被理解&#039;这一点。说其他的，都是给自己加戏。&quot;**</p><p style="margin-bottom:1.2vh;line-height:1.9">这时，一直沉默的梁文道说了一句：**&quot;李诞说得对。但问题是，&#039;被理解&#039;这件事，在AI时代，反而越来越稀缺了。&quot;**</p><p style="margin-bottom:1.2vh;line-height:1.9">这句话让所有人都陷入了沉默。</p></div>
+  </div>
+      <div class="deck-footer">第 3/3 轮 · 6 位专家发言</div>
+    </div>
+  </div><div class="slide hero title-slide" data-title="结语">
+  <div class="frame">
+    <div class="slide-content" style="justify-content:center;align-items:center;text-align:center">
+      <div class="kicker" data-anim>CONCLUSION</div>
+      <div class="h-hero" data-anim style="margin-bottom:4vh">内容产业的下一个十年</div>
+      <div class="quote-large" data-anim style="max-width:800px;margin-bottom:4vh">
+        当边际成本趋近于零，真正的价值将回归到那些无法被量化的东西——真实的生命体验、不可替代的信任、触及灵魂的共鸣。
+      </div>
+      <div class="gold-line" data-anim></div>
+      <div class="meta-row" data-anim>
+        <span>💼 刘润</span> · <span>📚 吴晓波</span> · <span>✍️ 余华</span> · <span>🎭 梁文道</span> · <span>🔮 凯文·凯利</span> · <span>😏 李诞</span>
+      </div>
+      <div style="margin-top:4vh;font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;opacity:.4" data-anim>
+        圆桌洞见 · 2026-05-26
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toc-backdrop" id="tocBackdrop"></div>
+<div class="toc-panel" id="tocPanel">
+<div class="toc-title">目录</div>
+<div id="tocList"></div>
+</div>
+<div class="nav-bar">
+<div class="nav-left">
+<button class="nav-btn" id="btnToc">☰ 目录</button>
+<button class="nav-btn" id="btnPrev">◀ 上一页</button>
+<button class="nav-btn" id="btnNext">下一页 ▶</button>
+</div>
+<div class="nav-right">
+<span class="nav-title" id="slideTitle"></span>
+<span class="nav-counter" id="slideCounter"></span>
+</div>
+</div>
+<div class="nav-dots" id="navDots"></div>
+</div>
+
+<script>
+(function(){
+var deck=document.getElementById("deck");
+var slides=deck.querySelectorAll(".slide");
+var total=slides.length;
+var cur=0;
+var dots=document.getElementById("navDots");
+var tocList=document.getElementById("tocList");
+var titleEl=document.getElementById("slideTitle");
+var counterEl=document.getElementById("slideCounter");
+var tocPanel=document.getElementById("tocPanel");
+var tocBackdrop=document.getElementById("tocBackdrop");
+var progressBar=document.getElementById("progressBar");
+
+for(var i=0;i<total;i++){
+  var d=document.createElement("button");
+  d.className="nd";
+  d.setAttribute("data-i",i);
+  d.onclick=(function(idx){return function(){go(idx)}})(i);
+  dots.appendChild(d);
+  var t=document.createElement("div");
+  t.className="toc-item";
+  t.setAttribute("data-i",i);
+  t.innerHTML='<span class="toc-label">'+(slides[i].getAttribute("data-title")||"Slide "+(i+1))+'</span><span class="toc-page">'+String(i+1).padStart(2,"0")+'</span>';
+  t.onclick=(function(idx){return function(){go(idx);closeTOC()}})(i);
+  tocList.appendChild(t);
+}
+
+function go(n){
+  if(n<0||n>=total)return;
+  slides[cur].classList.remove("active");
+  dots.children[cur].classList.remove("active");
+  tocList.children[cur].classList.remove("active");
+  cur=n;
+  slides[cur].classList.add("active");
+  dots.children[cur].classList.add("active");
+  tocList.children[cur].classList.add("active");
+  titleEl.textContent=slides[cur].getAttribute("data-title")||"";
+  counterEl.textContent=(cur+1)+" / "+total;
+  progressBar.style.width=((cur+1)/total*100)+"%";
+  slides[cur].scrollTop=0;
+}
+function toggleTOC(){tocPanel.classList.toggle("open");tocBackdrop.classList.toggle("open")}
+function closeTOC(){tocPanel.classList.remove("open");tocBackdrop.classList.remove("open")}
+
+document.addEventListener("keydown",function(e){
+  if(e.key==="ArrowRight"||e.key==="ArrowDown"||e.key===" "||e.key==="PageDown"){e.preventDefault();go(cur+1)}
+  else if(e.key==="ArrowLeft"||e.key==="ArrowUp"||e.key==="PageUp"){e.preventDefault();go(cur-1)}
+  else if(e.key==="Home"){e.preventDefault();go(0)}
+  else if(e.key==="End"){e.preventDefault();go(total-1)}
+  else if(e.key==="Escape"){closeTOC();go(0)}
+  else if(e.key==="t"||e.key==="T"){toggleTOC()}
+});
+var wheelTimer=null;
+deck.addEventListener("wheel",function(e){
+  var sl=slides[cur];
+  var atTop=sl.scrollTop<=0;
+  var atBottom=sl.scrollTop+sl.clientHeight>=sl.scrollHeight-2;
+  if(e.deltaY>0&&atBottom){
+    if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},350);go(cur+1)}
+    e.preventDefault();
+  }else if(e.deltaY<0&&atTop){
+    if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},350);go(cur-1)}
+    e.preventDefault();
+  }
+},{passive:false});
+var touchX=0,touchY=0;
+deck.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX;touchY=e.touches[0].clientY});
+deck.addEventListener("touchend",function(e){
+  var dx=touchX-e.changedTouches[0].clientX,dy=touchY-e.changedTouches[0].clientY;
+  if(Math.abs(dy)>Math.abs(dx)){if(dy>50)go(cur+1);else if(dy<-50)go(cur-1)}
+  else{if(dx>50)go(cur+1);else if(dx<-50)go(cur-1)}
+});
+deck.addEventListener("click",function(e){
+  if(e.target.closest(".nav-btn,.nd,.toc-item,.toc-panel,.toc-backdrop"))return;
+  var x=e.clientX/window.innerWidth;
+  if(x<0.3)go(cur-1);else if(x>0.7)go(cur+1);
+});
+document.getElementById("btnToc").addEventListener("click",function(e){e.stopPropagation();toggleTOC()});
+document.getElementById("btnPrev").addEventListener("click",function(e){e.stopPropagation();go(cur-1)});
+document.getElementById("btnNext").addEventListener("click",function(e){e.stopPropagation();go(cur+1)});
+tocBackdrop.addEventListener("click",closeTOC);
+go(0);
+})();
+</script>
+</body>
+</html>

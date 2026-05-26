@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{title}}</title>
+<style>
+:root {
+  --bg: #1a1a2e;
+  --surface: #16213e;
+  --dot: #0f3460;
+  --text: #e8e8e8;
+  --dim: #666680;
+  --accent: #e94560;
+  --signal: #00fff5;
+  --glow: rgba(233,69,96,0.2);
+  --mono: 'Courier New', monospace;
+  --sans: system-ui, -apple-system, sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; }
+body { display: flex; width: max-content; height: 100vh; background: var(--bg); font-family: var(--sans); color: var(--text); }
+.slide { width: 100vw; height: 100vh; min-width: 100vw; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; background-image: radial-gradient(circle at 1px 1px, var(--dot) 1px, transparent 1px); background-size: 24px 24px; }
+.slide-cover { justify-content: center; align-items: center; text-align: center; }
+.slide-surface { padding: 48px 64px; }
+.frame { max-width: 760px; margin: 0 auto; width: 100%; }
+.signal-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--dot); margin-bottom: 32px; }
+.signal-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--dim); }
+.signal-title { font-family: var(--mono); font-size: 13px; font-weight: 700; }
+.signal-accent { color: var(--signal); }
+.wave-block { background: var(--surface); padding: 24px; margin-bottom: 16px; border-left: 3px solid var(--accent); position: relative; }
+.wave-block::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); }
+.wave-meta { display: flex; justify-content: space-between; margin-bottom: 12px; }
+.wave-speaker { font-weight: 700; font-size: 14px; color: var(--signal); }
+.wave-tag { font-family: var(--mono); font-size: 10px; padding: 4px 8px; background: var(--dot); color: var(--dim); }
+.wave-content { font-size: 14px; line-height: 1.8; color: var(--text); }
+.signal-insight { background: linear-gradient(135deg, rgba(0,255,245,0.1), transparent); border: 1px solid var(--signal); padding: 24px; margin-top: 16px; }
+.insight-header { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--signal); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.insight-header::before { content: '◆'; }
+.insight-text { font-size: 15px; line-height: 1.7; }
+.frequency-bar { display: flex; gap: 2px; height: 40px; align-items: flex-end; margin-top: 16px; }
+.freq { width: 4px; background: var(--accent); opacity: 0.6; border-radius: 2px 2px 0 0; }
+#nav { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; z-index: 100; background: var(--surface); padding: 8px 16px; }
+.nav-btn { width: 32px; height: 32px; border: 1px solid var(--dot); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--dim); }
+.nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+.dots { display: flex; gap: 4px; }
+.dot { width: 6px; height: 6px; border-radius: 0; background: var(--dot); cursor: pointer; }
+.dot.active { background: var(--accent); }
+#counter { position: fixed; top: 20px; right: 24px; font-family: var(--mono); font-size: 10px; color: var(--dim); z-index: 100; }
+</style>
+</head>
+<body>
+{{slides}}
+<div id="nav">
+  <button class="nav-btn" id="prevBtn">◀</button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn">▶</button>
+</div>
+<div id="counter">1 / 1</div>
+<script>
+(function(){
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let cur = 0;
+  const dots = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => go(i);
+    dots.appendChild(d);
+  });
+  
+  function go(n) {
+    if (n < 0 || n >= total) return;
+    slides[cur].style.display = 'none';
+    dots.children[cur].classList.remove('active');
+    cur = n;
+    slides[cur].style.display = 'flex';
+    dots.children[cur].classList.add('active');
+    counter.textContent = (cur + 1) + ' / ' + total;
+  }
+  
+  document.getElementById('prevBtn').onclick = () => go(cur - 1);
+  document.getElementById('nextBtn').onclick = () => go(cur + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') go(cur + 1);
+    else if (e.key === 'ArrowLeft') go(cur - 1);
+  });
+  
+  go(0);
+})();
+</script>
+</body>
+</html>

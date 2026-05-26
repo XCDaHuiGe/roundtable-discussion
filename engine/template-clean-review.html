@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{title}}</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff;
+  --text: #1a1a1a;
+  --gray-100: #f5f5f5;
+  --gray-200: #e8e8e8;
+  --gray-400: #999999;
+  --gray-600: #555555;
+  --accent: #111111;
+  --green: #2d5a27;
+  --serif: 'Noto Serif SC', Georgia, serif;
+  --sans: 'Noto Sans SC', 'PingFang SC', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; }
+body { display: flex; width: max-content; height: 100vh; background: var(--bg); font-family: var(--sans); }
+.slide { width: 100vw; height: 100vh; min-width: 100vw; scroll-snap-align: start; display: flex; flex-direction: column; padding: 48px 64px; position: relative; }
+.slide-cover { background: var(--bg); justify-content: center; }
+.slide-white { background: var(--bg); }
+.cover { max-width: 600px; margin: 0 auto; text-align: center; }
+.cover-badge { display: inline-block; padding: 8px 20px; border: 1px solid var(--accent); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 32px; }
+.cover-title { font-family: var(--serif); font-size: clamp(32px, 5vw, 56px); font-weight: 700; line-height: 1.2; margin-bottom: 24px; }
+.cover-sub { font-size: 16px; color: var(--gray-600); line-height: 1.8; margin-bottom: 40px; }
+.cover-stats { display: flex; justify-content: center; gap: 48px; }
+.cover-stat { text-align: center; }
+.cover-stat-num { font-family: var(--serif); font-size: 40px; font-weight: 700; }
+.cover-stat-label { font-size: 11px; color: var(--gray-400); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
+.section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding-bottom: 16px; border-bottom: 1px solid var(--gray-200); }
+.section-tag { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray-400); }
+.section-title { font-family: var(--serif); font-size: 24px; font-weight: 700; }
+.review-card { background: var(--gray-100); border-radius: 8px; padding: 24px; margin-bottom: 16px; }
+.review-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.review-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+.review-name { font-weight: 700; font-size: 14px; }
+.review-role { font-size: 12px; color: var(--gray-400); }
+.review-content { font-size: 14px; line-height: 1.8; color: var(--gray-600); }
+.insight-card { background: linear-gradient(135deg, rgba(45,90,39,0.08), transparent); border: 1px solid var(--green); border-radius: 8px; padding: 20px; margin-top: 16px; }
+.insight-label { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--green); margin-bottom: 8px; }
+.insight-text { font-family: var(--serif); font-size: 16px; font-weight: 600; line-height: 1.6; }
+.conclusions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 32px; }
+.conclusion-item { padding: 24px; border: 1px solid var(--gray-200); border-radius: 8px; }
+.conclusion-num { font-family: var(--serif); font-size: 32px; font-weight: 700; color: var(--gray-200); margin-bottom: 8px; }
+.conclusion-text { font-size: 14px; line-height: 1.7; }
+#nav { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; z-index: 100; }
+.nav-btn { width: 36px; height: 36px; border: 1px solid var(--gray-200); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+.nav-btn:hover { background: var(--gray-100); }
+.dots { display: flex; gap: 6px; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gray-200); cursor: pointer; }
+.dot.active { background: var(--accent); }
+#counter { position: fixed; top: 20px; right: 24px; font-size: 11px; color: var(--gray-400); z-index: 100; }
+</style>
+</head>
+<body>
+{{slides}}
+<div id="nav">
+  <button class="nav-btn" id="prevBtn">◀</button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn">▶</button>
+</div>
+<div id="counter">1 / 1</div>
+<script>
+(function(){
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let cur = 0;
+  const dots = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => go(i);
+    dots.appendChild(d);
+  });
+  
+  function go(n) {
+    if (n < 0 || n >= total) return;
+    slides[cur].style.display = 'none';
+    dots.children[cur].classList.remove('active');
+    cur = n;
+    slides[cur].style.display = 'flex';
+    dots.children[cur].classList.add('active');
+    counter.textContent = (cur + 1) + ' / ' + total;
+  }
+  
+  document.getElementById('prevBtn').onclick = () => go(cur - 1);
+  document.getElementById('nextBtn').onclick = () => go(cur + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') go(cur + 1);
+    else if (e.key === 'ArrowLeft') go(cur - 1);
+  });
+  
+  go(0);
+})();
+</script>
+</body>
+</html>

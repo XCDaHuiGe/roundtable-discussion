@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{title}}</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f5f0;
+  --paper: #fffef9;
+  --ink: #3d3d3d;
+  --soft: #8a8a8a;
+  --accent: #6b8e9f;
+  --line: rgba(61,61,61,0.12);
+  --serif: 'Noto Serif SC', Georgia, serif;
+  --sans: 'Noto Sans SC', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; }
+body { display: flex; width: max-content; height: 100vh; background: var(--bg); font-family: var(--sans); }
+.slide { width: 100vw; height: 100vh; min-width: 100vw; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+.slide::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 1; }
+.slide-cover { justify-content: center; align-items: center; text-align: center; }
+.slide-white { padding: 48px 64px; }
+.frame { position: relative; z-index: 2; max-width: 720px; margin: 0 auto; width: 100%; }
+.cover { text-align: center; }
+.cover-date { font-size: 12px; color: var(--soft); letter-spacing: 0.2em; margin-bottom: 24px; }
+.cover-title { font-family: var(--serif); font-size: clamp(28px, 4vw, 48px); font-weight: 500; line-height: 1.4; margin-bottom: 20px; }
+.cover-meta { font-size: 13px; color: var(--soft); display: flex; justify-content: center; gap: 8px; }
+.note-header { margin-bottom: 24px; }
+.note-round { font-size: 11px; color: var(--soft); letter-spacing: 0.15em; }
+.note-question { font-family: var(--serif); font-size: 24px; font-weight: 500; line-height: 1.5; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--line); }
+.notes-container { display: flex; flex-direction: column; gap: 20px; }
+.note-entry { background: var(--paper); border-radius: 8px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+.note-speaker { font-weight: 600; font-size: 14px; margin-bottom: 8px; color: var(--ink); }
+.note-content { font-size: 14px; line-height: 1.9; color: var(--soft); }
+.rain-insight { background: linear-gradient(135deg, rgba(107,142,159,0.1), transparent); border-left: 3px solid var(--accent); padding: 20px 24px; margin-top: 24px; border-radius: 0 8px 8px 0; }
+.insight-marker { font-family: var(--serif); font-size: 24px; color: var(--accent); margin-bottom: 8px; }
+.insight-text { font-family: var(--serif); font-size: 15px; line-height: 1.7; color: var(--ink); font-style: italic; }
+#nav { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; z-index: 100; background: var(--paper); padding: 8px 16px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+.nav-btn { width: 32px; height: 32px; border: none; background: var(--bg); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--soft); border-radius: 50%; }
+.nav-btn:hover { background: var(--line); }
+.dots { display: flex; gap: 4px; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--line); cursor: pointer; }
+.dot.active { background: var(--accent); }
+#counter { position: fixed; top: 20px; right: 24px; font-size: 11px; color: var(--soft); z-index: 100; }
+</style>
+</head>
+<body>
+{{slides}}
+<div id="nav">
+  <button class="nav-btn" id="prevBtn">◀</button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn">▶</button>
+</div>
+<div id="counter">1 / 1</div>
+<script>
+(function(){
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let cur = 0;
+  const dots = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => go(i);
+    dots.appendChild(d);
+  });
+  
+  function go(n) {
+    if (n < 0 || n >= total) return;
+    slides[cur].style.display = 'none';
+    dots.children[cur].classList.remove('active');
+    cur = n;
+    slides[cur].style.display = 'flex';
+    dots.children[cur].classList.add('active');
+    counter.textContent = (cur + 1) + ' / ' + total;
+  }
+  
+  document.getElementById('prevBtn').onclick = () => go(cur - 1);
+  document.getElementById('nextBtn').onclick = () => go(cur + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') go(cur + 1);
+    else if (e.key === 'ArrowLeft') go(cur - 1);
+  });
+  
+  go(0);
+})();
+</script>
+</body>
+</html>

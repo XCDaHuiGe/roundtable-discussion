@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{title}}</title>
+<style>
+:root {
+  --bg: #000000;
+  --surface: #0a0a0a;
+  --text: #c0c0c0;
+  --dim: #404040;
+  --chrome: #c0c0c0;
+  --accent: #ff00ff;
+  --cyan: #00ffff;
+  --glow: rgba(255,0,255,0.3);
+  --mono: 'Courier New', monospace;
+  --sans: system-ui, -apple-system, sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; }
+body { display: flex; width: max-content; height: 100vh; background: var(--bg); font-family: var(--sans); color: var(--text); }
+.slide { width: 100vw; height: 100vh; min-width: 100vw; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+.slide-cover { justify-content: center; align-items: center; text-align: center; }
+.slide-chrome { padding: 48px 64px; }
+.frame { max-width: 720px; margin: 0 auto; width: 100%; }
+.window { background: var(--surface); border: 2px solid var(--chrome); box-shadow: 4px 4px 0 var(--chrome); margin-bottom: 24px; }
+.window-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: var(--chrome); color: var(--bg); }
+.window-title { font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; }
+.window-dots { display: flex; gap: 4px; }
+.window-dot { width: 10px; height: 10px; border-radius: 50%; }
+.window-dot:nth-child(1) { background: #ff5f56; }
+.window-dot:nth-child(2) { background: #ffbd2e; }
+.window-dot:nth-child(3) { background: #27ca40; }
+.window-body { padding: 24px; }
+.metal-title { font-family: var(--mono); font-size: clamp(24px, 4vw, 40px); font-weight: 700; text-transform: uppercase; background: linear-gradient(180deg, #ffffff 0%, var(--chrome) 50%, #808080 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 16px; }
+.metal-sub { font-size: 14px; color: var(--dim); line-height: 1.8; }
+.glitch-badge { display: inline-block; padding: 6px 16px; border: 1px solid var(--accent); font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); animation: glitch 2s infinite; margin-bottom: 32px; }
+@keyframes glitch { 0%, 90%, 100% { text-shadow: none; } 92% { text-shadow: 2px 0 var(--cyan), -2px 0 var(--accent); } 94% { text-shadow: -2px 0 var(--cyan), 2px 0 var(--accent); } }
+.chrome-card { background: var(--surface); border: 1px solid var(--chrome); padding: 20px; margin-bottom: 16px; }
+.chrome-speaker { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--accent); margin-bottom: 8px; text-transform: uppercase; }
+.chrome-content { font-size: 14px; line-height: 1.8; }
+.scanline { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 1px, transparent 1px, transparent 2px); pointer-events: none; z-index: 1000; }
+#nav { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; z-index: 100; }
+.nav-btn { width: 32px; height: 32px; border: 1px solid var(--chrome); background: var(--bg); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--chrome); font-family: var(--mono); }
+.nav-btn:hover { background: var(--surface); box-shadow: 2px 2px 0 var(--chrome); }
+.dots { display: flex; gap: 4px; }
+.dot { width: 6px; height: 6px; background: var(--dim); cursor: pointer; }
+.dot.active { background: var(--accent); box-shadow: 0 0 6px var(--glow); }
+#counter { position: fixed; top: 20px; right: 24px; font-family: var(--mono); font-size: 10px; color: var(--dim); z-index: 100; }
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+{{slides}}
+<div id="nav">
+  <button class="nav-btn" id="prevBtn">◀</button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn">▶</button>
+</div>
+<div id="counter">1 / 1</div>
+<script>
+(function(){
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let cur = 0;
+  const dots = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => go(i);
+    dots.appendChild(d);
+  });
+  
+  function go(n) {
+    if (n < 0 || n >= total) return;
+    slides[cur].style.display = 'none';
+    dots.children[cur].classList.remove('active');
+    cur = n;
+    slides[cur].style.display = 'flex';
+    dots.children[cur].classList.add('active');
+    counter.textContent = (cur + 1) + ' / ' + total;
+  }
+  
+  document.getElementById('prevBtn').onclick = () => go(cur - 1);
+  document.getElementById('nextBtn').onclick = () => go(cur + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') go(cur + 1);
+    else if (e.key === 'ArrowLeft') go(cur - 1);
+  });
+  
+  go(0);
+})();
+</script>
+</body>
+</html>

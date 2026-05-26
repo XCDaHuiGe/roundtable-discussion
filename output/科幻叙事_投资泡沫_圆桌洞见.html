@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>科幻叙事如何制造科技投资泡沫与预言的自我实现 圆桌洞见</title>
+<style>
+  :root{
+    /* ============ 主题色(默认:🖋 墨水经典) ============ */
+    --ink:#0a0a0b;
+    --ink-rgb:10,10,11;
+    --paper:#f1efea;
+    --paper-rgb:241,239,234;
+    --paper-tint:#e8e5de;
+    --ink-tint:#18181a;
+
+    /* ============ 强调色 ============ */
+    --accent:#c23b22;
+    --accent-rgb:194,59,34;
+    --gold:#d4a843;
+    --gold-rgb:212,168,67;
+    --blue:#4a6a9a;
+    --purple:#8a4aaa;
+    --green:#3a8a5c;
+    --cyan:#4a9a9a;
+    --orange:#d4843a;
+
+    /* ============ 字体(跨主题固定) ============ */
+    --mono:"IBM Plex Mono","SF Mono",monospace;
+    --serif-zh:"Noto Serif SC","Source Han Serif SC","STSong",serif;
+    --sans-zh:"Noto Sans SC","Source Han Sans SC","PingFang SC",sans-serif;
+
+    /* ============ 间距 ============ */
+    --radius:10px;
+    --ease:cubic-bezier(.4,0,.2,1);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans-zh);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+  /* ============ Deck 容器 ============ */
+  #deck{position:relative;width:100vw;height:100vh;overflow:hidden}
+
+  /* ============ 进度条 ============ */
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:1000;transition:width .5s var(--ease);box-shadow:0 0 12px rgba(var(--accent-rgb),.3)}
+
+  /* ============ 幻灯片 ============ */
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.12) transparent}
+  .slide::-webkit-scrollbar{width:4px}.slide::-webkit-scrollbar-track{background:transparent}.slide::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
+  .slide.active{display:flex}
+  .slide.hero{justify-content:center;align-items:center;text-align:center}
+  .slide.title-slide{justify-content:center;align-items:center;text-align:center}
+
+  /* ============ 入场动画(Guizang风格) ============ */
+  [data-anim]{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .slide.active [data-anim]{opacity:1;transform:translateY(0)}
+  .slide.active [data-anim]:nth-child(1){transition-delay:.1s}
+  .slide.active [data-anim]:nth-child(2){transition-delay:.18s}
+  .slide.active [data-anim]:nth-child(3){transition-delay:.26s}
+  .slide.active [data-anim]:nth-child(4){transition-delay:.34s}
+  .slide.active [data-anim]:nth-child(5){transition-delay:.42s}
+  .slide.active [data-anim]:nth-child(6){transition-delay:.5s}
+
+  /* ============ 内容区(book-distillation范式) ============ */
+  .frame{width:100%;max-width:1100px;margin:0 auto;flex:1;display:flex;flex-direction:column}
+  .slide-content{flex:1;display:flex;flex-direction:column}
+
+  /* ============ Magazine Chrome(Guizang风格) ============ */
+  .chrome{display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.5;margin-bottom:3vh}
+  .chrome .left,.chrome .right{display:flex;gap:2em;align-items:center}
+  .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
+
+  /* ============ 底部元数据(render_v8兼容) ============ */
+  .deck-footer{margin-top:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
+  .slide-number{position:absolute;bottom:2vh;right:3vw;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.35)}
+
+  /* ============ Section Label ============ */
+  .section-label{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
+
+  /* ============ 封面 ============ */
+  .cover-badge{display:inline-block;padding:6px 20px;border:1px solid var(--accent);border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4vh}
+  .cover-title{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:4vh;line-height:1.8;max-width:600px}
+  .cover-stats{display:flex;gap:4vh;flex-wrap:wrap;justify-content:center}
+  .cover-stat{text-align:center}
+  .cover-stat-num{font-family:var(--mono);font-size:2.5rem;font-weight:900;color:var(--accent)}
+  .cover-stat-label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.5);margin-top:.5vh}
+
+  /* ============ 封面标题(render_v8) ============ */
+  .hero-dark{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;flex:1}
+  .title-main{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .title-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:2vh;line-height:1.8}
+  .gold-line{width:80px;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));margin:3vh auto;border-radius:2px}
+
+  /* ============ 标题系统 ============ */
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
+  .h-hero{font-family:var(--serif-zh);font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.2;margin-bottom:3vh}
+  .h-xl{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.4rem,3vw,2.2rem);line-height:1.3;margin-bottom:2vh}
+  .h-lg{font-family:var(--serif-zh);font-weight:600;font-size:clamp(1.1rem,2vw,1.5rem);line-height:1.4;margin-bottom:1.5vh}
+  .h-md{font-weight:600;font-size:1.1rem;margin-bottom:1vh}
+  .lead{font-size:1rem;line-height:1.85;color:rgba(var(--paper-rgb),.8);max-width:700px}
+  .meta-row{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.4);display:flex;gap:2em;flex-wrap:wrap;margin-top:3vh}
+
+  /* ============ 大号引用(render_v8) ============ */
+  .quote-large{font-family:var(--serif-zh);font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:600;line-height:1.6;color:rgba(var(--paper-rgb),.9);max-width:800px;margin:0 auto}
+
+  /* ============ 分割线 ============ */
+  .rule{width:100%;height:1px;background:rgba(var(--paper-rgb),.15);margin:3vh 0}
+
+  /* ============ 标签 ============ */
+  .tag{display:inline-block;padding:4px 12px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;margin:3px}
+  .tag-gold{background:rgba(var(--gold-rgb),.15);color:var(--gold);border:1px solid rgba(var(--gold-rgb),.2)}
+  .tag-red{background:rgba(var(--accent-rgb),.15);color:var(--accent);border:1px solid rgba(var(--accent-rgb),.2)}
+  .tag-blue{background:rgba(74,106,154,.15);color:var(--blue);border:1px solid rgba(74,106,154,.2)}
+  .tag-purple{background:rgba(138,74,170,.15);color:var(--purple);border:1px solid rgba(138,74,170,.2)}
+  .tag-green{background:rgba(58,138,92,.15);color:var(--green);border:1px solid rgba(58,138,92,.2)}
+
+  /* ============ 霓虹强调色(render_v8) ============ */
+  .neon-gold{color:var(--gold)}.neon-red{color:var(--accent)}.neon-cyan{color:var(--cyan)}.neon-purple{color:var(--purple)}.neon-orange{color:var(--orange)}.neon-green{color:var(--green)}
+
+  /* ============ 网格系统 ============ */
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:2vh 2vw}
+  @media(max-width:768px){.grid-2{grid-template-columns:1fr}}
+
+  /* ============ 发言块(原生) ============ */
+  .sp{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2.5vw;margin-bottom:2vh;position:relative}
+  .sp::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .sh{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh}
+  .speaker-avatar{width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:var(--ink);background:var(--accent);flex-shrink:0}
+  .sn{font-weight:700;font-size:1rem}
+  .sr{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4);padding:3px 8px;background:rgba(var(--paper-rgb),.06);border-radius:3px}
+  .st{font-size:.95rem;line-height:2;color:rgba(var(--paper-rgb),.85)}
+  .st strong{color:var(--paper);font-weight:700}
+  .st em{color:var(--gold);font-style:normal;font-weight:600}
+
+  /* ============ 碰撞块(原生) ============ */
+  .cb{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;position:relative}
+  .cb::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .cb.blue{border-color:rgba(74,106,154,.3)}.cb.blue::before{background:var(--blue)}
+  .cb.purple{border-color:rgba(138,74,170,.3)}.cb.purple::before{background:var(--purple)}
+  .cb.green{border-color:rgba(58,138,92,.3)}.cb.green::before{background:var(--green)}
+  .cb.orange{border-color:rgba(var(--gold-rgb),.3)}.cb.orange::before{background:var(--gold)}
+  .cl{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;color:var(--accent);font-weight:600}
+  .cl.blue{color:var(--blue)}.cl.purple{color:var(--purple)}.cl.green{color:var(--green)}.cl.orange{color:var(--gold)}
+
+  /* ============ 洞见卡 ============ */
+  .insight-c{background:linear-gradient(135deg,rgba(var(--paper-rgb),.04) 0%,rgba(var(--paper-rgb),.08) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh;position:relative;overflow:hidden}
+  .insight-c::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold))}
+  .insight-q{font-family:var(--serif-zh);font-size:1.1rem;font-weight:700;color:var(--gold);line-height:1.6;margin-bottom:1vh}
+  .insight-a{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.75)}
+
+  /* ============ 卡片 ============ */
+  .card{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
+  .card-num{font-family:var(--mono);font-weight:900;font-size:1.8rem;color:var(--accent);opacity:.4;margin-bottom:1vh}
+  .card-title{font-weight:700;font-size:1rem;margin-bottom:1vh}
+  .card-body{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
+  .card-source{font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);margin-top:1vh}
+
+  /* ============ 专家卡片(render_v8) ============ */
+  .card-rise{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--green)}
+  .card-fall{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--accent)}
+  .speaker-header{display:flex;align-items:center;gap:16px;margin-bottom:2vh}
+  .speaker-name{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem}
+  .speaker-role{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:2px}
+  .expert-profile{display:flex;flex-direction:column;gap:1vh}
+  .profile-item{font-size:.9rem;line-height:1.7;color:rgba(var(--paper-rgb),.8)}
+  .profile-label{color:var(--gold);font-weight:600}
+
+  /* ============ 立场表达(render_v8) ============ */
+  .stance-item{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;border-left:3px solid var(--gold)}
+  .stance-expert{font-family:var(--serif-zh);font-weight:700;font-size:1rem;margin-bottom:1vh}
+  .stance-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 碰撞轮次(render_v8) ============ */
+  .clash-round{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;position:relative}
+  .clash-round::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .clash-header{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh;flex-wrap:wrap}
+  .clash-attacker{font-weight:700;font-size:1rem}
+  .clash-target{font-weight:700;font-size:1rem}
+  .clash-arrow{color:rgba(var(--paper-rgb),.3);font-size:1.2rem}
+  .clash-type{display:inline-block;padding:3px 10px;border-radius:3px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.5vh;font-weight:600}
+  .clash-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
+  .counter-attack{margin-top:2vh;padding-top:2vh;border-top:1px dashed rgba(var(--paper-rgb),.1)}
+  .counter-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .counter-content{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
+
+  /* ============ 攻击类型色 ============ */
+  .attack-logic{background:rgba(74,106,154,.15);color:var(--blue)}
+  .attack-interest{background:rgba(var(--accent-rgb),.15);color:var(--accent)}
+  .attack-reality{background:rgba(var(--gold-rgb),.15);color:var(--gold)}
+  .attack-human{background:rgba(138,74,170,.15);color:var(--purple)}
+  .attack-failure{background:rgba(58,138,92,.15);color:var(--green)}
+
+  /* ============ 现实案例(render_v8) ============ */
+  .reality-case{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--orange)}
+  .case-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5vh;flex-wrap:wrap;gap:8px}
+  .case-name{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem}
+  .case-source{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4)}
+  .case-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:1.5vh}
+  .case-outcome{font-size:.9rem;font-weight:600;margin-bottom:1vh}
+  .case-lesson{font-size:.9rem;font-weight:600}
+
+  /* ============ 代价讨论(render_v8) ============ */
+  .cost-discussion{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh}
+  .cost-scenario{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem;margin-bottom:2vh}
+  .cost-list{display:flex;flex-direction:column;gap:1.5vh;margin-bottom:2vh}
+  .cost-item{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:1.5vh 2vw;border-left:3px solid var(--accent)}
+  .cost-name{font-weight:700;font-size:.95rem;margin-bottom:.5vh}
+  .cost-analysis{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .worst-case{background:rgba(var(--accent-rgb),.08);border:1px solid rgba(var(--accent-rgb),.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
+  .worst-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .worst-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+  .survivor-bias{background:rgba(138,74,170,.08);border:1px solid rgba(138,74,170,.15);border-radius:6px;padding:2vh 2vw}
+  .survivor-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .survivor-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+
+  /* ============ 人性层(render_v8) ============ */
+  .human-nature{background:linear-gradient(135deg,rgba(var(--paper-rgb),.03) 0%,rgba(var(--paper-rgb),.06) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
+  .human-question{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem;margin-bottom:2vh;line-height:1.5}
+  .human-analysis{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:2vh}
+  .human-examples{margin-bottom:2vh}
+  .examples-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1vh;font-weight:600}
+  .example-item{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8);padding:.5vh 0}
+  .human-conclusion{font-size:.95rem;font-weight:600;line-height:1.7}
+
+  /* ============ 认知升级(render_v8) ============ */
+  .cognitive-upgrade{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
+  .upgrade-comparison{display:grid;grid-template-columns:1fr auto 1fr;gap:2vw;align-items:start;margin-bottom:2vh}
+  @media(max-width:768px){.upgrade-comparison{grid-template-columns:1fr}.upgrade-arrow{transform:rotate(90deg)}}
+  .old-thinking,.new-thinking{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:2vh 1.5vw}
+  .old-thinking{border-left:3px solid var(--accent)}
+  .new-thinking{border-left:3px solid var(--green)}
+  .thinking-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .thinking-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+  .upgrade-arrow{font-size:1.5rem;color:rgba(var(--paper-rgb),.3);display:flex;align-items:center;justify-content:center;padding-top:3vh}
+  .complexity{background:rgba(74,106,154,.08);border:1px solid rgba(74,106,154,.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
+  .complexity-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .complexity-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .actionable{background:rgba(var(--gold-rgb),.08);border:1px solid rgba(var(--gold-rgb),.15);border-radius:6px;padding:2vh 2vw}
+  .actionable-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .actionable-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 情绪样式 ============ */
+  .emotion-sarcasm{border-left:3px solid var(--purple);padding-left:12px;font-style:italic}
+  .emotion-helplessness{opacity:.75;font-style:italic}
+  .emotion-anger{color:var(--accent);font-weight:600}
+  .emotion-hesitation{opacity:.8;font-style:italic}
+  .emotion-self-deprecation{opacity:.7;font-style:italic}
+  .emotion-cold-laugh{color:var(--purple)}
+  .emotion-silence{opacity:.5;font-style:italic}
+  .emotion-serious{color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 指标 ============ */
+  .metrics{display:flex;gap:2vw;flex-wrap:wrap;margin-bottom:3vh}
+  .metric{flex:1;min-width:100px;text-align:center;background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 1.5vw}
+  .metric-val{font-family:var(--mono);font-weight:900;font-size:clamp(1.5rem,3vw,2.5rem);color:var(--accent)}
+  .metric-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:.5vh}
+
+  /* ============ 开放问题 ============ */
+  .oq{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
+  .oq-num{font-family:var(--mono);font-weight:900;font-size:1.2rem;color:var(--accent);opacity:.3;margin-bottom:1vh}
+  .oq-text{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .headline-item{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.85);padding:1.5vh 0;border-bottom:1px solid rgba(var(--paper-rgb),.06)}
+  .headline-item:last-child{border-bottom:none}
+  .headline-item strong{color:var(--gold);margin-right:8px}
+
+  /* ============ 引用 ============ */
+  .quote{font-family:var(--serif-zh);font-size:1rem;font-style:italic;line-height:1.8;padding:2vh 2.5vw;border-left:3px solid var(--gold);background:rgba(var(--gold-rgb),.05);margin:2vh 0;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ TOC ============ */
+  .toc-panel{position:fixed;top:0;left:0;width:min(340px,80vw);height:100vh;background:rgba(var(--ink-rgb),.97);backdrop-filter:blur(20px);z-index:100;transform:translateX(-100%);transition:transform .35s var(--ease);padding:3vh 2.5vw;overflow-y:auto;border-right:1px solid rgba(var(--paper-rgb),.08)}
+  .toc-panel.open{transform:translateX(0)}
+  .toc-title{font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:3vh;padding-bottom:2vh;border-bottom:1px solid rgba(var(--paper-rgb),.1)}
+  .toc-item{display:flex;justify-content:space-between;padding:1.2vh 1.5vw;margin-bottom:.5vh;cursor:pointer;border-radius:6px;border-left:2px solid transparent;font-size:.9rem;color:rgba(var(--paper-rgb),.7);transition:all .2s}
+  .toc-item:hover{background:rgba(var(--paper-rgb),.06);color:var(--paper)}
+  .toc-item.active{background:rgba(var(--paper-rgb),.08);color:var(--accent);border-left-color:var(--accent);font-weight:600}
+  .toc-label{flex:1}
+  .toc-page{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.35)}
+  .toc-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;opacity:0;pointer-events:none;transition:opacity .3s}
+  .toc-backdrop.open{opacity:1;pointer-events:auto}
+
+  /* ============ 导航栏 ============ */
+  .nav-bar{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 3vw;background:rgba(var(--ink-rgb),.9);backdrop-filter:blur(10px);z-index:50;border-top:1px solid rgba(var(--paper-rgb),.06)}
+  .nav-left,.nav-right{display:flex;align-items:center;gap:12px}
+  .nav-btn{background:none;border:1px solid rgba(var(--paper-rgb),.12);color:rgba(var(--paper-rgb),.7);padding:8px 16px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;cursor:pointer;transition:all .2s}
+  .nav-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(var(--accent-rgb),.1)}
+  .nav-title{font-size:12px;color:rgba(var(--paper-rgb),.5);max-width:40vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-counter{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.4)}
+
+  /* ============ 导航点 ============ */
+  .nav-dots{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:6px}
+  .nd{width:6px;height:6px;border-radius:50%;background:rgba(var(--paper-rgb),.15);cursor:pointer;transition:all .3s var(--ease);border:none;padding:0}
+  .nd.active{background:var(--accent);height:20px;border-radius:3px;box-shadow:0 0 8px rgba(var(--accent-rgb),.4)}
+  .nd:hover{background:rgba(var(--paper-rgb),.4)}
+
+  /* ============ 入场动画延迟(render_v8兼容) ============ */
+  .anim-in{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .slide.active .anim-in{opacity:1;transform:translateY(0)}
+  .slide.active .anim-in:nth-child(1){transition-delay:.1s}
+  .slide.active .anim-in:nth-child(2){transition-delay:.18s}
+  .slide.active .anim-in:nth-child(3){transition-delay:.26s}
+  .slide.active .anim-in:nth-child(4){transition-delay:.34s}
+  .slide.active .anim-in:nth-child(5){transition-delay:.42s}
+  .slide.active .anim-in:nth-child(6){transition-delay:.5s}
+  .anim-delay-1{transition-delay:.18s !important}
+  .anim-delay-2{transition-delay:.26s !important}
+  .anim-delay-3{transition-delay:.34s !important}
+  .anim-delay-4{transition-delay:.42s !important}
+  .anim-delay-5{transition-delay:.5s !important}
+  .anim-delay-6{transition-delay:.58s !important}
+
+  /* ============ 响应式 ============ */
+  @media(max-width:1024px){.slide{padding:4vh 5vw 8vh}}
+  @media(max-width:768px){
+    .slide{padding:3vh 4vw 7vh}
+    .cover-stats{gap:2vh}
+    .metrics{flex-direction:column}
+    .nav-dots,.nav-title{display:none}
+    .nav-bar{padding:0 2vw}
+  }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="slide hero title-slide" data-title="科幻叙事如何制造科技投资泡沫与预言的自我实现">
+  <div class="frame">
+    <div class="slide-content" style="justify-content:center;align-items:center;text-align:center">
+      <div class="cover-badge" data-anim>圆桌洞见</div>
+      <div class="cover-title" data-anim>科幻叙事如何制造科技投资泡沫与预言的自我实现</div>
+      <div class="cover-sub" data-anim>从《黑暗森林》到《基地》：叙事经济学的中国实验</div>
+      <div class="gold-line" data-anim></div>
+      <div class="cover-stats" data-anim>
+        <div class="cover-stat">
+          <div class="cover-stat-num">6</div>
+          <div class="cover-stat-label">专家</div>
+        </div>
+        <div class="cover-stat">
+          <div class="cover-stat-num">3</div>
+          <div class="cover-stat-label">轮讨论</div>
+        </div>
+        <div class="cover-stat">
+          <div class="cover-stat-num">18</div>
+          <div class="cover-stat-label">发言</div>
+        </div>
+        <div class="cover-stat">
+          <div class="cover-stat-num">5</div>
+          <div class="cover-stat-label">洞见</div>
+        </div>
+      </div>
+      <div class="meta-row" data-anim>
+        <span>KK 凯文·凯利</span> · <span>吴 吴军</span> · <span>库 雷·库兹韦尔</span> · <span>冯 冯唐</span> · <span>梁 梁文道</span> · <span>诞 李诞</span>
+      </div>
+      <div style="margin-top:2vh;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;opacity:.4" data-anim>
+        2026-05-26 · 约90分钟
+      </div>
+    </div>
+  </div>
+</div><div class="slide" data-title="核心洞见">
+  <div class="frame">
+    <div class="kicker" data-anim>KEY INSIGHTS</div>
+    <div class="h-xl" data-anim style="margin-bottom:4vh">核心洞见</div>
+    <div class="grid-2"><div class="insight-c" data-anim>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:2vh">
+        <span style="font-family:var(--mono);font-size:1.5rem;font-weight:900;color:var(--accent);opacity:.5">01</span>
+      </div>
+      <div class="insight-q">叙事是复杂系统的初始条件，而非预测工具</div>
+      <div class="insight-a">科幻叙事通过提供共同的认知框架，改变了投资者的决策模式，进而重塑了技术演化的路径。这种影响是真实的，但它不是'预测'，而是'锚定'——叙事锚定方向，但路径由实践者填充。</div>
+      <div style="margin-top:2vh;padding-top:1.5vh;border-top:1px solid rgba(var(--paper-rgb),.08)">
+        <div style="font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.4);margin-bottom:1vh">💬 核心引言</div>
+        <div style="font-family:var(--serif-zh);font-size:.95rem;font-style:italic;color:var(--gold);line-height:1.7">"叙事不是用来'预测未来'的，而是用来'锚定方向'的。——凯文·凯利"</div>
+      </div>
+    </div><div class="insight-c" data-anim>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:2vh">
+        <span style="font-family:var(--mono);font-size:1.5rem;font-weight:900;color:var(--accent);opacity:.5">02</span>
+      </div>
+      <div class="insight-q">泡沫识别需要三个核心指标</div>
+      <div class="insight-a">吴军提出的'人傻钱多指数''里程碑缺失指数''创始人叙事能力vs技术执行能力指数'，构成了一套实用的泡沫识别框架。真正的风险不在于叙事本身，而在于叙事与执行之间的巨大落差。</div>
+      <div style="margin-top:2vh;padding-top:1.5vh;border-top:1px solid rgba(var(--paper-rgb),.08)">
+        <div style="font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.4);margin-bottom:1vh">💬 核心引言</div>
+        <div style="font-family:var(--serif-zh);font-size:.95rem;font-style:italic;color:var(--gold);line-height:1.7">"当创始人的讲故事能力远超其技术团队的交付能力时，危险信号亮了。——吴军"</div>
+      </div>
+    </div><div class="insight-c" data-anim>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:2vh">
+        <span style="font-family:var(--mono);font-size:1.5rem;font-weight:900;color:var(--accent);opacity:.5">03</span>
+      </div>
+      <div class="insight-q">中国科幻叙事具有独特的文化特异性</div>
+      <div class="insight-a">'黑暗森林'编码了中国企业家在国际竞争中的生存焦虑，'饱和式救援'反映了中国科幻对集体协作的强调。理解这些叙事，需要将其放在中国独特的历史经验和文化语境中，而非简单套用西方叙事经济学的框架。</div>
+      <div style="margin-top:2vh;padding-top:1.5vh;border-top:1px solid rgba(var(--paper-rgb),.08)">
+        <div style="font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.4);margin-bottom:1vh">💬 核心引言</div>
+        <div style="font-family:var(--serif-zh);font-size:.95rem;font-style:italic;color:var(--gold);line-height:1.7">"《三体》的价值在于它提供了中国科技精英亟需的生存哲学叙事，而非普适的商业法则。——梁文道"</div>
+      </div>
+    </div><div class="insight-c" data-anim>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:2vh">
+        <span style="font-family:var(--mono);font-size:1.5rem;font-weight:900;color:var(--accent);opacity:.5">04</span>
+      </div>
+      <div class="insight-q">叙事主权是国家文化竞争力的核心</div>
+      <div class="insight-a">从好莱坞的'个人英雄叙事'到中国的'集体协作叙事'，谁掌握了'未来叙事'的定义权，谁就掌握了文化和经济的主导权。《三体》和《流浪地球》的成功，标志着中国开始具备生产原创性'未来叙事'的能力。</div>
+      <div style="margin-top:2vh;padding-top:1.5vh;border-top:1px solid rgba(var(--paper-rgb),.08)">
+        <div style="font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.4);margin-bottom:1vh">💬 核心引言</div>
+        <div style="font-family:var(--serif-zh);font-size:.95rem;font-style:italic;color:var(--gold);line-height:1.7">"叙事主权的争夺，往往伴随着叙事的简化。科幻叙事的影响力越大，我们就越需要警惕它被工具化。——梁文道"</div>
+      </div>
+    </div><div class="insight-c" data-anim>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:2vh">
+        <span style="font-family:var(--mono);font-size:1.5rem;font-weight:900;color:var(--accent);opacity:.5">05</span>
+      </div>
+      <div class="insight-q">活得久比赚得快重要一万倍</div>
+      <div class="insight-a">对于普通人而言，从科幻投资叙事中获利的最稳妥方式是：等待泡沫破裂，买入优质资产，但永远不要all in。真正的大趋势不是'被告诉的'，而是'事后被识别的'。</div>
+      <div style="margin-top:2vh;padding-top:1.5vh;border-top:1px solid rgba(var(--paper-rgb),.08)">
+        <div style="font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.4);margin-bottom:1vh">💬 核心引言</div>
+        <div style="font-family:var(--serif-zh);font-size:.95rem;font-style:italic;color:var(--gold);line-height:1.7">"不要为了一个'改变世界'的叙事，把自己的人生押上去。——李诞"</div>
+      </div>
+    </div></div>
+    <div class="deck-footer">5个颠覆认知的观点</div>
+  </div>
+</div><div class="slide" data-title="专家阵容">
+  <div class="frame">
+    <div class="kicker" data-anim>EXPERT PANEL</div>
+    <div class="h-xl" data-anim style="margin-bottom:4vh">专家阵容</div>
+    <div class="grid-2"><div class="card-rise" style="border-left-color:#4A90D9" data-anim>
+      <div class="speaker-header">
+        <div class="speaker-avatar" style="background:#4A90D9">KK</div>
+        <div>
+          <div class="speaker-name">凯文·凯利</div>
+          <div class="speaker-role">《连线》创始主编、科技思想家</div>
+        </div>
+      </div>
+    </div><div class="card-rise" style="border-left-color:#50B432" data-anim>
+      <div class="speaker-header">
+        <div class="speaker-avatar" style="background:#50B432">吴</div>
+        <div>
+          <div class="speaker-name">吴军</div>
+          <div class="speaker-role">计算机科学家、硅谷投资人</div>
+        </div>
+      </div>
+    </div><div class="card-rise" style="border-left-color:#ED561B" data-anim>
+      <div class="speaker-header">
+        <div class="speaker-avatar" style="background:#ED561B">库</div>
+        <div>
+          <div class="speaker-name">雷·库兹韦尔</div>
+          <div class="speaker-role">谷歌工程总监、奇点论提出者</div>
+        </div>
+      </div>
+    </div><div class="card-rise" style="border-left-color:#FF45B5" data-anim>
+      <div class="speaker-header">
+        <div class="speaker-avatar" style="background:#FF45B5">冯</div>
+        <div>
+          <div class="speaker-name">冯唐</div>
+          <div class="speaker-role">作家、麦肯锡前董事</div>
+        </div>
+      </div>
+    </div><div class="card-rise" style="border-left-color:#24C2CE" data-anim>
+      <div class="speaker-header">
+        <div class="speaker-avatar" style="background:#24C2CE">梁</div>
+        <div>
+          <div class="speaker-name">梁文道</div>
+          <div class="speaker-role">香港文化人、评论家</div>
+        </div>
+      </div>
+    </div><div class="card-rise" style="border-left-color:#9B59B6" data-anim>
+      <div class="speaker-header">
+        <div class="speaker-avatar" style="background:#9B59B6">诞</div>
+        <div>
+          <div class="speaker-name">李诞</div>
+          <div class="speaker-role">脱口秀演员、作家</div>
+        </div>
+      </div>
+    </div></div>
+    <div class="deck-footer">6位跨界专家，3轮深度交锋</div>
+  </div>
+</div><div class="slide" data-title="参考资料">
+  <div class="frame">
+    <div class="kicker" data-anim>REFERENCE MATERIALS</div>
+    <div class="h-xl" data-anim style="margin-bottom:4vh">参考资料</div>
+    <div class="card" data-anim>
+      <div class="card-title">核心素材</div>
+      <div class="card-body">
+        <p style="margin-bottom:2vh">本场圆桌讨论基于以下科幻作品与商业理论著作：</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:3vh"><span class="tag tag-blue">刘慈欣《三体》三部曲</span><span class="tag tag-blue">刘慈欣《流浪地球》</span><span class="tag tag-blue">艾萨克·阿西莫夫《基地》系列</span><span class="tag tag-blue">乔治·卢卡斯《星球大战》</span><span class="tag tag-blue">罗伯特·席勒《叙事经济学》</span><span class="tag tag-blue">凯文·凯利《科技想要什么》《必然》</span><span class="tag tag-blue">雷·库兹韦尔《奇点临近》</span><span class="tag tag-blue">吴军《浪潮之巅》《智能时代》</span></div>
+        <p style="font-size:.88rem;color:rgba(var(--paper-rgb),.6);margin-top:2vh">注：讨论内容为专家基于公开资料的观点延伸，不代表对原著的学术解读。</p>
+      </div>
+    </div>
+    <div class="deck-footer">资料来源：WebSearch + 专家档案整合</div>
+  </div>
+</div><div class="slide title-slide" data-title="第1轮：第一轮：立场陈述">
+    <div class="frame">
+      <div class="hero-dark">
+        <div class="kicker" data-anim>ROUND 1</div>
+        <div class="h-hero" data-anim style="background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">第一轮：立场陈述</div>
+        <div class="quote-large" data-anim style="max-width:700px;margin-top:3vh;font-size:1.1rem">科幻叙事如何塑造科技投资心智？</div>
+      </div>
+    </div>
+  </div><div class="slide" data-title="第1轮：上半场">
+    <div class="frame">
+      <div class="kicker" data-anim>ROUND 1 · 上半场</div>
+      <div class="h-lg" data-anim style="margin-bottom:3vh">第一轮：立场陈述 · 立场与依据</div>
+      <div class="sp" style="border-left-color:#4A90D9">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#4A90D9">KK</div>
+      <div>
+        <div class="sn">凯文·凯利</div>
+        <div class="sr">《连线》创始主编、科技思想家 · 立场陈述</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 技术元素的叙事本能</div>
+    <div class="st"><p style="margin-bottom:1.5vh;line-height:1.95">我观察科技产业四十年，发现一个被忽视的规律：技术从诞生之日起，就在寻找它的叙事。互联网诞生时，没人知道它该怎么被理解——直到《黑客帝国》用'母体'和'觉醒'的隐喻，给了数亿人一个理解数字生活的框架。&lt;br&gt;&lt;br&gt;《三体》的'黑暗森林法则'之所以能影响商业决策，不是因为刘慈欣在写商业教科书，而是因为这个叙事触碰了技术发展的深层逻辑：在一个资源有限、竞争激烈的宇宙中，生存是第一要务。这种生存焦虑，正是硅谷创业者的集体潜意识。&lt;br&gt;&lt;br&gt;技术元素（Technium）是一个有机系统，它需要叙事来凝聚共识、调动资源、克服阻力。当马斯克说'我要让人类成为多行星物种'时，他不是在描述一个技术方案，他是在提供一个史诗叙事——《基地》系列中的银河帝国衰落与重建，正是在这个叙事框架中被重新编码。&lt;br&gt;&lt;br&gt;问题不是'科幻叙事是否影响科技投资'，而是'科技投资是否需要科幻叙事'。答案是肯定的：没有叙事的锚定，资本就会在不确定性的海洋中迷失方向。</p></div>
+  </div><div class="sp" style="border-left-color:#50B432">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#50B432">吴</div>
+      <div>
+        <div class="sn">吴军</div>
+        <div class="sr">计算机科学家、硅谷投资人 · 立场陈述</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 浪潮叙事与投资泡沫的同构性</div>
+    <div class="st"><p style="margin-bottom:1.5vh;line-height:1.95">在《浪潮之巅》中，我分析过AT&amp;T、微软、苹果的兴衰，核心洞察只有一个：每一次技术浪潮来临，都会催生一批'叙事驱动型投资'——投资者买的不是当下的利润，而是对未来的叙事。&lt;br&gt;&lt;br&gt;互联网泡沫时期，'.com'就是最大的科幻叙事。任何一个公司只要名字里带'e-'或后缀是'.com'，估值就能翻十倍。当时最典型的案例是Pets.com——一家卖狗粮的网站，商业模式根本不成立，但因为'互联网将改变一切零售'这个宏大叙事，IPO当天股价暴涨86%。&lt;br&gt;&lt;br&gt;《三体》在中国的流行，恰好对应了中国科技产业从Copy to China（复制到中国）向Copy from China（从中国复制）转型的关键期。'黑暗森林'提供了一个解释字节跳动全球扩张的理论框架：在这个充满敌意的国际市场中生存，要么隐藏实力，要么先发制人。这种叙事，直接影响了投资人对中国科技公司出海战略的判断。&lt;br&gt;&lt;br&gt;我必须指出：叙事本身不是问题，问题是把叙事当成事实。当叙事开始自我强化、形成正反馈循环时，泡沫就产生了。1999年的互联网叙事催生了大量有价值的企业（亚马逊、谷歌正是泡沫期的幸存者），但也埋葬了无数投资者的真金白银。</p></div>
+  </div><div class="sp" style="border-left-color:#ED561B">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#ED561B">库</div>
+      <div>
+        <div class="sn">雷·库兹韦尔</div>
+        <div class="sr">谷歌工程总监、奇点论提出者 · 立场陈述</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 预言的数学基础：从科幻到路线图</div>
+    <div class="st"><p style="margin-bottom:1.5vh;line-height:1.95">你们都在讨论叙事对投资的影响，但我需要纠正一个认知偏差：科幻预言不是'泡沫'，而是加速回报定律的早期信号。&lt;br&gt;&lt;br&gt;我在1990年出版的《智能机器的时代》中，预测计算机将在1998年战胜世界棋王。1997年，深蓝做到了。我预测的准确率不是偶然——我是基于百年技术数据的趋势外推，而非主观想象。《基地》系列中阿西莫夫对'心理史学'的描绘，启发了我对技术预测方法论的思考：在一个足够复杂系统中，个体行为不可预测，但整体趋势是可预测的。&lt;br&gt;&lt;br&gt;马斯克承认SpaceX的愿景受《基地》影响，这绝非巧合。科幻叙事之所以能'预言'技术未来，是因为伟大的科幻作家捕捉到了技术发展的内在逻辑。阅读《基地》时，我看到的不是科幻，而是艾萨克·阿西莫夫对信息文明演进的深刻洞察——他预见了数据处理能力的指数增长将重塑人类社会，这个判断比计算机的实际普及早了四十年。&lt;br&gt;&lt;br&gt;今天的AI投资热潮，不是泡沫，而是对2029年AGI这一技术里程碑的理性定价。我预计到2030年代，纳米机器人将进入人体，与神经系统直接接口——这不是幻想，这是基于加速回报定律的数学推演。科幻叙事不过是提前把这些推演戏剧化地呈现出来。</p></div>
+  </div>
+      <div class="deck-footer">第 1/3 轮 · 6 位专家发言</div>
+    </div>
+  </div><div class="slide" data-title="第1轮：下半场">
+    <div class="frame">
+      <div class="kicker" data-anim>ROUND 1 · 下半场</div>
+      <div class="h-lg" data-anim style="margin-bottom:3vh">第一轮：立场陈述 · 多元视角</div>
+      <div class="sp" style="border-left-color:#FF45B5">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#FF45B5">冯</div>
+      <div>
+        <div class="sn">冯唐</div>
+        <div class="sr">作家、麦肯锡前董事 · 立场陈述</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 欲望叙事：科技投资的荷尔蒙经济学</div>
+    <div class="st"><p style="margin-bottom:1.5vh;line-height:1.95">你们讲得都很好，但都没说到根子上。&lt;br&gt;&lt;br&gt;在麦肯锡做咨询时，我见过太多科技公司的BP（商业计划书）。让我告诉你一个秘密：那些最成功的融资案例，从来不是因为'技术多么先进'，而是因为'故事多么动人'。雷军创办小米时讲什么故事？他说要做'年轻人的第一部手机'——这不是技术叙事，这是青春叙事、成长叙事、阶层跃升叙事。&lt;br&gt;&lt;br&gt;《星球大战》为什么影响马斯克？因为它讲的不是太空战争，而是英雄旅程（Hero's Journey）：一个普通人如何通过冒险成长为传奇。这种叙事模板，恰好对应了创业者内心最深的渴望——改变世界，也改变自己。我在《成事心法》里说过：'天才都是偏执狂，对事情抱有执念乃至欲念，是成事的前提。'科技投资，本质上是在投资创业者的欲望，而欲望需要叙事来锚定和放大。&lt;br&gt;&lt;br&gt;《流浪地球》的成功，恰恰在于它抓住了中国科技产业最稀缺的一种情绪：'我们也可以'的渴望。当好莱坞垄断太空叙事几十年后，中国终于有了一部自己的史诗级科幻——这种文化自信叙事，直接催生了后续《哪吒2》《黑神话》的资本热潮。投资人不只是在投资电影，他们是在投资一种集体欲望的释放。&lt;br&gt;&lt;br&gt;所以我的结论是：科技投资泡沫的本质，是欲望泡沫。当叙事能够充分调动人性中的贪欲、胜负欲、证明欲时，资金就会源源不断地涌入——至于技术是否成熟、商业模式是否成立，那都是次要问题。</p></div>
+  </div><div class="sp" style="border-left-color:#24C2CE">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#24C2CE">梁</div>
+      <div>
+        <div class="sn">梁文道</div>
+        <div class="sr">香港文化人、评论家 · 立场陈述</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 叙事作为集体记忆的编码形式</div>
+    <div class="st"><p style="margin-bottom:1.5vh;line-height:1.95">刚才几位的发言有一个共同盲点：你们都在讨论叙事对个体决策的影响，但忽略了叙事更深层的功能——它是集体记忆的编码形式，是社会凝聚力的载体。&lt;br&gt;&lt;br&gt;罗伯特·席勒在《叙事经济学》中指出，叙事是驱动经济泡沫的关键因素，但他没有充分解释'为什么某些叙事能够病毒式传播'。我的补充是：叙事之所以具有传染性，是因为它们触碰到了集体无意识中的深层焦虑。《三体》的'黑暗森林法则'之所以在中国商界产生巨大共鸣，是因为它完美编码了中国企业家在国际化竞争中的不安全感——我们在一个弱肉强食的世界中生存，随时可能被更强大的文明消灭。&lt;br&gt;&lt;br&gt;但我更想讨论的是叙事的'文化折扣'问题。《星球大战》在美国的成功，依赖于美国观众对'民主对抗专制'这一冷战叙事的深度认同。当这个叙事被翻译到中国市场时，它需要被重新编码——于是我们看到了《流浪地球》中'家国情怀'对个人英雄主义的替代。这种文化翻译不是偶然的，它反映了中西方科技叙事的根本差异：硅谷叙事是关于个人改变世界的，中国叙事是关于集体跨越周期的。&lt;br&gt;&lt;br&gt;《黑神话：悟空》的成功提供了一个绝佳案例：它把中国经典IP用西方3A游戏的技术标准重新包装，本质上是在进行一场文化转译实验。投资人投的不是游戏本身，而是'中国文化符号可以用全球市场认可的方式重新叙事'这一命题。</p></div>
+  </div><div class="sp" style="border-left-color:#9B59B6">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#9B59B6">诞</div>
+      <div>
+        <div class="sn">李诞</div>
+        <div class="sr">脱口秀演员、作家 · 立场陈述</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 解构科幻投资叙事：我看穿了什么</div>
+    <div class="st"><p style="margin-bottom:1.5vh;line-height:1.95">你们说得都很有道理，但我有一个问题：说这么多，对普通人有什么用？&lt;br&gt;&lt;br&gt;各位老师在这儿讨论'叙事经济学''加速回报定律''集体无意识'，但我作为一个普通人，最关心的只有一件事：我该不该往里投钱？&lt;br&gt;&lt;br&gt;好，让我来解构一下这个'科幻投资叙事'的套路：&lt;br&gt;&lt;br&gt;第一步，找一个科幻概念，越宏大越好。黑暗森林、奇点临近、元宇宙、Web3，随便什么都行。&lt;br&gt;&lt;br&gt;第二步，找一个现实中的科技公司，说它'正在把这个科幻概念变成现实'。字节跳动在做黑暗森林法则，SpaceX在做基地叙事，Meta在做元宇宙——其实这三家公司做的事完全不一样，但只要你套上科幻叙事，它们就变成了同一个故事的不同章节。&lt;br&gt;&lt;br&gt;第三步，发一支基金，或者开一个演讲，标题就叫'科幻改变世界'。然后韭菜们就来了。&lt;br&gt;&lt;br&gt;你们问我科幻叙事是创新指引还是泡沫制造？我说它是both。既不是纯粹的好，也不是纯粹的坏。它就是一个工具，工具本身不骗人，骗人的是用工具的人。&lt;br&gt;&lt;br&gt;当然，我也不是说所有投资都是骗局。我是说，你们要清醒地认识到：当一个叙事被讲得足够动听、足够宏大、足够激动人心的时候，往往就是有人想从你口袋里掏钱了。</p></div>
+  </div>
+      <div class="deck-footer">第 1/3 轮 · 6 位专家发言</div>
+    </div>
+  </div><div class="slide" data-title="第1轮：交锋">
+      <div class="frame">
+        <div class="kicker" data-anim>ROUND 1 · 观点碰撞</div>
+        <div class="h-lg" data-anim style="margin-bottom:3vh">第一轮：立场陈述 · 专家交锋</div>
+        <div style="background:rgba(var(--accent-rgb),.06);border:1px solid rgba(var(--accent-rgb),.15);border-radius:var(--radius);padding:3vh 2.5vw;margin-top:3vh">
+    <div style="font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh;font-weight:700">⚡ 专家交锋</div>
+    <div style="font-family:var(--serif-zh);font-size:1.05rem;font-weight:600;margin-bottom:2vh;line-height:1.6">第一轮碰撞：叙事是工具还是本体？</div>
+    <div class="st"><p style="margin-bottom:1.5vh;line-height:1.9">【凯文·凯利 vs 雷·库兹韦尔】&lt;br&gt;&lt;br&gt;凯文·凯利：我必须纠正雷的一个关键混淆。你把科幻叙事当作技术预测的'早期信号'，这有一定道理，但你忽略了叙事的独立价值。科幻不是'前科学'，它是一种独立的认知模式。《基地》系列之所以伟大，不是因为它'预测'了信息革命，而是因为它提供了一个理解复杂系统的隐喻框架。'心理史学'的价值不在于它是否可实现，而在于它启发我们思考：个体选择与群体命运之间的关系是什么？&lt;br&gt;&lt;br&gt;雷·库兹韦尔：凯文，我同意科幻有独立价值，但我不同意你把'预测'和'隐喻'对立起来。隐喻本身就是一种预测——当你用'母体'来理解数字生活时，你实际上是在做认知预测：我相信现实世界将按照这个隐喻的逻辑运转。《黑客帝国》的叙事确实影响了真实世界的技术发展方向，因为它为数十亿人提供了一个共同的认知框架，而这个框架反过来加速了虚拟现实技术的发展。&lt;br&gt;&lt;br&gt;【吴军 vs 冯唐】&lt;br&gt;&lt;br&gt;吴军：冯唐，你说'欲望叙事是投资本质'，这个论断过于简化了。我在《浪潮之巅》中分析过，成功的技术公司往往不是欲望最强的，而是最善于'顺势而为'的。腾讯的基因是社交，不是欲望——正是因为马化腾对社交的痴迷而非对金钱的渴望，腾讯才成为今天的样子。把一切归结为欲望，是创业者的自我安慰，也是投资者的认知偏误。&lt;br&gt;&lt;br&gt;冯唐：吴军老师，我理解你的意思，但我必须反驳。你举腾讯的例子，恰恰说明了我的观点——腾讯做社交，本质上是在满足用户的'连接欲望'，这和雷军做小米满足年轻人的'自我表达欲望'没有本质区别。欲望不是贬义词，它是一个中性描述。我在麦肯锡学到的最重要一课是：任何商业模式，最终都要回答一个问题——它满足了什么人性需求？你可以叫它'欲望'，也可以叫它'价值主张'，但本质是一样的。</p></div>
+  </div>
+        <div class="deck-footer">第 1/3 轮 · 直接反驳与回应</div>
+      </div>
+    </div><div class="slide title-slide" data-title="第2轮：第二轮：观点碰撞">
+    <div class="frame">
+      <div class="hero-dark">
+        <div class="kicker" data-anim>ROUND 2</div>
+        <div class="h-hero" data-anim style="background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">第二轮：观点碰撞</div>
+        <div class="quote-large" data-anim style="max-width:700px;margin-top:3vh;font-size:1.1rem">预言的自我实现：是泡沫还是引擎？</div>
+      </div>
+    </div>
+  </div><div class="slide" data-title="第2轮：上半场">
+    <div class="frame">
+      <div class="kicker" data-anim>ROUND 2 · 上半场</div>
+      <div class="h-lg" data-anim style="margin-bottom:3vh">第二轮：观点碰撞 · 立场与依据</div>
+      <div class="sp" style="border-left-color:#4A90D9">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#4A90D9">KK</div>
+      <div>
+        <div class="sn">凯文·凯利</div>
+        <div class="sr">《连线》创始主编、科技思想家 · 深度分析</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 叙事作为复杂系统的初始条件</div>
+    <div class="st"><p style="margin-bottom:1.5vh;line-height:1.95">在复杂系统理论中，有一个关键概念叫'初始条件敏感依赖'：系统的长期行为，对初始条件的选择高度敏感。一个微小的叙事变化，可能导致整个技术演化路径的天壤之别。&lt;br&gt;&lt;br&gt;让我用互联网的例子来说明。1960年代，阿帕网（ARPANET）的设计者们的初始叙事是'构建一个能够在核战争幸存下来的通信网络'——这是一个军事安全叙事。但正是这个叙事，锚定了互联网的底层架构：去中心化、分布式、节点冗余。当互联网从军事用途转向民用时，这个底层叙事并没有消失，而是被重新编码进了商业逻辑：'没有中央权威的信息网络'——这正是后来区块链、Web3叙事的原始模板。&lt;br&gt;&lt;br&gt;《三体》叙事对科技投资的影响，同样遵循这个逻辑。当'黑暗森林'成为中国科技精英的共同认知框架时，它改变了他们做决策的方式：在进入新市场时，他们更倾向于'先发制人'而非'后发优势'；在国际化时，他们更倾向于'本土化优先'而非'全球化标准'。这些决策反过来重塑了中国科技公司的出海路径——TikTok的成功，在某种程度上是'黑暗森林'叙事的产物。&lt;br&gt;&lt;br&gt;但这里有一个反直觉的洞见：叙事对系统的影响，恰恰证明了系统是开放的。《三体》可以被编码进字节跳动的全球化战略，但它也可以被解构、被重写、被新的叙事替代。重要的是意识到：我们在用叙事做决策，但叙事本身不是命运。</p></div>
+  </div><div class="sp" style="border-left-color:#50B432">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#50B432">吴</div>
+      <div>
+        <div class="sn">吴军</div>
+        <div class="sr">计算机科学家、硅谷投资人 · 深度分析</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 泡沫识别的工程方法论</div>
+    <div class="st"><p style="margin-bottom:1.5vh;line-height:1.95">作为一个在硅谷和中国都做过投资的人，我有一套判断泡沫的系统方法论——不是我拍脑袋想的，而是基于《浪潮之巅》中对百年技术周期的分析。&lt;br&gt;&lt;br&gt;泡沫有两个层次：&lt;br&gt;&lt;br&gt;第一层是'叙事泡沫'。当一个技术叙事的传播速度远超技术本身的发展速度时，叙事泡沫就产生了。典型特征是：任何公司只要贴上这个标签，估值就能翻倍；任何创业者只要讲这个故事，就能拿到钱。2017-2021年的区块链泡沫、2021-2022年的Web3泡沫，都是这种叙事泡沫。&lt;br&gt;&lt;br&gt;第二层是'估值泡沫'。当市场整体对该技术的定价超出了任何合理的现金流折现模型时，估值泡沫就产生了。这时候，即使这个技术最终会实现、这个公司最终会成功，投资者也无法赚钱——因为你买入的价格已经太高了。2000年的互联网公司、2021年的电动车公司，很多都经历了这种估值泡沫。&lt;br&gt;&lt;br&gt;那么，怎么区分'有价值的科幻叙事'和'即将破灭的泡沫'？我的经验是看三个指标：&lt;br&gt;&lt;br&gt;第一，'人傻钱多'指数。当连出租车司机都在讨论这个技术的时候，往往是泡沫的顶点。&lt;br&gt;&lt;br&gt;第二，'里程碑缺失'指数。真正有价值的技术叙事，往往有清晰的里程碑节点（'2025年实现L4自动驾驶'）；而泡沫叙事往往是'这项技术将改变一切，但没人知道什么时候'。&lt;br&gt;&lt;br&gt;第三，'创始人叙事能力vs技术执行能力'指数。当创始人的讲故事能力远超其技术团队的交付能力时，危险信号亮了。</p></div>
+  </div><div class="sp" style="border-left-color:#ED561B">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#ED561B">库</div>
+      <div>
+        <div class="sn">雷·库兹韦尔</div>
+        <div class="sr">谷歌工程总监、奇点论提出者 · 深度分析</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 奇点叙事：自我实现的预言还是数学必然？</div>
+    <div class="st"><p style="margin-bottom:1.5vh;line-height:1.95">我必须纠正一个广泛存在的误解：'奇点临近'不是一种信仰，而是一个基于加速回报定律的数学推演。&lt;br&gt;&lt;br&gt;让我展示一下这个推演的核心逻辑：&lt;br&gt;&lt;br&gt;第一步：计算能力的指数增长。从1939年第一台计算机到今天，计算能力增长了75万亿倍。这不是估计，是历史数据。&lt;br&gt;&lt;br&gt;第二步：范式转换的S曲线叠加。每一种计算范式（真空管、晶体管、集成电路）都遵循S曲线增长，但当一个范式趋于饱和时，新的范式会在它完全饱和之前接管。这导致的结果是：技术进步是一串叠加的指数曲线，而非单条指数曲线。&lt;br&gt;&lt;br&gt;第三步：通用智能的临界点。当计算能力达到人脑水平时（预计2029年），AI将从'专用工具'升级为'通用智能'，这将触发正反馈循环：更强的AI加速科研，科研突破加速更强的AI。&lt;br&gt;&lt;br&gt;《基地》中的'心理史学'之所以让我着迷，是因为阿西莫夫意识到：当系统足够复杂时，预测不是不可能的，而是需要新的数学工具。我提出的加速回报定律，正是这样一种工具——它不是科幻，但它预言了科幻作家们先验想象过的未来。&lt;br&gt;&lt;br&gt;至于'奇点叙事是否制造泡沫'——我要反问：'牛顿力学叙事是否制造了工业革命泡沫？''相对论叙事是否制造了原子弹泡沫？'任何深刻的科技叙事，都会改变资本的配置方向，这本来就是叙事的功能。问题不是'叙事是否影响投资'，而是'你的叙事是否基于正确的数学'。</p></div>
+  </div>
+      <div class="deck-footer">第 2/3 轮 · 6 位专家发言</div>
+    </div>
+  </div><div class="slide" data-title="第2轮：下半场">
+    <div class="frame">
+      <div class="kicker" data-anim>ROUND 2 · 下半场</div>
+      <div class="h-lg" data-anim style="margin-bottom:3vh">第二轮：观点碰撞 · 多元视角</div>
+      <div class="sp" style="border-left-color:#FF45B5">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#FF45B5">冯</div>
+      <div>
+        <div class="sn">冯唐</div>
+        <div class="sr">作家、麦肯锡前董事 · 深度分析</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 成功学叙事的欲望经济学</div>
+    <div class="st"><p style="margin-bottom:1.5vh;line-height:1.95">库兹韦尔老师讲得很好，但我作为一个在麦肯锡和华润都带过团队的人，必须给你们泼一盆冷水：数学推演再漂亮，执行层面的现实永远是另一回事。&lt;br&gt;&lt;br&gt;《三体》最精彩的不是'黑暗森林'这个概念，而是三体世界的设定：一个永远在乱纪元和恒纪元之间切换的世界。这意味着什么？意味着任何长期规划都是无效的，任何成功都是暂时的，任何生存策略都可能被突如其来的灾难摧毁。&lt;br&gt;&lt;br&gt;我在华润做医疗投资时，每年谈40多家医院，最终只谈成5家。为什么？不是因为我的商业模型不对，而是因为现实中有太多'乱纪元'——政策变化、人事变动、资金链紧张、突发的舆情危机。每一本商业教科书都告诉你'要长期主义'，但长期主义的前提是：你得活过所有的乱纪元。&lt;br&gt;&lt;br&gt;科技投资的'成事'逻辑是什么？借用我在《成事心法》里总结的九字箴言：&lt;br&gt;&lt;br&gt;'不着急'——给技术成熟的时间；&lt;br&gt;'不害怕'——敢于在不确定性中下注；&lt;br&gt;'不要脸'——敢于承认失败、及时止损。&lt;br&gt;&lt;br&gt;《流浪地球》为什么成功？因为它不是一个人的英雄故事，而是'饱和式救援'——无数人同时从不同方向努力，最终汇聚成拯救世界的力量。这才是真实的成事逻辑：没有谁可以单枪匹马改变世界，我们需要的是在乱纪元中幸存下来的韧性。</p></div>
+  </div><div class="sp" style="border-left-color:#24C2CE">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#24C2CE">梁</div>
+      <div>
+        <div class="sn">梁文道</div>
+        <div class="sr">香港文化人、评论家 · 深度分析</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 叙事经济学的文化特异性</div>
+    <div class="st"><p style="margin-bottom:1.5vh;line-height:1.95">席勒的《叙事经济学》有一个根本局限：它主要以美国市场为分析对象。而当这个框架被应用到中国市场时，我们必须考虑一个关键变量——文化特异性。&lt;br&gt;&lt;br&gt;美国科技叙事的核心是什么？是个人英雄主义。从《星球大战》的卢克·天行者，到《钢铁侠》的托尼·史塔克，再到现实中埃隆·马斯克的自我包装，美国科技叙事始终围绕着一个公式：孤独的天才+个人奋斗=拯救世界。这种叙事之所以有效，是因为它与美国梦的核心承诺深度共鸣——任何人都可以通过努力成为hero。&lt;br&gt;&lt;br&gt;中国科技叙事的核心是什么？是我在分析《流浪地球》时注意到的'饱和式救援'逻辑。不是一个人的英雄故事，而是集体协作、举国体制、代际传承。中国科幻叙事的原型不是美国式的'超级英雄'，而是《愚公移山》《大禹治水》——与自然或命运进行永恒抗争的集体英雄叙事。&lt;br&gt;&lt;br&gt;这意味着什么？意味着当我们用席勒的框架来分析中国科技投资泡沫时，我们必须问：哪些叙事是'中国特色'的？哪些泡沫是美国叙事的本土化复制？&lt;br&gt;&lt;br&gt;一个关键观察：《三体》之所以在中国商界产生巨大影响，很大程度上是因为'黑暗森林'完美编码了中国企业家在国际竞争中的焦虑——这种焦虑是美国科幻叙事无法触发的，因为它生长于不同的历史经验。</p></div>
+  </div><div class="sp" style="border-left-color:#9B59B6">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#9B59B6">诞</div>
+      <div>
+        <div class="sn">李诞</div>
+        <div class="sr">脱口秀演员、作家 · 深度分析</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 解构'叙事改变世界'的精英幻觉</div>
+    <div class="st"><p style="margin-bottom:1.5vh;line-height:1.95">我听了各位老师的发言，有一个感受：你们都在讨论'叙事如何影响科技投资'，但好像没有人在问一个更基本的问题——'叙事到底有没有那么重要？'&lt;br&gt;&lt;br&gt;好，我承认，叙事确实有影响。雷军讲小米故事的时候，投资人确实被打动了。马斯克讲火星故事的时候，确实有人愿意给他投钱。但是，我要问的是：这些叙事，是'改变世界的原因'，还是'成功之后的解释'？&lt;br&gt;&lt;br&gt;让我们做一个思想实验：如果乔布斯没有做出iPhone，如果马斯克的火箭连续爆炸，如果他俩的故事讲得再好听，结局会是什么？答案是：破产、被嘲笑、被遗忘。&lt;br&gt;&lt;br&gt;叙事的厉害之处在于：它可以在事后把'成功'包装得理所当然。失败者的叙事没人听，所以历史是由幸存者书写的——而幸存者最擅长的，就是把自己的成功归结于'愿景''使命''宏大叙事'，而不是运气、时机、家族资源。&lt;br&gt;&lt;br&gt;我不是说叙事完全没用。我是提醒大家：别把叙事当成原因，它更可能是一个结果。当你看到一个人靠讲'科幻叙事'拿到融资的时候，你应该问的不是'这个叙事有多宏大'，而是'这个人有没有能力把这个叙事变成现实'。&lt;br&gt;&lt;br&gt;记住：所有的愿景都是叙事，但不是所有的叙事都能成为现实。</p></div>
+  </div>
+      <div class="deck-footer">第 2/3 轮 · 6 位专家发言</div>
+    </div>
+  </div><div class="slide" data-title="第2轮：交锋">
+      <div class="frame">
+        <div class="kicker" data-anim>ROUND 2 · 观点碰撞</div>
+        <div class="h-lg" data-anim style="margin-bottom:3vh">第二轮：观点碰撞 · 专家交锋</div>
+        <div style="background:rgba(var(--accent-rgb),.06);border:1px solid rgba(var(--accent-rgb),.15);border-radius:var(--radius);padding:3vh 2.5vw;margin-top:3vh">
+    <div style="font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh;font-weight:700">⚡ 专家交锋</div>
+    <div style="font-family:var(--serif-zh);font-size:1.05rem;font-weight:600;margin-bottom:2vh;line-height:1.6">第二轮碰撞：预测是可能的吗？</div>
+    <div class="st"><p style="margin-bottom:1.5vh;line-height:1.9">【雷·库兹韦尔 vs 李诞】&lt;br&gt;&lt;br&gt;雷·库兹韦尔：李诞，你的发言很有意思，但你混淆了两个层次的问题。第一，'叙事能否改变现实'——这确实是一个经验问题，需要具体分析。第二，'某些趋势是否可预测'——这是数学问题，与叙事无关。加速回报定律不是叙事，而是对技术发展历史数据的归纳。任何理解了这个定律的人，都能做出与我相似的预测——区别不在于谁更聪明，而在于谁更愿意面对数据的含义。&lt;br&gt;&lt;br&gt;李诞：库兹韦尔老师，我完全同意'某些趋势可预测'这个命题。但我要挑战的是：'可预测'和'应该据此投资'是两回事。打个比方：我可以预测明天太阳会升起，但这不意味着我应该把我的养老金全部押在'太阳会继续升起'这个投资标的上。很多投资者的问题不是'看不清趋势'，而是'在错误的时机、用错误的方式押注正确的趋势'。&lt;br&gt;&lt;br&gt;【梁文道 vs 冯唐】&lt;br&gt;&lt;br&gt;梁文道：冯唐，你说'成事需要韧性'，我完全同意。但我想追问的是：为什么中国科技叙事如此痴迷于'乱纪元'和'生存焦虑'？这种集体心理的根源是什么？我认为这与中国的历史经验深度相关——我们这个民族经历过太多战乱、饥荒、朝代更替，所以'活下去'的焦虑渗透在我们的文化基因里。《三体》的黑暗森林之所以引起共鸣，正是因为它把这种焦虑宇宙化了。&lt;br&gt;&lt;br&gt;冯唐：梁老师，你的历史分析很有深度。但我想换一个角度：'生存焦虑'不是弱点，而是优势。你看世界上伟大的公司，有几家是在'安全感满满'的环境中诞生的？硅谷的诞生，恰恰是因为它地处偏远、没有东海岸老钱的支持、只能靠叛逆和冒险。中国的'生存焦虑'，可能正是催生下一个伟大科技公司的心理基础——当你的默认假设是'随时可能灭亡'时，你会更拼命、更专注、更有危机意识。</p></div>
+  </div>
+        <div class="deck-footer">第 2/3 轮 · 直接反驳与回应</div>
+      </div>
+    </div><div class="slide title-slide" data-title="第3轮：第三轮：整合与共识">
+    <div class="frame">
+      <div class="hero-dark">
+        <div class="kicker" data-anim>ROUND 3</div>
+        <div class="h-hero" data-anim style="background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">第三轮：整合与共识</div>
+        <div class="quote-large" data-anim style="max-width:700px;margin-top:3vh;font-size:1.1rem">叙事经济学的边界与中国实践</div>
+      </div>
+    </div>
+  </div><div class="slide" data-title="第3轮：上半场">
+    <div class="frame">
+      <div class="kicker" data-anim>ROUND 3 · 上半场</div>
+      <div class="h-lg" data-anim style="margin-bottom:3vh">第三轮：整合与共识 · 立场与依据</div>
+      <div class="sp" style="border-left-color:#4A90D9">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#4A90D9">KK</div>
+      <div>
+        <div class="sn">凯文·凯利</div>
+        <div class="sr">《连线》创始主编、科技思想家 · 整合共识</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 进托邦视角：叙事是渐进改良的工具</div>
+    <div class="st"><p style="margin-bottom:1.5vh;line-height:1.95">经过三轮讨论，我认为我们需要一个新的框架来整合各方观点——我称之为'进托邦叙事观'（Protopian Narrative Perspective）。&lt;br&gt;&lt;br&gt;在《必然》中，我提出'进托邦'（Protopia）的概念：进步不是乌托邦式的完美状态，也不是反乌托邦式的灾难，而是一个今天比昨天好一点点、持续微小改善的过程。这个概念可以帮我们理解叙事的作用机制。&lt;br&gt;&lt;br&gt;叙事不是用来'预测未来'的，而是用来'锚定方向'的。当马斯克说'我要让人类成为多行星物种'时，他不是在做一个精确的预测，而是在锚定一个方向——人类文明应该扩展到地球之外。这个叙事不保证实现，但它让资源向这个方向聚集、让人才向这个方向流动、让公众对这个问题产生关注。从这个角度看，'火星殖民'叙事的社会功能与它的'实现概率'无关——它是一个进托邦式的改良工具，而非一张通往确定未来的地图。&lt;br&gt;&lt;br&gt;科幻叙事的价值，恰恰在于它的'不完备性'：它提供了方向感，但留下了足够的空白让实践者填充。正是这种'有方向但无定法'的特质，使科幻叙事成为科技投资中不可替代的叙事类型。</p></div>
+  </div><div class="sp" style="border-left-color:#50B432">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#50B432">吴</div>
+      <div>
+        <div class="sn">吴军</div>
+        <div class="sr">计算机科学家、硅谷投资人 · 整合共识</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 工程视角：叙事泡沫的识别与利用</div>
+    <div class="st"><p style="margin-bottom:1.5vh;line-height:1.95">我接受KK的'进托邦'框架，但我需要补充一个实操维度：从工程视角看，叙事泡沫不是'好或坏'的问题，而是'如何应对'的问题。&lt;br&gt;&lt;br&gt;在科技投资中，叙事泡沫有两种处理策略：&lt;br&gt;&lt;br&gt;策略一是'逆向投资者'策略：当叙事泡沫达到顶峰时撤离，等待估值回归后入场。这种策略的核心是纪律——你需要能够识别泡沫顶点，并在顶点处克制贪婪。历史上，巴菲特在2000年互联网泡沫顶峰时持有大量现金，被嘲笑'老了'、'看不懂新经济'，但泡沫破裂后他的判断被证明是正确的。&lt;br&gt;&lt;br&gt;策略二是'骑乘泡沫'策略：不是预测泡沫何时破裂，而是在泡沫中寻找真正有价值的资产。1999年的互联网泡沫中，亚马逊的估值也严重高估，但如果投资者在泡沫破裂后持有亚马逊到现在，回报是惊人的。关键在于区分'被泡沫抬高的垃圾'和'被泡沫误伤的金子'。&lt;br&gt;&lt;br&gt;对于中国科技投资，我的建议是：关注'叙事-执行差距'。当一个公司的叙事野心远超其执行能力时，远离；当一个行业的叙事框架吸引了大量资金，但基础设施还不成熟时，等待；当一个叙事开始从'前沿概念'向'主流应用'迁移时，进入。</p></div>
+  </div><div class="sp" style="border-left-color:#ED561B">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#ED561B">库</div>
+      <div>
+        <div class="sn">雷·库兹韦尔</div>
+        <div class="sr">谷歌工程总监、奇点论提出者 · 整合共识</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 预测科学的进化：从科幻到数据科学</div>
+    <div class="st"><p style="margin-bottom:1.5vh;line-height:1.95">我想在各位的讨论基础上，提出一个方法论层面的整合：科幻叙事和科技预测，本质上是同一种认知活动的不同表现形式。&lt;br&gt;&lt;br&gt;区别在于：科幻叙事是'隐喻驱动的预测'——它用文学隐喻来捕捉技术发展的方向性；科技预测是'数据驱动的预测'——它用数学模型来外推技术进步的轨迹。但两者的功能是相同的：降低不确定性，锚定行为预期，动员社会资源。&lt;br&gt;&lt;br&gt;我认为未来的趋势是：科幻叙事将越来越多地被数据科学'殖民'。当GPT-5能够生成比人类作家更精彩的科幻小说时，科幻叙事的创作门槛将大幅降低——任何人都可以生成定制化的'技术未来叙事'。这意味着什么？意味着叙事的经济价值将下降，因为叙事不再是稀缺资源。&lt;br&gt;&lt;br&gt;但叙事中不可替代的部分是什么？是'价值观锚定'。科幻叙事大师之所以伟大，不是因为他们'预测'了某种技术，而是因为他们通过叙事确立了某种价值观坐标。《基地》的价值不在于它'预测'了信息革命，而在于它提出了一个核心问题：当技术足够强大时，人类如何保持对自身命运的控制？这种价值观层面的追问，是任何算法都无法生成的。</p></div>
+  </div>
+      <div class="deck-footer">第 3/3 轮 · 6 位专家发言</div>
+    </div>
+  </div><div class="slide" data-title="第3轮：下半场">
+    <div class="frame">
+      <div class="kicker" data-anim>ROUND 3 · 下半场</div>
+      <div class="h-lg" data-anim style="margin-bottom:3vh">第三轮：整合与共识 · 多元视角</div>
+      <div class="sp" style="border-left-color:#FF45B5">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#FF45B5">冯</div>
+      <div>
+        <div class="sn">冯唐</div>
+        <div class="sr">作家、麦肯锡前董事 · 整合共识</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 成事视角：叙事是欲望的包装</div>
+    <div class="st"><p style="margin-bottom:1.5vh;line-height:1.95">听了各位的高论，我来做一个'成事者'视角的总结：&lt;br&gt;&lt;br&gt;第一，叙事是必要的，但叙事不是充分的。在麦肯锡，我学到的最重要一课是：'一个好的商业故事，可以让投资者在第一天给你钱；但你的执行力，决定了你能不能在第三百六十五天还在牌桌上。'叙事是融资的敲门砖，执行才是企业的生死线。&lt;br&gt;&lt;br&gt;第二，欲望是叙事的燃料，但不是叙事的终点。我在《成事心法》里说过：'一个人有本事才是靠得住的财富。'同样，一个公司有本事才是靠得住的价值。叙事可以帮你拿到第一桶金，但如果你不能用产品证明叙事的正确性，叙事就会变成笑话。&lt;br&gt;&lt;br&gt;第三，'乱纪元'是常态，'恒纪元'是例外。科技投资中，最危险的思维是'这次不一样'——但事实上，每次都一样：都会有泡沫，都会有崩溃，都会有幸存者。区别只在于，你有没有为乱纪元做好准备。&lt;br&gt;&lt;br&gt;最后，用我的一句话收尾：'不要把别人不当人，不要把自己太当人。'——投资人不要把创业者不当人（他们有欲望、有恐惧、有极限）；创业者不要把自己太当人（你的叙事没那么重要，你的执行力才重要）。</p></div>
+  </div><div class="sp" style="border-left-color:#24C2CE">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#24C2CE">梁</div>
+      <div>
+        <div class="sn">梁文道</div>
+        <div class="sr">香港文化人、评论家 · 整合共识</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 文化视角：叙事主权与意义生产</div>
+    <div class="st"><p style="margin-bottom:1.5vh;line-height:1.95">各位都从技术和商业角度讨论了叙事，我想补充一个被忽视的维度：叙事主权（Narrative Sovereignty）。&lt;br&gt;&lt;br&gt;在全球化时代，谁掌握了'未来叙事'的定义权，谁就掌握了文化和经济的主导权。好莱坞通过一个世纪的叙事生产，确立了'个人英雄+普世价值'的叙事霸权——这种霸权不是通过军事力量建立的，而是通过持续的文化输出渗透到全世界的集体想象中。&lt;br&gt;&lt;br&gt;《三体》和《流浪地球》的意义，不在于它们'预测'了某种技术未来，而在于它们证明了中国有能力生产自己的'未来叙事'。当中国投资人开始用'黑暗森林法则'来理解字节跳动的全球化战略时，这意味着中国的科技精英开始用本土生成的叙事框架来思考问题——这是一个巨大的文化转折点。&lt;br&gt;&lt;br&gt;但我也要提出一个警惕：叙事主权的争夺，往往伴随着叙事的简化。当《三体》的'黑暗森林'被简化为'弱肉强食'的商业竞争法则时，刘慈欣原著中的哲学复杂性就被消解了。科幻叙事的影响力越大，我们就越需要警惕它被简化、被工具化、被用来合理化糟糕的决策。</p></div>
+  </div><div class="sp" style="border-left-color:#9B59B6">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#9B59B6">诞</div>
+      <div>
+        <div class="sn">李诞</div>
+        <div class="sr">脱口秀演员、作家 · 整合共识</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 人间清醒：给普通人的生存指南</div>
+    <div class="st"><p style="margin-bottom:1.5vh;line-height:1.95">好，各位老师都讲完了，我来做一个'人间清醒'版本的总结。&lt;br&gt;&lt;br&gt;你们说的都有道理，但你们说的都对普通人没用。为什么？因为你们讨论的是'宏观叙事如何影响资本流动'，但普通人关心的是'我该怎么配置我的养老金'。这两个问题，在同一个圆桌里讨论，注定是错位的。&lt;br&gt;&lt;br&gt;所以我直接给结论：&lt;br&gt;&lt;br&gt;第一，不要相信任何告诉你'这是下一个大趋势'的人，包括我。因为真正的大趋势，从来不是'被告诉'的，而是'事后被识别'的。等你听到'这是下一个互联网'的时候，往往已经是韭菜收割季了。&lt;br&gt;&lt;br&gt;第二，如果你真的想从科幻叙事中获利，有一个笨办法：等泡沫破裂，买优质资产。1999年互联网泡沫破裂后，亚马逊跌了90%以上，但如果你在那时候买了，现在涨了几百倍。关键是，你要能区分'跌了90%的亚马逊'和'跌了90%的Pets.com'——前者是金子，后者是垃圾。怎么区分？看你愿不愿意在这个公司倒闭之前继续持有它的产品或服务。&lt;br&gt;&lt;br&gt;第三，也是最重要的一点：不要all in。任何告诉你'这是千载难逢的机会、必须全力押注'的人，要么是骗子，要么是疯子，要么是骗子+疯子。活得久，比赚得快重要一万倍。&lt;br&gt;&lt;br&gt;人间不值得，但活着本身就值得。不要为了一个'改变世界'的叙事，把自己的人生押上去。</p></div>
+  </div>
+      <div class="deck-footer">第 3/3 轮 · 6 位专家发言</div>
+    </div>
+  </div><div class="slide" data-title="第3轮：交锋">
+      <div class="frame">
+        <div class="kicker" data-anim>ROUND 3 · 观点碰撞</div>
+        <div class="h-lg" data-anim style="margin-bottom:3vh">第三轮：整合与共识 · 专家交锋</div>
+        <div style="background:rgba(var(--accent-rgb),.06);border:1px solid rgba(var(--accent-rgb),.15);border-radius:var(--radius);padding:3vh 2.5vw;margin-top:3vh">
+    <div style="font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh;font-weight:700">⚡ 专家交锋</div>
+    <div style="font-family:var(--serif-zh);font-size:1.05rem;font-weight:600;margin-bottom:2vh;line-height:1.6">第三轮碰撞：谁能定义'现实'？</div>
+    <div class="st"><p style="margin-bottom:1.5vh;line-height:1.9">【凯文·凯利 vs 雷·库兹韦尔】&lt;br&gt;&lt;br&gt;凯文·凯利：雷，你的'数据驱动预测'和我的'技术元素进化论'有一个根本分歧：你认为技术发展是可预测的，甚至给出了精确的时间节点；我认为技术发展是方向可预测但路径不可预测的。区别在于：你是工程师思维，追求精确；我是生态学家思维，追求方向。我想用进托邦框架来调和这个分歧——我们都能看到'AI将变得越来越强大'这个方向，但没有人能精确预测'哪个时间节点会出现哪个具体突破'。预测方向是对的，预测路径是危险的。&lt;br&gt;&lt;br&gt;雷·库兹韦尔：凯文，我理解你的'方向vs路径'区分，但我认为你低估了数学模型的能力。天气预报在1960年代也被认为是'方向预测'，但今天我们可以精确到小时。问题不是'能否精确预测'，而是'预测的精度是否足以指导行动'。对于AI发展，我的判断是：精度已经足够了。2029年AGI这个预测，不是一个模糊的方向声明，而是一个有具体里程碑的技术路线图。&lt;br&gt;&lt;br&gt;【梁文道 vs 李诞】&lt;br&gt;&lt;br&gt;梁文道：李诞，你说'普通人不该关心宏观叙事'，这个论断本身就是一个宏观叙事。你在告诉别人'不要被叙事影响'，但你用什么方式告诉他们？用你自己的叙事。这是一个悖论：我们无法逃脱叙事，因为逃脱叙事本身也是一个叙事。&lt;br&gt;&lt;br&gt;李诞：梁老师，你说的这个悖论，我完全同意。但我想补充一句：意识到悖论的存在，和被悖论困住，是两回事。我知道'告诉别人不要被叙事影响'本身也是叙事，但我选择继续说下去。为什么？因为有些人需要这个叙事来让自己活得轻松一点。你可以说这是自我欺骗，但我更愿意把它叫做'务实的虚无主义'。</p></div>
+  </div>
+        <div class="deck-footer">第 3/3 轮 · 直接反驳与回应</div>
+      </div>
+    </div><div class="slide hero title-slide" data-title="结语">
+  <div class="frame">
+    <div class="slide-content" style="justify-content:center;align-items:center;text-align:center">
+      <div class="kicker" data-anim>CONCLUSION</div>
+      <div class="h-hero" data-anim style="margin-bottom:4vh">叙事经济学的边界</div>
+      <div class="quote-large" data-anim style="max-width:800px;margin-bottom:4vh">
+        "科幻叙事是预言还是泡沫？这个问题本身就是一个叙事。我们的任务不是找到'正确答案'，而是在参与叙事的过程中，保持对自己叙事位置的清醒认知。"
+      </div>
+      <div style="font-family:var(--mono);font-size:.9rem;color:rgba(var(--paper-rgb),.6);margin-bottom:4vh">—— 梁文道</div>
+      <div class="gold-line" data-anim></div>
+      <div class="meta-row" data-anim>
+        <span>KK 凯文·凯利</span> · <span>吴 吴军</span> · <span>库 雷·库兹韦尔</span> · <span>冯 冯唐</span> · <span>梁 梁文道</span> · <span>诞 李诞</span>
+      </div>
+      <div style="margin-top:4vh;font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;opacity:.4" data-anim>
+        圆桌洞见 · 2026-05-26
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toc-backdrop" id="tocBackdrop"></div>
+<div class="toc-panel" id="tocPanel">
+<div class="toc-title">目录</div>
+<div id="tocList"></div>
+</div>
+<div class="nav-bar">
+<div class="nav-left">
+<button class="nav-btn" id="btnToc">☰ 目录</button>
+<button class="nav-btn" id="btnPrev">◀ 上一页</button>
+<button class="nav-btn" id="btnNext">下一页 ▶</button>
+</div>
+<div class="nav-right">
+<span class="nav-title" id="slideTitle"></span>
+<span class="nav-counter" id="slideCounter"></span>
+</div>
+</div>
+<div class="nav-dots" id="navDots"></div>
+</div>
+
+<script>
+(function(){
+var deck=document.getElementById("deck");
+var slides=deck.querySelectorAll(".slide");
+var total=slides.length;
+var cur=0;
+var dots=document.getElementById("navDots");
+var tocList=document.getElementById("tocList");
+var titleEl=document.getElementById("slideTitle");
+var counterEl=document.getElementById("slideCounter");
+var tocPanel=document.getElementById("tocPanel");
+var tocBackdrop=document.getElementById("tocBackdrop");
+var progressBar=document.getElementById("progressBar");
+
+for(var i=0;i<total;i++){
+  var d=document.createElement("button");
+  d.className="nd";
+  d.setAttribute("data-i",i);
+  d.onclick=(function(idx){return function(){go(idx)}})(i);
+  dots.appendChild(d);
+  var t=document.createElement("div");
+  t.className="toc-item";
+  t.setAttribute("data-i",i);
+  t.innerHTML='<span class="toc-label">'+(slides[i].getAttribute("data-title")||"Slide "+(i+1))+'</span><span class="toc-page">'+String(i+1).padStart(2,"0")+'</span>';
+  t.onclick=(function(idx){return function(){go(idx);closeTOC()}})(i);
+  tocList.appendChild(t);
+}
+
+function go(n){
+  if(n<0||n>=total)return;
+  slides[cur].classList.remove("active");
+  dots.children[cur].classList.remove("active");
+  tocList.children[cur].classList.remove("active");
+  cur=n;
+  slides[cur].classList.add("active");
+  dots.children[cur].classList.add("active");
+  tocList.children[cur].classList.add("active");
+  titleEl.textContent=slides[cur].getAttribute("data-title")||"";
+  counterEl.textContent=(cur+1)+" / "+total;
+  progressBar.style.width=((cur+1)/total*100)+"%";
+  slides[cur].scrollTop=0;
+}
+function toggleTOC(){tocPanel.classList.toggle("open");tocBackdrop.classList.toggle("open")}
+function closeTOC(){tocPanel.classList.remove("open");tocBackdrop.classList.remove("open")}
+
+document.addEventListener("keydown",function(e){
+  if(e.key==="ArrowRight"||e.key==="ArrowDown"||e.key===" "||e.key==="PageDown"){e.preventDefault();go(cur+1)}
+  else if(e.key==="ArrowLeft"||e.key==="ArrowUp"||e.key==="PageUp"){e.preventDefault();go(cur-1)}
+  else if(e.key==="Home"){e.preventDefault();go(0)}
+  else if(e.key==="End"){e.preventDefault();go(total-1)}
+  else if(e.key==="Escape"){closeTOC();go(0)}
+  else if(e.key==="t"||e.key==="T"){toggleTOC()}
+});
+var wheelTimer=null;
+deck.addEventListener("wheel",function(e){
+  var sl=slides[cur];
+  var atTop=sl.scrollTop<=0;
+  var atBottom=sl.scrollTop+sl.clientHeight>=sl.scrollHeight-2;
+  if(e.deltaY>0&&atBottom){
+    if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},350);go(cur+1)}
+    e.preventDefault();
+  }else if(e.deltaY<0&&atTop){
+    if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},350);go(cur-1)}
+    e.preventDefault();
+  }
+},{passive:false});
+var touchX=0,touchY=0;
+deck.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX;touchY=e.touches[0].clientY});
+deck.addEventListener("touchend",function(e){
+  var dx=touchX-e.changedTouches[0].clientX,dy=touchY-e.changedTouches[0].clientY;
+  if(Math.abs(dy)>Math.abs(dx)){if(dy>50)go(cur+1);else if(dy<-50)go(cur-1)}
+  else{if(dx>50)go(cur+1);else if(dx<-50)go(cur-1)}
+});
+deck.addEventListener("click",function(e){
+  if(e.target.closest(".nav-btn,.nd,.toc-item,.toc-panel,.toc-backdrop"))return;
+  var x=e.clientX/window.innerWidth;
+  if(x<0.3)go(cur-1);else if(x>0.7)go(cur+1);
+});
+document.getElementById("btnToc").addEventListener("click",function(e){e.stopPropagation();toggleTOC()});
+document.getElementById("btnPrev").addEventListener("click",function(e){e.stopPropagation();go(cur-1)});
+document.getElementById("btnNext").addEventListener("click",function(e){e.stopPropagation();go(cur+1)});
+tocBackdrop.addEventListener("click",closeTOC);
+go(0);
+})();
+</script>
+</body>
+</html>

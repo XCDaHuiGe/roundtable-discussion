@@ -170,7 +170,7 @@ python validator.py "..\output\书名.html"
 
 ## 禁止事项
 
-- **禁止AI直接输出HTML**
+- **禁止AI直接输出完整HTML**
 - **禁止AI修改JS逻辑**
 - **禁止新增template-v2/v3/v4**
 - **禁止内联script超过50行**

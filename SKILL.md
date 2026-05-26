@@ -1,139 +1,205 @@
----
+﻿---
 name: roundtable-conference-v2
-description: "认知演化圆桌系统 V3.0。深度讨论导向，7轮全员交锋，锚定书中情节，每轮包含独立碰撞页，榨干每一滴认知增量。"
+description: "圆桌会议工程化HTML生成系统 V3.0。AI只负责内容(JSON)，程序负责渲染(Engine)。"
 ---
 
-# 圆桌会议 V3.0
+# 圆桌会议 V3.0 — 工程化HTML生成系统
 
-> **核心定位：榨干每一滴认知增量**
-> **质量 = 情节锚定 x 论证深度 x 碰撞强度 x 洞见锐度**
+> **核心原则：AI只负责内容，程序负责工程**
 
 ---
 
 ## 系统架构
 
-### 模板系统（统一规范）
-
-**唯一模板**: ssets/roundtable-template-v3.html
-
-- 字体: IBM Plex Mono + Noto Serif SC + Noto Sans SC
-- 配色: #0a0a0b 背景 + #f1efea 文字
-- 动画: [data-anim] 入场动画
-- 导航: 键盘/鼠标/触摸/滚轮/TOC
-
-**禁止使用其他模板**
-
----
-
-### HTML生成流程
-
-**必须使用PowerShell生成**，禁止Python脚本（编码问题）
-
-`powershell
-# Step 1: 读取模板
- = [System.IO.File]::ReadAllText("assetsoundtable-template-v3.html", [System.Text.Encoding]::UTF8)
-
-# Step 2: 准备slides内容
- = "slides HTML content here"
-
-# Step 3: 替换占位符
- = .Replace("<!-- SLIDES_HERE -->", )
- = .Replace("__BOOK_TITLE__", "书名")
-
-# Step 4: 写入文件
-[System.IO.File]::WriteAllText("output\书名_圆桌洞见.html", , [System.Text.Encoding]::UTF8)
-`
+```
+AI生成JSON内容
+    ↓
+Schema验证 (Pydantic)
+    ↓
+渲染引擎 (render.py)
+    ↓
+HTML模板渲染
+    ↓
+自动验证 (validator.py)
+    ↓
+最终HTML
+```
 
 ---
 
-### CSS Class 规范
+## 目录结构
 
-必须使用以下class（模板已定义）：
-- .slide - 幻灯片外壳
-- .slide.hero.active - 封面页
-- .slide.title-slide - 标题页
-- .frame - 内容区容器
-- .sp - 发言块
-- .cb - 碰撞块
-- .insight-c - 洞见卡
-- .metric - 指标卡
-- .tag - 标签
+```
+/engine          - 渲染引擎
+  schema.py      - 内容Schema定义
+  render.py      - HTML渲染器
+  validator.py   - HTML验证器
 
-**禁止自定义class**
+/templates       - 模板系统
+  base.html      - HTML模板
+  css/style.css  - 样式文件
+  js/app.js      - 交互逻辑
 
----
+/content         - JSON内容（AI生成）
+  *.json         - 圆桌讨论内容
 
-### 入场动画
-
-所有内容元素必须添加 data-anim 属性
-
----
-
-## 质量保证
-
-### 生成后必须验证
-
-`powershell
- = [System.IO.File]::ReadAllText("output\书名_圆桌洞见.html", [System.Text.Encoding]::UTF8)
-
-# 检查项：
-# 1. Slide结构 - slideCount, activeCount
-# 2. JS完整性 - go(), go(0), querySelectorAll, classList, wheel, keyboard
-# 3. CSS完整性 - display:none, display:flex, font system
-# 4. 组件完整性 - sp, cb, insight-c, TOC, progress-bar
-`
-
-**所有检查必须PASS**
+/output          - 生成结果
+  *.html         - 最终HTML文件
+```
 
 ---
 
-### 常见问题预防
+## AI工作流程
 
-- 只有一页 -> JS被截断 -> 用PowerShell生成
-- 样式丢失 -> 用了错误模板 -> 只用v3模板
-- 编码乱码 -> 编码不一致 -> 全程UTF8
-- 动画不生效 -> 缺少data-anim -> 所有内容元素加data-anim
+### Step 1: AI生成JSON内容
+
+AI **只负责生成JSON**，不负责HTML：
+
+```json
+{
+  "title": "书名",
+  "subtitle": "副标题",
+  "style": "严肃",
+  "dashboard": {
+    "total_experts": 6,
+    "total_rounds": 7,
+    "total_clashes": 24,
+    "total_insights": 6,
+    "experts": ["专家1", "专家2", ...]
+  },
+  "rounds": [
+    {
+      "round_number": 1,
+      "topic": "讨论主题",
+      "question": "核心问题",
+      "speakers": [
+        {
+          "name": "专家名",
+          "role": "角色",
+          "avatar_color": "#c23b22",
+          "content": "发言内容（至少10字）"
+        }
+      ],
+      "clashes": [
+        {
+          "type": "情节反驳/细节挑战/逻辑追问/框架质疑/反例引入",
+          "expert": "专家名",
+          "content": "碰撞内容"
+        }
+      ],
+      "insight": {
+        "statement": "洞见句",
+        "explanation": "洞见说明"
+      }
+    }
+  ],
+  "open_questions": [
+    {"question": "开放问题"}
+  ],
+  "conclusion": "结语"
+}
+```
+
+### Step 2: 渲染HTML
+
+```powershell
+cd engine
+python render.py "..\content\书名.json" "..\output\书名.html" "..\templates"
+```
+
+### Step 3: 验证HTML
+
+```powershell
+python validator.py "..\output\书名.html"
+```
+
+**必须PASS**，否则不交付。
 
 ---
 
-## 内容规范
+## Schema定义 (schema.py)
 
-### 专家库同步规则
+### 核心模型
 
-每次开始前必须同步专家库
+- `RoundtablePPT` - 完整PPT结构
+- `Round` - 讨论轮次
+- `Speaker` - 发言者
+- `Clash` - 碰撞交锋
+- `Insight` - 核心洞见
 
----
+### 验证规则
 
-### 质量红线
-
-**内容深度红线**：
-- 发言字数 < 350字 -> 无效发言
-- 无书中情节引用 -> 无效发言
-- 无因果推理链 -> 无效洞见
-- 无专家间直接反驳 -> 无效碰撞
-- 总页数 < 30页 -> 深度不足
-
-**排版红线**：
-- 同一屏幕内超过4人发言 -> 内容过载
-- 无颜色标记的碰撞类型 -> 视觉混乱
-
-**框架红线**：
-- 缺少三层架构 -> 结构性失败
+- 发言内容最少10字
+- 碰撞内容最少10字
+- 洞见说明最少10字
+- 轮次编号必须连续
 
 ---
 
-### 页面结构
+## 验证器检查项 (validator.py)
 
-总页数: 35-45页
+### HTML结构
 
-**第一层：洞见全景 30-40%**
-- 封面、洞见全景、讨论仪表盘、张力图谱
+- slide数量 > 0
+- active slide数量 = 1
 
-**第二层：深度讨论 40-50%**
-- 每轮：标题页 + 发言页(2-3人/页) + 碰撞页
+### JS完整性
 
-**第三层：认知演化 20-30%**
-- 假设演化、开放问题、结语
+- go() 函数
+- go(0) 初始化
+- querySelectorAll
+- classList操作
+- wheel/keyboard事件
+
+### CSS完整性
+
+- display:none
+- display:flex
+- 字体系统
+- 配色系统
+
+### 组件完整性
+
+- 发言块 .sp
+- 碰撞块 .cb
+- 洞见卡 .insight-c
+- TOC
+- 进度条
+
+---
+
+## 禁止事项
+
+- **禁止AI直接输出HTML**
+- **禁止AI修改JS逻辑**
+- **禁止新增template-v2/v3/v4**
+- **禁止内联script超过50行**
+- **禁止使用PowerShell here-string生成HTML**
+- **禁止生成未校验JSON**
+- **禁止使用旧class命名**
+
+---
+
+## 内容质量红线
+
+### 内容深度
+
+- 发言字数 < 350字 → 无效发言
+- 无书中情节引用 → 无效发言
+- 无因果推理链 → 无效洞见
+- 无专家间直接反驳 → 无效碰撞
+
+### 排版规范
+
+- 每页最多2-3人发言
+- 碰撞块颜色标记
+- 标题页大留白
+
+### 框架结构
+
+- 三层架构：洞见全景30% + 深度讨论50% + 认知演化20%
+- 讨论仪表盘
+- 张力图谱
 
 ---
 
@@ -145,49 +211,13 @@ description: "认知演化圆桌系统 V3.0。深度讨论导向，7轮全员交
 
 ---
 
-## 工作流程
-
-1. 同步专家库
-2. 分析书籍内容
-3. 选择6位专家
-4. 生成7轮讨论
-5. 用PowerShell生成HTML
-6. 运行验证脚本
-7. 提交到GitHub
-8. 更新README.md和index.html
-
-### 禁止事项
-
-- 不要用Python脚本生成HTML
-- 不要使用旧模板
-- 不要自定义CSS class
-- 不要跳过验证步骤
-- 不要引入外部资源
-
----
-
-## PPTX 导出（可选）
-
-使用 Presentations 技能，配置选择：
-- 观点表达 -> strategy-leadership
-- 数据分析 -> inance-ir
-- 产品介绍 -> product-platform
-
----
-
 ## 版本历史
 
-- V1.0: 整合蒸馏引擎 + 圆桌讨论 + 专家库
-- V2.0: 范式转变：深度讨论导向
-- V2.1: 全员发言、论证深度、碰撞强度
-- V2.2: 情节锚定、独立碰撞页
-- V2.4: 排版规范、CSS自包含
-- V2.5: 专家库同步规则
-- V2.6: 三层架构、质量红线
-- V3.0: **统一模板、PowerShell生成、自动化验证、稳定性保障**
+- V1.0-V2.6: AI直接拼HTML（不稳定）
+- V3.0: **工程化架构，AI只负责内容，程序负责渲染**
 
 ---
 
 *版本：V3.0*
 *更新时间：2026-05-26*
-*稳定性：PowerShell生成 + 自动化验证 + 单一模板*
+*核心原则：AI只负责内容，程序负责工程*

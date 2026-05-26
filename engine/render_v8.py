@@ -354,7 +354,7 @@ class RoundtableRendererV8:
       <div class="gold-line anim-in anim-delay-3"></div>
       <p style="font-size:14px;color:var(--text-dim);letter-spacing:0.1em;" class="anim-in anim-delay-4">从知识讨论到生存博弈</p>
     </div>
-    <div class="deck-footer">{content['title']} | V8级圆桌讨论</div>
+    <div class="deck-footer">{content['title']} | V8级圆桌洞见</div>
     <div class="slide-number">01 / {total_slides}</div>
   </section>''')
         slide_num += 1

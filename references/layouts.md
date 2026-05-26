@@ -615,7 +615,7 @@ layouts.md 使用的所有类都在 `assets/template.html` 的 `<style>` 块里�
 
 ## Layout 14: 专家阵容（Expert Roster）
 
-> **V5.2 新增**：圆桌讨论的专家阵容展示页，让读者知道谁参与了讨论。
+> **V5.2 新增**：圆桌洞见的专家阵容展示页，让读者知道谁参与了讨论。
 
 ```html
 <section class="slide dark expert-roster" data-title="圆桌阵容：4位跨领域专家">
@@ -659,7 +659,7 @@ layouts.md 使用的所有类都在 `assets/template.html` 的 `<style>` 块里�
 
 ## Layout 15: 多轮交锋（Expert Debate）
 
-> **V5.2 新增**：圆桌讨论的多轮交锋实录，展示专家之间的辩论过程。
+> **V5.2 新增**：圆桌洞见的多轮交锋实录，展示专家之间的辩论过程。
 
 ```html
 <section class="slide light expert-debate" data-title="多轮交锋：自由意志是否存在">
@@ -709,7 +709,7 @@ layouts.md 使用的所有类都在 `assets/template.html` 的 `<style>` 块里�
 
 ## Layout 16: 圆桌产出（Expert Output）
 
-> **V5.2 新增**：圆桌讨论的最终产出——共识、行动建议、开放问题。
+> **V5.2 新增**：圆桌洞见的最终产出——共识、行动建议、开放问题。
 
 ```html
 <section class="slide light expert-output" data-title="圆桌产出：共识与未尽之问">

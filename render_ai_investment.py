@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""人机协同投研重构圆桌讨论 - V8级渲染器"""
+"""人机协同投研重构圆桌洞见 - V8级渲染器"""
 
 import json
 import re
@@ -239,7 +239,7 @@ def render_discussion_slide(slide):
 </section>'''
 
 def render_discussion(json_path, output_path, template_path):
-    """渲染圆桌讨论HTML"""
+    """渲染圆桌洞见HTML"""
     with open(json_path, 'r', encoding='utf-8-sig') as f:
         content = json.load(f)
     

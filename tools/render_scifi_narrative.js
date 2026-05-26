@@ -171,7 +171,7 @@ slidesHtml += `<div class="slide" data-title="参考资料">
     <div class="card" data-anim>
       <div class="card-title">核心素材</div>
       <div class="card-body">
-        <p style="margin-bottom:2vh">本场圆桌讨论基于以下科幻作品与商业理论著作：</p>
+        <p style="margin-bottom:2vh">本场圆桌洞见基于以下科幻作品与商业理论著作：</p>
         ${generateSourceMaterials()}
         <p style="font-size:.88rem;color:rgba(var(--paper-rgb),.6);margin-top:2vh">注：讨论内容为专家基于公开资料的观点延伸，不代表对原著的学术解读。</p>
       </div>

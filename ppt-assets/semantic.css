@@ -1,12 +1,12 @@
 /* html-ppt :: semantic.css — 语义组件系统
  * V5.0 新增：将 SKILL.md 中定义的语义类硬化为可执行的 CSS
- * 
+ *
  * 包含：
  * - 三级排版范式（mod-title/mod-sub/mod-label）
  * - 入场动画系统（anim-1~6）
  * - 语义卡片（card-rise/card-fall）
  * - 语义框（warning-box/ok-box）
- * - 圆桌讨论组件
+ * - 圆桌洞见组件
  */
 
 /* ================= 三级排版范式 ================= */
@@ -18,55 +18,29 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--text-3);
-  font-family: var(--font-mono);
-  margin-bottom: 8px;
-}
-
-.mod-title {
-  font-family: var(--font-serif);
-  font-size: clamp(48px, 8vw, 96px);
-  line-height: 1.05;
-  font-weight: 900;
-  letter-spacing: var(--letter-tight);
-  margin: 0 0 24px;
-  color: var(--text-1);
 }
 
 .mod-sub {
-  font-family: var(--font-sans);
-  font-size: clamp(14px, 2vw, 18px);
-  line-height: 1.6;
+  font-size: 14px;
   font-weight: 400;
   color: var(--text-2);
-  max-width: 65ch;
+  line-height: 1.6;
 }
 
-/* 大号数字展示 */
-.stat-num {
-  font-family: var(--font-serif);
-  font-size: clamp(56px, 10vw, 120px);
-  line-height: 1;
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  color: var(--text-1);
+.mod-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--title);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
 }
 
-.stat-label {
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-3);
-  margin-top: 8px;
-}
-
-/* ================= 入场动画系统 ================= */
-/* data-anim 属性控制入场动画，分层延迟 */
+/* ================= 入场动画 ================= */
 
 [data-anim] {
   opacity: 0;
   transform: translateY(24px);
-  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
 [data-anim].visible {
@@ -74,7 +48,6 @@
   transform: translateY(0);
 }
 
-/* 预定义延迟类 */
 .anim-1 { transition-delay: 0.1s; }
 .anim-2 { transition-delay: 0.2s; }
 .anim-3 { transition-delay: 0.3s; }
@@ -82,162 +55,82 @@
 .anim-5 { transition-delay: 0.5s; }
 .anim-6 { transition-delay: 0.6s; }
 
-/* 动画类型变体 */
-[data-anim="fade-up"] {
-  transform: translateY(32px);
-}
-
-[data-anim="fade-right"] {
-  transform: translateX(-32px);
-}
-
-[data-anim="rise-in"] {
-  transform: translateY(48px) scale(0.96);
-}
-
-[data-anim="zoom-pop"] {
-  transform: scale(0.9);
-}
-
-/* 激活状态 */
-.slide.is-active [data-anim].visible,
-.slide.is-active .anim-1.visible,
-.slide.is-active .anim-2.visible,
-.slide.is-active .anim-3.visible,
-.slide.is-active .anim-4.visible,
-.slide.is-active .anim-5.visible,
-.slide.is-active .anim-6.visible {
-  opacity: 1;
-  transform: translateY(0) translateX(0) scale(1);
-}
-
 /* ================= 语义卡片 ================= */
-/* 带左侧重色条的卡片，用于上升/坠落对比 */
 
 .card-rise {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--good);
-  border-radius: var(--radius);
-  padding: 24px 28px;
-  position: relative;
-  box-shadow: var(--shadow);
+  background: var(--bg);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 20px;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
 }
 
-.card-rise::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: var(--good);
-  box-shadow: 0 0 12px rgba(26, 175, 108, 0.4);
-  border-radius: 4px 0 0 4px;
+.card-rise:hover {
+  transform: translateX(4px);
+  border-left-color: var(--accent-hover);
 }
 
 .card-fall {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--bad);
-  border-radius: var(--radius);
-  padding: 24px 28px;
-  position: relative;
-  box-shadow: var(--shadow);
+  background: var(--bg);
+  border-right: 3px solid var(--accent);
+  border-radius: 8px 0 0 8px;
+  padding: 20px;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
 }
 
-.card-fall::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: var(--bad);
-  box-shadow: 0 0 12px rgba(224, 68, 90, 0.4);
-  border-radius: 4px 0 0 4px;
+.card-fall:hover {
+  transform: translateX(-4px);
+  border-right-color: var(--accent-hover);
 }
 
 /* ================= 语义框 ================= */
-/* 警示框 / 正解框 */
 
 .warning-box {
-  background: color-mix(in srgb, var(--warn) 10%, transparent);
-  border: 1px solid color-mix(in srgb, var(--warn) 30%, transparent);
-  border-radius: var(--radius-sm);
-  padding: 16px 20px;
-  position: relative;
+  background: rgba(255, 76, 76, 0.1);
+  border: 1px solid rgba(255, 76, 76, 0.3);
+  border-left: 4px solid #ff4c4c;
+  border-radius: 4px;
+  padding: 16px;
+  margin-bottom: 12px;
 }
 
 .warning-box::before {
-  content: '⚠';
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  font-size: 18px;
-}
-
-.warning-box > * {
-  margin-left: 28px;
+  content: '⚠️ ';
+  font-size: 14px;
 }
 
 .ok-box {
-  background: color-mix(in srgb, var(--good) 10%, transparent);
-  border: 1px solid color-mix(in srgb, var(--good) 30%, transparent);
-  border-radius: var(--radius-sm);
-  padding: 16px 20px;
-  position: relative;
+  background: rgba(0, 200, 83, 0.1);
+  border: 1px solid rgba(0, 200, 83, 0.3);
+  border-left: 4px solid #00c853;
+  border-radius: 4px;
+  padding: 16px;
+  margin-bottom: 12px;
 }
 
 .ok-box::before {
-  content: '✓';
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  font-size: 18px;
-  color: var(--good);
-  font-weight: 700;
-}
-
-.ok-box > * {
-  margin-left: 28px;
+  content: '✓ ';
+  font-size: 14px;
+  color: #00c853;
 }
 
 /* ================= 引用块 ================= */
-.callout {
-  background: var(--surface-2);
-  border-left: 3px solid var(--accent);
-  padding: 20px 24px;
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  font-size: 18px;
-  line-height: 1.6;
-  color: var(--text-2);
-}
-
-.q-big {
-  font-family: var(--font-serif);
-  font-size: clamp(28px, 5vw, 48px);
-  line-height: 1.3;
-  font-weight: 700;
-  color: var(--text-1);
-  text-align: center;
-  max-width: 20ch;
-  margin: 0 auto;
-}
 
 .cite {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-3);
-  text-align: center;
-  margin-top: 16px;
+  font-style: italic;
+  color: var(--text-2);
+  padding-left: 16px;
+  border-left: 2px solid var(--accent);
+  margin: 16px 0;
 }
 
 .cite::before {
   content: '—— ';
 }
 
-/* ================= 圆桌讨论组件 ================= */
+/* ================= 圆桌洞见组件 ================= */
 /* V5.0 新增：Phase 1.5 圆桌深化模块 */
 
 .roundtable-grid {
@@ -248,295 +141,174 @@
 }
 
 .expert-card {
-  background: var(--surface);
+  background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px 24px;
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+
+.expert-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  border-color: var(--accent);
+}
+
+.expert-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--bg);
+  margin-bottom: 16px;
+}
+
+.expert-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--title);
+  margin-bottom: 4px;
+}
+
+.expert-role {
+  font-size: 12px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+
+.expert-bio {
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+
+/* ================= 洞见卡片 ================= */
+
+.insight-card {
+  background: linear-gradient(135deg, var(--bg) 0%, var(--bg-secondary) 100%);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
   position: relative;
   overflow: hidden;
 }
 
-.expert-card::before {
+.insight-card::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 3px;
-  background: var(--grad);
+  background: linear-gradient(90deg, var(--accent), var(--gold));
 }
 
-.expert-name {
-  font-family: var(--font-serif);
-  font-size: 20px;
+.insight-question {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--gold);
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.insight-answer {
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.8;
+}
+
+/* ================= 碰撞块 ================= */
+
+.clash-block {
+  background: var(--bg-secondary);
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.clash-label {
+  position: absolute;
+  top: -10px;
+  left: 16px;
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.clash-blue { border-color: rgba(74, 106, 154, 0.3); }
+.clash-blue .clash-label { background: var(--blue); }
+
+.clash-purple { border-color: rgba(138, 74, 170, 0.3); }
+.clash-purple .clash-label { background: var(--purple); }
+
+.clash-green { border-color: rgba(58, 138, 92, 0.3); }
+.clash-green .clash-label { background: var(--green); }
+
+/* ================= 指标展示 ================= */
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.metric-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+
+.metric-value {
+  font-size: 32px;
   font-weight: 700;
-  color: var(--text-1);
+  color: var(--accent);
   margin-bottom: 4px;
 }
 
-.expert-role {
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 12px;
-}
-
-.expert-quote {
-  font-size: 15px;
-  line-height: 1.6;
-  color: var(--text-2);
-  font-style: italic;
-  border-left: 2px solid var(--border);
-  padding-left: 12px;
-  margin: 12px 0;
-}
-
-.expert-summary {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-1);
-  margin-top: 12px;
-}
-
-.expert-summary::before {
-  content: '简言之：';
-  color: var(--text-3);
-  font-weight: 400;
-}
-
-/* 行动标签 */
-.action-tag {
-  display: inline-block;
+.metric-label {
   font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  color: var(--text-3);
   text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 4px;
-  margin-right: 6px;
+  letter-spacing: 0.1em;
 }
 
-.action-tag.statement {
-  background: color-mix(in srgb, var(--accent) 15%, transparent);
-  color: var(--accent);
-}
+/* ================= 开放问题 ================= */
 
-.action-tag.question {
-  background: color-mix(in srgb, var(--warn) 15%, transparent);
-  color: var(--warn);
-}
-
-.action-tag.supplement {
-  background: color-mix(in srgb, var(--good) 15%, transparent);
-  color: var(--good);
-}
-
-.action-tag.refute {
-  background: color-mix(in srgb, var(--bad) 15%, transparent);
-  color: var(--bad);
-}
-
-.action-tag.rebuttal {
-  background: color-mix(in srgb, var(--warn) 15%, transparent);
-  color: var(--warn);
-}
-
-.action-tag.challenge {
-  background: color-mix(in srgb, var(--bad) 15%, transparent);
-  color: var(--bad);
-  border: 1px dashed var(--bad);
-}
-
-.action-tag.synthesize {
-  background: color-mix(in srgb, var(--good) 15%, transparent);
-  color: var(--good);
-  border: 1px solid var(--good);
-}
-
-.action-tag.revise {
-  background: color-mix(in srgb, var(--accent) 15%, transparent);
-  color: var(--accent);
-  border: 1px dotted var(--accent);
-}
-
-/* expert-avatar — 圆桌阵容头像 */
-.expert-avatar {
-  width: 64px; height: 64px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.8rem; font-weight: 700;
-  color: var(--bg); background: var(--accent);
-  flex-shrink: 0;
-}
-
-/* expert-inline — 嵌入主题页底部的专家观点条 */
-.expert-inline {
-  margin-top: 3vh;
-  padding-top: 2vh;
-  border-top: 1px solid var(--border);
-  display: flex; flex-wrap: wrap; gap: 1.5vw;
-}
-
-.expert-inline .expert-card {
-  flex: 1 1 280px;
-}
-
-/* 圆桌内容区间距 */
-.expert-debate-turn {
-  display: grid;
-  grid-template-columns: 120px 1fr;
-  gap: 1.5vw;
-  padding: 1.5vh 2vw;
-  margin-bottom: 1.5vh;
-  border-left: 3px solid var(--accent);
-  background: var(--surface);
-}
-
-/* ASCII 思考框架图 */
-.ascii-diagram {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  line-height: 1.4;
-  color: var(--text-2);
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+.open-question {
+  background: var(--bg-secondary);
+  border: 1px dashed var(--border);
+  border-radius: 8px;
   padding: 20px;
-  overflow-x: auto;
-  white-space: pre;
+  margin-bottom: 16px;
 }
 
-/* ================= 网格布局增强 ================= */
-.grid-2 {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
+.oq-number {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--accent);
+  opacity: 0.3;
+  margin-bottom: 8px;
 }
 
-.grid-3 {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
-.grid-4 {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-}
-
-@media (max-width: 768px) {
-  .grid-2, .grid-3, .grid-4 {
-    grid-template-columns: 1fr;
-  }
-  
-  .roundtable-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ================= 时间线组件 ================= */
-.timeline {
-  position: relative;
-  padding-left: 32px;
-}
-
-.timeline::before {
-  content: '';
-  position: absolute;
-  left: 8px;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: var(--border);
-}
-
-.timeline-item {
-  position: relative;
-  padding-bottom: 24px;
-}
-
-.timeline-item::before {
-  content: '';
-  position: absolute;
-  left: -28px;
-  top: 4px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--accent);
-  border: 2px solid var(--bg);
-}
-
-.timeline-item:last-child {
-  padding-bottom: 0;
-}
-
-/* ================= 对比布局 ================= */
-.compare-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
-}
-
-.compare-before {
-  border-right: 1px dashed var(--border);
-  padding-right: 24px;
-}
-
-.compare-after {
-  padding-left: 24px;
-}
-
-@media (max-width: 768px) {
-  .compare-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .compare-before {
-    border-right: none;
-    border-bottom: 1px dashed var(--border);
-    padding-right: 0;
-    padding-bottom: 24px;
-  }
-  
-  .compare-after {
-    padding-left: 0;
-    padding-top: 24px;
-  }
-}
-
-/* ================= 深色主题适配 ================= */
-:root.dark,
-.slide.dark {
-  --bg: #0a0a0f;
-  --bg-soft: #12121a;
-  --surface: #16161f;
-  --surface-2: #1c1c28;
-  --border: rgba(255,255,255,.08);
-  --border-strong: rgba(255,255,255,.16);
-  --text-1: #f0f0f5;
-  --text-2: #a0a0b0;
-  --text-3: #606070;
-}
-
-/* 霓虹发光效果（深色主题） */
-:root.dark .neon-text,
-.slide.dark .neon-text {
-  text-shadow: 
-    0 0 5px currentColor,
-    0 0 10px currentColor,
-    0 0 20px currentColor;
-}
-
-:root.dark .card-rise::before,
-.slide.dark .card-rise::before {
-  box-shadow: 0 0 16px rgba(26, 175, 108, 0.6);
-}
-
-:root.dark .card-fall::before,
-.slide.dark .card-fall::before {
-  box-shadow: 0 0 16px rgba(224, 68, 90, 0.6);
+.oq-text {
+  font-size: 15px;
+  color: var(--text-2);
+  line-height: 1.7;
 }

@@ -442,7 +442,7 @@ python tools/validate_html.py "output/书名.html"
     ↓
 加载专家库（专家V1）
     ↓
-【Phase 1】生成圆桌讨论（基于互联网真实素材）
+【Phase 1】生成圆桌洞见（基于互联网真实素材）
     ↓
 【Phase 2】提取专家实战表现
     └─ 讨论中暴露的专家不足 → 触发互联网学习

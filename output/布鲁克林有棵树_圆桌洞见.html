@@ -87,9 +87,11 @@ html,body{height:100%;overflow:hidden;font-family:"Noto Sans SC","PingFang SC","
 .nd:hover{background:rgba(255,255,255,.35)}
 @media(max-width:1024px){.slide{padding:3vh 5vw}.st{font-size:clamp(.85rem,1.15vw,.98rem)}}
 @media(max-width:768px){.slide{padding:3vh 6vw}.st{font-size:.88rem}.h-xl{font-size:clamp(1.2rem,5vw,1.8rem)}.metrics{flex-direction:column}.nav-dots,.nav-title{display:none}}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--accent);z-index:999;transition:width .35s ease;width:0}
 </style>
 </head>
 <body>
+<div class="progress-bar" id="progressBar"></div>
 <div class="deck" id="deck">
 
 <div class="slide hero active" data-title="封面">
@@ -250,6 +252,8 @@ function go(n){
   titleEl.textContent=slides[cur].getAttribute("data-title")||"";
   counterEl.textContent=(cur+1)+" / "+total;
   slides[cur].scrollTop=0;
+  var pb=document.getElementById('progressBar');
+  if(pb)pb.style.width=((cur+1)/slides.length*100)+'%';
 }
 function toggleTOC(){tocPanel.classList.toggle("open");tocBackdrop.classList.toggle("open")}
 function closeTOC(){tocPanel.classList.remove("open");tocBackdrop.classList.remove("open")}

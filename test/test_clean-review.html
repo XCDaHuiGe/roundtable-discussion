@@ -3,30 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{{title}}</title>
+<title>AI与人类认知边界</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Serif+SC:wght@300;400;500;600;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f5f5f0;
-  --paper: #fffef9;
-  --paper-warm: #faf8f3;
-  --paper-card: rgba(255,254,249,0.94);
-  --ink: #2d2d2d;
-  --ink-dark: #1a1a1a;
-  --ink-light: #4a4a4a;
-  --soft: #7a7a7a;
-  --muted: #9a9a9a;
-  --accent: #6b8e9f;
-  --accent-dark: #4a7c8b;
-  --accent-light: rgba(107,142,159,0.1);
-  --accent-glow: rgba(107,142,159,0.18);
-  --line: rgba(45,45,45,0.08);
-  --line-dark: rgba(45,45,45,0.12);
-  --green: #4a7c59;
-  --green-light: rgba(74,124,89,0.06);
-  --green-dark: #2d5a27;
-  --red: #c44536;
-  --red-light: rgba(196,69,54,0.06);
+  --bg: #ffffff;
+  --bg-subtle: #fafbfc;
+  --bg-card: rgba(255,255,255,0.92);
+  --text: #0f1419;
+  --text-secondary: #536471;
+  --text-muted: #8899a6;
+  --gray-50: #f7f9fa;
+  --gray-100: #eff3f4;
+  --gray-200: #d9e1e4;
+  --gray-300: #c4ccd0;
+  --gray-400: #8899a6;
+  --accent: #00ba7c;
+  --accent-dark: #009668;
+  --accent-light: rgba(0,186,124,0.08);
+  --accent-glow: rgba(0,186,124,0.15);
+  --green: #00ba7c;
+  --green-light: rgba(0,186,124,0.06);
+  --green-dark: #009668;
+  --red: #f4212e;
+  --red-light: rgba(244,33,46,0.06);
+  --red-dark: #c44536;
   --serif: 'Noto Serif SC', Georgia, 'Times New Roman', serif;
   --sans: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   --mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
@@ -36,7 +37,7 @@ html { scroll-behavior: smooth; }
 body {
   background: var(--bg);
   font-family: var(--sans);
-  color: var(--ink);
+  color: var(--text);
   overflow-x: hidden;
   overflow-y: auto;
   scroll-snap-type: y mandatory;
@@ -59,26 +60,10 @@ body {
   position: absolute;
   inset: 0;
   background: 
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E"),
-    radial-gradient(ellipse 100% 60% at 50% -30%, rgba(107,142,159,0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 50% at 100% 100%, rgba(107,142,159,0.04) 0%, transparent 50%);
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0,186,124,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(0,186,124,0.02) 0%, transparent 40%);
   pointer-events: none;
   z-index: 0;
-}
-.slide::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(180deg, 
-    rgba(255,254,249,0.15) 0%, 
-    transparent 30%, 
-    transparent 70%, 
-    rgba(245,245,240,0.1) 100%);
-  pointer-events: none;
-  z-index: 1;
 }
 .slide.visible {
   opacity: 1;
@@ -89,22 +74,32 @@ body {
   align-items: center;
   text-align: center;
   background: 
-    linear-gradient(135deg, rgba(107,142,159,0.03) 0%, transparent 60%),
-    linear-gradient(225deg, rgba(255,254,249,0.5) 0%, transparent 50%),
+    linear-gradient(135deg, rgba(0,186,124,0.02) 0%, transparent 50%),
+    linear-gradient(225deg, rgba(0,186,124,0.015) 0%, transparent 50%),
     var(--bg);
 }
 .slide-white { background: var(--bg); position: relative; }
-.frame { position: relative; z-index: 3; max-width: 880px; margin: 0 auto; width: 100%; }
 .cover {
-  text-align: center;
+  max-width: 880px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
 }
-.cover-date {
+.cover-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 28px;
+  background: var(--accent-light);
+  border: 1.5px solid var(--accent);
+  border-radius: 100px;
   font-family: var(--mono);
-  font-size: 12px;
-  color: var(--muted);
-  letter-spacing: 0.25em;
-  margin-bottom: 36px;
-  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 48px;
+  font-weight: 600;
+  color: var(--accent-dark);
   animation: fadeInDown 0.8s ease forwards;
   animation-delay: 0.1s;
   opacity: 0;
@@ -118,10 +113,9 @@ body {
   font-size: clamp(52px, 9vw, 108px);
   font-weight: 900;
   line-height: 1.02;
-  margin-bottom: 32px;
+  margin-bottom: 28px;
   letter-spacing: -0.03em;
-  color: var(--ink-dark);
-  background: linear-gradient(135deg, var(--ink-dark) 0%, var(--ink-light) 40%, var(--accent-dark) 100%);
+  background: linear-gradient(135deg, var(--text) 0%, var(--text-secondary) 50%, var(--accent-dark) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -129,23 +123,19 @@ body {
   animation-delay: 0.2s;
   opacity: 0;
 }
-.cover-meta {
-  font-size: 18px;
-  color: var(--soft);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
+.cover-sub {
+  font-size: 19px;
+  color: var(--text-secondary);
+  line-height: 1.85;
   margin-bottom: 64px;
-  line-height: 1.7;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: 400;
+  letter-spacing: 0.01em;
   animation: fadeInUp 1s ease forwards;
   animation-delay: 0.35s;
   opacity: 0;
-}
-.cover-meta span:not(:last-child)::after {
-  content: '·';
-  margin-left: 16px;
-  color: var(--muted);
 }
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(30px); }
@@ -163,7 +153,7 @@ body {
 }
 .cover-stat {
   text-align: center;
-  padding: 0 44px;
+  padding: 0 40px;
   position: relative;
 }
 .cover-stat:not(:last-child)::after {
@@ -173,35 +163,37 @@ body {
   top: 50%;
   transform: translateY(-50%);
   width: 1px;
-  height: 52px;
-  background: linear-gradient(180deg, transparent 0%, var(--line-dark) 50%, transparent 100%);
+  height: 48px;
+  background: linear-gradient(180deg, transparent 0%, var(--gray-200) 50%, transparent 100%);
 }
 .cover-stat-num {
   font-family: var(--serif);
   font-size: 64px;
   font-weight: 900;
   line-height: 1;
-  color: var(--accent);
-  text-shadow: 0 2px 12px rgba(107,142,159,0.15);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 .cover-stat-label {
   font-family: var(--mono);
   font-size: 11px;
-  color: var(--muted);
+  color: var(--text-muted);
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  margin-top: 14px;
+  margin-top: 12px;
   font-weight: 500;
 }
 .experts-section {
   position: relative;
-  z-index: 3;
+  z-index: 2;
   max-width: 960px;
   margin: 0 auto;
   width: 100%;
 }
 .section-header {
-  margin-bottom: 44px;
+  margin-bottom: 40px;
   animation: fadeInUp 0.8s ease forwards;
   animation-delay: 0.1s;
   opacity: 0;
@@ -214,18 +206,17 @@ body {
   text-transform: uppercase;
   color: var(--accent);
   font-weight: 600;
-  margin-bottom: 14px;
-  padding: 7px 16px;
+  margin-bottom: 12px;
+  padding: 6px 14px;
   background: var(--accent-light);
   border-radius: 4px;
-  border: 1px solid rgba(107,142,159,0.15);
 }
 .section-title {
   font-family: var(--serif);
   font-size: 36px;
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: var(--ink-dark);
+  color: var(--text);
 }
 .experts-grid {
   display: grid;
@@ -233,16 +224,15 @@ body {
   gap: 24px;
 }
 .expert-card {
-  background: var(--paper-card);
+  background: var(--bg-card);
   border-radius: 20px;
   padding: 32px 24px;
   text-align: center;
   backdrop-filter: blur(12px);
-  border: 1px solid var(--line);
+  border: 1px solid var(--gray-100);
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.02);
 }
 .expert-card::before {
   content: '';
@@ -255,18 +245,10 @@ body {
   opacity: 0;
   transition: opacity 0.3s ease;
 }
-.expert-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-}
 .expert-card:hover {
   transform: translateY(-8px);
   box-shadow: 
-    0 20px 60px rgba(107,142,159,0.12),
+    0 20px 60px rgba(0,186,124,0.12),
     0 8px 24px rgba(0,0,0,0.04);
   border-color: var(--accent-light);
 }
@@ -291,10 +273,9 @@ body {
   font-weight: 800;
   color: white;
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-  box-shadow: 0 8px 24px rgba(107,142,159,0.25);
+  box-shadow: 0 8px 24px rgba(0,186,124,0.25);
   transition: all 0.4s ease;
   position: relative;
-  z-index: 1;
 }
 .expert-avatar::after {
   content: '';
@@ -312,121 +293,129 @@ body {
 }
 .expert-card:hover .expert-avatar {
   transform: scale(1.05);
-  box-shadow: 0 12px 32px rgba(107,142,159,0.35);
+  box-shadow: 0 12px 32px rgba(0,186,124,0.35);
 }
 .expert-card:hover .expert-avatar::after {
   opacity: 1;
 }
-.expert-card:nth-child(2) .expert-avatar { background: linear-gradient(135deg, #89a8b5 0%, #6b8e9f 100%); }
-.expert-card:nth-child(3) .expert-avatar { background: linear-gradient(135deg, #a8c5d1 0%, #89a8b5 100%); }
-.expert-card:nth-child(4) .expert-avatar { background: linear-gradient(135deg, #5a8a9a 0%, #4a7a8a 100%); }
-.expert-card:nth-child(5) .expert-avatar { background: linear-gradient(135deg, #7a9aaa 0%, #5a8a9a 100%); }
-.expert-card:nth-child(6) .expert-avatar { background: linear-gradient(135deg, #9ab5c1 0%, #7a9aaa 100%); }
-.expert-info { position: relative; z-index: 1; }
-.expert-name { font-weight: 700; font-size: 17px; margin-bottom: 6px; color: var(--ink-dark); letter-spacing: -0.01em; }
-.expert-role { font-size: 13px; color: var(--soft); line-height: 1.5; }
-.note-section {
+.expert-card:nth-child(2) .expert-avatar { background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 8px 24px rgba(16,185,129,0.25); }
+.expert-card:nth-child(3) .expert-avatar { background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); box-shadow: 0 8px 24px rgba(20,184,166,0.25); }
+.expert-card:nth-child(4) .expert-avatar { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); box-shadow: 0 8px 24px rgba(34,197,94,0.25); }
+.expert-card:nth-child(5) .expert-avatar { background: linear-gradient(135deg, #84cc16 0%, #65a30d 100%); box-shadow: 0 8px 24px rgba(132,204,22,0.25); }
+.expert-card:nth-child(6) .expert-avatar { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); box-shadow: 0 8px 24px rgba(6,182,212,0.25); }
+.expert-name { font-weight: 700; font-size: 17px; margin-bottom: 6px; color: var(--text); letter-spacing: -0.01em; }
+.expert-role { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+.round-section {
   position: relative;
-  z-index: 3;
+  z-index: 2;
   max-width: 920px;
   margin: 0 auto;
   width: 100%;
 }
-.note-header { margin-bottom: 32px; animation: fadeInUp 0.8s ease forwards; animation-delay: 0.1s; opacity: 0; }
-.note-round {
+.round-card {
+  background: var(--bg-card);
+  border-radius: 24px;
+  padding: 40px 44px;
+  margin-bottom: 28px;
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--gray-100);
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.8s ease forwards;
+  animation-delay: 0.1s;
+  opacity: 0;
+}
+.round-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-dark) 50%, var(--accent) 100%);
+}
+.round-tag {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   font-family: var(--mono);
   font-size: 10px;
-  color: var(--accent);
   letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
   font-weight: 600;
-  padding: 7px 14px;
+  margin-bottom: 16px;
+  padding: 6px 12px;
   background: var(--accent-light);
   border-radius: 4px;
-  border: 1px solid rgba(107,142,159,0.15);
 }
-.note-question {
+.round-question {
   font-family: var(--serif);
   font-size: 26px;
   font-weight: 700;
   line-height: 1.5;
-  margin-bottom: 36px;
-  padding-bottom: 28px;
-  border-bottom: 1px solid var(--line-dark);
-  color: var(--ink-dark);
+  margin-bottom: 32px;
+  color: var(--text);
   letter-spacing: -0.01em;
 }
-.notes-container { display: flex; flex-direction: column; gap: 20px; }
-.note-entry {
-  background: var(--paper);
+.review-card {
+  background: white;
   border-radius: 16px;
   padding: 28px 32px;
-  box-shadow: 
-    0 2px 16px rgba(0,0,0,0.03),
-    inset 0 0 60px rgba(255,254,249,0.5);
-  border: 1px solid var(--line);
+  margin-bottom: 18px;
+  border: 1px solid var(--gray-100);
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
-  overflow: hidden;
 }
-.note-entry::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-}
-.note-entry:hover {
+.review-card:hover {
   box-shadow: 
-    0 12px 40px rgba(107,142,159,0.08),
+    0 12px 40px rgba(0,186,124,0.08),
     0 4px 12px rgba(0,0,0,0.02);
-  border-color: var(--accent-light);
+  border-color: var(--gray-200);
   transform: translateX(4px);
 }
-.note-speaker {
-  font-weight: 700;
-  font-size: 16px;
-  margin-bottom: 12px;
-  color: var(--ink-dark);
+.review-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  position: relative;
-  z-index: 1;
+  gap: 16px;
+  margin-bottom: 16px;
 }
-.note-speaker::before {
-  content: '';
-  width: 10px;
-  height: 10px;
+.review-avatar {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-  box-shadow: 0 2px 8px rgba(107,142,159,0.3);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 18px;
+  flex-shrink: 0;
 }
-.note-content {
+.review-meta { flex: 1; }
+.review-name { font-weight: 700; font-size: 16px; color: var(--text); letter-spacing: -0.01em; }
+.review-role { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+.review-content {
   font-size: 15px;
   line-height: 1.9;
-  color: var(--ink-light);
+  color: var(--text-secondary);
   letter-spacing: 0.01em;
-  position: relative;
-  z-index: 1;
 }
-.note-content strong {
-  color: var(--ink-dark);
+.review-content strong {
+  color: var(--text);
   font-weight: 600;
 }
 .clash-block {
   background: var(--red-light);
-  border-left: 4px solid var(--red);
+  border-left: 4px solid var(--red-dark);
   border-radius: 0 16px 16px 0;
   padding: 28px 32px;
   margin: 24px 0;
   position: relative;
   box-shadow: 
-    inset 4px 0 20px rgba(196,69,54,0.04),
-    0 4px 16px rgba(196,69,54,0.06);
+    inset 4px 0 16px rgba(244,33,46,0.04),
+    0 4px 16px rgba(244,33,46,0.06);
 }
 .clash-label {
   font-family: var(--mono);
@@ -455,33 +444,33 @@ body {
 .clash-text {
   font-size: 15px;
   line-height: 1.85;
-  color: var(--ink-dark);
+  color: var(--text);
   letter-spacing: 0.01em;
 }
-.rain-insight {
+.insight-card {
   background: var(--green-light);
   border-left: 4px solid var(--green-dark);
+  border-radius: 0 16px 16px 0;
   padding: 28px 32px;
   margin-top: 28px;
-  border-radius: 0 16px 16px 0;
   position: relative;
   box-shadow: 
-    inset 4px 0 20px rgba(74,124,89,0.04),
-    0 4px 16px rgba(74,124,89,0.06);
+    inset 4px 0 16px rgba(0,186,124,0.04),
+    0 4px 16px rgba(0,186,124,0.06);
 }
-.insight-marker {
+.insight-label {
   font-family: var(--mono);
   font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
   color: var(--green-dark);
   margin-bottom: 14px;
   font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
   display: flex;
   align-items: center;
   gap: 8px;
 }
-.insight-marker::before {
+.insight-label::before {
   content: '✦';
   font-size: 12px;
 }
@@ -490,12 +479,12 @@ body {
   font-size: 20px;
   font-weight: 700;
   line-height: 1.65;
-  color: var(--ink-dark);
+  color: var(--text);
   letter-spacing: -0.01em;
 }
 .conclusions-section {
   position: relative;
-  z-index: 3;
+  z-index: 2;
   max-width: 920px;
   margin: 0 auto;
   width: 100%;
@@ -508,13 +497,12 @@ body {
 }
 .conclusion-item {
   padding: 36px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--gray-100);
   border-radius: 20px;
-  background: var(--paper);
+  background: white;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.02);
   animation: fadeInUp 0.6s ease forwards;
   opacity: 0;
 }
@@ -523,14 +511,6 @@ body {
 .conclusion-item:nth-child(3) { animation-delay: 0.3s; }
 .conclusion-item:nth-child(4) { animation-delay: 0.4s; }
 .conclusion-item::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-}
-.conclusion-item::after {
   content: '';
   position: absolute;
   top: 0;
@@ -544,48 +524,42 @@ body {
 .conclusion-item:hover {
   transform: translateY(-6px);
   box-shadow: 
-    0 16px 48px rgba(107,142,159,0.1),
+    0 16px 48px rgba(0,186,124,0.1),
     0 6px 16px rgba(0,0,0,0.03);
-  border-color: var(--accent-light);
+  border-color: var(--gray-200);
 }
-.conclusion-item:hover::after {
+.conclusion-item:hover::before {
   opacity: 1;
 }
 .conclusion-num {
   font-family: var(--serif);
   font-size: 56px;
   font-weight: 900;
-  color: var(--line-dark);
+  color: var(--gray-100);
   margin-bottom: 16px;
   line-height: 1;
   letter-spacing: -0.02em;
-  position: relative;
-  z-index: 1;
 }
 .conclusion-text {
   font-size: 15px;
   line-height: 1.85;
-  color: var(--soft);
+  color: var(--text-secondary);
   letter-spacing: 0.01em;
-  position: relative;
-  z-index: 1;
 }
 .conclusion-text strong {
   font-weight: 700;
-  color: var(--ink-dark);
+  color: var(--text);
   font-size: 17px;
   letter-spacing: -0.01em;
 }
 .question-card {
-  background: var(--paper-card);
+  background: var(--bg-card);
   border-radius: 18px;
   padding: 28px 32px;
   margin-bottom: 18px;
   cursor: pointer;
-  border: 1px solid var(--line);
+  border: 1px solid var(--gray-100);
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative;
-  overflow: hidden;
   animation: fadeInUp 0.6s ease forwards;
   opacity: 0;
 }
@@ -594,18 +568,10 @@ body {
 .question-card:nth-child(3) { animation-delay: 0.3s; }
 .question-card:nth-child(4) { animation-delay: 0.4s; }
 .question-card:nth-child(5) { animation-delay: 0.5s; }
-.question-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-}
 .question-card:hover {
-  background: var(--paper);
+  background: white;
   box-shadow: 
-    0 12px 40px rgba(107,142,159,0.1),
+    0 12px 40px rgba(0,186,124,0.1),
     0 4px 12px rgba(0,0,0,0.02);
   border-color: var(--accent);
 }
@@ -613,13 +579,11 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: relative;
-  z-index: 1;
 }
 .question-title {
   font-size: 17px;
   font-weight: 600;
-  color: var(--ink-dark);
+  color: var(--text);
   letter-spacing: -0.01em;
 }
 .question-icon {
@@ -646,10 +610,8 @@ body {
   transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), padding 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   font-size: 15px;
   line-height: 1.9;
-  color: var(--soft);
+  color: var(--text-secondary);
   letter-spacing: 0.01em;
-  position: relative;
-  z-index: 1;
 }
 .question-card:hover .question-answer {
   max-height: 300px;
@@ -668,25 +630,15 @@ body {
   font-size: 28px;
   font-weight: 700;
   line-height: 1.65;
-  color: var(--ink-dark);
+  color: var(--text);
   letter-spacing: -0.01em;
   padding: 48px;
-  background: var(--paper);
+  background: var(--bg-card);
   border-radius: 24px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--gray-100);
   position: relative;
-  overflow: hidden;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
 }
 .final-conclusion-text::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-}
-.final-conclusion-text::after {
   content: '';
   position: absolute;
   top: 0;
@@ -706,26 +658,26 @@ body {
   align-items: center;
   gap: 18px;
   z-index: 100;
-  background: var(--paper);
+  background: rgba(255,255,255,0.96);
   padding: 14px 28px;
   border-radius: 100px;
   box-shadow: 
-    0 8px 32px rgba(107,142,159,0.16),
+    0 8px 32px rgba(0,0,0,0.08),
     0 2px 8px rgba(0,0,0,0.04);
   backdrop-filter: blur(20px);
-  border: 1px solid var(--line);
+  border: 1px solid var(--gray-100);
 }
 .nav-btn {
   width: 44px;
   height: 44px;
   border: none;
-  background: var(--accent-light);
+  background: var(--gray-50);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 14px;
-  color: var(--accent);
+  color: var(--text-secondary);
   border-radius: 50%;
   transition: all 0.25s ease;
 }
@@ -739,11 +691,11 @@ body {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--line-dark);
+  background: var(--gray-200);
   cursor: pointer;
   transition: all 0.3s ease;
 }
-.dot:hover { background: var(--accent); opacity: 0.7; }
+.dot:hover { background: var(--gray-300); }
 .dot.active {
   background: var(--accent);
   width: 28px;
@@ -755,15 +707,14 @@ body {
   right: 40px;
   font-family: var(--mono);
   font-size: 12px;
-  color: var(--muted);
+  color: var(--text-muted);
   z-index: 100;
   font-weight: 500;
   letter-spacing: 0.08em;
-  background: var(--paper);
+  background: rgba(255,255,255,0.9);
   padding: 8px 16px;
   border-radius: 100px;
   backdrop-filter: blur(10px);
-  border: 1px solid var(--line);
 }
 #progress {
   position: fixed;
@@ -774,7 +725,7 @@ body {
   width: 0;
   z-index: 1000;
   transition: width 0.35s ease;
-  box-shadow: 0 0 12px rgba(107,142,159,0.4);
+  box-shadow: 0 0 12px rgba(0,186,124,0.4);
 }
 @media (max-width: 1024px) {
   .slide { padding: 56px 64px; }
@@ -789,8 +740,9 @@ body {
   .cover-stat-num { font-size: 48px; }
   .experts-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
   .section-title { font-size: 28px; }
-  .note-question { font-size: 22px; }
-  .note-entry { padding: 20px 24px; }
+  .round-card { padding: 28px 24px; }
+  .round-question { font-size: 22px; }
+  .review-card { padding: 20px 24px; }
   .conclusion-item { padding: 28px; }
   #nav { padding: 12px 20px; gap: 14px; }
   #counter { top: 20px; right: 24px; }
@@ -805,7 +757,52 @@ body {
 </head>
 <body>
 <div id="progress"></div>
-{{slides}}
+<div class="slide slide-cover visible">
+  <div class="cover">
+    <div class="cover-badge">圆桌洞见 V5.0</div>
+    <h1 class="cover-title">AI与人类认知边界</h1>
+    <p class="cover-sub">当算法超越直觉，我们如何定义智慧？</p>
+    <div class="cover-stats">
+      <div class="cover-stat"><div class="cover-stat-num">6</div><div class="cover-stat-label">专家</div></div>
+      <div class="cover-stat"><div class="cover-stat-num">3</div><div class="cover-stat-label">轮次</div></div>
+      <div class="cover-stat"><div class="cover-stat-num">6+</div><div class="cover-stat-label">碰撞</div></div>
+      <div class="cover-stat"><div class="cover-stat-num">3</div><div class="cover-stat-label">洞见</div></div>
+    </div>
+  </div>
+</div>
+<div class="slide experts-section">
+  <div class="experts-grid"><div class="expert-card"><div class="expert-avatar">孔</div><div class="expert-name">孔子</div><div class="expert-role">哲学家</div></div><div class="expert-card"><div class="expert-avatar">塔</div><div class="expert-name">塔勒布</div><div class="expert-role">风险分析师</div></div><div class="expert-card"><div class="expert-avatar">凯</div><div class="expert-name">凯文·凯利</div><div class="expert-role">科技预言家</div></div><div class="expert-card"><div class="expert-avatar">芒</div><div class="expert-name">芒格</div><div class="expert-role">投资智者</div></div><div class="expert-card"><div class="expert-avatar">韩</div><div class="expert-name">韩炳哲</div><div class="expert-role">文化批评家</div></div><div class="expert-card"><div class="expert-avatar">项</div><div class="expert-name">项飙</div><div class="expert-role">社会学家</div></div></div>
+</div>
+<div class="slide round-section">
+  <div class="round-card">
+    <div class="round-tag">Round 1</div>
+    <h2 class="round-question">AI能否真正理解人类的情感？</h2>
+    <div class="review-card"><div class="review-header"><div class="review-avatar">孔</div><div class="review-meta"><div class="review-name">孔子</div><div class="review-role">哲学家</div></div></div><div class="review-content">情感是仁的核心。AI可以模拟情感表达，但无法理解情感的道德维度——那种对他人的真诚关怀。</div></div><div class="review-card"><div class="review-header"><div class="review-avatar">塔</div><div class="review-meta"><div class="review-name">塔勒布</div><div class="review-role">风险分析师</div></div></div><div class="review-content">理解情感需要经历极端事件。AI没有经历过黑天鹅，它的"理解"只是统计模式匹配。</div></div><div class="review-card"><div class="review-header"><div class="review-avatar">凯</div><div class="review-meta"><div class="review-name">凯文·凯利</div><div class="review-role">科技预言家</div></div></div><div class="review-content">AI的理解是另一种理解。它不需要经历，只需要足够的数据。人类的理解方式不是唯一的方式。</div></div>
+    <div class="clash-block"><div class="clash-label">碰撞交锋</div><div class="clash-text">塔勒布：凯利，你说的"另一种理解"是危险的。没有经历的理解是脆弱的，会在极端情况下崩溃。 孔子：如果AI的情感理解只是模式匹配，那它如何处理道德困境？比如自动驾驶的伦理选择？</div></div>
+    <div class="insight-card"><div class="insight-label">核心洞见</div><div class="insight-text">AI的情感理解是"功能性理解"，而非"存在性理解"</div></div>
+  </div>
+</div>
+<div class="slide round-section">
+  <div class="round-card">
+    <div class="round-tag">Round 2</div>
+    <h2 class="round-question">算法决策会削弱人类的自主性吗？</h2>
+    <div class="review-card"><div class="review-header"><div class="review-avatar">芒</div><div class="review-meta"><div class="review-name">芒格</div><div class="review-role">投资智者</div></div></div><div class="review-content">算法决策是认知外包。它节省了时间，但也剥夺了我们犯错和学习的机会。</div></div><div class="review-card"><div class="review-header"><div class="review-avatar">韩</div><div class="review-meta"><div class="review-name">韩炳哲</div><div class="review-role">文化批评家</div></div></div><div class="review-content">算法决策创造了新的"透明监狱"。我们看似自由选择，实则被算法的推荐系统操控。</div></div><div class="review-card"><div class="review-header"><div class="review-avatar">项</div><div class="review-meta"><div class="review-name">项飙</div><div class="review-role">社会学家</div></div></div><div class="review-content">关键是谁控制算法。如果算法是公共工具，它可以增强自主性；如果是商业工具，它会削弱自主性。</div></div>
+    <div class="clash-block"><div class="clash-label">碰撞交锋</div><div class="clash-text">芒格：项飙，你的"公共工具"理想很美好，但现实中算法都是商业公司的。这种区分有意义吗？ 韩炳哲：芒格说的"认知外包"是倦怠社会的核心症状。我们因为疲惫而把决策交给算法，然后变得更疲惫。</div></div>
+    <div class="insight-card"><div class="insight-label">核心洞见</div><div class="insight-text">算法决策的威胁不是技术本身，而是权力结构</div></div>
+  </div>
+</div>
+<div class="slide round-section">
+  <div class="round-card">
+    <div class="round-tag">Round 3</div>
+    <h2 class="round-question">人类与AI协作的未来是什么？</h2>
+    <div class="review-card"><div class="review-header"><div class="review-avatar">凯</div><div class="review-meta"><div class="review-name">凯文·凯利</div><div class="review-role">科技预言家</div></div></div><div class="review-content">未来是"人机共生"。AI处理信息，人类处理意义。这不是竞争，是分工。</div></div><div class="review-card"><div class="review-header"><div class="review-avatar">孔</div><div class="review-meta"><div class="review-name">孔子</div><div class="review-role">哲学家</div></div></div><div class="review-content">共生需要"和而不同"。AI必须保持工具属性，人类必须保持主体地位。</div></div><div class="review-card"><div class="review-header"><div class="review-avatar">塔</div><div class="review-meta"><div class="review-name">塔勒布</div><div class="review-role">风险分析师</div></div></div><div class="review-content">共生是脆弱的。过度依赖AI会让系统在黑天鹅事件中崩溃。我们需要冗余和备份。</div></div>
+    <div class="clash-block"><div class="clash-label">碰撞交锋</div><div class="clash-text">塔勒布：凯利，你的"分工"假设太乐观了。当AI的能力边界不断扩展，人类的"意义处理"领域会越来越小。 孔子：塔勒布的担忧有道理，但凯利的愿景也有价值。关键是建立"边界协议"——明确哪些领域必须由人类主导。</div></div>
+    <div class="insight-card"><div class="insight-label">核心洞见</div><div class="insight-text">人机协作的核心是"边界意识"</div></div>
+  </div>
+</div>
+<div class="slide"><div class="conclusions-section"><div class="conclusions"><div class="conclusion-item"><div class="conclusion-num">1</div><div class="conclusion-text">AI的情感理解是功能性的，而非存在性的</div></div><div class="conclusion-item"><div class="conclusion-num">2</div><div class="conclusion-text">算法决策的威胁来自权力结构，而非技术本身</div></div><div class="conclusion-item"><div class="conclusion-num">3</div><div class="conclusion-text">人机协作需要明确的边界协议</div></div><div class="conclusion-item"><div class="conclusion-num">4</div><div class="conclusion-text">保持人类的主体性是技术发展的底线</div></div></div></div></div>
+<div class="slide"><div class="question-card"><div class="question-header"><div class="question-title">如果AI的情感理解只是模式匹配，那它能否发展出真正的道德判断？</div><div class="question-icon">+</div></div><div class="question-answer">这是一个值得深入探讨的开放性问题。</div></div><div class="question-card"><div class="question-header"><div class="question-title">算法决策的"透明监狱"如何被打破？</div><div class="question-icon">+</div></div><div class="question-answer">这是一个值得深入探讨的开放性问题。</div></div><div class="question-card"><div class="question-header"><div class="question-title">人机协作的边界协议应该由谁来制定？</div><div class="question-icon">+</div></div><div class="question-answer">这是一个值得深入探讨的开放性问题。</div></div><div class="question-card"><div class="question-header"><div class="question-title">在AI时代，"智慧"的定义是否需要重新审视？</div><div class="question-icon">+</div></div><div class="question-answer">这是一个值得深入探讨的开放性问题。</div></div></div>
+<div class="slide"><div class="final-conclusion"><div class="final-conclusion-text">AI不是人类的替代，而是人类的延伸</div></div></div>
 <div id="nav">
   <button class="nav-btn" id="prevBtn">◀</button>
   <div class="dots" id="dots"></div>
@@ -870,7 +867,7 @@ body {
   }, { passive: false });
   
   document.body.addEventListener('click', e => {
-    if (e.target.closest('.nav-btn, .dot, .expert-card, .note-entry, .question-card, .conclusion-item, .rain-insight, .clash-block, #nav')) return;
+    if (e.target.closest('.nav-btn, .dot, .expert-card, .review-card, .question-card, .conclusion-item, .insight-card, .clash-block, #nav')) return;
     go(cur + 1);
   });
   

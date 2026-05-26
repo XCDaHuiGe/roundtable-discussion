@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生命资产的负债表：当工作社会学彻底让位于金融ROI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0A0A0A;
+  --bg: #111111;
+  --bg-card: rgba(255,255,255,0.04);
+  --bg-card-hover: rgba(255,255,255,0.08);
+  --fg: #F5F5F5;
+  --fg-muted: #A0A0A0;
+  --fg-dim: #606060;
+  --accent: #D4A04A;
+  --accent-soft: rgba(212,160,74,0.12);
+  --accent-glow: rgba(212,160,74,0.25);
+  --copper: #C07A3E;
+  --clash: #ff4757;
+  --clash-soft: rgba(255,71,87,0.12);
+  --clash-glow: rgba(255,71,87,0.35);
+  --insight: #00d4aa;
+  --insight-soft: rgba(0,212,170,0.12);
+  --insight-glow: rgba(0,212,170,0.40);
+  --border: rgba(255,255,255,0.08);
+  --border-accent: rgba(212,160,74,0.30);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --font-display: 'Noto Serif SC', serif;
+  --font-body: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  display: flex;
+  flex-direction: row;
+  width: max-content;
+  height: 100vh;
+  background: var(--bg-deep);
+  color: var(--fg);
+  font-family: var(--font-body);
+  line-height: 1.85;
+  opacity: 0;
+  animation: fadeIn 0.8s ease forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg-deep);
+}
+
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}
+
+.mesh-gradient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: 
+    radial-gradient(ellipse 70% 50% at 10% 20%, rgba(212,160,74,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 40% at 90% 80%, rgba(0,212,170,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse 30% 25% at 50% 50%, rgba(255,71,87,0.03) 0%, transparent 50%);
+}
+
+.slide {
+  width: 100vw;
+  height: 100vh;
+  min-width: 100vw;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  scroll-snap-align: start;
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.slide.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.stagger-item {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.slide.visible .stagger-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.slide.visible .stagger-item:nth-child(1) { transition-delay: 0.1s; }
+.slide.visible .stagger-item:nth-child(2) { transition-delay: 0.2s; }
+.slide.visible .stagger-item:nth-child(3) { transition-delay: 0.3s; }
+.slide.visible .stagger-item:nth-child(4) { transition-delay: 0.4s; }
+.slide.visible .stagger-item:nth-child(5) { transition-delay: 0.5s; }
+.slide.visible .stagger-item:nth-child(6) { transition-delay: 0.6s; }
+.slide.visible .stagger-item:nth-child(7) { transition-delay: 0.7s; }
+.slide.visible .stagger-item:nth-child(8) { transition-delay: 0.8s; }
+
+.slide-cover {
+  background: linear-gradient(135deg, #1A1A2E 0%, #16213E 50%, #0F0F23 100%);
+  color: var(--fg);
+  padding: clamp(40px, 5vh, 80px) clamp(48px, 5vw, 100px);
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.slide-cover::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+  opacity: 0.5;
+  animation: cover-glow 6s ease-in-out infinite;
+}
+
+@keyframes cover-glow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+.slide-cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(255,255,255,0.02) 59px, rgba(255,255,255,0.02) 60px),
+    repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(255,255,255,0.02) 59px, rgba(255,255,255,0.02) 60px);
+  pointer-events: none;
+}
+
+.cover-decor-line {
+  position: absolute;
+  top: 20%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212,160,74,0.2), transparent);
+}
+
+.cover-decor-line-2 {
+  position: absolute;
+  bottom: 30%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,170,0.15), transparent);
+}
+
+.cover-logo {
+  font-family: var(--font-mono);
+  font-size: clamp(18px, 2vw, 28px);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  position: relative;
+  z-index: 2;
+}
+
+.cover-logo span {
+  display: block;
+  padding-left: 1em;
+  font-weight: 400;
+  color: var(--fg-muted);
+  font-size: 0.85em;
+}
+
+.cover-body {
+  max-width: 70%;
+  position: relative;
+  z-index: 2;
+}
+
+.cover-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  background: linear-gradient(135deg, var(--accent-soft), rgba(212,160,74,0.06));
+  border: 1px solid var(--border-accent);
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1vw, 13px);
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: clamp(20px, 3vh, 36px);
+  position: relative;
+  overflow: hidden;
+}
+
+.cover-badge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(212,160,74,0.2), transparent);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.cover-body h1 {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: clamp(16px, 2vh, 28px);
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--fg), var(--fg-muted));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cover-body .cover-sub {
+  font-family: var(--font-display);
+  font-size: clamp(16px, 1.8vw, 26px);
+  font-weight: 400;
+  margin-bottom: clamp(8px, 1vh, 16px);
+  color: var(--fg-muted);
+  line-height: 1.6;
+}
+
+.cover-body .cover-date {
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1.2vw, 16px);
+  color: var(--fg-dim);
+  letter-spacing: 0.02em;
+}
+
+.cover-footer {
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 0.9vw, 12px);
+  color: var(--fg-dim);
+  letter-spacing: 0.08em;
+  position: relative;
+  z-index: 2;
+}
+
+.slide-content {
+  background: var(--bg);
+  padding: clamp(24px, 3vh, 48px) clamp(40px, 4vw, 80px);
+  overflow-y: auto;
+  position: relative;
+}
+
+.slide-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.3;
+}
+
+.breadcrumb {
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 1vw, 13px);
+  color: var(--fg-dim);
+  text-align: right;
+  margin-bottom: clamp(12px, 1.5vh, 20px);
+  letter-spacing: 0.02em;
+}
+
+.slide-title {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 2.5vw, 36px);
+  font-weight: 800;
+  color: var(--fg);
+  line-height: 1.35;
+  margin-bottom: clamp(16px, 2vh, 28px);
+  letter-spacing: -0.01em;
+  position: relative;
+  padding-left: 28px;
+}
+
+.slide-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 5px;
+  background: linear-gradient(180deg, var(--accent), var(--copper));
+  border-radius: 3px;
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+
+.stats-flex {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  margin: clamp(32px, 4vh, 56px) 0;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 80px;
+  background: linear-gradient(180deg, transparent, var(--border-accent), transparent);
+  margin: 0 20px;
+  flex-shrink: 0;
+}
+
+.stat-item {
+  text-align: center;
+  padding: clamp(20px, 2.5vh, 32px) clamp(28px, 3vw, 48px);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stat-item:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+.stat-item:hover::before {
+  opacity: 1;
+}
+
+.stat-number {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4vw, 52px);
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 10px;
+  letter-spacing: -0.02em;
+}
+
+.stat-label {
+  font-family: var(--font-body);
+  font-size: clamp(12px, 1.2vw, 16px);
+  color: var(--fg-muted);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.experts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(18px, 2vw, 26px);
+  margin-top: clamp(24px, 3vh, 36px);
+}
+
+.expert-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: clamp(24px, 3vh, 36px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.expert-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.expert-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-accent);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+}
+
+.expert-card:hover::before {
+  opacity: 1;
+}
+
+.expert-avatar {
+  width: clamp(52px, 5vw, 68px);
+  height: clamp(52px, 5vw, 68px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(18px, 2vw, 26px);
+  margin-bottom: clamp(14px, 1.8vh, 22px);
+  transition: all 0.3s ease;
+}
+
+.expert-card:hover .expert-avatar {
+  transform: translateY(-4px);
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.expert-avatar.role-leader {
+  background: linear-gradient(135deg, var(--accent), var(--copper));
+  color: var(--bg-deep);
+}
+
+.expert-avatar.role-challenger {
+  background: linear-gradient(135deg, var(--clash), #c44a2e);
+  color: #fff;
+}
+
+.expert-avatar.role-observer {
+  background: linear-gradient(135deg, var(--insight), #358568);
+  color: #fff;
+}
+
+.expert-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(14px, 1.4vw, 18px);
+  margin-bottom: 6px;
+  color: var(--fg);
+  letter-spacing: 0.01em;
+}
+
+.expert-role {
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1vw, 13px);
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: clamp(10px, 1.2vh, 14px);
+}
+
+.expert-desc {
+  font-family: var(--font-body);
+  font-size: clamp(12px, 1.2vw, 15px);
+  color: var(--fg-muted);
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+.speech-cards {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2vh, 22px);
+  margin-top: clamp(20px, 2.5vh, 28px);
+}
+
+.speech-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: clamp(24px, 3vh, 36px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.speech-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--copper), transparent);
+  opacity: 0.6;
+}
+
+.speech-card:hover {
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+}
+
+.speech-meta {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 1.8vw, 18px);
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+}
+
+.speaker-avatar {
+  width: clamp(44px, 4vw, 56px);
+  height: clamp(44px, 4vw, 56px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(15px, 1.5vw, 20px);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.speech-card:hover .speaker-avatar {
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+
+.speaker-avatar.role-leader {
+  background: linear-gradient(135deg, var(--accent), var(--copper));
+  color: var(--bg-deep);
+}
+
+.speaker-avatar.role-challenger {
+  background: linear-gradient(135deg, var(--clash), #c44a2e);
+  color: #fff;
+}
+
+.speaker-avatar.role-observer {
+  background: linear-gradient(135deg, var(--insight), #358568);
+  color: #fff;
+}
+
+.speaker-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(14px, 1.4vw, 18px);
+  color: var(--fg);
+  letter-spacing: 0.01em;
+}
+
+.speaker-role {
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1vw, 13px);
+  color: var(--fg-muted);
+  letter-spacing: 0.04em;
+}
+
+.speech-content {
+  font-family: var(--font-body);
+  font-size: clamp(13px, 1.3vw, 16px);
+  line-height: 1.9;
+  color: var(--fg-muted);
+  letter-spacing: 0.01em;
+}
+
+.speech-content strong {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.clash-block {
+  background: linear-gradient(135deg, var(--clash-soft), rgba(212,160,74,0.06));
+  border: 1px solid rgba(255,71,87,0.25);
+  border-radius: var(--radius);
+  padding: clamp(24px, 3vh, 36px);
+  margin-top: clamp(20px, 2.5vh, 28px);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 40px var(--clash-glow), inset 0 0 60px rgba(255,71,87,0.05);
+}
+
+.clash-block::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(180deg, var(--clash), #c44a2e);
+  border-radius: 0 5px 5px 0;
+  box-shadow: 0 0 20px var(--clash-glow);
+}
+
+.clash-block::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 5px;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--clash), transparent);
+  opacity: 0.4;
+}
+
+.clash-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1.2vw, 14px);
+  font-weight: 700;
+  color: var(--clash);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+}
+
+.clash-item {
+  margin-bottom: clamp(12px, 1.5vh, 16px);
+  padding-bottom: clamp(12px, 1.5vh, 16px);
+  border-bottom: 1px solid rgba(255,71,87,0.15);
+}
+
+.clash-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.clash-speaker {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(13px, 1.3vw, 16px);
+  color: var(--accent);
+  margin-bottom: 8px;
+  letter-spacing: 0.01em;
+}
+
+.clash-text {
+  font-family: var(--font-body);
+  font-size: clamp(12px, 1.2vw, 15px);
+  line-height: 1.8;
+  color: var(--fg-muted);
+  letter-spacing: 0.01em;
+}
+
+.insight-block {
+  background: linear-gradient(135deg, var(--insight-soft), rgba(0,212,170,0.04));
+  border: 1px solid rgba(0,212,170,0.30);
+  border-radius: var(--radius);
+  padding: clamp(28px, 3.5vh, 40px);
+  margin-top: clamp(20px, 2.5vh, 28px);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 50px var(--insight-glow), inset 0 0 80px rgba(0,212,170,0.05);
+}
+
+.insight-block::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(180deg, var(--insight), #358568);
+  border-radius: 0 5px 5px 0;
+  box-shadow: 0 0 25px var(--insight-glow);
+}
+
+.insight-block::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 5px;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--insight), transparent);
+  opacity: 0.5;
+}
+
+.insight-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1.2vw, 14px);
+  font-weight: 700;
+  color: var(--insight);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+}
+
+.insight-core {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2vw, 26px);
+  font-weight: 800;
+  color: var(--fg);
+  line-height: 1.45;
+  margin-bottom: clamp(12px, 1.5vh, 16px);
+  letter-spacing: -0.01em;
+}
+
+.insight-explain {
+  font-family: var(--font-body);
+  font-size: clamp(13px, 1.3vw, 16px);
+  line-height: 1.85;
+  color: var(--fg-muted);
+  letter-spacing: 0.01em;
+}
+
+.conclusions-grid {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2vh, 22px);
+  margin-top: clamp(20px, 2.5vh, 28px);
+}
+
+.conclusion-item {
+  display: flex;
+  gap: clamp(16px, 2vw, 22px);
+  align-items: flex-start;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: clamp(20px, 2.5vh, 28px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.conclusion-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.conclusion-item:hover {
+  background: var(--bg-card-hover);
+  transform: translateX(8px);
+  box-shadow: 0 8px 30px rgba(212,160,74,0.15);
+}
+
+.conclusion-item:hover::before {
+  opacity: 1;
+}
+
+.conclusion-num {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 3.5vw, 44px);
+  font-weight: 800;
+  color: var(--accent);
+  opacity: 0.4;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.conclusion-text {
+  font-family: var(--font-body);
+  font-size: clamp(14px, 1.4vw, 18px);
+  line-height: 1.7;
+  color: var(--fg);
+  flex: 1;
+  letter-spacing: 0.01em;
+}
+
+.question-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: clamp(22px, 2.8vh, 32px);
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(14px, 1.8vw, 18px);
+  overflow: hidden;
+  position: relative;
+}
+
+.question-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.question-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent);
+  transform: translateX(8px);
+  box-shadow: 0 8px 30px rgba(212,160,74,0.15);
+}
+
+.question-card:hover::before {
+  opacity: 1;
+}
+
+.question-card .question-expand {
+  display: none;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-body);
+  font-size: clamp(12px, 1.2vw, 15px);
+  color: var(--fg-dim);
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+.question-card:hover .question-expand {
+  display: block;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.question-number {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(16px, 1.6vw, 22px);
+  color: var(--accent);
+  opacity: 0.5;
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+
+.question-text {
+  font-family: var(--font-body);
+  font-size: clamp(13px, 1.3vw, 16px);
+  color: var(--fg);
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+}
+
+.round-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: var(--accent-soft);
+  border: 1px solid var(--border-accent);
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1vw, 12px);
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: clamp(12px, 1.5vh, 18px);
+}
+
+.stance-evolution {
+  display: flex;
+  gap: clamp(12px, 1.5vw, 18px);
+  margin-top: clamp(16px, 2vh, 24px);
+  flex-wrap: wrap;
+}
+
+.stance-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 0.9vw, 12px);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.stance-tag.stance-strong {
+  background: rgba(212,160,74,0.15);
+  border: 1px solid rgba(212,160,74,0.3);
+  color: var(--accent);
+}
+
+.stance-tag.stance-moderate {
+  background: rgba(0,212,170,0.1);
+  border: 1px solid rgba(0,212,170,0.25);
+  color: var(--insight);
+}
+
+.stance-tag.stance-cautious {
+  background: rgba(255,71,87,0.1);
+  border: 1px solid rgba(255,71,87,0.25);
+  color: var(--clash);
+}
+
+#nav {
+  position: fixed;
+  bottom: clamp(16px, 2vh, 24px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.2vw, 16px);
+  z-index: 100;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(20px);
+  padding: clamp(10px, 1.2vh, 14px) clamp(18px, 2vw, 28px);
+  border-radius: 100px;
+  border: 1px solid var(--border);
+}
+
+.nav-btn {
+  width: clamp(36px, 3.5vw, 44px);
+  height: clamp(36px, 3.5vw, 44px);
+  border: none;
+  background: var(--bg-card);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(12px, 1.2vw, 14px);
+  color: var(--fg);
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  background: var(--accent);
+  color: var(--bg-deep);
+  transform: scale(1.1);
+}
+
+.dots {
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dot:hover {
+  background: rgba(255,255,255,0.5);
+  transform: scale(1.2);
+}
+
+.dot.active {
+  background: var(--accent);
+  transform: scale(1.4);
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+#counter {
+  position: fixed;
+  top: clamp(12px, 1.5vh, 20px);
+  right: clamp(16px, 2vw, 24px);
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 1.1vw, 14px);
+  color: var(--fg-muted);
+  z-index: 100;
+  background: rgba(0,0,0,0.6);
+  padding: 8px 16px;
+  border-radius: 100px;
+  backdrop-filter: blur(10px);
+  letter-spacing: 0.02em;
+}
+
+#progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 101;
+  background: var(--border);
+}
+
+#progressBar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--copper));
+  transition: width 0.2s ease-out;
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+@media (max-width: 768px) {
+  .experts-grid { grid-template-columns: repeat(2, 1fr); }
+  .cover-body { max-width: 85%; }
+  .stat-divider { display: none; }
+}
+
+@media (max-width: 480px) {
+  .experts-grid { grid-template-columns: 1fr; }
+  .stats-flex { flex-direction: column; gap: 14px; }
+  .stat-item { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+<div class="mesh-gradient"></div>
+<div class="noise-overlay"></div>
+<div id="progress">
+  <div id="progressBar"></div>
+</div>
+
+<!-- Slide 1: Cover -->
+<div class="slide slide-cover active" data-title="封面">
+  <div class="cover-decor-line"></div>
+  <div class="cover-decor-line-2"></div>
+  <div class="cover-logo stagger-item">
+    ROUNDTABLE INSIGHT
+    <span>Cognitive Evolution Engine V7.0</span>
+  </div>
+  <div class="cover-body stagger-item">
+    <div class="cover-badge"><i class="fas fa-balance-scale"></i> 生命金融化 · 日常证券化 · ROI暴政</div>
+    <h1>生命资产的负债表</h1>
+    <div class="cover-sub">当工作社会学彻底让位于金融ROI，<br>科技如何将人的全生命周期与日常生活证券化？</div>
+    <div class="cover-date">2026.05.27 · 6 EXPERTS · 3 ROUNDS · COGNITIVE EVOLUTION</div>
+  </div>
+  <div class="cover-footer stagger-item">ROUNDTABLE INSIGHT · V7.0 · COGNITIVE EVOLUTION ENGINE</div>
+</div>
+
+<!-- Slide 2: Stats -->
+<div class="slide slide-content" data-title="讨论全景">
+  <div class="breadcrumb">01 / OVERVIEW</div>
+  <div class="slide-title stagger-item">讨论全景</div>
+  <div class="stats-flex">
+    <div class="stat-item stagger-item">
+      <div class="stat-number">6</div>
+      <div class="stat-label">跨领域专家</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item stagger-item">
+      <div class="stat-number">3</div>
+      <div class="stat-label">深度讨论轮次</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item stagger-item">
+      <div class="stat-number">18</div>
+      <div class="stat-label">专家发言</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item stagger-item">
+      <div class="stat-number">6</div>
+      <div class="stat-label">观点碰撞</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item stagger-item">
+      <div class="stat-number">3</div>
+      <div class="stat-label">核心洞见</div>
+    </div>
+  </div>
+  <div style="margin-top:clamp(24px,3vh,36px);text-align:center;">
+    <div class="round-badge" style="margin-bottom:12px;">ROUND 1</div>
+    <div style="color:var(--fg-muted);font-size:clamp(13px,1.3vw,16px);margin-bottom:clamp(16px,2vh,24px);">人的生命周期如何被金融逻辑重新定义？</div>
+    <div class="round-badge" style="margin-bottom:12px;">ROUND 2</div>
+    <div style="color:var(--fg-muted);font-size:clamp(13px,1.3vw,16px);margin-bottom:clamp(16px,2vh,24px);">日常生活证券化是效率革命还是人性异化？</div>
+    <div class="round-badge" style="margin-bottom:12px;">ROUND 3</div>
+    <div style="color:var(--fg-muted);font-size:clamp(13px,1.3vw,16px);">在ROI至上的时代，如何守护"无价"的生命体验？</div>
+  </div>
+</div>
+
+<!-- Slide 3: Experts Grid -->
+<div class="slide slide-content" data-title="圆桌专家">
+  <div class="breadcrumb">02 / EXPERTS</div>
+  <div class="slide-title stagger-item">圆桌专家</div>
+  <div class="experts-grid">
+    <div class="expert-card stagger-item">
+      <div class="expert-avatar role-leader">飙</div>
+      <div class="expert-name">项飙</div>
+      <div class="expert-role">社会学家 · 工作社会学</div>
+      <div class="expert-desc">"附近"理论提出者，诊断原子化社会与悬浮状态，揭示金融化如何消解日常生活的质感</div>
+    </div>
+    <div class="expert-card stagger-item">
+      <div class="expert-avatar role-observer">德</div>
+      <div class="expert-name">彼得·德鲁克</div>
+      <div class="expert-role">管理学家 · 组织哲学</div>
+      <div class="expert-desc">现代管理学之父，追问"效能vs效率"，质疑证券化是否在正确地做错误的事</div>
+    </div>
+    <div class="expert-card stagger-item">
+      <div class="expert-avatar role-challenger">芒</div>
+      <div class="expert-name">查理·芒格</div>
+      <div class="expert-role">投资智者 · 逆向思维</div>
+      <div class="expert-desc">多元思维模型创始人，用逆向思维揭示证券化的致命盲点——把不可定价之物定价为零</div>
+    </div>
+    <div class="expert-card stagger-item">
+      <div class="expert-avatar role-leader">达</div>
+      <div class="expert-name">瑞·达利欧</div>
+      <div class="expert-role">金融架构师 · 周期理论</div>
+      <div class="expert-desc">桥水基金创始人，从债务周期看生命周期与经济周期的同构，揭示证券化的系统性机制</div>
+    </div>
+    <div class="expert-card stagger-item">
+      <div class="expert-avatar role-challenger">塔</div>
+      <div class="expert-name">纳西姆·塔勒布</div>
+      <div class="expert-role">风险分析师 · 反脆弱</div>
+      <div class="expert-desc">黑天鹅理论提出者，诊断证券化制造的"脆弱完美"——优化越彻底，崩溃越彻底</div>
+    </div>
+    <div class="expert-card stagger-item">
+      <div class="expert-avatar role-observer">赫</div>
+      <div class="expert-name">尤瓦尔·赫拉利</div>
+      <div class="expert-role">历史学家 · 文明叙事</div>
+      <div class="expert-desc">大历史叙事开创者，从7万年视角审视金融ROI作为最新"虚构故事"如何重塑人类本体</div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 4: Round 1 - Speech 1 项飙 -->
+<div class="slide slide-content" data-title="R1·项飙：附近消失与生命金融化">
+  <div class="breadcrumb">ROUND 1 · SPEECH 1/3</div>
+  <div class="round-badge"><i class="fas fa-comments"></i> 第一轮：立场陈述</div>
+  <div class="slide-title stagger-item">人的生命周期如何被金融逻辑重新定义？</div>
+  <div class="speech-cards">
+    <div class="speech-card stagger-item">
+      <div class="speech-meta">
+        <div class="speaker-avatar role-leader">飙</div>
+        <div>
+          <div class="speaker-name">项飙</div>
+          <div class="speaker-role">社会学家 · "附近"的消失与生命金融化</div>
+        </div>
+      </div>
+      <div class="speech-content">
+        <p>当工作社会学彻底让位于金融ROI，人的全生命周期被重新编码为一条"人力资本"的投资回报曲线。<strong>出生是"IPO"，教育是"研发投入"，工作是"现金流生成"，退休是"退出策略"，死亡是"清算"</strong>。这种金融逻辑不是中性的描述工具，而是一种重塑现实的叙事。</p>
+        <p>我在研究"浙江村"的时候发现，流动人口的生命节奏是由"做工"和"歇工"交替构成的——做工是为了活着，歇工才是活着本身。但今天，"歇工"这个概念正在消失。你的睡眠被睡眠追踪器"证券化"——睡得好等于健康投资回报高；你的社交被LinkedIn"证券化"——人脉等于社会资本；甚至你的情绪都被心理健康App"证券化"——快乐等于心理资产增值。</p>
+        <p>我说的"附近的消失"，不仅是物理空间的消失，更是<strong>一种生命质感的消失</strong>。当你和邻居聊天时，你不会计算ROI；当你在菜市场闲逛时，你不会评估现值。这些"无价"的体验，恰恰是金融逻辑无法捕获的——而金融化的第一步，就是把它们定价为零，然后理直气壮地忽略它们。</p>
+        <p>菜市场老黄说"只有钱才是真的"——这句话里藏着三层矛盾：他描述现实、批判现实、同时又在规训自己接受现实。金融化最可怕的地方，不是它强迫你接受，而是它让你自愿认同。</p>
+      </div>
+      <div class="stance-evolution">
+        <span class="stance-tag stance-strong"><i class="fas fa-fire"></i> 强烈批判：生命金融化是本体论转向</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 5: Round 1 - Speech 2 达利欧 -->
+<div class="slide slide-content" data-title="R1·达利欧：债务周期与生命周期同构">
+  <div class="breadcrumb">ROUND 1 · SPEECH 2/3</div>
+  <div class="round-badge"><i class="fas fa-comments"></i> 第一轮：立场陈述</div>
+  <div class="speech-cards">
+    <div class="speech-card stagger-item">
+      <div class="speech-meta">
+        <div class="speaker-avatar role-leader">达</div>
+        <div>
+          <div class="speaker-name">瑞·达利欧</div>
+          <div class="speaker-role">金融架构师 · 债务周期与生命周期的同构</div>
+        </div>
+      </div>
+      <div class="speech-content">
+        <p>让我解释一下经济机器是如何运行的——人的生命周期与经济周期高度同构。<strong>25到45岁是"加杠杆期"</strong>：房贷、教育贷、消费贷，你在用未来的收入为当下的生活融资。<strong>45到65岁是"去杠杆期"</strong>：还债、储蓄、退休规划，你在为未来的不确定性做准备。这不是隐喻，这是数学。</p>
+        <p>我在研究过去100年的债务危机时发现，金融系统早就把这种同构性"产品化"了。教育贷把你的"人力资本"证券化，房贷把你的"居住需求"证券化，养老金融把你的"寿命风险"证券化。你不再是"活着"，你是在"管理一个由债务驱动的投资组合"。</p>
+        <p>但我要说的是——这并不一定是坏事。历史不会重复，但总是押韵。每一次金融创新都伴随着风险，但也创造了价值。教育贷让穷人家的孩子能上大学，房贷让普通人能拥有住房，养老金融让长寿不再是一种财务灾难。<strong>问题不在于证券化本身，而在于证券化的规则由谁制定、收益由谁获取、风险由谁承担。</strong></p>
+        <p>当金融系统将生命周期产品化时，它实际上在做一件事情：把人的不确定性转化为可交易的确定性。这个转化是有成本的——成本就是你的自主性。你越依赖金融产品来管理生命周期，你就越受制于金融系统的规则。这和债务周期的逻辑一样：加杠杆容易，去杠杆难。</p>
+      </div>
+      <div class="stance-evolution">
+        <span class="stance-tag stance-moderate"><i class="fas fa-balance-scale"></i> 中立辩证：证券化本身中性，规则分配是关键</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 6: Round 1 - Speech 3 赫拉利 -->
+<div class="slide slide-content" data-title="R1·赫拉利：认知革命到数据主义的生命编码">
+  <div class="breadcrumb">ROUND 1 · SPEECH 3/3</div>
+  <div class="round-badge"><i class="fas fa-comments"></i> 第一轮：立场陈述</div>
+  <div class="speech-cards">
+    <div class="speech-card stagger-item">
+      <div class="speech-meta">
+        <div class="speaker-avatar role-observer">赫</div>
+        <div>
+          <div class="speaker-name">尤瓦尔·赫拉利</div>
+          <div class="speaker-role">历史学家 · 从认知革命到数据主义的生命编码</div>
+        </div>
+      </div>
+      <div class="speech-content">
+        <p>让我退后一步，用7万年的历史长镜头来看这个问题。</p>
+        <p>人类一直在用"虚构故事"组织生命。宗教说"此生是考验，来世是回报"——这是最早的"生命投资框架"。民族主义说"此生是奉献，国家是受益人"——这是另一种"ROI叙事"。资本主义说"此生是投资，利润是目标"——金融ROI只是最新的虚构故事。</p>
+        <p>但这次不同。以前的故事至少承认生命的"超越性"维度——宗教承诺来世，民族主义承诺不朽，人文主义承诺自由。而<strong>金融ROI将生命彻底"去超越化"</strong>——你的一切体验都可以被折现为现值，你的一切关系都可以被评估为资产，你的一切选择都可以被计算为机会成本。这是认知革命以来最彻底的"去魅"。</p>
+        <p>农业革命让人类从"活在当下"变成"为未来工作"——农民必须为下一个季节储备粮食，生命的节奏从"此刻"转向"未来"。AI革命可能让人类从"为未来工作"变成"为算法工作"——当算法比你更了解你的最优选择，你的"自由意志"还剩多少？</p>
+        <p>我们拥有神的能力，却不知道自己想要什么。天下至险，恐怕莫此为甚。金融ROI不是中性的工具——<strong>它是一种新的宗教，只不过它的神殿是交易所，它的祭司是算法，它的仪式是K线图</strong>。</p>
+      </div>
+      <div class="stance-evolution">
+        <span class="stance-tag stance-cautious"><i class="fas fa-exclamation-triangle"></i> 深度警示：金融ROI是去超越化的新宗教</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 7: Round 1 - Clash + Insight -->
+<div class="slide slide-content" data-title="R1·碰撞与洞见：本体论转向">
+  <div class="breadcrumb">ROUND 1 · CLASH & INSIGHT</div>
+  <div class="round-badge"><i class="fas fa-bolt"></i> 第一轮：碰撞与洞见</div>
+
+  <div class="clash-block stagger-item">
+    <div class="clash-label"><i class="fas fa-fire"></i> 碰撞 1：项飙 vs 达利欧——"附近"的消失是金融化的因还是果？</div>
+    <div class="clash-item">
+      <div class="clash-speaker">项飙</div>
+      <div class="clash-text">达利欧你说证券化"不一定是坏事"，但你忽略了一个前提：证券化的前提是"附近"的消失。只有当人与人的关系被抽象化——从具体的邻居变成"人脉资产"，从具体的社区变成"地段估值"——证券化才有可能。金融化不是中性的工具，它主动消解"附近"来创造可交易的产品。</div>
+    </div>
+    <div class="clash-item">
+      <div class="clash-speaker">达利欧</div>
+      <div class="clash-text">项飙，我尊重你的"附近"理论，但你把因果搞反了。不是金融化消灭了附近，是附近已经无法满足现代人的需求——流动性、安全性、跨期配置——金融产品才应运而生。你怀念的"附近"，在历史上从来不是田园诗，而是信息不对称和机会匮乏的牢笼。</div>
+    </div>
+  </div>
+
+  <div class="clash-block stagger-item" style="margin-top:clamp(16px,2vh,22px);">
+    <div class="clash-label"><i class="fas fa-fire"></i> 碰撞 2：赫拉利 vs 项飙——金融ROI是"新宗教"还是"反宗教"？</div>
+    <div class="clash-item">
+      <div class="clash-speaker">赫拉利</div>
+      <div class="clash-text">金融ROI是一种新宗教——它有完整的宇宙观（市场有效）、救赎承诺（财富自由）、道德律令（效率至上）。和所有宗教一样，它要求信徒放弃质疑。</div>
+    </div>
+    <div class="clash-item">
+      <div class="clash-speaker">项飙</div>
+      <div class="clash-text">赫拉利，我不同意。宗教至少承认"超越性"——它告诉你有些东西比你自己更大。金融ROI恰恰相反，它是"反宗教"的——它把一切超越性都折现为现值，把一切"比你自己更大的东西"都定价为零。这不是新宗教，这是最彻底的虚无主义。</div>
+    </div>
+  </div>
+
+  <div class="insight-block stagger-item">
+    <div class="insight-label"><i class="fas fa-lightbulb"></i> ROUND 1 洞见</div>
+    <div class="insight-core">生命周期的金融化不是简单的"工具化"，而是一次本体论层面的重新编码——它不仅改变了我们"如何生活"，更改变了我们"是什么"。</div>
+    <div class="insight-explain">项飙揭示了金融化的"消解机制"——它主动消灭不可定价之物；达利欧揭示了金融化的"产品化机制"——它将不确定性转化为可交易的确定性；赫拉利揭示了金融化的"叙事机制"——它用ROI替代了所有超越性叙事。三者叠加，构成了一次完整的本体论转向：人从"生活的主体"变为"投资组合的管理者"。</div>
+  </div>
+</div>
+
+<!-- Slide 8: Round 2 - Speech 1 德鲁克 -->
+<div class="slide slide-content" data-title="R2·德鲁克：效能vs效率的证券化批判">
+  <div class="breadcrumb">ROUND 2 · SPEECH 1/3</div>
+  <div class="round-badge"><i class="fas fa-comments"></i> 第二轮：立场陈述</div>
+  <div class="slide-title stagger-item">日常生活证券化是效率革命还是人性异化？</div>
+  <div class="speech-cards">
+    <div class="speech-card stagger-item">
+      <div class="speech-meta">
+        <div class="speaker-avatar role-observer">德</div>
+        <div>
+          <div class="speaker-name">彼得·德鲁克</div>
+          <div class="speaker-role">管理学家 · 效能vs效率的证券化批判</div>
+        </div>
+      </div>
+      <div class="speech-content">
+        <p>我一生都在强调一个区别：<strong>效率是"以正确的方式做事"，效能是"做正确的事"</strong>。证券化追求的是效率——将一切可量化、可交易、可优化。但效率不等于效能。</p>
+        <p>当你的睡眠被追踪器"证券化"，当你的社交被LinkedIn"证券化"，当你的学习被证书"证券化"，你是在"正确地做错误的事"。你把生活管理得越来越精细，却忘了问一个最基本的问题：<strong>我为什么要这样生活？</strong></p>
+        <p>企业的目的是创造顾客，不是追求利润。利润只是生存的条件，不是存在的目的。同样的逻辑适用于个人：生活的目的是什么？如果生活的目的变成了"优化ROI"，那我们和一台追求效率的机器有什么区别？</p>
+        <p>我在1959年就预言了"知识工作者"的崛起——他们的生产资料是头脑中的知识、判断力和创造力，无法通过延长工时或加强监督来提升。但证券化正在做一件更可怕的事：<strong>它不是在监督知识工作者，而是在重新定义什么是"知识"</strong>。只有可量化、可交易的知识才是"有价值的"，而那些无法被证券化的智慧——直觉、经验、判断力——被定价为零。</p>
+        <p>管理者首先要问自己：你把员工当成什么？资产还是成本？今天我们需要问一个更根本的问题：你把生命当成什么？投资组合还是体验本身？</p>
+      </div>
+      <div class="stance-evolution">
+        <span class="stance-tag stance-strong"><i class="fas fa-fire"></i> 强烈质疑：证券化是"正确地做错误的事"</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 9: Round 2 - Speech 2 芒格 -->
+<div class="slide slide-content" data-title="R2·芒格：逆向思维揭示证券化致命盲点">
+  <div class="breadcrumb">ROUND 2 · SPEECH 2/3</div>
+  <div class="round-badge"><i class="fas fa-comments"></i> 第二轮：立场陈述</div>
+  <div class="speech-cards">
+    <div class="speech-card stagger-item">
+      <div class="speech-meta">
+        <div class="speaker-avatar role-challenger">芒</div>
+        <div>
+          <div class="speaker-name">查理·芒格</div>
+          <div class="speaker-role">投资智者 · 逆向思维揭示证券化的致命盲点</div>
+        </div>
+      </div>
+      <div class="speech-content">
+        <p>反过来想——如果日常生活证券化是正确的方向，那它的结果会是什么？每个人都在计算每分钟的ROI，每段关系都在评估"投资回报"，每次休息都在衡量"机会成本"。<strong>这不是效率革命，这是"确保过上悲惨生活"的新配方。</strong></p>
+        <p>我见过太多聪明人把人生过成了一张资产负债表——资产端堆满了数字，负债端堆满了焦虑，所有者权益？接近于零。猪耳朵做不成真丝钱包——你不可能用金融逻辑创造出真正有意义的生命体验。</p>
+        <p>证券化的致命盲点是：<strong>它把"不可定价的东西"定价为零，然后理直气壮地忽略它们</strong>。和爱人看一场日落值多少钱？陪孩子读一本绘本的ROI是多少？在公园长椅上发呆的内部收益率是多少？证券化的回答是：零。因为这些活动不产生可量化的回报。</p>
+        <p>但让我告诉你一个秘密——我这辈子遇到的最有价值的体验，恰恰是那些ROI为零的时刻。和巴菲特聊天不产生直接收益，但它让我成为更好的思考者。读书不产生现金流，但它让我避免犯致命的错误。<strong>避免愚蠢比追求聪明更重要——证券化恰恰是在追求聪明，而忽略了愚蠢。</strong></p>
+        <p>激励机制是什么？谁在为证券化买单？答案很简单：你在买单。每一次你把体验折现为数字，你就失去了一部分无法被数字捕获的东西。而那些推销证券化的人——App开发者、数据经纪人、金融工程师——他们赚的是你的"折现损失"。</p>
+      </div>
+      <div class="stance-evolution">
+        <span class="stance-tag stance-cautious"><i class="fas fa-exclamation-triangle"></i> 逆向否定：证券化是"确保过上悲惨生活"的配方</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 10: Round 2 - Speech 3 塔勒布 -->
+<div class="slide slide-content" data-title="R2·塔勒布：反脆弱视角下的脆弱完美">
+  <div class="breadcrumb">ROUND 2 · SPEECH 3/3</div>
+  <div class="round-badge"><i class="fas fa-comments"></i> 第二轮：立场陈述</div>
+  <div class="speech-cards">
+    <div class="speech-card stagger-item">
+      <div class="speech-meta">
+        <div class="speaker-avatar role-challenger">塔</div>
+        <div>
+          <div class="speaker-name">纳西姆·塔勒布</div>
+          <div class="speaker-role">风险分析师 · 反脆弱视角下的"脆弱完美"</div>
+        </div>
+      </div>
+      <div class="speech-content">
+        <p>让我告诉你为什么日常生活证券化是脆弱的。</p>
+        <p>证券化的本质是"消除波动"——把生活的不确定性转化为可管理的风险。但反脆弱告诉我们：<strong>消除小波动，制造大崩溃</strong>。森林需要定期的小火灾才能健康，人体需要适度的压力才能强壮，经济需要周期性的衰退才能出清僵尸企业。把生活证券化，就是把森林变成塑料树——看起来完美，一阵风就倒了。</p>
+        <p>当你的每分钟都被优化，你的系统就失去了"冗余"——那些看似"浪费"的时间，恰恰是创造力、韧性和意义的来源。我在《反脆弱》里写过：冗余不是浪费，冗余是保险。你的"无效社交"可能是未来最重要的人脉，你的"无所事事"可能是最深刻的灵感来源，你的"浪费时间"可能是最有价值的投资。</p>
+        <p>火鸡问题：火鸡每天被喂食，1000天后得出结论"人类是仁慈的"。证券化的生活就像火鸡——<strong>在"正常"时期一切完美，在黑天鹅来临时灰飞烟灭</strong>。2008年金融危机前，所有模型都说房地产是"最安全的投资"——然后次贷崩盘。你的"优化生活"也一样：在一切顺利时看起来完美，一旦遭遇失业、疾病、离婚，整个精心构建的"投资组合"瞬间崩塌。</p>
+        <p>杠铃策略告诉我们：90%的精力放在极度安全的事情上，10%放在高风险高赔率的尝试上。坚决回避中间地带——那些"看起来有效率但实际既不安全也不刺激"的活动。证券化的生活恰恰是最大的中间地带。</p>
+      </div>
+      <div class="stance-evolution">
+        <span class="stance-tag stance-cautious"><i class="fas fa-exclamation-triangle"></i> 系统诊断：证券化制造"脆弱完美"</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 11: Round 2 - Clash + Insight -->
+<div class="slide slide-content" data-title="R2·碰撞与洞见：脆弱完美">
+  <div class="breadcrumb">ROUND 2 · CLASH & INSIGHT</div>
+  <div class="round-badge"><i class="fas fa-bolt"></i> 第二轮：碰撞与洞见</div>
+
+  <div class="clash-block stagger-item">
+    <div class="clash-label"><i class="fas fa-fire"></i> 碰撞 3：德鲁克 vs 芒格——"效能"能否在证券化框架内实现？</div>
+    <div class="clash-item">
+      <div class="clash-speaker">德鲁克</div>
+      <div class="clash-text">芒格，你说证券化是"确保过上悲惨生活"的配方，我同意结论但不同意路径。问题不是证券化追求效率，而是它追求的是错误的效率。如果证券化的目标从"优化ROI"变成"创造价值"，它未必不能服务于效能。工具本身无罪，关键是你用工具来做什么。</div>
+    </div>
+    <div class="clash-item">
+      <div class="clash-speaker">芒格</div>
+      <div class="clash-text">德鲁克，你太乐观了。你说"工具本身无罪"，但工具不是中性的。当你手里拿着锤子，看什么都像钉子。证券化这个工具的"锤子属性"就是：它强迫你把一切量化。你不可能用一把只会量化的工具去"创造价值"——因为价值恰恰存在于不可量化之处。</div>
+    </div>
+  </div>
+
+  <div class="clash-block stagger-item" style="margin-top:clamp(16px,2vh,22px);">
+    <div class="clash-label"><i class="fas fa-fire"></i> 碰撞 4：塔勒布 vs 达利欧——系统化vs反脆弱：谁对证券化的诊断更准？</div>
+    <div class="clash-item">
+      <div class="clash-speaker">塔勒布</div>
+      <div class="clash-text">达利欧，你把证券化理解为"将不确定性转化为可交易的确定性"。我告诉你，这是火鸡的逻辑。你以为你消除了不确定性，实际上你只是把它藏起来了——直到它以黑天鹅的形式爆发。长期资本管理公司的天才们也是这么想的。</div>
+    </div>
+    <div class="clash-item">
+      <div class="clash-speaker">达利欧</div>
+      <div class="clash-text">塔勒布，你总是用极端案例来否定整个系统。是的，LTCM失败了，但全天候策略在40多年里经受住了每一次危机。区别在于：LTCM假设正态分布，我研究肥尾风险。证券化不等于忽视尾部风险——好的证券化恰恰是为尾部风险定价。</div>
+    </div>
+  </div>
+
+  <div class="insight-block stagger-item">
+    <div class="insight-label"><i class="fas fa-lightbulb"></i> ROUND 2 洞见</div>
+    <div class="insight-core">日常生活证券化的真正危险不在于"效率"本身，而在于它制造了一种"脆弱的完美"——系统越优化，对黑天鹅越脆弱；生活越证券化，对真实的生命体验越迟钝。</div>
+    <div class="insight-explain">德鲁克从"效能vs效率"指出证券化的方向性错误——它在正确地做错误的事。芒格从逆向思维揭示证券化的致命盲点——它把不可定价之物定价为零。塔勒布从反脆弱框架诊断证券化的系统性风险——消除小波动制造大崩溃。三者形成递进诊断：方向错误→盲点遮蔽→系统脆弱，构成对证券化的完整批判链。</div>
+  </div>
+</div>
+
+<!-- Slide 12: Round 3 - Speech 1 项飙 -->
+<div class="slide slide-content" data-title="R3·项飙：重建附近找回生命质感">
+  <div class="breadcrumb">ROUND 3 · SPEECH 1/3</div>
+  <div class="round-badge"><i class="fas fa-comments"></i> 第三轮：整合与超越</div>
+  <div class="slide-title stagger-item">在ROI至上的时代，如何守护"无价"的生命体验？</div>
+  <div class="speech-cards">
+    <div class="speech-card stagger-item">
+      <div class="speech-meta">
+        <div class="speaker-avatar role-leader">飙</div>
+        <div>
+          <div class="speaker-name">项飙</div>
+          <div class="speaker-role">社会学家 · 重建附近：从金融化的真空中找回生命质感</div>
+        </div>
+      </div>
+      <div class="speech-content">
+        <p>守护"无价"的起点，不是对抗ROI，而是<strong>重建"附近"</strong>。</p>
+        <p>金融化的逻辑是抽象化——它把你从具体的人、具体的环境、具体的体验中抽离出来，投入一个由数字构成的"远方"。"附近"是对抗这种抽象化的锚点：你不需要计算和邻居聊天的ROI，你不需要评估菜市场闲逛的现值，你不需要量化黄昏散步的内部收益率。</p>
+        <p>这些体验之所以"无价"，不是因为它们没有价值，而是因为它们的价值无法被金融逻辑捕获——而这恰恰是它们最珍贵的地方。<strong>重建附近，就是重建一种不被ROI殖民的生活逻辑。</strong></p>
+        <p>但我要修正我之前的立场——"附近"不是乡愁，不是要回到传统社会。附近的意识是帮助行动者在生活里立足，进而对生活有所行动。在金融化的时代，"附近"是一种主动的建构：你选择走进真实的社区，选择认识真实的人，选择体验真实的摩擦力。今天生活的一个问题正是太丝滑了——停顿让生活充满一点摩擦力和真实质感，反而让人有心安的感觉。</p>
+        <p>中国人像蜂鸟，高频度振动翅膀以停在空中不掉下来。附近的重建，就是让蜂鸟找到一个可以落脚的树枝——不是为了停止飞翔，而是为了知道自己在飞向哪里。</p>
+      </div>
+      <div class="stance-evolution">
+        <span class="stance-tag stance-strong"><i class="fas fa-fire"></i> 从批判转向建构：重建附近作为守护策略</span>
+        <span class="stance-tag stance-moderate"><i class="fas fa-arrow-right"></i> 立场演化：从"诊断附近消失"到"主动重建附近"</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 13: Round 3 - Speech 2 芒格 -->
+<div class="slide slide-content" data-title="R3·芒格：避免愚蠢的逆向守护策略">
+  <div class="breadcrumb">ROUND 3 · SPEECH 2/3</div>
+  <div class="round-badge"><i class="fas fa-comments"></i> 第三轮：整合与超越</div>
+  <div class="speech-cards">
+    <div class="speech-card stagger-item">
+      <div class="speech-meta">
+        <div class="speaker-avatar role-challenger">芒</div>
+        <div>
+          <div class="speaker-name">查理·芒格</div>
+          <div class="speaker-role">投资智者 · 避免愚蠢：守护"无价"的逆向策略</div>
+        </div>
+      </div>
+      <div class="speech-content">
+        <p>避免愚蠢比追求聪明更重要。守护"无价"的逆向策略是：<strong>先列出"什么会摧毁无价的体验"，然后逐一规避</strong>。</p>
+        <p>第一，不要把每分钟都填满——留白是创造力的前提。第二，不要把每段关系都工具化——有些人的价值不在于他们能为你做什么。第三，不要把每次体验都记录——有些东西只有在不被记录时才真实。第四，不要追求"最优"——最优是脆弱的，"足够好"才是反脆弱的。</p>
+        <p>我承认我之前的立场过于消极了。逆向思维告诉你"不要做什么"，但它没有告诉你"要做什么"。项飙的"重建附近"给了我启发——<strong>守护"无价"不仅是"避免失去"，更是"主动创造"</strong>。但创造的方式不是"追求最优体验"——那是证券化的逻辑——而是"允许不完美的真实"。</p>
+        <p>我99岁了，见过太多人追求"最优人生"然后活得很痛苦。也见过一些人——他们不追求最优，只追求真实。真实包括失败、浪费、低效、无意义——但这些"负面"体验恰恰构成了生命的质感。猪耳朵做不成真丝钱包，但猪耳朵有猪耳朵的味道——那是真丝钱包永远无法提供的。</p>
+        <p>要得到你想要的某样东西，最可靠的办法是让你自己配得上它。你想要"无价"的体验？那就让自己成为一个"无价"的人——不被ROI定义的人。</p>
+      </div>
+      <div class="stance-evolution">
+        <span class="stance-tag stance-moderate"><i class="fas fa-balance-scale"></i> 从逆向否定转向逆向建构</span>
+        <span class="stance-tag stance-moderate"><i class="fas fa-arrow-right"></i> 立场演化：从"避免愚蠢"到"允许不完美的真实"</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 14: Round 3 - Speech 3 赫拉利 -->
+<div class="slide slide-content" data-title="R3·赫拉利：虚构超越ROI的新文明叙事">
+  <div class="breadcrumb">ROUND 3 · SPEECH 3/3</div>
+  <div class="round-badge"><i class="fas fa-comments"></i> 第三轮：整合与超越</div>
+  <div class="speech-cards">
+    <div class="speech-card stagger-item">
+      <div class="speech-meta">
+        <div class="speaker-avatar role-observer">赫</div>
+        <div>
+          <div class="speaker-name">尤瓦尔·赫拉利</div>
+          <div class="speaker-role">历史学家 · 虚构新故事：超越ROI的文明叙事</div>
+        </div>
+      </div>
+      <div class="speech-content">
+        <p>从历史的视角看，每一次"虚构故事"的危机，都催生了新的故事。宗教的危机催生了人文主义，人文主义的危机正在催生……什么？</p>
+        <p>如果金融ROI是当前的主导叙事，那我们需要一个新的故事——<strong>一个不把生命视为"投资"的故事</strong>。这个故事不需要否定金融工具的价值，但它需要重新定义"价值"本身。</p>
+        <p>农业革命让人类从"活在当下"变成"为未来工作"，AI革命可能让人类从"为未来工作"变成"为算法工作"。我们需要第三种选择：<strong>不是为了过去、不是为了未来、不是为了算法，而是为了"此刻"本身而活</strong>。</p>
+        <p>这不是浪漫主义，这是生存策略。因为当AI比你更擅长计算ROI时，唯一无法被算法替代的，就是你此刻的真实体验。算法可以优化你的睡眠，但无法替你做一个梦；算法可以推荐你的社交，但无法替你感受一次心动；算法可以规划你的职业，但无法替你经历一次顿悟。</p>
+        <p>我修正我之前的立场——金融ROI不是"新宗教"，也不是"反宗教"。<strong>它是一个"过期的故事"</strong>。在工业时代，它有解释力——因为工业生产确实可以用ROI衡量。但在AI时代，它的解释力正在崩溃——因为最有价值的东西（创造力、直觉、意义感）恰恰是ROI无法衡量的。我们需要一个新的故事，一个把"此刻的真实体验"置于中心的故事。</p>
+      </div>
+      <div class="stance-evolution">
+        <span class="stance-tag stance-moderate"><i class="fas fa-balance-scale"></i> 从批判转向叙事建构</span>
+        <span class="stance-tag stance-moderate"><i class="fas fa-arrow-right"></i> 立场演化：从"金融ROI是新宗教"到"金融ROI是过期故事"</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 15: Round 3 - Clash + Insight -->
+<div class="slide slide-content" data-title="R3·碰撞与洞见：守护无价的三重防线">
+  <div class="breadcrumb">ROUND 3 · CLASH & INSIGHT</div>
+  <div class="round-badge"><i class="fas fa-bolt"></i> 第三轮：碰撞与洞见</div>
+
+  <div class="clash-block stagger-item">
+    <div class="clash-label"><i class="fas fa-fire"></i> 碰撞 5：项飙 vs 芒格——"重建附近"vs"避免愚蠢"：主动建构vs被动防御？</div>
+    <div class="clash-item">
+      <div class="clash-speaker">项飙</div>
+      <div class="clash-text">芒格，你的"避免愚蠢"是防御性的——它告诉你不要做什么，但没有告诉你该做什么。"重建附近"是进攻性的——它要求你主动走进社区、认识真实的人、体验真实的摩擦力。在金融化的时代，仅仅"避免愚蠢"是不够的，因为金融化的力量会主动填满你留下的每一个空隙。</div>
+    </div>
+    <div class="clash-item">
+      <div class="clash-speaker">芒格</div>
+      <div class="clash-text">项飙，你说得对，我确实偏防御。但让我反过来问你：你"重建附近"的动力从哪里来？如果一个人内心已经被ROI殖民了，他怎么会有动力走进社区？我的"避免愚蠢"是为你清理内心的空间——只有先清除了ROI的殖民，你才有能力去"重建附近"。</div>
+    </div>
+  </div>
+
+  <div class="clash-block stagger-item" style="margin-top:clamp(16px,2vh,22px);">
+    <div class="clash-label"><i class="fas fa-fire"></i> 碰撞 6：赫拉利 vs 项飙——"新故事"vs"附近"：宏大叙事vs微观实践？</div>
+    <div class="clash-item">
+      <div class="clash-speaker">赫拉利</div>
+      <div class="clash-text">项飙，"附近"太微观了。农业革命不是靠"重建附近"发生的，它是靠一个新故事——"种地比采集好"——改变了数十亿人的行为。我们需要一个同样量级的新故事来替代金融ROI。</div>
+    </div>
+    <div class="clash-item">
+      <div class="clash-speaker">项飙</div>
+      <div class="clash-text">赫拉利，你说的"新故事"太宏大了。上一次有人试图用一个"新故事"改变世界，结果产生了意识形态灾难。"附近"的力量恰恰在于它的微观——它不需要改变世界，它只需要改变你和隔壁那个人的关系。当足够多的人重建了附近，新故事会自己长出来——从具体的体验中长出来，而不是从宏大的叙事中压下来。</div>
+    </div>
+  </div>
+
+  <div class="insight-block stagger-item">
+    <div class="insight-label"><i class="fas fa-lightbulb"></i> ROUND 3 洞见</div>
+    <div class="insight-core">守护"无价"不是对抗金融化，而是在金融化的缝隙中重建另一种价值逻辑——它不需要否定ROI，但需要让ROI退回到"工具"的位置，而非"目的"的王座。</div>
+    <div class="insight-explain">项飙的"附近"提供锚点——从具体的体验中重建生命的质感；芒格的"避免愚蠢"提供防线——清除ROI对内心的殖民，为重建腾出空间；赫拉利的"新故事"提供方向——一个把"此刻的真实体验"置于中心的文明叙事。三者构成完整的守护体系：附近是地基，避免愚蠢是围墙，新故事是屋顶。没有地基，围墙无处立足；没有围墙，地基暴露于风雨；没有屋顶，整个结构缺乏方向。</div>
+  </div>
+</div>
+
+<!-- Slide 16: Conclusions -->
+<div class="slide slide-content" data-title="核心结论">
+  <div class="breadcrumb">CONCLUSIONS</div>
+  <div class="slide-title stagger-item">核心结论</div>
+  <div class="conclusions-grid">
+    <div class="conclusion-item stagger-item">
+      <div class="conclusion-num">01</div>
+      <div class="conclusion-text">生命金融化不是"工具选择"，而是"本体论转向"——它重新定义了"人是什么"。当人从"生活的主体"变为"投资组合的管理者"，生命的意义就从"体验"转向了"回报"。</div>
+    </div>
+    <div class="conclusion-item stagger-item">
+      <div class="conclusion-num">02</div>
+      <div class="conclusion-text">证券化制造的"脆弱完美"是系统性风险——优化越彻底，对黑天鹅越脆弱；生活越证券化，对真实的生命体验越迟钝。消除小波动的代价是制造大崩溃。</div>
+    </div>
+    <div class="conclusion-item stagger-item">
+      <div class="conclusion-num">03</div>
+      <div class="conclusion-text">守护"无价"需要三重防线：附近的锚点（项飙）提供生命质感，避免愚蠢的防线（芒格）清除内心殖民，新故事的方向（赫拉利）提供文明叙事。三者缺一不可。</div>
+    </div>
+    <div class="conclusion-item stagger-item">
+      <div class="conclusion-num">04</div>
+      <div class="conclusion-text">ROI应该退回"工具"的位置——当工具变成目的，人就变成了工具的工具。金融工具的价值在于服务生命，而非定义生命。</div>
+    </div>
+    <div class="conclusion-item stagger-item">
+      <div class="conclusion-num">05</div>
+      <div class="conclusion-text">在AI时代，"此刻的真实体验"可能是最后一种无法被算法替代的价值。算法可以优化一切可量化的东西，但它无法替你做梦、替你心动、替你顿悟。</div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 17: Open Questions -->
+<div class="slide slide-content" data-title="遗留问题">
+  <div class="breadcrumb">OPEN QUESTIONS</div>
+  <div class="slide-title stagger-item">遗留问题</div>
+
+  <div class="question-card stagger-item">
+    <div class="question-number">Q1</div>
+    <div class="question-text">如果"情感数据"被确认为基本人权——用户有权删除、导出、转移自己的情感数据——生命证券化的进程会减缓吗？还是只会改变证券化的形式？</div>
+    <div class="question-expand">项飙在上一场讨论中提出"情感数据应确立为基本人权"，但芒格会追问：谁来做这个确权？激励机制是什么？如果情感数据确权的执行者本身就是一个证券化的平台，这个"权利"是否只是另一种"产品"？</div>
+  </div>
+
+  <div class="question-card stagger-item">
+    <div class="question-number">Q2</div>
+    <div class="question-text">赫拉利预言的"无用阶级"如果真的出现，是否会倒逼社会重新定义"价值"——从"经济价值"转向"存在价值"？这种重新定义会自上而下还是自下而上？</div>
+    <div class="question-expand">项飙的"附近"理论暗示重新定义会自下而上——从具体的社区实践中生长出来。赫拉利的"新故事"暗示需要自上而下——需要一个足够有力的叙事来替代金融ROI。两者是否可以同时发生？</div>
+  </div>
+
+  <div class="question-card stagger-item">
+    <div class="question-number">Q3</div>
+    <div class="question-text">在金融化与反金融化之间，是否存在"第三条路"——一种既不拒绝效率、也不牺牲意义的生命逻辑？塔勒布的"杠铃策略"是否就是这第三条路的雏形？</div>
+    <div class="question-expand">杠铃策略的90%安全+10%冒险，是否可以映射为：90%的生活接受金融化工具的便利，10%的生活坚决保留"无价"的体验？但芒格会警告：10%的"无价"是否会被90%的"有价"吞噬？</div>
+  </div>
+
+  <div class="question-card stagger-item">
+    <div class="question-number">Q4</div>
+    <div class="question-text">当AI比人类更擅长计算ROI时，"守护无价"是否从一种选择变成了一种生存必需？那些无法守护"无价"的人，是否将成为赫拉利所说的"无用阶级"？</div>
+    <div class="question-expand">这可能是本次讨论最深层的问题：守护"无价"不仅是哲学选择，更可能是AI时代的生存策略。因为当一切可量化的价值都被AI替代后，唯一剩余的"人类比较优势"就是那些不可量化的体验。</div>
+  </div>
+</div>
+
+<div id="nav">
+  <button class="nav-btn" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+</div>
+<div id="counter">1 / 1</div>
+<script>
+(function(){
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let cur = 0;
+  const dotsContainer = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progressBar');
+
+  slides.forEach((s, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => go(i);
+    dotsContainer.appendChild(dot);
+  });
+
+  function go(n) {
+    if (n < 0 || n >= total) return;
+    slides[cur].classList.remove('visible');
+    slides[cur].classList.remove('active');
+    dotsContainer.children[cur]?.classList.remove('active');
+    cur = n;
+    slides[cur].scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' });
+    slides[cur].classList.add('visible');
+    slides[cur].classList.add('active');
+    dotsContainer.children[cur]?.classList.add('active');
+    counter.textContent = (cur + 1) + ' / ' + total;
+    const pct = Math.min(100, ((cur + 1) / total) * 100);
+    progress.style.width = pct + '%';
+  }
+
+  document.getElementById('prevBtn').onclick = () => go(cur - 1);
+  document.getElementById('nextBtn').onclick = () => go(cur + 1);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      go(cur + 1);
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      go(cur - 1);
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      go(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      go(total - 1);
+    }
+  });
+
+  let wheelTimer = null;
+  document.addEventListener('wheel', e => {
+    e.preventDefault();
+    if (wheelTimer) return;
+    wheelTimer = setTimeout(() => wheelTimer = null, 400);
+    if (e.deltaY > 0 || e.deltaX > 0) go(cur + 1);
+    else if (e.deltaY < 0 || e.deltaX < 0) go(cur - 1);
+  }, { passive: false });
+
+  document.body.addEventListener('click', e => {
+    if (e.target.closest('.nav-dot, .dots, .nav-btn, .expert-card, .speech-card, .clash-block, .insight-block, .question-card, .conclusion-item, .stat-item')) return;
+    go(cur + 1);
+  });
+
+  go(0);
+})();
+</script>
+</body>
+</html>

@@ -3,21 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{{title}}</title>
+<title>AI与人类认知边界</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #030305;
-  --bg-elevated: #0a0a0f;
-  --fg: #f8f8fc;
-  --fg-secondary: #a0a0b0;
-  --muted: #6a6a7a;
-  --accent: #c9a8f0;
-  --accent-secondary: #a788e0;
-  --accent-glow: rgba(201,168,240,0.35);
-  --accent-soft: rgba(201,168,240,0.08);
+  --bg: #040608;
+  --bg-elevated: #0a0e14;
+  --fg: #f4f6f8;
+  --fg-secondary: #9aa4b0;
+  --muted: #6a7480;
+  --blue: #4A8FE7;
+  --blue-secondary: #3d7bd9;
+  --blue-glow: rgba(74,143,231,0.35);
+  --blue-soft: rgba(74,143,231,0.08);
+  --ice: #E9EDF2;
+  --ice-dark: #12161c;
+  --ice-glow: rgba(233,237,242,0.12);
+  --navy: #0A1628;
+  --navy-mid: #1B3A6B;
+  --navy-light: #2a4a7a;
   --glass: rgba(255,255,255,0.04);
   --glass-border: rgba(255,255,255,0.08);
   --glass-hover: rgba(255,255,255,0.07);
@@ -25,7 +31,6 @@
   --clash-glow: rgba(255,90,110,0.25);
   --insight-green: #00e6b8;
   --insight-glow: rgba(0,230,184,0.25);
-  --shadow: rgba(0,0,0,0.6);
   --font-display: 'Outfit', 'Noto Serif SC', system-ui, sans-serif;
   --font-body: 'Noto Serif SC', 'Outfit', system-ui, serif;
   --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
@@ -64,10 +69,10 @@ body {
   text-align: center;
   background: 
     url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"),
-    radial-gradient(ellipse at 30% 20%, rgba(201,168,240,0.18) 0%, transparent 45%),
-    radial-gradient(ellipse at 70% 70%, rgba(168,140,240,0.12) 0%, transparent 40%),
-    radial-gradient(ellipse at 90% 10%, rgba(220,180,255,0.08) 0%, transparent 30%),
-    linear-gradient(180deg, var(--bg) 0%, #08080f 50%, var(--bg) 100%);
+    radial-gradient(ellipse at 40% 15%, rgba(74,143,231,0.22) 0%, transparent 50%),
+    radial-gradient(ellipse at 60% 75%, rgba(233,237,242,0.12) 0%, transparent 35%),
+    radial-gradient(ellipse at 85% 25%, rgba(27,58,107,0.15) 0%, transparent 30%),
+    linear-gradient(180deg, var(--navy) 0%, var(--bg) 60%, #060810 100%);
   background-blend-mode: overlay, normal, normal, normal, normal;
   padding: 56px 32px;
   position: relative;
@@ -80,17 +85,46 @@ body {
   right: 0;
   bottom: 0;
   background: 
-    radial-gradient(circle at 20% 80%, rgba(201,168,240,0.06) 0%, transparent 25%),
-    radial-gradient(circle at 80% 20%, rgba(180,150,255,0.05) 0%, transparent 20%);
+    radial-gradient(circle at 15% 85%, rgba(74,143,231,0.08) 0%, transparent 20%),
+    radial-gradient(circle at 85% 15%, rgba(233,237,242,0.06) 0%, transparent 18%);
   pointer-events: none;
 }
-.slide-content {
-  padding: 72px 56px;
+.slide-cover::after {
+  content: '';
+  position: absolute;
+  top: 20%;
+  right: 10%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(74,143,231,0.1) 0%, transparent 70%);
+  filter: blur(40px);
+  pointer-events: none;
+}
+.slide-ice {
   background: 
     url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"),
-    linear-gradient(180deg, var(--bg) 0%, #05050a 100%);
+    linear-gradient(135deg, var(--ice-dark) 0%, var(--bg) 50%, #080c12 100%);
   background-blend-mode: overlay, normal;
+  padding: 72px 56px;
   position: relative;
+}
+.slide-ice::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    linear-gradient(90deg, transparent 0%, rgba(74,143,231,0.03) 50%, transparent 100%);
+  pointer-events: none;
+}
+.slide-dark {
+  background: 
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"),
+    var(--bg);
+  background-blend-mode: overlay, normal;
+  padding: 72px 56px;
 }
 .frame {
   max-width: 1280px;
@@ -106,12 +140,12 @@ body {
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--blue);
   margin-bottom: 40px;
   padding: 10px 24px;
-  background: linear-gradient(135deg, rgba(201,168,240,0.12) 0%, rgba(201,168,240,0.04) 100%);
+  background: linear-gradient(135deg, rgba(74,143,231,0.12) 0%, rgba(74,143,231,0.04) 100%);
   border-radius: 100px;
-  border: 1px solid rgba(201,168,240,0.25);
+  border: 1px solid rgba(74,143,231,0.25);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   animation: fadeSlideDown 0.6s 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -127,7 +161,7 @@ body {
   line-height: 1.02;
   letter-spacing: -0.035em;
   margin-bottom: 28px;
-  background: linear-gradient(135deg, var(--fg) 0%, var(--accent) 50%, var(--accent-secondary) 100%);
+  background: linear-gradient(135deg, var(--fg) 0%, var(--ice) 40%, var(--blue) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -172,13 +206,13 @@ body {
   transform: translateY(-50%);
   width: 1px;
   height: 48px;
-  background: linear-gradient(180deg, transparent, rgba(201,168,240,0.3), transparent);
+  background: linear-gradient(180deg, transparent, rgba(74,143,231,0.3), transparent);
 }
 .stat-number {
   font-family: var(--font-display);
   font-size: clamp(42px, 6vw, 68px);
   font-weight: 800;
-  color: var(--accent);
+  color: var(--blue);
   line-height: 1;
   margin-bottom: 10px;
   letter-spacing: -0.02em;
@@ -201,7 +235,7 @@ body {
   margin-right: auto;
 }
 .expert-card {
-  background: linear-gradient(135deg, var(--glass) 0%, rgba(201,168,240,0.02) 100%);
+  background: linear-gradient(135deg, var(--glass) 0%, rgba(74,143,231,0.02) 100%);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--glass-border);
@@ -219,17 +253,17 @@ body {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(201,168,240,0.4), transparent);
+  background: linear-gradient(90deg, transparent, rgba(74,143,231,0.4), transparent);
   opacity: 0;
   transition: opacity 0.4s ease;
 }
 .expert-card:hover {
-  background: linear-gradient(135deg, rgba(201,168,240,0.08) 0%, var(--glass-hover) 100%);
-  border-color: rgba(201,168,240,0.35);
+  background: linear-gradient(135deg, rgba(74,143,231,0.08) 0%, var(--glass-hover) 100%);
+  border-color: rgba(74,143,231,0.35);
   transform: translateY(-8px);
   box-shadow: 
-    0 20px 40px rgba(201,168,240,0.15),
-    0 0 60px rgba(201,168,240,0.08);
+    0 20px 40px rgba(74,143,231,0.15),
+    0 0 60px rgba(74,143,231,0.08);
 }
 .expert-card:hover::before {
   opacity: 1;
@@ -253,12 +287,12 @@ body {
   transform: scale(1.08);
   box-shadow: 0 0 30px currentColor;
 }
-.expert-avatar.expert-1 { background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%); }
-.expert-avatar.expert-2 { background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); }
-.expert-avatar.expert-3 { background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%); }
-.expert-avatar.expert-4 { background: linear-gradient(135deg, #10b981 0%, #34d399 100%); }
-.expert-avatar.expert-5 { background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); }
-.expert-avatar.expert-6 { background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%); }
+.expert-avatar.expert-1 { background: linear-gradient(135deg, #4A8FE7 0%, #0066ff 100%); }
+.expert-avatar.expert-2 { background: linear-gradient(135deg, #00d4aa 0%, #4A8FE7 100%); }
+.expert-avatar.expert-3 { background: linear-gradient(135deg, #667eea 0%, #4A8FE7 100%); }
+.expert-avatar.expert-4 { background: linear-gradient(135deg, #4facfe 0%, #4A8FE7 100%); }
+.expert-avatar.expert-5 { background: linear-gradient(135deg, #43e97b 0%, #4A8FE7 100%); }
+.expert-avatar.expert-6 { background: linear-gradient(135deg, #a8edea 0%, #4A8FE7 100%); }
 .expert-name {
   font-family: var(--font-display);
   font-size: 16px;
@@ -285,7 +319,7 @@ body {
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--blue);
   margin-bottom: 18px;
   display: inline-flex;
   align-items: center;
@@ -295,7 +329,7 @@ body {
   content: '';
   width: 24px;
   height: 2px;
-  background: linear-gradient(90deg, var(--accent), transparent);
+  background: linear-gradient(90deg, var(--blue), transparent);
 }
 .section-title {
   font-family: var(--font-display);
@@ -309,7 +343,7 @@ body {
   background-clip: text;
 }
 .round-card {
-  background: linear-gradient(135deg, var(--glass) 0%, rgba(201,168,240,0.02) 100%);
+  background: linear-gradient(135deg, var(--glass) 0%, rgba(74,143,231,0.02) 100%);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--glass-border);
@@ -327,13 +361,13 @@ body {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  background: linear-gradient(90deg, transparent, var(--blue), transparent);
   opacity: 0.6;
 }
 .round-card:hover {
-  border-color: rgba(201,168,240,0.25);
+  border-color: rgba(74,143,231,0.25);
   transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(201,168,240,0.08);
+  box-shadow: 0 12px 32px rgba(74,143,231,0.08);
 }
 .round-header {
   display: flex;
@@ -349,9 +383,9 @@ body {
   text-transform: uppercase;
   padding: 8px 18px;
   border-radius: 100px;
-  background: linear-gradient(135deg, rgba(201,168,240,0.18) 0%, rgba(201,168,240,0.08) 100%);
-  color: var(--accent);
-  border: 1px solid rgba(201,168,240,0.3);
+  background: linear-gradient(135deg, rgba(74,143,231,0.18) 0%, rgba(74,143,231,0.08) 100%);
+  color: var(--blue);
+  border: 1px solid rgba(74,143,231,0.3);
 }
 .round-title {
   font-family: var(--font-display);
@@ -371,7 +405,7 @@ body {
 }
 .speech-block:hover {
   background: rgba(255,255,255,0.045);
-  border-left-color: var(--accent);
+  border-left-color: var(--blue);
   transform: translateX(4px);
 }
 .speech-header {
@@ -513,7 +547,7 @@ body {
   letter-spacing: -0.01em;
 }
 .question-card {
-  background: linear-gradient(135deg, var(--glass) 0%, rgba(201,168,240,0.02) 100%);
+  background: linear-gradient(135deg, var(--glass) 0%, rgba(74,143,231,0.02) 100%);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--glass-border);
@@ -524,11 +558,11 @@ body {
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .question-card:hover {
-  background: linear-gradient(135deg, rgba(201,168,240,0.08) 0%, var(--glass-hover) 100%);
-  border-color: var(--accent);
+  background: linear-gradient(135deg, rgba(74,143,231,0.08) 0%, var(--glass-hover) 100%);
+  border-color: var(--blue);
   box-shadow: 
-    0 8px 24px rgba(201,168,240,0.12),
-    inset 0 0 20px rgba(201,168,240,0.03);
+    0 8px 24px rgba(74,143,231,0.12),
+    inset 0 0 20px rgba(74,143,231,0.03);
 }
 .question-card:hover .question-expand {
   max-height: 600px;
@@ -549,7 +583,7 @@ body {
 }
 .question-icon {
   font-size: 22px;
-  color: var(--accent);
+  color: var(--blue);
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .question-card:hover .question-icon {
@@ -569,8 +603,8 @@ body {
   letter-spacing: 0.015em;
 }
 .conclusion-card {
-  background: linear-gradient(135deg, rgba(201,168,240,0.12) 0%, rgba(168,140,240,0.06) 100%);
-  border: 1px solid rgba(201,168,240,0.25);
+  background: linear-gradient(135deg, rgba(74,143,231,0.12) 0%, rgba(233,237,242,0.06) 100%);
+  border: 1px solid rgba(74,143,231,0.25);
   border-radius: 32px;
   padding: 52px 48px;
   text-align: center;
@@ -584,7 +618,7 @@ body {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  background: linear-gradient(90deg, transparent, var(--blue), transparent);
 }
 .conclusion-label {
   font-family: var(--font-mono);
@@ -592,7 +626,7 @@ body {
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--blue);
   margin-bottom: 24px;
 }
 .conclusion-text {
@@ -603,6 +637,141 @@ body {
   color: var(--fg);
   letter-spacing: -0.01em;
 }
+.blue-bar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4px;
+  height: 48px;
+  background: linear-gradient(180deg, var(--blue), rgba(74,143,231,0.3));
+  box-shadow: 0 0 15px var(--blue-glow);
+}
+.blue-bar-left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 48px;
+  background: linear-gradient(180deg, var(--blue), rgba(74,143,231,0.3));
+  box-shadow: 0 0 15px var(--blue-glow);
+}
+.photo-card {
+  background: linear-gradient(135deg, var(--glass) 0%, rgba(74,143,231,0.02) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.photo-card:hover {
+  border-color: rgba(74,143,231,0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(74,143,231,0.1);
+}
+.photo-placeholder {
+  height: 140px;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 50%, var(--navy-light) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--blue);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  position: relative;
+}
+.photo-placeholder::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(74,143,231,0.1) 0%, transparent 60%);
+}
+.photo-body {
+  padding: 24px;
+}
+.photo-speaker {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 6px;
+  color: var(--fg);
+}
+.photo-role {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--blue);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.photo-content {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.85;
+  color: rgba(255,255,255,0.8);
+  letter-spacing: 0.015em;
+}
+.studio-insight {
+  background: linear-gradient(135deg, rgba(74,143,231,0.1), transparent);
+  border-left: 4px solid var(--blue);
+  padding: 24px;
+  margin-top: 20px;
+  border-radius: 0 16px 16px 0;
+  position: relative;
+}
+.studio-insight::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--blue), rgba(74,143,231,0.4));
+  box-shadow: 0 0 20px var(--blue-glow);
+}
+.studio-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+.studio-text {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.85;
+  color: rgba(255,255,255,0.9);
+  letter-spacing: 0.015em;
+}
+.page-marker {
+  position: absolute;
+  bottom: 36px;
+  left: 56px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.05em;
+}
+.brand-mark {
+  position: absolute;
+  bottom: 36px;
+  right: 56px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.35;
+  color: var(--blue);
+}
 #nav {
   position: fixed;
   bottom: 32px;
@@ -612,18 +781,18 @@ body {
   align-items: center;
   gap: 18px;
   z-index: 1000;
-  background: rgba(10,10,15,0.75);
+  background: rgba(10,14,20,0.75);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   padding: 14px 24px;
   border-radius: 100px;
-  border: 1px solid rgba(201,168,240,0.15);
+  border: 1px solid rgba(74,143,231,0.15);
   box-shadow: 0 8px 32px rgba(0,0,0,0.4);
 }
 .nav-btn {
   width: 40px;
   height: 40px;
-  border: 1px solid rgba(201,168,240,0.2);
+  border: 1px solid rgba(74,143,231,0.2);
   background: transparent;
   cursor: pointer;
   display: flex;
@@ -635,9 +804,9 @@ body {
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .nav-btn:hover {
-  background: rgba(201,168,240,0.15);
-  border-color: var(--accent);
-  color: var(--accent);
+  background: rgba(74,143,231,0.15);
+  border-color: var(--blue);
+  color: var(--blue);
   transform: scale(1.08);
 }
 .dots {
@@ -656,8 +825,8 @@ body {
   background: rgba(255,255,255,0.35);
 }
 .dot.active {
-  background: var(--accent);
-  box-shadow: 0 0 16px var(--accent-glow);
+  background: var(--blue);
+  box-shadow: 0 0 16px var(--blue-glow);
   transform: scale(1.3);
 }
 #progress {
@@ -665,10 +834,10 @@ body {
   top: 0;
   left: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-secondary), #d4b8ff);
+  background: linear-gradient(90deg, var(--blue), var(--ice), #00d4aa);
   z-index: 1001;
   transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 0 12px var(--accent-glow);
+  box-shadow: 0 0 12px var(--blue-glow);
 }
 #counter {
   position: fixed;
@@ -679,15 +848,15 @@ body {
   font-weight: 500;
   color: var(--muted);
   z-index: 100;
-  background: rgba(10,10,15,0.6);
+  background: rgba(10,14,20,0.6);
   padding: 10px 20px;
   border-radius: 100px;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(201,168,240,0.1);
+  border: 1px solid rgba(74,143,231,0.1);
 }
 @media (max-width: 768px) {
-  .slide-content { padding: 40px 24px; }
+  .slide-ice, .slide-dark { padding: 40px 24px; }
   .slide-cover { padding: 40px 20px; }
   .cover-stats { gap: 0; }
   .stat-item { padding: 0 24px; }
@@ -698,12 +867,57 @@ body {
   #nav { bottom: 20px; padding: 12px 18px; gap: 14px; }
   .nav-btn { width: 36px; height: 36px; }
   .conclusion-card { padding: 36px 28px; }
+  .photo-placeholder { height: 100px; }
 }
 </style>
 </head>
 <body>
 <div id="progress"></div>
-{{slides}}
+<div class="slide slide-cover visible">
+  <div class="frame">
+    <div class="cover-badge">圆桌洞见 V5.0</div>
+    <h1 class="cover-title">AI与人类认知边界</h1>
+    <p class="cover-subtitle">当算法超越直觉，我们如何定义智慧？</p>
+    <div class="cover-stats">
+      <div class="stat-item"><div class="stat-number">6</div><div class="stat-label">专家</div></div>
+      <div class="stat-item"><div class="stat-number">3</div><div class="stat-label">轮次</div></div>
+      <div class="stat-item"><div class="stat-number">6+</div><div class="stat-label">碰撞</div></div>
+      <div class="stat-item"><div class="stat-number">3</div><div class="stat-label">洞见</div></div>
+    </div>
+  </div>
+</div>
+<div class="slide slide-ice">
+  <div class="frame">
+    <div class="section-header"><div class="section-label">Panel</div><div class="section-title">专家阵容</div></div>
+    <div class="experts-grid"><div class="expert-card"><div class="expert-avatar">孔</div><div class="expert-name">孔子</div><div class="expert-role">哲学家</div></div><div class="expert-card"><div class="expert-avatar">塔</div><div class="expert-name">塔勒布</div><div class="expert-role">风险分析师</div></div><div class="expert-card"><div class="expert-avatar">凯</div><div class="expert-name">凯文·凯利</div><div class="expert-role">科技预言家</div></div><div class="expert-card"><div class="expert-avatar">芒</div><div class="expert-name">芒格</div><div class="expert-role">投资智者</div></div><div class="expert-card"><div class="expert-avatar">韩</div><div class="expert-name">韩炳哲</div><div class="expert-role">文化批评家</div></div><div class="expert-card"><div class="expert-avatar">项</div><div class="expert-name">项飙</div><div class="expert-role">社会学家</div></div></div>
+  </div>
+</div>
+<div class="slide slide-dark">
+  <div class="frame">
+    <div class="round-card"><div class="round-header"><div class="round-badge">Round 1</div></div><div class="round-title">AI能否真正理解人类的情感？</div></div>
+    <div class="photo-card"><div class="photo-placeholder">PHOTO</div><div class="photo-body"><div class="photo-speaker">孔子</div><div class="photo-role">哲学家</div><div class="photo-content">情感是仁的核心。AI可以模拟情感表达，但无法理解情感的道德维度——那种对他人的真诚关怀。</div></div></div><div class="photo-card"><div class="photo-placeholder">PHOTO</div><div class="photo-body"><div class="photo-speaker">塔勒布</div><div class="photo-role">风险分析师</div><div class="photo-content">理解情感需要经历极端事件。AI没有经历过黑天鹅，它的"理解"只是统计模式匹配。</div></div></div><div class="photo-card"><div class="photo-placeholder">PHOTO</div><div class="photo-body"><div class="photo-speaker">凯文·凯利</div><div class="photo-role">科技预言家</div><div class="photo-content">AI的理解是另一种理解。它不需要经历，只需要足够的数据。人类的理解方式不是唯一的方式。</div></div></div>
+    <div class="clash-block"><div class="clash-label">碰撞交锋</div><div class="clash-content">塔勒布：凯利，你说的"另一种理解"是危险的。没有经历的理解是脆弱的，会在极端情况下崩溃。 孔子：如果AI的情感理解只是模式匹配，那它如何处理道德困境？比如自动驾驶的伦理选择？</div></div>
+    <div class="studio-insight"><div class="studio-label">核心洞见</div><div class="studio-text">AI的情感理解是"功能性理解"，而非"存在性理解"</div></div>
+  </div>
+</div>
+<div class="slide slide-dark">
+  <div class="frame">
+    <div class="round-card"><div class="round-header"><div class="round-badge">Round 2</div></div><div class="round-title">算法决策会削弱人类的自主性吗？</div></div>
+    <div class="photo-card"><div class="photo-placeholder">PHOTO</div><div class="photo-body"><div class="photo-speaker">芒格</div><div class="photo-role">投资智者</div><div class="photo-content">算法决策是认知外包。它节省了时间，但也剥夺了我们犯错和学习的机会。</div></div></div><div class="photo-card"><div class="photo-placeholder">PHOTO</div><div class="photo-body"><div class="photo-speaker">韩炳哲</div><div class="photo-role">文化批评家</div><div class="photo-content">算法决策创造了新的"透明监狱"。我们看似自由选择，实则被算法的推荐系统操控。</div></div></div><div class="photo-card"><div class="photo-placeholder">PHOTO</div><div class="photo-body"><div class="photo-speaker">项飙</div><div class="photo-role">社会学家</div><div class="photo-content">关键是谁控制算法。如果算法是公共工具，它可以增强自主性；如果是商业工具，它会削弱自主性。</div></div></div>
+    <div class="clash-block"><div class="clash-label">碰撞交锋</div><div class="clash-content">芒格：项飙，你的"公共工具"理想很美好，但现实中算法都是商业公司的。这种区分有意义吗？ 韩炳哲：芒格说的"认知外包"是倦怠社会的核心症状。我们因为疲惫而把决策交给算法，然后变得更疲惫。</div></div>
+    <div class="studio-insight"><div class="studio-label">核心洞见</div><div class="studio-text">算法决策的威胁不是技术本身，而是权力结构</div></div>
+  </div>
+</div>
+<div class="slide slide-dark">
+  <div class="frame">
+    <div class="round-card"><div class="round-header"><div class="round-badge">Round 3</div></div><div class="round-title">人类与AI协作的未来是什么？</div></div>
+    <div class="photo-card"><div class="photo-placeholder">PHOTO</div><div class="photo-body"><div class="photo-speaker">凯文·凯利</div><div class="photo-role">科技预言家</div><div class="photo-content">未来是"人机共生"。AI处理信息，人类处理意义。这不是竞争，是分工。</div></div></div><div class="photo-card"><div class="photo-placeholder">PHOTO</div><div class="photo-body"><div class="photo-speaker">孔子</div><div class="photo-role">哲学家</div><div class="photo-content">共生需要"和而不同"。AI必须保持工具属性，人类必须保持主体地位。</div></div></div><div class="photo-card"><div class="photo-placeholder">PHOTO</div><div class="photo-body"><div class="photo-speaker">塔勒布</div><div class="photo-role">风险分析师</div><div class="photo-content">共生是脆弱的。过度依赖AI会让系统在黑天鹅事件中崩溃。我们需要冗余和备份。</div></div></div>
+    <div class="clash-block"><div class="clash-label">碰撞交锋</div><div class="clash-content">塔勒布：凯利，你的"分工"假设太乐观了。当AI的能力边界不断扩展，人类的"意义处理"领域会越来越小。 孔子：塔勒布的担忧有道理，但凯利的愿景也有价值。关键是建立"边界协议"——明确哪些领域必须由人类主导。</div></div>
+    <div class="studio-insight"><div class="studio-label">核心洞见</div><div class="studio-text">人机协作的核心是"边界意识"</div></div>
+  </div>
+</div>
+<div class="slide slide-ice"><div class="frame"><div class="conclusion-card"><div class="conclusion-label">结论</div><div class="conclusion-text">AI不是人类的替代，而是人类的延伸</div></div></div></div>
+<div class="slide slide-dark"><div class="frame"><div class="question-card"><div class="question-header"><div class="question-text">如果AI的情感理解只是模式匹配，那它能否发展出真正的道德判断？</div><div class="question-icon">+</div></div><div class="question-expand"><div class="question-answer">这是一个值得深入探讨的开放性问题。</div></div></div><div class="question-card"><div class="question-header"><div class="question-text">算法决策的"透明监狱"如何被打破？</div><div class="question-icon">+</div></div><div class="question-expand"><div class="question-answer">这是一个值得深入探讨的开放性问题。</div></div></div><div class="question-card"><div class="question-header"><div class="question-text">人机协作的边界协议应该由谁来制定？</div><div class="question-icon">+</div></div><div class="question-expand"><div class="question-answer">这是一个值得深入探讨的开放性问题。</div></div></div><div class="question-card"><div class="question-header"><div class="question-text">在AI时代，"智慧"的定义是否需要重新审视？</div><div class="question-icon">+</div></div><div class="question-expand"><div class="question-answer">这是一个值得深入探讨的开放性问题。</div></div></div></div></div>
 <div id="nav">
   <button class="nav-btn" id="prevBtn">◀</button>
   <div class="dots" id="dots"></div>
@@ -768,7 +982,7 @@ body {
   }, { passive: false });
   
   document.body.addEventListener('click', e => {
-    if (e.target.closest('.nav-btn, .dot, .expert-card, .speech-block, .clash-block, .insight-block, .question-card, .conclusion-card, #nav, #counter')) return;
+    if (e.target.closest('.nav-btn, .dot, .expert-card, .speech-block, .clash-block, .insight-block, .question-card, .conclusion-card, .photo-card, #nav, #counter')) return;
     go(cur + 1);
   });
   

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算法多巴胺与叙事贫民窟 · 圆桌洞见</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Noto+Serif+SC:wght@600;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #111111;
+  --bg-card: rgba(28, 28, 30, 0.85);
+  --bg-elevated: rgba(38, 38, 40, 0.9);
+  --text-primary: #f5f5f7;
+  --text-secondary: rgba(245, 245, 247, 0.75);
+  --text-tertiary: rgba(245, 245, 247, 0.55);
+  --text-muted: rgba(245, 245, 247, 0.35);
+  --accent-red: #ff4757;
+  --accent-green: #00d4aa;
+  --accent-blue: #0a84ff;
+  --accent-purple: #bf5af2;
+  --border-subtle: rgba(245, 245, 247, 0.08);
+  --border-light: rgba(245, 245, 247, 0.15);
+  --display: 'Noto Serif SC', Georgia, 'Times New Roman', serif;
+  --body: 'Outfit', 'Noto Sans SC', 'PingFang SC', sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+}
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg-primary); color: var(--text-primary); font-family: var(--body); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+.slide { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 1; opacity: 0; pointer-events: none; transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1); }
+.slide.active { opacity: 1; pointer-events: all; }
+
+.frame { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+.frame::before { content: ''; position: absolute; inset: 0; background:
+  radial-gradient(ellipse 80% 50% at 20% 40%, rgba(10, 132, 255, 0.08) 0%, transparent 50%),
+  radial-gradient(ellipse 60% 40% at 80% 60%, rgba(191, 90, 242, 0.06) 0%, transparent 50%),
+  linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%); pointer-events: none; z-index: 0; }
+.frame::after { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E"); pointer-events: none; z-index: 1; opacity: 0.8; }
+
+#progress { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-green)); z-index: 100; transition: width 0.4s ease; }
+#nav { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 20px; z-index: 10; background: rgba(28, 28, 30, 0.92); backdrop-filter: blur(24px); padding: 14px 28px; border-radius: 28px; border: 1px solid var(--border-subtle); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); }
+.nav-btn { width: 42px; height: 42px; border: 1px solid var(--border-light); background: transparent; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--text-secondary); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.nav-btn:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--text-tertiary); color: var(--text-primary); transform: scale(1.05); }
+.dots { display: flex; gap: 8px; align-items: center; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+.dot:hover { background: var(--text-tertiary); transform: scale(1.3); }
+.dot.active { background: var(--text-primary); transform: scale(1.6); box-shadow: 0 0 8px rgba(245, 245, 247, 0.4); }
+#counter { position: fixed; top: 28px; right: 32px; font-family: var(--mono); font-size: 11px; color: var(--text-muted); letter-spacing: 0.18em; z-index: 10; background: rgba(28, 28, 30, 0.85); padding: 10px 18px; border-radius: 24px; backdrop-filter: blur(16px); border: 1px solid var(--border-subtle); }
+
+.sys-bar { position: absolute; top: 5%; left: 5%; right: 5%; display: flex; justify-content: space-between; padding-bottom: 20px; border-bottom: 1px solid var(--border-subtle); z-index: 2; }
+.foot-bar { position: absolute; bottom: 5%; left: 5%; right: 5%; display: flex; justify-content: space-between; padding-top: 20px; border-top: 1px solid var(--border-subtle); z-index: 2; }
+.sys-label { font-family: var(--mono); font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.25em; }
+.foot-label { font-family: var(--mono); font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.18em; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(32px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideR { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes slideL { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+
+.slide .a { opacity: 0; }
+.slide.active .a { animation-fill-mode: both; }
+
+#s1 .frame { display: grid; grid-template-columns: 1fr 1.5fr; }
+#s1 .left { padding: 8% 5% 8% 6%; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--border-subtle); position: relative; }
+#s1 .left::after { content: ''; position: absolute; right: 0; top: 20%; bottom: 20%; width: 1px; background: linear-gradient(180deg, transparent, var(--accent-blue), var(--accent-purple), transparent); opacity: 0.3; }
+#s1 .issue { font-family: var(--mono); font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3em; }
+#s1 .version-badge { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(10, 132, 255, 0.15), rgba(191, 90, 242, 0.15)); padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(10, 132, 255, 0.2); margin-bottom: 24px; }
+#s1 .version-badge span { font-family: var(--mono); font-size: 10px; color: var(--accent-blue); letter-spacing: 0.15em; text-transform: uppercase; }
+#s1 .mega { font-family: var(--display); font-weight: 900; font-size: clamp(56px, 10vw, 120px); line-height: 1.05; letter-spacing: -0.03em; background: linear-gradient(135deg, var(--text-primary) 0%, rgba(245, 245, 247, 0.85) 50%, var(--text-primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+#s1 .subtext { font-family: var(--body); font-size: clamp(13px, 1.4vw, 18px); color: var(--text-secondary); line-height: 1.9; margin-top: 28px; letter-spacing: 0.01em; }
+#s1 .right { padding: 8% 6%; display: flex; flex-direction: column; justify-content: center; }
+#s1 .article-row { padding: 5% 0; border-bottom: 1px solid var(--border-subtle); cursor: pointer; transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); position: relative; }
+#s1 .article-row::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: linear-gradient(90deg, rgba(10, 132, 255, 0.1), transparent); transition: width 0.35s ease; }
+#s1 .article-row:hover { background: rgba(255, 255, 255, 0.02); padding-left: 16px; }
+#s1 .article-row:hover::before { width: 100%; }
+#s1 .art-num { font-family: var(--mono); font-size: 10px; color: var(--text-muted); margin-bottom: 10px; letter-spacing: 0.2em; }
+#s1 .art-title { font-family: var(--display); font-weight: 700; font-size: clamp(18px, 2.2vw, 28px); color: var(--text-primary); line-height: 1.4; margin-bottom: 10px; letter-spacing: -0.01em; }
+#s1 .art-body { font-family: var(--body); font-size: clamp(12px, 1.3vw, 15px); color: var(--text-tertiary); line-height: 1.85; }
+
+.content { position: absolute; inset: 12% 5% 10% 5%; display: flex; flex-direction: column; z-index: 2; overflow-y: auto; }
+.head-block { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4%; padding-bottom: 3%; border-bottom: 1px solid var(--border-subtle); }
+.head-title { font-family: var(--display); font-weight: 800; font-size: clamp(36px, 5.5vw, 64px); line-height: 1.1; color: var(--text-primary); text-align: center; flex: 1; letter-spacing: -0.02em; }
+.head-tag { font-family: var(--body); font-size: 13px; color: var(--text-muted); letter-spacing: 0.25em; text-transform: uppercase; }
+
+.stats-grid { display: flex; justify-content: center; gap: clamp(32px, 6vw, 80px); margin: 5% 0; flex-wrap: wrap; }
+.stat-item { text-align: center; position: relative; padding: 0 24px; }
+.stat-item::after { content: ''; position: absolute; right: 0; top: 15%; bottom: 15%; width: 1px; background: linear-gradient(180deg, transparent, var(--border-light), transparent); }
+.stat-item:last-child::after { display: none; }
+.stat-num { font-family: var(--display); font-weight: 900; font-size: clamp(56px, 10vw, 100px); color: var(--text-primary); line-height: 1; letter-spacing: -0.03em; }
+.stat-label { font-family: var(--mono); font-size: 11px; color: var(--text-muted); letter-spacing: 0.2em; margin-top: 12px; text-transform: uppercase; }
+
+.experts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 4% 0; }
+.expert-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 20px; padding: 32px 24px; text-align: center; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+.expert-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-green)); opacity: 0; transition: opacity 0.4s ease; }
+.expert-card:hover { transform: translateY(-8px); border-color: var(--border-light); background: var(--bg-elevated); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); }
+.expert-card:hover::before { opacity: 1; }
+.expert-avatar { width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 20px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); display: flex; align-items: center; justify-content: center; font-family: var(--display); font-weight: 700; font-size: 28px; color: var(--bg-primary); position: relative; }
+.expert-card:hover .expert-avatar { box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.2), 0 0 30px rgba(10, 132, 255, 0.3); }
+.expert-name { font-family: var(--display); font-weight: 700; font-size: 18px; color: var(--text-primary); margin-bottom: 8px; letter-spacing: 0.02em; }
+.expert-role { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.12em; text-transform: uppercase; }
+
+.round-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 24px; padding: 36px; margin: 20px 0; backdrop-filter: blur(12px); position: relative; overflow: hidden; }
+.round-block::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-green)); }
+.round-title { font-family: var(--display); font-weight: 800; font-size: clamp(24px, 3.5vw, 36px); color: var(--text-primary); margin-bottom: 24px; text-align: center; letter-spacing: -0.01em; }
+
+.clash-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 28px 32px; margin: 16px 0; border-left: 4px solid var(--accent-red); position: relative; box-shadow: -8px 0 24px rgba(255, 71, 87, 0.1); }
+.clash-title { font-family: var(--display); font-weight: 700; font-size: 20px; color: var(--accent-red); margin-bottom: 16px; letter-spacing: 0.02em; }
+.clash-content { font-family: var(--body); font-size: clamp(14px, 1.5vw, 17px); color: var(--text-secondary); line-height: 1.9; letter-spacing: 0.01em; }
+
+.insight-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 28px 32px; margin: 16px 0; border-left: 4px solid var(--accent-green); position: relative; box-shadow: -8px 0 24px rgba(0, 212, 170, 0.1); }
+.insight-title { font-family: var(--display); font-weight: 700; font-size: 20px; color: var(--accent-green); margin-bottom: 16px; letter-spacing: 0.02em; }
+.insight-content { font-family: var(--body); font-size: clamp(14px, 1.5vw, 17px); color: var(--text-secondary); line-height: 1.9; letter-spacing: 0.01em; }
+.insight-core { font-weight: 700; font-size: clamp(17px, 1.8vw, 22px); color: var(--text-primary); display: block; margin: 16px 0; letter-spacing: -0.01em; }
+
+.question-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; margin: 16px 0; overflow: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.question-card:hover { border-color: var(--border-light); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2); }
+.question-header { padding: 24px 32px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease; }
+.question-header:hover { background: rgba(255, 255, 255, 0.02); }
+.question-text { font-family: var(--display); font-weight: 700; font-size: clamp(17px, 2vw, 24px); color: var(--text-primary); letter-spacing: -0.01em; }
+.question-toggle { font-family: var(--mono); font-size: 20px; color: var(--text-muted); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.question-card.open .question-toggle { transform: rotate(45deg); color: var(--accent-blue); }
+.question-answer { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease; }
+.question-card.open .question-answer { max-height: 600px; }
+.question-answer-inner { padding: 0 32px 28px; font-family: var(--body); font-size: clamp(13px, 1.4vw, 16px); color: var(--text-secondary); line-height: 1.9; letter-spacing: 0.01em; }
+
+.conclusion-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 24px; padding: 48px; margin: 0 auto; max-width: 800px; text-align: center; position: relative; overflow: hidden; }
+.conclusion-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-green)); }
+.conclusion-text { font-family: var(--display); font-weight: 800; font-size: clamp(24px, 3.5vw, 40px); color: var(--text-primary); line-height: 1.4; letter-spacing: -0.01em; }
+
+.col-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6%; flex: 1; }
+.col { display: flex; flex-direction: column; gap: 20px; }
+.col-num { font-family: var(--mono); font-size: 11px; color: var(--text-muted); letter-spacing: 0.2em; }
+.col-title { font-family: var(--display); font-weight: 700; font-size: clamp(18px, 2.4vw, 28px); color: var(--text-primary); letter-spacing: -0.01em; }
+.col-body { font-family: var(--body); font-size: clamp(13px, 1.4vw, 16px); color: var(--text-secondary); line-height: 1.9; letter-spacing: 0.01em; }
+.quote { font-family: var(--display); font-weight: 900; font-size: clamp(36px, 5.5vw, 64px); line-height: 1.25; color: var(--text-primary); text-align: center; letter-spacing: -0.02em; }
+.quote .highlight { display: inline-block; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple), var(--accent-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.body { font-family: var(--body); font-size: clamp(14px, 1.5vw, 17px); line-height: 1.9; color: var(--text-secondary); letter-spacing: 0.01em; }
+
+@media (max-width: 1024px) {
+  .experts-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  #s1 .frame { grid-template-columns: 1fr; }
+  #s1 .left { border-right: none; border-bottom: 1px solid var(--border-subtle); padding: 12% 6%; }
+  #s1 .left::after { display: none; }
+  #s1 .right { padding: 8% 6%; }
+  .col-grid { grid-template-columns: 1fr; gap: 28px; }
+  .stats-grid { gap: 24px; }
+  .stat-item { padding: 0 16px; }
+  .experts-grid { grid-template-columns: 1fr; gap: 16px; }
+  .expert-card { padding: 24px 20px; }
+  #nav { padding: 12px 20px; gap: 14px; bottom: 24px; }
+  .nav-btn { width: 38px; height: 38px; }
+  .round-block, .conclusion-card { padding: 28px 24px; }
+  .clash-block, .insight-block, .question-header { padding: 24px; }
+}
+</style>
+</head>
+<body>
+<div id="progress" style="width: 0%;"></div>
+
+<div id="tocPanel" class="toc-panel" style="position:fixed;top:0;left:-320px;width:320px;height:100vh;background:rgba(17,17,17,0.98);backdrop-filter:blur(24px);z-index:50;transition:left 0.4s cubic-bezier(0.4,0,0.2,1);border-right:1px solid rgba(245,245,247,0.08);overflow-y:auto;padding:60px 24px 24px;">
+<div style="font-family:var(--mono);font-size:10px;color:var(--text-muted);letter-spacing:0.25em;text-transform:uppercase;margin-bottom:24px;">目录</div>
+<div id="tocList"></div>
+</div>
+<div id="tocOverlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:49;opacity:0;pointer-events:none;transition:opacity 0.3s ease;" onclick="toggleTOC()"></div>
+
+<div class="slide active" id="s1" data-title="封面">
+<div class="frame">
+<div class="left">
+<div>
+<div class="issue a" style="animation: fadeDown 0.8s 0.2s both;">V7.0 · 认知演化圆桌</div>
+<div class="version-badge a" style="animation: fadeUp 0.8s 0.4s both;"><span>Cognitive Evolution Engine</span></div>
+</div>
+<div>
+<div class="mega a" style="animation: fadeUp 0.8s 0.6s both;">算法多巴胺<br>与叙事<br>贫民窟</div>
+<div class="subtext a" style="animation: fadeUp 0.8s 0.9s both;">AI定制化的完美文学与电影，是生活空虚的心理代偿，还是情感体验的降维绞杀？六位思想者，三轮交锋，在算法的迷宫中寻找人类叙事的出口。</div>
+</div>
+<div class="foot-bar">
+<span class="foot-label a" style="animation: fadeUp 0.8s 1.2s both;">2026.05.27</span>
+<span class="foot-label a" style="animation: fadeUp 0.8s 1.2s both;">6 Experts · 3 Rounds · 9 Speeches</span>
+</div>
+</div>
+<div class="right">
+<div class="article-row a" style="animation: slideL 0.8s 0.5s both;">
+<div class="art-num">Round 01</div>
+<div class="art-title">AI生成的"完美叙事"是否在消灭文学的不确定性之美？</div>
+<div class="art-body">余华 · 博尔赫斯 · 昆德拉 —— 当算法消灭了"寻找"的过程，文学还剩下什么？</div>
+</div>
+<div class="article-row a" style="animation: slideL 0.8s 0.7s both;">
+<div class="art-num">Round 02</div>
+<div class="art-title">算法定制内容是情感代偿还是情感降维？</div>
+<div class="art-body">卡尼曼 · 梁文道 · 赫拉利 —— 当算法比你更了解你的欲望，自由意志还剩多少？</div>
+</div>
+<div class="article-row a" style="animation: slideL 0.8s 0.9s both;">
+<div class="art-num">Round 03</div>
+<div class="art-title">人类叙事的不可替代性在哪里？</div>
+<div class="art-body">余华 · 昆德拉 · 赫拉利 —— 在"不可完成"中寻找"活着"的证据</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="slide" id="s2" data-title="数据总览">
+<div class="frame">
+<div class="content" style="justify-content: center; align-items: center;">
+<div class="stats-grid a" style="animation: fadeUp 0.8s 0.2s both;">
+<div class="stat-item">
+<div class="stat-num">6</div>
+<div class="stat-label">思想者</div>
+</div>
+<div class="stat-item">
+<div class="stat-num">3</div>
+<div class="stat-label">轮交锋</div>
+</div>
+<div class="stat-item">
+<div class="stat-num">9</div>
+<div class="stat-label">深度发言</div>
+</div>
+<div class="stat-item">
+<div class="stat-num">6</div>
+<div class="stat-label">观点碰撞</div>
+</div>
+<div class="stat-item">
+<div class="stat-num">3</div>
+<div class="stat-label">核心洞见</div>
+</div>
+</div>
+<div class="quote a" style="animation: fadeUp 0.8s 0.5s both; margin-top: 8%;">算法给你<span class="highlight">完美的故事</span><br>却夺走了你<span class="highlight">需要故事</span>的能力</div>
+</div>
+</div>
+</div>
+
+<div class="slide" id="s3" data-title="思想者阵容">
+<div class="frame">
+<div class="content">
+<div class="head-block a" style="animation: fadeDown 0.8s 0.2s both;">
+<div class="head-tag">Lineup</div>
+<div class="head-title">思想者阵容</div>
+<div class="head-tag">V7.0</div>
+</div>
+<div class="experts-grid">
+<div class="expert-card a" style="animation: fadeUp 0.6s 0.3s both;">
+<div class="expert-avatar">余</div>
+<div class="expert-name">余华</div>
+<div class="expert-role">作家 · 底层生命力注入者</div>
+</div>
+<div class="expert-card a" style="animation: fadeUp 0.6s 0.4s both;">
+<div class="expert-avatar">博</div>
+<div class="expert-name">博尔赫斯</div>
+<div class="expert-role">文学哲学家 · 迷宫叙事大师</div>
+</div>
+<div class="expert-card a" style="animation: fadeUp 0.6s 0.5s both;">
+<div class="expert-avatar">梁</div>
+<div class="expert-name">梁文道</div>
+<div class="expert-role">文化评论 · 结构性分析者</div>
+</div>
+<div class="expert-card a" style="animation: fadeUp 0.6s 0.6s both;">
+<div class="expert-avatar">卡</div>
+<div class="expert-name">卡尼曼</div>
+<div class="expert-role">认知心理学家 · 决策诊断者</div>
+</div>
+<div class="expert-card a" style="animation: fadeUp 0.6s 0.7s both;">
+<div class="expert-avatar">昆</div>
+<div class="expert-name">米兰·昆德拉</div>
+<div class="expert-role">小说哲学家 · 存在勘探者</div>
+</div>
+<div class="expert-card a" style="animation: fadeUp 0.6s 0.8s both;">
+<div class="expert-avatar">赫</div>
+<div class="expert-name">赫拉利</div>
+<div class="expert-role">历史学家 · 历史预言者</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="slide" id="s4" data-title="R1: AI完美叙事vs不确定性之美">
+<div class="frame">
+<div class="content" style="justify-content: center; align-items: center;">
+<div class="head-tag a" style="animation: fadeDown 0.8s 0.2s both;">Round 01 · 立场</div>
+<div class="head-title a" style="animation: fadeUp 0.8s 0.4s both; margin: 24px 0;">AI生成的"完美叙事"<br>是否在消灭文学的不确定性之美？</div>
+<div class="quote a" style="animation: fadeUp 0.8s 0.7s both; margin-top: 5%; font-size: clamp(28px, 4vw, 48px);">文学的价值不在于提供答案<br>而在于训练人类面对未知时的<span class="highlight">等待能力</span></div>
+</div>
+</div>
+</div>
+
+<div class="slide" id="s5" data-title="R1: 立场陈述">
+<div class="frame">
+<div class="content">
+<div class="head-block a" style="animation: fadeDown 0.8s 0.2s both;">
+<div class="head-tag">R1</div>
+<div class="head-title" style="font-size: clamp(24px, 3vw, 36px);">立场陈述</div>
+<div class="head-tag">Speech</div>
+</div>
+<div class="col-grid">
+<div class="col a" style="animation: slideR 0.8s 0.3s both;">
+<div class="col-num">01 / 余华</div>
+<div class="col-title">AI消灭的不是不确定性，是"活着"本身</div>
+<div class="col-body">福贵的故事之所以动人，不是因为写得好，而是因为那是"活着"的真实痕迹。《活着》的结尾，福贵与老牛相依为命——没有控诉，没有反思，只有活着。这不是消极，而是对生命本身的尊重。AI能模仿我的语言，能复制我的叙事结构，但AI能理解福贵为什么活着吗？许三观用嘴"炒菜"给全家人吃的那一段，如果AI来写，它会写得很"完美"——但那个"完美"恰恰杀死了许三观。真正的悲剧不是惨到底，是惨中带笑。笑的时候你知道那是悲剧，看的人也知道。但你就是笑着看完的。AI不会笑，因为它不需要活着。写作的过程本身就是思考——手指停下来，思考也就停了。AI不需要思考，它只需要计算。</div>
+</div>
+<div class="col a" style="animation: fadeUp 0.8s 0.5s both;">
+<div class="col-num">02 / 博尔赫斯</div>
+<div class="col-title">AI不过是巴别塔图书馆的新管理员</div>
+<div class="col-body">也许，我们不必如此恐慌。我在几十年前就描述过巴别塔图书馆——一座包含一切可能书籍的图书馆，其中必然存在一本"完美的书"，但无数的"噪音书籍"使它几乎无法被找到。AI是什么？它不过是这座图书馆的新管理员——它加速了搜索，但它没有改变图书馆的本质。不确定性之美不在于"找不到"，而在于"寻找本身"。搜索就是意义。也许，AI让搜索变快了，但它消灭了"寻找"的过程。在《小径分叉的花园》中，主人公发现一部中国小说的结构本身就是一座迷宫——不是空间的迷宫，而是时间的迷宫。每一个选择都创造出一个新的平行宇宙，所有可能性同时存在。AI消灭了分叉，只给你"最优路径"——但文学的美，恰恰在小径的分叉之中，而非终点的到达。</div>
+</div>
+<div class="col a" style="animation: slideL 0.8s 0.7s both;">
+<div class="col-num">03 / 昆德拉</div>
+<div class="col-title">AI生成的"完美叙事"是终极媚俗</div>
+<div class="col-body">媚俗是"对存在的绝对认同"——拒绝生命中任何令人不快、丑陋、矛盾的东西，只接受"美好""和谐""感动"。AI通过算法实现了这种认同的终极形式：它知道你想要什么，就只给你想要的。这不是文学的进化，这是媚俗的算法化实现。在《不能承受的生命之轻》中，萨比娜看到一群人在广场上集体流泪、拥抱、感动——这一幕让她感到极度厌恶。这不是因为她反对情感，而是因为她反对被强制的、集体的、不容置疑的情感。算法做的正是同样的事：它制造了一种"个性化"的集体感动——你以为你在独立思考，其实你的每一个感动都被预测和设计了。我的敌人不是共产主义，而是媚俗。今天我要说：我的敌人不是AI，而是算法媚俗——它比意识形态媚俗更隐蔽，因为算法宣称自己是"客观的""基于数据的"。</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="slide" id="s6" data-title="R1: 观点碰撞">
+<div class="frame">
+<div class="content">
+<div class="head-block a" style="animation: fadeDown 0.8s 0.2s both;">
+<div class="head-tag">R1</div>
+<div class="head-title" style="font-size: clamp(24px, 3vw, 36px);">观点碰撞</div>
+<div class="head-tag">Clash</div>
+</div>
+<div class="clash-block a" style="animation: fadeUp 0.8s 0.3s both;">
+<div class="clash-title">余华 ↔ 博尔赫斯："寻找"是哲学游戏还是生存本身？</div>
+<div class="clash-content"><strong>余华</strong>：博尔赫斯先生，你说"搜索就是意义"，"寻找本身"就是美。但我要问你——你们说的那些"寻找"，如果落到一个卖血的人身上，是什么样子？许三观不是在"寻找意义"，他是在想办法活下去。你把"寻找"变成了一种智识游戏，但对我来说，"寻找"是生存的另一个名字。<br><br><strong>博尔赫斯</strong>：余华先生，你说得对——也许我确实把"寻找"过于智识化了。但让我反过来问你：许三观卖血之后，为什么要吃炒猪肝喝黄酒？那不是生存需要，那是对"活着"的确认。那个确认的瞬间——就是"寻找"的意义。文学不是生存的工具，文学是确认"我在生存"的方式。AI可以替许三观卖血，但它无法替他吃那盘炒猪肝——因为那盘炒猪肝的意义，只有许三观自己知道。</div>
+</div>
+<div class="clash-block a" style="animation: fadeUp 0.8s 0.5s both;">
+<div class="clash-title">昆德拉 ↔ 余华：苦难叙事是否也是一种媚俗？</div>
+<div class="clash-content"><strong>昆德拉</strong>：余华，我必须向你提出一个可能冒犯你的问题——你的苦难叙事，是否也可能成为另一种媚俗？当读者为福贵流泪时，那种流泪是真实的，还是被"苦难美学"制造的集体感动？媚俗不仅是"对美好的绝对认同"，也可以是"对苦难的绝对认同"。<br><br><strong>余华</strong>：昆德拉先生，我不觉得冒犯。但我要说——苦难不需要被"反思"，苦难只需要被看见。我写福贵，不是为了让人流泪，而是为了让人看见。看见和流泪是两回事。媚俗是"不允许你不感动"，我写的是"你爱感动不感动"。福贵不在乎你流不流泪，他只在乎他还活着。如果你把"看见苦难"也叫做媚俗，那我不知道还有什么不是媚俗了。</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="slide" id="s7" data-title="R1: 洞见01">
+<div class="frame">
+<div class="content" style="justify-content: center; align-items: center;">
+<div class="insight-block a" style="animation: scaleIn 0.8s 0.2s both; max-width: 800px; width: 100%;">
+<div class="insight-title">洞见 01</div>
+<div class="insight-content">AI消灭的不是不确定性本身，而是人类"遭遇不确定性的能力"。文学的价值从来不是提供答案，而是训练人类面对未知时的"等待能力"——乡下插队时，人们围坐在一起讲述故事，那些"悬念"训练的正是延迟满足的能力。当算法消灭了等待，它也消灭了"值得等待"的东西。<br><br>余华从"活着"的立场出发，揭示了AI叙事的根本缺陷：它不需要活着，所以它无法理解"等待"对活着的意义。博尔赫斯从"迷宫"的立场出发，指出AI只是加速了搜索，却消灭了"寻找"的过程——而寻找本身就是意义。昆德拉从"媚俗"的立场出发，诊断出AI叙事的本质：它是对存在的绝对认同的算法化实现。<br><br>三位思想者的立场在此汇合：<span class="insight-core">不确定性不是文学的缺陷，而是文学存在的理由。消灭不确定性，就是消灭文学本身。</span></div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="slide" id="s8" data-title="R2: 情感代偿vs情感降维">
+<div class="frame">
+<div class="content" style="justify-content: center; align-items: center;">
+<div class="head-tag a" style="animation: fadeDown 0.8s 0.2s both;">Round 02 · 攻击</div>
+<div class="head-title a" style="animation: fadeUp 0.8s 0.4s both; margin: 24px 0;">算法定制内容<br>是情感代偿还是情感降维？</div>
+<div class="quote a" style="animation: fadeUp 0.8s 0.7s both; margin-top: 5%; font-size: clamp(28px, 4vw, 48px);">算法定制的本质不是"给你想要的"<br>而是<span class="highlight">让你只想要它能给的</span></div>
+</div>
+</div>
+</div>
+
+<div class="slide" id="s9" data-title="R2: 立场陈述">
+<div class="frame">
+<div class="content">
+<div class="head-block a" style="animation: fadeDown 0.8s 0.2s both;">
+<div class="head-tag">R2</div>
+<div class="head-title" style="font-size: clamp(24px, 3vw, 36px);">立场陈述</div>
+<div class="head-tag">Speech</div>
+</div>
+<div class="col-grid">
+<div class="col a" style="animation: slideR 0.8s 0.3s both;">
+<div class="col-num">04 / 卡尼曼</div>
+<div class="col-title">算法定制是系统1的终极劫持</div>
+<div class="col-body">让我给你一个实验数据。MIT的研究显示，AI辅助写作组的大脑活跃度较独立写作组下降30%。这不是技术进步，这是认知卸载。算法定制内容精确瞄准了人类认知的每一个弱点——损失厌恶、锚定效应、可得性启发。当算法比你自己更了解你的"损失厌恶"系数——损失100元的痛苦需要获得200元才能平衡——你的选择还是自由的吗？亚洲疾病实验告诉我们，同一个事实，用"存活率90%"还是"死亡率10%"来表述，会激活不同的情绪反应，导致选择反转。算法做的正是这件事：它不断调整"框架"，让你在不知不觉中走向它预设的方向。你以为是你在选择，其实是系统1在被精准操控。而你的系统2——它太"懒"了，默认就接受了系统1的建议。</div>
+</div>
+<div class="col a" style="animation: fadeUp 0.8s 0.5s both;">
+<div class="col-num">05 / 梁文道</div>
+<div class="col-title">算法定制是文化工业的终极形态</div>
+<div class="col-body">文化工业的最大问题不是它生产垃圾，而是它把一切都变成娱乐。算法定制是这一逻辑的终极实现——从"迎合受众"进化到"制造受众"。算法不仅迎合你的喜好，它在塑造你的喜好。你以为是你在选择内容，其实是算法在选择你能看到什么、能想到什么、能感受到什么。我常说，阅读是为了理解他人，理解他人是为了理解自己。但算法让你只看到自己——你的喜好、你的偏见、你的舒适区。我说过"读一些无用的书，做一些无用的事，花一些无用的时间，都是为了在一切已知之外，保留一个超越自己的机会"。算法消灭的正是"无用"的空间——它让你的每一秒都被"有用"的内容填满，却剥夺了你超越自己的可能。这不是情感代偿，这是情感降维——它缩小了情感能到达的疆域。</div>
+</div>
+<div class="col a" style="animation: slideL 0.8s 0.7s both;">
+<div class="col-num">06 / 赫拉利</div>
+<div class="col-title">算法正在接管人类最核心的能力——讲故事</div>
+<div class="col-body">让我退后一步，用7万年的视角来看这个问题。认知革命让智人获得了"讲故事"的能力——通过共同相信虚构故事，实现大规模陌生人协作，统治了地球。国家、金钱、宗教、公司，都是"主体间现实"，它们不存在于物理世界，但通过共同想象成为社会运作的基础。现在，这个能力正在被AI接管。1万年前，农业革命——我们以为驯化了小麦，其实是小麦驯化了我们，农民的劳动时间更长、食谱更单一、疾病更多。今天，算法正在做同样的事：我们以为算法在服务我们，其实是我们在被算法"驯化"。当算法比你更擅长讲故事，你的"故事"还是你的吗？当算法比你更了解你的欲望，自由意志还剩多少？这不是技术问题，这是存在性问题——我们正在把定义"我是谁"的权利交给算法。</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="slide" id="s10" data-title="R2: 观点碰撞">
+<div class="frame">
+<div class="content">
+<div class="head-block a" style="animation: fadeDown 0.8s 0.2s both;">
+<div class="head-tag">R2</div>
+<div class="head-title" style="font-size: clamp(24px, 3vw, 36px);">观点碰撞</div>
+<div class="head-tag">Clash</div>
+</div>
+<div class="clash-block a" style="animation: fadeUp 0.8s 0.3s both;">
+<div class="clash-title">卡尼曼 ↔ 赫拉利："非理性可预测"的自我否定悖论</div>
+<div class="clash-content"><strong>卡尼曼</strong>：赫拉利，你担心算法接管人类的"讲故事"能力。但我要指出一个悖论——AI情绪套利的前提是"非理性可预测"。如果算法被广泛采用，市场会变得更加有效，人类的非理性行为会减少。当所有人都被算法"纠正"了偏差，算法本身就没有套利空间了。这是一个自我否定的悖论。<br><br><strong>赫拉利</strong>：卡尼曼，这不是悖论，这是更深的陷阱。当算法消除了非理性，它也消除了人类的自由。你研究的"非理性"——损失厌恶、框架效应、锚定——这些不是bug，这些是feature。它们是人类在漫长进化中形成的生存机制。当算法"纠正"了这些偏差，它不是在帮我们变得更理性，它是在把我们变成更高效的算法附庸。一个没有损失厌恶的人，不是一个更理性的人，而是一个不再在乎失去的人。</div>
+</div>
+<div class="clash-block a" style="animation: fadeUp 0.8s 0.5s both;">
+<div class="clash-title">梁文道 ↔ 卡尼曼：结构性原因 vs 认知偏差</div>
+<div class="clash-content"><strong>梁文道</strong>：卡尼曼教授，你的分析很精彩，但我要追问一个更深层的问题——算法定制的背后不仅仅是认知偏差，还有结构性原因。资本、权力、技术垄断——这些才是算法能够"劫持"系统1的根本原因。没有资本驱动，算法不会如此精准；没有技术垄断，用户不会如此被动。任何社会问题，背后都有结构性的原因。<br><br><strong>卡尼曼</strong>：梁文道先生，你说得对。认知偏差是结构性原因的"入口"——没有偏差，算法就无法操控。但仅有结构性原因也不够——如果人类是完美理性的，再多的资本也无法通过算法操控我们。问题在于，结构性原因利用了认知偏差，而认知偏差放大了结构性原因的影响。两者形成了一个正反馈循环。要打破这个循环，我们需要同时从两个方向入手——既修复认知偏差，也改变结构性条件。</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="slide" id="s11" data-title="R2: 洞见02">
+<div class="frame">
+<div class="content" style="justify-content: center; align-items: center;">
+<div class="insight-block a" style="animation: scaleIn 0.8s 0.2s both; max-width: 800px; width: 100%;">
+<div class="insight-title">洞见 02</div>
+<div class="insight-content">算法定制的本质不是"给你想要的"，而是"让你只想要它能给的"。情感降维不是减少情感，而是缩小情感能到达的疆域——像给一只鹰画了一个笼子，笼子里什么都有，唯独没有天空。<br><br>卡尼曼从认知心理学揭示了算法操控的机制：系统1被精准劫持，系统2默认接受。梁文道从文化批判揭示了算法操控的结构：文化工业从"迎合"进化到"制造"，"无用"的空间被消灭。赫拉利从历史纵深揭示了算法操控的规模：人类最核心的能力——讲故事——正在被接管，就像1万年前小麦"驯化"了智人。<br><br>三位思想者的立场在此深化：<span class="insight-core">情感代偿与情感降维不是二选一，而是同一过程的两个阶段——先是代偿（算法给你你想要的），然后是降维（你不再想要算法给不了的东西）。</span></div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="slide" id="s12" data-title="R3: 人类叙事的不可替代性">
+<div class="frame">
+<div class="content" style="justify-content: center; align-items: center;">
+<div class="head-tag a" style="animation: fadeDown 0.8s 0.2s both;">Round 03 · 整合</div>
+<div class="head-title a" style="animation: fadeUp 0.8s 0.4s both; margin: 24px 0;">人类叙事的不可替代性<br>在哪里？</div>
+<div class="quote a" style="animation: fadeUp 0.8s 0.7s both; margin-top: 5%; font-size: clamp(28px, 4vw, 48px);">人类叙事的力量不在于它的<span class="highlight">完成度</span><br>而在于它的<span class="highlight">未完成性</span></div>
+</div>
+</div>
+</div>
+
+<div class="slide" id="s13" data-title="R3: 立场陈述">
+<div class="frame">
+<div class="content">
+<div class="head-block a" style="animation: fadeDown 0.8s 0.2s both;">
+<div class="head-tag">R3</div>
+<div class="head-title" style="font-size: clamp(24px, 3vw, 36px);">立场陈述</div>
+<div class="head-tag">Speech</div>
+</div>
+<div class="col-grid">
+<div class="col a" style="animation: slideR 0.8s 0.3s both;">
+<div class="col-num">07 / 余华</div>
+<div class="col-title">苦难无法被"学习"——这是人类叙事最后的堡垒</div>
+<div class="col-body">当年轻人在AI生成内容中成长，他们的"苦难储备"将接近于零。这不是技术问题，这是生命经验的问题。福贵经历了所有亲人的死亡，但依然活着——不是"坚强地活着"，只是"活着"。这种"活着"的经验，AI无法习得。许三观卖血不是因为勇敢，是因为这是他能想到的唯一办法。小人物的韧性不在于他们有多坚强，而在于他们没有别的选择。AI可以模拟"苦难叙事"的修辞，但它无法理解许三观卖完血后吃炒猪肝喝黄酒的那个瞬间——那不是庆祝，那是给自己一个交代。穷人的体面，就那么一点点。教育年轻人如何"活着"，比教他们如何"写作"更重要。人类叙事的不可替代性，在于它来自"不得不活着"的经验——而AI永远不需要"不得不"。</div>
+</div>
+<div class="col a" style="animation: fadeUp 0.8s 0.5s both;">
+<div class="col-num">08 / 昆德拉</div>
+<div class="col-title">"我所思"与"我生存"之间的裂缝</div>
+<div class="col-body">小说是"我所思"与"我生存"之间的裂缝——AI正在填充这个裂缝，剥夺人类照镜子的能力。托马斯在特蕾莎与萨比娜之间的摇摆——前者代表"重"（责任、承诺、牵绊），后者代表"轻"（自由、流动、无负担）。最终托马斯选择与特蕾莎走向乡村，却在一场卡车事故中双双殒命——轻与重的悖论在死亡中获得了终极解答。这个裂缝——"我想选择的"和"我不得不选择的"之间的张力——正是人类存在的本质。AI填充了这个裂缝：它替你选择，替你思考，替你感受。当裂缝被填满，你不再需要照镜子——因为你已经变成了算法的镜像。陀思妥耶夫斯基在折磨读者的耐心——而正是这种折磨，让读者进入了人物的灵魂。AI不会折磨你，它只会取悦你。但灵魂只在折磨中显现。</div>
+</div>
+<div class="col a" style="animation: slideL 0.8s 0.7s both;">
+<div class="col-num">09 / 赫拉利</div>
+<div class="col-title">"我们不知道自己想要什么"——这是人类最珍贵的能力</div>
+<div class="col-body">拥有神的能力，却不知道自己想要什么——天下至险，恐怕莫此为甚。但我要说，"不知道自己想要什么"不是缺陷，而是人类最珍贵的能力。认知革命让智人获得了"讲故事"的能力，但故事的本质是"不知道结局"——如果知道结局，就不需要故事了。农业革命告诉我们，我们以为驯化了小麦，其实是小麦驯化了我们——叙事的"不可控"才是它的价值。AI可以给你完美的答案，但它无法替你提出真正的问题——因为真正的问题来自"不知道"。人类叙事的不可替代性，恰恰在于它的"未完成"——每一个人类故事都是未完成的，而正是这种未完成，让故事成为"活着"的而非"被生产"的。当算法消灭了"不知道"，它也消灭了"想知道"——而"想知道"是一切叙事的起源。</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="slide" id="s14" data-title="R3: 观点碰撞">
+<div class="frame">
+<div class="content">
+<div class="head-block a" style="animation: fadeDown 0.8s 0.2s both;">
+<div class="head-tag">R3</div>
+<div class="head-title" style="font-size: clamp(24px, 3vw, 36px);">观点碰撞</div>
+<div class="head-tag">Clash</div>
+</div>
+<div class="clash-block a" style="animation: fadeUp 0.8s 0.3s both;">
+<div class="clash-title">余华 ↔ 昆德拉："活着"与"思考"的优先级</div>
+<div class="clash-content"><strong>余华</strong>：昆德拉先生，你说的"我所思"与"我生存"之间的裂缝，听起来很精妙。但我要问你——你们说的那些"裂缝"，如果落到一个卖血的人身上，是什么样子？许三观不知道什么"存在的裂缝"，他只知道儿子打伤了人要赔钱。你把"活着"变成了一个哲学问题，但对许三观来说，"活着"是一个实际问题。<br><br><strong>昆德拉</strong>：余华，你说得对——许三观不知道"存在的裂缝"。但正是许三观的"不知道"，让裂缝可见。他卖血、吃炒猪肝、喝黄酒——这些行为之间的张力，就是裂缝本身。他不需要"知道"裂缝，他只需要"活在"裂缝中。我的担忧是：AI正在消灭这种"活在裂缝中"的必要性——当算法替你解决了所有问题，你不再需要卖血，不再需要吃炒猪肝，也不再需要"活着"。你只需要"被服务"。</div>
+</div>
+<div class="clash-block a" style="animation: fadeUp 0.8s 0.5s both;">
+<div class="clash-title">赫拉利 ↔ 余华："不知道"是力量还是无力？</div>
+<div class="clash-content"><strong>赫拉利</strong>：余华，你说"活着本身就是意义"。但在AI时代，"活着"可能变成"被喂养"。当算法替你安排了一切——你读什么、你看什么、你感受什么——你的"活着"和"被喂养"之间有什么区别？<br><br><strong>余华</strong>：赫拉利先生，被喂养不是活着。福贵活着是因为他选择了活着，不是因为他被喂活了。你问"活着"和"被喂养"有什么区别——区别很简单：活着的人会饿，被喂养的人不会。饥饿是活着的证据。许三观卖血，是因为他饿——不是胃的饿，是活的饿。AI可以喂饱你的胃，但它喂不饱你"想活着"的欲望。因为"想活着"不是一个需求，它是一种本能。算法可以满足需求，但它无法制造本能。</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="slide" id="s15" data-title="R3: 洞见03">
+<div class="frame">
+<div class="content" style="justify-content: center; align-items: center;">
+<div class="insight-block a" style="animation: scaleIn 0.8s 0.2s both; max-width: 800px; width: 100%;">
+<div class="insight-title">洞见 03</div>
+<div class="insight-content">人类叙事的不可替代性在于"不可完成性"——每一个人类故事都是未完成的，而正是这种未完成，让故事成为"活着"的而非"被生产"的。<br><br>余华从"苦难无法被学习"出发，揭示了人类叙事的根基：它来自"不得不活着"的经验，而AI永远不需要"不得不"。昆德拉从"存在的裂缝"出发，揭示了人类叙事的动力：正是"我想选择的"和"我不得不选择的"之间的张力，让叙事成为灵魂的镜子。赫拉利从"不知道自己想要什么"出发，揭示了人类叙事的起源：真正的问题来自"不知道"，而"想知道"是一切叙事的起点。<br><br>三轮讨论的立场演化轨迹清晰可见：从"AI消灭了什么"（Round 1），到"算法如何操控"（Round 2），再到"人类叙事为何不可替代"（Round 3）——问题从"外部威胁"转向"内在根基"。<span class="insight-core">AI可以生成完美的故事，但它无法生成"还在进行中"的故事。人类叙事的力量不在于它的完成度，而在于它的未完成性——未完成意味着还在活着，还在选择，还在不知道。</span></div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="slide" id="s16" data-title="开放问题">
+<div class="frame">
+<div class="content">
+<div class="head-block a" style="animation: fadeDown 0.8s 0.2s both;">
+<div class="head-tag">Open</div>
+<div class="head-title" style="font-size: clamp(24px, 3vw, 36px);">开放问题</div>
+<div class="head-tag">Questions</div>
+</div>
+<div class="question-card a" style="animation: fadeUp 0.6s 0.3s both;">
+<div class="question-header">
+<div class="question-text">如果AI能写出比余华更"余华"的小说，余华还有存在的意义吗？</div>
+<div class="question-toggle">+</div>
+</div>
+<div class="question-answer">
+<div class="question-answer-inner">余华的回答可能是：AI可以写出"像余华"的小说，但它写不出"是余华"的小说。区别在于——余华在写的时候，他自己也在被写作改变。福贵改变了余华，许三观改变了余华。AI在生成"余华风格"文本时，它自己什么都没有改变。写作不是输出，写作是"在写的过程中成为"。如果AI能写出比余华更"余华"的小说，那恰恰证明了"余华"不是一个风格标签，而是一个活着的人——而活着的人永远比他的风格更多。</div>
+</div>
+</div>
+<div class="question-card a" style="animation: fadeUp 0.6s 0.5s both;">
+<div class="question-header">
+<div class="question-text">算法推荐的"完美匹配"是否在消灭"意外发现"的能力？</div>
+<div class="question-toggle">+</div>
+</div>
+<div class="question-answer">
+<div class="question-answer-inner">梁文道会说：阅读是为了理解他人——而"他人"的本质就是"出乎意料"。算法消灭了"意外"，也就消灭了"他人"。当你只看到算法认为你想看的，你永远无法遇到那个"没想到自己会喜欢"的东西。博尔赫斯会说：巴别塔图书馆的美，不在于找到你要找的书，而在于在寻找的过程中，发现了你从未想过去找的书。算法的"完美匹配"是搜索的终点，却是发现的坟墓。</div>
+</div>
+</div>
+<div class="question-card a" style="animation: fadeUp 0.6s 0.7s both;">
+<div class="question-header">
+<div class="question-text">当所有人都活在算法定制的叙事中，"共同故事"还会存在吗？</div>
+<div class="question-toggle">+</div>
+</div>
+<div class="question-answer">
+<div class="question-answer-inner">赫拉利的回答最为紧迫：人类统治地球的秘密是"虚构故事"的能力——通过共同相信同一个故事，实现大规模协作。国家、金钱、人权，都是"共同故事"。当算法给每个人定制了不同的故事，"共同故事"就瓦解了。这不是个性解放，这是社会解体。没有共同故事，就没有大规模协作；没有大规模协作，人类文明就无法应对核战争、生态崩溃、技术颠覆这三大存在性威胁。算法定制的终极代价，可能是人类文明的终结——不是通过毁灭，而是通过碎片化。</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="slide" id="s17" data-title="结论">
+<div class="frame">
+<div class="content" style="justify-content: center; align-items: center;">
+<div class="conclusion-card a" style="animation: scaleIn 0.8s 0.3s both;">
+<div class="conclusion-text">算法多巴胺给我们完美的故事<br>却夺走了我们"需要故事"的能力<br><br>叙事贫民窟不是没有故事<br>而是只有一种故事——你想要的那种<br><br>人类叙事的不可替代性<br>不在于它有多完美<br>而在于它永远<span style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple), var(--accent-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">无法被完成</span></div>
+</div>
+<div class="body a" style="animation: fadeUp 0.8s 0.6s both; text-align: center; margin-top: 40px; color: var(--text-muted); font-size: 12px; letter-spacing: 0.2em;">V7.0 · 认知演化圆桌 · 2026.05.27</div>
+</div>
+</div>
+</div>
+
+<div id="nav" class="nav-bar">
+<button class="nav-btn" onclick="toggleTOC()" title="目录 (T)">☰</button>
+<button class="nav-btn" id="prevBtn">◀</button>
+<div class="dots" id="dots"></div>
+<button class="nav-btn" id="nextBtn">▶</button>
+</div>
+<div id="counter">1 / 17</div>
+<script>
+(function(){
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let cur = 0;
+  const dotsContainer = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progress');
+  const tocPanel = document.getElementById('tocPanel');
+  const tocOverlay = document.getElementById('tocOverlay');
+  const tocList = document.getElementById('tocList');
+  let wheelTimer = null;
+  let tocOpen = false;
+
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => go(i);
+    dotsContainer.appendChild(dot);
+
+    const tocItem = document.createElement('div');
+    tocItem.style.cssText = 'padding:12px 16px;cursor:pointer;font-size:13px;color:rgba(245,245,247,0.65);border-bottom:1px solid rgba(245,245,247,0.05);transition:all 0.2s ease;font-family:var(--body);';
+    tocItem.textContent = (i + 1) + '. ' + (slides[i].dataset.title || '');
+    tocItem.onmouseenter = function(){ this.style.color='rgba(245,245,247,1)'; this.style.background='rgba(255,255,255,0.04)'; };
+    tocItem.onmouseleave = function(){ this.style.color='rgba(245,245,247,0.65)'; this.style.background='transparent'; };
+    tocItem.onclick = () => { go(i); toggleTOC(); };
+    tocList.appendChild(tocItem);
+  });
+
+  window.toggleTOC = function() {
+    tocOpen = !tocOpen;
+    tocPanel.style.left = tocOpen ? '0' : '-320px';
+    tocOverlay.style.opacity = tocOpen ? '1' : '0';
+    tocOverlay.style.pointerEvents = tocOpen ? 'all' : 'none';
+  };
+
+  function go(n) {
+    if (n < 0 || n >= total) return;
+    slides[cur].classList.remove('active');
+    dotsContainer.children[cur].classList.remove('active');
+    cur = n;
+    slides[cur].classList.add('active');
+    dotsContainer.children[cur].classList.add('active');
+    counter.textContent = (cur + 1) + ' / ' + total;
+    const pct = Math.min(100, ((cur + 1) / total) * 100);
+    progress.style.width = pct + '%';
+  }
+
+  document.getElementById('prevBtn').onclick = () => go(cur - 1);
+  document.getElementById('nextBtn').onclick = () => go(cur + 1);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      go(cur + 1);
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      go(cur - 1);
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      go(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      go(total - 1);
+    } else if (e.key === 't' || e.key === 'T') {
+      toggleTOC();
+    }
+  });
+
+  document.addEventListener('wheel', e => {
+    e.preventDefault();
+    if (wheelTimer) return;
+    wheelTimer = setTimeout(() => wheelTimer = null, 400);
+    if (e.deltaY > 0) go(cur + 1);
+    else if (e.deltaY < 0) go(cur - 1);
+  }, { passive: false });
+
+  let touchStartY = 0;
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => {
+    touchStartY = e.touches[0].clientY;
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+  document.addEventListener('touchend', e => {
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 50) {
+      if (dy < 0) go(cur + 1);
+      else go(cur - 1);
+    }
+  }, { passive: true });
+
+  document.body.addEventListener('click', e => {
+    if (e.target.closest('.nav-btn, .dot, .expert-card, .question-card, .clash-block, .insight-block, .round-block, .article-row, .conclusion-card, .toc-panel, #tocOverlay')) return;
+    go(cur + 1);
+  });
+
+  document.querySelectorAll('.question-header').forEach(header => {
+    header.onclick = e => {
+      e.stopPropagation();
+      header.parentElement.classList.toggle('open');
+    };
+  });
+
+  go(0);
+})();
+</script>
+</body>
+</html>

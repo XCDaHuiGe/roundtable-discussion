@@ -1,4 +1,4 @@
----
+﻿---
 name: roundtable-conference-v2
 description: "认知演化圆桌系统 V2.5。深度讨论导向，7轮全员交锋，锚定书中情节，每轮包含独立碰撞页，榨干每一滴认知增量。"
 ---
@@ -441,6 +441,93 @@ CSS/JS/导航/响应式全部由模板 `assets/roundtable-template.html` 提供�
   - 禁止 inline style 超过 3 行
   - 禁止引入任何外部资源（字体、图标、CDN）
 
+
+## HTML 模板说明（V2.6+）
+
+### 模板文件
+- **主模板**: `assets/roundtable-template-v2.html`（推荐）
+- **旧模板**: `assets/roundtable-template.html`（兼容）
+
+### V2.6 模板设计特点
+
+**视觉风格**
+- 深色主题：`#0a0a0f` 背景 + `#e8e0d4` 文字
+- 衬线字体：Noto Serif SC，更有质感
+- 渐变色标题：金色渐变效果
+- 毛玻璃效果：backdrop-filter
+
+**配色系统**
+```css
+--accent: #c23b22  /* 主强调色（红） */
+--gold: #d4a843    /* 次强调色（金） */
+--blue: #4a6a9a    /* 蓝色 */
+--purple: #8a4aaa  /* 紫色 */
+--green: #3a8a5c   /* 绿色 */
+```
+
+**组件样式**
+- 发言块 `.sp`：卡片式设计，左侧彩色边条
+- 碰撞块 `.cb`：虚线边框，颜色区分类型
+- 洞见卡 `.insight-c`：渐变背景，顶部金色装饰线
+- 指标卡 `.metric`：简洁卡片，大号数字
+
+**动画效果**
+- 入场动画 `.anim-up`：向上淡入，逐个延迟
+- 进度条 `.progress-bar`：顶部渐变进度
+- 平滑过渡：所有交互都有缓动效果
+
+**响应式设计**
+- 桌面：>1024px，80px 侧边距
+- 平板：768-1024px，40px 侧边距
+- 手机：<768px，20px 侧边距，隐藏导航点
+
+### Slide HTML 规则（V2.6）
+
+```yaml
+每个 slide:
+  外壳: <div class="slide" data-title="标题">
+  首页: <div class="slide hero active" data-title="封面">
+  标题页: <div class="slide title-slide" data-title="标题">
+  内容区: <div class="frame">...</div>
+  动画: 内容元素加 class="anim-up"
+  关闭: </div>
+
+封面:
+  <div class="cover-badge">圆桌洞见 V2.6</div>
+  <h1 class="cover-title">书名</h1>
+  <p class="cover-sub">描述</p>
+  <div class="cover-stats">
+    <div class="cover-stat"><div class="cover-stat-num">6</div><div class="cover-stat-label">专家</div></div>
+  </div>
+
+发言块:
+  <div class="sp anim-up">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#c23b22">孔</div>
+      <span class="sn">孔子</span>
+      <span class="sr">主辩手</span>
+    </div>
+    <div class="st">发言内容...</div>
+  </div>
+
+碰撞块:
+  <div class="cb [blue|purple|orange|green] anim-up">
+    <div class="cl [blue|purple|orange|green]">碰撞类型</div>
+    <div class="sh"><span class="sn">专家名</span></div>
+    <div class="st">发言内容...</div>
+  </div>
+
+洞见卡:
+  <div class="insight-c anim-up">
+    <div class="insight-q">洞见句</div>
+    <div class="insight-a">内容...</div>
+  </div>
+
+指标:
+  <div class="metrics anim-up">
+    <div class="metric"><div class="metric-val">7</div><div class="metric-label">轮次</div></div>
+  </div>
+```
 ## 版本历史
 
 | 版本 | 核心升级 |

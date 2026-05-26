@@ -1,0 +1,41 @@
+{
+  "templates": [
+    {
+      "id": "v3-magazine",
+      "name": "杂志墨水风格",
+      "file": "template-v3-magazine.html",
+      "description": "幻灯片式翻页，墨水经典深色主题，适合投资/文学类话题",
+      "theme": {
+        "bg": "#0a0a0b",
+        "accent": "#c23b22",
+        "gold": "#d4a843"
+      }
+    },
+    {
+      "id": "v2-starry",
+      "name": "深邃星空风格",
+      "file": "template-v2-starry.html",
+      "description": "单页滚动式，星空金色主题+圆桌可视化图示，适合科技/社会类话题",
+      "theme": {
+        "bg": "#0C0C0C",
+        "accent": "#D4A04A",
+        "clash": "#E85D3A",
+        "insight": "#4AAD8B"
+      }
+    }
+  ],
+  "selection": {
+    "mode": "random",
+    "default": "v3-magazine",
+    "seed": null
+  },
+  "topic_matching": {
+    "投资": ["v3-magazine", "v2-starry"],
+    "哲学": ["v2-starry"],
+    "科技": ["v2-starry", "v3-magazine"],
+    "文学": ["v3-magazine", "v2-starry"],
+    "社会": ["v2-starry"],
+    "default": ["v3-magazine", "v2-starry"]
+  },
+  "usage_log": []
+}

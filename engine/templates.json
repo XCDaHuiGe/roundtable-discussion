@@ -76,9 +76,33 @@
       "id": "dot-matrix",
       "name": "点阵编辑风格",
       "file": "template-dot-matrix.html",
-      "description": "点阵场、明暗变体、信号感，适合信号叙事/基准分析",
+      "description": "点阵场，明暗变体、信号感，适合信号叙事/基准分析",
       "origin": "lieflat",
       "theme": { "bg": "#1a1a2e", "accent": "#e94560", "dot": "#16213e" }
+    },
+    {
+      "id": "dot-matrix-light",
+      "name": "点阵编辑-亮色",
+      "file": "template-dot-matrix-light.html",
+      "description": "点阵场亮色变体，柔和纸感，适合信号叙事/基准分析",
+      "origin": "lieflat",
+      "theme": { "bg": "#deded9", "accent": "#3e4744", "paper": "#fbfaf6" }
+    },
+    {
+      "id": "shiny-tiles",
+      "name": "闪光瓦片风格",
+      "file": "template-shiny-tiles.html",
+      "description": "玻璃态毛玻璃效果，柔和闪光，适合现代UI/产品展示",
+      "origin": "lieflat",
+      "theme": { "bg": "#050505", "accent": "#c9a8f0", "glass": "true" }
+    },
+    {
+      "id": "studio-photo",
+      "name": "摄影工作室风格",
+      "file": "template-studio-photo.html",
+      "description": "深海军蓝+冰蓝强调，电影感，适合品牌路演/摄影集",
+      "origin": "lieflat",
+      "theme": { "bg": "#0A1628", "accent": "#4A8FE7", "ice": "#E9EDF2" }
     },
     {
       "id": "story-field",

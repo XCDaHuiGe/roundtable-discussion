@@ -444,6 +444,49 @@ CSS/JS/导航/响应式全部由模板 `assets/roundtable-template.html` 提供�
 
 ## HTML 模板说明（V2.6+）
 
+### 模板文件（V3 - 融合Guizang设计理念）
+- **主模板**: `assets/roundtable-template-v3.html`（推荐 - 融合Guizang PPT Skill）
+- **旧模板**: `assets/roundtable-template-v2.html`（兼容）
+- **参考**: `references/guizang-ppt-skill/`（Guizang的设计理念和模板）
+
+### V3 模板设计特点（融合Guizang）
+
+**视觉风格**
+- 深色主题：`#0a0a0b` 背景 + `#f1efea` 文字（Guizang墨水经典）
+- 衬线标题：Noto Serif SC + 非衬线正文 + 等宽元数据
+- 渐变色标题：金色渐变效果
+- 毛玻璃效果：backdrop-filter
+
+**字体系统（Guizang风格）**
+```css
+--mono: "IBM Plex Mono"        /* 元数据、标签 */
+--serif-zh: "Noto Serif SC"    /* 大标题、重点金句 */
+--sans-zh: "Noto Sans SC"      /* 正文 */
+```
+
+**配色系统（Guizang风格）**
+```css
+--ink: #0a0a0b                 /* 背景色 */
+--paper: #f1efea               /* 文字色 */
+--accent: #c23b22              /* 主强调色（红） */
+--gold: #d4a843                /* 次强调色（金） */
+```
+
+**组件样式**
+- 发言块 `.sp`：卡片式设计，左侧彩色边条
+- 碰撞块 `.cb`：虚线边框，颜色区分类型
+- 洞见卡 `.insight-c`：渐变背景，顶部金色装饰线
+- 指标卡 `.metric`：简洁卡片，大号数字
+
+**动画效果**
+- 入场动画 `[data-anim]`：向上淡入，逐个延迟（Guizang风格）
+- 进度条 `.progress-bar`：顶部渐变进度
+- 平滑过渡：所有交互都有缓动效果
+
+**响应式设计**
+- 桌面：>1024px，8vw 侧边距
+- 平板：768-1024px，5vw 侧边距
+- 手机：<768px，4vw 侧边距，隐藏导航点
 ### 模板文件
 - **主模板**: `assets/roundtable-template-v2.html`（推荐）
 - **旧模板**: `assets/roundtable-template.html`（兼容）

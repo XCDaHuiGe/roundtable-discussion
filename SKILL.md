@@ -174,6 +174,70 @@ Slide 35-36: 结语
 
 ---
 
+## 讨论风格预设 ★
+
+用户可通过提示词指定风格，如：`/roundtable-conference-v2 接地气风格 {书籍}`
+
+### 预设 A：严肃风格（默认）
+
+```yaml
+语气: 严谨、克制、有分寸
+允许: 学术术语（但必须用括号解释）
+禁止: 段子、网络用语、情绪化表达
+发言顺序: 先论据后论点
+示例: |
+  "凯蒂坚持让孩子每天读一页圣经、一页莎士比亚——请注意，她自己不识字。
+  这在心理学上叫做'代际期望投射'（就是父母把自己没实现的愿望压在孩子身上），
+  但凯蒂的情况更复杂：她不是在投射，而是在执行她母亲玛丽的遗嘱。"
+```
+
+### 预设 B：接地气风格
+
+```yaml
+语气: 像朋友聊天，轻松但有深度
+允许: 口语、比喻、生活化类比
+禁止: 未经解释的学术术语、论文腔、"从XX理论看"
+发言顺序: 先说人话再上理论，先举例子再下结论
+示例: |
+  "凯蒂这个妈挺有意思的——自己一个字不认得，偏偏逼着孩子每天读圣经和莎士比亚。
+  换成今天的话说，就是一个初中都没毕业的保洁阿姨，非要让孩子背《论语》和莎士比亚。
+  你可能觉得这不现实，但凯蒂根本不在乎现实不现实。
+  她妈临死前跟她说了一句话：'你可以没吃没穿，但你必须让孩子读书。'
+  凯蒂就把这句话当圣旨执行了。"
+```
+
+### 预设 C：人物原有风格
+
+```yaml
+语气: 还原每位专家的真实说话方式
+核心: 每位专家用自己著作中的语言风格发言
+规则:
+  - 马斯洛: 用"需求""自我实现""高峰体验"等自己的术语，语气温和人本主义
+  - 加缪: 用"荒谬""反抗""西西弗斯"等意象，语言简洁有力带哲学诗意
+  - 芒格: 用"多元思维模型""反过来想""能力圈"等自己的概念，直接毒舌
+  - 孔子: 用"仁""礼""中庸"等儒家概念，温润而坚定
+  - 塞利格曼: 用"习得性无助""习得性乐观""PERMA"等术语，实证导向
+  - 格拉德威尔: 用"引爆点""异类""10000小时"等自己的框架，讲故事风格
+示例: |
+  加缪: "弗兰西坐在太平梯上觉得自己住在树上。这就是西西弗斯。
+  她每天推石头上山——捡破烂、挨饿、被人嘲笑——然后第二天重新开始。
+  但她找到了一个山顶：那棵天堂树。石头不再重要了。"
+```
+
+### 风格切换规则
+
+```yaml
+选择方式:
+  - 用户提示词包含"严肃" → 预设A
+  - 用户提示词包含"接地气"/"通俗"/"大白话" → 预设B
+  - 用户提示词包含"原味"/"人物风格"/"还原" → 预设C
+  - 未指定 → 默认预设A
+
+混搭规则:
+  - 同一轮讨论内风格必须统一
+  - 不同轮次可以切换风格（需用户明确指定）
+  - 洞见句始终使用简洁直白风格（不随预设变化）
+
 ## 碰撞机制（V2.6 强制）
 
 ```yaml
@@ -240,57 +304,98 @@ Slide 35-36: 结语
 
 ---
 
-## HTML PPT 架构（V2.6）
+## HTML PPT 生成（V2.7 模板化）
+
+**模板文件**: `assets/roundtable-template.html`
+
+### 生成流程（必须严格遵守）
+
+```
+Step 1: 读取模板
+  template = read("assets/roundtable-template.html")
+
+Step 2: 生成 slide 内容（纯 HTML，不含 <head>/<body>/<style>/<script>）
+  slides_html = ""
+  slides_html += cover_slide(book_title, author, experts)
+  slides_html += toc_slide(rounds)
+  slides_html += insight_slide(insights)
+  slides_html += dashboard_slide(metrics)
+  for round in rounds:
+      slides_html += title_slide(round.theme, round.question)
+      slides_html += speech_slide(round.speeches[:3])   # 上半场 3人
+      slides_html += speech_slide(round.speeches[3:])   # 下半场 3人
+      slides_html += collision_slide(round.collisions, round.insight)
+  slides_html += evolution_slide(hypotheses)
+  slides_html += questions_slide(open_questions)
+  slides_html += conclusion_slide(quote, summary)
+
+Step 3: 注入模板
+  html = template.replace("<!-- SLIDES_HERE -->", slides_html)
+  html = html.replace("__BOOK_TITLE__", book_title)
+
+Step 4: 写入文件
+  write("output/{书名}_圆桌洞见.html", html)
+```
+
+### ⚠️ 绝对禁止
+
+- ❌ 不要手写 <style> 标签（模板已包含）
+- ❌ 不要手写 <script> 标签（模板已包含）
+- ❌ 不要修改模板中的 CSS class 名（.slide, .active, .frame 等）
+- ❌ 不要在 slide 内容中使用内联 style 超过 3 行
+- ❌ 不要引入任何外部资源
+
+### Slide HTML 规则
 
 ```yaml
-页面结构:
-  总计: 35-45页（弹性）
+每个 slide:
+  外壳: <div class="slide" data-title="标题">
+  首页: <div class="slide hero active" data-title="封面">
+  标题页: <div class="slide title-slide" data-title="标题">
+  内容区: <div class="frame">...</div>
+  关闭: </div>
 
-  每页内容密度:
-    标题页: 轮次主题 + 核心问题（100字以内，大留白）
-    发言页: 2-3人发言，每人400-500字
-    碰撞页: 3-4轮来回反驳 + 洞见句
-    每页总字数: 800-1200字（控制在一屏可读范围内）
+发言块:
+  <div class="sp">
+    <div class="sh"><span class="sn">专家名</span><span class="sr">角色</span></div>
+    <div class="st">发言内容...</div>
+  </div>
 
-导航系统（V2.6 完整）:
-  键盘:
-    左/上箭头, PageUp: 上一页
-    右/下箭头, PageDown, 空格: 下一页
-    Home: 第一页
-    End: 最后一页
-    Escape: 回封面
-    T/t: 打开/关闭目录
-  鼠标:
-    滚轮上/下: 翻页
-    点击页面任意位置: 下一页
-    点击导航圆点: 跳转到指定页
-    点击目录项: 跳转到指定页
-  触摸:
-    上滑: 下一页
-    下滑: 上一页
-    左滑: 下一页
-    右滑: 上一页
+碰撞块:
+  <div class="cb [blue|purple|orange|green]">
+    <div class="cl [blue|purple|orange|green]">碰撞类型</div>
+    <div class="sh"><span class="sn">专家名</span></div>
+    <div class="st">发言内容...</div>
+  </div>
 
-目录 TOC:
-  - 固定在页面左侧或通过 T 键呼出
-  - 显示所有轮次标题 + 页码
-  - 点击可跳转
-  - 高亮当前所在轮次
+洞见句:
+  <div class="insight-c">
+    <div class="insight-q">洞见句</div>
+    <div class="insight-a">内容...</div>
+  </div>
 
-页眉:
-  - 显示当前页面标题（data-title）
-  - 显示页码（当前 / 总数）
-  - 固定在页面底部
+标签:
+  <span class="tag [tag-gold|tag-red|tag-blue|tag-purple|tag-green|tag-brown]">文字</span>
 
-视觉风格:
-  - 暗色主题（--ink #0a0a0b, --paper #f1efea, --accent #c9a227）
-  - 标题页大留白，居中排版
-  - 发言页左对齐，专家名+角色标签
-  - 碰撞页左边框颜色标记
-  - 页面过渡：即时切换（无动画）
-  - 发言块间距: 2vh
-  - 碰撞块背景: rgba(233,69,96,.08)
+指标:
+  <div class="metrics">
+    <div class="metric"><div class="metric-val">7</div><div class="metric-label">轮次</div></div>
+  </div>
 ```
+
+每页内容密度：
+  - 标题页: 轮次主题 + 核心问题（100字以内，大留白）
+  - 发言页: 2-3人发言，每人400-500字
+  - 碰撞页: 3-4轮来回反驳 + 洞见句
+  - 每页总字数: 800-1200字（控制在一屏可读范围内）
+
+Slide HTML 规则：
+  - 每个 slide 用 `<div class="slide" data-title="标题">` 包裹
+  - 第一个 slide 加 `active` class: `<div class="slide hero active" data-title="封面">`
+  - 内容区用 `<div class="frame">` 包裹
+  - 发言块用 `.sp` > `.sh`(头部) + `.st`(正文)
+  - 碰撞块用 `.cb` + 颜色 class（.blue/.purple/.orange/.green）
+  - 洞见卡用 `.insight-c` > `.insight-q` + `.insight-a`
 
 ---
 
@@ -322,92 +427,19 @@ Slide 35-36: 结语
 
 ---
 
-## 排版规范（V2.6 强制）
+## 排版规范（V2.7）
 
-```yaml
-CSS 自包含原则:
-  - 禁止 @import url() 引用外部字体/GCSS
-  - 禁止引用 base.css / external.css 等外部文件
-  - 所有样式必须内联在 <style> 标签中
-  - 字体使用系统字体栈: "Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif
-  - 不依赖 Google Fonts 或任何 CDN
+CSS/JS/导航/响应式全部由模板 `assets/roundtable-template.html` 提供，无需手写。
 
-字体层级:
-  封面标题:    clamp(2.5rem, 8vw, 5rem)   font-weight:900
-  页面大标题:  clamp(1.8rem, 5vw, 3rem)   font-weight:700
-  区域标题:    clamp(1rem, 1.8vw, 1.4rem) font-weight:600
-  正文:        clamp(.85rem, 1.1vw, .95rem) line-height:1.8 opacity:.9
-  标签/元信息: 10-11px                     font-family:monospace  opacity:.5
+内容排版规则：
+  - 发言页最多 2-3 人/页，6 人发言拆成 2-3 页
+  - 长发言（>400字）独占一页
+  - 标题页大留白，只放轮次编号 + 主题 + 核心问题
+  - 碰撞页颜色标记：情节反驳(红)、细节挑战(蓝)、逻辑追问(紫)、框架质疑(橙)、反例引入(绿)
 
-间距系统:
-  页面内边距:    padding: 5vh 6vw（发言页/碰撞页）
-  封面内边距:    padding: 10vh 8vw
-  发言块间距:    margin-bottom: 2vh（标准）
-  碰撞块间距:    margin: 1.5vh 0
-  洞见句上下:    margin: 2vh auto
-  卡片内边距:    padding: 2vh 2vw
-
-内容密度控制（关键）:
-  发言页最多3人发言（V2.4 改为2-3人/页）:
-    - 每人发言区域用 .sp 块包裹
-    - 发言文本 st 类: font-size clamp(.82rem,1.05vw,.95rem)
-    - 6人发言拆成 2-3 页，每页 2-3 人
-    - 长发言（>400字）独占一页
-    - 碰撞页标题区: kicker + h-xl 合计不超过 8vh
-    - 允许内容溢出滚动（见下方滚动规则）
-  标题页:
-    - 大留白，上下居中
-    - 只放轮次编号 + 主题 + 核心问题
-    - 背景可加微妙装饰（渐变/线条）
-
-碰撞页布局:
-  结构:
-    - 左边框 3px 颜色标记区分碰撞类型
-    - 碰撞块背景: rgba(233,69,96,.08) 红色系
-    - 洞见句独立居中区域: 背景 rgba(201,162,39,.06) 金色系
-    - 洞见句字号: .95rem，font-weight:400，line-height:1.7
-  颜色标记:
-    - 情节反驳: 左边框 #e94560（红）
-    - 细节挑战: 左边框 #3498db（蓝）
-    - 逻辑追问: 左边框 #9b59b6（紫）
-    - 框架质疑: 左边框 #f39c12（橙）
-    - 反例引入: 左边框 #2ecc71（绿）
-
-滚动处理:
-  .slide 类:
-    - overflow-y: auto（允许垂直滚动）
-    - overflow-x: hidden
-    - 自定义滚动条: width 4px, track transparent, thumb rgba(255,255,255,.15)
-  滚动条仅在内容溢出时出现
-  封面页和结语页: overflow hidden（不滚动）
-
-响应式断点:
-  桌面 (>1024px):
-    - 正文 .st: clamp(.8rem, 1vw, .9rem)
-    - 发言块间距: 1.5vh
-    - grid 布局: 2列/3列
-  平板 (768-1024px):
-    - 正文 .st: clamp(.82rem, 1.2vw, .92rem)
-    - 发言块间距: 1vh
-    - grid 布局: 2列
-  手机 (<768px):
-    - 正文 .st: .85rem (固定)
-    - 发言块间距: .8vh
-    - grid 布局: 单列
-    - 页面内边距: 2vh 5vw
-
-幻灯片导航:
-  - 右侧固定圆点导航: position:fixed; right:2vw; top:50%
-  - 键盘支持: 左/右箭头切换, Escape 回封面
-  - 圆点尺寸: 8px, 激活态 24px 宽椭圆
-  - 底部页码: position:fixed; bottom:1.5vh; right:3vw
-
-禁止事项:
-  - 禁止使用 CSS 变量以外的颜色值（必须用 var(--ink) 等）
-  - 禁止 inline style 超过 3 行（复杂样式必须提取到 <style>）
-  - 禁止使用 !important
+禁止事项：
+  - 禁止 inline style 超过 3 行
   - 禁止引入任何外部资源（字体、图标、CDN）
-```
 
 ## 版本历史
 

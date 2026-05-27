@@ -2,935 +2,1228 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>《穷查理宝典》圆桌洞见 圆桌洞见</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《穷查理宝典》圆桌洞见</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 <style>
-  :root{
-    /* ============ 主题色(默认:🖋 墨水经典) ============ */
-    --ink:#0a0a0b;
-    --ink-rgb:10,10,11;
-    --paper:#f1efea;
-    --paper-rgb:241,239,234;
-    --paper-tint:#e8e5de;
-    --ink-tint:#18181a;
-    --text-dim:rgba(241,239,234,0.5);
+:root {
+  --bg-deep: #0A0A0A;
+  --bg: #111111;
+  --bg-card: rgba(255,255,255,0.04);
+  --bg-card-hover: rgba(255,255,255,0.08);
+  --fg: #F5F5F5;
+  --fg-muted: #A0A0A0;
+  --fg-dim: #606060;
+  --accent: #D4A04A;
+  --accent-soft: rgba(212,160,74,0.12);
+  --accent-glow: rgba(212,160,74,0.25);
+  --copper: #C07A3E;
+  --clash: #ff4757;
+  --clash-soft: rgba(255,71,87,0.12);
+  --clash-glow: rgba(255,71,87,0.35);
+  --insight: #00d4aa;
+  --insight-soft: rgba(0,212,170,0.12);
+  --insight-glow: rgba(0,212,170,0.40);
+  --border: rgba(255,255,255,0.08);
+  --border-accent: rgba(212,160,74,0.30);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --font-display: 'Noto Serif SC', serif;
+  --font-body: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
 
-    /* ============ 强调色 ============ */
-    --accent:#c23b22;
-    --accent-rgb:194,59,34;
-    --gold:#d4a843;
-    --gold-rgb:212,168,67;
-    --blue:#4a6a9a;
-    --purple:#8a4aaa;
-    --green:#3a8a5c;
-    --cyan:#4a9a9a;
-    --orange:#d4843a;
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* ============ 字体(跨主题固定) ============ */
-    --mono:"IBM Plex Mono","SF Mono",monospace;
-    --serif-zh:"Noto Serif SC","Source Han Serif SC","STSong",serif;
-    --sans-zh:"Noto Sans SC","Source Han Sans SC","PingFang SC",sans-serif;
+html {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
 
-    /* ============ 间距 ============ */
-    --radius:10px;
-    --ease:cubic-bezier(.4,0,.2,1);
+body {
+  display: flex;
+  flex-direction: row;
+  width: max-content;
+  height: 100vh;
+  background: var(--bg-deep);
+  color: var(--fg);
+  font-family: var(--font-body);
+  line-height: 1.85;
+  opacity: 0;
+  animation: fadeIn 0.8s ease forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg-deep);
+}
+
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}
+
+.mesh-gradient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: 
+    radial-gradient(ellipse 70% 50% at 10% 20%, rgba(212,160,74,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 40% at 90% 80%, rgba(0,212,170,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse 30% 25% at 50% 50%, rgba(255,71,87,0.03) 0%, transparent 50%);
+}
+
+.slide {
+  width: 100vw;
+  height: 100vh;
+  min-width: 100vw;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  scroll-snap-align: start;
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  overflow: hidden;
+}
+
+.slide.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.stagger-item {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.slide.visible .stagger-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.slide.visible .stagger-item:nth-child(1) { transition-delay: 0.1s; }
+.slide.visible .stagger-item:nth-child(2) { transition-delay: 0.2s; }
+.slide.visible .stagger-item:nth-child(3) { transition-delay: 0.3s; }
+.slide.visible .stagger-item:nth-child(4) { transition-delay: 0.4s; }
+.slide.visible .stagger-item:nth-child(5) { transition-delay: 0.5s; }
+.slide.visible .stagger-item:nth-child(6) { transition-delay: 0.6s; }
+.slide.visible .stagger-item:nth-child(7) { transition-delay: 0.7s; }
+.slide.visible .stagger-item:nth-child(8) { transition-delay: 0.8s; }
+
+.slide-cover {
+  background: linear-gradient(135deg, #1A1A2E 0%, #16213E 50%, #0F0F23 100%);
+  color: var(--fg);
+  padding: clamp(40px, 5vh, 80px) clamp(48px, 5vw, 100px);
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.slide-cover::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+  opacity: 0.5;
+  animation: cover-glow 6s ease-in-out infinite;
+}
+
+@keyframes cover-glow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+.slide-cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(255,255,255,0.02) 59px, rgba(255,255,255,0.02) 60px),
+    repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(255,255,255,0.02) 59px, rgba(255,255,255,0.02) 60px);
+  pointer-events: none;
+}
+
+.cover-decor-line {
+  position: absolute;
+  top: 20%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212,160,74,0.2), transparent);
+}
+
+.cover-decor-line-2 {
+  position: absolute;
+  bottom: 30%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,170,0.15), transparent);
+}
+
+.cover-logo {
+  font-family: var(--font-mono);
+  font-size: clamp(18px, 2vw, 28px);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  position: relative;
+  z-index: 2;
+}
+
+.cover-logo span {
+  display: block;
+  padding-left: 1em;
+  font-weight: 400;
+  color: var(--fg-muted);
+  font-size: 0.85em;
+}
+
+.cover-body {
+  max-width: 70%;
+  position: relative;
+  z-index: 2;
+}
+
+.cover-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  background: linear-gradient(135deg, var(--accent-soft), rgba(212,160,74,0.06));
+  border: 1px solid var(--border-accent);
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1vw, 13px);
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: clamp(20px, 3vh, 36px);
+  position: relative;
+  overflow: hidden;
+}
+
+.cover-badge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(212,160,74,0.2), transparent);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.cover-body h1 {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: clamp(16px, 2vh, 28px);
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--fg), var(--fg-muted));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cover-body .cover-sub {
+  font-family: var(--font-display);
+  font-size: clamp(16px, 1.8vw, 26px);
+  font-weight: 400;
+  margin-bottom: clamp(8px, 1vh, 16px);
+  color: var(--fg-muted);
+  line-height: 1.6;
+}
+
+.cover-body .cover-date {
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1.2vw, 16px);
+  color: var(--fg-dim);
+  letter-spacing: 0.02em;
+}
+
+.cover-footer {
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 0.9vw, 12px);
+  color: var(--fg-dim);
+  letter-spacing: 0.08em;
+  position: relative;
+  z-index: 2;
+}
+
+.slide-content {
+  background: var(--bg);
+  padding: clamp(24px, 3vh, 48px) clamp(40px, 4vw, 80px);
+  overflow: hidden;
+  position: relative;
+}
+
+.slide-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.3;
+}
+
+.breadcrumb {
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 1vw, 13px);
+  color: var(--fg-dim);
+  text-align: right;
+  margin-bottom: clamp(12px, 1.5vh, 20px);
+  letter-spacing: 0.02em;
+}
+
+.slide-title {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 2.5vw, 36px);
+  font-weight: 800;
+  color: var(--fg);
+  line-height: 1.35;
+  margin-bottom: clamp(16px, 2vh, 28px);
+  letter-spacing: -0.01em;
+  position: relative;
+  padding-left: 28px;
+}
+
+.slide-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 5px;
+  background: linear-gradient(180deg, var(--accent), var(--copper));
+  border-radius: 3px;
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+
+.stats-flex {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  margin: clamp(32px, 4vh, 56px) 0;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 80px;
+  background: linear-gradient(180deg, transparent, var(--border-accent), transparent);
+  margin: 0 20px;
+  flex-shrink: 0;
+}
+
+.stat-item {
+  text-align: center;
+  padding: clamp(20px, 2.5vh, 32px) clamp(28px, 3vw, 48px);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stat-item:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+.stat-item:hover::before {
+  opacity: 1;
+}
+
+.stat-number {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4vw, 52px);
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 10px;
+  letter-spacing: -0.02em;
+}
+
+.stat-label {
+  font-family: var(--font-body);
+  font-size: clamp(12px, 1.2vw, 16px);
+  color: var(--fg-muted);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.experts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(18px, 2vw, 26px);
+  margin-top: clamp(24px, 3vh, 36px);
+}
+
+.expert-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: clamp(24px, 3vh, 36px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.expert-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.expert-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-accent);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+}
+
+.expert-card:hover::before {
+  opacity: 1;
+}
+
+.expert-avatar {
+  width: clamp(52px, 5vw, 68px);
+  height: clamp(52px, 5vw, 68px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(18px, 2vw, 26px);
+  margin-bottom: clamp(14px, 1.8vh, 22px);
+  transition: all 0.3s ease;
+}
+
+.expert-card:hover .expert-avatar {
+  transform: translateY(-4px);
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.expert-avatar.role-leader {
+  background: linear-gradient(135deg, var(--accent), var(--copper));
+  color: var(--bg-deep);
+}
+
+.expert-avatar.role-challenger {
+  background: linear-gradient(135deg, var(--clash), #c44a2e);
+  color: #fff;
+}
+
+.expert-avatar.role-observer {
+  background: linear-gradient(135deg, var(--insight), #358568);
+  color: #fff;
+}
+
+.expert-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(14px, 1.4vw, 18px);
+  margin-bottom: 6px;
+  color: var(--fg);
+  letter-spacing: 0.01em;
+}
+
+.expert-role {
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1vw, 13px);
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: clamp(10px, 1.2vh, 14px);
+}
+
+.expert-desc {
+  font-family: var(--font-body);
+  font-size: clamp(12px, 1.2vw, 15px);
+  color: var(--fg-muted);
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+.speech-cards {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2vh, 22px);
+  margin-top: clamp(20px, 2.5vh, 28px);
+}
+
+.speech-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: clamp(24px, 3vh, 36px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.speech-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--copper), transparent);
+  opacity: 0.6;
+}
+
+.speech-card:hover {
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+}
+
+.speech-meta {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 1.8vw, 18px);
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+}
+
+.speaker-avatar {
+  width: clamp(44px, 4vw, 56px);
+  height: clamp(44px, 4vw, 56px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(15px, 1.5vw, 20px);
+  transition: all 0.3s ease;
+}
+
+.speech-card:hover .speaker-avatar {
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+
+.speaker-avatar.role-leader {
+  background: linear-gradient(135deg, var(--accent), var(--copper));
+  color: var(--bg-deep);
+}
+
+.speaker-avatar.role-challenger {
+  background: linear-gradient(135deg, var(--clash), #c44a2e);
+  color: #fff;
+}
+
+.speaker-avatar.role-observer {
+  background: linear-gradient(135deg, var(--insight), #358568);
+  color: #fff;
+}
+
+.speaker-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(14px, 1.4vw, 18px);
+  color: var(--fg);
+  letter-spacing: 0.01em;
+}
+
+.speaker-role {
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1vw, 13px);
+  color: var(--fg-muted);
+  letter-spacing: 0.04em;
+}
+
+.speech-content {
+  font-family: var(--font-body);
+  font-size: clamp(13px, 1.3vw, 16px);
+  line-height: 1.9;
+  color: var(--fg-muted);
+  letter-spacing: 0.01em;
+}
+
+.clash-block {
+  background: linear-gradient(135deg, var(--clash-soft), rgba(212,160,74,0.06));
+  border: 1px solid rgba(255,71,87,0.25);
+  border-radius: var(--radius);
+  padding: clamp(24px, 3vh, 36px);
+  margin-top: clamp(20px, 2.5vh, 28px);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 40px var(--clash-glow), inset 0 0 60px rgba(255,71,87,0.05);
+}
+
+.clash-block::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(180deg, var(--clash), #c44a2e);
+  border-radius: 0 5px 5px 0;
+  box-shadow: 0 0 20px var(--clash-glow);
+}
+
+.clash-block::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 5px;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--clash), transparent);
+  opacity: 0.4;
+}
+
+.clash-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1.2vw, 14px);
+  font-weight: 700;
+  color: var(--clash);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+}
+
+.clash-item {
+  margin-bottom: clamp(12px, 1.5vh, 16px);
+  padding-bottom: clamp(12px, 1.5vh, 16px);
+  border-bottom: 1px solid rgba(255,71,87,0.15);
+}
+
+.clash-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.clash-speaker {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(13px, 1.3vw, 16px);
+  color: var(--accent);
+  margin-bottom: 8px;
+  letter-spacing: 0.01em;
+}
+
+.clash-text {
+  font-family: var(--font-body);
+  font-size: clamp(12px, 1.2vw, 15px);
+  line-height: 1.8;
+  color: var(--fg-muted);
+  letter-spacing: 0.01em;
+}
+
+.insight-block {
+  background: linear-gradient(135deg, var(--insight-soft), rgba(0,212,170,0.04));
+  border: 1px solid rgba(0,212,170,0.30);
+  border-radius: var(--radius);
+  padding: clamp(28px, 3.5vh, 40px);
+  margin-top: clamp(20px, 2.5vh, 28px);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 50px var(--insight-glow), inset 0 0 80px rgba(0,212,170,0.05);
+}
+
+.insight-block::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(180deg, var(--insight), #358568);
+  border-radius: 0 5px 5px 0;
+  box-shadow: 0 0 25px var(--insight-glow);
+}
+
+.insight-block::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 5px;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--insight), transparent);
+  opacity: 0.5;
+}
+
+.insight-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1.2vw, 14px);
+  font-weight: 700;
+  color: var(--insight);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+}
+
+.insight-core {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2vw, 26px);
+  font-weight: 800;
+  color: var(--fg);
+  line-height: 1.45;
+  margin-bottom: clamp(12px, 1.5vh, 16px);
+  letter-spacing: -0.01em;
+}
+
+.insight-explain {
+  font-family: var(--font-body);
+  font-size: clamp(13px, 1.3vw, 16px);
+  line-height: 1.85;
+  color: var(--fg-muted);
+  letter-spacing: 0.01em;
+}
+
+.conclusions-grid {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2vh, 22px);
+  margin-top: clamp(20px, 2.5vh, 28px);
+}
+
+.conclusion-item {
+  display: flex;
+  gap: clamp(16px, 2vw, 22px);
+  align-items: flex-start;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: clamp(20px, 2.5vh, 28px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.conclusion-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.conclusion-item:hover {
+  background: var(--bg-card-hover);
+  transform: translateX(8px);
+  box-shadow: 0 8px 30px rgba(212,160,74,0.15);
+}
+
+.conclusion-item:hover::before {
+  opacity: 1;
+}
+
+.conclusion-num {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 3.5vw, 44px);
+  font-weight: 800;
+  color: var(--accent);
+  opacity: 0.4;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.conclusion-text {
+  font-family: var(--font-body);
+  font-size: clamp(14px, 1.4vw, 18px);
+  line-height: 1.7;
+  color: var(--fg);
+  flex: 1;
+  letter-spacing: 0.01em;
+}
+
+.question-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: clamp(22px, 2.8vh, 32px);
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(14px, 1.8vw, 18px);
+  overflow: hidden;
+  position: relative;
+}
+
+.question-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.question-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent);
+  transform: translateX(8px);
+  box-shadow: 0 8px 30px rgba(212,160,74,0.15);
+}
+
+.question-card:hover::before {
+  opacity: 1;
+}
+
+.question-card .question-expand {
+  display: none;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-body);
+  font-size: clamp(12px, 1.2vw, 15px);
+  color: var(--fg-dim);
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+.question-card:hover .question-expand {
+  display: block;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.question-number {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(16px, 1.6vw, 22px);
+  color: var(--accent);
+  opacity: 0.5;
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+
+.question-text {
+  font-family: var(--font-body);
+  font-size: clamp(13px, 1.3vw, 16px);
+  color: var(--fg);
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+}
+
+#nav {
+  position: fixed;
+  bottom: clamp(16px, 2vh, 24px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.2vw, 16px);
+  z-index: 100;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(20px);
+  padding: clamp(10px, 1.2vh, 14px) clamp(18px, 2vw, 28px);
+  border-radius: 100px;
+  border: 1px solid var(--border);
+}
+
+.nav-btn {
+  width: clamp(36px, 3.5vw, 44px);
+  height: clamp(36px, 3.5vw, 44px);
+  border: none;
+  background: var(--bg-card);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(12px, 1.2vw, 14px);
+  color: var(--fg);
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  background: var(--accent);
+  color: var(--bg-deep);
+  transform: scale(1.1);
+}
+
+.dots {
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dot:hover {
+  background: rgba(255,255,255,0.5);
+  transform: scale(1.2);
+}
+
+.dot.active {
+  background: var(--accent);
+  transform: scale(1.4);
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+#counter {
+  position: fixed;
+  top: clamp(12px, 1.5vh, 20px);
+  right: clamp(16px, 2vw, 24px);
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 1.1vw, 14px);
+  color: var(--fg-muted);
+  z-index: 100;
+  background: rgba(0,0,0,0.6);
+  padding: 8px 16px;
+  border-radius: 100px;
+  backdrop-filter: blur(10px);
+  letter-spacing: 0.02em;
+}
+
+#progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 101;
+  background: var(--border);
+}
+
+#progressBar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--copper));
+  transition: width 0.2s ease-out;
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+@media (max-width: 768px) {
+  .experts-grid { grid-template-columns: repeat(2, 1fr); }
+  .cover-body { max-width: 85%; }
+  .stat-divider { display: none; }
+}
+
+@media (max-width: 480px) {
+  .experts-grid { grid-template-columns: 1fr; }
+  .stats-flex { flex-direction: column; gap: 14px; }
+  .stat-item { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
-
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans-zh);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-
-  /* ============ Deck 容器 ============ */
-  #deck{position:relative;width:100vw;height:100vh;overflow:hidden}
-
-  /* ============ 进度条 ============ */
-  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:1000;transition:width .5s var(--ease);box-shadow:0 0 12px rgba(var(--accent-rgb),.3)}
-
-  /* ============ 幻灯片 ============ */
-  .deck{position:relative;width:100%;height:100%}
-  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;overflow:hidden}
-  .slide-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
-  .slide.active{display:flex}
-  .slide.hero{justify-content:center;align-items:center;text-align:center}
-  .slide.title-slide{justify-content:center;align-items:center;text-align:center}
-
-  /* ============ 入场动画(Guizang风格) ============ */
-  [data-anim]{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
-  .slide.active [data-anim]{opacity:1;transform:translateY(0)}
-  .slide.active [data-anim]:nth-child(1){transition-delay:.1s}
-  .slide.active [data-anim]:nth-child(2){transition-delay:.18s}
-  .slide.active [data-anim]:nth-child(3){transition-delay:.26s}
-  .slide.active [data-anim]:nth-child(4){transition-delay:.34s}
-  .slide.active [data-anim]:nth-child(5){transition-delay:.42s}
-  .slide.active [data-anim]:nth-child(6){transition-delay:.5s}
-
-  /* ============ 内容区(book-distillation范式) ============ */
-  .frame{width:100%;max-width:1100px;margin:0 auto;flex:1;display:flex;flex-direction:column}
-  .slide-content{flex:1;display:flex;flex-direction:column}
-
-  /* ============ Magazine Chrome(Guizang风格) ============ */
-  .chrome{display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.5;margin-bottom:3vh}
-  .chrome .left,.chrome .right{display:flex;gap:2em;align-items:center}
-  .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
-
-  /* ============ 底部元数据(render_v8兼容) ============ */
-  .deck-footer{margin-top:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
-  .slide-number{position:absolute;bottom:2vh;right:3vw;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.35)}
-
-  /* ============ Section Label ============ */
-  .section-label{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
-
-  /* ============ 封面 ============ */
-  .cover-badge{display:inline-block;padding:6px 20px;border:1px solid var(--accent);border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4vh}
-  .cover-title{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .cover-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:4vh;line-height:1.8;max-width:600px}
-  .cover-stats{display:flex;gap:4vh;flex-wrap:wrap;justify-content:center}
-  .cover-stat{text-align:center}
-  .cover-stat-num{font-family:var(--mono);font-size:2.5rem;font-weight:900;color:var(--accent)}
-  .cover-stat-label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.5);margin-top:.5vh}
-
-  /* ============ 封面标题(render_v8) ============ */
-  .hero-dark{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;flex:1}
-  .title-main{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .title-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:2vh;line-height:1.8}
-  .gold-line{width:80px;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));margin:3vh auto;border-radius:2px}
-
-  /* ============ 标题系统 ============ */
-  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
-  .h-hero{font-family:var(--serif-zh);font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.2;margin-bottom:3vh}
-  .h-xl{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.4rem,3vw,2.2rem);line-height:1.3;margin-bottom:2vh}
-  .h-lg{font-family:var(--serif-zh);font-weight:600;font-size:clamp(1.1rem,2vw,1.5rem);line-height:1.4;margin-bottom:1.5vh}
-  .h-md{font-weight:600;font-size:1.1rem;margin-bottom:1vh}
-  .lead{font-size:1rem;line-height:1.85;color:rgba(var(--paper-rgb),.8);max-width:700px}
-  .meta-row{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.4);display:flex;gap:2em;flex-wrap:wrap;margin-top:3vh}
-
-  /* ============ 大号引用(render_v8) ============ */
-  .quote-large{font-family:var(--serif-zh);font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:600;line-height:1.6;color:rgba(var(--paper-rgb),.9);max-width:800px;margin:0 auto}
-
-  /* ============ 分割线 ============ */
-  .rule{width:100%;height:1px;background:rgba(var(--paper-rgb),.15);margin:3vh 0}
-
-  /* ============ 标签 ============ */
-  .tag{display:inline-block;padding:4px 12px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;margin:3px}
-  .tag-gold{background:rgba(var(--gold-rgb),.15);color:var(--gold);border:1px solid rgba(var(--gold-rgb),.2)}
-  .tag-red{background:rgba(var(--accent-rgb),.15);color:var(--accent);border:1px solid rgba(var(--accent-rgb),.2)}
-  .tag-blue{background:rgba(74,106,154,.15);color:var(--blue);border:1px solid rgba(74,106,154,.2)}
-  .tag-purple{background:rgba(138,74,170,.15);color:var(--purple);border:1px solid rgba(138,74,170,.2)}
-  .tag-green{background:rgba(58,138,92,.15);color:var(--green);border:1px solid rgba(58,138,92,.2)}
-
-  /* ============ 霓虹强调色(render_v8) ============ */
-  .neon-gold{color:var(--gold)}.neon-red{color:var(--accent)}.neon-cyan{color:var(--cyan)}.neon-purple{color:var(--purple)}.neon-orange{color:var(--orange)}.neon-green{color:var(--green)}
-
-  /* ============ 网格系统 ============ */
-  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:2vh 2vw}
-  @media(max-width:768px){.grid-2{grid-template-columns:1fr}}
-
-  /* ============ 发言块(原生) ============ */
-  .sp{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2.5vw;margin-bottom:2vh;position:relative}
-  .sp::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
-  .sh{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh}
-  .speaker-avatar{width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:var(--ink);background:var(--accent);flex-shrink:0}
-  .sn{font-weight:700;font-size:1rem}
-  .sr{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4);padding:3px 8px;background:rgba(var(--paper-rgb),.06);border-radius:3px}
-  .st{font-size:.95rem;line-height:2;color:rgba(var(--paper-rgb),.85)}
-  .st strong{color:var(--paper);font-weight:700}
-  .st em{color:var(--gold);font-style:normal;font-weight:600}
-
-  /* ============ 碰撞块(原生) ============ */
-  .cb{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;position:relative}
-  .cb::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
-  .cb.blue{border-color:rgba(74,106,154,.3)}.cb.blue::before{background:var(--blue)}
-  .cb.purple{border-color:rgba(138,74,170,.3)}.cb.purple::before{background:var(--purple)}
-  .cb.green{border-color:rgba(58,138,92,.3)}.cb.green::before{background:var(--green)}
-  .cb.orange{border-color:rgba(var(--gold-rgb),.3)}.cb.orange::before{background:var(--gold)}
-  .cl{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;color:var(--accent);font-weight:600}
-  .cl.blue{color:var(--blue)}.cl.purple{color:var(--purple)}.cl.green{color:var(--green)}.cl.orange{color:var(--gold)}
-
-  /* ============ 洞见卡 ============ */
-  .insight-c{background:linear-gradient(135deg,rgba(var(--paper-rgb),.04) 0%,rgba(var(--paper-rgb),.08) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh;position:relative;overflow:hidden}
-  .insight-c::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold))}
-  .insight-q{font-family:var(--serif-zh);font-size:1.1rem;font-weight:700;color:var(--gold);line-height:1.6;margin-bottom:1vh}
-  .insight-a{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.75)}
-
-  /* ============ 卡片 ============ */
-  .card{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
-  .card-num{font-family:var(--mono);font-weight:900;font-size:1.8rem;color:var(--accent);opacity:.4;margin-bottom:1vh}
-  .card-title{font-weight:700;font-size:1rem;margin-bottom:1vh}
-  .card-body{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
-  .card-source{font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);margin-top:1vh}
-
-  /* ============ 专家卡片(render_v8) ============ */
-  .card-rise{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--green)}
-  .card-fall{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--accent)}
-  .speaker-header{display:flex;align-items:center;gap:16px;margin-bottom:2vh}
-  .speaker-name{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem}
-  .speaker-role{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:2px}
-  .expert-profile{display:flex;flex-direction:column;gap:1vh}
-  .profile-item{font-size:.9rem;line-height:1.7;color:rgba(var(--paper-rgb),.8)}
-  .profile-label{color:var(--gold);font-weight:600}
-
-  /* ============ 立场表达(render_v8) ============ */
-  .stance-item{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;border-left:3px solid var(--gold)}
-  .stance-expert{font-family:var(--serif-zh);font-weight:700;font-size:1rem;margin-bottom:1vh}
-  .stance-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
-  .stances-grid{display:flex;flex-direction:column;gap:1.5vh}
-
-  /* ============ 碰撞轮次(render_v8) ============ */
-  .clash-round{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;position:relative}
-  .clash-round::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
-  .clash-header{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh;flex-wrap:wrap}
-  .clash-attacker{font-weight:700;font-size:1rem}
-  .clash-target{font-weight:700;font-size:1rem}
-  .clash-arrow{color:rgba(var(--paper-rgb),.3);font-size:1.2rem}
-  .clash-type{display:inline-block;padding:3px 10px;border-radius:3px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.5vh;font-weight:600}
-  .clash-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
-  .counter-attack{margin-top:2vh;padding-top:2vh;border-top:1px dashed rgba(var(--paper-rgb),.1)}
-  .counter-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .counter-content{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
-  .clash-container{display:flex;flex-direction:column;gap:2vh}
-
-  /* ============ 攻击类型色 ============ */
-  .attack-logic{background:rgba(74,106,154,.15);color:var(--blue)}
-  .attack-interest{background:rgba(var(--accent-rgb),.15);color:var(--accent)}
-  .attack-reality{background:rgba(var(--gold-rgb),.15);color:var(--gold)}
-  .attack-human{background:rgba(138,74,170,.15);color:var(--purple)}
-  .attack-failure{background:rgba(58,138,92,.15);color:var(--green)}
-
-  /* ============ 现实案例(render_v8) ============ */
-  .reality-case{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--orange)}
-  .case-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5vh;flex-wrap:wrap;gap:8px}
-  .case-name{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem}
-  .case-source{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4)}
-  .case-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:1.5vh}
-  .case-outcome{font-size:.9rem;font-weight:600;margin-bottom:1vh}
-  .case-lesson{font-size:.9rem;font-weight:600}
-  .cases-container{display:flex;flex-direction:column;gap:2vh}
-
-  /* ============ 代价讨论(render_v8) ============ */
-  .cost-discussion{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh}
-  .cost-scenario{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem;margin-bottom:2vh}
-  .cost-list{display:flex;flex-direction:column;gap:1.5vh;margin-bottom:2vh}
-  .cost-item{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:1.5vh 2vw;border-left:3px solid var(--accent)}
-  .cost-name{font-weight:700;font-size:.95rem;margin-bottom:.5vh}
-  .cost-analysis{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
-  .worst-case{background:rgba(var(--accent-rgb),.08);border:1px solid rgba(var(--accent-rgb),.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
-  .worst-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .worst-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
-  .survivor-bias{background:rgba(138,74,170,.08);border:1px solid rgba(138,74,170,.15);border-radius:6px;padding:2vh 2vw}
-  .survivor-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .survivor-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
-
-  /* ============ 人性层(render_v8) ============ */
-  .human-nature{background:linear-gradient(135deg,rgba(var(--paper-rgb),.03) 0%,rgba(var(--paper-rgb),.06) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
-  .human-question{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem;margin-bottom:2vh;line-height:1.5}
-  .human-analysis{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:2vh}
-  .human-examples{margin-bottom:2vh}
-  .examples-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1vh;font-weight:600}
-  .example-item{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8);padding:.5vh 0}
-  .human-conclusion{font-size:.95rem;font-weight:600;line-height:1.7}
-
-  /* ============ 认知升级(render_v8) ============ */
-  .cognitive-upgrade{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
-  .upgrade-comparison{display:grid;grid-template-columns:1fr auto 1fr;gap:2vw;align-items:start;margin-bottom:2vh}
-  @media(max-width:768px){.upgrade-comparison{grid-template-columns:1fr}.upgrade-arrow{transform:rotate(90deg)}}
-  .old-thinking,.new-thinking{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:2vh 1.5vw}
-  .old-thinking{border-left:3px solid var(--accent)}
-  .new-thinking{border-left:3px solid var(--green)}
-  .thinking-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .thinking-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
-  .upgrade-arrow{font-size:1.5rem;color:rgba(var(--paper-rgb),.3);display:flex;align-items:center;justify-content:center;padding-top:3vh}
-  .complexity{background:rgba(74,106,154,.08);border:1px solid rgba(74,106,154,.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
-  .complexity-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .complexity-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
-  .actionable{background:rgba(var(--gold-rgb),.08);border:1px solid rgba(var(--gold-rgb),.15);border-radius:6px;padding:2vh 2vw}
-  .actionable-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .actionable-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
-
-  /* ============ 情绪样式 ============ */
-  .emotion-sarcasm{border-left:3px solid var(--purple);padding-left:12px;font-style:italic}
-  .emotion-helplessness{opacity:.75;font-style:italic}
-  .emotion-anger{color:var(--accent);font-weight:600}
-  .emotion-hesitation{opacity:.8;font-style:italic}
-  .emotion-self-deprecation{opacity:.7;font-style:italic}
-  .emotion-cold-laugh{color:var(--purple)}
-  .emotion-silence{opacity:.5;font-style:italic}
-  .emotion-serious{color:rgba(var(--paper-rgb),.85)}
-
-  /* ============ 指标 ============ */
-  .metrics{display:flex;gap:2vw;flex-wrap:wrap;margin-bottom:3vh}
-  .metric{flex:1;min-width:100px;text-align:center;background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 1.5vw}
-  .metric-val{font-family:var(--mono);font-weight:900;font-size:clamp(1.5rem,3vw,2.5rem);color:var(--accent)}
-  .metric-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:.5vh}
-
-  /* ============ 开放问题 ============ */
-  .oq{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
-  .oq-num{font-family:var(--mono);font-weight:900;font-size:1.2rem;color:var(--accent);opacity:.3;margin-bottom:1vh}
-  .oq-text{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
-  .headline-item{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.85);padding:1.5vh 0;border-bottom:1px solid rgba(var(--paper-rgb),.06)}
-  .headline-item:last-child{border-bottom:none}
-  .headline-item strong{color:var(--gold);margin-right:8px}
-
-  /* ============ 引用 ============ */
-  .quote{font-family:var(--serif-zh);font-size:1rem;font-style:italic;line-height:1.8;padding:2vh 2.5vw;border-left:3px solid var(--gold);background:rgba(var(--gold-rgb),.05);margin:2vh 0;color:rgba(var(--paper-rgb),.85)}
-
-  /* ============ TOC ============ */
-  .toc-panel{position:fixed;top:0;left:0;width:min(340px,80vw);height:100vh;background:rgba(var(--ink-rgb),.97);backdrop-filter:blur(20px);z-index:100;transform:translateX(-100%);transition:transform .35s var(--ease);padding:3vh 2.5vw;overflow-y:auto;border-right:1px solid rgba(var(--paper-rgb),.08)}
-  .toc-panel.open{transform:translateX(0)}
-  .toc-title{font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:3vh;padding-bottom:2vh;border-bottom:1px solid rgba(var(--paper-rgb),.1)}
-  .toc-item{display:flex;justify-content:space-between;padding:1.2vh 1.5vw;margin-bottom:.5vh;cursor:pointer;border-radius:6px;border-left:2px solid transparent;font-size:.9rem;color:rgba(var(--paper-rgb),.7);transition:all .2s}
-  .toc-item:hover{background:rgba(var(--paper-rgb),.06);color:var(--paper)}
-  .toc-item.active{background:rgba(var(--paper-rgb),.08);color:var(--accent);border-left-color:var(--accent);font-weight:600}
-  .toc-label{flex:1}
-  .toc-page{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.35)}
-  .toc-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;opacity:0;pointer-events:none;transition:opacity .3s}
-  .toc-backdrop.open{opacity:1;pointer-events:auto}
-
-  /* ============ 导航栏 ============ */
-  .nav-bar{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 3vw;background:rgba(var(--ink-rgb),.9);backdrop-filter:blur(10px);z-index:50;border-top:1px solid rgba(var(--paper-rgb),.06)}
-  .nav-left,.nav-right{display:flex;align-items:center;gap:12px}
-  .nav-btn{background:none;border:1px solid rgba(var(--paper-rgb),.12);color:rgba(var(--paper-rgb),.7);padding:8px 16px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;cursor:pointer;transition:all .2s}
-  .nav-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(var(--accent-rgb),.1)}
-  .nav-title{font-size:12px;color:rgba(var(--paper-rgb),.5);max-width:40vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .nav-counter{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.4)}
-
-  /* ============ 导航点 ============ */
-  .nav-dots{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:6px}
-  .nd{width:6px;height:6px;border-radius:50%;background:rgba(var(--paper-rgb),.15);cursor:pointer;transition:all .3s var(--ease);border:none;padding:0}
-  .nd.active{background:var(--accent);height:20px;border-radius:3px;box-shadow:0 0 8px rgba(var(--accent-rgb),.4)}
-  .nd:hover{background:rgba(var(--paper-rgb),.4)}
-
-  /* ============ 入场动画延迟(render_v8兼容) ============ */
-  .anim-in{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
-  .slide.active .anim-in{opacity:1;transform:translateY(0)}
-  .slide.active .anim-in:nth-child(1){transition-delay:.1s}
-  .slide.active .anim-in:nth-child(2){transition-delay:.18s}
-  .slide.active .anim-in:nth-child(3){transition-delay:.26s}
-  .slide.active .anim-in:nth-child(4){transition-delay:.34s}
-  .slide.active .anim-in:nth-child(5){transition-delay:.42s}
-  .slide.active .anim-in:nth-child(6){transition-delay:.5s}
-  .anim-delay-1{transition-delay:.18s !important}
-  .anim-delay-2{transition-delay:.26s !important}
-  .anim-delay-3{transition-delay:.34s !important}
-  .anim-delay-4{transition-delay:.42s !important}
-  .anim-delay-5{transition-delay:.5s !important}
-  .anim-delay-6{transition-delay:.58s !important}
-
-  /* ============ 响应式 ============ */
-  @media(max-width:1024px){.slide{padding:4vh 5vw 8vh}}
-  @media(max-width:768px){
-    .slide{padding:3vh 4vw 7vh}
-    .cover-stats{gap:2vh}
-    .metrics{flex-direction:column}
-    .nav-dots,.nav-title{display:none}
-    .nav-bar{padding:0 2vw}
-  }
+}
 </style>
 </head>
 <body>
-<div class="deck" id="deck">
-<div class="progress-bar" id="progressBar"></div>
-
-
-  <section class="slide hero active" data-title="封面">
-    <div class="slide-content hero-dark">
-      <div class="section-label anim-in">ROUNDTABLE DISCUSSION V8.0</div>
-      <h1 class="title-main anim-in anim-delay-1">《穷查理宝典》圆桌洞见</h1>
-      <div class="title-sub anim-in anim-delay-2">《穷查理宝典》· 6位专家 · 3轮碰撞 · 基于互联网真实素材</div>
-      <div class="gold-line anim-in anim-delay-3"></div>
-      <p style="font-size:14px;color:var(--text-dim);letter-spacing:0.1em;" class="anim-in anim-delay-4">从知识讨论到生存博弈</p>
-    </div>
-    <div class="deck-footer">《穷查理宝典》圆桌洞见 | V8级圆桌洞见</div>
-    <div class="slide-number">01 / 18</div>
-  </section>
-
-  <section class="slide" data-title="专家档案(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">EXPERT PROFILES (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
-      <div class="grid-2">
-        
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#1a5f2a">巴</div>
-          <div>
-            <div class="speaker-name neon-gold">巴菲特</div>
-            <div class="speaker-role">价值投资奠基人</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>买股票就是买公司，用合理价格买优秀企业比用便宜价格买普通企业好得多</div><div class="profile-item"><span class="profile-label">利益相关：</span>段永平是价值投资在中国最忠实的实践者，验证了巴菲特体系的跨文化可行性</div><div class="profile-item"><span class="profile-label">恐惧：</span>段永平的体系被机械模仿而非真正理解，最终在市场考验中失败</div><div class="profile-item"><span class="profile-label">偏见：</span>倾向于认为段永平的成功是'认知胜利'而非'时代红利'</div>
-        </div>
-      </div>
-
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#8a2a4a">塔</div>
-          <div>
-            <div class="speaker-name neon-gold">塔勒布</div>
-            <div class="speaker-role">不确定性思想家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>反脆弱性：有些事物能从冲击、不确定性和波动中获益</div><div class="profile-item"><span class="profile-label">利益相关：</span>段永平的集中持仓+长期持有策略在尾部风险面前极为脆弱</div><div class="profile-item"><span class="profile-label">恐惧：</span>段永平的成功建立在一系列不可能预测的'正面黑天鹅'之上</div><div class="profile-item"><span class="profile-label">偏见：</span>系统性低估个体认知能力，倾向于认为'懂企业'是一种幻觉</div>
-        </div>
-      </div>
-
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#333333">丹</div>
-          <div>
-            <div class="speaker-name neon-gold">丹尼尔·卡尼曼</div>
-            <div class="speaker-role">行为经济学之父</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>待填充</div><div class="profile-item"><span class="profile-label">利益相关：</span>待填充</div><div class="profile-item"><span class="profile-label">恐惧：</span>待填充</div><div class="profile-item"><span class="profile-label">偏见：</span>待填充</div>
-        </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">专家档案</div>
-    <div class="slide-number">02 / 18</div>
-  </section>
-
-  <section class="slide" data-title="专家档案(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">EXPERT PROFILES (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
-      <div class="grid-2">
-        
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#333333">丹</div>
-          <div>
-            <div class="speaker-name neon-gold">丹尼尔·戈尔曼</div>
-            <div class="speaker-role">情商理论专家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>待填充</div><div class="profile-item"><span class="profile-label">利益相关：</span>待填充</div><div class="profile-item"><span class="profile-label">恐惧：</span>待填充</div><div class="profile-item"><span class="profile-label">偏见：</span>待填充</div>
-        </div>
-      </div>
-
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#2a6a6a">吴</div>
-          <div>
-            <div class="speaker-name neon-gold">吴军</div>
-            <div class="speaker-role">科技投资观察者</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>科技发展以浪潮形式推进，顺势者昌逆势者亡；简单即是美</div><div class="profile-item"><span class="profile-label">利益相关：</span>段永平是中国第一个用实业思维做投资的实践者，具有划时代意义</div><div class="profile-item"><span class="profile-label">恐惧：</span>段永平的实业经验既是他的护城河，也是他的认知边界</div><div class="profile-item"><span class="profile-label">偏见：</span>对中国市场的独特性可能过于乐观</div>
-        </div>
-      </div>
-
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#4a2d8a">柯</div>
-          <div>
-            <div class="speaker-name neon-gold">柯林斯</div>
-            <div class="speaker-role">实证管理学家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>卓越企业的共同特征是'第五级经理人'+飞轮效应+知道不做什么</div><div class="profile-item"><span class="profile-label">利益相关：</span>段永平用实证证明：知道自己不做什么，是比知道自己做什么更强大的竞争优势</div><div class="profile-item"><span class="profile-label">恐惧：</span>段永平的体系无法被普通人真正复制，因为它依赖特定的个人能力和资本条件</div><div class="profile-item"><span class="profile-label">偏见：</span>倾向于用实证数据说话，但可能低估了'洞见'和'直觉'的价值</div>
-        </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">专家档案</div>
-    <div class="slide-number">03 / 18</div>
-  </section>
-
-  <section class="slide" data-title="Round 1: 段永平投资哲学的底层逻辑是否站得住脚？">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1</div>
-      <h2 class="quote-large anim-in anim-delay-1">段永平投资哲学的底层逻辑是否站得住脚？</h2>
-      <div class="gold-line anim-in anim-delay-2"></div>
-      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">买股票就是买公司——这句话有1%的人真懂就了不起，做到就更难</p>
-    </div>
-    <div class="deck-footer">Round 1 | 段永平投资哲学的底层逻辑是否站得住脚？</div>
-    <div class="slide-number">04 / 18</div>
-  </section>
-
-  <section class="slide" data-title="R1 立场(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
-      <div class="stances-grid">
-        
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">巴菲特</div>
-        <div class="stance-content emotion-serious">芒格是我见过的最聪明的人，他彻底改变了伯克希尔的投资哲学。在我遇到芒格之前，我是格雷厄姆'捡烟蒂'理论的信徒——用清算价值买便宜公司。芒格对我说：'沃伦，用合理的价格买伟大的公司，比用便宜的价格买普通公司好得多。'这句话改变了我的一生。
-
-芒格的多元思维模型不是知识的堆砌，而是穿透表象的武器。他研究心理学、经济学、物理学、生物学，不是为了炫耀，而是为了在投资决策时不犯致命的错误。他在评估喜诗糖果时，不仅看财务数据，还研究品牌忠诚度的心理学基础。他在做决策前，会用他的'检查清单'一项项核对——这个清单，正是多元思维模型的具体应用。
-
-我常开玩笑说，芒格是'长着两条腿的书'。他每天阅读超过5小时，涉猎广泛。但他的阅读不是为了积累知识，而是为了构建一个'思维模型的格栅'——当面对复杂问题时，他能从多个角度同时思考，这就是他的竞争优势。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">塔勒布</div>
-        <div class="stance-content emotion-serious">我必须对芒格的多元思维模型提出根本性质疑。这个体系的核心假设是：掌握足够多的思维模型，就能做出更好的决策。但现实恰恰相反——过度分析往往导致决策瘫痪，而'事后诸葛亮'式的解释让任何事后分析看起来都像是洞见。
-
-芒格说'如果你只有一把锤子，看什么都会像钉子'。但反过来，如果你有100把锤子，你会变成什么样？你会变成一个无法行动的人。我的'反脆弱'理念告诉我：最好的决策往往来自简单原则，而不是复杂模型。你需要的是足够少的关键变量，而不是足够多的思维框架。
-
-更严重的是'确认偏误'问题：一旦你相信多元思维模型是好的，你会倾向于只看到支持这个信念的证据。芒格的成功案例被反复引用，但那些使用多元思维模型却失败的人呢？他们的故事在哪里？任何理论，如果只展示成功案例，都值得怀疑。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">卡尼曼</div>
-        <div class="stance-content emotion-serious">芒格的人类误判心理学是《思考，快与慢》的先驱。他在1995年哈佛法学院的演讲，比我的诺贝尔获奖研究还要早。他在演讲中总结了25种导致人类错误判断的心理倾向——这与我研究的'认知偏误'高度重合。
-
-但我要补充一点：芒格的框架有一个盲点。他强调'知道什么会出错'，但没有充分讨论'知道什么是对的'的困难。认知科学告诉我们，人类不仅在避免错误方面有困难，在识别正确方面也有系统性的偏差。比如'有效性幻觉'——人们倾向于高估自己预测未来的能力，即使他们的预测是基于合理的模型。
-
-芒格说'逆向思考'是成功的关键。这在原则上是对的，但在实践中，'知道你会死在何处'并不自动告诉你'你应该去哪里'。我的研究表明，即使人们知道自己的偏误，也很难克服它们。知识≠行动。</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 立场</div>
-    <div class="slide-number">05 / 18</div>
-  </section>
-
-  <section class="slide" data-title="R1 立场(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
-      <div class="stances-grid">
-        
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">戈尔曼</div>
-        <div class="stance-content emotion-serious">芒格的多元思维模型与情商理论有深刻的共鸣。他强调的很多心理倾向——如社会认同、奖励超级反应——都与情商研究的核心发现一致：高情商的人能识别并管理这些心理倾向对自己的影响。
-
-但我注意到芒格体系的一个缺失：他没有充分讨论'情绪'的作用。在他的框架中，人主要是'认知机器'，但忽略了情绪在决策中的核心作用。神经科学研究表明，没有情绪参与的大脑，无法做出好的决策——这就是为什么'纯粹理性'的决策者往往表现不佳。
-
-芒格强调'理性'，这当然重要。但如果理性不包括对自身情绪的理解和调节，它就是不完整的。他提到避免'嫉妒'和'怨恨'，但没有讨论如何做到这一点——这恰恰是情商的核心课题。我建议在他的框架中加入情绪智商的维度。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">吴军</div>
-        <div class="stance-content emotion-serious">芒格对中国读者的价值，远超投资本身。他的多元思维模型，本质上是一种'降噪'机制——在信息爆炸的时代，帮助你过滤噪音，抓住关键变量。
-
-我用他的框架分析科技公司。比如评估字节跳动：我会同时考虑：1)传播学视角（内容分发算法）；2)心理学视角（用户多巴胺反馈机制）；3)经济学视角（注意力经济的市场结构）；4)生物学视角（竞争达尔文主义）；5)社会学视角（Z世代的内容消费习惯）。这种多维分析，让我比单一视角的分析师更能把握公司的本质。
-
-但我也有担忧：芒格的框架需要大量知识储备作为基础。普通人没有时间和精力去掌握100个思维模型。我的建议是：专注于最重要的20-30个模型，精通它们，而不是泛泛了解100个。'精通20个核心模型，就能解决90%的问题。'</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">柯林斯</div>
-        <div class="stance-content emotion-serious">芒格的理念与我的实证研究高度一致。我研究卓越企业时发现：它们往往具备'兼容并蓄'的文化——愿意从不同领域汲取智慧，而不是固守单一范式。这就是芒格所说的'格栅思维'在组织层面的体现。
-
-但我要提出一个关键问题：芒格的方法是个人层面的智慧，它能转化为组织层面的实践吗？我的研究发现，从个人洞见到组织能力，有一个巨大的鸿沟。很多企业学习芒格，学的是'术'而不是'道'——它们雇佣了几个有多元背景的分析师，但没有建立真正的多元思维文化。
-
-另一个问题是'选择性证据'。芒格在书中引用了大量成功案例——可口可乐、喜诗糖果、伯克希尔本身。但失败案例呢？有多少人用同样的方法，却失败了？我们需要知道这个比率，才能真正评估这个方法的价值。</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 立场</div>
-    <div class="slide-number">06 / 18</div>
-  </section>
-
-  <section class="slide" data-title="Round 2: 段永平投资体系的局限在哪里？">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2</div>
-      <h2 class="quote-large anim-in anim-delay-1">段永平投资体系的局限在哪里？</h2>
-      <div class="gold-line anim-in anim-delay-2"></div>
-      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">成功是认知的胜利还是时代的红利？实业经验是优势还是局限？</p>
-    </div>
-    <div class="deck-footer">Round 2 | 段永平投资体系的局限在哪里？</div>
-    <div class="slide-number">07 / 18</div>
-  </section>
-
-  <section class="slide" data-title="R2 碰撞(1/3)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (1/3)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">塔勒布</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">巴菲特</span>
-        </div>
-        <div class="clash-type attack-logic">逻辑漏洞</div>
-        <div class="clash-content emotion-serious">巴菲特你说芒格'改变了你'，但你有没有想过：如果芒格的框架如此有效，为什么你们没有预见到2008年金融危机？你们的保险公司Gen Re在CDS上的亏损，不是证明了多元思维模型也有盲点吗？芒格自己承认他在金融危机中'犯了很多错误'。这说明什么？说明他的体系并不像他说的那样完善。过度依赖'理性分析'，反而可能让人忽视真正的尾部风险。</div>
-        
-      </div>
-
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">巴菲特</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">塔勒布</span>
-        </div>
-        <div class="clash-type attack-logic">逻辑漏洞</div>
-        <div class="clash-content emotion-serious">塔勒布你说2008年金融危机，但你忽略了一个事实：我们活下来了。你说预见到危机才算成功，但'反脆弱'的定义是：不是预测风险，而是能够在冲击中变得更强。伯克希尔在2008年不仅没有倒下，还趁机收购了多家优质资产。这正是芒格框架的体现：'知道你会死在何处'不是预测死亡，而是确保死亡不会杀死你。</div>
-        
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 碰撞</div>
-    <div class="slide-number">08 / 18</div>
-  </section>
-
-  <section class="slide" data-title="R2 碰撞(2/3)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (2/3)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">卡尼曼</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">戈尔曼</span>
-        </div>
-        <div class="clash-type attack-logic">逻辑漏洞</div>
-        <div class="clash-content emotion-serious">戈尔曼你说芒格忽略了情绪，但我要指出：你对情绪的理解可能过于简化。芒格在人类误判心理学中提到的'喜欢/热爱倾向'和'讨厌/憎恨倾向'，本质上就是情绪倾向。他说'避免嫉妒'和'避免怨恨'，正是情绪管理的内容。你可以说他的框架不完整，但不能说他完全忽略了情绪。</div>
-        
-      </div>
-
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">戈尔曼</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">卡尼曼</span>
-        </div>
-        <div class="clash-type attack-logic">逻辑漏洞</div>
-        <div class="clash-content emotion-serious">卡尼曼你说芒格'没有充分讨论知道什么是对的'，但这正是我批评他的地方。他的检查清单是'避免错误'的工具，但缺乏'识别正确'的指南。情商理论的核心是：不仅要避免负面情绪，还要培养积极情绪（如同理心、好奇心）来支持决策。芒格的框架更像'心理免疫系统'，而不是'心理成长系统'。</div>
-        
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 碰撞</div>
-    <div class="slide-number">09 / 18</div>
-  </section>
-
-  <section class="slide" data-title="R2 碰撞(3/3)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (3/3)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">柯林斯</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">塔勒布</span>
-        </div>
-        <div class="clash-type attack-logic">逻辑漏洞</div>
-        <div class="clash-content emotion-serious">塔勒布你说芒格的方法'只有成功案例'，但你有没有统计过失败率？我的研究显示，使用系统化投资方法的人，长期表现优于随机决策者。芒格的价值不在于'永不犯错'，而在于'少犯大错'。区分'知道多少'和'能做什么'，是评估任何方法论的关键。</div>
-        
-      </div>
-
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">吴军</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">柯林斯</span>
-        </div>
-        <div class="clash-type attack-logic">逻辑漏洞</div>
-        <div class="clash-content emotion-serious">柯林斯你说芒格的方法'不可复制'，但这恰恰是他的价值所在。他不是教你'抄作业'，而是教你'建立框架'。框架的意义不在于复制结果，而在于建立你自己的决策系统。芒格自己也说：'智慧不是知道什么，而是知道自己的无知边界。'这就是框架的意义——帮助你识别边界。</div>
-        
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 碰撞</div>
-    <div class="slide-number">10 / 18</div>
-  </section>
-
-  <section class="slide" data-title="Round 3: 段永平投资哲学对普通人的启示与局限">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3</div>
-      <h2 class="quote-large anim-in anim-delay-1">段永平投资哲学对普通人的启示与局限</h2>
-      <div class="gold-line anim-in anim-delay-2"></div>
-      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">如何从段永平的成功中提取可执行的洞见，而不是机械模仿</p>
-    </div>
-    <div class="deck-footer">Round 3 | 段永平投资哲学对普通人的启示与局限</div>
-    <div class="slide-number">11 / 18</div>
-  </section>
-
-  <section class="slide" data-title="R3 案例(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3: REALITY (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
-      <div class="cases-container">
-        
-      <div class="reality-case anim-in">
-        <div class="case-header">
-          <div class="case-name neon-orange">网易投资（2001-2009）</div>
-          <div class="case-source">[来源：雪球投资分析](https://xueqiu.com/4136606186/361411928)</div>
-        </div>
-        <div class="case-content">2001年互联网泡沫破裂，网易濒临退市，股价跌至0.25-1美元。段永平以0.8美元大举买入，最终获利超100倍，约20亿美元。
-
-芒格留给我们最宝贵的遗产，不是'多元思维模型'本身，而是一种'终身学习'的态度。他在90多岁时依然每天阅读，这本身就是对年轻人最好的教育。
-
-我学到的是：投资的本质不是选股，而是建立一套决策框架。这个框架应该能帮助你：1)识别真正的机会；2)避免致命的错误；3)在不确定中保持冷静。芒格的检查清单，正是这个框架的具体体现。
-
-对年轻人，我的建议是：不要急着投资，先建立你的思维框架。等你的框架成熟了，好的投资机会自然会浮现。芒格说过：'如果你找不到足够好的投资机会，那只能说明你的知识还不够。'</div>
-        <div class="case-outcome neon-red">代价：百倍回报，但过程极为痛苦——股价长期在1美元以下，多次濒临退市</div>
-        <div class="case-lesson neon-gold">教训：逆向投资需要对自己判断的极度自信，以及足够深的'安全垫'——段永平懂游戏、懂管理层、懂商业模式</div>
-      </div>
-
-      <div class="reality-case anim-in">
-        <div class="case-header">
-          <div class="case-name neon-orange">苹果持仓集中（2011至今）</div>
-          <div class="case-source">[来源：阿怪分析](https://xueqiu.com/9081465327/361663212)</div>
-        </div>
-        <div class="case-content">段永平在苹果持仓占组合74.33%，持仓市值超122亿美元。这是极度集中的投资，也是他最大的一次'押注'。
-
-我承认芒格的框架有价值，但我要强调：它的价值在于'避免愚蠢'，而不是'追求卓越'。这是两种不同的目标，需要不同的方法。
-
-芒格的逆向思维是'避免错误'的利器，但在'识别机会'方面，它的作用有限。如果你想避免失败，学习芒格；如果想追求卓越，你可能需要我的'反脆弱'框架——拥抱不确定性，从波动中获益。
-
-对普通人，我的建议是：芒格的框架作为'防御系统'，我的框架作为'进攻系统'。先学会不输，再学会赢。不要把防御武器当成进攻武器。</div>
-        <div class="case-outcome neon-red">代价：回报超20倍，但一旦苹果出现根本性危机，整个资产面临灭顶之灾</div>
-        <div class="case-lesson neon-gold">教训：集中持仓的前提是'真懂'——段永平懂消费电子、懂乔布斯、懂生态系统</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 案例</div>
-    <div class="slide-number">12 / 18</div>
-  </section>
-
-  <section class="slide" data-title="R3 案例(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3: REALITY (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
-      <div class="cases-container">
-        
-      <div class="reality-case anim-in">
-        <div class="case-header">
-          <div class="case-name neon-orange">做空百度（教训）</div>
-          <div class="case-source">[来源：阿怪分析](https://xueqiu.com/9081465327/361663212)</div>
-        </div>
-        <div class="case-content">段永平曾做空百度，亏损约2亿美元。他坦言：'这是失去平常心的愚蠢行为。'这次教训让他定下'永远不做空'的铁律。
-
-芒格的人类误判心理学需要升级。我建议在他的25种倾向之外，加入三种关键的元认知偏误：
-
-1. '我比你更聪明'偏误——高估自己的分析能力；
-2. '我知道我在做什么'偏误——合理化自己的行为；
-3. '我会改变'偏误——低估改变习惯的难度。
-
-知道自己的偏误，只是第一步。真正的挑战是'如何改变'。我的研究显示，仅仅'知道'偏误存在，往往不足以改变行为。你需要建立'外部约束'——比如决策清单、预先承诺机制——来对冲内在的偏误。
-
-芒格的检查清单，本质上就是'外部约束'。但这个约束必须足够具体、足够严格，才能真正起作用。</div>
-        <div class="case-outcome neon-red">代价：2亿美元亏损，但换来了一条价值连城的投资铁律</div>
-        <div class="case-lesson neon-gold">教训：'不做空'不是因为胆小，而是因为理解了做空的非线性风险</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 案例</div>
-    <div class="slide-number">13 / 18</div>
-  </section>
-
-  <section class="slide" data-title="R3 代价">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 4: COST</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
-      
-      <div class="cost-discussion anim-in">
-        <div class="cost-scenario neon-gold">如果普通人模仿段永平的集中持仓策略，会发生什么？</div>
-        <div class="cost-list">
-          
-          <div class="cost-item">
-            <div class="cost-name neon-red">资本不足导致无法加仓</div>
-            <div class="cost-analysis">段永平可以在股价下跌时持续加仓——他有足够的资本。普通人可能在第一个低点就用光了子弹，然后在下一次暴跌中被迫割肉。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">实业经验无法复制</div>
-            <div class="cost-analysis">段永平懂网易，是因为他做了20年游戏；懂苹果，是因为他在消费电子行业摸爬滚打。这种经验不是读几本书能学到的。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">心理承受能力不同</div>
-            <div class="cost-analysis">段永平说过：'为什么我能拿网易那么久，赚了那么多钱还不卖？因为那些钱对我来讲并不多。'当你亏的是孩子的学费、房子的首付，你的'理性'会瞬间崩溃。</div>
-          </div>
-        </div>
-        <div class="worst-case">
-          <div class="worst-label neon-red">最坏情况</div>
-          <div class="worst-content">普通人用杠杆或借来的钱'集中持仓'，在一次市场暴跌中爆仓——这不是价值投资，这是赌博。</div>
-        </div>
-        
-          <div class="survivor-bias">
-            <div class="survivor-label neon-purple">幸存者偏差</div>
-            <div class="survivor-content">你只看到段永平的网易百倍回报，看不到同期有无数人用同样的方法重仓了雅虎、朗讯、WorldCom，血本无归。</div>
-          </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 代价</div>
-    <div class="slide-number">14 / 18</div>
-  </section>
-
-  <section class="slide" data-title="R3 人性">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
-      
-      <div class="human-nature anim-in">
-        <div class="human-question neon-purple">为什么大多数人无法真正执行段永平的投资体系？</div>
-        <div class="human-analysis">投资最大的敌人不是市场，而是我们自己。段永平的体系要求：1）极度理性；2）极度耐心；3）极度自知。这三件事，每一件都是反人性的。我们天生倾向于过度自信、频繁交易、追涨杀跌。更深层的问题是：'懂'是一种幻觉——我们以为我们懂了，但其实是认知偏误在起作用。</div>
-        <div class="human-examples">
-          <div class="examples-label">现实例子</div>
-          
-          <div class="example-item">• 段永平在2001年买入网易时，市场上99%的人认为他是疯子——股价从70美元跌到0.25美元，你真的能拿住吗？</div>
-          <div class="example-item">• 巴菲特说过：'在别人恐惧时贪婪，在别人贪婪时恐惧'——这句话人人都知道，但执行起来需要的是对自己判断的绝对信心，而这种信心需要深刻的理解来支撑</div>
-          <div class="example-item">• 达利欧说'如果你不觉得一年前的自己是个蠢货，那说明你这年没学到什么东西'——但大多数人不愿意承认自己曾经愚蠢</div>
-        </div>
-        <div class="human-conclusion neon-gold">段永平的体系本质上是一套'认知-行为'系统：深度理解→坚定信念→持续行动。大多数人缺的不是知识，而是把知识转化为行动的认知深度。</div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 人性</div>
-    <div class="slide-number">15 / 18</div>
-  </section>
-
-  <section class="slide" data-title="R3 升级">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
-      
-      <div class="cognitive-upgrade anim-in">
-        <div class="upgrade-comparison">
-          <div class="old-thinking">
-            <div class="thinking-label neon-red">旧思维</div>
-            <div class="thinking-content">段永平的方法很简单：买好公司，长期持有。普通人学他买苹果茅台就行。</div>
-          </div>
-          <div class="upgrade-arrow">→</div>
-          <div class="new-thinking">
-            <div class="thinking-label neon-green">新思维</div>
-            <div class="thinking-content">段永平的方法极难复制：他用几十年实业经验建立了对特定行业的深度理解，然后在理解范围内极度专注。普通人需要找到自己的'实业经验'领域，而不是照抄持仓。</div>
-          </div>
-        </div>
-        <div class="complexity">
-          <div class="complexity-label neon-cyan">复杂性</div>
-          <div class="complexity-content">段永平的'简单'是几十年积累之后的返璞归真。对于刚起步的投资者，'简单'意味着先去积累实业经验、行业认知，而不是急着买股票。</div>
-        </div>
-        <div class="actionable">
-          <div class="actionable-label neon-gold">可执行洞见</div>
-          <div class="actionable-content">不要抄段永平的持仓，要学段永平的'不为清单'。把他不做什么列出来，然后问自己：我能做到吗？如果不能，就用指数基金。</div>
-        </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 升级</div>
-    <div class="slide-number">16 / 18</div>
-  </section>
-
-  <section class="slide" data-title="最终洞见">
-    <div class="slide-content">
-      <div class="section-label anim-in">FINAL INSIGHT</div>
-      <div class="quote-large anim-in anim-delay-1">芒格的多元思维模型本质上是'认知保险'——它不能保证你成功，但能大大降低你犯致命错误的概率。</div>
-    </div>
-    <div class="deck-footer">最终洞见</div>
-    <div class="slide-number">17 / 18</div>
-  </section>
-
-  <section class="slide" data-title="开放问题">
-    <div class="slide-content">
-      <div class="section-label anim-in">OPEN QUESTIONS</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">留给读者的问题</h3>
-      <div class="headline-item anim-in"><strong>Q1:</strong> 段永平能在泡泡玛特上复制他的成功吗？还是说他的实业经验边界到了消费娱乐领域就失效了？</div>
-<div class="headline-item anim-in"><strong>Q2:</strong> 如果茅台的营收利润双降持续5年，段永平还会坚持'懂'茅台吗？还是说他的'懂'会变成'固执'？</div>
-<div class="headline-item anim-in"><strong>Q3:</strong> 普通人能否找到一条介于'完全模仿段永平'和'全部买指数基金'之间的中间路径？</div>
-    </div>
-    <div class="deck-footer">开放问题</div>
-    <div class="slide-number">18 / 18</div>
-  </section>
-
-<div class="toc-backdrop" id="tocBackdrop"></div>
-<div class="toc-panel" id="tocPanel">
-<div class="toc-title">目录</div>
-<div id="tocList"></div>
-</div>
-<div class="nav-bar">
-<div class="nav-left">
-<button class="nav-btn" id="btnToc">☰ 目录</button>
-<button class="nav-btn" id="btnPrev">◀ 上一页</button>
-<button class="nav-btn" id="btnNext">下一页 ▶</button>
-</div>
-<div class="nav-right">
-<span class="nav-title" id="slideTitle"></span>
-<span class="nav-counter" id="slideCounter"></span>
-</div>
-</div>
-<div class="nav-dots" id="navDots"></div>
+<div class="mesh-gradient"></div>
+<div class="noise-overlay"></div>
+<div id="progress">
+  <div id="progressBar"></div>
 </div>
 
+<div class="slide slide-cover">
+  <div class="cover-logo">圆桌洞见<span>Roundtable Insight</span></div>
+  <div class="cover-body">
+    <h1>《穷查理宝典》圆桌洞见</h1>
+    <p class="cover-sub">《穷查理宝典》· 6位专家 · 3轮碰撞 · 基于互联网真实素材</p>
+    <p class="cover-date">6 位专家 · 3 轮讨论</p>
+  </div>
+  <div class="cover-footer">本报告由 AI 专家圆桌生成</div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">专家阵容</div>
+  <h2 class="slide-title">《穷查理宝典》圆桌洞见</h2>
+  <div class="experts-grid">
+    <div class="expert-card">
+      <div class="expert-avatar">巴</div>
+      <div class="expert-name">巴菲特</div>
+      <div class="expert-role">价值投资奠基人</div>
+      <div class="expert-desc">买股票就是买公司，用合理价格买优秀企业比用便宜价格买普通企业好得多...</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">塔</div>
+      <div class="expert-name">塔勒布</div>
+      <div class="expert-role">不确定性思想家</div>
+      <div class="expert-desc">反脆弱性：有些事物能从冲击、不确定性和波动中获益...</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">丹</div>
+      <div class="expert-name">丹尼尔·卡尼曼</div>
+      <div class="expert-role">行为经济学之父</div>
+      <div class="expert-desc">待填充...</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">丹</div>
+      <div class="expert-name">丹尼尔·戈尔曼</div>
+      <div class="expert-role">情商理论专家</div>
+      <div class="expert-desc">待填充...</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">吴</div>
+      <div class="expert-name">吴军</div>
+      <div class="expert-role">科技投资观察者</div>
+      <div class="expert-desc">科技发展以浪潮形式推进，顺势者昌逆势者亡；简单即是美...</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">柯</div>
+      <div class="expert-name">柯林斯</div>
+      <div class="expert-role">实证管理学家</div>
+      <div class="expert-desc">卓越企业的共同特征是'第五级经理人'+飞轮效应+知道不做什么...</div>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 1 / 3</div>
+  <h2 class="slide-title">段永平投资哲学的底层逻辑是否站得住脚？</h2>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 1 发言</div>
+  <div class="speech-cards">
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#d4a843">巴</div>
+            <div>
+              <div class="speaker-name">巴菲特</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">芒格是我见过的最聪明的人，他彻底改变了伯克希尔的投资哲学。在我遇到芒格之前，我是格雷厄姆'捡烟蒂'理论的信徒——用清算价值买便宜公司。芒格对我说：'沃伦，用合理的价格买伟大的公司，比用便宜的价格买普通公司好得多。'这句话改变了我的一生。 芒格的多元思维模型不是知识的堆砌，而是穿透表象的武器。他研究心理学、经济学、物理学、生物学，不是为了炫耀，而是为了在投资决策时不犯致命的错误。他在评估喜诗糖果时，不仅看财务数据，还研究品牌忠诚度的心理学基础。他在做决策前，会用他的'检查清单'一项项核对——这个清单，正是多元思维模型的具体应用。 我常开玩笑说，芒格是'长着两条腿的书'。他每天阅读超过5小时，涉猎广泛。但他的阅读不是为了积累知识，而是为了构建一个'思维模型的格栅'——当面对复杂问题时，他能从多个角度同时思考，这就是他的竞争优势。</div>
+        </div>
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#d4a843">塔</div>
+            <div>
+              <div class="speaker-name">塔勒布</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">我必须对芒格的多元思维模型提出根本性质疑。这个体系的核心假设是：掌握足够多的思维模型，就能做出更好的决策。但现实恰恰相反——过度分析往往导致决策瘫痪，而'事后诸葛亮'式的解释让任何事后分析看起来都像是洞见。 芒格说'如果你只有一把锤子，看什么都会像钉子'。但反过来，如果你有100把锤子，你会变成什么样？你会变成一个无法行动的人。我的'反脆弱'理念告诉我：最好的决策往往来自简单原则，而不是复杂模型。你需要的是足够少的关键变量，而不是足够多的思维框架。 更严重的是'确认偏误'问题：一旦你相信多元思维模型是好的，你会倾向于只看到支持这个信念的证据。芒格的成功案例被反复引用，但那些使用多元思维模型却失败的人呢？他们的故事在哪里？任何理论，如果只展示成功案例，都值得怀疑。</div>
+        </div>
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#e85d3a">卡</div>
+            <div>
+              <div class="speaker-name">卡尼曼</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">芒格的人类误判心理学是《思考，快与慢》的先驱。他在1995年哈佛法学院的演讲，比我的诺贝尔获奖研究还要早。他在演讲中总结了25种导致人类错误判断的心理倾向——这与我研究的'认知偏误'高度重合。 但我要补充一点：芒格的框架有一个盲点。他强调'知道什么会出错'，但没有充分讨论'知道什么是对的'的困难。认知科学告诉我们，人类不仅在避免错误方面有困难，在识别正确方面也有系统性的偏差。比如'有效性幻觉'——人们倾向于高估自己预测未来的能力，即使他们的预测是基于合理的模型。 芒格说'逆向思考'是成功的关键。这在原则上是对的，但在实践中，'知道你会死在何处'并不自动告诉你'你应该去哪里'。我的研究表明，即使人们知道自己的偏误，也很难克服它们。知识≠行动。</div>
+        </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 2 / 3</div>
+  <h2 class="slide-title">段永平投资体系的局限在哪里？</h2>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 2 碰撞</div>
+  <div class="clash-block">
+        <div class="clash-item">
+          <div class="clash-speaker">塔勒布</div>
+          <div class="clash-text">巴菲特你说芒格'改变了你'，但你有没有想过：如果芒格的框架如此有效，为什么你们没有预见到2008年金融危机？你们的保险公司Gen Re在CDS上的亏损，不是证明了多元思维模型也有盲点吗？芒格自己承认他在金融危机中'犯了很多错误'。这说明什么？说明他的体系并不像他说的那样完善。过度依赖'理性分析'，反而可能让人忽视真正的尾部风险。</div>
+        </div>
+        <div class="clash-item">
+          <div class="clash-speaker">巴菲特</div>
+          <div class="clash-text">塔勒布你说2008年金融危机，但你忽略了一个事实：我们活下来了。你说预见到危机才算成功，但'反脆弱'的定义是：不是预测风险，而是能够在冲击中变得更强。伯克希尔在2008年不仅没有倒下，还趁机收购了多家优质资产。这正是芒格框架的体现：'知道你会死在何处'不是预测死亡，而是确保死亡不会杀死你。</div>
+        </div>
+        <div class="clash-item">
+          <div class="clash-speaker">卡尼曼</div>
+          <div class="clash-text">戈尔曼你说芒格忽略了情绪，但我要指出：你对情绪的理解可能过于简化。芒格在人类误判心理学中提到的'喜欢/热爱倾向'和'讨厌/憎恨倾向'，本质上就是情绪倾向。他说'避免嫉妒'和'避免怨恨'，正是情绪管理的内容。你可以说他的框架不完整，但不能说他完全忽略了情绪。</div>
+        </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 3 / 3</div>
+  <h2 class="slide-title">段永平投资哲学对普通人的启示与局限</h2>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 3 洞见</div>
+  <div class="insight-block">
+    <div class="insight-q">段永平的方法极难复制：他用几十年实业经验建立了对特定行业的深度理解，然后在理解范围内极度专注。普通人需要找到自己的'实业经验'领域，而不是照抄持仓。</div>
+    <div class="insight-a">段永平的'简单'是几十年积累之后的返璞归真。对于刚起步的投资者，'简单'意味着先去积累实业经验、行业认知，而不是急着买股票。</div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">核心结论</div>
+  <h2 class="slide-title">圆桌洞见总结</h2>
+  <div class="conclusions-grid">
+        <div class="conclusion-item">
+          <div class="conclusion-num">1</div>
+          <div class="conclusion-text">芒格的多元思维模型本质上是'认知保险'——它不能保证你成功，但能大大降低你犯致命错误的概率。</div>
+        </div>
+        <div class="conclusion-item">
+          <div class="conclusion-num">2</div>
+          <div class="conclusion-text">段永平能在泡泡玛特上复制他的成功吗？还是说他的实业经验边界到了消费娱乐领域就失效了？</div>
+        </div>
+        <div class="conclusion-item">
+          <div class="conclusion-num">3</div>
+          <div class="conclusion-text">如果茅台的营收利润双降持续5年，段永平还会坚持'懂'茅台吗？还是说他的'懂'会变成'固执'？</div>
+        </div>
+        <div class="conclusion-item">
+          <div class="conclusion-num">4</div>
+          <div class="conclusion-text">普通人能否找到一条介于'完全模仿段永平'和'全部买指数基金'之间的中间路径？</div>
+        </div>
+  </div>
+</div>
+
+<div id="nav">
+  <button class="nav-btn" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+</div>
+<div id="counter">1 / 1</div>
 <script>
 (function(){
-var deck=document.getElementById("deck");
-var slides=deck.querySelectorAll(".slide");
-var total=slides.length;
-var cur=0;
-var dots=document.getElementById("navDots");
-var tocList=document.getElementById("tocList");
-var titleEl=document.getElementById("slideTitle");
-var counterEl=document.getElementById("slideCounter");
-var tocPanel=document.getElementById("tocPanel");
-var tocBackdrop=document.getElementById("tocBackdrop");
-var progressBar=document.getElementById("progressBar");
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let cur = 0;
+  const dotsContainer = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progressBar');
 
-for(var i=0;i<total;i++){
-  var d=document.createElement("button");
-  d.className="nd";
-  d.setAttribute("data-i",i);
-  d.onclick=(function(idx){return function(){go(idx)}})(i);
-  dots.appendChild(d);
-  var t=document.createElement("div");
-  t.className="toc-item";
-  t.setAttribute("data-i",i);
-  t.innerHTML='<span class="toc-label">'+(slides[i].getAttribute("data-title")||"Slide "+(i+1))+'</span><span class="toc-page">'+String(i+1).padStart(2,"0")+'</span>';
-  t.onclick=(function(idx){return function(){go(idx);closeTOC()}})(i);
-  tocList.appendChild(t);
-}
+  slides.forEach((s, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => go(i);
+    dotsContainer.appendChild(dot);
+  });
 
-function go(n){
-  if(n<0||n>=total)return;
-  slides[cur].classList.remove("active");
-  dots.children[cur].classList.remove("active");
-  tocList.children[cur].classList.remove("active");
-  cur=n;
-  slides[cur].classList.add("active");
-  dots.children[cur].classList.add("active");
-  tocList.children[cur].classList.add("active");
-  titleEl.textContent=slides[cur].getAttribute("data-title")||"";
-  counterEl.textContent=(cur+1)+" / "+total;
-  progressBar.style.width=((cur+1)/total*100)+"%";
-  slides[cur].scrollTop=0;
-}
-function toggleTOC(){tocPanel.classList.toggle("open");tocBackdrop.classList.toggle("open")}
-function closeTOC(){tocPanel.classList.remove("open");tocBackdrop.classList.remove("open")}
+  function go(n) {
+    if (n < 0 || n >= total) return;
+    slides[cur].classList.remove('visible');
+    dotsContainer.children[cur]?.classList.remove('active');
+    cur = n;
+    slides[cur].scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' });
+    slides[cur].classList.add('visible');
+    dotsContainer.children[cur]?.classList.add('active');
+    counter.textContent = (cur + 1) + ' / ' + total;
+    const pct = Math.min(100, ((cur + 1) / total) * 100);
+    progress.style.width = pct + '%';
+  }
 
-document.addEventListener("keydown",function(e){
-  if(e.key==="ArrowRight"||e.key==="ArrowDown"||e.key===" "||e.key==="PageDown"){e.preventDefault();go(cur+1)}
-  else if(e.key==="ArrowLeft"||e.key==="ArrowUp"||e.key==="PageUp"){e.preventDefault();go(cur-1)}
-  else if(e.key==="Home"){e.preventDefault();go(0)}
-  else if(e.key==="End"){e.preventDefault();go(total-1)}
-  else if(e.key==="Escape"){closeTOC();go(0)}
-  else if(e.key==="t"||e.key==="T"){toggleTOC()}
-});
-var wheelTimer=null;
-deck.addEventListener("wheel",function(e){
-  e.preventDefault();
-  if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},400)}
-  if(e.deltaY>0)go(cur+1);
-  else if(e.deltaY<0)go(cur-1);
-},{passive:false});
-var touchX=0,touchY=0;
-deck.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX;touchY=e.touches[0].clientY});
-deck.addEventListener("touchend",function(e){
-  var dx=touchX-e.changedTouches[0].clientX,dy=touchY-e.changedTouches[0].clientY;
-  if(Math.abs(dy)>Math.abs(dx)){if(dy>50)go(cur+1);else if(dy<-50)go(cur-1)}
-  else{if(dx>50)go(cur+1);else if(dx<-50)go(cur-1)}
-});
-deck.addEventListener("click",function(e){
-  if(e.target.closest(".nav-btn,.nd,.toc-item,.toc-panel,.toc-backdrop"))return;
-  var x=e.clientX/window.innerWidth;
-  if(x<0.3)go(cur-1);else if(x>0.7)go(cur+1);
-});
-document.getElementById("btnToc").addEventListener("click",function(e){e.stopPropagation();toggleTOC()});
-document.getElementById("btnPrev").addEventListener("click",function(e){e.stopPropagation();go(cur-1)});
-document.getElementById("btnNext").addEventListener("click",function(e){e.stopPropagation();go(cur+1)});
-tocBackdrop.addEventListener("click",closeTOC);
-go(0);
+  document.getElementById('prevBtn').onclick = () => go(cur - 1);
+  document.getElementById('nextBtn').onclick = () => go(cur + 1);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      go(cur + 1);
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      go(cur - 1);
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      go(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      go(total - 1);
+    }
+  });
+
+  let wheelTimer = null;
+  document.addEventListener('wheel', e => {
+    e.preventDefault();
+    if (wheelTimer) return;
+    wheelTimer = setTimeout(() => wheelTimer = null, 400);
+    if (e.deltaY > 0 || e.deltaX > 0) go(cur + 1);
+    else if (e.deltaY < 0 || e.deltaX < 0) go(cur - 1);
+  }, { passive: false });
+
+  document.body.addEventListener('click', e => {
+    if (e.target.closest('.nav-dot, .dots, .nav-btn, .expert-card, .speech-card, .clash-block, .insight-block, .question-card, .conclusion-item, .stat-item')) return;
+    go(cur + 1);
+  });
+
+  go(0);
 })();
 </script>
 </body>

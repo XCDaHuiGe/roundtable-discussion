@@ -2,1293 +2,1358 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>数字游民的身份危机 圆桌洞见</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数字游民的身份危机</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 <style>
-  :root{
-    /* ============ 主题色(默认:🖋 墨水经典) ============ */
-    --ink:#0a0a0b;
-    --ink-rgb:10,10,11;
-    --paper:#f1efea;
-    --paper-rgb:241,239,234;
-    --paper-tint:#e8e5de;
-    --ink-tint:#18181a;
-    --text-dim:rgba(241,239,234,0.5);
+:root {
+  --bg-deep: #0A0A0A;
+  --bg: #111111;
+  --bg-card: rgba(255,255,255,0.04);
+  --bg-card-hover: rgba(255,255,255,0.08);
+  --fg: #F5F5F5;
+  --fg-muted: #A0A0A0;
+  --fg-dim: #606060;
+  --accent: #D4A04A;
+  --accent-soft: rgba(212,160,74,0.12);
+  --accent-glow: rgba(212,160,74,0.25);
+  --copper: #C07A3E;
+  --clash: #ff4757;
+  --clash-soft: rgba(255,71,87,0.12);
+  --clash-glow: rgba(255,71,87,0.35);
+  --insight: #00d4aa;
+  --insight-soft: rgba(0,212,170,0.12);
+  --insight-glow: rgba(0,212,170,0.40);
+  --border: rgba(255,255,255,0.08);
+  --border-accent: rgba(212,160,74,0.30);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --font-display: 'Noto Serif SC', serif;
+  --font-body: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
 
-    /* ============ 强调色 ============ */
-    --accent:#c23b22;
-    --accent-rgb:194,59,34;
-    --gold:#d4a843;
-    --gold-rgb:212,168,67;
-    --blue:#4a6a9a;
-    --purple:#8a4aaa;
-    --green:#3a8a5c;
-    --cyan:#4a9a9a;
-    --orange:#d4843a;
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* ============ 字体(跨主题固定) ============ */
-    --mono:"IBM Plex Mono","SF Mono",monospace;
-    --serif-zh:"Noto Serif SC","Source Han Serif SC","STSong",serif;
-    --sans-zh:"Noto Sans SC","Source Han Sans SC","PingFang SC",sans-serif;
+html {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
 
-    /* ============ 间距 ============ */
-    --radius:10px;
-    --ease:cubic-bezier(.4,0,.2,1);
+body {
+  display: flex;
+  flex-direction: row;
+  width: max-content;
+  height: 100vh;
+  background: var(--bg-deep);
+  color: var(--fg);
+  font-family: var(--font-body);
+  line-height: 1.85;
+  opacity: 0;
+  animation: fadeIn 0.8s ease forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg-deep);
+}
+
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}
+
+.mesh-gradient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: 
+    radial-gradient(ellipse 70% 50% at 10% 20%, rgba(212,160,74,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 40% at 90% 80%, rgba(0,212,170,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse 30% 25% at 50% 50%, rgba(255,71,87,0.03) 0%, transparent 50%);
+}
+
+.slide {
+  width: 100vw;
+  height: 100vh;
+  min-width: 100vw;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  scroll-snap-align: start;
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  overflow: hidden;
+}
+
+.slide.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.stagger-item {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.slide.visible .stagger-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.slide.visible .stagger-item:nth-child(1) { transition-delay: 0.1s; }
+.slide.visible .stagger-item:nth-child(2) { transition-delay: 0.2s; }
+.slide.visible .stagger-item:nth-child(3) { transition-delay: 0.3s; }
+.slide.visible .stagger-item:nth-child(4) { transition-delay: 0.4s; }
+.slide.visible .stagger-item:nth-child(5) { transition-delay: 0.5s; }
+.slide.visible .stagger-item:nth-child(6) { transition-delay: 0.6s; }
+.slide.visible .stagger-item:nth-child(7) { transition-delay: 0.7s; }
+.slide.visible .stagger-item:nth-child(8) { transition-delay: 0.8s; }
+
+.slide-cover {
+  background: linear-gradient(135deg, #1A1A2E 0%, #16213E 50%, #0F0F23 100%);
+  color: var(--fg);
+  padding: clamp(40px, 5vh, 80px) clamp(48px, 5vw, 100px);
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.slide-cover::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+  opacity: 0.5;
+  animation: cover-glow 6s ease-in-out infinite;
+}
+
+@keyframes cover-glow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+.slide-cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(255,255,255,0.02) 59px, rgba(255,255,255,0.02) 60px),
+    repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(255,255,255,0.02) 59px, rgba(255,255,255,0.02) 60px);
+  pointer-events: none;
+}
+
+.cover-decor-line {
+  position: absolute;
+  top: 20%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212,160,74,0.2), transparent);
+}
+
+.cover-decor-line-2 {
+  position: absolute;
+  bottom: 30%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,170,0.15), transparent);
+}
+
+.cover-logo {
+  font-family: var(--font-mono);
+  font-size: clamp(18px, 2vw, 28px);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  position: relative;
+  z-index: 2;
+}
+
+.cover-logo span {
+  display: block;
+  padding-left: 1em;
+  font-weight: 400;
+  color: var(--fg-muted);
+  font-size: 0.85em;
+}
+
+.cover-body {
+  max-width: 70%;
+  position: relative;
+  z-index: 2;
+}
+
+.cover-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  background: linear-gradient(135deg, var(--accent-soft), rgba(212,160,74,0.06));
+  border: 1px solid var(--border-accent);
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1vw, 13px);
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: clamp(20px, 3vh, 36px);
+  position: relative;
+  overflow: hidden;
+}
+
+.cover-badge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(212,160,74,0.2), transparent);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.cover-body h1 {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: clamp(16px, 2vh, 28px);
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--fg), var(--fg-muted));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cover-body .cover-sub {
+  font-family: var(--font-display);
+  font-size: clamp(16px, 1.8vw, 26px);
+  font-weight: 400;
+  margin-bottom: clamp(8px, 1vh, 16px);
+  color: var(--fg-muted);
+  line-height: 1.6;
+}
+
+.cover-body .cover-date {
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1.2vw, 16px);
+  color: var(--fg-dim);
+  letter-spacing: 0.02em;
+}
+
+.cover-footer {
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 0.9vw, 12px);
+  color: var(--fg-dim);
+  letter-spacing: 0.08em;
+  position: relative;
+  z-index: 2;
+}
+
+.slide-content {
+  background: var(--bg);
+  padding: clamp(24px, 3vh, 48px) clamp(40px, 4vw, 80px);
+  overflow: hidden;
+  position: relative;
+}
+
+.slide-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.3;
+}
+
+.breadcrumb {
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 1vw, 13px);
+  color: var(--fg-dim);
+  text-align: right;
+  margin-bottom: clamp(12px, 1.5vh, 20px);
+  letter-spacing: 0.02em;
+}
+
+.slide-title {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 2.5vw, 36px);
+  font-weight: 800;
+  color: var(--fg);
+  line-height: 1.35;
+  margin-bottom: clamp(16px, 2vh, 28px);
+  letter-spacing: -0.01em;
+  position: relative;
+  padding-left: 28px;
+}
+
+.slide-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 5px;
+  background: linear-gradient(180deg, var(--accent), var(--copper));
+  border-radius: 3px;
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+
+.stats-flex {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  margin: clamp(32px, 4vh, 56px) 0;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 80px;
+  background: linear-gradient(180deg, transparent, var(--border-accent), transparent);
+  margin: 0 20px;
+  flex-shrink: 0;
+}
+
+.stat-item {
+  text-align: center;
+  padding: clamp(20px, 2.5vh, 32px) clamp(28px, 3vw, 48px);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stat-item:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+.stat-item:hover::before {
+  opacity: 1;
+}
+
+.stat-number {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4vw, 52px);
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 10px;
+  letter-spacing: -0.02em;
+}
+
+.stat-label {
+  font-family: var(--font-body);
+  font-size: clamp(12px, 1.2vw, 16px);
+  color: var(--fg-muted);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.experts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(18px, 2vw, 26px);
+  margin-top: clamp(24px, 3vh, 36px);
+}
+
+.expert-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: clamp(24px, 3vh, 36px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.expert-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.expert-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-accent);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+}
+
+.expert-card:hover::before {
+  opacity: 1;
+}
+
+.expert-avatar {
+  width: clamp(52px, 5vw, 68px);
+  height: clamp(52px, 5vw, 68px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(18px, 2vw, 26px);
+  margin-bottom: clamp(14px, 1.8vh, 22px);
+  transition: all 0.3s ease;
+}
+
+.expert-card:hover .expert-avatar {
+  transform: translateY(-4px);
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.expert-avatar.role-leader {
+  background: linear-gradient(135deg, var(--accent), var(--copper));
+  color: var(--bg-deep);
+}
+
+.expert-avatar.role-challenger {
+  background: linear-gradient(135deg, var(--clash), #c44a2e);
+  color: #fff;
+}
+
+.expert-avatar.role-observer {
+  background: linear-gradient(135deg, var(--insight), #358568);
+  color: #fff;
+}
+
+.expert-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(14px, 1.4vw, 18px);
+  margin-bottom: 6px;
+  color: var(--fg);
+  letter-spacing: 0.01em;
+}
+
+.expert-role {
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1vw, 13px);
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: clamp(10px, 1.2vh, 14px);
+}
+
+.expert-desc {
+  font-family: var(--font-body);
+  font-size: clamp(12px, 1.2vw, 15px);
+  color: var(--fg-muted);
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+.speech-cards {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2vh, 22px);
+  margin-top: clamp(20px, 2.5vh, 28px);
+}
+
+.speech-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: clamp(24px, 3vh, 36px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.speech-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--copper), transparent);
+  opacity: 0.6;
+}
+
+.speech-card:hover {
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+}
+
+.speech-meta {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 1.8vw, 18px);
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+}
+
+.speaker-avatar {
+  width: clamp(44px, 4vw, 56px);
+  height: clamp(44px, 4vw, 56px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(15px, 1.5vw, 20px);
+  transition: all 0.3s ease;
+}
+
+.speech-card:hover .speaker-avatar {
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+
+.speaker-avatar.role-leader {
+  background: linear-gradient(135deg, var(--accent), var(--copper));
+  color: var(--bg-deep);
+}
+
+.speaker-avatar.role-challenger {
+  background: linear-gradient(135deg, var(--clash), #c44a2e);
+  color: #fff;
+}
+
+.speaker-avatar.role-observer {
+  background: linear-gradient(135deg, var(--insight), #358568);
+  color: #fff;
+}
+
+.speaker-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(14px, 1.4vw, 18px);
+  color: var(--fg);
+  letter-spacing: 0.01em;
+}
+
+.speaker-role {
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1vw, 13px);
+  color: var(--fg-muted);
+  letter-spacing: 0.04em;
+}
+
+.speech-content {
+  font-family: var(--font-body);
+  font-size: clamp(13px, 1.3vw, 16px);
+  line-height: 1.9;
+  color: var(--fg-muted);
+  letter-spacing: 0.01em;
+}
+
+.clash-block {
+  background: linear-gradient(135deg, var(--clash-soft), rgba(212,160,74,0.06));
+  border: 1px solid rgba(255,71,87,0.25);
+  border-radius: var(--radius);
+  padding: clamp(24px, 3vh, 36px);
+  margin-top: clamp(20px, 2.5vh, 28px);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 40px var(--clash-glow), inset 0 0 60px rgba(255,71,87,0.05);
+}
+
+.clash-block::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(180deg, var(--clash), #c44a2e);
+  border-radius: 0 5px 5px 0;
+  box-shadow: 0 0 20px var(--clash-glow);
+}
+
+.clash-block::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 5px;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--clash), transparent);
+  opacity: 0.4;
+}
+
+.clash-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1.2vw, 14px);
+  font-weight: 700;
+  color: var(--clash);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+}
+
+.clash-item {
+  margin-bottom: clamp(12px, 1.5vh, 16px);
+  padding-bottom: clamp(12px, 1.5vh, 16px);
+  border-bottom: 1px solid rgba(255,71,87,0.15);
+}
+
+.clash-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.clash-speaker {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(13px, 1.3vw, 16px);
+  color: var(--accent);
+  margin-bottom: 8px;
+  letter-spacing: 0.01em;
+}
+
+.clash-text {
+  font-family: var(--font-body);
+  font-size: clamp(12px, 1.2vw, 15px);
+  line-height: 1.8;
+  color: var(--fg-muted);
+  letter-spacing: 0.01em;
+}
+
+.insight-block {
+  background: linear-gradient(135deg, var(--insight-soft), rgba(0,212,170,0.04));
+  border: 1px solid rgba(0,212,170,0.30);
+  border-radius: var(--radius);
+  padding: clamp(28px, 3.5vh, 40px);
+  margin-top: clamp(20px, 2.5vh, 28px);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 50px var(--insight-glow), inset 0 0 80px rgba(0,212,170,0.05);
+}
+
+.insight-block::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(180deg, var(--insight), #358568);
+  border-radius: 0 5px 5px 0;
+  box-shadow: 0 0 25px var(--insight-glow);
+}
+
+.insight-block::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 5px;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--insight), transparent);
+  opacity: 0.5;
+}
+
+.insight-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1.2vw, 14px);
+  font-weight: 700;
+  color: var(--insight);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+}
+
+.insight-core {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2vw, 26px);
+  font-weight: 800;
+  color: var(--fg);
+  line-height: 1.45;
+  margin-bottom: clamp(12px, 1.5vh, 16px);
+  letter-spacing: -0.01em;
+}
+
+.insight-explain {
+  font-family: var(--font-body);
+  font-size: clamp(13px, 1.3vw, 16px);
+  line-height: 1.85;
+  color: var(--fg-muted);
+  letter-spacing: 0.01em;
+}
+
+.conclusions-grid {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2vh, 22px);
+  margin-top: clamp(20px, 2.5vh, 28px);
+}
+
+.conclusion-item {
+  display: flex;
+  gap: clamp(16px, 2vw, 22px);
+  align-items: flex-start;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: clamp(20px, 2.5vh, 28px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.conclusion-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.conclusion-item:hover {
+  background: var(--bg-card-hover);
+  transform: translateX(8px);
+  box-shadow: 0 8px 30px rgba(212,160,74,0.15);
+}
+
+.conclusion-item:hover::before {
+  opacity: 1;
+}
+
+.conclusion-num {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 3.5vw, 44px);
+  font-weight: 800;
+  color: var(--accent);
+  opacity: 0.4;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.conclusion-text {
+  font-family: var(--font-body);
+  font-size: clamp(14px, 1.4vw, 18px);
+  line-height: 1.7;
+  color: var(--fg);
+  flex: 1;
+  letter-spacing: 0.01em;
+}
+
+.question-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: clamp(22px, 2.8vh, 32px);
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(14px, 1.8vw, 18px);
+  overflow: hidden;
+  position: relative;
+}
+
+.question-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.question-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent);
+  transform: translateX(8px);
+  box-shadow: 0 8px 30px rgba(212,160,74,0.15);
+}
+
+.question-card:hover::before {
+  opacity: 1;
+}
+
+.question-card .question-expand {
+  display: none;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-body);
+  font-size: clamp(12px, 1.2vw, 15px);
+  color: var(--fg-dim);
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+.question-card:hover .question-expand {
+  display: block;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.question-number {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(16px, 1.6vw, 22px);
+  color: var(--accent);
+  opacity: 0.5;
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+
+.question-text {
+  font-family: var(--font-body);
+  font-size: clamp(13px, 1.3vw, 16px);
+  color: var(--fg);
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+}
+
+#nav {
+  position: fixed;
+  bottom: clamp(16px, 2vh, 24px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.2vw, 16px);
+  z-index: 100;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(20px);
+  padding: clamp(10px, 1.2vh, 14px) clamp(18px, 2vw, 28px);
+  border-radius: 100px;
+  border: 1px solid var(--border);
+}
+
+.nav-btn {
+  width: clamp(36px, 3.5vw, 44px);
+  height: clamp(36px, 3.5vw, 44px);
+  border: none;
+  background: var(--bg-card);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(12px, 1.2vw, 14px);
+  color: var(--fg);
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  background: var(--accent);
+  color: var(--bg-deep);
+  transform: scale(1.1);
+}
+
+.dots {
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dot:hover {
+  background: rgba(255,255,255,0.5);
+  transform: scale(1.2);
+}
+
+.dot.active {
+  background: var(--accent);
+  transform: scale(1.4);
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+#counter {
+  position: fixed;
+  top: clamp(12px, 1.5vh, 20px);
+  right: clamp(16px, 2vw, 24px);
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 1.1vw, 14px);
+  color: var(--fg-muted);
+  z-index: 100;
+  background: rgba(0,0,0,0.6);
+  padding: 8px 16px;
+  border-radius: 100px;
+  backdrop-filter: blur(10px);
+  letter-spacing: 0.02em;
+}
+
+#progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 101;
+  background: var(--border);
+}
+
+#progressBar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--copper));
+  transition: width 0.2s ease-out;
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+@media (max-width: 768px) {
+  .experts-grid { grid-template-columns: repeat(2, 1fr); }
+  .cover-body { max-width: 85%; }
+  .stat-divider { display: none; }
+}
+
+@media (max-width: 480px) {
+  .experts-grid { grid-template-columns: 1fr; }
+  .stats-flex { flex-direction: column; gap: 14px; }
+  .stat-item { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
-
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans-zh);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-
-  /* ============ Deck 容器 ============ */
-  #deck{position:relative;width:100vw;height:100vh;overflow:hidden}
-
-  /* ============ 进度条 ============ */
-  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:1000;transition:width .5s var(--ease);box-shadow:0 0 12px rgba(var(--accent-rgb),.3)}
-
-  /* ============ 幻灯片 ============ */
-  .deck{position:relative;width:100%;height:100%}
-  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;overflow:hidden}
-  .slide-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
-  .slide.active{display:flex}
-  .slide.hero{justify-content:center;align-items:center;text-align:center}
-  .slide.title-slide{justify-content:center;align-items:center;text-align:center}
-
-  /* ============ 入场动画(Guizang风格) ============ */
-  [data-anim]{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
-  .slide.active [data-anim]{opacity:1;transform:translateY(0)}
-  .slide.active [data-anim]:nth-child(1){transition-delay:.1s}
-  .slide.active [data-anim]:nth-child(2){transition-delay:.18s}
-  .slide.active [data-anim]:nth-child(3){transition-delay:.26s}
-  .slide.active [data-anim]:nth-child(4){transition-delay:.34s}
-  .slide.active [data-anim]:nth-child(5){transition-delay:.42s}
-  .slide.active [data-anim]:nth-child(6){transition-delay:.5s}
-
-  /* ============ 内容区(book-distillation范式) ============ */
-  .frame{width:100%;max-width:1100px;margin:0 auto;flex:1;display:flex;flex-direction:column}
-  .slide-content{flex:1;display:flex;flex-direction:column}
-
-  /* ============ Magazine Chrome(Guizang风格) ============ */
-  .chrome{display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.5;margin-bottom:3vh}
-  .chrome .left,.chrome .right{display:flex;gap:2em;align-items:center}
-  .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
-
-  /* ============ 底部元数据(render_v8兼容) ============ */
-  .deck-footer{margin-top:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
-  .slide-number{position:absolute;bottom:2vh;right:3vw;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.35)}
-
-  /* ============ Section Label ============ */
-  .section-label{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
-
-  /* ============ 封面 ============ */
-  .cover-badge{display:inline-block;padding:6px 20px;border:1px solid var(--accent);border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4vh}
-  .cover-title{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .cover-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:4vh;line-height:1.8;max-width:600px}
-  .cover-stats{display:flex;gap:4vh;flex-wrap:wrap;justify-content:center}
-  .cover-stat{text-align:center}
-  .cover-stat-num{font-family:var(--mono);font-size:2.5rem;font-weight:900;color:var(--accent)}
-  .cover-stat-label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.5);margin-top:.5vh}
-
-  /* ============ 封面标题(render_v8) ============ */
-  .hero-dark{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;flex:1}
-  .title-main{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .title-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:2vh;line-height:1.8}
-  .gold-line{width:80px;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));margin:3vh auto;border-radius:2px}
-
-  /* ============ 标题系统 ============ */
-  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
-  .h-hero{font-family:var(--serif-zh);font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.2;margin-bottom:3vh}
-  .h-xl{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.4rem,3vw,2.2rem);line-height:1.3;margin-bottom:2vh}
-  .h-lg{font-family:var(--serif-zh);font-weight:600;font-size:clamp(1.1rem,2vw,1.5rem);line-height:1.4;margin-bottom:1.5vh}
-  .h-md{font-weight:600;font-size:1.1rem;margin-bottom:1vh}
-  .lead{font-size:1rem;line-height:1.85;color:rgba(var(--paper-rgb),.8);max-width:700px}
-  .meta-row{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.4);display:flex;gap:2em;flex-wrap:wrap;margin-top:3vh}
-
-  /* ============ 大号引用(render_v8) ============ */
-  .quote-large{font-family:var(--serif-zh);font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:600;line-height:1.6;color:rgba(var(--paper-rgb),.9);max-width:800px;margin:0 auto}
-
-  /* ============ 分割线 ============ */
-  .rule{width:100%;height:1px;background:rgba(var(--paper-rgb),.15);margin:3vh 0}
-
-  /* ============ 标签 ============ */
-  .tag{display:inline-block;padding:4px 12px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;margin:3px}
-  .tag-gold{background:rgba(var(--gold-rgb),.15);color:var(--gold);border:1px solid rgba(var(--gold-rgb),.2)}
-  .tag-red{background:rgba(var(--accent-rgb),.15);color:var(--accent);border:1px solid rgba(var(--accent-rgb),.2)}
-  .tag-blue{background:rgba(74,106,154,.15);color:var(--blue);border:1px solid rgba(74,106,154,.2)}
-  .tag-purple{background:rgba(138,74,170,.15);color:var(--purple);border:1px solid rgba(138,74,170,.2)}
-  .tag-green{background:rgba(58,138,92,.15);color:var(--green);border:1px solid rgba(58,138,92,.2)}
-
-  /* ============ 霓虹强调色(render_v8) ============ */
-  .neon-gold{color:var(--gold)}.neon-red{color:var(--accent)}.neon-cyan{color:var(--cyan)}.neon-purple{color:var(--purple)}.neon-orange{color:var(--orange)}.neon-green{color:var(--green)}
-
-  /* ============ 网格系统 ============ */
-  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:2vh 2vw}
-  @media(max-width:768px){.grid-2{grid-template-columns:1fr}}
-
-  /* ============ 发言块(原生) ============ */
-  .sp{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2.5vw;margin-bottom:2vh;position:relative}
-  .sp::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
-  .sh{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh}
-  .speaker-avatar{width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:var(--ink);background:var(--accent);flex-shrink:0}
-  .sn{font-weight:700;font-size:1rem}
-  .sr{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4);padding:3px 8px;background:rgba(var(--paper-rgb),.06);border-radius:3px}
-  .st{font-size:.95rem;line-height:2;color:rgba(var(--paper-rgb),.85)}
-  .st strong{color:var(--paper);font-weight:700}
-  .st em{color:var(--gold);font-style:normal;font-weight:600}
-
-  /* ============ 碰撞块(原生) ============ */
-  .cb{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;position:relative}
-  .cb::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
-  .cb.blue{border-color:rgba(74,106,154,.3)}.cb.blue::before{background:var(--blue)}
-  .cb.purple{border-color:rgba(138,74,170,.3)}.cb.purple::before{background:var(--purple)}
-  .cb.green{border-color:rgba(58,138,92,.3)}.cb.green::before{background:var(--green)}
-  .cb.orange{border-color:rgba(var(--gold-rgb),.3)}.cb.orange::before{background:var(--gold)}
-  .cl{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;color:var(--accent);font-weight:600}
-  .cl.blue{color:var(--blue)}.cl.purple{color:var(--purple)}.cl.green{color:var(--green)}.cl.orange{color:var(--gold)}
-
-  /* ============ 洞见卡 ============ */
-  .insight-c{background:linear-gradient(135deg,rgba(var(--paper-rgb),.04) 0%,rgba(var(--paper-rgb),.08) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh;position:relative;overflow:hidden}
-  .insight-c::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold))}
-  .insight-q{font-family:var(--serif-zh);font-size:1.1rem;font-weight:700;color:var(--gold);line-height:1.6;margin-bottom:1vh}
-  .insight-a{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.75)}
-
-  /* ============ 卡片 ============ */
-  .card{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
-  .card-num{font-family:var(--mono);font-weight:900;font-size:1.8rem;color:var(--accent);opacity:.4;margin-bottom:1vh}
-  .card-title{font-weight:700;font-size:1rem;margin-bottom:1vh}
-  .card-body{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
-  .card-source{font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);margin-top:1vh}
-
-  /* ============ 专家卡片(render_v8) ============ */
-  .card-rise{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--green)}
-  .card-fall{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--accent)}
-  .speaker-header{display:flex;align-items:center;gap:16px;margin-bottom:2vh}
-  .speaker-name{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem}
-  .speaker-role{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:2px}
-  .expert-profile{display:flex;flex-direction:column;gap:1vh}
-  .profile-item{font-size:.9rem;line-height:1.7;color:rgba(var(--paper-rgb),.8)}
-  .profile-label{color:var(--gold);font-weight:600}
-
-  /* ============ 立场表达(render_v8) ============ */
-  .stance-item{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;border-left:3px solid var(--gold)}
-  .stance-expert{font-family:var(--serif-zh);font-weight:700;font-size:1rem;margin-bottom:1vh}
-  .stance-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
-  .stances-grid{display:flex;flex-direction:column;gap:1.5vh}
-
-  /* ============ 碰撞轮次(render_v8) ============ */
-  .clash-round{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;position:relative}
-  .clash-round::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
-  .clash-header{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh;flex-wrap:wrap}
-  .clash-attacker{font-weight:700;font-size:1rem}
-  .clash-target{font-weight:700;font-size:1rem}
-  .clash-arrow{color:rgba(var(--paper-rgb),.3);font-size:1.2rem}
-  .clash-type{display:inline-block;padding:3px 10px;border-radius:3px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.5vh;font-weight:600}
-  .clash-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
-  .counter-attack{margin-top:2vh;padding-top:2vh;border-top:1px dashed rgba(var(--paper-rgb),.1)}
-  .counter-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .counter-content{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
-  .clash-container{display:flex;flex-direction:column;gap:2vh}
-
-  /* ============ 攻击类型色 ============ */
-  .attack-logic{background:rgba(74,106,154,.15);color:var(--blue)}
-  .attack-interest{background:rgba(var(--accent-rgb),.15);color:var(--accent)}
-  .attack-reality{background:rgba(var(--gold-rgb),.15);color:var(--gold)}
-  .attack-human{background:rgba(138,74,170,.15);color:var(--purple)}
-  .attack-failure{background:rgba(58,138,92,.15);color:var(--green)}
-
-  /* ============ 现实案例(render_v8) ============ */
-  .reality-case{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--orange)}
-  .case-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5vh;flex-wrap:wrap;gap:8px}
-  .case-name{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem}
-  .case-source{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4)}
-  .case-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:1.5vh}
-  .case-outcome{font-size:.9rem;font-weight:600;margin-bottom:1vh}
-  .case-lesson{font-size:.9rem;font-weight:600}
-  .cases-container{display:flex;flex-direction:column;gap:2vh}
-
-  /* ============ 代价讨论(render_v8) ============ */
-  .cost-discussion{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh}
-  .cost-scenario{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem;margin-bottom:2vh}
-  .cost-list{display:flex;flex-direction:column;gap:1.5vh;margin-bottom:2vh}
-  .cost-item{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:1.5vh 2vw;border-left:3px solid var(--accent)}
-  .cost-name{font-weight:700;font-size:.95rem;margin-bottom:.5vh}
-  .cost-analysis{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
-  .worst-case{background:rgba(var(--accent-rgb),.08);border:1px solid rgba(var(--accent-rgb),.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
-  .worst-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .worst-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
-  .survivor-bias{background:rgba(138,74,170,.08);border:1px solid rgba(138,74,170,.15);border-radius:6px;padding:2vh 2vw}
-  .survivor-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .survivor-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
-
-  /* ============ 人性层(render_v8) ============ */
-  .human-nature{background:linear-gradient(135deg,rgba(var(--paper-rgb),.03) 0%,rgba(var(--paper-rgb),.06) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
-  .human-question{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem;margin-bottom:2vh;line-height:1.5}
-  .human-analysis{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:2vh}
-  .human-examples{margin-bottom:2vh}
-  .examples-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1vh;font-weight:600}
-  .example-item{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8);padding:.5vh 0}
-  .human-conclusion{font-size:.95rem;font-weight:600;line-height:1.7}
-
-  /* ============ 认知升级(render_v8) ============ */
-  .cognitive-upgrade{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
-  .upgrade-comparison{display:grid;grid-template-columns:1fr auto 1fr;gap:2vw;align-items:start;margin-bottom:2vh}
-  @media(max-width:768px){.upgrade-comparison{grid-template-columns:1fr}.upgrade-arrow{transform:rotate(90deg)}}
-  .old-thinking,.new-thinking{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:2vh 1.5vw}
-  .old-thinking{border-left:3px solid var(--accent)}
-  .new-thinking{border-left:3px solid var(--green)}
-  .thinking-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .thinking-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
-  .upgrade-arrow{font-size:1.5rem;color:rgba(var(--paper-rgb),.3);display:flex;align-items:center;justify-content:center;padding-top:3vh}
-  .complexity{background:rgba(74,106,154,.08);border:1px solid rgba(74,106,154,.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
-  .complexity-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .complexity-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
-  .actionable{background:rgba(var(--gold-rgb),.08);border:1px solid rgba(var(--gold-rgb),.15);border-radius:6px;padding:2vh 2vw}
-  .actionable-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .actionable-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
-
-  /* ============ 情绪样式 ============ */
-  .emotion-sarcasm{border-left:3px solid var(--purple);padding-left:12px;font-style:italic}
-  .emotion-helplessness{opacity:.75;font-style:italic}
-  .emotion-anger{color:var(--accent);font-weight:600}
-  .emotion-hesitation{opacity:.8;font-style:italic}
-  .emotion-self-deprecation{opacity:.7;font-style:italic}
-  .emotion-cold-laugh{color:var(--purple)}
-  .emotion-silence{opacity:.5;font-style:italic}
-  .emotion-serious{color:rgba(var(--paper-rgb),.85)}
-
-  /* ============ 指标 ============ */
-  .metrics{display:flex;gap:2vw;flex-wrap:wrap;margin-bottom:3vh}
-  .metric{flex:1;min-width:100px;text-align:center;background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 1.5vw}
-  .metric-val{font-family:var(--mono);font-weight:900;font-size:clamp(1.5rem,3vw,2.5rem);color:var(--accent)}
-  .metric-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:.5vh}
-
-  /* ============ 开放问题 ============ */
-  .oq{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
-  .oq-num{font-family:var(--mono);font-weight:900;font-size:1.2rem;color:var(--accent);opacity:.3;margin-bottom:1vh}
-  .oq-text{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
-  .headline-item{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.85);padding:1.5vh 0;border-bottom:1px solid rgba(var(--paper-rgb),.06)}
-  .headline-item:last-child{border-bottom:none}
-  .headline-item strong{color:var(--gold);margin-right:8px}
-
-  /* ============ 引用 ============ */
-  .quote{font-family:var(--serif-zh);font-size:1rem;font-style:italic;line-height:1.8;padding:2vh 2.5vw;border-left:3px solid var(--gold);background:rgba(var(--gold-rgb),.05);margin:2vh 0;color:rgba(var(--paper-rgb),.85)}
-
-  /* ============ TOC ============ */
-  .toc-panel{position:fixed;top:0;left:0;width:min(340px,80vw);height:100vh;background:rgba(var(--ink-rgb),.97);backdrop-filter:blur(20px);z-index:100;transform:translateX(-100%);transition:transform .35s var(--ease);padding:3vh 2.5vw;overflow-y:auto;border-right:1px solid rgba(var(--paper-rgb),.08)}
-  .toc-panel.open{transform:translateX(0)}
-  .toc-title{font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:3vh;padding-bottom:2vh;border-bottom:1px solid rgba(var(--paper-rgb),.1)}
-  .toc-item{display:flex;justify-content:space-between;padding:1.2vh 1.5vw;margin-bottom:.5vh;cursor:pointer;border-radius:6px;border-left:2px solid transparent;font-size:.9rem;color:rgba(var(--paper-rgb),.7);transition:all .2s}
-  .toc-item:hover{background:rgba(var(--paper-rgb),.06);color:var(--paper)}
-  .toc-item.active{background:rgba(var(--paper-rgb),.08);color:var(--accent);border-left-color:var(--accent);font-weight:600}
-  .toc-label{flex:1}
-  .toc-page{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.35)}
-  .toc-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;opacity:0;pointer-events:none;transition:opacity .3s}
-  .toc-backdrop.open{opacity:1;pointer-events:auto}
-
-  /* ============ 导航栏 ============ */
-  .nav-bar{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 3vw;background:rgba(var(--ink-rgb),.9);backdrop-filter:blur(10px);z-index:50;border-top:1px solid rgba(var(--paper-rgb),.06)}
-  .nav-left,.nav-right{display:flex;align-items:center;gap:12px}
-  .nav-btn{background:none;border:1px solid rgba(var(--paper-rgb),.12);color:rgba(var(--paper-rgb),.7);padding:8px 16px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;cursor:pointer;transition:all .2s}
-  .nav-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(var(--accent-rgb),.1)}
-  .nav-title{font-size:12px;color:rgba(var(--paper-rgb),.5);max-width:40vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .nav-counter{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.4)}
-
-  /* ============ 导航点 ============ */
-  .nav-dots{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:6px}
-  .nd{width:6px;height:6px;border-radius:50%;background:rgba(var(--paper-rgb),.15);cursor:pointer;transition:all .3s var(--ease);border:none;padding:0}
-  .nd.active{background:var(--accent);height:20px;border-radius:3px;box-shadow:0 0 8px rgba(var(--accent-rgb),.4)}
-  .nd:hover{background:rgba(var(--paper-rgb),.4)}
-
-  /* ============ 入场动画延迟(render_v8兼容) ============ */
-  .anim-in{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
-  .slide.active .anim-in{opacity:1;transform:translateY(0)}
-  .slide.active .anim-in:nth-child(1){transition-delay:.1s}
-  .slide.active .anim-in:nth-child(2){transition-delay:.18s}
-  .slide.active .anim-in:nth-child(3){transition-delay:.26s}
-  .slide.active .anim-in:nth-child(4){transition-delay:.34s}
-  .slide.active .anim-in:nth-child(5){transition-delay:.42s}
-  .slide.active .anim-in:nth-child(6){transition-delay:.5s}
-  .anim-delay-1{transition-delay:.18s !important}
-  .anim-delay-2{transition-delay:.26s !important}
-  .anim-delay-3{transition-delay:.34s !important}
-  .anim-delay-4{transition-delay:.42s !important}
-  .anim-delay-5{transition-delay:.5s !important}
-  .anim-delay-6{transition-delay:.58s !important}
-
-  /* ============ 响应式 ============ */
-  @media(max-width:1024px){.slide{padding:4vh 5vw 8vh}}
-  @media(max-width:768px){
-    .slide{padding:3vh 4vw 7vh}
-    .cover-stats{gap:2vh}
-    .metrics{flex-direction:column}
-    .nav-dots,.nav-title{display:none}
-    .nav-bar{padding:0 2vw}
-  }
+}
 </style>
 </head>
 <body>
-<div class="deck" id="deck">
-<div class="progress-bar" id="progressBar"></div>
-
-
-  <section class="slide hero active" data-title="封面">
-    <div class="slide-content hero-dark">
-      <div class="section-label anim-in">ROUNDTABLE DISCUSSION V8.0</div>
-      <h1 class="title-main anim-in anim-delay-1">数字游民的身份危机</h1>
-      <div class="title-sub anim-in anim-delay-2"></div>
-      <div class="gold-line anim-in anim-delay-3"></div>
-      <p style="font-size:14px;color:var(--text-dim);letter-spacing:0.1em;" class="anim-in anim-delay-4">从知识讨论到生存博弈</p>
-    </div>
-    <div class="deck-footer">数字游民的身份危机 | V8级圆桌洞见</div>
-    <div class="slide-number">01 / 32</div>
-  </section>
-
-  <section class="slide" data-title="专家档案(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">EXPERT PROFILES (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
-      <div class="grid-2">
-        
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#1a5f2a">项</div>
-          <div>
-            <div class="speaker-name neon-gold">项飙</div>
-            <div class="speaker-role">人类学家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          
-        </div>
-      </div>
-
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#8a2a4a">韩</div>
-          <div>
-            <div class="speaker-name neon-gold">韩炳哲</div>
-            <div class="speaker-role">哲学家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          
-        </div>
-      </div>
-
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#2a6a8a">傅</div>
-          <div>
-            <div class="speaker-name neon-gold">傅盛</div>
-            <div class="speaker-role">科技企业家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          
-        </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">专家档案</div>
-    <div class="slide-number">02 / 32</div>
-  </section>
-
-  <section class="slide" data-title="专家档案(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">EXPERT PROFILES (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
-      <div class="grid-2">
-        
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#4a2d8a">弗</div>
-          <div>
-            <div class="speaker-name neon-gold">弗洛姆</div>
-            <div class="speaker-role">精神分析学家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          
-        </div>
-      </div>
-
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#e65100">李</div>
-          <div>
-            <div class="speaker-name neon-gold">李诞</div>
-            <div class="speaker-role">脱口秀演员</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          
-        </div>
-      </div>
-
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#6a4a2a">理</div>
-          <div>
-            <div class="speaker-name neon-gold">理查德·佛罗里达</div>
-            <div class="speaker-role">城市经济学家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          
-        </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">专家档案</div>
-    <div class="slide-number">03 / 32</div>
-  </section>
-
-  <section class="slide" data-title="Round 1: 数字游民的自由幻象">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1</div>
-      <h2 class="quote-large anim-in anim-delay-1">数字游民的自由幻象</h2>
-      <div class="gold-line anim-in anim-delay-2"></div>
-      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">数字游民是自由的极致还是新的异化形式？</p>
-    </div>
-    <div class="deck-footer">Round 1 | 数字游民的自由幻象</div>
-    <div class="slide-number">04 / 32</div>
-  </section>
-
-  <section class="slide" data-title="R1 立场(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
-      <div class="stances-grid">
-        
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">项飙</div>
-        <div class="stance-content emotion-serious">数字游民是'附近'消失的极端形式。他们不是在'移动'，而是在'漂浮'——从一个 Airbnb 到另一个 Airbnb，从一个咖啡馆到另一个咖啡馆，从一个时区到另一个时区。他们与任何地方都没有真正的连接。这种'全球流动'看似自由，实际上是一种'无根的存在'。人类需要'根'——需要一个社区、一段历史、一种归属感。数字游民把这些都交换成了'灵活性'，但灵活性不等于自由。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">韩炳哲</div>
-        <div class="stance-content emotion-serious">数字游民是'自我剥削'的终极形式。他们不是被老板剥削，而是被自己剥削——24小时待命、随时随地工作、把生活完全融入工作。这种'自由'的代价是：工作与生活的边界完全消失。你以为你在巴厘岛的海滩上工作很浪漫？实际上你只是把办公室搬到了海滩上，你的精神状态和在格子间里没有任何区别。数字游民的'自由'，是一种更精致的奴役。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">傅盛</div>
-        <div class="stance-content emotion-serious">作为创业者，我看到的是数字游民代表了一种新的生产力组织方式。他们不受地域限制，可以在全球范围内寻找最佳的工作机会和生活成本。一个程序员可以选择在清迈远程工作，生活成本是北京的1/3，收入却是全球水平。这不是'异化'，这是'效率'。数字游民是全球化的受益者，他们把'地理位置'从工作方程中移除了。</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 立场</div>
-    <div class="slide-number">05 / 32</div>
-  </section>
-
-  <section class="slide" data-title="R1 立场(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
-      <div class="stances-grid">
-        
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">弗洛姆</div>
-        <div class="stance-content emotion-serious">数字游民的困境，本质上是现代人'逃避自由'的又一种表现。弗洛伊德说，文明的代价是压抑；我说，自由的代价是焦虑。当一个人可以'任何地方'，他就面临一个存在主义的问题：我属于哪里？我是谁？传统的身份认同——国籍、职业、社区——在数字游民身上都被削弱了。他们用'流动性'来逃避这种身份焦虑，但流动性本身不能提供答案。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">李诞</div>
-        <div class="stance-content emotion-serious">你们说的数字游民太抽象了。我认识很多这样的人，他们中的大多数不是在'追求自由'，而是在'逃避现实'。在北京买不起房？去清迈。在纽约卷不动？去里斯本。他们把'数字游民'包装成一种生活方式选择，但实际上这只是一种体面的撤退。真正的自由不是'去哪里都行'，而是'在哪里都能扎根'。数字游民的问题不是他们太自由了，而是他们太害怕承诺了。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">理查德·佛罗里达</div>
-        <div class="stance-content emotion-serious">从城市经济学的角度，数字游民代表了'创意阶层'的全球化。他们是高技能、高收入、高流动性的知识工作者，他们的流动正在重塑全球城市格局。巴厘岛、清迈、里斯本——这些城市正在成为'数字游民枢纽'，吸引着全球的创意人才。这不是'无根'，这是'多根'——数字游民同时属于多个城市、多个社区、多个网络。</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 立场</div>
-    <div class="slide-number">06 / 32</div>
-  </section>
-
-  <section class="slide" data-title="R1 碰撞(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">韩炳哲</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">傅盛</span>
-        </div>
-        <div class="clash-type attack-interest">利益冲突</div>
-        <div class="clash-content emotion-serious">你说数字游民代表'效率'——但效率的受益者是谁？是数字游民自己，还是雇佣他们的公司？一个在清迈远程工作的程序员，拿着硅谷的薪水，享受着清迈的低物价——他确实在'优化'自己的生活。但他的雇主获得了什么？一个24小时待命、没有劳动法保护、没有工会支持的'灵活劳动力'。你的'效率论'，本质上是在为一种新形式的劳动剥削辩护。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你的'剥削论'有一个关键假设：数字游民是'被迫'选择这种生活方式的。但现实是：大多数数字游民是主动选择的——他们可以选择去大公司上班，但他们选择了灵活性。你说他们'没有劳动法保护'——但他们也没有通勤、没有办公室政治、没有朝九晚五。你把'灵活性'等同于'剥削'，这是一种家长主义的傲慢——你比数字游民自己更知道什么对他们好？</div>
-          </div>
-      </div>
-
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">项飙</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">理查德·佛罗里达</span>
-        </div>
-        <div class="clash-type attack-logic">逻辑漏洞</div>
-        <div class="clash-content emotion-serious">你说数字游民是'多根'的——同时属于多个城市、多个社区。但'多根'和'无根'之间的区别是什么？如果你在清迈住了三个月，你认识你的邻居吗？你知道当地的社区议题吗？你参与过任何本地的公共生活吗？'多根'听起来很美好，但实际上它只是一种'浅层连接'的美化说法。人类的归属感需要时间、需要投入、需要承诺——这些都不是'三个月'能提供的。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你的'深度连接'标准是基于传统的定居社会模式。但在数字时代，'社区'的定义已经改变了。一个数字游民可能不认识他的物理邻居，但他可能有一个全球分布的'数字部落'——一群和他生活方式相似、价值观相近、在线上持续互动的人。你说这种连接是'浅层'的——但深度的标准是什么？是物理距离，还是情感投入？你的标准是工业时代的，不是数字时代的。</div>
-          </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 碰撞</div>
-    <div class="slide-number">07 / 32</div>
-  </section>
-
-  <section class="slide" data-title="R1 碰撞(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">弗洛姆</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">李诞</span>
-        </div>
-        <div class="clash-type attack-human">人性弱点</div>
-        <div class="clash-content emotion-serious">你说数字游民是'逃避现实'——但这个判断预设了一个'应该面对的现实'。这个'现实'是什么？是在北京买不起房的现实？是在纽约卷不动的现实？如果'现实'本身就是病态的，那么'逃避'它可能恰恰是理性的选择。你的'扎根论'是一种浪漫化的保守主义——它假设'在哪里都能扎根'是可能的，但对很多人来说，这个假设根本不成立。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你说'逃避病态的现实可能是理性的'——但逃避的代价是什么？是失去面对困难的能力。当一个人习惯了'不爽就换地方'，他怎么学会处理冲突、怎么学会妥协、怎么学会在一个不完美的环境中建立有意义的关系？你说'现实是病态的'——但逃避不能治愈病，它只是让你暂时感觉不到痛。你的'理性逃避论'，实际上是在为一种存在主义的懒惰辩护。</div>
-          </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 碰撞</div>
-    <div class="slide-number">08 / 32</div>
-  </section>
-
-  <section class="slide" data-title="R1 案例">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3: REALITY </div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
-      <div class="cases-container">
-        
-      <div class="reality-case anim-in">
-        <div class="case-header">
-          <div class="case-name neon-orange">巴厘岛的数字游民社区</div>
-          <div class="case-source">BBC 2023</div>
-        </div>
-        <div class="case-content">巴厘岛的苍古（Canggu）已经成为全球最大的数字游民社区之一。数千名远程工作者在这里生活和工作，形成了一个独特的'数字飞地'。但当地社区开始出现反弹：房租上涨、文化冲突、环境压力。数字游民的'自由'，正在以当地居民的'不自由'为代价。</div>
-        <div class="case-outcome neon-red">代价：印尼政府开始讨论数字游民签证的限制条款</div>
-        <div class="case-lesson neon-gold">教训：数字游民的流动性不是'无成本'的——成本由当地社区承担</div>
-      </div>
-
-      <div class="reality-case anim-in">
-        <div class="case-header">
-          <div class="case-name neon-orange">爱沙尼亚的电子公民计划</div>
-          <div class="case-source">爱沙尼亚政府 2014至今</div>
-        </div>
-        <div class="case-content">爱沙尼亚推出了全球第一个'电子公民'计划，允许任何人在爱沙尼亚注册公司、开设银行账户，无需实际居住。这个计划吸引了大量数字游民和远程工作者。但它也引发了关于'公民身份'本质的讨论：当一个人可以在任何地方'属于'一个国家，'国家'这个概念还有意义吗？</div>
-        <div class="case-outcome neon-red">代价：超过10万人申请电子公民，但实际经济影响有限</div>
-        <div class="case-lesson neon-gold">教训：数字游民正在挑战传统的'公民身份'概念</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 案例</div>
-    <div class="slide-number">09 / 32</div>
-  </section>
-
-  <section class="slide" data-title="R1 代价">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 4: COST</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
-      
-      <div class="cost-discussion anim-in">
-        <div class="cost-scenario neon-gold">数字游民成为主流工作模式</div>
-        <div class="cost-list">
-          
-          <div class="cost-item">
-            <div class="cost-name neon-red">社区归属感的瓦解</div>
-            <div class="cost-analysis">当大量人口成为'流动人口'，传统的社区结构会瓦解。邻里关系、地方参与、社区互助——这些都需要'稳定性'作为前提。数字游民的流动性，会削弱这些社会资本。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">社会安全网的崩溃</div>
-            <div class="cost-analysis">现有的社会安全网——医疗保险、养老金、失业保险——都是基于'固定就业'和'固定居住'设计的。数字游民往往不在任何地方'正式定居'，他们可能逃避税收、逃避社会保险，最终削弱整个社会安全网。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">全球不平等的加剧</div>
-            <div class="cost-analysis">数字游民拿着发达国家的薪水，在发展中国家消费——这会推高当地的物价，挤压当地居民的生活空间。巴厘岛的房租因为数字游民而上涨了300%，当地年轻人已经负担不起。</div>
-          </div>
-        </div>
-        <div class="worst-case">
-          <div class="worst-label neon-red">最坏情况</div>
-          <div class="worst-content">2040年，世界分裂成两个阶层：流动的'全球公民'和被困在原地的'本地居民'。前者享受着全球套利的好处，后者承受着全球套利的成本。这不是自由的胜利，这是新形式的殖民主义。</div>
-        </div>
-        
-          <div class="survivor-bias">
-            <div class="survivor-label neon-purple">幸存者偏差</div>
-            <div class="survivor-content">我们只听到数字游民的'成功故事'——自由、灵活、全球视野。但我们没有听到的是：那些因为数字游民涌入而被迫搬离家乡的当地人，那些因为'远程工作'而失去劳动保护的工人，那些因为'流动性'而无法建立深度关系的孤独灵魂。</div>
-          </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 代价</div>
-    <div class="slide-number">10 / 32</div>
-  </section>
-
-  <section class="slide" data-title="R1 人性">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
-      
-      <div class="human-nature anim-in">
-        <div class="human-question neon-purple">人类是否需要'归属'才能获得幸福？</div>
-        <div class="human-analysis">依恋理论告诉我们，人类是'亲附属'的生物——我们需要与他人建立稳定、持久的连接。马斯洛的需求层次理论中，'归属感'是仅次于安全需求的基本需求。数字游民的流动性，恰恰在削弱这种归属感。但也有研究表明，'安全型依恋'的人可以在流动中保持心理健康——他们不依赖特定的'地点'来获得归属感，而是依赖'关系'。</div>
-        <div class="human-examples">
-          <div class="examples-label">现实例子</div>
-          
-          <div class="example-item">• 游牧民族的历史——他们在流动中建立了强烈的部落认同</div>
-          <div class="example-item">• 外交官家庭——他们的孩子在多个国家长大，但往往发展出更强的适应能力</div>
-        </div>
-        <div class="human-conclusion neon-gold">人类确实需要'归属'，但'归属'不一定需要'固定地点'。数字游民的挑战在于：如何在流动中建立有意义的连接。这需要新的技能、新的社会支持、新的身份认同框架。</div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 人性</div>
-    <div class="slide-number">11 / 32</div>
-  </section>
-
-  <section class="slide" data-title="R1 升级">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
-      
-      <div class="cognitive-upgrade anim-in">
-        <div class="upgrade-comparison">
-          <div class="old-thinking">
-            <div class="thinking-label neon-red">旧思维</div>
-            <div class="thinking-content">数字游民是自由的极致，是未来的工作方式</div>
-          </div>
-          <div class="upgrade-arrow">→</div>
-          <div class="new-thinking">
-            <div class="thinking-label neon-green">新思维</div>
-            <div class="thinking-content">数字游民是一种有代价的自由选择，它需要新的社会契约来支撑</div>
-          </div>
-        </div>
-        <div class="complexity">
-          <div class="complexity-label neon-cyan">复杂性</div>
-          <div class="complexity-content">数字游民不是简单的'自由'或'异化'，而是一种复杂的社会现象。它提供了灵活性和全球视野，但也削弱了社区归属感和社会安全网。问题不在于数字游民'好不好'，而在于社会如何适应这种新的工作方式——如何保护流动性工人的权益，如何补偿当地社区的成本，如何帮助数字游民建立有意义的连接。</div>
-        </div>
-        <div class="actionable">
-          <div class="actionable-label neon-gold">可执行洞见</div>
-          <div class="actionable-content">作为数字游民：意识到你的流动性有外部成本，主动参与当地社区，而不仅仅是'消费'它。作为政策制定者：设计'便携式'的社会保障——医疗保险、养老金可以跟着人走，而不是跟着工作走。作为雇主：为远程工人提供'社区津贴'，帮助他们在任何地方都能建立社交网络。</div>
-        </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 升级</div>
-    <div class="slide-number">12 / 32</div>
-  </section>
-
-  <section class="slide" data-title="Round 2: 远程工作与亲密关系">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2</div>
-      <h2 class="quote-large anim-in anim-delay-1">远程工作与亲密关系</h2>
-      <div class="gold-line anim-in anim-delay-2"></div>
-      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">当工作不再需要办公室，亲密关系会发生什么变化？</p>
-    </div>
-    <div class="deck-footer">Round 2 | 远程工作与亲密关系</div>
-    <div class="slide-number">13 / 32</div>
-  </section>
-
-  <section class="slide" data-title="R2 立场(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
-      <div class="stances-grid">
-        
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">项飙</div>
-        <div class="stance-content emotion-serious">远程工作正在创造一种'共处但不连接'的亲密关系模式。两个人可能每天都在同一个空间里工作，但他们各自面对自己的屏幕，各自沉浸在自己的数字世界里。物理上的'共处'不再等于情感上的'连接'。这种'并行存在'可能比传统的'分离工作'更孤独——因为你明明在场，却感觉不到对方。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">韩炳哲</div>
-        <div class="stance-content emotion-serious">远程工作模糊了'工作'和'生活'的边界，也模糊了'专业关系'和'亲密关系'的边界。当你的伴侣同时也是你的'同事'，当你的家同时也是你的'办公室'，所有的关系都变得暧昧不清。这种'边界的消失'不是解放，而是一种新的压迫——你无处可逃，无处休息，无处做'不是任何角色'的自己。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">傅盛</div>
-        <div class="stance-content emotion-serious">远程工作实际上可以改善亲密关系。没有通勤，意味着更多的时间陪伴家人；灵活的时间安排，意味着可以更好地协调双方的需求。我和我妻子都是远程工作，我们的关系比以前更好了，因为我们有更多的时间在一起，也有更多的自主权来安排自己的时间。问题不在于远程工作本身，而在于如何'设计'远程工作的生活。</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 立场</div>
-    <div class="slide-number">14 / 32</div>
-  </section>
-
-  <section class="slide" data-title="R2 立场(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
-      <div class="stances-grid">
-        
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">弗洛姆</div>
-        <div class="stance-content emotion-serious">远程工作的亲密关系面临一个深层的存在主义挑战：当'工作'不再需要你'在场'，你如何定义自己的'存在'？传统的办公室工作提供了一种'社会性存在'——你的身份、你的价值、你的社交网络都与工作场所绑定。远程工作打破了这种绑定，但也剥夺了这种存在感。当一个人失去了'在场'的意义，他怎么在亲密关系中'在场'？</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">李诞</div>
-        <div class="stance-content emotion-serious">你们把远程工作的亲密关系想得太复杂了。最简单的问题是：当两个人24小时在一起，他们怎么忍受对方？以前上班是一种'逃离'——你可以从家庭压力中暂时解脱。现在呢？你无处可逃。我认识很多因为疫情远程工作而离婚的夫妻，不是因为他们不爱对方了，而是因为他们无法忍受24小时和另一个人共处。距离产生美，不是因为距离本身好，而是因为距离给了你喘息的空间。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">理查德·佛罗里达</div>
-        <div class="stance-content emotion-serious">从城市规划的角度，远程工作正在重塑'亲密关系的地理学'。过去，情侣必须在同一个城市工作，这意味着他们必须在职业和关系之间做出妥协。现在，他们可以选择在任何地方生活——可以是海边、可以是山区、可以是另一个国家。这种'地理自由'给了亲密关系新的可能性，但也带来了新的挑战：当'去哪里'成为一个无限选项，决策本身就变得困难。</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 立场</div>
-    <div class="slide-number">15 / 32</div>
-  </section>
-
-  <section class="slide" data-title="R2 碰撞(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">韩炳哲</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">傅盛</span>
-        </div>
-        <div class="clash-type attack-reality">现实矛盾</div>
-        <div class="clash-content emotion-serious">你说远程工作给了你'更多时间陪伴家人'——但你有没有注意到，'陪伴'和'在场'是两件事？你可能每天都在家里，但你的注意力在屏幕上；你可能和妻子坐在同一个沙发上，但你们各自在开视频会议。这种'物理在场但精神缺席'的状态，可能比完全不在家更让人孤独。你的'更多时间'论，混淆了'时间数量'和'时间质量'。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你的质疑是合理的，但你忽视了一个关键变量：主动性。是的，远程工作可能导致'精神缺席'——但这不是远程工作的必然结果，而是个人选择的结果。我和我妻子有明确的'无屏幕时间'——吃饭时不开手机，晚上8点后不看电脑。你说'物理在场但精神缺席'——但这在传统工作中不也一样吗？一个每天加班到10点的人，即使'在家'，也是'精神缺席'。你的批判是针对'不健康的远程工作习惯'，而不是远程工作本身。</div>
-          </div>
-      </div>
-
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">弗洛姆</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">李诞</span>
-        </div>
-        <div class="clash-type attack-logic">逻辑漏洞</div>
-        <div class="clash-content emotion-serious">你说'距离产生美'——但你有没有想过，这种'距离'本质上是一种逃避？当一个人需要用'上班'来'逃离'家庭，这说明什么？说明他的亲密关系本身就有问题。远程工作不是问题的根源，它只是暴露了问题。那些因为'24小时在一起'而离婚的夫妻，他们的关系早就岌岌可危了——远程工作只是最后一根稻草。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你说'远程工作暴露了问题'——但暴露问题的方式很重要。如果一种工作方式系统性地让'脆弱的关系'崩溃，那它至少需要承担部分责任。你说'关系本身就有问题'——但没有完美的关系，所有的关系都需要'喘息空间'。传统的办公室工作提供了这种空间：你可以在工作中处理情绪，可以在通勤中整理思绪，可以在同事中获得支持。远程工作剥夺了这些'缓冲区'，把所有的压力都集中在家庭空间里。这不是'暴露问题'，这是'制造问题'。</div>
-          </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 碰撞</div>
-    <div class="slide-number">16 / 32</div>
-  </section>
-
-  <section class="slide" data-title="R2 碰撞(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">项飙</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">理查德·佛罗里达</span>
-        </div>
-        <div class="clash-type attack-human">人性弱点</div>
-        <div class="clash-content emotion-serious">你说远程工作给了亲密关系'地理自由'——但你有没有注意到，这种'自由'往往导致'决策瘫痪'？当选择是有限的，决策是容易的；当选择是无限的，决策就变成了折磨。'去哪里住'这个问题，在传统社会是不需要想的——你在哪里工作，就在哪里住。现在呢？你可以去任何地方，这意味着你必须不断做出选择，而且永远不知道你的选择是否'最优'。这种'无限选择的焦虑'，可能比'没有选择的无奈'更痛苦。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你的'选择悖论'是有道理的，但它不适用于所有人。对于那些有明确偏好的人——比如喜欢海边、喜欢大城市、喜欢某种文化——'地理自由'是真正的解放。你说'无限选择导致焦虑'——但对于那些在传统模式下完全没有选择的人——比如因为工作必须留在一个不喜欢的城市——任何选择都是进步。你的批判是基于'选择过多'的特权视角，忽视了'没有选择'的大多数。</div>
-          </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 碰撞</div>
-    <div class="slide-number">17 / 32</div>
-  </section>
-
-  <section class="slide" data-title="R2 案例">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3: REALITY </div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
-      <div class="cases-container">
-        
-      <div class="reality-case anim-in">
-        <div class="case-header">
-          <div class="case-name neon-orange">疫情后的远程工作离婚潮</div>
-          <div class="case-source">多家律所报告 2021-2022</div>
-        </div>
-        <div class="case-content">2021-2022年，多个国家报告了显著的离婚率上升，尤其是在实施长期封锁的地区。律师们报告，很多夫妻是因为'24小时在一起'而发现彼此无法忍受。远程工作不是离婚的原因，但它是催化剂——它加速了那些本已脆弱的关系的崩溃。</div>
-        <div class="case-outcome neon-red">代价：离婚率在2023年有所回落，但仍高于疫情前水平</div>
-        <div class="case-lesson neon-gold">教训：远程工作需要'关系设计'——如何在共享空间中保持个人边界</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 案例</div>
-    <div class="slide-number">18 / 32</div>
-  </section>
-
-  <section class="slide" data-title="R2 代价">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 4: COST</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
-      
-      <div class="cost-discussion anim-in">
-        <div class="cost-scenario neon-gold">远程工作成为永久常态</div>
-        <div class="cost-list">
-          
-          <div class="cost-item">
-            <div class="cost-name neon-red">办公室恋情的消失</div>
-            <div class="cost-analysis">办公室是成年人最主要的社交场所之一。很多重要的关系——包括婚姻——都是在办公室开始的。当人们不再去办公室，这种'自然的相遇'就会消失。取而代之的是约会App——一种算法驱动的、高度目的性的相遇方式。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">工作支持网络的瓦解</div>
-            <div class="cost-analysis">在传统办公室，你有同事可以倾诉、可以寻求建议、可以一起吐槽。这种'工作友谊'是重要的情感支持。远程工作削弱了这种连接——你可能和同事只通过Slack交流，永远不知道他们的笑容是什么样的。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">亲密关系的'去仪式化'</div>
-            <div class="cost-analysis">传统的亲密关系有很多'仪式'——一起吃晚饭、一起看电影、一起散步。这些仪式需要'时间'和'空间'的边界。当工作和生活完全融合，这些仪式就失去了它们的特殊性。'一起在家'不再是'共度时光'，只是'在同一空间里各自忙碌'。</div>
-          </div>
-        </div>
-        <div class="worst-case">
-          <div class="worst-label neon-red">最坏情况</div>
-          <div class="worst-content">2035年，亲密关系变成了'两个远程工作者的并行存在'。他们共享一个物理空间，但各自沉浸在自己的数字世界里。'陪伴'变成了'共存'，'亲密'变成了'相邻'。他们从未真正'分离'，也从未真正'连接'。</div>
-        </div>
-        
-          <div class="survivor-bias">
-            <div class="survivor-label neon-purple">幸存者偏差</div>
-            <div class="survivor-content">我们看到的是'成功的远程工作夫妻'——他们有明确的边界、有意识的连接、主动的沟通。但我们没有看到的是：那些因为远程工作而渐行渐远的伴侣，那些在'共享空间'中感到窒息的个体，那些因为'无处可逃'而选择分手的情侣。</div>
-          </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 代价</div>
-    <div class="slide-number">19 / 32</div>
-  </section>
-
-  <section class="slide" data-title="R2 人性">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
-      
-      <div class="human-nature anim-in">
-        <div class="human-question neon-purple">亲密关系是否需要'距离'才能健康？</div>
-        <div class="human-analysis">依恋理论中的'安全基地'概念告诉我们，健康的亲密关系需要'安全'和'探索'的平衡。你需要一个'基地'可以回来，但也需要'探索'的空间。远程工作的问题在于：它消除了'探索'的物理距离，把两个人困在同一个'基地'里。这不是'更亲密'，而是'更拥挤'。</div>
-        <div class="human-examples">
-          <div class="examples-label">现实例子</div>
-          
-          <div class="example-item">• 长期航海的夫妻——他们的关系往往更紧密，因为他们有共同的'探索'经历</div>
-          <div class="example-item">• 两地分居的夫妻——他们的关系可能更脆弱，因为他们缺乏日常的'小连接'</div>
-        </div>
-        <div class="human-conclusion neon-gold">亲密关系不需要'距离'本身，但需要'空间'——包括物理空间和心理空间。远程工作的问题不在于它消除了距离，而在于它可能消除了'空间'。</div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 人性</div>
-    <div class="slide-number">20 / 32</div>
-  </section>
-
-  <section class="slide" data-title="R2 升级">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
-      
-      <div class="cognitive-upgrade anim-in">
-        <div class="upgrade-comparison">
-          <div class="old-thinking">
-            <div class="thinking-label neon-red">旧思维</div>
-            <div class="thinking-content">远程工作让亲密关系更自由</div>
-          </div>
-          <div class="upgrade-arrow">→</div>
-          <div class="new-thinking">
-            <div class="thinking-label neon-green">新思维</div>
-            <div class="thinking-content">远程工作让亲密关系面临新的挑战，需要有意识的设计</div>
-          </div>
-        </div>
-        <div class="complexity">
-          <div class="complexity-label neon-cyan">复杂性</div>
-          <div class="complexity-content">远程工作对亲密关系的影响是双面的。它提供了更多的时间和地理自由，但也消除了'喘息空间'和'自然相遇'。问题不在于远程工作'好不好'，而在于如何'设计'远程工作的亲密关系——如何在共享空间中保持个人边界，如何在'永远在线'的时代创造'断连'的时刻，如何在'地理自由'中建立'情感根基'。</div>
-        </div>
-        <div class="actionable">
-          <div class="actionable-label neon-gold">可执行洞见</div>
-          <div class="actionable-content">作为远程工作的伴侣：建立'无屏幕时间'，创造'分开的仪式'（比如各自去咖啡馆工作），定期'约会'（不只是'在家'）。作为雇主：为远程员工提供'关系支持'——比如伴侣一起参加的团建活动。作为政策制定者：研究远程工作对亲密关系的长期影响，为需要帮助的伴侣提供咨询服务。</div>
-        </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 升级</div>
-    <div class="slide-number">21 / 32</div>
-  </section>
-
-  <section class="slide" data-title="Round 3: 数字游民的未来">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3</div>
-      <h2 class="quote-large anim-in anim-delay-1">数字游民的未来</h2>
-      <div class="gold-line anim-in anim-delay-2"></div>
-      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">数字游民是一种过渡现象还是永久的工作方式变革？</p>
-    </div>
-    <div class="deck-footer">Round 3 | 数字游民的未来</div>
-    <div class="slide-number">22 / 32</div>
-  </section>
-
-  <section class="slide" data-title="R3 立场(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
-      <div class="stances-grid">
-        
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">项飙</div>
-        <div class="stance-content emotion-serious">我不认为数字游民会成为主流。大多数人需要'根'——需要一个社区、一段历史、一种归属感。数字游民的生活方式是反人性的，它只有在特定条件下才可行：高技能、高收入、单身或伴侣也是数字游民。对于有孩子的人、有老人需要照顾的人、有社区责任的人，数字游民是不现实的。它是一种精英的特权，不是大众的未来。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">韩炳哲</div>
-        <div class="stance-content emotion-serious">数字游民的未来取决于资本主义的逻辑。如果'效率'继续是最高价值，数字游民可能会扩大——因为远程工作确实是'更高效'的。但我不认为这是'进步'。真正的进步应该是：减少工作时间、增加闲暇、恢复工作与生活的边界。数字游民的方向是错的——它不是在'解放'工作，而是在'殖民'生活。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">傅盛</div>
-        <div class="stance-content emotion-serious">数字游民不会成为'所有人'的工作方式，但会成为'相当一部分人'的选择。未来的工作模式是'混合'的——有些人选择在办公室，有些人选择远程，有些人选择数字游民。关键是：社会需要为所有这些选择提供支持。我正在投资一些为数字游民服务的创业公司——从远程工作签证到数字游民社区——因为我相信这个市场会继续增长。</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 立场</div>
-    <div class="slide-number">23 / 32</div>
-  </section>
-
-  <section class="slide" data-title="R3 立场(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
-      <div class="stances-grid">
-        
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">弗洛姆</div>
-        <div class="stance-content emotion-serious">数字游民的未来取决于人类对'自由'的理解。如果'自由'继续被定义为'不受约束'，数字游民可能会扩大。但如果人类开始重新理解'自由'——不是'逃离'，而是'朝向'；不是'灵活性'，而是'承诺的能力'——那么数字游民的吸引力会下降。真正的自由不是'去哪里都行'，而是'选择一个地方，并为之负责'。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">李诞</div>
-        <div class="stance-content emotion-serious">数字游民会继续存在，但它会变成一种'亚文化'，而不是主流。就像嬉皮士、波西米亚人——它是一种'生活方式选择'，吸引的是那些不适合传统社会结构的人。大多数人最终还是会选择'稳定'——不是因为他们不想要自由，而是因为'稳定'有它的价值：安全感、归属感、可预测性。数字游民的未来是'小众但持久'。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">理查德·佛罗里达</div>
-        <div class="stance-content emotion-serious">数字游民代表了'创意经济'的未来。随着知识工作的比重继续上升，对'灵活性'的需求也会继续上升。但数字游民的形态会演变——从'永远在路上'变成'季节性流动'。未来可能是：每年在不同的城市住几个月，然后回到一个'基地'。这种'半游牧'模式，既保留了流动的好处，又提供了稳定的根基。</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 立场</div>
-    <div class="slide-number">24 / 32</div>
-  </section>
-
-  <section class="slide" data-title="R3 碰撞(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">项飙</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">傅盛</span>
-        </div>
-        <div class="clash-type attack-reality">现实矛盾</div>
-        <div class="clash-content emotion-serious">你说'社会需要为所有选择提供支持'——但社会资源是有限的。当数字游民不缴税、不参与本地社区、不为公共产品做贡献，他们凭什么享受社会的支持？你的'数字游民服务'创业公司，本质上是在为一群'搭便车'的人提供便利。数字游民想要'全球流动'的好处，但不想承担'全球公民'的责任。这不是'选择的自由'，这是'责任的逃避'。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你的'搭便车'指控是不公平的。大多数数字游民是缴税的——他们向自己的国籍国或居住国缴税。你说他们'不参与本地社区'——但这是一种选择，不是义务。你不会指责一个在北京工作的上海人'不参与北京社区'吧？数字游民的问题不在于他们'逃避责任'，而在于现有的税制和社区参与机制是基于'固定居住'设计的，不适应流动性工作。你说我在'为搭便车的人提供便利'——实际上我在'为新的工作方式设计新的支持系统'。</div>
-          </div>
-      </div>
-
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">韩炳哲</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">理查德·佛罗里达</span>
-        </div>
-        <div class="clash-type attack-logic">逻辑漏洞</div>
-        <div class="clash-content emotion-serious">你说未来是'半游牧'模式——每年在不同城市住几个月，然后回到一个'基地'。但你有没有注意到，这种'半游牧'需要什么前提？需要足够的收入来维持两个住所，需要足够的时间来'选择'去哪里，需要足够的社会网络来'保持连接'。你的'半游牧'论，是一种精英的想象——对大多数人来说，'一个家'已经是负担，'两个家'更是奢望。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你的'精英想象'指控有一定道理，但你忽视了技术和社会变革的趋势。Airbnb已经让'临时住所'变得便宜，共享办公空间让'工作场所'变得灵活，远程工作让'收入'与'地点'脱钩。你说'两个家'是奢望——但未来可能不是'两个家'，而是'一个家+多个临时基地'。更重要的是：你把'半游牧'理解为'两个固定点之间的移动'，但未来更可能是'多个临时点之间的流动'。你的想象被'家'这个传统概念限制住了。</div>
-          </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 碰撞</div>
-    <div class="slide-number">25 / 32</div>
-  </section>
-
-  <section class="slide" data-title="R3 碰撞(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">弗洛姆</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">李诞</span>
-        </div>
-        <div class="clash-type attack-human">人性弱点</div>
-        <div class="clash-content emotion-serious">你说数字游民会变成'亚文化'——就像嬉皮士、波西米亚人。但你有没有注意到，嬉皮士运动最终失败了？他们没有改变社会，而是被社会吸收了——变成了'消费主义的点缀'。数字游民可能会走同样的路：它不会改变工作方式，只会变成一种'生活方式消费品'——一种可以购买的'自由感'。你的'小众但持久'论，实际上是承认了数字游民的'无力'。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你说嬉皮士运动'失败了'——但失败的标准是什么？嬉皮士没有推翻资本主义，但他们改变了文化：环保意识、性别平等、反战运动——这些都源于嬉皮士时代。你说数字游民会变成'消费品'——但消费品也可以是革命性的。智能手机是消费品，但它改变了人类的生活方式。数字游民作为一种'消费品'，可能会在无形中改变人们对'工作'和'生活'的期待。你对'改变'的定义太狭隘了——不是所有改变都是'推翻'，有些改变是'渗透'。</div>
-          </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 碰撞</div>
-    <div class="slide-number">26 / 32</div>
-  </section>
-
-  <section class="slide" data-title="R3 案例">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3: REALITY </div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
-      <div class="cases-container">
-        
-      <div class="reality-case anim-in">
-        <div class="case-header">
-          <div class="case-name neon-orange">葡萄牙的数字游民签证</div>
-          <div class="case-source">葡萄牙政府 2022</div>
-        </div>
-        <div class="case-content">葡萄牙推出了专门针对数字游民的签证，允许远程工作者在葡萄牙合法居住和工作。这个签证吸引了大量数字游民，但也引发了当地居民的不满——房租上涨、文化冲突、社区异化。葡萄牙政府正在调整政策，试图在'吸引数字游民'和'保护本地居民'之间找到平衡。</div>
-        <div class="case-outcome neon-red">代价：签证政策仍在调整中，开始引入'本地贡献'要求</div>
-        <div class="case-lesson neon-gold">教训：数字游民政策需要考虑'外部性'——对当地社区的影响</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 案例</div>
-    <div class="slide-number">27 / 32</div>
-  </section>
-
-  <section class="slide" data-title="R3 代价">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 4: COST</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
-      
-      <div class="cost-discussion anim-in">
-        <div class="cost-scenario neon-gold">数字游民成为全球劳动力的重要组成部分</div>
-        <div class="cost-list">
-          
-          <div class="cost-item">
-            <div class="cost-name neon-red">全球税收基础的侵蚀</div>
-            <div class="cost-analysis">当高收入的数字游民可以选择在低税国家缴税，高税国家的税收基础会被侵蚀。这最终会导致公共服务的下降——因为政府没有足够的钱来提供教育、医疗、基础设施。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">全球不平等的加剧</div>
-            <div class="cost-analysis">数字游民拿着发达国家的薪水，在发展中国家消费——这会推高当地的物价，挤压当地居民的生活空间。巴厘岛的房租因为数字游民而上涨了300%，当地年轻人已经负担不起。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">社区参与的下降</div>
-            <div class="cost-analysis">当人们不再'属于'任何地方，他们对'任何地方'的责任感都会下降。投票、志愿服务、邻里互助——这些都需要'归属感'作为前提。数字游民的流动性，会削弱这些社会资本。</div>
-          </div>
-        </div>
-        <div class="worst-case">
-          <div class="worst-label neon-red">最坏情况</div>
-          <div class="worst-content">2050年，世界分裂成两个阶层：流动的'全球精英'和被困在原地的'本地居民'。前者享受着全球套利的好处，后者承受着全球套利的成本。这不是自由的胜利，这是新形式的阶级分化。</div>
-        </div>
-        
-          <div class="survivor-bias">
-            <div class="survivor-label neon-purple">幸存者偏差</div>
-            <div class="survivor-content">我们只看到数字游民的'成功案例'——自由、灵活、全球视野。但我们没有看到的是：那些因为数字游民涌入而被迫搬离家乡的当地人，那些因为'远程工作'而失去劳动保护的工人，那些因为'流动性'而无法建立深度关系的孤独灵魂。</div>
-          </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 代价</div>
-    <div class="slide-number">28 / 32</div>
-  </section>
-
-  <section class="slide" data-title="R3 人性">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
-      
-      <div class="human-nature anim-in">
-        <div class="human-question neon-purple">人类是'天生游牧'还是'天生定居'？</div>
-        <div class="human-analysis">人类进化史表明，我们的祖先是'游牧'的——在非洲大草原上追逐猎物。但农业革命后，人类开始了'定居'生活。这两种模式都在我们的基因里。数字游民可能是在'重新发现'我们的游牧本能——但问题是：现代社会的基础设施是为'定居'设计的，不是为'游牧'设计的。数字游民的困境，本质上是'游牧本能'与'定居社会'之间的冲突。</div>
-        <div class="human-examples">
-          <div class="examples-label">现实例子</div>
-          
-          <div class="example-item">• 游牧民族在现代社会的适应困难</div>
-          <div class="example-item">• 城市居民的'周末逃离'需求——一种对'游牧'的渴望</div>
-        </div>
-        <div class="human-conclusion neon-gold">人类既有'游牧'的本能，也有'定居'的需求。数字游民代表了'游牧'的一面，但它不能完全取代'定居'的价值。未来的工作方式可能是：在'定居'和'游牧'之间找到动态平衡。</div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 人性</div>
-    <div class="slide-number">29 / 32</div>
-  </section>
-
-  <section class="slide" data-title="R3 升级">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
-      
-      <div class="cognitive-upgrade anim-in">
-        <div class="upgrade-comparison">
-          <div class="old-thinking">
-            <div class="thinking-label neon-red">旧思维</div>
-            <div class="thinking-content">数字游民是工作的未来，传统办公室会消亡</div>
-          </div>
-          <div class="upgrade-arrow">→</div>
-          <div class="new-thinking">
-            <div class="thinking-label neon-green">新思维</div>
-            <div class="thinking-content">数字游民是工作方式的一种选择，它需要新的社会契约来支撑</div>
-          </div>
-        </div>
-        <div class="complexity">
-          <div class="complexity-label neon-cyan">复杂性</div>
-          <div class="complexity-content">数字游民不是'所有人的未来'，而是'一部分人的选择'。它的可行性取决于个人条件（技能、收入、家庭状况）和社会条件（税制、社区支持、基础设施）。问题不在于数字游民'会不会成为主流'，而在于社会如何为这种新的工作方式提供支持——同时保护那些'不能'或'不想'成为数字游民的人。</div>
-        </div>
-        <div class="actionable">
-          <div class="actionable-label neon-gold">可执行洞见</div>
-          <div class="actionable-content">作为数字游民：意识到你的流动性有外部成本，主动参与当地社区。作为政策制定者：设计'便携式'的社会保障，同时保护本地社区的利益。作为雇主：提供灵活的工作安排，但也要为远程工人创造'连接'的机会——比如定期的线下聚会。作为社会：重新思考'公民身份'的定义——在一个流动的世界里，'你属于哪里'可能需要新的答案。</div>
-        </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 升级</div>
-    <div class="slide-number">30 / 32</div>
-  </section>
-
-  <section class="slide" data-title="最终洞见">
-    <div class="slide-content">
-      <div class="section-label anim-in">FINAL INSIGHT</div>
-      <div class="quote-large anim-in anim-delay-1">数字游民不是自由的极致，而是一种有代价的选择。它提供了灵活性和全球视野，但也削弱了社区归属感、模糊了工作与生活的边界、加剧了全球不平等。问题不在于数字游民'好不好'，而在于社会如何适应这种新的工作方式——如何保护流动性工人的权益，如何补偿当地社区的成本，如何帮助数字游民建立有意义的连接。未来的'自由'不是'去哪里都行'，而是'在哪里都能扎根，也能随时出发'。</div>
-    </div>
-    <div class="deck-footer">最终洞见</div>
-    <div class="slide-number">31 / 32</div>
-  </section>
-
-  <section class="slide" data-title="开放问题">
-    <div class="slide-content">
-      <div class="section-label anim-in">OPEN QUESTIONS</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">留给读者的问题</h3>
-      <div class="headline-item anim-in"><strong>Q1:</strong> 如果'公民身份'不再与'居住地'绑定，'国家'这个概念还有意义吗？</div>
-<div class="headline-item anim-in"><strong>Q2:</strong> 亲密关系是否需要'物理距离'才能健康，还是'心理空间'就足够了？</div>
-<div class="headline-item anim-in"><strong>Q3:</strong> 数字游民是一种'特权'还是一种'权利'？社会应该为它提供支持吗？</div>
-    </div>
-    <div class="deck-footer">开放问题</div>
-    <div class="slide-number">32 / 32</div>
-  </section>
-
-<div class="toc-backdrop" id="tocBackdrop"></div>
-<div class="toc-panel" id="tocPanel">
-<div class="toc-title">目录</div>
-<div id="tocList"></div>
-</div>
-<div class="nav-bar">
-<div class="nav-left">
-<button class="nav-btn" id="btnToc">☰ 目录</button>
-<button class="nav-btn" id="btnPrev">◀ 上一页</button>
-<button class="nav-btn" id="btnNext">下一页 ▶</button>
-</div>
-<div class="nav-right">
-<span class="nav-title" id="slideTitle"></span>
-<span class="nav-counter" id="slideCounter"></span>
-</div>
-</div>
-<div class="nav-dots" id="navDots"></div>
+<div class="mesh-gradient"></div>
+<div class="noise-overlay"></div>
+<div id="progress">
+  <div id="progressBar"></div>
 </div>
 
+<div class="slide slide-cover">
+  <div class="cover-logo">圆桌洞见<span>Roundtable Insight</span></div>
+  <div class="cover-body">
+    <h1>数字游民的身份危机</h1>
+    <p class="cover-sub"></p>
+    <p class="cover-date">6 位专家 · 3 轮讨论</p>
+  </div>
+  <div class="cover-footer">本报告由 AI 专家圆桌生成</div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">专家阵容</div>
+  <h2 class="slide-title">数字游民的身份危机</h2>
+  <div class="experts-grid">
+    <div class="expert-card">
+      <div class="expert-avatar">项</div>
+      <div class="expert-name">项飙</div>
+      <div class="expert-role">人类学家</div>
+      <div class="expert-desc">...</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">韩</div>
+      <div class="expert-name">韩炳哲</div>
+      <div class="expert-role">哲学家</div>
+      <div class="expert-desc">...</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">傅</div>
+      <div class="expert-name">傅盛</div>
+      <div class="expert-role">科技企业家</div>
+      <div class="expert-desc">...</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">弗</div>
+      <div class="expert-name">弗洛姆</div>
+      <div class="expert-role">精神分析学家</div>
+      <div class="expert-desc">...</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">李</div>
+      <div class="expert-name">李诞</div>
+      <div class="expert-role">脱口秀演员</div>
+      <div class="expert-desc">...</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">理</div>
+      <div class="expert-name">理查德·佛罗里达</div>
+      <div class="expert-role">城市经济学家</div>
+      <div class="expert-desc">...</div>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 1 / 3</div>
+  <h2 class="slide-title">数字游民的自由幻象</h2>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 1 发言</div>
+  <div class="speech-cards">
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#c23b22">项</div>
+            <div>
+              <div class="speaker-name">项飙</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">数字游民是'附近'消失的极端形式。他们不是在'移动'，而是在'漂浮'——从一个 Airbnb 到另一个 Airbnb，从一个咖啡馆到另一个咖啡馆，从一个时区到另一个时区。他们与任何地方都没有真正的连接。这种'全球流动'看似自由，实际上是一种'无根的存在'。人类需要'根'——需要一个社区、一段历史、一种归属感。数字游民把这些都交换成了'灵活性'，但灵活性不等于自由。</div>
+        </div>
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#3a8a5c">韩</div>
+            <div>
+              <div class="speaker-name">韩炳哲</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">数字游民是'自我剥削'的终极形式。他们不是被老板剥削，而是被自己剥削——24小时待命、随时随地工作、把生活完全融入工作。这种'自由'的代价是：工作与生活的边界完全消失。你以为你在巴厘岛的海滩上工作很浪漫？实际上你只是把办公室搬到了海滩上，你的精神状态和在格子间里没有任何区别。数字游民的'自由'，是一种更精致的奴役。</div>
+        </div>
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#8a4aaa">傅</div>
+            <div>
+              <div class="speaker-name">傅盛</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">作为创业者，我看到的是数字游民代表了一种新的生产力组织方式。他们不受地域限制，可以在全球范围内寻找最佳的工作机会和生活成本。一个程序员可以选择在清迈远程工作，生活成本是北京的1/3，收入却是全球水平。这不是'异化'，这是'效率'。数字游民是全球化的受益者，他们把'地理位置'从工作方程中移除了。</div>
+        </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 1 碰撞</div>
+  <div class="clash-block">
+        <div class="clash-item">
+          <div class="clash-speaker">韩炳哲</div>
+          <div class="clash-text">你说数字游民代表'效率'——但效率的受益者是谁？是数字游民自己，还是雇佣他们的公司？一个在清迈远程工作的程序员，拿着硅谷的薪水，享受着清迈的低物价——他确实在'优化'自己的生活。但他的雇主获得了什么？一个24小时待命、没有劳动法保护、没有工会支持的'灵活劳动力'。你的'效率论'，本质上是在为一种新形式的劳动剥削辩护。</div>
+        </div>
+        <div class="clash-item">
+          <div class="clash-speaker">项飙</div>
+          <div class="clash-text">你说数字游民是'多根'的——同时属于多个城市、多个社区。但'多根'和'无根'之间的区别是什么？如果你在清迈住了三个月，你认识你的邻居吗？你知道当地的社区议题吗？你参与过任何本地的公共生活吗？'多根'听起来很美好，但实际上它只是一种'浅层连接'的美化说法。人类的归属感需要时间、需要投入、需要承诺——这些都不是'三个月'能提供的。</div>
+        </div>
+        <div class="clash-item">
+          <div class="clash-speaker">弗洛姆</div>
+          <div class="clash-text">你说数字游民是'逃避现实'——但这个判断预设了一个'应该面对的现实'。这个'现实'是什么？是在北京买不起房的现实？是在纽约卷不动的现实？如果'现实'本身就是病态的，那么'逃避'它可能恰恰是理性的选择。你的'扎根论'是一种浪漫化的保守主义——它假设'在哪里都能扎根'是可能的，但对很多人来说，这个假设根本不成立。</div>
+        </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 1 洞见</div>
+  <div class="insight-block">
+    <div class="insight-q">数字游民是一种有代价的自由选择，它需要新的社会契约来支撑</div>
+    <div class="insight-a">数字游民不是简单的'自由'或'异化'，而是一种复杂的社会现象。它提供了灵活性和全球视野，但也削弱了社区归属感和社会安全网。问题不在于数字游民'好不好'，而在于社会如何适应这种新的工作方式——如何保护流动性工人的权益，如何补偿当地社区的成本，如何帮助数字游民建立有意义的连接。</div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 2 / 3</div>
+  <h2 class="slide-title">远程工作与亲密关系</h2>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 2 发言</div>
+  <div class="speech-cards">
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#c23b22">项</div>
+            <div>
+              <div class="speaker-name">项飙</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">远程工作正在创造一种'共处但不连接'的亲密关系模式。两个人可能每天都在同一个空间里工作，但他们各自面对自己的屏幕，各自沉浸在自己的数字世界里。物理上的'共处'不再等于情感上的'连接'。这种'并行存在'可能比传统的'分离工作'更孤独——因为你明明在场，却感觉不到对方。</div>
+        </div>
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#3a8a5c">韩</div>
+            <div>
+              <div class="speaker-name">韩炳哲</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">远程工作模糊了'工作'和'生活'的边界，也模糊了'专业关系'和'亲密关系'的边界。当你的伴侣同时也是你的'同事'，当你的家同时也是你的'办公室'，所有的关系都变得暧昧不清。这种'边界的消失'不是解放，而是一种新的压迫——你无处可逃，无处休息，无处做'不是任何角色'的自己。</div>
+        </div>
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#8a4aaa">傅</div>
+            <div>
+              <div class="speaker-name">傅盛</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">远程工作实际上可以改善亲密关系。没有通勤，意味着更多的时间陪伴家人；灵活的时间安排，意味着可以更好地协调双方的需求。我和我妻子都是远程工作，我们的关系比以前更好了，因为我们有更多的时间在一起，也有更多的自主权来安排自己的时间。问题不在于远程工作本身，而在于如何'设计'远程工作的生活。</div>
+        </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 2 碰撞</div>
+  <div class="clash-block">
+        <div class="clash-item">
+          <div class="clash-speaker">韩炳哲</div>
+          <div class="clash-text">你说远程工作给了你'更多时间陪伴家人'——但你有没有注意到，'陪伴'和'在场'是两件事？你可能每天都在家里，但你的注意力在屏幕上；你可能和妻子坐在同一个沙发上，但你们各自在开视频会议。这种'物理在场但精神缺席'的状态，可能比完全不在家更让人孤独。你的'更多时间'论，混淆了'时间数量'和'时间质量'。</div>
+        </div>
+        <div class="clash-item">
+          <div class="clash-speaker">弗洛姆</div>
+          <div class="clash-text">你说'距离产生美'——但你有没有想过，这种'距离'本质上是一种逃避？当一个人需要用'上班'来'逃离'家庭，这说明什么？说明他的亲密关系本身就有问题。远程工作不是问题的根源，它只是暴露了问题。那些因为'24小时在一起'而离婚的夫妻，他们的关系早就岌岌可危了——远程工作只是最后一根稻草。</div>
+        </div>
+        <div class="clash-item">
+          <div class="clash-speaker">项飙</div>
+          <div class="clash-text">你说远程工作给了亲密关系'地理自由'——但你有没有注意到，这种'自由'往往导致'决策瘫痪'？当选择是有限的，决策是容易的；当选择是无限的，决策就变成了折磨。'去哪里住'这个问题，在传统社会是不需要想的——你在哪里工作，就在哪里住。现在呢？你可以去任何地方，这意味着你必须不断做出选择，而且永远不知道你的选择是否'最优'。这种'无限选择的焦虑'，可能比'没有选择的无奈'更痛苦。</div>
+        </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 2 洞见</div>
+  <div class="insight-block">
+    <div class="insight-q">远程工作让亲密关系面临新的挑战，需要有意识的设计</div>
+    <div class="insight-a">远程工作对亲密关系的影响是双面的。它提供了更多的时间和地理自由，但也消除了'喘息空间'和'自然相遇'。问题不在于远程工作'好不好'，而在于如何'设计'远程工作的亲密关系——如何在共享空间中保持个人边界，如何在'永远在线'的时代创造'断连'的时刻，如何在'地理自由'中建立'情感根基'。</div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 3 / 3</div>
+  <h2 class="slide-title">数字游民的未来</h2>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 3 发言</div>
+  <div class="speech-cards">
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#c23b22">项</div>
+            <div>
+              <div class="speaker-name">项飙</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">我不认为数字游民会成为主流。大多数人需要'根'——需要一个社区、一段历史、一种归属感。数字游民的生活方式是反人性的，它只有在特定条件下才可行：高技能、高收入、单身或伴侣也是数字游民。对于有孩子的人、有老人需要照顾的人、有社区责任的人，数字游民是不现实的。它是一种精英的特权，不是大众的未来。</div>
+        </div>
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#3a8a5c">韩</div>
+            <div>
+              <div class="speaker-name">韩炳哲</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">数字游民的未来取决于资本主义的逻辑。如果'效率'继续是最高价值，数字游民可能会扩大——因为远程工作确实是'更高效'的。但我不认为这是'进步'。真正的进步应该是：减少工作时间、增加闲暇、恢复工作与生活的边界。数字游民的方向是错的——它不是在'解放'工作，而是在'殖民'生活。</div>
+        </div>
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#8a4aaa">傅</div>
+            <div>
+              <div class="speaker-name">傅盛</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">数字游民不会成为'所有人'的工作方式，但会成为'相当一部分人'的选择。未来的工作模式是'混合'的——有些人选择在办公室，有些人选择远程，有些人选择数字游民。关键是：社会需要为所有这些选择提供支持。我正在投资一些为数字游民服务的创业公司——从远程工作签证到数字游民社区——因为我相信这个市场会继续增长。</div>
+        </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 3 碰撞</div>
+  <div class="clash-block">
+        <div class="clash-item">
+          <div class="clash-speaker">项飙</div>
+          <div class="clash-text">你说'社会需要为所有选择提供支持'——但社会资源是有限的。当数字游民不缴税、不参与本地社区、不为公共产品做贡献，他们凭什么享受社会的支持？你的'数字游民服务'创业公司，本质上是在为一群'搭便车'的人提供便利。数字游民想要'全球流动'的好处，但不想承担'全球公民'的责任。这不是'选择的自由'，这是'责任的逃避'。</div>
+        </div>
+        <div class="clash-item">
+          <div class="clash-speaker">韩炳哲</div>
+          <div class="clash-text">你说未来是'半游牧'模式——每年在不同城市住几个月，然后回到一个'基地'。但你有没有注意到，这种'半游牧'需要什么前提？需要足够的收入来维持两个住所，需要足够的时间来'选择'去哪里，需要足够的社会网络来'保持连接'。你的'半游牧'论，是一种精英的想象——对大多数人来说，'一个家'已经是负担，'两个家'更是奢望。</div>
+        </div>
+        <div class="clash-item">
+          <div class="clash-speaker">弗洛姆</div>
+          <div class="clash-text">你说数字游民会变成'亚文化'——就像嬉皮士、波西米亚人。但你有没有注意到，嬉皮士运动最终失败了？他们没有改变社会，而是被社会吸收了——变成了'消费主义的点缀'。数字游民可能会走同样的路：它不会改变工作方式，只会变成一种'生活方式消费品'——一种可以购买的'自由感'。你的'小众但持久'论，实际上是承认了数字游民的'无力'。</div>
+        </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 3 洞见</div>
+  <div class="insight-block">
+    <div class="insight-q">数字游民是工作方式的一种选择，它需要新的社会契约来支撑</div>
+    <div class="insight-a">数字游民不是'所有人的未来'，而是'一部分人的选择'。它的可行性取决于个人条件（技能、收入、家庭状况）和社会条件（税制、社区支持、基础设施）。问题不在于数字游民'会不会成为主流'，而在于社会如何为这种新的工作方式提供支持——同时保护那些'不能'或'不想'成为数字游民的人。</div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">核心结论</div>
+  <h2 class="slide-title">圆桌洞见总结</h2>
+  <div class="conclusions-grid">
+        <div class="conclusion-item">
+          <div class="conclusion-num">1</div>
+          <div class="conclusion-text">数字游民不是自由的极致，而是一种有代价的选择。它提供了灵活性和全球视野，但也削弱了社区归属感、模糊了工作与生活的边界、加剧了全球不平等。问题不在于数字游民'好不好'，而在于社会如何适应这种新的工作方式——如何保护流动性工人的权益，如何补偿当地社区的成本，如何帮助数字游民建立有意义的连接。未来的'自由'不是'去哪里都行'，而是'在哪里都能扎根，也能随时出发'。</div>
+        </div>
+        <div class="conclusion-item">
+          <div class="conclusion-num">2</div>
+          <div class="conclusion-text">如果'公民身份'不再与'居住地'绑定，'国家'这个概念还有意义吗？</div>
+        </div>
+        <div class="conclusion-item">
+          <div class="conclusion-num">3</div>
+          <div class="conclusion-text">亲密关系是否需要'物理距离'才能健康，还是'心理空间'就足够了？</div>
+        </div>
+        <div class="conclusion-item">
+          <div class="conclusion-num">4</div>
+          <div class="conclusion-text">数字游民是一种'特权'还是一种'权利'？社会应该为它提供支持吗？</div>
+        </div>
+  </div>
+</div>
+
+<div id="nav">
+  <button class="nav-btn" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+</div>
+<div id="counter">1 / 1</div>
 <script>
 (function(){
-var deck=document.getElementById("deck");
-var slides=deck.querySelectorAll(".slide");
-var total=slides.length;
-var cur=0;
-var dots=document.getElementById("navDots");
-var tocList=document.getElementById("tocList");
-var titleEl=document.getElementById("slideTitle");
-var counterEl=document.getElementById("slideCounter");
-var tocPanel=document.getElementById("tocPanel");
-var tocBackdrop=document.getElementById("tocBackdrop");
-var progressBar=document.getElementById("progressBar");
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let cur = 0;
+  const dotsContainer = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progressBar');
 
-for(var i=0;i<total;i++){
-  var d=document.createElement("button");
-  d.className="nd";
-  d.setAttribute("data-i",i);
-  d.onclick=(function(idx){return function(){go(idx)}})(i);
-  dots.appendChild(d);
-  var t=document.createElement("div");
-  t.className="toc-item";
-  t.setAttribute("data-i",i);
-  t.innerHTML='<span class="toc-label">'+(slides[i].getAttribute("data-title")||"Slide "+(i+1))+'</span><span class="toc-page">'+String(i+1).padStart(2,"0")+'</span>';
-  t.onclick=(function(idx){return function(){go(idx);closeTOC()}})(i);
-  tocList.appendChild(t);
-}
+  slides.forEach((s, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => go(i);
+    dotsContainer.appendChild(dot);
+  });
 
-function go(n){
-  if(n<0||n>=total)return;
-  slides[cur].classList.remove("active");
-  dots.children[cur].classList.remove("active");
-  tocList.children[cur].classList.remove("active");
-  cur=n;
-  slides[cur].classList.add("active");
-  dots.children[cur].classList.add("active");
-  tocList.children[cur].classList.add("active");
-  titleEl.textContent=slides[cur].getAttribute("data-title")||"";
-  counterEl.textContent=(cur+1)+" / "+total;
-  progressBar.style.width=((cur+1)/total*100)+"%";
-  slides[cur].scrollTop=0;
-}
-function toggleTOC(){tocPanel.classList.toggle("open");tocBackdrop.classList.toggle("open")}
-function closeTOC(){tocPanel.classList.remove("open");tocBackdrop.classList.remove("open")}
+  function go(n) {
+    if (n < 0 || n >= total) return;
+    slides[cur].classList.remove('visible');
+    dotsContainer.children[cur]?.classList.remove('active');
+    cur = n;
+    slides[cur].scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' });
+    slides[cur].classList.add('visible');
+    dotsContainer.children[cur]?.classList.add('active');
+    counter.textContent = (cur + 1) + ' / ' + total;
+    const pct = Math.min(100, ((cur + 1) / total) * 100);
+    progress.style.width = pct + '%';
+  }
 
-document.addEventListener("keydown",function(e){
-  if(e.key==="ArrowRight"||e.key==="ArrowDown"||e.key===" "||e.key==="PageDown"){e.preventDefault();go(cur+1)}
-  else if(e.key==="ArrowLeft"||e.key==="ArrowUp"||e.key==="PageUp"){e.preventDefault();go(cur-1)}
-  else if(e.key==="Home"){e.preventDefault();go(0)}
-  else if(e.key==="End"){e.preventDefault();go(total-1)}
-  else if(e.key==="Escape"){closeTOC();go(0)}
-  else if(e.key==="t"||e.key==="T"){toggleTOC()}
-});
-var wheelTimer=null;
-deck.addEventListener("wheel",function(e){
-  e.preventDefault();
-  if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},400)}
-  if(e.deltaY>0)go(cur+1);
-  else if(e.deltaY<0)go(cur-1);
-},{passive:false});
-var touchX=0,touchY=0;
-deck.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX;touchY=e.touches[0].clientY});
-deck.addEventListener("touchend",function(e){
-  var dx=touchX-e.changedTouches[0].clientX,dy=touchY-e.changedTouches[0].clientY;
-  if(Math.abs(dy)>Math.abs(dx)){if(dy>50)go(cur+1);else if(dy<-50)go(cur-1)}
-  else{if(dx>50)go(cur+1);else if(dx<-50)go(cur-1)}
-});
-deck.addEventListener("click",function(e){
-  if(e.target.closest(".nav-btn,.nd,.toc-item,.toc-panel,.toc-backdrop"))return;
-  var x=e.clientX/window.innerWidth;
-  if(x<0.3)go(cur-1);else if(x>0.7)go(cur+1);
-});
-document.getElementById("btnToc").addEventListener("click",function(e){e.stopPropagation();toggleTOC()});
-document.getElementById("btnPrev").addEventListener("click",function(e){e.stopPropagation();go(cur-1)});
-document.getElementById("btnNext").addEventListener("click",function(e){e.stopPropagation();go(cur+1)});
-tocBackdrop.addEventListener("click",closeTOC);
-go(0);
+  document.getElementById('prevBtn').onclick = () => go(cur - 1);
+  document.getElementById('nextBtn').onclick = () => go(cur + 1);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      go(cur + 1);
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      go(cur - 1);
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      go(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      go(total - 1);
+    }
+  });
+
+  let wheelTimer = null;
+  document.addEventListener('wheel', e => {
+    e.preventDefault();
+    if (wheelTimer) return;
+    wheelTimer = setTimeout(() => wheelTimer = null, 400);
+    if (e.deltaY > 0 || e.deltaX > 0) go(cur + 1);
+    else if (e.deltaY < 0 || e.deltaX < 0) go(cur - 1);
+  }, { passive: false });
+
+  document.body.addEventListener('click', e => {
+    if (e.target.closest('.nav-dot, .dots, .nav-btn, .expert-card, .speech-card, .clash-block, .insight-block, .question-card, .conclusion-item, .stat-item')) return;
+    go(cur + 1);
+  });
+
+  go(0);
 })();
 </script>
 </body>

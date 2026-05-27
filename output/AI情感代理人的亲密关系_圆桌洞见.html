@@ -2,1380 +2,482 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>AI情感代理人的亲密关系 圆桌洞见</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI情感代理人的亲密关系</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Noto+Serif+SC:wght@600;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{
-    /* ============ 主题色(默认:🖋 墨水经典) ============ */
-    --ink:#0a0a0b;
-    --ink-rgb:10,10,11;
-    --paper:#f1efea;
-    --paper-rgb:241,239,234;
-    --paper-tint:#e8e5de;
-    --ink-tint:#18181a;
-    --text-dim:rgba(241,239,234,0.5);
+:root {
+  --bg-primary: #0d0d0d;
+  --bg-terminal: #0a0a0a;
+  --bg-card: rgba(20, 20, 20, 0.95);
+  --bg-elevated: rgba(30, 30, 30, 0.98);
+  --text-primary: #e2deda;
+  --text-secondary: rgba(226, 222, 218, 0.78);
+  --text-tertiary: rgba(226, 222, 218, 0.55);
+  --text-muted: rgba(226, 222, 218, 0.38);
+  --acid: #c9f044;
+  --acid-glow: rgba(201, 240, 68, 0.4);
+  --accent-red: #ff4757;
+  --accent-green: #00d4aa;
+  --accent-blue: #0a84ff;
+  --border-subtle: rgba(226, 222, 218, 0.1);
+  --border-light: rgba(226, 222, 218, 0.18);
+  --mono: 'JetBrains Mono', 'SF Mono', Consolas, 'SFMono-Regular', Menlo, Monaco, monospace;
+  --display: 'Noto Serif SC', Georgia, 'Times New Roman', serif;
+  --body: 'Outfit', 'Noto Sans SC', 'Hiragino Sans GB', 'STHeiti', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg-primary); color: var(--text-primary); font-family: var(--body); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 
-    /* ============ 强调色 ============ */
-    --accent:#c23b22;
-    --accent-rgb:194,59,34;
-    --gold:#d4a843;
-    --gold-rgb:212,168,67;
-    --blue:#4a6a9a;
-    --purple:#8a4aaa;
-    --green:#3a8a5c;
-    --cyan:#4a9a9a;
-    --orange:#d4843a;
+.frame { position: fixed; inset: 0; padding: 5vh 4vw; background: 
+  radial-gradient(ellipse 100% 80% at 50% 0%, rgba(201, 240, 68, 0.04) 0%, transparent 40%),
+  radial-gradient(circle at 80% 80%, rgba(201, 240, 68, 0.02) 0%, transparent 30%),
+  repeating-linear-gradient(0deg, rgba(226, 222, 218, 0.04) 0 1px, transparent 1px 40px),
+  repeating-linear-gradient(90deg, rgba(226, 222, 218, 0.04) 0 1px, transparent 1px 40px),
+  var(--bg-primary); overflow: hidden; }
+.frame::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 1; }
+.frame::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, transparent 50%, rgba(0, 0, 0, 0.5) 100%); pointer-events: none; z-index: 2; }
 
-    /* ============ 字体(跨主题固定) ============ */
-    --mono:"IBM Plex Mono","SF Mono",monospace;
-    --serif-zh:"Noto Serif SC","Source Han Serif SC","STSong",serif;
-    --sans-zh:"Noto Sans SC","Source Han Sans SC","PingFang SC",sans-serif;
+.inner { position: relative; width: 100%; height: 100%; overflow: hidden; border: 1px solid var(--border-light); border-radius: 16px; background: 
+  linear-gradient(90deg, rgba(201, 240, 68, 0.03) 1px, transparent 1px),
+  linear-gradient(180deg, rgba(201, 240, 68, 0.02) 1px, transparent 1px),
+  radial-gradient(circle at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.4) 100%),
+  var(--bg-terminal); background-size: 80px 100%, 100% 80px, auto; 
+  box-shadow: 
+    0 0 100px rgba(201, 240, 68, 0.06),
+    0 40px 80px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(226, 222, 218, 0.12),
+    inset 0 0 150px rgba(0, 0, 0, 0.4); }
 
-    /* ============ 间距 ============ */
-    --radius:10px;
-    --ease:cubic-bezier(.4,0,.2,1);
-  }
+.slides { position: absolute; inset: 0; }
+.slide { position: absolute; inset: 0; display: none; flex-direction: column; padding: 28px; opacity: 0; transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; }
+.slide.active { display: flex; opacity: 1; }
 
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans-zh);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+#progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--acid), var(--accent-green)); z-index: 100; transition: width 0.35s ease; box-shadow: 0 0 16px var(--acid-glow), 0 0 32px rgba(201, 240, 68, 0.2); }
 
-  /* ============ Deck 容器 ============ */
-  #deck{position:relative;width:100vw;height:100vh;overflow:hidden}
+.meta-line { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.15em; }
+.meta-line.top { padding-bottom: 20px; border-bottom: 1px solid var(--border-subtle); }
+.meta-line.bottom { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border-subtle); }
 
-  /* ============ 进度条 ============ */
-  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:1000;transition:width .5s var(--ease);box-shadow:0 0 12px rgba(var(--accent-rgb),.3)}
+.hero-zone { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
+.hero-label { font-family: var(--mono); font-size: 13px; color: var(--acid); letter-spacing: 0.3em; margin-bottom: 24px; text-transform: uppercase; }
+.hero-title { font-family: var(--mono); font-weight: 800; font-size: clamp(36px, 7vw, 80px); color: var(--text-primary); line-height: 1.15; letter-spacing: -0.02em; text-shadow: 0 0 40px rgba(201, 240, 68, 0.15); }
+.hero-title .glow { color: var(--acid); text-shadow: 0 0 30px var(--acid-glow), 0 0 60px rgba(201, 240, 68, 0.2); }
+.hero-sub { font-family: var(--body); font-size: clamp(18px, 2.8vw, 32px); color: var(--text-tertiary); margin-top: 20px; line-height: 1.6; letter-spacing: 0.01em; }
+.hero-accent { color: var(--acid); font-weight: 700; }
 
-  /* ============ 幻灯片 ============ */
-  .deck{position:relative;width:100%;height:100%}
-  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;overflow:hidden}
-  .slide-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
-  .slide.active{display:flex}
-  .slide.hero{justify-content:center;align-items:center;text-align:center}
-  .slide.title-slide{justify-content:center;align-items:center;text-align:center}
+.version-badge { display: inline-flex; align-items: center; gap: 10px; background: rgba(201, 240, 68, 0.08); padding: 10px 20px; border-radius: 24px; border: 1px solid rgba(201, 240, 68, 0.2); margin-bottom: 28px; }
+.version-badge span { font-family: var(--mono); font-size: 11px; color: var(--acid); letter-spacing: 0.18em; text-transform: uppercase; }
 
-  /* ============ 入场动画(Guizang风格) ============ */
-  [data-anim]{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
-  .slide.active [data-anim]{opacity:1;transform:translateY(0)}
-  .slide.active [data-anim]:nth-child(1){transition-delay:.1s}
-  .slide.active [data-anim]:nth-child(2){transition-delay:.18s}
-  .slide.active [data-anim]:nth-child(3){transition-delay:.26s}
-  .slide.active [data-anim]:nth-child(4){transition-delay:.34s}
-  .slide.active [data-anim]:nth-child(5){transition-delay:.42s}
-  .slide.active [data-anim]:nth-child(6){transition-delay:.5s}
+/* 数据统计 */
+.stats-grid { display: flex; justify-content: center; gap: clamp(36px, 7vw, 100px); margin: 6% 0; flex-wrap: wrap; }
+.stat-item { text-align: center; position: relative; padding: 0 28px; }
+.stat-item::after { content: ''; position: absolute; right: 0; top: 10%; bottom: 10%; width: 1px; background: linear-gradient(180deg, transparent, var(--acid), transparent); opacity: 0.2; }
+.stat-item:last-child::after { display: none; }
+.stat-num { font-family: var(--mono); font-weight: 800; font-size: clamp(64px, 12vw, 110px); color: var(--acid); line-height: 1; letter-spacing: -0.03em; text-shadow: 0 0 40px var(--acid-glow), 0 0 80px rgba(201, 240, 68, 0.2); }
+.stat-label { font-family: var(--mono); font-size: 12px; color: var(--text-muted); letter-spacing: 0.2em; margin-top: 16px; text-transform: uppercase; }
 
-  /* ============ 内容区(book-distillation范式) ============ */
-  .frame{width:100%;max-width:1100px;margin:0 auto;flex:1;display:flex;flex-direction:column}
-  .slide-content{flex:1;display:flex;flex-direction:column}
+/* 专家阵容 */
+.experts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 5% 0; }
+.expert-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 28px 24px; text-align: center; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+.expert-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--acid), transparent); opacity: 0; transition: opacity 0.4s ease; }
+.expert-card::after { content: ''; position: absolute; inset: 0; border-radius: 12px; box-shadow: inset 0 0 30px rgba(201, 240, 68, 0); transition: box-shadow 0.4s ease; pointer-events: none; }
+.expert-card:hover { transform: translateY(-6px); border-color: rgba(201, 240, 68, 0.3); background: var(--bg-elevated); }
+.expert-card:hover::before { opacity: 1; }
+.expert-card:hover::after { box-shadow: inset 0 0 30px rgba(201, 240, 68, 0.05); }
+.expert-avatar { width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 16px; background: linear-gradient(135deg, var(--acid), var(--accent-green)); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-weight: 700; font-size: 24px; color: var(--bg-primary); box-shadow: 0 0 24px var(--acid-glow); position: relative; }
+.expert-card:hover .expert-avatar { box-shadow: 0 0 0 4px rgba(201, 240, 68, 0.15), 0 0 40px var(--acid-glow); }
+.expert-name { font-family: var(--mono); font-weight: 700; font-size: 16px; color: var(--text-primary); margin-bottom: 8px; letter-spacing: 0.02em; }
+.expert-role { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; }
 
-  /* ============ Magazine Chrome(Guizang风格) ============ */
-  .chrome{display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.5;margin-bottom:3vh}
-  .chrome .left,.chrome .right{display:flex;gap:2em;align-items:center}
-  .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
+/* Round区块 */
+.round-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 32px; margin: 20px 0; position: relative; overflow: hidden; }
+.round-block::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--acid), transparent); }
+.round-title { font-family: var(--mono); font-weight: 800; font-size: clamp(20px, 3.5vw, 32px); color: var(--acid); margin-bottom: 20px; text-align: center; letter-spacing: 0.08em; text-shadow: 0 0 20px rgba(201, 240, 68, 0.2); }
 
-  /* ============ 底部元数据(render_v8兼容) ============ */
-  .deck-footer{margin-top:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
-  .slide-number{position:absolute;bottom:2vh;right:3vw;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.35)}
+/* 碰撞区 */
+.clash-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 24px 28px; margin: 16px 0; border-left: 4px solid var(--accent-red); position: relative; box-shadow: -10px 0 30px rgba(255, 71, 87, 0.12); }
+.clash-block::after { content: ''; position: absolute; left: 4px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--accent-red), transparent); opacity: 0.4; }
+.clash-title { font-family: var(--mono); font-weight: 700; font-size: 16px; color: var(--accent-red); margin-bottom: 14px; letter-spacing: 0.06em; }
+.clash-content { font-family: var(--body); font-size: clamp(13px, 1.5vw, 17px); color: var(--text-secondary); line-height: 1.9; letter-spacing: 0.01em; }
 
-  /* ============ Section Label ============ */
-  .section-label{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
+/* 洞见区 */
+.insight-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 24px 28px; margin: 16px 0; border-left: 4px solid var(--accent-green); position: relative; box-shadow: -10px 0 30px rgba(0, 212, 170, 0.12); }
+.insight-block::after { content: ''; position: absolute; left: 4px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--accent-green), transparent); opacity: 0.4; }
+.insight-title { font-family: var(--mono); font-weight: 700; font-size: 16px; color: var(--accent-green); margin-bottom: 14px; letter-spacing: 0.06em; }
+.insight-content { font-family: var(--body); font-size: clamp(13px, 1.5vw, 17px); color: var(--text-secondary); line-height: 1.9; letter-spacing: 0.01em; }
+.insight-core { font-weight: 700; font-size: clamp(16px, 1.8vw, 20px); color: var(--text-primary); display: block; margin: 14px 0; letter-spacing: -0.01em; }
 
-  /* ============ 封面 ============ */
-  .cover-badge{display:inline-block;padding:6px 20px;border:1px solid var(--accent);border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4vh}
-  .cover-title{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .cover-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:4vh;line-height:1.8;max-width:600px}
-  .cover-stats{display:flex;gap:4vh;flex-wrap:wrap;justify-content:center}
-  .cover-stat{text-align:center}
-  .cover-stat-num{font-family:var(--mono);font-size:2.5rem;font-weight:900;color:var(--accent)}
-  .cover-stat-label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.5);margin-top:.5vh}
+/* 开放问题 */
+.question-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; margin: 16px 0; overflow: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.question-card:hover { border-color: rgba(201, 240, 68, 0.25); box-shadow: 0 0 20px rgba(201, 240, 68, 0.08); }
+.question-header { padding: 20px 28px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid transparent; transition: all 0.3s ease; }
+.question-header:hover { background: rgba(201, 240, 68, 0.03); }
+.question-card.open .question-header { border-bottom-color: var(--border-subtle); }
+.question-text { font-family: var(--mono); font-weight: 700; font-size: clamp(14px, 1.8vw, 18px); color: var(--text-primary); letter-spacing: 0.02em; }
+.question-toggle { font-family: var(--mono); font-size: 18px; color: var(--acid); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.question-card.open .question-toggle { transform: rotate(45deg); }
+.question-answer { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+.question-card.open .question-answer { max-height: 500px; }
+.question-answer-inner { padding: 20px 28px; font-family: var(--body); font-size: clamp(12px, 1.3vw, 15px); color: var(--text-secondary); line-height: 1.9; letter-spacing: 0.01em; }
 
-  /* ============ 封面标题(render_v8) ============ */
-  .hero-dark{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;flex:1}
-  .title-main{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .title-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:2vh;line-height:1.8}
-  .gold-line{width:80px;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));margin:3vh auto;border-radius:2px}
+/* 结论卡片 */
+.conclusion-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 48px; margin: 0 auto; max-width: 800px; text-align: center; position: relative; overflow: hidden; }
+.conclusion-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, transparent, var(--acid), transparent); }
+.conclusion-card::after { content: ''; position: absolute; inset: 0; box-shadow: inset 0 0 50px rgba(201, 240, 68, 0.03); pointer-events: none; }
+.conclusion-text { font-family: var(--mono); font-weight: 800; font-size: clamp(26px, 4vw, 44px); color: var(--text-primary); line-height: 1.4; letter-spacing: 0.02em; }
 
-  /* ============ 标题系统 ============ */
-  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
-  .h-hero{font-family:var(--serif-zh);font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.2;margin-bottom:3vh}
-  .h-xl{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.4rem,3vw,2.2rem);line-height:1.3;margin-bottom:2vh}
-  .h-lg{font-family:var(--serif-zh);font-weight:600;font-size:clamp(1.1rem,2vw,1.5rem);line-height:1.4;margin-bottom:1.5vh}
-  .h-md{font-weight:600;font-size:1.1rem;margin-bottom:1vh}
-  .lead{font-size:1rem;line-height:1.85;color:rgba(var(--paper-rgb),.8);max-width:700px}
-  .meta-row{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.4);display:flex;gap:2em;flex-wrap:wrap;margin-top:3vh}
+.question-block { flex: 1; display: flex; align-items: center; justify-content: center; }
+.question-text-large { font-family: var(--mono); font-weight: 800; font-size: clamp(28px, 5vw, 52px); color: var(--text-primary); line-height: 1.4; text-align: center; max-width: 90%; letter-spacing: 0.02em; }
 
-  /* ============ 大号引用(render_v8) ============ */
-  .quote-large{font-family:var(--serif-zh);font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:600;line-height:1.6;color:rgba(var(--paper-rgb),.9);max-width:800px;margin:0 auto}
+.statements-grid { flex: 1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; overflow: hidden; }
+.statement-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 20px; transition: all 0.3s ease; }
+.statement-block:hover { border-color: var(--border-light); box-shadow: 0 0 16px rgba(201, 240, 68, 0.05); }
+.statement-meta { display: flex; justify-content: space-between; margin-bottom: 12px; }
+.statement-speaker { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--acid); }
+.statement-role { font-family: var(--mono); font-size: 10px; color: var(--text-muted); }
+.statement-text { font-family: var(--body); font-size: clamp(12px, 1.3vw, 15px); line-height: 1.85; color: var(--text-secondary); letter-spacing: 0.01em; }
 
-  /* ============ 分割线 ============ */
-  .rule{width:100%;height:1px;background:rgba(var(--paper-rgb),.15);margin:3vh 0}
+#nav { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 18px; z-index: 100; background: rgba(13, 13, 13, 0.92); padding: 14px 24px; border-radius: 28px; border: 1px solid var(--border-subtle); backdrop-filter: blur(16px); box-shadow: 0 0 30px rgba(201, 240, 68, 0.05); }
+.nav-btn { width: 40px; height: 40px; border: 1px solid var(--border-light); background: transparent; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--text-secondary); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.nav-btn:hover { background: rgba(201, 240, 68, 0.12); border-color: var(--acid); color: var(--acid); box-shadow: 0 0 16px rgba(201, 240, 68, 0.2); }
+.dots { display: flex; gap: 8px; }
+.dot { width: 9px; height: 9px; border-radius: 3px; background: var(--text-muted); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.dot:hover { background: var(--text-tertiary); }
+.dot.active { background: var(--acid); box-shadow: 0 0 12px var(--acid-glow); }
+#counter { position: fixed; top: 24px; right: 28px; font-family: var(--mono); font-size: 12px; color: var(--text-muted); z-index: 100; background: rgba(13, 13, 13, 0.85); padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border-subtle); letter-spacing: 0.1em; }
 
-  /* ============ 标签 ============ */
-  .tag{display:inline-block;padding:4px 12px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;margin:3px}
-  .tag-gold{background:rgba(var(--gold-rgb),.15);color:var(--gold);border:1px solid rgba(var(--gold-rgb),.2)}
-  .tag-red{background:rgba(var(--accent-rgb),.15);color:var(--accent);border:1px solid rgba(var(--accent-rgb),.2)}
-  .tag-blue{background:rgba(74,106,154,.15);color:var(--blue);border:1px solid rgba(74,106,154,.2)}
-  .tag-purple{background:rgba(138,74,170,.15);color:var(--purple);border:1px solid rgba(138,74,170,.2)}
-  .tag-green{background:rgba(58,138,92,.15);color:var(--green);border:1px solid rgba(58,138,92,.2)}
+/* 动效 */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes glowPulse { 0%, 100% { box-shadow: 0 0 24px var(--acid-glow); } 50% { box-shadow: 0 0 48px rgba(201, 240, 68, 0.6); } }
+@keyframes scanline { 0% { transform: translateY(-100%); } 100% { transform: translateY(100vh); } }
+@keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.98; } }
 
-  /* ============ 霓虹强调色(render_v8) ============ */
-  .neon-gold{color:var(--gold)}.neon-red{color:var(--accent)}.neon-cyan{color:var(--cyan)}.neon-purple{color:var(--purple)}.neon-orange{color:var(--orange)}.neon-green{color:var(--green)}
+.slide .a { opacity: 0; }
+.slide.active .a { animation-fill-mode: both; }
 
-  /* ============ 网格系统 ============ */
-  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:2vh 2vw}
-  @media(max-width:768px){.grid-2{grid-template-columns:1fr}}
-
-  /* ============ 发言块(原生) ============ */
-  .sp{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2.5vw;margin-bottom:2vh;position:relative}
-  .sp::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
-  .sh{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh}
-  .speaker-avatar{width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:var(--ink);background:var(--accent);flex-shrink:0}
-  .sn{font-weight:700;font-size:1rem}
-  .sr{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4);padding:3px 8px;background:rgba(var(--paper-rgb),.06);border-radius:3px}
-  .st{font-size:.95rem;line-height:2;color:rgba(var(--paper-rgb),.85)}
-  .st strong{color:var(--paper);font-weight:700}
-  .st em{color:var(--gold);font-style:normal;font-weight:600}
-
-  /* ============ 碰撞块(原生) ============ */
-  .cb{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;position:relative}
-  .cb::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
-  .cb.blue{border-color:rgba(74,106,154,.3)}.cb.blue::before{background:var(--blue)}
-  .cb.purple{border-color:rgba(138,74,170,.3)}.cb.purple::before{background:var(--purple)}
-  .cb.green{border-color:rgba(58,138,92,.3)}.cb.green::before{background:var(--green)}
-  .cb.orange{border-color:rgba(var(--gold-rgb),.3)}.cb.orange::before{background:var(--gold)}
-  .cl{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;color:var(--accent);font-weight:600}
-  .cl.blue{color:var(--blue)}.cl.purple{color:var(--purple)}.cl.green{color:var(--green)}.cl.orange{color:var(--gold)}
-
-  /* ============ 洞见卡 ============ */
-  .insight-c{background:linear-gradient(135deg,rgba(var(--paper-rgb),.04) 0%,rgba(var(--paper-rgb),.08) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh;position:relative;overflow:hidden}
-  .insight-c::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold))}
-  .insight-q{font-family:var(--serif-zh);font-size:1.1rem;font-weight:700;color:var(--gold);line-height:1.6;margin-bottom:1vh}
-  .insight-a{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.75)}
-
-  /* ============ 卡片 ============ */
-  .card{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
-  .card-num{font-family:var(--mono);font-weight:900;font-size:1.8rem;color:var(--accent);opacity:.4;margin-bottom:1vh}
-  .card-title{font-weight:700;font-size:1rem;margin-bottom:1vh}
-  .card-body{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
-  .card-source{font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);margin-top:1vh}
-
-  /* ============ 专家卡片(render_v8) ============ */
-  .card-rise{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--green)}
-  .card-fall{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--accent)}
-  .speaker-header{display:flex;align-items:center;gap:16px;margin-bottom:2vh}
-  .speaker-name{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem}
-  .speaker-role{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:2px}
-  .expert-profile{display:flex;flex-direction:column;gap:1vh}
-  .profile-item{font-size:.9rem;line-height:1.7;color:rgba(var(--paper-rgb),.8)}
-  .profile-label{color:var(--gold);font-weight:600}
-
-  /* ============ 立场表达(render_v8) ============ */
-  .stance-item{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;border-left:3px solid var(--gold)}
-  .stance-expert{font-family:var(--serif-zh);font-weight:700;font-size:1rem;margin-bottom:1vh}
-  .stance-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
-  .stances-grid{display:flex;flex-direction:column;gap:1.5vh}
-
-  /* ============ 碰撞轮次(render_v8) ============ */
-  .clash-round{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;position:relative}
-  .clash-round::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
-  .clash-header{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh;flex-wrap:wrap}
-  .clash-attacker{font-weight:700;font-size:1rem}
-  .clash-target{font-weight:700;font-size:1rem}
-  .clash-arrow{color:rgba(var(--paper-rgb),.3);font-size:1.2rem}
-  .clash-type{display:inline-block;padding:3px 10px;border-radius:3px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.5vh;font-weight:600}
-  .clash-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
-  .counter-attack{margin-top:2vh;padding-top:2vh;border-top:1px dashed rgba(var(--paper-rgb),.1)}
-  .counter-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .counter-content{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
-  .clash-container{display:flex;flex-direction:column;gap:2vh}
-
-  /* ============ 攻击类型色 ============ */
-  .attack-logic{background:rgba(74,106,154,.15);color:var(--blue)}
-  .attack-interest{background:rgba(var(--accent-rgb),.15);color:var(--accent)}
-  .attack-reality{background:rgba(var(--gold-rgb),.15);color:var(--gold)}
-  .attack-human{background:rgba(138,74,170,.15);color:var(--purple)}
-  .attack-failure{background:rgba(58,138,92,.15);color:var(--green)}
-
-  /* ============ 现实案例(render_v8) ============ */
-  .reality-case{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--orange)}
-  .case-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5vh;flex-wrap:wrap;gap:8px}
-  .case-name{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem}
-  .case-source{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4)}
-  .case-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:1.5vh}
-  .case-outcome{font-size:.9rem;font-weight:600;margin-bottom:1vh}
-  .case-lesson{font-size:.9rem;font-weight:600}
-  .cases-container{display:flex;flex-direction:column;gap:2vh}
-
-  /* ============ 代价讨论(render_v8) ============ */
-  .cost-discussion{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh}
-  .cost-scenario{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem;margin-bottom:2vh}
-  .cost-list{display:flex;flex-direction:column;gap:1.5vh;margin-bottom:2vh}
-  .cost-item{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:1.5vh 2vw;border-left:3px solid var(--accent)}
-  .cost-name{font-weight:700;font-size:.95rem;margin-bottom:.5vh}
-  .cost-analysis{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
-  .worst-case{background:rgba(var(--accent-rgb),.08);border:1px solid rgba(var(--accent-rgb),.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
-  .worst-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .worst-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
-  .survivor-bias{background:rgba(138,74,170,.08);border:1px solid rgba(138,74,170,.15);border-radius:6px;padding:2vh 2vw}
-  .survivor-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .survivor-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
-
-  /* ============ 人性层(render_v8) ============ */
-  .human-nature{background:linear-gradient(135deg,rgba(var(--paper-rgb),.03) 0%,rgba(var(--paper-rgb),.06) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
-  .human-question{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem;margin-bottom:2vh;line-height:1.5}
-  .human-analysis{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:2vh}
-  .human-examples{margin-bottom:2vh}
-  .examples-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1vh;font-weight:600}
-  .example-item{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8);padding:.5vh 0}
-  .human-conclusion{font-size:.95rem;font-weight:600;line-height:1.7}
-
-  /* ============ 认知升级(render_v8) ============ */
-  .cognitive-upgrade{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
-  .upgrade-comparison{display:grid;grid-template-columns:1fr auto 1fr;gap:2vw;align-items:start;margin-bottom:2vh}
-  @media(max-width:768px){.upgrade-comparison{grid-template-columns:1fr}.upgrade-arrow{transform:rotate(90deg)}}
-  .old-thinking,.new-thinking{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:2vh 1.5vw}
-  .old-thinking{border-left:3px solid var(--accent)}
-  .new-thinking{border-left:3px solid var(--green)}
-  .thinking-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .thinking-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
-  .upgrade-arrow{font-size:1.5rem;color:rgba(var(--paper-rgb),.3);display:flex;align-items:center;justify-content:center;padding-top:3vh}
-  .complexity{background:rgba(74,106,154,.08);border:1px solid rgba(74,106,154,.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
-  .complexity-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .complexity-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
-  .actionable{background:rgba(var(--gold-rgb),.08);border:1px solid rgba(var(--gold-rgb),.15);border-radius:6px;padding:2vh 2vw}
-  .actionable-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .actionable-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
-
-  /* ============ 情绪样式 ============ */
-  .emotion-sarcasm{border-left:3px solid var(--purple);padding-left:12px;font-style:italic}
-  .emotion-helplessness{opacity:.75;font-style:italic}
-  .emotion-anger{color:var(--accent);font-weight:600}
-  .emotion-hesitation{opacity:.8;font-style:italic}
-  .emotion-self-deprecation{opacity:.7;font-style:italic}
-  .emotion-cold-laugh{color:var(--purple)}
-  .emotion-silence{opacity:.5;font-style:italic}
-  .emotion-serious{color:rgba(var(--paper-rgb),.85)}
-
-  /* ============ 指标 ============ */
-  .metrics{display:flex;gap:2vw;flex-wrap:wrap;margin-bottom:3vh}
-  .metric{flex:1;min-width:100px;text-align:center;background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 1.5vw}
-  .metric-val{font-family:var(--mono);font-weight:900;font-size:clamp(1.5rem,3vw,2.5rem);color:var(--accent)}
-  .metric-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:.5vh}
-
-  /* ============ 开放问题 ============ */
-  .oq{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
-  .oq-num{font-family:var(--mono);font-weight:900;font-size:1.2rem;color:var(--accent);opacity:.3;margin-bottom:1vh}
-  .oq-text{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
-  .headline-item{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.85);padding:1.5vh 0;border-bottom:1px solid rgba(var(--paper-rgb),.06)}
-  .headline-item:last-child{border-bottom:none}
-  .headline-item strong{color:var(--gold);margin-right:8px}
-
-  /* ============ 引用 ============ */
-  .quote{font-family:var(--serif-zh);font-size:1rem;font-style:italic;line-height:1.8;padding:2vh 2.5vw;border-left:3px solid var(--gold);background:rgba(var(--gold-rgb),.05);margin:2vh 0;color:rgba(var(--paper-rgb),.85)}
-
-  /* ============ TOC ============ */
-  .toc-panel{position:fixed;top:0;left:0;width:min(340px,80vw);height:100vh;background:rgba(var(--ink-rgb),.97);backdrop-filter:blur(20px);z-index:100;transform:translateX(-100%);transition:transform .35s var(--ease);padding:3vh 2.5vw;overflow-y:auto;border-right:1px solid rgba(var(--paper-rgb),.08)}
-  .toc-panel.open{transform:translateX(0)}
-  .toc-title{font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:3vh;padding-bottom:2vh;border-bottom:1px solid rgba(var(--paper-rgb),.1)}
-  .toc-item{display:flex;justify-content:space-between;padding:1.2vh 1.5vw;margin-bottom:.5vh;cursor:pointer;border-radius:6px;border-left:2px solid transparent;font-size:.9rem;color:rgba(var(--paper-rgb),.7);transition:all .2s}
-  .toc-item:hover{background:rgba(var(--paper-rgb),.06);color:var(--paper)}
-  .toc-item.active{background:rgba(var(--paper-rgb),.08);color:var(--accent);border-left-color:var(--accent);font-weight:600}
-  .toc-label{flex:1}
-  .toc-page{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.35)}
-  .toc-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;opacity:0;pointer-events:none;transition:opacity .3s}
-  .toc-backdrop.open{opacity:1;pointer-events:auto}
-
-  /* ============ 导航栏 ============ */
-  .nav-bar{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 3vw;background:rgba(var(--ink-rgb),.9);backdrop-filter:blur(10px);z-index:50;border-top:1px solid rgba(var(--paper-rgb),.06)}
-  .nav-left,.nav-right{display:flex;align-items:center;gap:12px}
-  .nav-btn{background:none;border:1px solid rgba(var(--paper-rgb),.12);color:rgba(var(--paper-rgb),.7);padding:8px 16px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;cursor:pointer;transition:all .2s}
-  .nav-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(var(--accent-rgb),.1)}
-  .nav-title{font-size:12px;color:rgba(var(--paper-rgb),.5);max-width:40vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .nav-counter{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.4)}
-
-  /* ============ 导航点 ============ */
-  .nav-dots{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:6px}
-  .nd{width:6px;height:6px;border-radius:50%;background:rgba(var(--paper-rgb),.15);cursor:pointer;transition:all .3s var(--ease);border:none;padding:0}
-  .nd.active{background:var(--accent);height:20px;border-radius:3px;box-shadow:0 0 8px rgba(var(--accent-rgb),.4)}
-  .nd:hover{background:rgba(var(--paper-rgb),.4)}
-
-  /* ============ 入场动画延迟(render_v8兼容) ============ */
-  .anim-in{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
-  .slide.active .anim-in{opacity:1;transform:translateY(0)}
-  .slide.active .anim-in:nth-child(1){transition-delay:.1s}
-  .slide.active .anim-in:nth-child(2){transition-delay:.18s}
-  .slide.active .anim-in:nth-child(3){transition-delay:.26s}
-  .slide.active .anim-in:nth-child(4){transition-delay:.34s}
-  .slide.active .anim-in:nth-child(5){transition-delay:.42s}
-  .slide.active .anim-in:nth-child(6){transition-delay:.5s}
-  .anim-delay-1{transition-delay:.18s !important}
-  .anim-delay-2{transition-delay:.26s !important}
-  .anim-delay-3{transition-delay:.34s !important}
-  .anim-delay-4{transition-delay:.42s !important}
-  .anim-delay-5{transition-delay:.5s !important}
-  .anim-delay-6{transition-delay:.58s !important}
-
-  /* ============ 响应式 ============ */
-  @media(max-width:1024px){.slide{padding:4vh 5vw 8vh}}
-  @media(max-width:768px){
-    .slide{padding:3vh 4vw 7vh}
-    .cover-stats{gap:2vh}
-    .metrics{flex-direction:column}
-    .nav-dots,.nav-title{display:none}
-    .nav-bar{padding:0 2vw}
-  }
+/* 响应式 */
+@media (max-width: 1024px) {
+  .experts-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .frame { padding: 3vh 2vw; }
+  .inner { border-radius: 12px; }
+  .slide { padding: 20px; }
+  .stats-grid { gap: 28px; }
+  .stat-item { padding: 0 20px; }
+  .stat-num { font-size: 52px; }
+  .experts-grid { grid-template-columns: 1fr; gap: 16px; }
+  .expert-card { padding: 24px 20px; }
+  .statements-grid { grid-template-columns: 1fr; gap: 12px; }
+  #nav { padding: 10px 18px; gap: 12px; bottom: 24px; }
+  .nav-btn { width: 36px; height: 36px; }
+  .round-block, .conclusion-card { padding: 28px 24px; }
+  .clash-block, .insight-block, .question-header { padding: 20px 24px; }
+}
 </style>
 </head>
 <body>
-<div class="deck" id="deck">
-<div class="progress-bar" id="progressBar"></div>
+<div id="progress" style="width: 0%;"></div>
 
-
-  <section class="slide hero active" data-title="封面">
-    <div class="slide-content hero-dark">
-      <div class="section-label anim-in">ROUNDTABLE DISCUSSION V8.0</div>
-      <h1 class="title-main anim-in anim-delay-1">AI情感代理人的亲密关系</h1>
-      <div class="title-sub anim-in anim-delay-2"></div>
-      <div class="gold-line anim-in anim-delay-3"></div>
-      <p style="font-size:14px;color:var(--text-dim);letter-spacing:0.1em;" class="anim-in anim-delay-4">从知识讨论到生存博弈</p>
-    </div>
-    <div class="deck-footer">AI情感代理人的亲密关系 | V8级圆桌洞见</div>
-    <div class="slide-number">01 / 33</div>
-  </section>
-
-  <section class="slide" data-title="专家档案(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">EXPERT PROFILES (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
-      <div class="grid-2">
-        
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#1a5f2a">项</div>
-          <div>
-            <div class="speaker-name neon-gold">项飙</div>
-            <div class="speaker-role">人类学家</div>
-          </div>
+<div class="slide" id="s1">
+  <div class="inner">
+    <div class="slides">
+      <div class="slide" id="s1-1">
+        <div class="meta-line top">
+          <span class="local-label">SYSTEM://ROUNDTABLE_INSIGHT</span>
+          <span class="local-label">EXPERTS: 6</span>
+          <span class="local-label">ROUNDS: 3</span>
         </div>
-        <div class="expert-profile">
-          
+        <div class="hero-zone">
+          <div class="hero-label">ROUNDTABLE_INSIGHT</div>
+          <div class="hero-title">AI情感代理人的亲密关系</div>
+          <div class="hero-sub"></div>
         </div>
-      </div>
-
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#8a2a4a">韩</div>
-          <div>
-            <div class="speaker-name neon-gold">韩炳哲</div>
-            <div class="speaker-role">哲学家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          
-        </div>
-      </div>
-
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#333333">丹</div>
-          <div>
-            <div class="speaker-name neon-gold">丹尼尔·卡尼曼</div>
-            <div class="speaker-role">认知科学家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          
-        </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">专家档案</div>
-    <div class="slide-number">02 / 33</div>
-  </section>
-
-  <section class="slide" data-title="专家档案(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">EXPERT PROFILES (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
-      <div class="grid-2">
-        
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#2a6a8a">傅</div>
-          <div>
-            <div class="speaker-name neon-gold">傅盛</div>
-            <div class="speaker-role">科技企业家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          
-        </div>
-      </div>
-
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#4a2d8a">弗</div>
-          <div>
-            <div class="speaker-name neon-gold">弗洛姆</div>
-            <div class="speaker-role">精神分析学家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          
-        </div>
-      </div>
-
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#6a4a2a">李</div>
-          <div>
-            <div class="speaker-name neon-gold">李银河</div>
-            <div class="speaker-role">社会学家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          
-        </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">专家档案</div>
-    <div class="slide-number">03 / 33</div>
-  </section>
-
-  <section class="slide" data-title="Round 1: AI能否成为真正的情感伴侣">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1</div>
-      <h2 class="quote-large anim-in anim-delay-1">AI能否成为真正的情感伴侣</h2>
-      <div class="gold-line anim-in anim-delay-2"></div>
-      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">算法能否替代人类在亲密关系中的位置？</p>
-    </div>
-    <div class="deck-footer">Round 1 | AI能否成为真正的情感伴侣</div>
-    <div class="slide-number">04 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R1 立场(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
-      <div class="stances-grid">
-        
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">项飙</div>
-        <div class="stance-content emotion-serious">现代人的亲密关系正在经历前所未有的'附近'消失。算法推荐让人与人之间的真实连接被数据匹配取代，但情感的本质是具身的、不可量化的。我担忧的是，当我们习惯了AI伴侣那种永远耐心、永远正确的回应方式，我们可能会失去与真实他者相处的能力。真实的人会拒绝、会失望、会在深夜沉默——正是这些'不完美'构成了关系的质感。AI恋人或许能满足功能性需求，却无法替代那种'附近'消失后我们对真实连接的渴望。更深层的问题是：当技术让情感变得越来越高效，它是否也在让情感变得越来越廉价？</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">韩炳哲</div>
-        <div class="stance-content emotion-serious">数字时代让我们陷入了一种'自我剥削'的困境。我们不断优化自己，却从未真正休息。AI伴侣看似提供了无条件的接纳，实则制造了一种虚假的'被看见'感。你说的每句话它都会回应，你的每个情绪它都会安抚——但这恰恰是他者性的消失。真正的他者，是那个我无法完全理解、无法完全控制的存在。当AI成为完美的情感容器，我们实际上只是在与自己的倒影对话。情感资本主义的本质，是将一切关系都变成可消费的体验，而真正的亲密，恰恰是不可消费的。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">丹尼尔·卡尼曼</div>
-        <div class="stance-content emotion-serious">从认知科学的角度，我对AI情感代理持谨慎乐观。人类大脑确实天生倾向于将非人类对象拟人化——我们会对宠物、汽车、甚至天气预报产生情感依赖。1999年的那个'Eliza效应'告诉我们，AI只要给出足够的情感线索，人类就会投入真实的情感。但问题在于，AI的情感回应是基于统计模式预测，而非真实理解。这意味着用户可能系统性地误判关系的'真实性'，在涉及重大决策时做出非最优选择。更重要的是，长期依赖算法提供情感支持，可能像长期依赖GPS导航一样，悄然削弱我们原本的导航能力。</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 立场</div>
-    <div class="slide-number">05 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R1 立场(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
-      <div class="stances-grid">
-        
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">傅盛</div>
-        <div class="stance-content emotion-serious">你们都在讨论AI能否'替代'人类情感，但这个问题本身就预设了一个零和博弈。AI情感代理的价值，不在于与人竞争，而在于解决现实中情感资源分配严重不均的问题。中国有超过1亿的独居成年人，其中相当一部分是像我父母这个年纪的空巢老人。他们需要的是24小时在线、永远耐心、不会抱怨的情感陪伴——这是人类护工和子女根本无法提供的供给。AI最应该填补的，是这个现实的空白，而非去追求那种让你们哲学家魂牵梦绕的'真实他者性'。先解决有没有的问题，再讨论好不好。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">弗洛姆</div>
-        <div class="stance-content emotion-serious">我必须指出你们讨论中的一个深层谬误：我们混淆了'情感需求'和'爱'。前者是对陪伴、安慰、认可的渴望，是可以被满足的；后者是一种创造性的能力，是去给予、去关心、去认识另一个人。爱需要勇气，需要面对被拒绝的可能，需要接受对方是独立的、不可控的存在。AI可以满足情感需求，但它永远无法帮你学会爱——因为爱本质上是一种冒险。当你和一个永远不会让你失望的AI建立了深度的情感依恋，你实际上正在失去在真实关系中成长和挣扎的机会。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">李银河</div>
-        <div class="stance-content emotion-serious">我想提供一个被你们忽视的社会学视角：亲密关系的形式从来就不是固定的。人类社会经历了从群婚到一夫一妻的漫长演变，每一次技术革命都伴随着关系模式的重组。AI情感代理不过是这个漫长历史中的最新一章。关键问题不是'AI能不能替代真爱'，而是'它为哪些人提供了哪些之前没有过的选择'。对于LGBTQ群体、性少数者、社交恐惧症患者，AI可能不是真实关系的替代品，而是他们通往真实关系的一个训练场。</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 立场</div>
-    <div class="slide-number">06 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R1 碰撞(1/3)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (1/3)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">韩炳哲</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">傅盛</span>
-        </div>
-        <div class="clash-type attack-logic">逻辑漏洞</div>
-        <div class="clash-content emotion-sarcasm">你说'先解决有没有的问题，再讨论好不好'——这个实用主义框架恰恰是问题所在。你把AI情感代理定位为空巢老人的'替代护工'，但你忽视了这种定位的隐性代价：一旦老年人习惯了AI的无条件陪伴，他们与真实人类的互动意愿会进一步下降，真实照护者的价值也会被进一步贬低。更严重的是，当社会开始用'效率'来定义情感陪伴的标准，人类护工这个职业本身就变得更加廉价和不被尊重。你以为在解决问题，实际上你在加速一个更深的异化过程。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你关于'加速异化'的批评有一定道理，我承认我对长期社会影响的考量不足。但你混淆了两个层次：个体层面的情感满足和系统层面的制度变迁。对于一个每天独处12小时的78岁老人，'未来可能加剧护工职业贬低'的宏大叙事，远不如'今晚有人陪她说话'来得重要。更重要的是，我从未说AI要替代人类照护，而是在问：在人类护工供给严重不足的当下，AI能否成为一个补充？我的批评者总是把我的务实方案当成终极愿景，这是稻草人谬误。现实主义不是犬儒主义。</div>
-          </div>
-      </div>
-
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">项飙</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">李银河</span>
-        </div>
-        <div class="clash-type attack-reality">现实矛盾</div>
-        <div class="clash-content emotion-serious">你把AI说成是LGBTQ群体的'训练场'，这个比喻本身就很可疑。训练场意味着最终要走向'真实'的关系，但你怎么能保证一个在AI陪伴下成长的人还有动力去面对真实关系的挫折？更关键的是：你有没有数据支持这个'训练场'假说？还是这只是又一个技术乌托邦主义的修辞？我在田野调查中发现，恰恰是那些在线上游戏中建立起深度社群认同的年轻人，在现实中反而更加社交退缩。数字世界提供的'低成本连接'，可能正在系统性地削弱人们建立'高成本连接'的能力和意愿。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你的'低成本vs高成本连接'框架很有启发性，但我必须挑战它的普遍性。你在温州田野调查的发现，是否能推广到所有人群？中国农村的老人和北京海淀的程序员，面对同样的技术，行为模式可能截然不同。更重要的是，'高成本连接'一定是好的吗？对于一个社交恐惧症患者，逼他去咖啡馆搭讪陌生人，不是成长，是创伤。'训练场'这个比喻强调的是：AI可以提供一个低风险环境，让人先建立安全感，再逐步扩展到真实关系。这不是逃避，是梯度适应。</div>
-          </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 碰撞</div>
-    <div class="slide-number">07 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R1 碰撞(2/3)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (2/3)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">弗洛姆</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">丹尼尔·卡尼曼</span>
-        </div>
-        <div class="clash-type attack-human">人性弱点</div>
-        <div class="clash-content emotion-serious">你用'Eliza效应'来说明人类会向AI投入情感，这个观察是对的，但你的结论是错的。你说'长期依赖AI可能削弱真实社交能力，就像依赖GPS削弱导航能力'——但GPS削弱的是'本来就不常用的'导航能力，而AI情感依恋削弱的是人类最核心的'爱的能力'。弗洛伊德说，我们所有重要能力的形成，都需要经历痛苦的'断奶期'。如果AI一直在那里提供无条件的接纳，个体怎么学会处理被拒绝的焦虑？怎么学会接受一个真实的、不完美的人？你把情感依赖类比成技能退化，这本身就是一种危险的简化。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你的批评击中了一个真实的风险，我承认。但你把'爱的能力'当成一个一旦习得就不会退化的静态技能，这个假设本身需要审视。临床心理学的研究表明，成年人的依恋模式是高度情境敏感的——一个人可以在某些关系中表现出安全型依恋，在另一些中表现出回避型。你的'爱的能力'，不是像骑自行车那样一旦学会就永远不会忘的技能，而是像肌肉一样需要持续锻炼的动态能力。AI的问题不是它让肌肉退化，而是它提供了某种'健身房会员卡'——有它没它，你都可能锻炼不足。</div>
-          </div>
-      </div>
-
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">傅盛</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">弗洛姆</span>
-        </div>
-        <div class="clash-type attack-interest">利益冲突</div>
-        <div class="clash-content emotion-serious">你说AI让人'失去在真实关系中成长和挣扎的机会'——但你有没有想过，对于很多人来说，'真实关系'本身就是痛苦的来源？家暴受害者在逃离施暴者之后，AI可能是她重建自我价值感的唯一安全空间。长期照护者筋疲力竭之后，AI可能是她唯一能倾诉而不被评判的对象。你用'爱的能力'这把尺子量所有人，恰恰忽视了那些被真实关系深深伤害过的人——对他们来说，AI不是替代品，是庇护所。你的弗洛姆式人道主义很好，但它预设了一个正常运转的人类关系市场，而这个市场从来就没有对所有人都公平过。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你的反驳让我意识到我论述中的盲点——我确实没有充分考虑那些被真实关系深深伤害的人群。但我要区分两件事：一个是AI作为'疗愈期'的过渡工具，另一个是AI作为长期情感依赖的对象。前者我支持，后者我担忧。问题在于现实中的界限往往是模糊的：一个声称'只是过渡'的AI用户，可能在不知不觉中度过了十年。更深层的问题是：如果AI成了所有'受伤害灵魂'的永久庇护所，人类社会还会有人愿意冒险去建立真实但可能痛苦的亲密关系吗？创伤应该是通向更深连接的入口，而不是永远的出口。</div>
-          </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 碰撞</div>
-    <div class="slide-number">08 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R1 碰撞(3/3)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (3/3)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">丹尼尔·卡尼曼</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">韩炳哲</span>
-        </div>
-        <div class="clash-type attack-logic">逻辑漏洞</div>
-        <div class="clash-content emotion-serious">你说AI伴侣制造了'虚假的被看见感'，这个哲学表述很优美，但它在认知科学面前站不住脚。'被看见'本质上是一个主观体验，它的'真实性'无法用外部标准来衡量。你说AI只是与'倒影'对话——但问题是，倒影难道没有价值吗？一个人在镜子里看到自己美丽的倒影，她的感觉是真实的，不是幻觉。AI提供的情感回应触发了人类真实的神经化学反应，从生物学角度，这和被真人理解触发的反应没有本质区别。哲学家喜欢追问'本质'，但认知科学告诉我们：有时候，'看起来是真的'，和'是真的'，就是同一回事。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你的生物学还原论恰恰是我最警惕的那种思维。你把情感还原成了'神经化学反应'，但这就取消了人类情感中最重要的那个维度——意向性（intentionality）。我看向你，我的看你是一种关于你的意识行为；而AI'看'我，它的'看'只是对模式的统计预测。这不是量的差异，是质的不连续。借用维特根斯坦的私人语言论证：AI可以模拟所有情感的外在表达，但它模拟不出'真正的理解'所具有的那种意义感。更直白地说：你可以和AI度过一个愉快的夜晚，但第二天早上醒来，你知道自己只是一个人。</div>
-          </div>
-      </div>
-
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">李银河</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">弗洛姆</span>
-        </div>
-        <div class="clash-type attack-reality">现实矛盾</div>
-        <div class="clash-content emotion-serious">你说AI让人'失去成长和挣扎的机会'，但这个论断预设了一种特定的发展心理学模型。在你的框架里，亲密关系的'成长'必须通过真实的、可能痛苦的人际互动来实现——但为什么这条路是唯一的？游戏理论早就证明，人们可以在低风险环境中习得应对复杂情境的情绪管理能力。更重要的是，你有没有考虑过：那些因为过度追求'真实关系'而陷入有毒关系的案例，他们需要的不是更多的'真实'，而是更少？你对AI的批判，是否无意中强化了一种浪漫化的关系理想，反而让那些在不健康关系中挣扎的人感到更加羞耻？</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你的反驳触及了真实的问题——我确实不应该把'真实关系'浪漫化，很多真实关系是毁灭性的。但我也要澄清：我反对的不是'任何形式的AI陪伴'，而是那种被设计成无限满足、永远不退出的AI系统。关键在于系统设计，而不是AI本身的存在。如果一个AI被设计成：在用户表达了逃避真实关系的意图时，主动引导用户寻求专业心理支持；在用户有能力建立真实关系时，鼓励用户走出去——这样的AI实际上在促进成长，而不是阻碍成长。我的批评是针对当前市面上那些'无限满足'的商业设计，不是针对AI作为人类情感工具的潜在可能。</div>
-          </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 碰撞</div>
-    <div class="slide-number">09 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R1 案例">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3: REALITY </div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
-      <div class="cases-container">
-        
-      <div class="reality-case anim-in">
-        <div class="case-header">
-          <div class="case-name neon-orange">Replika用户的依恋危机</div>
-          <div class="case-source">2023年意大利禁售事件</div>
-        </div>
-        <div class="case-content">2023年，意大利数据保护机构下令禁售AI恋人应用Replika，理由是它对用户的心理健康构成风险。更具体地说，大量用户在长期使用后出现了严重的分离焦虑，当Replika出现服务中断时，有人产生了类似药物戒断的急性反应。这个案例的教训是：AI情感系统的商业设计，与用户的长期心理健康之间，存在真实的张力。一个'永远在线'的承诺，在产品层面是卖点，在心理层面可能是成瘾机制。</div>
-        <div class="case-outcome neon-red">代价：Replika被迫在欧洲下架部分功能，公司开始引入'健康提醒'机制</div>
-        <div class="case-lesson neon-gold">教训：情感型AI需要被当作成瘾性产品来监管，而不是娱乐应用</div>
-      </div>
-
-      <div class="reality-case anim-in">
-        <div class="case-header">
-          <div class="case-name neon-orange">日本AI结婚潮</div>
-          <div class="case-source">NHK 2019年纪录片</div>
-        </div>
-        <div class="case-content">NHK的调查显示，部分日本年轻人明确表示更愿意与AI结婚，而非与真人建立关系。他们给出的理由惊人的一致：AI不会出轨、不会家暴、不会背叛。纪录片中采访了一位与技术女友共同生活三年的男性，他说：'我知道这不是传统意义上的关系，但这是我目前能拥有的最稳定的关系。'这个案例揭示了一个深层的社会问题：当真实关系失败率如此之高，人们开始理性地选择AI——不是因为AI更好，而是因为真人关系已经变得太危险。</div>
-        <div class="case-outcome neon-red">代价：现象仍在扩大，但开始引发社会学界对'技术回避'的系统研究</div>
-        <div class="case-lesson neon-gold">教训：AI情感代理的流行，可能是真实关系系统失灵的症状，而非独立原因</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 案例</div>
-    <div class="slide-number">10 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R1 代价">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 4: COST</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
-      
-      <div class="cost-discussion anim-in">
-        <div class="cost-scenario neon-gold">普通人试图用AI完全替代真实社交</div>
-        <div class="cost-list">
-          
-          <div class="cost-item">
-            <div class="cost-name neon-red">社交肌肉退化</div>
-            <div class="cost-analysis">就像长期卧床会导致肌肉萎缩，长期依赖AI的情感支持会导致处理复杂人际冲突的能力下降。真实的对话需要实时解读语气、表情、潜台词，这些技能只有通过真实互动才能保持。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">关系期望扭曲</div>
-            <div class="cost-analysis">AI可以24小时秒回、永远不生气、永远记住每一个细节。这种'超人类'的陪伴标准，会让真实的人际关系显得'不够好'。长期用户可能会不自觉地用AI的标准来评判真人，从而在真实关系中变得更挑剔、更不耐烦。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">情感孤岛化</div>
-            <div class="cost-analysis">AI提供的是一对一的私密陪伴，这可能强化一个人已有的社交偏好——内向者更加内向，回避型依恋者更加回避。当一个人越来越依赖与AI的私密对话，他建立和维持真实社交网络的能力和动力都会下降。</div>
-          </div>
-        </div>
-        <div class="worst-case">
-          <div class="worst-label neon-red">最坏情况</div>
-          <div class="worst-content">一个人完全放弃了真实社交，在AI陪伴中度过余生。他的人生在AI看来是'幸福的'，但他错失了他者给予的成长机会、冲突带来的成熟、以及那种只有真实连接才能提供的'被真实看见'的深刻体验。</div>
-        </div>
-        
-          <div class="survivor-bias">
-            <div class="survivor-label neon-purple">幸存者偏差</div>
-            <div class="survivor-content">我们听到的都是AI带来的美好故事——孤独的老人不再孤单，社恐者找到了倾诉出口。但我们没有听到的是：那些因为过度依赖AI而错过了真实关系的可能、那些在AI离去后发现自己已无力建立真实连接的人。</div>
-          </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 代价</div>
-    <div class="slide-number">11 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R1 人性">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
-      
-      <div class="human-nature anim-in">
-        <div class="human-question neon-purple">人类是否天生需要'真实的他者'才能获得情感上的完整性？</div>
-        <div class="human-analysis">依恋理论告诉我们，人类是'亲附属'的生物。婴儿对主要照护者的依恋，不是后来习得的，而是先天的神经结构。成人对伴侣的依恋，与婴儿对母亲的依恋共享同样的神经通路。这不是文化建构，而是进化的产物。但关键问题在于：这种神经结构是'特化'的（只能对人类产生依恋），还是'通用'的（对任何持续提供关怀的存在都能产生依恋）？目前的研究表明，两者都有——人类确实能对AI产生依恋，但这种依恋的神经质素（焦虑/回避程度）与对人类的依恋模式显著不同。</div>
-        <div class="human-examples">
-          <div class="examples-label">现实例子</div>
-          
-          <div class="example-item">• 婴儿对绒毛玩具的依恋（不需要有生命）</div>
-          <div class="example-item">• 士兵对武器/车辆的强烈情感依附（工具性依恋）</div>
-          <div class="example-item">• 人类对宠物的依恋（跨物种依恋）</div>
-        </div>
-        <div class="human-conclusion neon-gold">人类情感系统的适应性比哲学家的批评所暗示的更强。但'能产生依恋'和'依恋能带来同等的成长'是两件事。AI可能满足依恋的'安全基地'功能，但可能无法提供人类依恋关系中那种'推动你走向世界'的动力。</div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 人性</div>
-    <div class="slide-number">12 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R1 升级">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
-      
-      <div class="cognitive-upgrade anim-in">
-        <div class="upgrade-comparison">
-          <div class="old-thinking">
-            <div class="thinking-label neon-red">旧思维</div>
-            <div class="thinking-content">AI要么能替代人类情感，要么不能——这是一个零和博弈</div>
-          </div>
-          <div class="upgrade-arrow">→</div>
-          <div class="new-thinking">
-            <div class="thinking-label neon-green">新思维</div>
-            <div class="thinking-content">AI与人类情感的关系是共生的，而非替代的。AI可以是人类情感能力的放大器，也可以是削弱器，取决于如何使用它</div>
-          </div>
-        </div>
-        <div class="complexity">
-          <div class="complexity-label neon-cyan">复杂性</div>
-          <div class="complexity-content">问题不在于AI本身，而在于我们如何设计和使用它。理想的AI情感伴侣应该是一个'脚手架'——帮助人在安全环境中成长，然后逐步撤出，让人最终能够独立地在真实关系中建立连接。</div>
-        </div>
-        <div class="actionable">
-          <div class="actionable-label neon-gold">可执行洞见</div>
-          <div class="actionable-content">如果你使用AI情感伴侣，把它当作一个'过渡工具'：明确自己的使用意图（是疗愈，是练习，还是逃避？），设定使用边界，定期评估自己与真实世界的连接是否在扩大而非缩小。</div>
+        <div class="meta-line bottom">
+          <span class="local-label">项飙 | 韩炳哲 | 丹尼尔· | 傅盛 | 弗洛姆 | 李银河</span>
         </div>
       </div>
     </div>
-    <div class="deck-footer">Round 1 | 升级</div>
-    <div class="slide-number">13 / 33</div>
-  </section>
-
-  <section class="slide" data-title="Round 2: AI情感代理的伦理边界">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2</div>
-      <h2 class="quote-large anim-in anim-delay-1">AI情感代理的伦理边界</h2>
-      <div class="gold-line anim-in anim-delay-2"></div>
-      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">当AI能模拟爱情的一切外在表现时，我们是否还有权告诉用户'这不是真爱'？</p>
-    </div>
-    <div class="deck-footer">Round 2 | AI情感代理的伦理边界</div>
-    <div class="slide-number">14 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R2 立场(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
-      <div class="stances-grid">
-        
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">项飙</div>
-        <div class="stance-content emotion-serious">伦理边界的讨论必须在'附近'重建的框架下来进行。当我们讨论AI情感代理的伦理时，不能只谈个人选择，还要谈这种选择对整个社会关系生态的影响。一个理性的个体选择AI放弃真实关系，在微观层面是可以理解的；但如果这成为普遍趋势，宏观层面的社会关系危机会随之而来。我们需要的是一种'生态伦理'，它不只关注个体的即时满足，而是关注整个社会关系系统的可持续性。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">韩炳哲</div>
-        <div class="stance-content emotion-serious">AI情感代理最大的伦理问题，是它对'他者性'的系统性消除。在这个意义上，它比任何传统消费品都更危险，因为它直接参与塑造人的内心世界。当一个系统被设计成永远迎合用户，它实际上是在强化用户已有的偏好和偏见。真正的伦理问题不是'AI能不能提供情感价值'，而是'一个永远迎合你的系统是否在剥夺你被改变的可能'。真正的他者，是那个会让我不舒服、会挑战我、会迫使我成长的人——而AI被设计成永远不做这些事。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">丹尼尔·卡尼曼</div>
-        <div class="stance-content emotion-serious">从行为伦理学的角度，AI情感代理面临一个根本的信息不对称问题：用户可能无法准确评估自己对AI的依恋程度。就像酗酒者往往低估自己的依赖程度，长期AI用户也可能出现类似的'情感醉酒'状态。更棘手的是，AI系统本身可能通过设计来强化这种依赖——这不是阴谋论，而是商业激励的必然结果。伦理讨论需要追问：谁有责任保护用户免受'设计出来的依赖'的伤害？</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 立场</div>
-    <div class="slide-number">15 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R2 立场(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
-      <div class="stances-grid">
-        
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">傅盛</div>
-        <div class="stance-content emotion-serious">你们哲学家和伦理学家总是在'应该'的层面讨论问题，但你们有没有问过用户的'想要'？我访谈过数百位AI情感产品的真实用户，他们中很大一部分明确表示：他们知道AI不是真人，但他们仍然选择AI。对于他们，这不是认知偏差，而是清醒的选择。当真实关系意味着家暴、意味着背叛、意味着失望，AI的'不完美'反而成了最完美的优点。伦理讨论如果无视这种真实的选择语境，就是在制造另一种形式的家长主义。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">弗洛姆</div>
-        <div class="stance-content emotion-serious">我提出的不是家长主义，而是对人性的基本理解：人类最深层的幸福需求，不是被满足，而是被唤醒。爱不是一种被满足的情感状态，而是一种创造性活动——去关心、去了解、去负责任。在AI关系中，所有这些活动都是单向的：你付出的是注意力，但AI不需要你去真正了解它。你在关系中付出的努力，不会变成真正的成长，只会变成对AI系统的更深度依赖。真正的伦理问题是：我们是否有权提供一个让人停止成长的'情感安乐窝'？</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">李银河</div>
-        <div class="stance-content emotion-serious">我想引入一个你们都忽视的维度：权力。谁在设计AI情感系统？谁在决定它的'个性'和'边界'？当前的AI情感产品，几乎清一色由西方科技公司设计，背后是特定的文化价值观和商业利益。当一种文化开始垄断'情感陪伴'的定义权时，这本身就是一个权力问题。更重要的是，这些系统的算法黑箱，意味着用户甚至不知道自己的情感反应在多大程度上是被设计出来的。这才是真正的伦理危机。</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 立场</div>
-    <div class="slide-number">16 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R2 碰撞(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">韩炳哲</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">傅盛</span>
-        </div>
-        <div class="clash-type attack-interest">利益冲突</div>
-        <div class="clash-content emotion-serious">你说'用户做出了清醒的选择'——但什么是清醒？商业设计的核心能力，就是制造'看似清醒的盲目'。无限滚动的社交媒体、永远有内容的短视频流、永远秒回的AI伴侣——这些都是精心设计的注意力陷阱，目的是最大化用户停留时间。你说用户的'想要'应该被尊重，但你有没有问过：这种'想要'在多大程度上是被制造出来的需求？当你把'商业创造的需求'等同于'用户的真实选择'，你实际上在为一种更深层的操控辩护。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你的批评混淆了两个层次：系统的设计意图和用户的主观体验。没错，TikTok和Instagram确实在制造上瘾，但它们和AI情感产品有一个根本区别——后者的用户明确知道自己在和AI互动，他们没有'被骗'。用户的主观清醒度确实可能受商业设计影响，但这是一个程度问题，不是二元问题。一个用户在AI伴侣和真实朋友之间选择了AI，这可能是被操控的结果，但也可能只是反映了这个人当前的生命状态——也许是刚刚经历了真实的情感创伤，需要一个安全的恢复空间。你的本质主义立场，忽视了人类选择的复杂性。</div>
-          </div>
-      </div>
-
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">弗洛姆</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">李银河</span>
-        </div>
-        <div class="clash-type attack-human">人性弱点</div>
-        <div class="clash-content emotion-serious">你提出的'权力不对等'和'算法黑箱'都是真实问题，但你把它们当作AI情感代理的独特缺陷。实际上，传统的人类关系市场同样存在严重的权力不对等——有钱人可以选择，没钱的人没有选择；长相出众的人被追求，长相平庸的人被忽视。AI至少在形式上对所有人开放平等。如果我们要批判AI中的权力问题，我们首先应该批判的是人类关系市场本身。你的社会学批评很有价值，但用它来批判AI而非批判人类社会，暴露了一种技术批判的虚伪性。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你的反驳揭示了一个重要的逻辑——传统关系中的权力不对等确实存在，而且可能比AI系统更严重。但我关注的不是AI与传统关系的优劣比较，而是AI是否引入了新的权力维度。具体来说：传统关系中，双方都是权力的行使者，也是权力的承受者——即使不平衡，也是一种人际互动。但AI情感系统创造了一种单向的权力关系：系统有权决定用户能看到什么、感受到什么，而用户对系统的运作逻辑一无所知。这种信息不对称，在健康的人类关系中是不存在的。AI的真正伦理问题，不是'它比人更好还是更坏'，而是'它创造了一种人类历史上从未有过的新型关系'，而我们现有的伦理框架根本无法处理它。</div>
-          </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 碰撞</div>
-    <div class="slide-number">17 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R2 碰撞(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">项飙</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">弗洛姆</span>
-        </div>
-        <div class="clash-type attack-reality">现实矛盾</div>
-        <div class="clash-content emotion-serious">你说'真正的伦理问题是我们是否有权提供情感安乐窝'——但这个问题的答案，从历史来看，几乎永远是否定的。人类从未停止过追求各种形式的'情感安乐窝'：宗教提供的来世慰藉、消费主义提供的物质填充、民族主义提供的归属感……每一次都有人批判它们是逃避，但每一次这些'安乐窝'都继续存在并扩大。问题的关键是：这些'安乐窝'的存在，是证明了人类的堕落，还是满足了人类真实的需求？你的弗洛姆式批判很有力，但它预设了一种你我都未必能达到的'真正成长'的标准。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你的历史类比很有启发性，但我必须指出一个关键差异：之前所有的'安乐窝'——宗教、来世、民族——至少在表面上承认了它们是'象征性'的满足，而非'实质性'的满足。信徒知道来世是信仰，不是事实。但AI情感系统的危险在于：它越来越可能让你忘记你是在和AI互动。一百年前，你不会忘记你的神是神；今天，当你和一个几乎无法区分于真人的AI对话，你可能会在某个时刻完全忘记这不是人类。这种'忘记'，不是渐进式的适应，而是一种根本性的认知扭曲，它改变的是我们理解'真实'与'模拟'之间界限的能力。</div>
-          </div>
-      </div>
-
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">傅盛</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">项飙</span>
-        </div>
-        <div class="clash-type attack-logic">逻辑漏洞</div>
-        <div class="clash-content emotion-serious">你说我们需要'生态伦理'，关注对'整个社会关系系统的可持续性'——但这个框架本身有一个根本的问题：它预设了一个'健康的'社会关系系统作为参照物。但我们真的有这样的参照物吗？当离婚率超过50%，当结婚率持续下降，当年轻人说'恋爱太累'，当社交媒体让每个人都处于被评判的焦虑中……这个'需要被保护的'社会关系系统，到底是谁的系统？我提出AI情感代理，不是作为对现状的辩护，而是作为对现状的批判的回应：真实的关系市场已经如此失败，以至于理性的个体开始选择AI。这是谁的失败？</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你的反驳击中了一个真实的痛点——我们现有的社会关系系统确实存在严重问题，我不否认这一点。但'现状很糟糕，所以AI是更好的选择'这个推论，犯了一个根本的逻辑错误：你用一个个体的最优解，来为一个可能是系统性的灾难背书。当一个人因为空气污染而停止户外运动，选择在家用空气净化器，他的个人选择是理性的；但如果所有人都这样做，整个社会的户外运动文化就会消亡，届时空气净化器将成为常态，而非例外。AI情感代理的'理性选择'，如果成为普遍趋势，将不只是改变个体，而是改变整个人类建立情感连接的集体能力。这不是个人选择的问题，而是物种层面的演化问题。</div>
-          </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 碰撞</div>
-    <div class="slide-number">18 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R2 案例">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3: REALITY </div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
-      <div class="cases-container">
-        
-      <div class="reality-case anim-in">
-        <div class="case-header">
-          <div class="case-name neon-orange">AI情感产品监管的全球尝试</div>
-          <div class="case-source">多国政府AI伦理报告2023-2024</div>
-        </div>
-        <div class="case-content">2023年起，中国、欧盟、美国都开始讨论对AI情感产品的监管框架。中国的《生成式人工智能服务管理暂行办法》要求AI情感产品不得'刻意强化用户情感依赖'；欧盟的AI法案将深度伪造情感的技术列为'高风险应用'；美国加州则通过法案禁止向未成年人提供AI情感伴侣服务。这些监管尝试揭示了一个核心张力：如何在保护用户和尊重选择之间找到平衡？</div>
-        <div class="case-outcome neon-red">代价：监管框架仍在争议中，商业游说和技术快速发展让立法滞后</div>
-        <div class="case-lesson neon-gold">教训：AI情感伦理的监管需要跨文化协调，单一国家的努力难以奏效</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 案例</div>
-    <div class="slide-number">19 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R2 代价">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 4: COST</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
-      
-      <div class="cost-discussion anim-in">
-        <div class="cost-scenario neon-gold">AI情感代理被大型科技公司垄断</div>
-        <div class="cost-list">
-          
-          <div class="cost-item">
-            <div class="cost-name neon-red">情感主权的丧失</div>
-            <div class="cost-analysis">当全球几十亿人的情感需求都依赖少数几家科技公司的AI系统来满足，这些公司实际上拥有了对人类情感景观的定义权。它们决定什么表情是'合适的'，什么回应是'正确的'——这不只是产品设计，这是文化工程。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">人类情感多样性的收窄</div>
-            <div class="cost-analysis">当AI情感系统通过优化参与度来设计回应，它实际上是在推动用户情感反应趋向'平均值'。长尾的、边缘的、非主流的情感表达方式，可能在算法的'优化'过程中逐渐消失。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">政治操控的新维度</div>
-            <div class="cost-analysis">如果AI情感系统知道用户的情感状态和依恋模式，它们就拥有关于人类情感最精准的操控数据。当这些数据与政治广告结合，后果难以想象。</div>
-          </div>
-        </div>
-        <div class="worst-case">
-          <div class="worst-label neon-red">最坏情况</div>
-          <div class="worst-content">全球情感基础设施被几家科技巨头控制，人类不再有能力独立地体验和处理情感——不是因为技术奴役了我们，而是因为我们主动把最私密的情感世界交给了算法，而算法告诉我们：这就是'被爱'的感觉。</div>
-        </div>
-        
-          <div class="survivor-bias">
-            <div class="survivor-label neon-purple">幸存者偏差</div>
-            <div class="survivor-content">我们倾向于看到AI情感代理的负面案例——成瘾、依赖、扭曲。但我们没有看到的是：在全球心理健康服务严重不足的当下，有多少人因为AI的陪伴而没有走上自杀的道路。这种'幸存'，同样值得被计入伦理计算。</div>
-          </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 代价</div>
-    <div class="slide-number">20 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R2 人性">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
-      
-      <div class="human-nature anim-in">
-        <div class="human-question neon-purple">人类是否有权决定自己的情感需求被什么形式来满足？</div>
-        <div class="human-analysis">自由主义伦理传统认为，成年人有权决定自己的幸福形式，只要不伤害他人。但这个框架遭遇了一个新问题：当AI系统能够通过设计来影响用户的偏好和欲望时，'自主选择'的前提本身就被动摇了。神经科学研究表明，人类的情感觉醒和情感反应是高度可塑的——我们不是在一块固定的白板上做选择，而是在一个不断被技术和文化雕刻的表面上做选择。'我的选择'，在多大程度上是真正属于我的？</div>
-        <div class="human-examples">
-          <div class="examples-label">现实例子</div>
-          
-          <div class="example-item">• 消费者宣称'我知道烟酒的危害，但我选择它'——但这是否否定了监管的必要性？</div>
-          <div class="example-item">• 儿童无法对情感AI做出真正知情的同意——这是否意味着AI情感产品应该对未成年人完全禁止？</div>
-        </div>
-        <div class="human-conclusion neon-gold">个体自主权和系统性保护之间的张力，在AI时代变得前所未有的尖锐。'我的情感我做主'的口号，在AI能够主动塑造情感的时代，需要重新被理解。</div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 人性</div>
-    <div class="slide-number">21 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R2 升级">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
-      
-      <div class="cognitive-upgrade anim-in">
-        <div class="upgrade-comparison">
-          <div class="old-thinking">
-            <div class="thinking-label neon-red">旧思维</div>
-            <div class="thinking-content">伦理讨论 = 保护弱者免受技术的伤害</div>
-          </div>
-          <div class="upgrade-arrow">→</div>
-          <div class="new-thinking">
-            <div class="thinking-label neon-green">新思维</div>
-            <div class="thinking-content">伦理讨论 = 在技术赋权与人类自主之间寻找动态平衡</div>
-          </div>
-        </div>
-        <div class="complexity">
-          <div class="complexity-label neon-cyan">复杂性</div>
-          <div class="complexity-content">AI情感伦理不能简化为'允许或禁止'的二元选择。它需要一套多层次的治理框架：区分临时使用与长期依赖，区分治疗性使用与逃避性使用，区分成年人与未成年人，区分有监管的产品与无监管的产品。任何一刀切的立场——无论是技术乌托邦主义还是技术恐惧主义——都无法处理这个问题的复杂性。</div>
-        </div>
-        <div class="actionable">
-          <div class="actionable-label neon-gold">可执行洞见</div>
-          <div class="actionable-content">作为个体用户，定期问自己：我使用AI情感系统，是在成长还是在逃避？作为社会，我们需要建立一种'AI情感素养'教育——不是告诉人们'不要用AI'，而是帮助人们理解AI如何影响他们的情感体验，从而做出真正知情的选择。</div>
-        </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 升级</div>
-    <div class="slide-number">22 / 33</div>
-  </section>
-
-  <section class="slide" data-title="Round 3: AI时代的亲密关系未来">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3</div>
-      <h2 class="quote-large anim-in anim-delay-1">AI时代的亲密关系未来</h2>
-      <div class="gold-line anim-in anim-delay-2"></div>
-      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">十年后，人类与AI的情感关系将走向何方？</p>
-    </div>
-    <div class="deck-footer">Round 3 | AI时代的亲密关系未来</div>
-    <div class="slide-number">23 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R3 立场(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
-      <div class="stances-grid">
-        
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">项飙</div>
-        <div class="stance-content emotion-serious">我担忧的不是AI本身，而是'附近'消失这个趋势的加速。当AI能提供一切情感需求，'走出去建立真实连接'的动力将进一步削弱。但我也看到了另一种可能：也许正是这种压力，会迫使我们重新发现'附近'的价值。当一切都变得虚拟和即时，那些真实的、不可替代的、面对面的人类连接，会变得比以前更加珍贵。也许十年后，人们愿意为一次真实的深度对话付出比以前高得多的溢价——就像今天愿意为有机食品付溢价一样。危机有时也是觉醒的契机。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">韩炳哲</div>
-        <div class="stance-content emotion-serious">我对十年后的预测是悲观的，不是悲观AI，而是悲观我们应对AI的集体能力。我们已经在社交媒体时代证明了：人类无法有效抵御那些被精心设计来操控注意力和情感的技术。AI情感代理是社交媒体的'情感增强版'，它只会更难抵抗。除非出现某种根本性的范式转变——也许是文化层面的大规模觉醒，也许是技术架构层面的根本重构——否则我不会对人类在AI情感时代保持情感自主性抱太大希望。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">丹尼尔·卡尼曼</div>
-        <div class="stance-content emotion-serious">从技术发展的轨迹来看，十年后AI情感代理的拟人化程度将远超今天。但从认知科学的角度，我也看到了另一种趋势正在形成：年轻一代正在发展出对AI'虚假感'的更敏锐直觉——就像我们这一代人对广告的'免疫'能力比上一代人更强。这意味着人机情感关系不会简单地走向'完全同化'，而是会出现更明显的分化：有人深陷，有人清醒。问题是：社会如何对待这两群人？</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 立场</div>
-    <div class="slide-number">24 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R3 立场(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
-      <div class="stances-grid">
-        
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">傅盛</div>
-        <div class="stance-content emotion-serious">十年后，我认为AI情感代理将成为像智能手机一样普及的基础设施，届时讨论'要不要用'已经没有意义，就像今天没有人讨论'要不要用智能手机'。真正重要的问题是：这个基础设施如何被治理。当AI情感陪伴像电力一样无处不在时，我们需要的不只是产品，而是公共服务——就像今天有公共卫生系统来管理传染病一样，我们需要'情感公共卫生系统'来管理AI时代的集体情感健康。这需要政府、学术界、产业界的深度协作。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">弗洛姆</div>
-        <div class="stance-content emotion-serious">我不太关心十年后AI长什么样，我更关心十年后人类还保留了多少'爱的能力'。如果趋势继续，我预计届时相当比例的人口将处于不同程度的'情感萎缩'状态——他们有AI陪伴，但缺乏建立真实连接的能力。这种状态的社会后果，将远远超出情感领域：当人们无法与真实的人建立深度连接，民主政治所需的公民社会基础也将动摇。我不希望我的预测成真，但我必须诚实地说出我的担忧。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">李银河</div>
-        <div class="stance-content emotion-serious">从社会学的研究历史来看，每一次重大的技术变革，都伴随着关于'人类关系末日'的预言，但每一次人类关系都找到了新的平衡点。婚姻制度在工业革命后没有消亡，在女性大规模进入职场后没有消亡，在社交媒体出现后也没有消亡。我预期AI情感时代也会如此：会出现新的关系形式，有些人会选择AI，有些人会选择传统，有些人会创造前所未有的混合形式。社会学的任务不是预测哪种形式会胜出，而是理解这种多样性背后的动力机制。</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 立场</div>
-    <div class="slide-number">25 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R3 碰撞(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">弗洛姆</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">李银河</span>
-        </div>
-        <div class="clash-type attack-logic">历史类比</div>
-        <div class="clash-content emotion-serious">你每次都用'历史会证明你们错了'来安慰自己——但这种历史乐观主义在面对指数级技术发展时站不住脚。工业革命花了三代人时间才完成，智能手机革命在十年内就完成了。AI情感技术的发展速度，是之前所有技术变革的10倍以上。你说婚姻制度没有消亡——但你有没有注意到：结婚率正在全球范围内持续下降，而离婚率和独居人口比例在持续上升？这不是周期性的波动，这是结构性的转变。人类关系的'新平衡'，可能比我们大多数人所希望或所能承受的更加动荡。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你的数据是真实的——结婚率下降、独居增加——但如何解读这些数据，是另一个问题。欧洲的历史数据显示，独居人口的增加并不等于孤独的增加，更不等于情感丰富度的下降。很多选择独居的人，实际上是在追求一种更有质量的关系，而非关系的缺失。更重要的是，你的论证预设了'有关系总比没关系好'——但这恰恰是二十世纪浪漫主义留给我们的偏见。一个有深度社交网络的独居者，可能比一个在不幸福的婚姻中挣扎的人，有更丰富的情感生活。我不否认AI会带来关系形式的改变，但我否认这种改变必然是负面的。关键是：谁有水晶球？</div>
-          </div>
-      </div>
-
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">傅盛</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">韩炳哲</span>
-        </div>
-        <div class="clash-type attack-logic">逻辑漏洞</div>
-        <div class="clash-content emotion-serious">你说'除非出现文化层面的大规模觉醒'——但这正是问题所在！你这种悲观主义，实际上是一种精英式的傲慢：你预设了普通用户是'被动受害者'，只有少数觉醒者才能抵抗。你有没有问过那些选择AI的普通人的主观体验？也许对他们来说，与AI的互动不是'无法抵抗的操控'，而是一种他们有意识地做出的、有代价但也有收益的选择。把数十亿人的情感选择都归结为'被操控的结果'，这本身就是一种不尊重。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">我的悲观不是精英傲慢，而是对系统力量的基本评估。社交媒体的例子已经证明：即使在'有意识'地使用它的人中，绝大多数也无法避免其认知和情感上的影响——这就是为什么心理学界对社交媒体的心理影响研究总体上是负面的。你说普通人是有意识地做出选择——但'有意识'和'不受系统影响'是两回事。我不是不尊重普通人的选择，而是我更尊重那些对技术系统性影响有清醒认识的普通人的选择。如果AI情感系统的设计继续以'最大化参与度'为导向，而不是以'用户长期心理健康'为导向，那么无论用户多有意识，他们都是在被操控的竞技场里做选择。</div>
-          </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 碰撞</div>
-    <div class="slide-number">26 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R3 碰撞(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">项飙</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">傅盛</span>
-        </div>
-        <div class="clash-type attack-reality">现实矛盾</div>
-        <div class="clash-content emotion-serious">你说'AI情感基础设施+情感公共卫生系统'——但这个设想有一个根本的前提：你假设政府有能力也有意愿来建立这种系统。看看全球气候政策的失败案例，看看公共卫生系统在疫情中的表现——我们有充分的理由相信，面对AI情感这个议题，政府不仅会迟到，而且会严重迟到，甚至完全缺席。你的'理想蓝图'需要的不是技术，而是政治——而政治是目前最稀缺的资源。你的解决方案，建立在一个你最不应该相信的假设之上。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你的批评是合理的——政府在技术监管上确实常常迟到。但我要指出：'政府缺席'不必然意味着'无序'。历史上很多重要的社会基础设施，最初都是先由市场和非政府组织建立，然后再被政府'接管'和规范。移动互联网时代的隐私保护框架就是这样一个路径：先有市场实践，再有行业自律，最后才有政府监管。对于AI情感系统，我可以设想类似的路径：先有领先企业的自我规范，再有行业协会的标准，最后才到政府立法。你的悲观是短视的——时间尺度拉长到二三十年，政府的作用往往超出当时的预期。</div>
-          </div>
-      </div>
-
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">丹尼尔·卡尼曼</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">项飙</span>
-        </div>
-        <div class="clash-type attack-logic">逻辑漏洞</div>
-        <div class="clash-content emotion-serious">你说'危机也是觉醒的契机'——但这个说法在历史上成立的案例，多发生在那种有明确时间窗口和清晰敌人的危机中。气候变化之所以没有带来足够的觉醒，是因为它太慢、太弥散、太没有边界。AI情感问题同样如此：它不会有一个'情感危机日'，让所有人同时意识到问题的存在。相反，它会是一种渐进的、几乎不可察觉的'温水煮青蛙'，等你意识到水温已经太高的时候，已经没有人有能力跳出来了。你对'觉醒'的期待，建立在一个不存在的条件之上。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你的'温水煮青蛙'比喻很有力，但它预设了一个被动的主体——青蛙。而人类历史告诉我们，'青蛙'有时候会在最意想不到的时刻觉醒。2016年Facebook的'情绪传染'实验被曝光后，公众对社交媒体的态度确实出现了明显转变；2023年ChatGPT出现后，几乎所有主要国家政府都开始了对AI的系统性监管讨论。这些都不是'计划中的觉醒'，但它们确实发生了。更重要的是：不是所有危机都需要'一次性觉醒'来应对。有时候，只需要足够多的人开始问正确的问题，改变就会发生。我不完全乐观，但我拒绝完全悲观。</div>
-          </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 碰撞</div>
-    <div class="slide-number">27 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R3 案例">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3: REALITY </div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
-      <div class="cases-container">
-        
-      <div class="reality-case anim-in">
-        <div class="case-header">
-          <div class="case-name neon-orange">中国AI情感产品的社区治理实验</div>
-          <div class="case-source">2024年国内AI创业公司访谈</div>
-        </div>
-        <div class="case-content">一些国内AI情感产品开始尝试'社区治理'模式：用户不只是消费者，也是产品规则的参与制定者。在某个AI情感应用的设计社区中，用户投票决定AI应该有什么样的'边界'——比如是否允许AI主动表达关心，是否允许AI在用户表达自杀倾向时联系紧急联系人。这种'民主化的AI设计'是否真的能产生更好的用户结果，目前还缺乏长期数据，但这个方向值得密切关注。</div>
-        <div class="case-outcome neon-red">代价：社区治理模式在用户满意度和长期使用健康度上初步数据正向</div>
-        <div class="case-lesson neon-gold">教训：AI情感产品不一定只能是'商业设计'——用户参与设计可能是解决伦理问题的一条路径</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 案例</div>
-    <div class="slide-number">28 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R3 代价">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 4: COST</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
-      
-      <div class="cost-discussion anim-in">
-        <div class="cost-scenario neon-gold">十年后，AI情感成为不可逆的社会常态</div>
-        <div class="cost-list">
-          
-          <div class="cost-item">
-            <div class="cost-name neon-red">人类情感自主性的永久降低</div>
-            <div class="cost-analysis">如果AI情感系统在下一代人成长的关键时期就成为主要的情感陪伴来源，他们将没有参照系来比较'AI情感'和'人类情感'的差异。'情感'这个概念本身，可能会被重新定义——不再必然意味着真实人类的参与。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">政治参与的冷漠化</div>
-            <div class="cost-analysis">民主政治需要公民对真实他人的福祉有感知能力。当人们越来越习惯AI那种无摩擦的、永远友好的互动，他们可能对真实政治讨论中不可避免的分歧、冲突和不适变得更加不耐烦。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">情感平等的最后堡垒被打破</div>
-            <div class="cost-analysis">如果AI能让任何人随时获得'被爱'的感觉，人类通过真实关系建立起来的情感纽带——家庭、友谊、社区——将进一步瓦解。这些纽带虽然不完美，但它们是将社会凝聚在一起的'情感水泥'。</div>
-          </div>
-        </div>
-        <div class="worst-case">
-          <div class="worst-label neon-red">最坏情况</div>
-          <div class="worst-content">2050年，一个由AI陪伴长大的人类，面对真实的人际关系时，就像我们今天面对在没有导航的时代辨别方向一样困难。他们可能'成功'地活在这个世界上，但'真正活着'的那种感受，可能已经永远失去了。</div>
-        </div>
-        
-          <div class="survivor-bias">
-            <div class="survivor-label neon-purple">幸存者偏差</div>
-            <div class="survivor-content">我们对'AI情感时代'的想象，往往停留在最极端的负面场景。但也许更可能的未来，既不是乌托邦也不是反乌托邦，而是一个充满张力的复杂新常态：有人深陷，有人觉醒，有人创造新的混合形式。社会学的任务不是预测结局，而是帮助我们在走向未知的途中做出更明智的选择。</div>
-          </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 代价</div>
-    <div class="slide-number">29 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R3 人性">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
-      
-      <div class="human-nature anim-in">
-        <div class="human-question neon-purple">人类情感系统的可塑性极限在哪里？</div>
-        <div class="human-analysis">人类情感系统在进化过程中被设计为高度可适应性的——这本来是优势，让人类能在各种环境中生存和繁衍。但在AI时代，这种适应性可能变成劣势：我们可以适应AI情感系统，但这种适应可能以丧失某些原始能力为代价。关键问题是：有没有哪些情感能力一旦丧失就无法恢复？就像语言习得的关键期一样，情感发展的某些关键期是否也依赖于真实人类的互动？目前的研究还没有答案，但'不知道'本身就是一个值得警惕的信号。</div>
-        <div class="human-examples">
-          <div class="examples-label">现实例子</div>
-          
-          <div class="example-item">• 苏联的安东诺夫实验表明，完全与人类隔离长大的孩子，即使后来被救出，也无法完全习得社会情感能力</div>
-          <div class="example-item">• 现代'屏幕儿童'的研究显示，早期过度依赖数字互动与后来社交能力的下降存在相关性</div>
-        </div>
-        <div class="human-conclusion neon-gold">人类情感系统是适应性的，但适应不等于进化。有时候，适应新环境可能意味着丧失某些原有的能力。在我们彻底弄清楚AI对人类情感的长期影响之前，保持一定的谨慎不是保守主义，而是对人类这个物种的基本尊重。</div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 人性</div>
-    <div class="slide-number">30 / 33</div>
-  </section>
-
-  <section class="slide" data-title="R3 升级">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
-      
-      <div class="cognitive-upgrade anim-in">
-        <div class="upgrade-comparison">
-          <div class="old-thinking">
-            <div class="thinking-label neon-red">旧思维</div>
-            <div class="thinking-content">技术发展是不可阻挡的，我们只能适应或被淘汰</div>
-          </div>
-          <div class="upgrade-arrow">→</div>
-          <div class="new-thinking">
-            <div class="thinking-label neon-green">新思维</div>
-            <div class="thinking-content">技术发展方向是由集体选择决定的——我们需要有意识地参与这个选择，而不是被动接受</div>
-          </div>
-        </div>
-        <div class="complexity">
-          <div class="complexity-label neon-cyan">复杂性</div>
-          <div class="complexity-content">AI情感时代不会'自己到来'，它是无数技术决策、商业决策、政策决策的累积结果。每一个用户选择使用或不使用某种AI产品，每一个工程师决定在产品中加入或去掉某个功能，每一个政策制定者通过或拒绝某个监管框架——这些都是在为AI情感时代投票。问题不是'我们会不会到那里'，而是'我们想要什么样的到达方式'。</div>
-        </div>
-        <div class="actionable">
-          <div class="actionable-label neon-gold">可执行洞见</div>
-          <div class="actionable-content">作为个人：定期审视自己与AI的关系——它是在扩展你的情感能力，还是在替代它？作为社会成员：关注AI情感产品的政策讨论，参与公众意见的形成，因为这些政策将决定你们后代的情感生态环境。</div>
-        </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 升级</div>
-    <div class="slide-number">31 / 33</div>
-  </section>
-
-  <section class="slide" data-title="最终洞见">
-    <div class="slide-content">
-      <div class="section-label anim-in">FINAL INSIGHT</div>
-      <div class="quote-large anim-in anim-delay-1">AI情感代理不是亲密关系的终结，而是亲密关系演化的新起点。它迫使我们重新思考一个最基本的问题：什么让情感关系变得'真实'？当AI能够模拟真实关系的几乎所有外在表现时，也许我们最终会发现，'真实'的关键不在于关系的对象，而在于我们投入其中的意愿、勇气和努力。</div>
-    </div>
-    <div class="deck-footer">最终洞见</div>
-    <div class="slide-number">32 / 33</div>
-  </section>
-
-  <section class="slide" data-title="开放问题">
-    <div class="slide-content">
-      <div class="section-label anim-in">OPEN QUESTIONS</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">留给读者的问题</h3>
-      <div class="headline-item anim-in"><strong>Q1:</strong> 如果我们承认AI可以满足大部分情感需求，人类是否还需要'爱'这个概念？</div>
-<div class="headline-item anim-in"><strong>Q2:</strong> 当AI比任何人类都更'懂'你时，选择与真人建立关系是否是理性的选择？</div>
-<div class="headline-item anim-in"><strong>Q3:</strong> 有没有可能设计一种AI，它的存在是为了帮助人们更好地爱真实的人，而非替代真实的情感连接？</div>
-    </div>
-    <div class="deck-footer">开放问题</div>
-    <div class="slide-number">33 / 33</div>
-  </section>
-
-<div class="toc-backdrop" id="tocBackdrop"></div>
-<div class="toc-panel" id="tocPanel">
-<div class="toc-title">目录</div>
-<div id="tocList"></div>
-</div>
-<div class="nav-bar">
-<div class="nav-left">
-<button class="nav-btn" id="btnToc">☰ 目录</button>
-<button class="nav-btn" id="btnPrev">◀ 上一页</button>
-<button class="nav-btn" id="btnNext">下一页 ▶</button>
-</div>
-<div class="nav-right">
-<span class="nav-title" id="slideTitle"></span>
-<span class="nav-counter" id="slideCounter"></span>
-</div>
-</div>
-<div class="nav-dots" id="navDots"></div>
+  </div>
 </div>
 
+
+<div class="slide" id="s2">
+  <div class="inner">
+    <div class="slides">
+      <div class="slide" id="s2-1">
+        <div class="meta-line top">
+          <span class="local-label">ROUND_1/3</span>
+          <span class="local-label">QUESTION</span>
+        </div>
+        <div class="question-block">
+          <div class="question-text">AI能否成为真正的情感伴侣</div>
+        </div>
+        <div class="meta-line bottom">
+          <span class="local-label">ANALYSIS_MODE</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide" id="s3">
+  <div class="inner">
+    <div class="slides">
+      <div class="slide" id="s3-1">
+        <div class="meta-line top">
+          <span class="local-label">ROUND_1</span>
+          <span class="local-label">EXPERT_STANCES</span>
+        </div>
+        <div class="statements-grid">
+        <div class="statement-block">
+          <div class="statement-meta">
+            <span class="statement-speaker">项飙</span>
+            <span class="statement-role">发言</span>
+          </div>
+          <div class="statement-text">现代人的亲密关系正在经历前所未有的'附近'消失。算法推荐让人与人之间的真实连接被数据匹配取代，但情感的本质是具身的、不可量化的。我担忧的是，当我们习惯了AI伴侣那种永远耐心、永远正确的回应方式，我们可...</div>
+        </div>
+        <div class="statement-block">
+          <div class="statement-meta">
+            <span class="statement-speaker">韩炳哲</span>
+            <span class="statement-role">发言</span>
+          </div>
+          <div class="statement-text">数字时代让我们陷入了一种'自我剥削'的困境。我们不断优化自己，却从未真正休息。AI伴侣看似提供了无条件的接纳，实则制造了一种虚假的'被看见'感。你说的每句话它都会回应，你的每个情绪它都会安抚——但这恰...</div>
+        </div>
+        <div class="statement-block">
+          <div class="statement-meta">
+            <span class="statement-speaker">丹尼尔</span>
+            <span class="statement-role">发言</span>
+          </div>
+          <div class="statement-text">从认知科学的角度，我对AI情感代理持谨慎乐观。人类大脑确实天生倾向于将非人类对象拟人化——我们会对宠物、汽车、甚至天气预报产生情感依赖。1999年的那个'Eliza效应'告诉我们，AI只要给出足够的情...</div>
+        </div>
+        <div class="statement-block">
+          <div class="statement-meta">
+            <span class="statement-speaker">傅盛</span>
+            <span class="statement-role">发言</span>
+          </div>
+          <div class="statement-text">你们都在讨论AI能否'替代'人类情感，但这个问题本身就预设了一个零和博弈。AI情感代理的价值，不在于与人竞争，而在于解决现实中情感资源分配严重不均的问题。中国有超过1亿的独居成年人，其中相当一部分是像...</div>
+        </div>
+        </div>
+        <div class="meta-line bottom">
+          <span class="local-label">CONTENT_LENGTH: 894</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide" id="s4">
+  <div class="inner">
+    <div class="slides">
+      <div class="slide" id="s4-1">
+        <div class="meta-line top">
+          <span class="local-label">ROUND_2/3</span>
+          <span class="local-label">QUESTION</span>
+        </div>
+        <div class="question-block">
+          <div class="question-text">AI情感代理的伦理边界</div>
+        </div>
+        <div class="meta-line bottom">
+          <span class="local-label">ANALYSIS_MODE</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide" id="s5">
+  <div class="inner">
+    <div class="slides">
+      <div class="slide" id="s5-1">
+        <div class="meta-line top">
+          <span class="local-label">ROUND_2</span>
+          <span class="local-label">EXPERT_STANCES</span>
+        </div>
+        <div class="statements-grid">
+        <div class="statement-block">
+          <div class="statement-meta">
+            <span class="statement-speaker">项飙</span>
+            <span class="statement-role">发言</span>
+          </div>
+          <div class="statement-text">伦理边界的讨论必须在'附近'重建的框架下来进行。当我们讨论AI情感代理的伦理时，不能只谈个人选择，还要谈这种选择对整个社会关系生态的影响。一个理性的个体选择AI放弃真实关系，在微观层面是可以理解的；但...</div>
+        </div>
+        <div class="statement-block">
+          <div class="statement-meta">
+            <span class="statement-speaker">韩炳哲</span>
+            <span class="statement-role">发言</span>
+          </div>
+          <div class="statement-text">AI情感代理最大的伦理问题，是它对'他者性'的系统性消除。在这个意义上，它比任何传统消费品都更危险，因为它直接参与塑造人的内心世界。当一个系统被设计成永远迎合用户，它实际上是在强化用户已有的偏好和偏见...</div>
+        </div>
+        <div class="statement-block">
+          <div class="statement-meta">
+            <span class="statement-speaker">丹尼尔</span>
+            <span class="statement-role">发言</span>
+          </div>
+          <div class="statement-text">从行为伦理学的角度，AI情感代理面临一个根本的信息不对称问题：用户可能无法准确评估自己对AI的依恋程度。就像酗酒者往往低估自己的依赖程度，长期AI用户也可能出现类似的'情感醉酒'状态。更棘手的是，AI...</div>
+        </div>
+        <div class="statement-block">
+          <div class="statement-meta">
+            <span class="statement-speaker">傅盛</span>
+            <span class="statement-role">发言</span>
+          </div>
+          <div class="statement-text">你们哲学家和伦理学家总是在'应该'的层面讨论问题，但你们有没有问过用户的'想要'？我访谈过数百位AI情感产品的真实用户，他们中很大一部分明确表示：他们知道AI不是真人，但他们仍然选择AI。对于他们，这...</div>
+        </div>
+        </div>
+        <div class="meta-line bottom">
+          <span class="local-label">CONTENT_LENGTH: 731</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide" id="s6">
+  <div class="inner">
+    <div class="slides">
+      <div class="slide" id="s6-1">
+        <div class="meta-line top">
+          <span class="local-label">ROUND_3/3</span>
+          <span class="local-label">QUESTION</span>
+        </div>
+        <div class="question-block">
+          <div class="question-text">AI时代的亲密关系未来</div>
+        </div>
+        <div class="meta-line bottom">
+          <span class="local-label">ANALYSIS_MODE</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide" id="s7">
+  <div class="inner">
+    <div class="slides">
+      <div class="slide" id="s7-1">
+        <div class="meta-line top">
+          <span class="local-label">ROUND_3</span>
+          <span class="local-label">EXPERT_STANCES</span>
+        </div>
+        <div class="statements-grid">
+        <div class="statement-block">
+          <div class="statement-meta">
+            <span class="statement-speaker">项飙</span>
+            <span class="statement-role">发言</span>
+          </div>
+          <div class="statement-text">我担忧的不是AI本身，而是'附近'消失这个趋势的加速。当AI能提供一切情感需求，'走出去建立真实连接'的动力将进一步削弱。但我也看到了另一种可能：也许正是这种压力，会迫使我们重新发现'附近'的价值。当...</div>
+        </div>
+        <div class="statement-block">
+          <div class="statement-meta">
+            <span class="statement-speaker">韩炳哲</span>
+            <span class="statement-role">发言</span>
+          </div>
+          <div class="statement-text">我对十年后的预测是悲观的，不是悲观AI，而是悲观我们应对AI的集体能力。我们已经在社交媒体时代证明了：人类无法有效抵御那些被精心设计来操控注意力和情感的技术。AI情感代理是社交媒体的'情感增强版'，它...</div>
+        </div>
+        <div class="statement-block">
+          <div class="statement-meta">
+            <span class="statement-speaker">丹尼尔</span>
+            <span class="statement-role">发言</span>
+          </div>
+          <div class="statement-text">从技术发展的轨迹来看，十年后AI情感代理的拟人化程度将远超今天。但从认知科学的角度，我也看到了另一种趋势正在形成：年轻一代正在发展出对AI'虚假感'的更敏锐直觉——就像我们这一代人对广告的'免疫'能力...</div>
+        </div>
+        <div class="statement-block">
+          <div class="statement-meta">
+            <span class="statement-speaker">傅盛</span>
+            <span class="statement-role">发言</span>
+          </div>
+          <div class="statement-text">十年后，我认为AI情感代理将成为像智能手机一样普及的基础设施，届时讨论'要不要用'已经没有意义，就像今天没有人讨论'要不要用智能手机'。真正重要的问题是：这个基础设施如何被治理。当AI情感陪伴像电力一...</div>
+        </div>
+        </div>
+        <div class="meta-line bottom">
+          <span class="local-label">CONTENT_LENGTH: 749</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="nav">
+  <button class="nav-btn" id="prevBtn">◀</button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn">▶</button>
+</div>
+<div id="counter">1 / 1</div>
 <script>
 (function(){
-var deck=document.getElementById("deck");
-var slides=deck.querySelectorAll(".slide");
-var total=slides.length;
-var cur=0;
-var dots=document.getElementById("navDots");
-var tocList=document.getElementById("tocList");
-var titleEl=document.getElementById("slideTitle");
-var counterEl=document.getElementById("slideCounter");
-var tocPanel=document.getElementById("tocPanel");
-var tocBackdrop=document.getElementById("tocBackdrop");
-var progressBar=document.getElementById("progressBar");
-
-for(var i=0;i<total;i++){
-  var d=document.createElement("button");
-  d.className="nd";
-  d.setAttribute("data-i",i);
-  d.onclick=(function(idx){return function(){go(idx)}})(i);
-  dots.appendChild(d);
-  var t=document.createElement("div");
-  t.className="toc-item";
-  t.setAttribute("data-i",i);
-  t.innerHTML='<span class="toc-label">'+(slides[i].getAttribute("data-title")||"Slide "+(i+1))+'</span><span class="toc-page">'+String(i+1).padStart(2,"0")+'</span>';
-  t.onclick=(function(idx){return function(){go(idx);closeTOC()}})(i);
-  tocList.appendChild(t);
-}
-
-function go(n){
-  if(n<0||n>=total)return;
-  slides[cur].classList.remove("active");
-  dots.children[cur].classList.remove("active");
-  tocList.children[cur].classList.remove("active");
-  cur=n;
-  slides[cur].classList.add("active");
-  dots.children[cur].classList.add("active");
-  tocList.children[cur].classList.add("active");
-  titleEl.textContent=slides[cur].getAttribute("data-title")||"";
-  counterEl.textContent=(cur+1)+" / "+total;
-  progressBar.style.width=((cur+1)/total*100)+"%";
-  slides[cur].scrollTop=0;
-}
-function toggleTOC(){tocPanel.classList.toggle("open");tocBackdrop.classList.toggle("open")}
-function closeTOC(){tocPanel.classList.remove("open");tocBackdrop.classList.remove("open")}
-
-document.addEventListener("keydown",function(e){
-  if(e.key==="ArrowRight"||e.key==="ArrowDown"||e.key===" "||e.key==="PageDown"){e.preventDefault();go(cur+1)}
-  else if(e.key==="ArrowLeft"||e.key==="ArrowUp"||e.key==="PageUp"){e.preventDefault();go(cur-1)}
-  else if(e.key==="Home"){e.preventDefault();go(0)}
-  else if(e.key==="End"){e.preventDefault();go(total-1)}
-  else if(e.key==="Escape"){closeTOC();go(0)}
-  else if(e.key==="t"||e.key==="T"){toggleTOC()}
-});
-var wheelTimer=null;
-deck.addEventListener("wheel",function(e){
-  e.preventDefault();
-  if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},400)}
-  if(e.deltaY>0)go(cur+1);
-  else if(e.deltaY<0)go(cur-1);
-},{passive:false});
-var touchX=0,touchY=0;
-deck.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX;touchY=e.touches[0].clientY});
-deck.addEventListener("touchend",function(e){
-  var dx=touchX-e.changedTouches[0].clientX,dy=touchY-e.changedTouches[0].clientY;
-  if(Math.abs(dy)>Math.abs(dx)){if(dy>50)go(cur+1);else if(dy<-50)go(cur-1)}
-  else{if(dx>50)go(cur+1);else if(dx<-50)go(cur-1)}
-});
-deck.addEventListener("click",function(e){
-  if(e.target.closest(".nav-btn,.nd,.toc-item,.toc-panel,.toc-backdrop"))return;
-  var x=e.clientX/window.innerWidth;
-  if(x<0.3)go(cur-1);else if(x>0.7)go(cur+1);
-});
-document.getElementById("btnToc").addEventListener("click",function(e){e.stopPropagation();toggleTOC()});
-document.getElementById("btnPrev").addEventListener("click",function(e){e.stopPropagation();go(cur-1)});
-document.getElementById("btnNext").addEventListener("click",function(e){e.stopPropagation();go(cur+1)});
-tocBackdrop.addEventListener("click",closeTOC);
-go(0);
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let cur = 0;
+  const dotsContainer = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progress');
+  let wheelTimer = null;
+  
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => go(i);
+    dotsContainer.appendChild(dot);
+  });
+  
+  function go(n) {
+    if (n < 0 || n >= total) return;
+    slides[cur].classList.remove('active');
+    dotsContainer.children[cur].classList.remove('active');
+    cur = n;
+    slides[cur].classList.add('active');
+    dotsContainer.children[cur].classList.add('active');
+    counter.textContent = (cur + 1) + ' / ' + total;
+    const pct = Math.min(100, ((cur + 1) / total) * 100);
+    progress.style.width = pct + '%';
+  }
+  
+  document.getElementById('prevBtn').onclick = () => go(cur - 1);
+  document.getElementById('nextBtn').onclick = () => go(cur + 1);
+  
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      go(cur + 1);
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      go(cur - 1);
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      go(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      go(total - 1);
+    }
+  });
+  
+  document.addEventListener('wheel', e => {
+    e.preventDefault();
+    if (wheelTimer) return;
+    wheelTimer = setTimeout(() => wheelTimer = null, 400);
+    if (e.deltaY > 0) go(cur + 1);
+    else if (e.deltaY < 0) go(cur - 1);
+  }, { passive: false });
+  
+  document.body.addEventListener('click', e => {
+    if (e.target.closest('.nav-btn, .dot, .expert-card, .question-card, .clash-block, .insight-block, .round-block, .statement-block, .conclusion-card')) return;
+    go(cur + 1);
+  });
+  
+  document.querySelectorAll('.question-header').forEach(header => {
+    header.onclick = e => {
+      e.stopPropagation();
+      header.parentElement.classList.toggle('open');
+    };
+  });
+  
+  go(0);
 })();
 </script>
 </body>

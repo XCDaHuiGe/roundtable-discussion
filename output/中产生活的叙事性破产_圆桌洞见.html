@@ -2,1110 +2,366 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>中产生活的叙事性破产 圆桌洞见</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中产生活的叙事性破产</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Noto+Serif+SC:wght@600;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{
-    /* ============ 主题色(默认:🖋 墨水经典) ============ */
-    --ink:#0a0a0b;
-    --ink-rgb:10,10,11;
-    --paper:#f1efea;
-    --paper-rgb:241,239,234;
-    --paper-tint:#e8e5de;
-    --ink-tint:#18181a;
-    --text-dim:rgba(241,239,234,0.5);
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #111111;
+  --bg-card: rgba(28, 28, 30, 0.85);
+  --bg-elevated: rgba(38, 38, 40, 0.9);
+  --text-primary: #f5f5f7;
+  --text-secondary: rgba(245, 245, 247, 0.75);
+  --text-tertiary: rgba(245, 245, 247, 0.55);
+  --text-muted: rgba(245, 245, 247, 0.35);
+  --accent-red: #ff4757;
+  --accent-green: #00d4aa;
+  --accent-blue: #0a84ff;
+  --accent-purple: #bf5af2;
+  --border-subtle: rgba(245, 245, 247, 0.08);
+  --border-light: rgba(245, 245, 247, 0.15);
+  --display: 'Noto Serif SC', Georgia, 'Times New Roman', serif;
+  --body: 'Outfit', 'Noto Sans SC', 'PingFang SC', sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+}
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg-primary); color: var(--text-primary); font-family: var(--body); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 
-    /* ============ 强调色 ============ */
-    --accent:#c23b22;
-    --accent-rgb:194,59,34;
-    --gold:#d4a843;
-    --gold-rgb:212,168,67;
-    --blue:#4a6a9a;
-    --purple:#8a4aaa;
-    --green:#3a8a5c;
-    --cyan:#4a9a9a;
-    --orange:#d4843a;
+.slide { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 1; opacity: 0; pointer-events: none; transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; }
+.slide.active { opacity: 1; pointer-events: all; }
 
-    /* ============ 字体(跨主题固定) ============ */
-    --mono:"IBM Plex Mono","SF Mono",monospace;
-    --serif-zh:"Noto Serif SC","Source Han Serif SC","STSong",serif;
-    --sans-zh:"Noto Sans SC","Source Han Sans SC","PingFang SC",sans-serif;
+.frame { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+.frame::before { content: ''; position: absolute; inset: 0; background: 
+  radial-gradient(ellipse 80% 50% at 20% 40%, rgba(10, 132, 255, 0.08) 0%, transparent 50%),
+  radial-gradient(ellipse 60% 40% at 80% 60%, rgba(191, 90, 242, 0.06) 0%, transparent 50%),
+  linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%); pointer-events: none; z-index: 0; }
+.frame::after { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E"); pointer-events: none; z-index: 1; opacity: 0.8; }
 
-    /* ============ 间距 ============ */
-    --radius:10px;
-    --ease:cubic-bezier(.4,0,.2,1);
-  }
+#progress { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-green)); z-index: 100; transition: width 0.4s ease; }
+#nav { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 20px; z-index: 10; background: rgba(28, 28, 30, 0.92); backdrop-filter: blur(24px); padding: 14px 28px; border-radius: 28px; border: 1px solid var(--border-subtle); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); }
+.nav-btn { width: 42px; height: 42px; border: 1px solid var(--border-light); background: transparent; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--text-secondary); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.nav-btn:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--text-tertiary); color: var(--text-primary); transform: scale(1.05); }
+.dots { display: flex; gap: 8px; align-items: center; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+.dot:hover { background: var(--text-tertiary); transform: scale(1.3); }
+.dot.active { background: var(--text-primary); transform: scale(1.6); box-shadow: 0 0 8px rgba(245, 245, 247, 0.4); }
+#counter { position: fixed; top: 28px; right: 32px; font-family: var(--mono); font-size: 11px; color: var(--text-muted); letter-spacing: 0.18em; z-index: 10; background: rgba(28, 28, 30, 0.85); padding: 10px 18px; border-radius: 24px; backdrop-filter: blur(16px); border: 1px solid var(--border-subtle); }
 
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans-zh);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+.sys-bar { position: absolute; top: 5%; left: 5%; right: 5%; display: flex; justify-content: space-between; padding-bottom: 20px; border-bottom: 1px solid var(--border-subtle); z-index: 2; }
+.foot-bar { position: absolute; bottom: 5%; left: 5%; right: 5%; display: flex; justify-content: space-between; padding-top: 20px; border-top: 1px solid var(--border-subtle); z-index: 2; }
+.sys-label { font-family: var(--mono); font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.25em; }
+.foot-label { font-family: var(--mono); font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.18em; }
 
-  /* ============ Deck 容器 ============ */
-  #deck{position:relative;width:100vw;height:100vh;overflow:hidden}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(32px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideR { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes slideL { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
 
-  /* ============ 进度条 ============ */
-  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:1000;transition:width .5s var(--ease);box-shadow:0 0 12px rgba(var(--accent-rgb),.3)}
+.slide .a { opacity: 0; }
+.slide.active .a { animation-fill-mode: both; }
 
-  /* ============ 幻灯片 ============ */
-  .deck{position:relative;width:100%;height:100%}
-  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;overflow:hidden}
-  .slide-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
-  .slide.active{display:flex}
-  .slide.hero{justify-content:center;align-items:center;text-align:center}
-  .slide.title-slide{justify-content:center;align-items:center;text-align:center}
+/* 封面 */
+#s1 .frame { display: grid; grid-template-columns: 1fr 1.5fr; }
+#s1 .left { padding: 8% 5% 8% 6%; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--border-subtle); position: relative; }
+#s1 .left::after { content: ''; position: absolute; right: 0; top: 20%; bottom: 20%; width: 1px; background: linear-gradient(180deg, transparent, var(--accent-blue), var(--accent-purple), transparent); opacity: 0.3; }
+#s1 .issue { font-family: var(--mono); font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3em; }
+#s1 .version-badge { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(10, 132, 255, 0.15), rgba(191, 90, 242, 0.15)); padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(10, 132, 255, 0.2); margin-bottom: 24px; }
+#s1 .version-badge span { font-family: var(--mono); font-size: 10px; color: var(--accent-blue); letter-spacing: 0.15em; text-transform: uppercase; }
+#s1 .mega { font-family: var(--display); font-weight: 900; font-size: clamp(56px, 10vw, 120px); line-height: 1.05; letter-spacing: -0.03em; background: linear-gradient(135deg, var(--text-primary) 0%, rgba(245, 245, 247, 0.85) 50%, var(--text-primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+#s1 .subtext { font-family: var(--body); font-size: clamp(13px, 1.4vw, 18px); color: var(--text-secondary); line-height: 1.9; margin-top: 28px; letter-spacing: 0.01em; }
+#s1 .right { padding: 8% 6%; display: flex; flex-direction: column; justify-content: center; }
+#s1 .article-row { padding: 5% 0; border-bottom: 1px solid var(--border-subtle); cursor: pointer; transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); position: relative; }
+#s1 .article-row::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: linear-gradient(90deg, rgba(10, 132, 255, 0.1), transparent); transition: width 0.35s ease; }
+#s1 .article-row:hover { background: rgba(255, 255, 255, 0.02); padding-left: 16px; }
+#s1 .article-row:hover::before { width: 100%; }
+#s1 .art-num { font-family: var(--mono); font-size: 10px; color: var(--text-muted); margin-bottom: 10px; letter-spacing: 0.2em; }
+#s1 .art-title { font-family: var(--display); font-weight: 700; font-size: clamp(18px, 2.2vw, 28px); color: var(--text-primary); line-height: 1.4; margin-bottom: 10px; letter-spacing: -0.01em; }
+#s1 .art-body { font-family: var(--body); font-size: clamp(12px, 1.3vw, 15px); color: var(--text-tertiary); line-height: 1.85; }
 
-  /* ============ 入场动画(Guizang风格) ============ */
-  [data-anim]{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
-  .slide.active [data-anim]{opacity:1;transform:translateY(0)}
-  .slide.active [data-anim]:nth-child(1){transition-delay:.1s}
-  .slide.active [data-anim]:nth-child(2){transition-delay:.18s}
-  .slide.active [data-anim]:nth-child(3){transition-delay:.26s}
-  .slide.active [data-anim]:nth-child(4){transition-delay:.34s}
-  .slide.active [data-anim]:nth-child(5){transition-delay:.42s}
-  .slide.active [data-anim]:nth-child(6){transition-delay:.5s}
+/* 内容页 */
+.content { position: absolute; inset: 12% 5% 10% 5%; display: flex; flex-direction: column; z-index: 2; }
+.head-block { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4%; padding-bottom: 3%; border-bottom: 1px solid var(--border-subtle); }
+.head-title { font-family: var(--display); font-weight: 800; font-size: clamp(36px, 5.5vw, 64px); line-height: 1.1; color: var(--text-primary); text-align: center; flex: 1; letter-spacing: -0.02em; }
+.head-tag { font-family: var(--body); font-size: 13px; color: var(--text-muted); letter-spacing: 0.25em; text-transform: uppercase; }
 
-  /* ============ 内容区(book-distillation范式) ============ */
-  .frame{width:100%;max-width:1100px;margin:0 auto;flex:1;display:flex;flex-direction:column}
-  .slide-content{flex:1;display:flex;flex-direction:column}
+/* 数据统计 */
+.stats-grid { display: flex; justify-content: center; gap: clamp(32px, 6vw, 80px); margin: 5% 0; flex-wrap: wrap; }
+.stat-item { text-align: center; position: relative; padding: 0 24px; }
+.stat-item::after { content: ''; position: absolute; right: 0; top: 15%; bottom: 15%; width: 1px; background: linear-gradient(180deg, transparent, var(--border-light), transparent); }
+.stat-item:last-child::after { display: none; }
+.stat-num { font-family: var(--display); font-weight: 900; font-size: clamp(56px, 10vw, 100px); color: var(--text-primary); line-height: 1; letter-spacing: -0.03em; }
+.stat-label { font-family: var(--mono); font-size: 11px; color: var(--text-muted); letter-spacing: 0.2em; margin-top: 12px; text-transform: uppercase; }
 
-  /* ============ Magazine Chrome(Guizang风格) ============ */
-  .chrome{display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.5;margin-bottom:3vh}
-  .chrome .left,.chrome .right{display:flex;gap:2em;align-items:center}
-  .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
+/* 专家阵容 */
+.experts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 4% 0; }
+.expert-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 20px; padding: 32px 24px; text-align: center; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+.expert-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-green)); opacity: 0; transition: opacity 0.4s ease; }
+.expert-card:hover { transform: translateY(-8px); border-color: var(--border-light); background: var(--bg-elevated); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); }
+.expert-card:hover::before { opacity: 1; }
+.expert-avatar { width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 20px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); display: flex; align-items: center; justify-content: center; font-family: var(--display); font-weight: 700; font-size: 28px; color: var(--bg-primary); position: relative; }
+.expert-card:hover .expert-avatar { box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.2), 0 0 30px rgba(10, 132, 255, 0.3); }
+.expert-name { font-family: var(--display); font-weight: 700; font-size: 18px; color: var(--text-primary); margin-bottom: 8px; letter-spacing: 0.02em; }
+.expert-role { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.12em; text-transform: uppercase; }
 
-  /* ============ 底部元数据(render_v8兼容) ============ */
-  .deck-footer{margin-top:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
-  .slide-number{position:absolute;bottom:2vh;right:3vw;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.35)}
+/* Round区块 */
+.round-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 24px; padding: 36px; margin: 20px 0; backdrop-filter: blur(12px); position: relative; overflow: hidden; }
+.round-block::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-green)); }
+.round-title { font-family: var(--display); font-weight: 800; font-size: clamp(24px, 3.5vw, 36px); color: var(--text-primary); margin-bottom: 24px; text-align: center; letter-spacing: -0.01em; }
 
-  /* ============ Section Label ============ */
-  .section-label{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
+/* 碰撞区 */
+.clash-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 28px 32px; margin: 16px 0; border-left: 4px solid var(--accent-red); position: relative; box-shadow: -8px 0 24px rgba(255, 71, 87, 0.1); }
+.clash-title { font-family: var(--display); font-weight: 700; font-size: 20px; color: var(--accent-red); margin-bottom: 16px; letter-spacing: 0.02em; }
+.clash-content { font-family: var(--body); font-size: clamp(14px, 1.5vw, 17px); color: var(--text-secondary); line-height: 1.9; letter-spacing: 0.01em; }
 
-  /* ============ 封面 ============ */
-  .cover-badge{display:inline-block;padding:6px 20px;border:1px solid var(--accent);border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4vh}
-  .cover-title{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .cover-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:4vh;line-height:1.8;max-width:600px}
-  .cover-stats{display:flex;gap:4vh;flex-wrap:wrap;justify-content:center}
-  .cover-stat{text-align:center}
-  .cover-stat-num{font-family:var(--mono);font-size:2.5rem;font-weight:900;color:var(--accent)}
-  .cover-stat-label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.5);margin-top:.5vh}
+/* 洞见区 */
+.insight-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 28px 32px; margin: 16px 0; border-left: 4px solid var(--accent-green); position: relative; box-shadow: -8px 0 24px rgba(0, 212, 170, 0.1); }
+.insight-title { font-family: var(--display); font-weight: 700; font-size: 20px; color: var(--accent-green); margin-bottom: 16px; letter-spacing: 0.02em; }
+.insight-content { font-family: var(--body); font-size: clamp(14px, 1.5vw, 17px); color: var(--text-secondary); line-height: 1.9; letter-spacing: 0.01em; }
+.insight-core { font-weight: 700; font-size: clamp(17px, 1.8vw, 22px); color: var(--text-primary); display: block; margin: 16px 0; letter-spacing: -0.01em; }
 
-  /* ============ 封面标题(render_v8) ============ */
-  .hero-dark{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;flex:1}
-  .title-main{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .title-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:2vh;line-height:1.8}
-  .gold-line{width:80px;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));margin:3vh auto;border-radius:2px}
+/* 开放问题 */
+.question-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; margin: 16px 0; overflow: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.question-card:hover { border-color: var(--border-light); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2); }
+.question-header { padding: 24px 32px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease; }
+.question-header:hover { background: rgba(255, 255, 255, 0.02); }
+.question-text { font-family: var(--display); font-weight: 700; font-size: clamp(17px, 2vw, 24px); color: var(--text-primary); letter-spacing: -0.01em; }
+.question-toggle { font-family: var(--mono); font-size: 20px; color: var(--text-muted); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.question-card.open .question-toggle { transform: rotate(45deg); color: var(--accent-blue); }
+.question-answer { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease; }
+.question-card.open .question-answer { max-height: 600px; }
+.question-answer-inner { padding: 0 32px 28px; font-family: var(--body); font-size: clamp(13px, 1.4vw, 16px); color: var(--text-secondary); line-height: 1.9; letter-spacing: 0.01em; }
 
-  /* ============ 标题系统 ============ */
-  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
-  .h-hero{font-family:var(--serif-zh);font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.2;margin-bottom:3vh}
-  .h-xl{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.4rem,3vw,2.2rem);line-height:1.3;margin-bottom:2vh}
-  .h-lg{font-family:var(--serif-zh);font-weight:600;font-size:clamp(1.1rem,2vw,1.5rem);line-height:1.4;margin-bottom:1.5vh}
-  .h-md{font-weight:600;font-size:1.1rem;margin-bottom:1vh}
-  .lead{font-size:1rem;line-height:1.85;color:rgba(var(--paper-rgb),.8);max-width:700px}
-  .meta-row{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.4);display:flex;gap:2em;flex-wrap:wrap;margin-top:3vh}
+/* 结论卡片 */
+.conclusion-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 24px; padding: 48px; margin: 0 auto; max-width: 800px; text-align: center; position: relative; overflow: hidden; }
+.conclusion-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-green)); }
+.conclusion-text { font-family: var(--display); font-weight: 800; font-size: clamp(24px, 3.5vw, 40px); color: var(--text-primary); line-height: 1.4; letter-spacing: -0.01em; }
 
-  /* ============ 大号引用(render_v8) ============ */
-  .quote-large{font-family:var(--serif-zh);font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:600;line-height:1.6;color:rgba(var(--paper-rgb),.9);max-width:800px;margin:0 auto}
+/* 三栏布局 */
+.col-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6%; flex: 1; }
+.col { display: flex; flex-direction: column; gap: 20px; }
+.col-num { font-family: var(--mono); font-size: 11px; color: var(--text-muted); letter-spacing: 0.2em; }
+.col-title { font-family: var(--display); font-weight: 700; font-size: clamp(18px, 2.4vw, 28px); color: var(--text-primary); letter-spacing: -0.01em; }
+.col-body { font-family: var(--body); font-size: clamp(13px, 1.4vw, 16px); color: var(--text-secondary); line-height: 1.9; letter-spacing: 0.01em; }
+.quote { font-family: var(--display); font-weight: 900; font-size: clamp(36px, 5.5vw, 64px); line-height: 1.25; color: var(--text-primary); text-align: center; letter-spacing: -0.02em; }
+.quote .highlight { display: inline-block; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple), var(--accent-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.body { font-family: var(--body); font-size: clamp(14px, 1.5vw, 17px); line-height: 1.9; color: var(--text-secondary); letter-spacing: 0.01em; }
 
-  /* ============ 分割线 ============ */
-  .rule{width:100%;height:1px;background:rgba(var(--paper-rgb),.15);margin:3vh 0}
-
-  /* ============ 标签 ============ */
-  .tag{display:inline-block;padding:4px 12px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;margin:3px}
-  .tag-gold{background:rgba(var(--gold-rgb),.15);color:var(--gold);border:1px solid rgba(var(--gold-rgb),.2)}
-  .tag-red{background:rgba(var(--accent-rgb),.15);color:var(--accent);border:1px solid rgba(var(--accent-rgb),.2)}
-  .tag-blue{background:rgba(74,106,154,.15);color:var(--blue);border:1px solid rgba(74,106,154,.2)}
-  .tag-purple{background:rgba(138,74,170,.15);color:var(--purple);border:1px solid rgba(138,74,170,.2)}
-  .tag-green{background:rgba(58,138,92,.15);color:var(--green);border:1px solid rgba(58,138,92,.2)}
-
-  /* ============ 霓虹强调色(render_v8) ============ */
-  .neon-gold{color:var(--gold)}.neon-red{color:var(--accent)}.neon-cyan{color:var(--cyan)}.neon-purple{color:var(--purple)}.neon-orange{color:var(--orange)}.neon-green{color:var(--green)}
-
-  /* ============ 网格系统 ============ */
-  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:2vh 2vw}
-  @media(max-width:768px){.grid-2{grid-template-columns:1fr}}
-
-  /* ============ 发言块(原生) ============ */
-  .sp{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2.5vw;margin-bottom:2vh;position:relative}
-  .sp::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
-  .sh{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh}
-  .speaker-avatar{width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:var(--ink);background:var(--accent);flex-shrink:0}
-  .sn{font-weight:700;font-size:1rem}
-  .sr{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4);padding:3px 8px;background:rgba(var(--paper-rgb),.06);border-radius:3px}
-  .st{font-size:.95rem;line-height:2;color:rgba(var(--paper-rgb),.85)}
-  .st strong{color:var(--paper);font-weight:700}
-  .st em{color:var(--gold);font-style:normal;font-weight:600}
-
-  /* ============ 碰撞块(原生) ============ */
-  .cb{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;position:relative}
-  .cb::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
-  .cb.blue{border-color:rgba(74,106,154,.3)}.cb.blue::before{background:var(--blue)}
-  .cb.purple{border-color:rgba(138,74,170,.3)}.cb.purple::before{background:var(--purple)}
-  .cb.green{border-color:rgba(58,138,92,.3)}.cb.green::before{background:var(--green)}
-  .cb.orange{border-color:rgba(var(--gold-rgb),.3)}.cb.orange::before{background:var(--gold)}
-  .cl{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;color:var(--accent);font-weight:600}
-  .cl.blue{color:var(--blue)}.cl.purple{color:var(--purple)}.cl.green{color:var(--green)}.cl.orange{color:var(--gold)}
-
-  /* ============ 洞见卡 ============ */
-  .insight-c{background:linear-gradient(135deg,rgba(var(--paper-rgb),.04) 0%,rgba(var(--paper-rgb),.08) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh;position:relative;overflow:hidden}
-  .insight-c::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold))}
-  .insight-q{font-family:var(--serif-zh);font-size:1.1rem;font-weight:700;color:var(--gold);line-height:1.6;margin-bottom:1vh}
-  .insight-a{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.75)}
-
-  /* ============ 卡片 ============ */
-  .card{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
-  .card-num{font-family:var(--mono);font-weight:900;font-size:1.8rem;color:var(--accent);opacity:.4;margin-bottom:1vh}
-  .card-title{font-weight:700;font-size:1rem;margin-bottom:1vh}
-  .card-body{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
-  .card-source{font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);margin-top:1vh}
-
-  /* ============ 专家卡片(render_v8) ============ */
-  .card-rise{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--green)}
-  .card-fall{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--accent)}
-  .speaker-header{display:flex;align-items:center;gap:16px;margin-bottom:2vh}
-  .speaker-name{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem}
-  .speaker-role{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:2px}
-  .expert-profile{display:flex;flex-direction:column;gap:1vh}
-  .profile-item{font-size:.9rem;line-height:1.7;color:rgba(var(--paper-rgb),.8)}
-  .profile-label{color:var(--gold);font-weight:600}
-
-  /* ============ 立场表达(render_v8) ============ */
-  .stance-item{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;border-left:3px solid var(--gold)}
-  .stance-expert{font-family:var(--serif-zh);font-weight:700;font-size:1rem;margin-bottom:1vh}
-  .stance-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
-  .stances-grid{display:flex;flex-direction:column;gap:1.5vh}
-
-  /* ============ 碰撞轮次(render_v8) ============ */
-  .clash-round{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;position:relative}
-  .clash-round::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
-  .clash-header{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh;flex-wrap:wrap}
-  .clash-attacker{font-weight:700;font-size:1rem}
-  .clash-target{font-weight:700;font-size:1rem}
-  .clash-arrow{color:rgba(var(--paper-rgb),.3);font-size:1.2rem}
-  .clash-type{display:inline-block;padding:3px 10px;border-radius:3px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.5vh;font-weight:600}
-  .clash-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
-  .counter-attack{margin-top:2vh;padding-top:2vh;border-top:1px dashed rgba(var(--paper-rgb),.1)}
-  .counter-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .counter-content{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
-  .clash-container{display:flex;flex-direction:column;gap:2vh}
-
-  /* ============ 攻击类型色 ============ */
-  .attack-logic{background:rgba(74,106,154,.15);color:var(--blue)}
-  .attack-interest{background:rgba(var(--accent-rgb),.15);color:var(--accent)}
-  .attack-reality{background:rgba(var(--gold-rgb),.15);color:var(--gold)}
-  .attack-human{background:rgba(138,74,170,.15);color:var(--purple)}
-  .attack-failure{background:rgba(58,138,92,.15);color:var(--green)}
-
-  /* ============ 现实案例(render_v8) ============ */
-  .reality-case{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--orange)}
-  .case-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5vh;flex-wrap:wrap;gap:8px}
-  .case-name{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem}
-  .case-source{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4)}
-  .case-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:1.5vh}
-  .case-outcome{font-size:.9rem;font-weight:600;margin-bottom:1vh}
-  .case-lesson{font-size:.9rem;font-weight:600}
-  .cases-container{display:flex;flex-direction:column;gap:2vh}
-
-  /* ============ 代价讨论(render_v8) ============ */
-  .cost-discussion{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh}
-  .cost-scenario{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem;margin-bottom:2vh}
-  .cost-list{display:flex;flex-direction:column;gap:1.5vh;margin-bottom:2vh}
-  .cost-item{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:1.5vh 2vw;border-left:3px solid var(--accent)}
-  .cost-name{font-weight:700;font-size:.95rem;margin-bottom:.5vh}
-  .cost-analysis{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
-  .worst-case{background:rgba(var(--accent-rgb),.08);border:1px solid rgba(var(--accent-rgb),.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
-  .worst-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .worst-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
-  .survivor-bias{background:rgba(138,74,170,.08);border:1px solid rgba(138,74,170,.15);border-radius:6px;padding:2vh 2vw}
-  .survivor-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .survivor-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
-
-  /* ============ 人性层(render_v8) ============ */
-  .human-nature{background:linear-gradient(135deg,rgba(var(--paper-rgb),.03) 0%,rgba(var(--paper-rgb),.06) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
-  .human-question{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem;margin-bottom:2vh;line-height:1.5}
-  .human-analysis{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:2vh}
-  .human-examples{margin-bottom:2vh}
-  .examples-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1vh;font-weight:600}
-  .example-item{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8);padding:.5vh 0}
-  .human-conclusion{font-size:.95rem;font-weight:600;line-height:1.7}
-
-  /* ============ 认知升级(render_v8) ============ */
-  .cognitive-upgrade{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
-  .upgrade-comparison{display:grid;grid-template-columns:1fr auto 1fr;gap:2vw;align-items:start;margin-bottom:2vh}
-  @media(max-width:768px){.upgrade-comparison{grid-template-columns:1fr}.upgrade-arrow{transform:rotate(90deg)}}
-  .old-thinking,.new-thinking{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:2vh 1.5vw}
-  .old-thinking{border-left:3px solid var(--accent)}
-  .new-thinking{border-left:3px solid var(--green)}
-  .thinking-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .thinking-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
-  .upgrade-arrow{font-size:1.5rem;color:rgba(var(--paper-rgb),.3);display:flex;align-items:center;justify-content:center;padding-top:3vh}
-  .complexity{background:rgba(74,106,154,.08);border:1px solid rgba(74,106,154,.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
-  .complexity-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .complexity-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
-  .actionable{background:rgba(var(--gold-rgb),.08);border:1px solid rgba(var(--gold-rgb),.15);border-radius:6px;padding:2vh 2vw}
-  .actionable-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .actionable-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
-
-  /* ============ 情绪样式 ============ */
-  .emotion-sarcasm{border-left:3px solid var(--purple);padding-left:12px;font-style:italic}
-  .emotion-helplessness{opacity:.75;font-style:italic}
-  .emotion-anger{color:var(--accent);font-weight:600}
-  .emotion-hesitation{opacity:.8;font-style:italic}
-  .emotion-self-deprecation{opacity:.7;font-style:italic}
-  .emotion-cold-laugh{color:var(--purple)}
-  .emotion-silence{opacity:.5;font-style:italic}
-  .emotion-serious{color:rgba(var(--paper-rgb),.85)}
-
-  /* ============ 指标 ============ */
-  .metrics{display:flex;gap:2vw;flex-wrap:wrap;margin-bottom:3vh}
-  .metric{flex:1;min-width:100px;text-align:center;background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 1.5vw}
-  .metric-val{font-family:var(--mono);font-weight:900;font-size:clamp(1.5rem,3vw,2.5rem);color:var(--accent)}
-  .metric-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:.5vh}
-
-  /* ============ 开放问题 ============ */
-  .oq{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
-  .oq-num{font-family:var(--mono);font-weight:900;font-size:1.2rem;color:var(--accent);opacity:.3;margin-bottom:1vh}
-  .oq-text{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
-  .headline-item{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.85);padding:1.5vh 0;border-bottom:1px solid rgba(var(--paper-rgb),.06)}
-  .headline-item:last-child{border-bottom:none}
-  .headline-item strong{color:var(--gold);margin-right:8px}
-
-  /* ============ 引用 ============ */
-  .quote{font-family:var(--serif-zh);font-size:1rem;font-style:italic;line-height:1.8;padding:2vh 2.5vw;border-left:3px solid var(--gold);background:rgba(var(--gold-rgb),.05);margin:2vh 0;color:rgba(var(--paper-rgb),.85)}
-
-  /* ============ TOC ============ */
-  .toc-panel{position:fixed;top:0;left:0;width:min(340px,80vw);height:100vh;background:rgba(var(--ink-rgb),.97);backdrop-filter:blur(20px);z-index:100;transform:translateX(-100%);transition:transform .35s var(--ease);padding:3vh 2.5vw;overflow-y:auto;border-right:1px solid rgba(var(--paper-rgb),.08)}
-  .toc-panel.open{transform:translateX(0)}
-  .toc-title{font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:3vh;padding-bottom:2vh;border-bottom:1px solid rgba(var(--paper-rgb),.1)}
-  .toc-item{display:flex;justify-content:space-between;padding:1.2vh 1.5vw;margin-bottom:.5vh;cursor:pointer;border-radius:6px;border-left:2px solid transparent;font-size:.9rem;color:rgba(var(--paper-rgb),.7);transition:all .2s}
-  .toc-item:hover{background:rgba(var(--paper-rgb),.06);color:var(--paper)}
-  .toc-item.active{background:rgba(var(--paper-rgb),.08);color:var(--accent);border-left-color:var(--accent);font-weight:600}
-  .toc-label{flex:1}
-  .toc-page{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.35)}
-  .toc-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;opacity:0;pointer-events:none;transition:opacity .3s}
-  .toc-backdrop.open{opacity:1;pointer-events:auto}
-
-  /* ============ 导航栏 ============ */
-  .nav-bar{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 3vw;background:rgba(var(--ink-rgb),.9);backdrop-filter:blur(10px);z-index:50;border-top:1px solid rgba(var(--paper-rgb),.06)}
-  .nav-left,.nav-right{display:flex;align-items:center;gap:12px}
-  .nav-btn{background:none;border:1px solid rgba(var(--paper-rgb),.12);color:rgba(var(--paper-rgb),.7);padding:8px 16px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;cursor:pointer;transition:all .2s}
-  .nav-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(var(--accent-rgb),.1)}
-  .nav-title{font-size:12px;color:rgba(var(--paper-rgb),.5);max-width:40vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .nav-counter{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.4)}
-
-  /* ============ 导航点 ============ */
-  .nav-dots{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:6px}
-  .nd{width:6px;height:6px;border-radius:50%;background:rgba(var(--paper-rgb),.15);cursor:pointer;transition:all .3s var(--ease);border:none;padding:0}
-  .nd.active{background:var(--accent);height:20px;border-radius:3px;box-shadow:0 0 8px rgba(var(--accent-rgb),.4)}
-  .nd:hover{background:rgba(var(--paper-rgb),.4)}
-
-  /* ============ 入场动画延迟(render_v8兼容) ============ */
-  .anim-in{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
-  .slide.active .anim-in{opacity:1;transform:translateY(0)}
-  .slide.active .anim-in:nth-child(1){transition-delay:.1s}
-  .slide.active .anim-in:nth-child(2){transition-delay:.18s}
-  .slide.active .anim-in:nth-child(3){transition-delay:.26s}
-  .slide.active .anim-in:nth-child(4){transition-delay:.34s}
-  .slide.active .anim-in:nth-child(5){transition-delay:.42s}
-  .slide.active .anim-in:nth-child(6){transition-delay:.5s}
-  .anim-delay-1{transition-delay:.18s !important}
-  .anim-delay-2{transition-delay:.26s !important}
-  .anim-delay-3{transition-delay:.34s !important}
-  .anim-delay-4{transition-delay:.42s !important}
-  .anim-delay-5{transition-delay:.5s !important}
-  .anim-delay-6{transition-delay:.58s !important}
-
-  /* ============ 响应式 ============ */
-  @media(max-width:1024px){.slide{padding:4vh 5vw 8vh}}
-  @media(max-width:768px){
-    .slide{padding:3vh 4vw 7vh}
-    .cover-stats{gap:2vh}
-    .metrics{flex-direction:column}
-    .nav-dots,.nav-title{display:none}
-    .nav-bar{padding:0 2vw}
-  }
+/* 响应式 */
+@media (max-width: 1024px) {
+  .experts-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  #s1 .frame { grid-template-columns: 1fr; }
+  #s1 .left { border-right: none; border-bottom: 1px solid var(--border-subtle); padding: 12% 6%; }
+  #s1 .left::after { display: none; }
+  #s1 .right { padding: 8% 6%; }
+  .col-grid { grid-template-columns: 1fr; gap: 28px; }
+  .stats-grid { gap: 24px; }
+  .stat-item { padding: 0 16px; }
+  .experts-grid { grid-template-columns: 1fr; gap: 16px; }
+  .expert-card { padding: 24px 20px; }
+  #nav { padding: 12px 20px; gap: 14px; bottom: 24px; }
+  .nav-btn { width: 38px; height: 38px; }
+  .round-block, .conclusion-card { padding: 28px 24px; }
+  .clash-block, .insight-block, .question-header { padding: 24px; }
+}
 </style>
 </head>
 <body>
-<div class="deck" id="deck">
-<div class="progress-bar" id="progressBar"></div>
+<div id="progress" style="width: 0%;"></div>
 
-
-  <section class="slide hero active" data-title="封面">
-    <div class="slide-content hero-dark">
-      <div class="section-label anim-in">ROUNDTABLE DISCUSSION V8.0</div>
-      <h1 class="title-main anim-in anim-delay-1">中产生活的叙事性破产</h1>
-      <div class="title-sub anim-in anim-delay-2">从文学幻梦到消费信贷，金融系统如何利用心理学陷阱将理想生活异化为永不歇息的债务枷锁？</div>
-      <div class="gold-line anim-in anim-delay-3"></div>
-      <p style="font-size:14px;color:var(--text-dim);letter-spacing:0.1em;" class="anim-in anim-delay-4">从知识讨论到生存博弈</p>
+<div class="slide" id="s1">
+  <div class="frame">
+    <div class="left">
+      <div class="issue">Roundtable Insight</div>
+      <div class="mega">中产生活的叙事性</div>
+      <div class="subtext">从文学幻梦到消费信贷，金融系统如何利用心理学陷阱将理想生活异化为永不歇息的债务枷锁？</div>
     </div>
-    <div class="deck-footer">中产生活的叙事性破产 | V8级圆桌洞见</div>
-    <div class="slide-number">01 / 24</div>
-  </section>
-
-  <section class="slide" data-title="专家档案(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">EXPERT PROFILES (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
-      <div class="grid-2">
-        
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#1565c0">吴</div>
-          <div>
-            <div class="speaker-name neon-gold">吴晓波</div>
-            <div class="speaker-role">财经观察家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>中国经济的每一次转型都有叙事驱动，中产的困境本质上是叙事与现实的错位</div><div class="profile-item"><span class="profile-label">利益相关：</span>中产消费叙事如何被金融工具放大和收割</div><div class="profile-item"><span class="profile-label">恐惧：</span>中产阶层的集体幻灭会引发消费断崖和社会动荡</div><div class="profile-item"><span class="profile-label">偏见：</span>过于依赖商业叙事框架，可能忽视底层结构性暴力</div>
-        </div>
+    <div class="right">
+      <div class="article-row">
+        <div class="art-num">参与专家</div>
+        <div class="art-title">吴晓波 / 项飙 / 冯唐 / 李诞</div>
+        <div class="art-body">6 位专家 · 4 轮交锋</div>
       </div>
-
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#2d5a8e">项</div>
-          <div>
-            <div class="speaker-name neon-gold">项飙</div>
-            <div class="speaker-role">人类学家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>中产身份是一种社会表演，当表演的成本超过承受力，叙事就会崩塌</div><div class="profile-item"><span class="profile-label">利益相关：</span>"身份认同消费"如何成为一种隐性社会控制机制</div><div class="profile-item"><span class="profile-label">恐惧：</span>中产叙事破产后，社会失去中间层的稳定功能</div><div class="profile-item"><span class="profile-label">偏见：</span>社会学视角可能低估个体在经济压力下的真实痛苦</div>
-        </div>
-      </div>
-
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#e65100">冯</div>
-          <div>
-            <div class="speaker-name neon-gold">冯唐</div>
-            <div class="speaker-role">商业战略家与作家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>成事者不抱怨，但也要看清楚牌桌上谁在出老千</div><div class="profile-item"><span class="profile-label">利益相关：</span>中产财务困境背后的商业模式设计——谁在赚中产的焦虑钱</div><div class="profile-item"><span class="profile-label">恐惧：</span>最有消费力的群体被债务锁死，整个经济循环断裂</div><div class="profile-item"><span class="profile-label">偏见：</span>精英视角可能低估普通中产的真实选择空间</div>
-        </div>
-      </div>
+      <div class="article-row">
+        <div class="art-num">核心议题</div>
+        <div class="art-title">中产叙事的真相...</div>
       </div>
     </div>
-    <div class="deck-footer">专家档案</div>
-    <div class="slide-number">02 / 24</div>
-  </section>
-
-  <section class="slide" data-title="专家档案(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">EXPERT PROFILES (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
-      <div class="grid-2">
-        
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#6a4a8a">李</div>
-          <div>
-            <div class="speaker-name neon-gold">李诞</div>
-            <div class="speaker-role">脱口秀演员与作家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>人间不值得，但活得明白比活得体面更重要</div><div class="profile-item"><span class="profile-label">利益相关：</span>中产叙事破产的荒诞感——那些用六个钱包换一纸房产证的人</div><div class="profile-item"><span class="profile-label">恐惧：</span>当所有人都看穿了叙事，社会会不会陷入集体虚无</div><div class="profile-item"><span class="profile-label">偏见：</span>解构一切的视角可能让人失去行动力</div>
-        </div>
-      </div>
-
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#00897b">刘</div>
-          <div>
-            <div class="speaker-name neon-gold">刘润</div>
-            <div class="speaker-role">商业顾问</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>所有商业问题的本质都是效率问题，中产困境是资源配置的低效</div><div class="profile-item"><span class="profile-label">利益相关：</span>"主动破产"作为一种理性财务策略的商业逻辑</div><div class="profile-item"><span class="profile-label">恐惧：</span>中产集体降维消费会引发通缩螺旋</div><div class="profile-item"><span class="profile-label">偏见：</span>效率逻辑可能忽视人的情感需求和尊严</div>
-        </div>
-      </div>
-
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#1a237e">罗</div>
-          <div>
-            <div class="speaker-name neon-gold">罗翔</div>
-            <div class="speaker-role">法学家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>法治的要义是对权力的限制，金融消费者的权益保护是文明社会的底线</div><div class="profile-item"><span class="profile-label">利益相关：</span>六个钱包、消费信贷背后的法律灰色地带与消费者保护缺失</div><div class="profile-item"><span class="profile-label">恐惧：</span>最脆弱的中产群体在债务陷阱中无法获得法律救济</div><div class="profile-item"><span class="profile-label">偏见：</span>法律视角可能过于理想化，忽视执行层面的困难</div>
-        </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">专家档案</div>
-    <div class="slide-number">03 / 24</div>
-  </section>
-
-  <section class="slide" data-title="Round 1: 中产叙事的真相">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1</div>
-      <h2 class="quote-large anim-in anim-delay-1">中产叙事的真相</h2>
-      <div class="gold-line anim-in anim-delay-2"></div>
-      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">中产的"宏大叙事"到底是自我构建的幻觉，还是被系统性设计的陷阱？</p>
-    </div>
-    <div class="deck-footer">Round 1 | 中产叙事的真相</div>
-    <div class="slide-number">04 / 24</div>
-  </section>
-
-  <section class="slide" data-title="R1 立场(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
-      <div class="stances-grid">
-        
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">吴晓波</div>
-        <div class="stance-content emotion-serious">中国经济过去四十年有一个核心叙事：努力工作、买房置地、子女教育向上流动，你就属于中产。这个叙事在2015年之前基本成立——房价每年涨10%-15%，工资也在涨，教育投资回报率看得见。
-
-但2022年之后，这个叙事全面破产了。2019-2021年高位接盘的那批"刚需中产"，房价腰斩，法拍房暴增300%。他们的资产负债表一夜之间从正变负。这不是个人判断失误，是整个叙事框架的坍塌。
-
-知乎上一个获得129个赞同的帖子说得很精准："相当一部分中产人群宏大叙事的破产，这波人是真正具有能量的一群人。"这群人不是懒人，不是投机客，他们是真信了叙事的人——掏空六个钱包，背三十年房贷，送孩子上国际学校。现在叙事碎了，他们被困在债务里出不来。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">项飙</div>
-        <div class="stance-content emotion-serious">我更关心的是：这个"中产叙事"是怎么被建构起来的？
-
-中产身份从来不是一个经济概念，它是一种社会表演。你住什么小区、开什么车、孩子上什么学校、假期去哪里旅游——这些不是消费，是身份标识。你不是在"买东西"，你是在"证明自己是中产"。
-
-2026年开始流行的"主动破产"恰恰证明了这一点：所谓"剥离身份认同消费"，就是说你以前花钱买的不是商品，是身份。一杯星巴克38块，成本8块，剩下30块买的是"我是喝得起星巴克的人"这个标签。
-
-中产的悲剧在于：他们用真实的钱去买虚构的身份。当房价下跌、收入停滞，这个身份的维护成本就超过了他们的承受能力。叙事破产的本质是：你发现你一直在为一个幻觉打工。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">冯唐</div>
-        <div class="stance-content emotion-serious">作为写过小说也做过生意的人，我要说一个残酷的真相：中产叙事不是自然形成的，它是被精心设计的。
-
-房地产商卖的不是房子，是"阶层跃升"的叙事。教育机构卖的不是知识，是"不能输在起跑线"的焦虑。金融机构卖的不是贷款，是"提前享受中产生活"的幻觉。
-
-整个链条的商业逻辑非常清晰：先用叙事制造焦虑，再用信贷消除支付障碍，最后用债务锁定消费行为。你不是"选择"了中产生活，你是被"设计"进了中产生活。
-
-六个钱包换来终身债务陷阱——这个"六个钱包"的说法本身就暴露了问题：当一个消费决策需要动员三代人的积蓄时，它还叫"理性消费"吗？</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 立场</div>
-    <div class="slide-number">05 / 24</div>
-  </section>
-
-  <section class="slide" data-title="R1 立场(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
-      <div class="stances-grid">
-        
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">李诞</div>
-        <div class="stance-content emotion-self-deprecation">我来讲个笑话：一个人掏空六个钱包买了房，每月还贷一万五。他老婆说"我们是中产了"。他说"对，我们是欠银行三百万的中产"。
-
-这个笑话不好笑，因为它是真的。
-
-我身边太多这样的朋友。2019年、2020年买房的那批人，现在房子值多少钱？腰斩。但他们欠银行的钱一分没少。他们每天早上醒来第一件事不是想"今天做什么"，而是想"今天怎么还贷"。
-
-最讽刺的是什么？他们当年买房的理由是"房价还会涨""现在不买以后更买不起"。这不是他们的判断，这是整个社会在告诉他们的话。他们只是"听话"了。
-
-现在他们被困住了。想卖？卖了也还不清贷款。想断供？法拍之后还欠银行钱。想躺平？每月一万五的房贷不允许你躺平。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">刘润</div>
-        <div class="stance-content emotion-serious">从商业逻辑看，中产困境的核心问题是"沉没成本谬误"和"锚定效应"的叠加。
-
-你在2019年花500万买了一套房子，现在只值300万。理性决策应该是"止损"——卖掉房子，承认亏损200万。但大多数人做不到。为什么？因为"沉没成本"让你不愿意割肉，"锚定效应"让你一直记着"它曾经值500万"。
-
-更深层的问题是：中产的财务结构极度脆弱。一个典型的中产家庭，70%的资产是房产，每月收入的40%-60%用于还贷。这意味着什么？意味着任何风吹草动——裁员、降薪、生病——都会让整个财务结构崩塌。
-
-这不是"个别案例"，这是结构性问题。中产的"资产负债表"看起来漂亮，但"现金流"极其脆弱。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">罗翔</div>
-        <div class="stance-content emotion-serious">法律上有一个概念叫"信息不对称"——卖方知道的比买方多，交易就不是公平的。
-
-2019年买房的那些人，他们知道开发商的真实负债率吗？他们知道地方政府的土地财政依赖吗？他们知道银行的风控模型把风险转嫁给了谁吗？
-
-答案是：他们不知道。他们被告知的是"房价永远涨""现在不买以后更贵""这是刚需"。这些信息是谁提供的？是开发商的广告、中介的话术、媒体的渲染。
-
-法律应该保护信息弱势方。但在房地产市场，消费者保护几乎是空白的。你买了房，房价跌了，你不能退。你断供了，银行可以追偿你一辈子。你维权了，开发商早就破产了。
-
-六个钱包换来的不是"安居乐业"，是一份不平等的契约。</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 立场</div>
-    <div class="slide-number">06 / 24</div>
-  </section>
-
-  <section class="slide" data-title="Round 2: 债务陷阱的心理机制">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2</div>
-      <h2 class="quote-large anim-in anim-delay-1">债务陷阱的心理机制</h2>
-      <div class="gold-line anim-in anim-delay-2"></div>
-      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">中产为什么明知是陷阱还往里跳？是贪婪、无知，还是被设计好的心理弱点？</p>
-    </div>
-    <div class="deck-footer">Round 2 | 债务陷阱的心理机制</div>
-    <div class="slide-number">07 / 24</div>
-  </section>
-
-  <section class="slide" data-title="R2 碰撞(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">项飙</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">吴晓波</span>
-        </div>
-        <div class="clash-type attack-logic">逻辑漏洞</div>
-        <div class="clash-content emotion-serious">吴晓波，你说"叙事破产"，但你有没有想过：这个叙事之所以能运转这么多年，恰恰是因为它在很长时间内是"真的"。2015年之前买房的人确实赚了。问题不是"叙事是假的"，问题是"叙事突然不成立了"。那些2019年买房的人不是"被骗了"，他们是"赶上了叙事转折点"——这比被骗更残酷，因为你连被骗的安慰都没有。</div>
-        
-      </div>
-
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">冯唐</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">刘润</span>
-        </div>
-        <div class="clash-type attack-reality">现实矛盾</div>
-        <div class="clash-content emotion-anger">刘润，你用"沉没成本谬误"来分析，听起来很理性。但你有没有想过：对一个背着三百万房贷、每月还一万五的人来说，"理性止损"意味着什么？意味着卖了房子，亏掉首付和已还贷款，还要继续还差额，同时租房住。这不是"止损"，这是"双倍出血"。你用商学院的框架分析真实人生的困境，太轻巧了。</div>
-        
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 碰撞</div>
-    <div class="slide-number">08 / 24</div>
-  </section>
-
-  <section class="slide" data-title="R2 碰撞(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">李诞</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">冯唐</span>
-        </div>
-        <div class="clash-type attack-human">人性弱点</div>
-        <div class="clash-content emotion-cold-laugh">冯唐，你说中产叙事是"被设计的"。但设计者是谁？你能指着一个人说"就是你"吗？不能。因为这是一个系统——开发商、银行、中介、媒体、政府，每个环节都在做"理性"的事情，但合在一起就变成了一个吞噬中产的机器。你说得好像有一个阴谋，但其实没有阴谋，只有"每个参与者都在最大化自己的利益"——这才是最恐怖的。</div>
-        
-      </div>
-
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">罗翔</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">项飙</span>
-        </div>
-        <div class="clash-type attack-logic">逻辑漏洞</div>
-        <div class="clash-content emotion-serious">项飙，你说中产花钱买的是"身份"不是商品。但法律上，你花了钱就是买了商品——你有消费者权益。问题是：当"身份消费"变成"债务陷阱"，法律能保护你吗？答案是不能。因为法律不保护"你觉得自己应该过什么样的生活"，法律只保护"你签了什么合同"。这恰恰是问题所在——中产的困境不仅是社会学问题，更是法律保护缺位的问题。</div>
-        
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 碰撞</div>
-    <div class="slide-number">09 / 24</div>
-  </section>
-
-  <section class="slide" data-title="Round 3: "主动破产"的合理性">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3</div>
-      <h2 class="quote-large anim-in anim-delay-1">"主动破产"的合理性</h2>
-      <div class="gold-line anim-in anim-delay-2"></div>
-      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">2026年中产开始流行"主动破产"——剥离身份消费、生活降维，这是理性还是投降？</p>
-    </div>
-    <div class="deck-footer">Round 3 | "主动破产"的合理性</div>
-    <div class="slide-number">10 / 24</div>
-  </section>
-
-  <section class="slide" data-title="R3 案例(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3: REALITY (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
-      <div class="cases-container">
-        
-      <div class="reality-case anim-in">
-        <div class="case-header">
-          <div class="case-name neon-orange">2019-2021年高位接盘的"刚需中产"</div>
-          <div class="case-source">[来源：知乎 2026]</div>
-        </div>
-        <div class="case-content">2019-2021年高位接盘的"刚需中产"是最惨的一批人。他们掏空六个钱包凑首付，背三十年房贷。现在房价腰斩，法拍房暴增300%。他们的房子值200万，但还欠银行350万。想卖？卖了还要倒欠150万。想断供？法拍后银行继续追偿。他们被困在一套"负资产"的房子里，每月还贷一万五，生活质量全面塌陷。</div>
-        <div class="case-outcome neon-red">代价：资产负债表全面崩溃，每月现金流被房贷吞噬，生活降级但无法脱身</div>
-        <div class="case-lesson neon-gold">教训："刚需"本身就是一个被建构的概念——什么时候买房、买什么样的房，本应是个人选择，但被叙事绑架成了"不得不"</div>
-      </div>
-
-      <div class="reality-case anim-in">
-        <div class="case-header">
-          <div class="case-name neon-orange">2026中产"主动破产"运动</div>
-          <div class="case-source">[来源：知乎 中年观察局]</div>
-        </div>
-        <div class="case-content">2026年开始，一批中产开始"主动破产"——不是法律意义上的破产，而是心理和消费层面的"破产"。他们剥离"身份认同消费"：不喝星巴克改喝便利店咖啡，不开BBA改骑电动车，不送孩子上国际学校改上公立学校，不买学区房改租房住。他们发现：当你不再为"中产身份"买单时，生活成本可以降低60%以上。</div>
-        <div class="case-outcome neon-red">代价：生活质量反而提升——因为焦虑减少了，可支配时间增加了，家庭关系改善了</div>
-        <div class="case-lesson neon-gold">教训："主动破产"不是失败，是清醒——当你意识到"中产身份"是一个消费陷阱时，退出就是最大的胜利</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 案例</div>
-    <div class="slide-number">11 / 24</div>
-  </section>
-
-  <section class="slide" data-title="R3 案例(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3: REALITY (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
-      <div class="cases-container">
-        
-      <div class="reality-case anim-in">
-        <div class="case-header">
-          <div class="case-name neon-orange">教育军备竞赛的退出者</div>
-          <div class="case-source">[来源：知乎 2026]</div>
-        </div>
-        <div class="case-content">一批中产家庭开始退出教育军备竞赛。他们的逻辑很简单：一个孩子从幼儿园到大学的"精英教育"路径，总花费在200-500万之间。但毕业后月薪可能只有一万出头。投入产出比为负。他们选择让孩子上公立学校，省下来的钱用于家庭旅行、亲子陪伴、孩子自己的兴趣探索。</div>
-        <div class="case-outcome neon-red">代价：家庭财务压力大幅降低，孩子心理健康水平反而提升</div>
-        <div class="case-lesson neon-gold">教训：教育军备竞赛的本质不是"为了孩子"，而是"家长的身份焦虑"——当家长放下焦虑，孩子反而受益</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 案例</div>
-    <div class="slide-number">12 / 24</div>
-  </section>
-
-  <section class="slide" data-title="R3 代价">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 4: COST</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
-      
-      <div class="cost-discussion anim-in">
-        <div class="cost-scenario neon-gold">如果大量中产"主动破产"、集体降维消费，会发生什么？</div>
-        <div class="cost-list">
-          
-          <div class="cost-item">
-            <div class="cost-name neon-red">消费市场的结构性萎缩</div>
-            <div class="cost-analysis">中产是中国消费市场的核心驱动力。如果这个群体集体"降维"，从星巴克退到便利店，从BBA退到电动车，从国际学校退到公立学校——整个消费升级链条会断裂。餐饮、教育、汽车、奢侈品行业的营收会大幅下滑。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">社会流动性的进一步固化</div>
-            <div class="cost-analysis">"主动破产"的代价之一是放弃"向上流动"的尝试。当大量中产不再"投资自己"和"投资下一代"，阶层固化会加速。那些还在"卷"的人会获得相对优势，而"退出"的人会被甩出赛道。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">心理落差与身份危机</div>
-            <div class="cost-analysis">从"中产"降到"朴素生活"，听起来很洒脱，但实际操作中会面临巨大的心理落差。亲戚朋友的眼光、孩子的同学比较、社会评价体系的挤压——这些都是真实的压力。"主动破产"需要的不仅是财务调整，更是心理重建。</div>
-          </div>
-        </div>
-        <div class="worst-case">
-          <div class="worst-label neon-red">最坏情况</div>
-          <div class="worst-content">中产集体"主动破产"可能导致通缩螺旋：消费萎缩导致企业裁员，裁员导致收入下降，收入下降导致进一步消费萎缩。最终，"主动破产"变成"被动破产"——你想降维，但经济环境让你连降维的机会都没有。</div>
-        </div>
-        
-          <div class="survivor-bias">
-            <div class="survivor-label neon-purple">幸存者偏差</div>
-            <div class="survivor-content">你只看到那些"主动破产"后活得更好的人——他们有积蓄、有技能、有退路。你看不到那些根本没有"主动破产"资本的人——他们的"被动破产"是真正的灾难。"主动破产"是有门槛的，它本身就是另一种中产特权。</div>
-          </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 代价</div>
-    <div class="slide-number">13 / 24</div>
-  </section>
-
-  <section class="slide" data-title="R3 人性">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
-      
-      <div class="human-nature anim-in">
-        <div class="human-question neon-purple">为什么明知道"身份消费"是陷阱，中产还是停不下来？</div>
-        <div class="human-analysis">中产的"身份消费"本质上是一种"社会比较焦虑"的外化表现。心理学研究表明，人的幸福感不取决于绝对收入，而取决于相对收入——你比周围人赚得多，你就幸福；你比周围人赚得少，你就不幸福。
-
-中产的生活环境是一个"比较场"：邻居开什么车、同事的孩子上什么学校、朋友圈里谁又去了欧洲度假。这些比较不是"虚荣"，而是人类进化出来的社会定位机制——你通过比较来确定自己在群体中的位置。
-
-问题在于：现代社会的"比较范围"被无限扩大了。以前你只和邻居比，现在你和全网比。社交媒体让每个人都在"展示最好的自己"，这制造了一个"所有人都过得比我好"的幻觉。你不是在"消费"，你是在"追赶"——但你永远追不上，因为"比较的锚点"一直在移动。</div>
-        <div class="human-examples">
-          <div class="examples-label">现实例子</div>
-          
-          <div class="example-item">• "六个钱包"买房——不是因为需要，是因为"别人都买了"，不买就"落后了"</div>
-          <div class="example-item">• 送孩子上国际学校——不是因为教育质量，是因为"同事的孩子都上了"</div>
-          <div class="example-item">• 买BBA——不是因为需要好车，是因为"开国产车去谈生意没面子"</div>
-        </div>
-        <div class="human-conclusion neon-gold">中产停不下来的真正原因不是"贪婪"，而是"恐惧"——恐惧"掉队"、恐惧"被看不起"、恐惧"孩子输在起跑线"。这些恐惧是被社会环境放大的，不是中产自己制造的。"主动破产"需要克服的不是欲望，而是恐惧。</div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 人性</div>
-    <div class="slide-number">14 / 24</div>
-  </section>
-
-  <section class="slide" data-title="R3 升级">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
-      
-      <div class="cognitive-upgrade anim-in">
-        <div class="upgrade-comparison">
-          <div class="old-thinking">
-            <div class="thinking-label neon-red">旧思维</div>
-            <div class="thinking-content">中产生活是"努力工作→消费升级→阶层跃升"的正循环，只要更努力就能维持</div>
-          </div>
-          <div class="upgrade-arrow">→</div>
-          <div class="new-thinking">
-            <div class="thinking-label neon-green">新思维</div>
-            <div class="thinking-content">中产生活是一个"身份消费→债务锁定→被迫维持"的死循环。"主动破产"不是失败，是打破循环的第一步。真正的富足不是"拥有更多"，而是"需要更少"。</div>
-          </div>
-        </div>
-        <div class="complexity">
-          <div class="complexity-label neon-cyan">复杂性</div>
-          <div class="complexity-content">"主动破产"不是万能药。它对有积蓄、有技能、有退路的中产有效，但对那些已经被债务锁死的人可能来不及。而且，集体降维消费可能引发通缩螺旋，让"主动破产"变成"被动破产"。关键不是"要不要降维"，而是"在什么条件下降维是安全的"。</div>
-        </div>
-        <div class="actionable">
-          <div class="actionable-label neon-gold">可执行洞见</div>
-          <div class="actionable-content">对个人：先做一次"身份消费审计"——把每月支出分为"生存需要"和"身份需要"，看看"身份需要"占了多少。你会惊讶地发现：可能一半以上的支出都是为了"维持中产身份"而非真正的需要。
-
-对社会：重建"朴素生活的尊严"——让"不消费"不再等于"失败"。这需要媒体、教育、文化的共同努力。
-
-对政策：加强消费者保护，特别是金融消费者的知情权和退出权。六个钱包换来的不应该是终身债务陷阱。</div>
-        </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 升级</div>
-    <div class="slide-number">15 / 24</div>
-  </section>
-
-  <section class="slide" data-title="Round 4: 重建生活意义">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 4</div>
-      <h2 class="quote-large anim-in anim-delay-1">重建生活意义</h2>
-      <div class="gold-line anim-in anim-delay-2"></div>
-      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">当中产叙事破产之后，什么能填补意义的真空？</p>
-    </div>
-    <div class="deck-footer">Round 4 | 重建生活意义</div>
-    <div class="slide-number">16 / 24</div>
-  </section>
-
-  <section class="slide" data-title="R4 碰撞(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">吴晓波</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">李诞</span>
-        </div>
-        <div class="clash-type attack-logic">逻辑漏洞</div>
-        <div class="clash-content emotion-serious">李诞，你一直在解构中产叙事，但你有没有想过：解构之后呢？人不能只靠"看穿一切"活着。那些"主动破产"的人，他们需要新的叙事来替代旧的叙事。你不能把旧的拆了，然后说"反正都是假的"——这不叫清醒，这叫虚无主义。</div>
-        
-      </div>
-
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">项飙</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">刘润</span>
-        </div>
-        <div class="clash-type attack-reality">现实矛盾</div>
-        <div class="clash-content emotion-serious">刘润，你用"效率"来分析"主动破产"，但"主动破产"的核心不是效率——是意义。一个人退出教育军备竞赛，不是因为他算清了"投入产出比"，而是因为他想清楚了"我到底要什么样的生活"。你用商业框架理解人生选择，永远理解不了。</div>
-        
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 4 | 碰撞</div>
-    <div class="slide-number">17 / 24</div>
-  </section>
-
-  <section class="slide" data-title="R4 碰撞(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">罗翔</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">吴晓波</span>
-        </div>
-        <div class="clash-type attack-logic">数据反驳</div>
-        <div class="clash-content emotion-serious">吴晓波，你说需要"新的叙事"。但法律的视角是：我们需要的不是叙事，是制度。美国1978年《破产法》允许个人破产后"重新开始"，给了债务人一个"第二次机会"。中国的个人破产制度还在试点阶段。与其讨论"什么叙事能替代旧叙事"，不如先把个人破产制度建立起来——让那些被困在债务里的人有一个合法的退出通道。</div>
-        
-      </div>
-
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">冯唐</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">项飙</span>
-        </div>
-        <div class="clash-type attack-human">人性弱点</div>
-        <div class="clash-content emotion-serious">项飙，你说"意义"比"效率"重要。但你有没有想过：对于一个每月还贷一万五、工资到手两万的人来说，"意义"是一个奢侈品？他需要的不是"存在主义的思考"，是"下个月怎么还贷"。先解决生存问题，再谈意义问题——这个顺序不能颠倒。</div>
-        
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 4 | 碰撞</div>
-    <div class="slide-number">18 / 24</div>
-  </section>
-
-  <section class="slide" data-title="R4 案例">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3: REALITY </div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
-      <div class="cases-container">
-        
-      <div class="reality-case anim-in">
-        <div class="case-header">
-          <div class="case-name neon-orange">日本"失去的三十年"与中产叙事重建</div>
-          <div class="case-source">[来源：日本经济研究]</div>
-        </div>
-        <div class="case-content">1990年日本泡沫破裂后，整整一代日本人经历了"中产叙事破产"。他们被告知"努力工作→好大学→大企业→终身雇佣"的路径会保证中产生活。泡沫破裂后，这个叙事碎了。但经过三十年，日本人发展出了"低欲望社会"的生活哲学——不追求"更多"，而是追求"足够"。无印良品的崛起就是这种哲学的商业化表达。</div>
-        <div class="case-outcome neon-red">代价："低欲望"不是"没有欲望"，而是"重新定义欲望"——从"拥有更多"转向"拥有足够"</div>
-        <div class="case-lesson neon-gold">教训：叙事破产后的重建不是找一个"新叙事"替代"旧叙事"，而是学会"不需要叙事"也能活</div>
-      </div>
-
-      <div class="reality-case anim-in">
-        <div class="case-header">
-          <div class="case-name neon-orange">北欧"简约生活"模式</div>
-          <div class="case-source">[来源：OECD幸福指数报告]</div>
-        </div>
-        <div class="case-content">北欧国家长期位居全球幸福指数前列，但它们的消费水平并不高。丹麦、瑞典的人均住房面积只有美国的60%，汽车保有量只有美国的40%。但它们的工作时间最短、假期最多、社会保障最完善。北欧人的幸福不是来自"消费"，而是来自"安全感"——知道失业了有保障、生病了有医疗、老了有养老金。</div>
-        <div class="case-outcome neon-red">代价：幸福与消费水平不是正相关，安全感和社会保障才是幸福的基础</div>
-        <div class="case-lesson neon-gold">教训：中产叙事破产后，真正需要重建的不是"消费叙事"，而是"社会保障"——当你知道"底线不会崩"，你就不会那么焦虑</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 4 | 案例</div>
-    <div class="slide-number">19 / 24</div>
-  </section>
-
-  <section class="slide" data-title="R4 代价">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 4: COST</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
-      
-      <div class="cost-discussion anim-in">
-        <div class="cost-scenario neon-gold">如果中产集体放弃"向上流动"的叙事，转向"足够就好"的生活哲学，会发生什么？</div>
-        <div class="cost-list">
-          
-          <div class="cost-item">
-            <div class="cost-name neon-red">经济增速的结构性放缓</div>
-            <div class="cost-analysis">消费驱动的经济增长需要"欲望"——人们想要"更好的"东西，才会持续消费。如果中产集体转向"足够就好"，消费升级的动力消失，经济增长会从"消费驱动"转向"投资驱动"或"出口驱动"——但这两种模式都有天花板。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">创新能力的潜在下降</div>
-            <div class="cost-analysis">"向上流动"的欲望是创新的重要驱动力。当人们不再"想过得更好"，他们还会"想做出更好的东西"吗？这是一个开放的问题。北欧的经验表明：社会保障完善的社会也可以有很强的创新能力，但前提是教育和科研投入足够高。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">代际冲突的加剧</div>
-            <div class="cost-analysis">"主动破产"的主要是70后、80后中产。但他们的子女——00后、10后——可能不接受"降维"的生活。"你放弃了，但我不想放弃"——这种代际冲突可能比中产叙事破产本身更具破坏性。</div>
-          </div>
-        </div>
-        <div class="worst-case">
-          <div class="worst-label neon-red">最坏情况</div>
-          <div class="worst-content">中产集体放弃"向上流动"后，社会失去"中间层的活力"——既没有富人的资源，也没有穷人的韧性，只剩下"够了就好"的惰性。这不是"简约生活"，这是"社会活力的衰退"。</div>
-        </div>
-        
-          <div class="survivor-bias">
-            <div class="survivor-label neon-purple">幸存者偏差</div>
-            <div class="survivor-content">你只看到北欧"简约生活"的幸福指数，看不到北欧模式的前提条件——高税收、高福利、小国寡民、文化同质性。中国不具备这些条件，照搬北欧模式可能"画虎不成反类犬"。</div>
-          </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 4 | 代价</div>
-    <div class="slide-number">20 / 24</div>
-  </section>
-
-  <section class="slide" data-title="R4 人性">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
-      
-      <div class="human-nature anim-in">
-        <div class="human-question neon-purple">人真的能"不需要叙事"活着吗？</div>
-        <div class="human-analysis">人类是"叙事性动物"——我们通过故事来理解世界、组织经验、赋予意义。没有叙事的人生是不可想象的。问题不是"要不要叙事"，而是"要什么样的叙事"。
-
-旧的中产叙事是"向上流动"——努力→买房→教育→阶层跃升。这个叙事破产后，人们需要一个新的故事来解释"我为什么活着"。
-
-"主动破产"提供的是一种"反叙事"——"我不需要证明自己"。但"反叙事"本身也是一种叙事。真正的问题是：这个"反叙事"能支撑多久？当新鲜感过去，当"简约生活"变成"无聊生活"，人们会不会重新渴望"意义"？
-
-心理学研究表明：人需要三种基本心理需求——自主感（我可以选择）、胜任感（我能做到）、归属感（我被接纳）。旧的中产叙事满足了"胜任感"但牺牲了"自主感"。新的叙事需要同时满足这三种需求。</div>
-        <div class="human-examples">
-          <div class="examples-label">现实例子</div>
-          
-          <div class="example-item">• 日本"御宅族"——放弃社会竞争，转向个人兴趣。但很多人在中年后陷入"意义危机"——"我这些年到底在干什么？"</div>
-          <div class="example-item">• "躺平"运动——作为一种"反叙事"引发共鸣，但持续时间有限——大多数人最终还是要"站起来"</div>
-          <div class="example-item">• "数字游民"——一种新的生活方式叙事，但只有少数人能真正实现——它本身也是一种"精英叙事"</div>
-        </div>
-        <div class="human-conclusion neon-gold">人不能"不需要叙事"活着，但可以选择"什么样的叙事"。旧的中产叙事是"被设计的"——它服务于房地产商、教育机构和金融系统的利益。新的叙事应该是"自选的"——它服务于你自己的价值观和人生目标。关键不是"放弃叙事"，而是"夺回叙事权"。</div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 4 | 人性</div>
-    <div class="slide-number">21 / 24</div>
-  </section>
-
-  <section class="slide" data-title="R4 升级">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
-      
-      <div class="cognitive-upgrade anim-in">
-        <div class="upgrade-comparison">
-          <div class="old-thinking">
-            <div class="thinking-label neon-red">旧思维</div>
-            <div class="thinking-content">中产叙事破产了，需要找一个"新的宏大叙事"来替代</div>
-          </div>
-          <div class="upgrade-arrow">→</div>
-          <div class="new-thinking">
-            <div class="thinking-label neon-green">新思维</div>
-            <div class="thinking-content">不需要"宏大叙事"。需要的是"小叙事"——属于你自己的、不被商业系统绑架的、关于"什么样的生活对我有意义"的个人叙事。它可以很小：种花、做饭、陪孩子、读一本好书。</div>
-          </div>
-        </div>
-        <div class="complexity">
-          <div class="complexity-label neon-cyan">复杂性</div>
-          <div class="complexity-content">"小叙事"不是"逃避"。它需要勇气——因为社会评价体系仍然是"大叙事"主导的。你选择"小叙事"，意味着你要承受"别人觉得你失败"的压力。但如果你能承受这个压力，你会发现："小叙事"比"大叙事"更真实、更持久、更属于你自己。</div>
-        </div>
-        <div class="actionable">
-          <div class="actionable-label neon-gold">可执行洞见</div>
-          <div class="actionable-content">第一步：停止用"社会标准"评价自己的生活。你是不是中产、你有没有"成功"——这些问题的答案不应该由别人定义。
-
-第二步：找到你的"小叙事"。什么是你真正喜欢做的？不是"应该做的"，不是"做了能让简历好看的"，是"做了让你觉得活着真好"的。
-
-第三步：制度层面，推动个人破产立法、消费者保护法完善、教育评价体系改革——让"退出"不再等于"失败"，让"选择不同的路"不再等于"没有路"。</div>
-        </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 4 | 升级</div>
-    <div class="slide-number">22 / 24</div>
-  </section>
-
-  <section class="slide" data-title="最终洞见">
-    <div class="slide-content">
-      <div class="section-label anim-in">FINAL INSIGHT</div>
-      <div class="quote-large anim-in anim-delay-1">中产叙事的破产不是个人的失败，是系统的骗局被揭穿。六个钱包换来的不是安居乐业，是终身债务；身份认同消费买的不是品质生活，是焦虑的牢笼。"主动破产"不是投降，是清醒——当你不再为幻觉买单，你才真正开始活着。真正的富足不是拥有更多，而是需要更少。夺回叙事权，定义自己的"足够"，这比任何中产身份都更值钱。</div>
-    </div>
-    <div class="deck-footer">最终洞见</div>
-    <div class="slide-number">23 / 24</div>
-  </section>
-
-  <section class="slide" data-title="开放问题">
-    <div class="slide-content">
-      <div class="section-label anim-in">OPEN QUESTIONS</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">留给读者的问题</h3>
-      <div class="headline-item anim-in"><strong>Q1:</strong> 如果"中产身份"本身就是消费陷阱，那么"阶层"这个概念还有意义吗？</div>
-<div class="headline-item anim-in"><strong>Q2:</strong> "主动破产"是有门槛的——那些已经被债务锁死的人，有没有合法的退出通道？</div>
-<div class="headline-item anim-in"><strong>Q3:</strong> 当一代人集体放弃"向上流动"，下一代人的社会流动性会改善还是恶化？</div>
-    </div>
-    <div class="deck-footer">开放问题</div>
-    <div class="slide-number">24 / 24</div>
-  </section>
-
-<div class="toc-backdrop" id="tocBackdrop"></div>
-<div class="toc-panel" id="tocPanel">
-<div class="toc-title">目录</div>
-<div id="tocList"></div>
-</div>
-<div class="nav-bar">
-<div class="nav-left">
-<button class="nav-btn" id="btnToc">☰ 目录</button>
-<button class="nav-btn" id="btnPrev">◀ 上一页</button>
-<button class="nav-btn" id="btnNext">下一页 ▶</button>
-</div>
-<div class="nav-right">
-<span class="nav-title" id="slideTitle"></span>
-<span class="nav-counter" id="slideCounter"></span>
-</div>
-</div>
-<div class="nav-dots" id="navDots"></div>
+  </div>
 </div>
 
+
+<div class="slide" id="s2">
+  <div class="content">
+    <div class="head-block">
+      <div class="head-title">中产叙事的真相</div>
+      <div class="head-tag">Round 1</div>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide" id="s3">
+  <div class="content">
+    <div class="head-block">
+      <div class="head-title">各方立场</div>
+    </div>
+    <div class="col-grid">
+        <div class="col">
+          <div class="col-num">吴</div>
+          <div class="col-title">吴晓波</div>
+          <div class="col-body">中国经济过去四十年有一个核心叙事：努力工作、买房置地、子女教育向上流动，你就属于中产。这个叙事在2015年之前基本成立——房价每年涨10%-15%，工资也在涨，教育投资回报率看得见。 但2022年之后，这个叙事全面破产了。2019-2021年高位接盘的那批"刚需中产"，房价腰斩，法拍房暴增300%。...</div>
+        </div>
+        <div class="col">
+          <div class="col-num">项</div>
+          <div class="col-title">项飙</div>
+          <div class="col-body">我更关心的是：这个"中产叙事"是怎么被建构起来的？ 中产身份从来不是一个经济概念，它是一种社会表演。你住什么小区、开什么车、孩子上什么学校、假期去哪里旅游——这些不是消费，是身份标识。你不是在"买东西"，你是在"证明自己是中产"。 2026年开始流行的"主动破产"恰恰证明了这一点：所谓"剥离身份认同...</div>
+        </div>
+        <div class="col">
+          <div class="col-num">冯</div>
+          <div class="col-title">冯唐</div>
+          <div class="col-body">作为写过小说也做过生意的人，我要说一个残酷的真相：中产叙事不是自然形成的，它是被精心设计的。 房地产商卖的不是房子，是"阶层跃升"的叙事。教育机构卖的不是知识，是"不能输在起跑线"的焦虑。金融机构卖的不是贷款，是"提前享受中产生活"的幻觉。 整个链条的商业逻辑非常清晰：先用叙事制造焦虑，再用信贷消除...</div>
+        </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide" id="s5">
+  <div class="content">
+    <div class="head-block">
+      <div class="head-title">债务陷阱的心理机制</div>
+      <div class="head-tag">Round 2</div>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide" id="s8">
+  <div class="content">
+    <div class="head-block">
+      <div class="head-title">"主动破产"的合理性</div>
+      <div class="head-tag">Round 3</div>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide" id="s10">
+  <div class="content">
+    <div class="quote">
+      中产生活是一个"身份消费→债务锁定→被迫维持"的死循环。"主动破产"不是失败，是打破循环的第一步。真正的富足不是"拥有更...
+      <span class="highlight">多"，而是"需要更少"。</span>
+    </div>
+    <div class="body">
+      <p>"主动破产"不是万能药。它对有积蓄、有技能、有退路的中产有效，但对那些已经被债务锁死的人可能来不及。而且，集体降维消费可能引发通缩螺旋，让"主动破产"变成"被动破产"。关键不是"要不要降维"，而是"在什么条件下降维是安全的"。</p>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide" id="s11">
+  <div class="content">
+    <div class="head-block">
+      <div class="head-title">重建生活意义</div>
+      <div class="head-tag">Round 4</div>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide" id="s13">
+  <div class="content">
+    <div class="quote">
+      不需要"宏大叙事"。需要的是"小叙事"——属于你自己的、不被商业系统绑架的、关于"什么样的生活对我有意义"的个人叙事。它...
+      <span class="highlight">可以很小：种花、做饭、陪孩子、读一本好书。</span>
+    </div>
+    <div class="body">
+      <p>"小叙事"不是"逃避"。它需要勇气——因为社会评价体系仍然是"大叙事"主导的。你选择"小叙事"，意味着你要承受"别人觉得你失败"的压力。但如果你能承受这个压力，你会发现："小叙事"比"大叙事"更真实、更持久、更属于你自己。</p>
+    </div>
+  </div>
+</div>
+
+<div id="nav">
+  <button class="nav-btn" id="prevBtn">◀</button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn">▶</button>
+</div>
+<div id="counter">1 / 1</div>
 <script>
 (function(){
-var deck=document.getElementById("deck");
-var slides=deck.querySelectorAll(".slide");
-var total=slides.length;
-var cur=0;
-var dots=document.getElementById("navDots");
-var tocList=document.getElementById("tocList");
-var titleEl=document.getElementById("slideTitle");
-var counterEl=document.getElementById("slideCounter");
-var tocPanel=document.getElementById("tocPanel");
-var tocBackdrop=document.getElementById("tocBackdrop");
-var progressBar=document.getElementById("progressBar");
-
-for(var i=0;i<total;i++){
-  var d=document.createElement("button");
-  d.className="nd";
-  d.setAttribute("data-i",i);
-  d.onclick=(function(idx){return function(){go(idx)}})(i);
-  dots.appendChild(d);
-  var t=document.createElement("div");
-  t.className="toc-item";
-  t.setAttribute("data-i",i);
-  t.innerHTML='<span class="toc-label">'+(slides[i].getAttribute("data-title")||"Slide "+(i+1))+'</span><span class="toc-page">'+String(i+1).padStart(2,"0")+'</span>';
-  t.onclick=(function(idx){return function(){go(idx);closeTOC()}})(i);
-  tocList.appendChild(t);
-}
-
-function go(n){
-  if(n<0||n>=total)return;
-  slides[cur].classList.remove("active");
-  dots.children[cur].classList.remove("active");
-  tocList.children[cur].classList.remove("active");
-  cur=n;
-  slides[cur].classList.add("active");
-  dots.children[cur].classList.add("active");
-  tocList.children[cur].classList.add("active");
-  titleEl.textContent=slides[cur].getAttribute("data-title")||"";
-  counterEl.textContent=(cur+1)+" / "+total;
-  progressBar.style.width=((cur+1)/total*100)+"%";
-  slides[cur].scrollTop=0;
-}
-function toggleTOC(){tocPanel.classList.toggle("open");tocBackdrop.classList.toggle("open")}
-function closeTOC(){tocPanel.classList.remove("open");tocBackdrop.classList.remove("open")}
-
-document.addEventListener("keydown",function(e){
-  if(e.key==="ArrowRight"||e.key==="ArrowDown"||e.key===" "||e.key==="PageDown"){e.preventDefault();go(cur+1)}
-  else if(e.key==="ArrowLeft"||e.key==="ArrowUp"||e.key==="PageUp"){e.preventDefault();go(cur-1)}
-  else if(e.key==="Home"){e.preventDefault();go(0)}
-  else if(e.key==="End"){e.preventDefault();go(total-1)}
-  else if(e.key==="Escape"){closeTOC();go(0)}
-  else if(e.key==="t"||e.key==="T"){toggleTOC()}
-});
-var wheelTimer=null;
-deck.addEventListener("wheel",function(e){
-  e.preventDefault();
-  if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},400)}
-  if(e.deltaY>0)go(cur+1);
-  else if(e.deltaY<0)go(cur-1);
-},{passive:false});
-var touchX=0,touchY=0;
-deck.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX;touchY=e.touches[0].clientY});
-deck.addEventListener("touchend",function(e){
-  var dx=touchX-e.changedTouches[0].clientX,dy=touchY-e.changedTouches[0].clientY;
-  if(Math.abs(dy)>Math.abs(dx)){if(dy>50)go(cur+1);else if(dy<-50)go(cur-1)}
-  else{if(dx>50)go(cur+1);else if(dx<-50)go(cur-1)}
-});
-deck.addEventListener("click",function(e){
-  if(e.target.closest(".nav-btn,.nd,.toc-item,.toc-panel,.toc-backdrop"))return;
-  var x=e.clientX/window.innerWidth;
-  if(x<0.3)go(cur-1);else if(x>0.7)go(cur+1);
-});
-document.getElementById("btnToc").addEventListener("click",function(e){e.stopPropagation();toggleTOC()});
-document.getElementById("btnPrev").addEventListener("click",function(e){e.stopPropagation();go(cur-1)});
-document.getElementById("btnNext").addEventListener("click",function(e){e.stopPropagation();go(cur+1)});
-tocBackdrop.addEventListener("click",closeTOC);
-go(0);
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let cur = 0;
+  const dotsContainer = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progress');
+  let wheelTimer = null;
+  
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => go(i);
+    dotsContainer.appendChild(dot);
+  });
+  
+  function go(n) {
+    if (n < 0 || n >= total) return;
+    slides[cur].classList.remove('active');
+    dotsContainer.children[cur].classList.remove('active');
+    cur = n;
+    slides[cur].classList.add('active');
+    dotsContainer.children[cur].classList.add('active');
+    counter.textContent = (cur + 1) + ' / ' + total;
+    const pct = Math.min(100, ((cur + 1) / total) * 100);
+    progress.style.width = pct + '%';
+  }
+  
+  document.getElementById('prevBtn').onclick = () => go(cur - 1);
+  document.getElementById('nextBtn').onclick = () => go(cur + 1);
+  
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      go(cur + 1);
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      go(cur - 1);
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      go(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      go(total - 1);
+    }
+  });
+  
+  document.addEventListener('wheel', e => {
+    e.preventDefault();
+    if (wheelTimer) return;
+    wheelTimer = setTimeout(() => wheelTimer = null, 400);
+    if (e.deltaY > 0) go(cur + 1);
+    else if (e.deltaY < 0) go(cur - 1);
+  }, { passive: false });
+  
+  document.body.addEventListener('click', e => {
+    if (e.target.closest('.nav-btn, .dot, .expert-card, .question-card, .clash-block, .insight-block, .round-block, .article-row, .conclusion-card')) return;
+    go(cur + 1);
+  });
+  
+  document.querySelectorAll('.question-header').forEach(header => {
+    header.onclick = e => {
+      e.stopPropagation();
+      header.parentElement.classList.toggle('open');
+    };
+  });
+  
+  go(0);
 })();
 </script>
 </body>

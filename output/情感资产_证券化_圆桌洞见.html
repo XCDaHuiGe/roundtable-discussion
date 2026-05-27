@@ -2,893 +2,957 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>情感资产的证券化 圆桌洞见</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>情感资产的证券化</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Serif+SC:wght@300;400;500;600;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{
-    /* ============ 主题色(默认:🖋 墨水经典) ============ */
-    --ink:#0a0a0b;
-    --ink-rgb:10,10,11;
-    --paper:#f1efea;
-    --paper-rgb:241,239,234;
-    --paper-tint:#e8e5de;
-    --ink-tint:#18181a;
-    --text-dim:rgba(241,239,234,0.5);
-
-    /* ============ 强调色 ============ */
-    --accent:#c23b22;
-    --accent-rgb:194,59,34;
-    --gold:#d4a843;
-    --gold-rgb:212,168,67;
-    --blue:#4a6a9a;
-    --purple:#8a4aaa;
-    --green:#3a8a5c;
-    --cyan:#4a9a9a;
-    --orange:#d4843a;
-
-    /* ============ 字体(跨主题固定) ============ */
-    --mono:"IBM Plex Mono","SF Mono",monospace;
-    --serif-zh:"Noto Serif SC","Source Han Serif SC","STSong",serif;
-    --sans-zh:"Noto Sans SC","Source Han Sans SC","PingFang SC",sans-serif;
-
-    /* ============ 间距 ============ */
-    --radius:10px;
-    --ease:cubic-bezier(.4,0,.2,1);
-  }
-
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans-zh);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-
-  /* ============ Deck 容器 ============ */
-  #deck{position:relative;width:100vw;height:100vh;overflow:hidden}
-
-  /* ============ 进度条 ============ */
-  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:1000;transition:width .5s var(--ease);box-shadow:0 0 12px rgba(var(--accent-rgb),.3)}
-
-  /* ============ 幻灯片 ============ */
-  .deck{position:relative;width:100%;height:100%}
-  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;overflow:hidden}
-  .slide-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
-  .slide.active{display:flex}
-  .slide.hero{justify-content:center;align-items:center;text-align:center}
-  .slide.title-slide{justify-content:center;align-items:center;text-align:center}
-
-  /* ============ 入场动画(Guizang风格) ============ */
-  [data-anim]{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
-  .slide.active [data-anim]{opacity:1;transform:translateY(0)}
-  .slide.active [data-anim]:nth-child(1){transition-delay:.1s}
-  .slide.active [data-anim]:nth-child(2){transition-delay:.18s}
-  .slide.active [data-anim]:nth-child(3){transition-delay:.26s}
-  .slide.active [data-anim]:nth-child(4){transition-delay:.34s}
-  .slide.active [data-anim]:nth-child(5){transition-delay:.42s}
-  .slide.active [data-anim]:nth-child(6){transition-delay:.5s}
-
-  /* ============ 内容区(book-distillation范式) ============ */
-  .frame{width:100%;max-width:1100px;margin:0 auto;flex:1;display:flex;flex-direction:column}
-  .slide-content{flex:1;display:flex;flex-direction:column}
-
-  /* ============ Magazine Chrome(Guizang风格) ============ */
-  .chrome{display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.5;margin-bottom:3vh}
-  .chrome .left,.chrome .right{display:flex;gap:2em;align-items:center}
-  .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
-
-  /* ============ 底部元数据(render_v8兼容) ============ */
-  .deck-footer{margin-top:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
-  .slide-number{position:absolute;bottom:2vh;right:3vw;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.35)}
-
-  /* ============ Section Label ============ */
-  .section-label{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
-
-  /* ============ 封面 ============ */
-  .cover-badge{display:inline-block;padding:6px 20px;border:1px solid var(--accent);border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4vh}
-  .cover-title{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .cover-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:4vh;line-height:1.8;max-width:600px}
-  .cover-stats{display:flex;gap:4vh;flex-wrap:wrap;justify-content:center}
-  .cover-stat{text-align:center}
-  .cover-stat-num{font-family:var(--mono);font-size:2.5rem;font-weight:900;color:var(--accent)}
-  .cover-stat-label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.5);margin-top:.5vh}
-
-  /* ============ 封面标题(render_v8) ============ */
-  .hero-dark{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;flex:1}
-  .title-main{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .title-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:2vh;line-height:1.8}
-  .gold-line{width:80px;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));margin:3vh auto;border-radius:2px}
-
-  /* ============ 标题系统 ============ */
-  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
-  .h-hero{font-family:var(--serif-zh);font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.2;margin-bottom:3vh}
-  .h-xl{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.4rem,3vw,2.2rem);line-height:1.3;margin-bottom:2vh}
-  .h-lg{font-family:var(--serif-zh);font-weight:600;font-size:clamp(1.1rem,2vw,1.5rem);line-height:1.4;margin-bottom:1.5vh}
-  .h-md{font-weight:600;font-size:1.1rem;margin-bottom:1vh}
-  .lead{font-size:1rem;line-height:1.85;color:rgba(var(--paper-rgb),.8);max-width:700px}
-  .meta-row{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.4);display:flex;gap:2em;flex-wrap:wrap;margin-top:3vh}
-
-  /* ============ 大号引用(render_v8) ============ */
-  .quote-large{font-family:var(--serif-zh);font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:600;line-height:1.6;color:rgba(var(--paper-rgb),.9);max-width:800px;margin:0 auto}
-
-  /* ============ 分割线 ============ */
-  .rule{width:100%;height:1px;background:rgba(var(--paper-rgb),.15);margin:3vh 0}
-
-  /* ============ 标签 ============ */
-  .tag{display:inline-block;padding:4px 12px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;margin:3px}
-  .tag-gold{background:rgba(var(--gold-rgb),.15);color:var(--gold);border:1px solid rgba(var(--gold-rgb),.2)}
-  .tag-red{background:rgba(var(--accent-rgb),.15);color:var(--accent);border:1px solid rgba(var(--accent-rgb),.2)}
-  .tag-blue{background:rgba(74,106,154,.15);color:var(--blue);border:1px solid rgba(74,106,154,.2)}
-  .tag-purple{background:rgba(138,74,170,.15);color:var(--purple);border:1px solid rgba(138,74,170,.2)}
-  .tag-green{background:rgba(58,138,92,.15);color:var(--green);border:1px solid rgba(58,138,92,.2)}
-
-  /* ============ 霓虹强调色(render_v8) ============ */
-  .neon-gold{color:var(--gold)}.neon-red{color:var(--accent)}.neon-cyan{color:var(--cyan)}.neon-purple{color:var(--purple)}.neon-orange{color:var(--orange)}.neon-green{color:var(--green)}
-
-  /* ============ 网格系统 ============ */
-  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:2vh 2vw}
-  @media(max-width:768px){.grid-2{grid-template-columns:1fr}}
-
-  /* ============ 发言块(原生) ============ */
-  .sp{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2.5vw;margin-bottom:2vh;position:relative}
-  .sp::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
-  .sh{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh}
-  .speaker-avatar{width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:var(--ink);background:var(--accent);flex-shrink:0}
-  .sn{font-weight:700;font-size:1rem}
-  .sr{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4);padding:3px 8px;background:rgba(var(--paper-rgb),.06);border-radius:3px}
-  .st{font-size:.95rem;line-height:2;color:rgba(var(--paper-rgb),.85)}
-  .st strong{color:var(--paper);font-weight:700}
-  .st em{color:var(--gold);font-style:normal;font-weight:600}
-
-  /* ============ 碰撞块(原生) ============ */
-  .cb{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;position:relative}
-  .cb::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
-  .cb.blue{border-color:rgba(74,106,154,.3)}.cb.blue::before{background:var(--blue)}
-  .cb.purple{border-color:rgba(138,74,170,.3)}.cb.purple::before{background:var(--purple)}
-  .cb.green{border-color:rgba(58,138,92,.3)}.cb.green::before{background:var(--green)}
-  .cb.orange{border-color:rgba(var(--gold-rgb),.3)}.cb.orange::before{background:var(--gold)}
-  .cl{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;color:var(--accent);font-weight:600}
-  .cl.blue{color:var(--blue)}.cl.purple{color:var(--purple)}.cl.green{color:var(--green)}.cl.orange{color:var(--gold)}
-
-  /* ============ 洞见卡 ============ */
-  .insight-c{background:linear-gradient(135deg,rgba(var(--paper-rgb),.04) 0%,rgba(var(--paper-rgb),.08) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh;position:relative;overflow:hidden}
-  .insight-c::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold))}
-  .insight-q{font-family:var(--serif-zh);font-size:1.1rem;font-weight:700;color:var(--gold);line-height:1.6;margin-bottom:1vh}
-  .insight-a{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.75)}
-
-  /* ============ 卡片 ============ */
-  .card{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
-  .card-num{font-family:var(--mono);font-weight:900;font-size:1.8rem;color:var(--accent);opacity:.4;margin-bottom:1vh}
-  .card-title{font-weight:700;font-size:1rem;margin-bottom:1vh}
-  .card-body{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
-  .card-source{font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);margin-top:1vh}
-
-  /* ============ 专家卡片(render_v8) ============ */
-  .card-rise{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--green)}
-  .card-fall{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--accent)}
-  .speaker-header{display:flex;align-items:center;gap:16px;margin-bottom:2vh}
-  .speaker-name{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem}
-  .speaker-role{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:2px}
-  .expert-profile{display:flex;flex-direction:column;gap:1vh}
-  .profile-item{font-size:.9rem;line-height:1.7;color:rgba(var(--paper-rgb),.8)}
-  .profile-label{color:var(--gold);font-weight:600}
-
-  /* ============ 立场表达(render_v8) ============ */
-  .stance-item{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;border-left:3px solid var(--gold)}
-  .stance-expert{font-family:var(--serif-zh);font-weight:700;font-size:1rem;margin-bottom:1vh}
-  .stance-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
-  .stances-grid{display:flex;flex-direction:column;gap:1.5vh}
-
-  /* ============ 碰撞轮次(render_v8) ============ */
-  .clash-round{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;position:relative}
-  .clash-round::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
-  .clash-header{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh;flex-wrap:wrap}
-  .clash-attacker{font-weight:700;font-size:1rem}
-  .clash-target{font-weight:700;font-size:1rem}
-  .clash-arrow{color:rgba(var(--paper-rgb),.3);font-size:1.2rem}
-  .clash-type{display:inline-block;padding:3px 10px;border-radius:3px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.5vh;font-weight:600}
-  .clash-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
-  .counter-attack{margin-top:2vh;padding-top:2vh;border-top:1px dashed rgba(var(--paper-rgb),.1)}
-  .counter-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .counter-content{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
-  .clash-container{display:flex;flex-direction:column;gap:2vh}
-
-  /* ============ 攻击类型色 ============ */
-  .attack-logic{background:rgba(74,106,154,.15);color:var(--blue)}
-  .attack-interest{background:rgba(var(--accent-rgb),.15);color:var(--accent)}
-  .attack-reality{background:rgba(var(--gold-rgb),.15);color:var(--gold)}
-  .attack-human{background:rgba(138,74,170,.15);color:var(--purple)}
-  .attack-failure{background:rgba(58,138,92,.15);color:var(--green)}
-
-  /* ============ 现实案例(render_v8) ============ */
-  .reality-case{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--orange)}
-  .case-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5vh;flex-wrap:wrap;gap:8px}
-  .case-name{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem}
-  .case-source{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4)}
-  .case-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:1.5vh}
-  .case-outcome{font-size:.9rem;font-weight:600;margin-bottom:1vh}
-  .case-lesson{font-size:.9rem;font-weight:600}
-  .cases-container{display:flex;flex-direction:column;gap:2vh}
-
-  /* ============ 代价讨论(render_v8) ============ */
-  .cost-discussion{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh}
-  .cost-scenario{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem;margin-bottom:2vh}
-  .cost-list{display:flex;flex-direction:column;gap:1.5vh;margin-bottom:2vh}
-  .cost-item{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:1.5vh 2vw;border-left:3px solid var(--accent)}
-  .cost-name{font-weight:700;font-size:.95rem;margin-bottom:.5vh}
-  .cost-analysis{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
-  .worst-case{background:rgba(var(--accent-rgb),.08);border:1px solid rgba(var(--accent-rgb),.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
-  .worst-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .worst-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
-  .survivor-bias{background:rgba(138,74,170,.08);border:1px solid rgba(138,74,170,.15);border-radius:6px;padding:2vh 2vw}
-  .survivor-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .survivor-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
-
-  /* ============ 人性层(render_v8) ============ */
-  .human-nature{background:linear-gradient(135deg,rgba(var(--paper-rgb),.03) 0%,rgba(var(--paper-rgb),.06) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
-  .human-question{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem;margin-bottom:2vh;line-height:1.5}
-  .human-analysis{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:2vh}
-  .human-examples{margin-bottom:2vh}
-  .examples-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1vh;font-weight:600}
-  .example-item{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8);padding:.5vh 0}
-  .human-conclusion{font-size:.95rem;font-weight:600;line-height:1.7}
-
-  /* ============ 认知升级(render_v8) ============ */
-  .cognitive-upgrade{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
-  .upgrade-comparison{display:grid;grid-template-columns:1fr auto 1fr;gap:2vw;align-items:start;margin-bottom:2vh}
-  @media(max-width:768px){.upgrade-comparison{grid-template-columns:1fr}.upgrade-arrow{transform:rotate(90deg)}}
-  .old-thinking,.new-thinking{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:2vh 1.5vw}
-  .old-thinking{border-left:3px solid var(--accent)}
-  .new-thinking{border-left:3px solid var(--green)}
-  .thinking-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .thinking-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
-  .upgrade-arrow{font-size:1.5rem;color:rgba(var(--paper-rgb),.3);display:flex;align-items:center;justify-content:center;padding-top:3vh}
-  .complexity{background:rgba(74,106,154,.08);border:1px solid rgba(74,106,154,.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
-  .complexity-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .complexity-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
-  .actionable{background:rgba(var(--gold-rgb),.08);border:1px solid rgba(var(--gold-rgb),.15);border-radius:6px;padding:2vh 2vw}
-  .actionable-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .actionable-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
-
-  /* ============ 情绪样式 ============ */
-  .emotion-sarcasm{border-left:3px solid var(--purple);padding-left:12px;font-style:italic}
-  .emotion-helplessness{opacity:.75;font-style:italic}
-  .emotion-anger{color:var(--accent);font-weight:600}
-  .emotion-hesitation{opacity:.8;font-style:italic}
-  .emotion-self-deprecation{opacity:.7;font-style:italic}
-  .emotion-cold-laugh{color:var(--purple)}
-  .emotion-silence{opacity:.5;font-style:italic}
-  .emotion-serious{color:rgba(var(--paper-rgb),.85)}
-
-  /* ============ 指标 ============ */
-  .metrics{display:flex;gap:2vw;flex-wrap:wrap;margin-bottom:3vh}
-  .metric{flex:1;min-width:100px;text-align:center;background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 1.5vw}
-  .metric-val{font-family:var(--mono);font-weight:900;font-size:clamp(1.5rem,3vw,2.5rem);color:var(--accent)}
-  .metric-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:.5vh}
-
-  /* ============ 开放问题 ============ */
-  .oq{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
-  .oq-num{font-family:var(--mono);font-weight:900;font-size:1.2rem;color:var(--accent);opacity:.3;margin-bottom:1vh}
-  .oq-text{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
-  .headline-item{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.85);padding:1.5vh 0;border-bottom:1px solid rgba(var(--paper-rgb),.06)}
-  .headline-item:last-child{border-bottom:none}
-  .headline-item strong{color:var(--gold);margin-right:8px}
-
-  /* ============ 引用 ============ */
-  .quote{font-family:var(--serif-zh);font-size:1rem;font-style:italic;line-height:1.8;padding:2vh 2.5vw;border-left:3px solid var(--gold);background:rgba(var(--gold-rgb),.05);margin:2vh 0;color:rgba(var(--paper-rgb),.85)}
-
-  /* ============ TOC ============ */
-  .toc-panel{position:fixed;top:0;left:0;width:min(340px,80vw);height:100vh;background:rgba(var(--ink-rgb),.97);backdrop-filter:blur(20px);z-index:100;transform:translateX(-100%);transition:transform .35s var(--ease);padding:3vh 2.5vw;overflow-y:auto;border-right:1px solid rgba(var(--paper-rgb),.08)}
-  .toc-panel.open{transform:translateX(0)}
-  .toc-title{font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:3vh;padding-bottom:2vh;border-bottom:1px solid rgba(var(--paper-rgb),.1)}
-  .toc-item{display:flex;justify-content:space-between;padding:1.2vh 1.5vw;margin-bottom:.5vh;cursor:pointer;border-radius:6px;border-left:2px solid transparent;font-size:.9rem;color:rgba(var(--paper-rgb),.7);transition:all .2s}
-  .toc-item:hover{background:rgba(var(--paper-rgb),.06);color:var(--paper)}
-  .toc-item.active{background:rgba(var(--paper-rgb),.08);color:var(--accent);border-left-color:var(--accent);font-weight:600}
-  .toc-label{flex:1}
-  .toc-page{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.35)}
-  .toc-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;opacity:0;pointer-events:none;transition:opacity .3s}
-  .toc-backdrop.open{opacity:1;pointer-events:auto}
-
-  /* ============ 导航栏 ============ */
-  .nav-bar{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 3vw;background:rgba(var(--ink-rgb),.9);backdrop-filter:blur(10px);z-index:50;border-top:1px solid rgba(var(--paper-rgb),.06)}
-  .nav-left,.nav-right{display:flex;align-items:center;gap:12px}
-  .nav-btn{background:none;border:1px solid rgba(var(--paper-rgb),.12);color:rgba(var(--paper-rgb),.7);padding:8px 16px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;cursor:pointer;transition:all .2s}
-  .nav-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(var(--accent-rgb),.1)}
-  .nav-title{font-size:12px;color:rgba(var(--paper-rgb),.5);max-width:40vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .nav-counter{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.4)}
-
-  /* ============ 导航点 ============ */
-  .nav-dots{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:6px}
-  .nd{width:6px;height:6px;border-radius:50%;background:rgba(var(--paper-rgb),.15);cursor:pointer;transition:all .3s var(--ease);border:none;padding:0}
-  .nd.active{background:var(--accent);height:20px;border-radius:3px;box-shadow:0 0 8px rgba(var(--accent-rgb),.4)}
-  .nd:hover{background:rgba(var(--paper-rgb),.4)}
-
-  /* ============ 入场动画延迟(render_v8兼容) ============ */
-  .anim-in{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
-  .slide.active .anim-in{opacity:1;transform:translateY(0)}
-  .slide.active .anim-in:nth-child(1){transition-delay:.1s}
-  .slide.active .anim-in:nth-child(2){transition-delay:.18s}
-  .slide.active .anim-in:nth-child(3){transition-delay:.26s}
-  .slide.active .anim-in:nth-child(4){transition-delay:.34s}
-  .slide.active .anim-in:nth-child(5){transition-delay:.42s}
-  .slide.active .anim-in:nth-child(6){transition-delay:.5s}
-  .anim-delay-1{transition-delay:.18s !important}
-  .anim-delay-2{transition-delay:.26s !important}
-  .anim-delay-3{transition-delay:.34s !important}
-  .anim-delay-4{transition-delay:.42s !important}
-  .anim-delay-5{transition-delay:.5s !important}
-  .anim-delay-6{transition-delay:.58s !important}
-
-  /* ============ 响应式 ============ */
-  @media(max-width:1024px){.slide{padding:4vh 5vw 8vh}}
-  @media(max-width:768px){
-    .slide{padding:3vh 4vw 7vh}
-    .cover-stats{gap:2vh}
-    .metrics{flex-direction:column}
-    .nav-dots,.nav-title{display:none}
-    .nav-bar{padding:0 2vw}
-  }
+:root {
+  --bg: #f5f5f0;
+  --paper: #fffef9;
+  --paper-warm: #faf8f3;
+  --paper-card: rgba(255,254,249,0.94);
+  --ink: #2d2d2d;
+  --ink-dark: #1a1a1a;
+  --ink-light: #4a4a4a;
+  --soft: #7a7a7a;
+  --muted: #9a9a9a;
+  --accent: #6b8e9f;
+  --accent-dark: #4a7c8b;
+  --accent-light: rgba(107,142,159,0.1);
+  --accent-glow: rgba(107,142,159,0.18);
+  --line: rgba(45,45,45,0.08);
+  --line-dark: rgba(45,45,45,0.12);
+  --green: #4a7c59;
+  --green-light: rgba(74,124,89,0.06);
+  --green-dark: #2d5a27;
+  --red: #c44536;
+  --red-light: rgba(196,69,54,0.06);
+  --serif: 'Noto Serif SC', Georgia, 'Times New Roman', serif;
+  --sans: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  font-family: var(--sans);
+  color: var(--ink);
+  overflow-x: hidden;
+  overflow:hidden;
+  scroll-snap-type: y mandatory;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.slide {
+  height: 100vh;
+  overflow:hidden;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  padding: 72px 96px;
+  position: relative;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.slide::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse 100% 60% at 50% -30%, rgba(107,142,159,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 50% at 100% 100%, rgba(107,142,159,0.04) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+.slide::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, 
+    rgba(255,254,249,0.15) 0%, 
+    transparent 30%, 
+    transparent 70%, 
+    rgba(245,245,240,0.1) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+.slide.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.slide-cover {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: 
+    linear-gradient(135deg, rgba(107,142,159,0.03) 0%, transparent 60%),
+    linear-gradient(225deg, rgba(255,254,249,0.5) 0%, transparent 50%),
+    var(--bg);
+}
+.slide-white { background: var(--bg); position: relative; }
+.frame { position: relative; z-index: 3; max-width: 880px; margin: 0 auto; width: 100%; }
+.cover {
+  text-align: center;
+}
+.cover-date {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.25em;
+  margin-bottom: 36px;
+  font-weight: 500;
+  animation: fadeInDown 0.8s ease forwards;
+  animation-delay: 0.1s;
+  opacity: 0;
+}
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.cover-title {
+  font-family: var(--serif);
+  font-size: clamp(52px, 9vw, 108px);
+  font-weight: 900;
+  line-height: 1.02;
+  margin-bottom: 32px;
+  letter-spacing: -0.03em;
+  color: var(--ink-dark);
+  background: linear-gradient(135deg, var(--ink-dark) 0%, var(--ink-light) 40%, var(--accent-dark) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: fadeInUp 1s ease forwards;
+  animation-delay: 0.2s;
+  opacity: 0;
+}
+.cover-meta {
+  font-size: 18px;
+  color: var(--soft);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 64px;
+  line-height: 1.7;
+  animation: fadeInUp 1s ease forwards;
+  animation-delay: 0.35s;
+  opacity: 0;
+}
+.cover-meta span:not(:last-child)::after {
+  content: '·';
+  margin-left: 16px;
+  color: var(--muted);
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.cover-stats {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 56px;
+  animation: fadeInUp 1s ease forwards;
+  animation-delay: 0.5s;
+  opacity: 0;
+}
+.cover-stat {
+  text-align: center;
+  padding: 0 44px;
+  position: relative;
+}
+.cover-stat:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 52px;
+  background: linear-gradient(180deg, transparent 0%, var(--line-dark) 50%, transparent 100%);
+}
+.cover-stat-num {
+  font-family: var(--serif);
+  font-size: 64px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--accent);
+  text-shadow: 0 2px 12px rgba(107,142,159,0.15);
+}
+.cover-stat-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-top: 14px;
+  font-weight: 500;
+}
+.experts-section {
+  position: relative;
+  z-index: 3;
+  max-width: 960px;
+  margin: 0 auto;
+  width: 100%;
+}
+.section-header {
+  margin-bottom: 44px;
+  animation: fadeInUp 0.8s ease forwards;
+  animation-delay: 0.1s;
+  opacity: 0;
+}
+.section-tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 14px;
+  padding: 7px 16px;
+  background: var(--accent-light);
+  border-radius: 4px;
+  border: 1px solid rgba(107,142,159,0.15);
+}
+.section-title {
+  font-family: var(--serif);
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ink-dark);
+}
+.experts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.expert-card {
+  background: var(--paper-card);
+  border-radius: 20px;
+  padding: 32px 24px;
+  text-align: center;
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--line);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.02);
+}
+.expert-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-dark) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.expert-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+.expert-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 
+    0 20px 60px rgba(107,142,159,0.12),
+    0 8px 24px rgba(0,0,0,0.04);
+  border-color: var(--accent-light);
+}
+.expert-card:hover::before {
+  opacity: 1;
+}
+.expert-card:nth-child(1) { animation: fadeInUp 0.6s ease forwards; animation-delay: 0.15s; opacity: 0; }
+.expert-card:nth-child(2) { animation: fadeInUp 0.6s ease forwards; animation-delay: 0.25s; opacity: 0; }
+.expert-card:nth-child(3) { animation: fadeInUp 0.6s ease forwards; animation-delay: 0.35s; opacity: 0; }
+.expert-card:nth-child(4) { animation: fadeInUp 0.6s ease forwards; animation-delay: 0.45s; opacity: 0; }
+.expert-card:nth-child(5) { animation: fadeInUp 0.6s ease forwards; animation-delay: 0.55s; opacity: 0; }
+.expert-card:nth-child(6) { animation: fadeInUp 0.6s ease forwards; animation-delay: 0.65s; opacity: 0; }
+.expert-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 800;
+  color: white;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+  box-shadow: 0 8px 24px rgba(107,142,159,0.25);
+  transition: all 0.4s ease;
+  position: relative;
+  z-index: 1;
+}
+.expert-avatar::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  background: linear-gradient(135deg, var(--accent) 0%, transparent 50%) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.expert-card:hover .expert-avatar {
+  transform: scale(1.05);
+  box-shadow: 0 12px 32px rgba(107,142,159,0.35);
+}
+.expert-card:hover .expert-avatar::after {
+  opacity: 1;
+}
+.expert-card:nth-child(2) .expert-avatar { background: linear-gradient(135deg, #89a8b5 0%, #6b8e9f 100%); }
+.expert-card:nth-child(3) .expert-avatar { background: linear-gradient(135deg, #a8c5d1 0%, #89a8b5 100%); }
+.expert-card:nth-child(4) .expert-avatar { background: linear-gradient(135deg, #5a8a9a 0%, #4a7a8a 100%); }
+.expert-card:nth-child(5) .expert-avatar { background: linear-gradient(135deg, #7a9aaa 0%, #5a8a9a 100%); }
+.expert-card:nth-child(6) .expert-avatar { background: linear-gradient(135deg, #9ab5c1 0%, #7a9aaa 100%); }
+.expert-info { position: relative; z-index: 1; }
+.expert-name { font-weight: 700; font-size: 17px; margin-bottom: 6px; color: var(--ink-dark); letter-spacing: -0.01em; }
+.expert-role { font-size: 13px; color: var(--soft); line-height: 1.5; }
+.note-section {
+  position: relative;
+  z-index: 3;
+  max-width: 920px;
+  margin: 0 auto;
+  width: 100%;
+}
+.note-header { margin-bottom: 32px; animation: fadeInUp 0.8s ease forwards; animation-delay: 0.1s; opacity: 0; }
+.note-round {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  font-weight: 600;
+  padding: 7px 14px;
+  background: var(--accent-light);
+  border-radius: 4px;
+  border: 1px solid rgba(107,142,159,0.15);
+}
+.note-question {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.5;
+  margin-bottom: 36px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--line-dark);
+  color: var(--ink-dark);
+  letter-spacing: -0.01em;
+}
+.notes-container { display: flex; flex-direction: column; gap: 20px; }
+.note-entry {
+  background: var(--paper);
+  border-radius: 16px;
+  padding: 28px 32px;
+  box-shadow: 
+    0 2px 16px rgba(0,0,0,0.03),
+    inset 0 0 60px rgba(255,254,249,0.5);
+  border: 1px solid var(--line);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+.note-entry::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+.note-entry:hover {
+  box-shadow: 
+    0 12px 40px rgba(107,142,159,0.08),
+    0 4px 12px rgba(0,0,0,0.02);
+  border-color: var(--accent-light);
+  transform: translateX(4px);
+}
+.note-speaker {
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: var(--ink-dark);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+.note-speaker::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+  box-shadow: 0 2px 8px rgba(107,142,159,0.3);
+}
+.note-content {
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--ink-light);
+  letter-spacing: 0.01em;
+  position: relative;
+  z-index: 1;
+}
+.note-content strong {
+  color: var(--ink-dark);
+  font-weight: 600;
+}
+.clash-block {
+  background: var(--red-light);
+  border-left: 4px solid var(--red);
+  border-radius: 0 16px 16px 0;
+  padding: 28px 32px;
+  margin: 24px 0;
+  position: relative;
+  box-shadow: 
+    inset 4px 0 20px rgba(196,69,54,0.04),
+    0 4px 16px rgba(196,69,54,0.06);
+}
+.clash-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.clash-label::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: var(--red);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.clash-text {
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--ink-dark);
+  letter-spacing: 0.01em;
+}
+.rain-insight {
+  background: var(--green-light);
+  border-left: 4px solid var(--green-dark);
+  padding: 28px 32px;
+  margin-top: 28px;
+  border-radius: 0 16px 16px 0;
+  position: relative;
+  box-shadow: 
+    inset 4px 0 20px rgba(74,124,89,0.04),
+    0 4px 16px rgba(74,124,89,0.06);
+}
+.insight-marker {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--green-dark);
+  margin-bottom: 14px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.insight-marker::before {
+  content: '✦';
+  font-size: 12px;
+}
+.insight-text {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.65;
+  color: var(--ink-dark);
+  letter-spacing: -0.01em;
+}
+.conclusions-section {
+  position: relative;
+  z-index: 3;
+  max-width: 920px;
+  margin: 0 auto;
+  width: 100%;
+}
+.conclusions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-top: 48px;
+}
+.conclusion-item {
+  padding: 36px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--paper);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.02);
+  animation: fadeInUp 0.6s ease forwards;
+  opacity: 0;
+}
+.conclusion-item:nth-child(1) { animation-delay: 0.1s; }
+.conclusion-item:nth-child(2) { animation-delay: 0.2s; }
+.conclusion-item:nth-child(3) { animation-delay: 0.3s; }
+.conclusion-item:nth-child(4) { animation-delay: 0.4s; }
+.conclusion-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+.conclusion-item::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-dark) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.conclusion-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 
+    0 16px 48px rgba(107,142,159,0.1),
+    0 6px 16px rgba(0,0,0,0.03);
+  border-color: var(--accent-light);
+}
+.conclusion-item:hover::after {
+  opacity: 1;
+}
+.conclusion-num {
+  font-family: var(--serif);
+  font-size: 56px;
+  font-weight: 900;
+  color: var(--line-dark);
+  margin-bottom: 16px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  position: relative;
+  z-index: 1;
+}
+.conclusion-text {
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--soft);
+  letter-spacing: 0.01em;
+  position: relative;
+  z-index: 1;
+}
+.conclusion-text strong {
+  font-weight: 700;
+  color: var(--ink-dark);
+  font-size: 17px;
+  letter-spacing: -0.01em;
+}
+.question-card {
+  background: var(--paper-card);
+  border-radius: 18px;
+  padding: 28px 32px;
+  margin-bottom: 18px;
+  cursor: pointer;
+  border: 1px solid var(--line);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.6s ease forwards;
+  opacity: 0;
+}
+.question-card:nth-child(1) { animation-delay: 0.1s; }
+.question-card:nth-child(2) { animation-delay: 0.2s; }
+.question-card:nth-child(3) { animation-delay: 0.3s; }
+.question-card:nth-child(4) { animation-delay: 0.4s; }
+.question-card:nth-child(5) { animation-delay: 0.5s; }
+.question-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+.question-card:hover {
+  background: var(--paper);
+  box-shadow: 
+    0 12px 40px rgba(107,142,159,0.1),
+    0 4px 12px rgba(0,0,0,0.02);
+  border-color: var(--accent);
+}
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+.question-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink-dark);
+  letter-spacing: -0.01em;
+}
+.question-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--accent);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+.question-card:hover .question-icon {
+  transform: rotate(90deg);
+  background: var(--accent);
+  color: white;
+}
+.question-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), padding 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--soft);
+  letter-spacing: 0.01em;
+  position: relative;
+  z-index: 1;
+}
+.question-card:hover .question-answer {
+  max-height: 300px;
+  padding-top: 20px;
+}
+.final-conclusion {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  animation: fadeInUp 0.8s ease forwards;
+  animation-delay: 0.2s;
+  opacity: 0;
+}
+.final-conclusion-text {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.65;
+  color: var(--ink-dark);
+  letter-spacing: -0.01em;
+  padding: 48px;
+  background: var(--paper);
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+}
+.final-conclusion-text::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+.final-conclusion-text::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-dark) 100%);
+  border-radius: 2px;
+}
+#nav {
+  position: fixed;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  z-index: 100;
+  background: var(--paper);
+  padding: 14px 28px;
+  border-radius: 100px;
+  box-shadow: 
+    0 8px 32px rgba(107,142,159,0.16),
+    0 2px 8px rgba(0,0,0,0.04);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--line);
+}
+.nav-btn {
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: var(--accent-light);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--accent);
+  border-radius: 50%;
+  transition: all 0.25s ease;
+}
+.nav-btn:hover {
+  background: var(--accent);
+  color: white;
+  transform: scale(1.05);
+}
+.dots { display: flex; gap: 8px; }
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--line-dark);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.dot:hover { background: var(--accent); opacity: 0.7; }
+.dot.active {
+  background: var(--accent);
+  width: 28px;
+  border-radius: 4px;
+}
+#counter {
+  position: fixed;
+  top: 32px;
+  right: 40px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+  z-index: 100;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  background: var(--paper);
+  padding: 8px 16px;
+  border-radius: 100px;
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--line);
+}
+#progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-dark) 100%);
+  width: 0;
+  z-index: 1000;
+  transition: width 0.35s ease;
+  box-shadow: 0 0 12px rgba(107,142,159,0.4);
+}
+@media (max-width: 1024px) {
+  .slide { padding: 56px 64px; }
+  .experts-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .conclusions { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .slide { padding: 40px 28px; }
+  .cover-title { font-size: 44px; }
+  .cover-stats { gap: 0; flex-wrap: wrap; }
+  .cover-stat { padding: 0 24px; }
+  .cover-stat-num { font-size: 48px; }
+  .experts-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .section-title { font-size: 28px; }
+  .note-question { font-size: 22px; }
+  .note-entry { padding: 20px 24px; }
+  .conclusion-item { padding: 28px; }
+  #nav { padding: 12px 20px; gap: 14px; }
+  #counter { top: 20px; right: 24px; }
+}
+@media (max-width: 480px) {
+  .experts-grid { grid-template-columns: 1fr; }
+  .cover-stats { flex-direction: column; gap: 24px; }
+  .cover-stat:not(:last-child)::after { display: none; }
+  .conclusions { gap: 16px; }
+}
 </style>
 </head>
 <body>
-<div class="deck" id="deck">
-<div class="progress-bar" id="progressBar"></div>
+<div id="progress"></div>
 
-
-  <section class="slide hero active" data-title="封面">
-    <div class="slide-content hero-dark">
-      <div class="section-label anim-in">ROUNDTABLE DISCUSSION V8.0</div>
-      <h1 class="title-main anim-in anim-delay-1">情感资产的证券化</h1>
-      <div class="title-sub anim-in anim-delay-2">文学IP的情绪共鸣如何被金融模型精准捕获与透支？</div>
-      <div class="gold-line anim-in anim-delay-3"></div>
-      <p style="font-size:14px;color:var(--text-dim);letter-spacing:0.1em;" class="anim-in anim-delay-4">从知识讨论到生存博弈</p>
-    </div>
-    <div class="deck-footer">情感资产的证券化 | V8级圆桌洞见</div>
-    <div class="slide-number">01 / 17</div>
-  </section>
-
-  <section class="slide" data-title="专家档案(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">EXPERT PROFILES (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
-      <div class="grid-2">
-        
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#c23b22">吴</div>
-          <div>
-            <div class="speaker-name neon-gold">吴晓波</div>
-            <div class="speaker-role">财经作家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>商业趋势观察者，相信资本是文化传播的放大器</div><div class="profile-item"><span class="profile-label">利益相关：</span>阅文集团IP证券化的商业模式创新</div><div class="profile-item"><span class="profile-label">恐惧：</span>文化价值被金融逻辑稀释</div><div class="profile-item"><span class="profile-label">偏见：</span>对商业化可能过于乐观</div>
-        </div>
-      </div>
-
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#8a2a4a">纳</div>
-          <div>
-            <div class="speaker-name neon-gold">纳西姆·塔勒布</div>
-            <div class="speaker-role">风险管理专家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>反脆弱性思维：有些系统从冲击中获益</div><div class="profile-item"><span class="profile-label">利益相关：</span>IP证券化的尾部风险与流动性幻觉</div><div class="profile-item"><span class="profile-label">恐惧：</span>IP价值依赖历史数据，无法预测黑天鹅</div><div class="profile-item"><span class="profile-label">偏见：</span>系统性低估金融创新的短期价值</div>
-        </div>
-      </div>
-
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#2d5a8e">项</div>
-          <div>
-            <div class="speaker-name neon-gold">项飙</div>
-            <div class="speaker-role">人类学家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>附近消失理论：真实社会连接的瓦解</div><div class="profile-item"><span class="profile-label">利益相关：</span>情感证券化如何改变人与文化作品的关系</div><div class="profile-item"><span class="profile-label">恐惧：</span>情感被彻底商品化后失去无用之用</div><div class="profile-item"><span class="profile-label">偏见：</span>可能忽视商业化对创作的积极作用</div>
-        </div>
-      </div>
+<div class="slide" id="s1">
+  <div class="frame">
+    <div class="paper-texture"></div>
+    <div class="rain-overlay"></div>
+    <div class="cover-content">
+      <div class="cover-date">圆桌洞见</div>
+      <h1 class="cover-title">情感资产的证券化</h1>
+      <div class="cover-meta">
+        <span>6 位专家</span>
+        <span>·</span>
+        <span>3 轮讨论</span>
       </div>
     </div>
-    <div class="deck-footer">专家档案</div>
-    <div class="slide-number">02 / 17</div>
-  </section>
-
-  <section class="slide" data-title="专家档案(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">EXPERT PROFILES (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
-      <div class="grid-2">
-        
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#e65100">冯</div>
-          <div>
-            <div class="speaker-name neon-gold">冯唐</div>
-            <div class="speaker-role">战略管理专家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>商业逻辑的务实主义者</div><div class="profile-item"><span class="profile-label">利益相关：</span>创作者权益保护与利益分配机制</div><div class="profile-item"><span class="profile-label">恐惧：</span>创作者被平台收割</div><div class="profile-item"><span class="profile-label">偏见：</span>对资本力量可能过于接受</div>
-        </div>
-      </div>
-
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#6a4a8a">李</div>
-          <div>
-            <div class="speaker-name neon-gold">李诞</div>
-            <div class="speaker-role">脱口秀演员</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>真诚的表达比精密的计算更重要</div><div class="profile-item"><span class="profile-label">利益相关：</span>创作者如何在资本化时代保持初心</div><div class="profile-item"><span class="profile-label">恐惧：</span>代币价格取代故事质量成为创作动机</div><div class="profile-item"><span class="profile-label">偏见：</span>倾向解构宏大叙事</div>
-        </div>
-      </div>
-
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#4a6a9a">刘</div>
-          <div>
-            <div class="speaker-name neon-gold">刘润</div>
-            <div class="speaker-role">商业顾问</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>交易成本理论：商业本质是降低交易成本</div><div class="profile-item"><span class="profile-label">利益相关：</span>IP证券化如何完善文化资产的流动性</div><div class="profile-item"><span class="profile-label">恐惧：</span>过度金融化可能扭曲创作激励</div><div class="profile-item"><span class="profile-label">偏见：</span>对效率提升可能过于乐观</div>
-        </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">专家档案</div>
-    <div class="slide-number">03 / 17</div>
-  </section>
-
-  <section class="slide" data-title="Round 1: 情感资产证券化的本质">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1</div>
-      <h2 class="quote-large anim-in anim-delay-1">情感资产证券化的本质</h2>
-      <div class="gold-line anim-in anim-delay-2"></div>
-      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">阅文集团将IP收益权代币化，是文化价值变现还是透支？</p>
-    </div>
-    <div class="deck-footer">Round 1 | 情感资产证券化的本质</div>
-    <div class="slide-number">04 / 17</div>
-  </section>
-
-  <section class="slide" data-title="R1 立场(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
-      <div class="stances-grid">
-        
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">吴晓波</div>
-        <div class="stance-content emotion-serious">我追踪中国文化产业二十年，从来没见过这么激进的变化。阅文集团2025年上半年IP衍生品GMV达到4.8亿元，接近去年全年总额。《庆余年》影视卡牌预售GMV达2000万元，创影视类收藏卡牌历史纪录。
-
-这说明情感消费已经不是边缘现象，而是主流。年轻人愿意为《诡秘之主》的盲盒花费数百元，为稀有卡二级市场溢价超300%。这不是消费，这是信仰变现。
-
-阅文提出IP代币化：底层锚定资产选择已验证市场价值的热门IP（如《庆余年》《诡秘之主》）的未来衍生收益权，将其分割为数字权益凭证。这本质上是把"情绪共鸣"这个最不可量化的东西，变成了可交易的金融资产。
-
-我必须问：这种金融化，是文化的胜利还是文化的透支？</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">纳西姆·塔勒布</div>
-        <div class="stance-content emotion-serious">我必须提出严重警告。
-
-IP证券化是一个完美的反脆弱陷阱——它在短期内看起来稳定，但一旦遇到黑天鹅事件，就会崩溃。
-
-让我分析三个致命问题：
-
-第一，估值模型依赖历史数据。《庆余年》的IP价值建立在已有的读者基础、改编成功、粉丝忠诚度上。但这些因素会变。一旦主创团队出问题、改编质量下降、粉丝群体迁移，IP价值可能归零。用历史数据预测未来，这是平均斯坦思维，不是极端斯坦思维。
-
-第二，流动性幻觉。代币化确实提高了流动性，但流动性是把双刃剑。一旦投资者可以在二级市场自由买卖，IP的运营方就失去了对股东的约束力。短期资本可能逼迫IP做出损害长期价值的决策。
-
-第三，谁来定价？IP价值是主观的——它取决于读者的情感投入，而情感是不可量化的。用数学模型给情感定价，这是对人类认知的傲慢。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">项飙</div>
-        <div class="stance-content emotion-serious">你们谈的都是效率和金融工具，我想谈谈情感本身被商品化的后果。
-
-《情感符号的转译与增值》这篇学术论文揭示了一个关键机制：出版机构通过将图书内容转化为可识别、可参与、可再创作的情感符号，实现IP衍生与用户连接的双向赋能。这个过程被描述为"出版物-IP衍生品-用户社群"三元交互模型。
-
-问题在于：一旦情感被证券化，它就不再是纯粹的情感了。你持有的代币价格会影响你对《诡秘之主》的情感吗？当你看到《庆余年》代币价格下跌，你会对这部作品失去信心吗？
-
-资本化的情感已经不是情感，是投资品。当"我喜欢这本书"变成"我持有这本书的代币"，我们与作品的关系发生了根本性的异化。</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 立场</div>
-    <div class="slide-number">05 / 17</div>
-  </section>
-
-  <section class="slide" data-title="R1 立场(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
-      <div class="stances-grid">
-        
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">冯唐</div>
-        <div class="stance-content emotion-serious">塔勒布的担忧有一定道理，但解决方案不是拒绝金融化，而是设计更好的金融工具。
-
-我做了二十年商业咨询，见过太多文化人因为不懂商业逻辑而吃亏。作者们说"我只想创作"，结果版权被低价卖掉，后续收益一分没有。IP证券化至少让创作者在早期就能变现未来的价值。
-
-阅文的数据证明这条路走得通：2025年上半年，新签作品单部收入超过100万元的数量同比增长63%。这是实实在在的收益，不是泡沫。
-
-关键问题是：谁在这个过程中获益最多？是创作者还是平台？我认为需要建立更公平的利益分配机制，让作者拿大头，而不是让华尔街的金融工程师拿走大部分利润。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">李诞</div>
-        <div class="stance-content emotion-serious">我是个讲脱口秀的，我不懂金融，但我懂一件事：真诚。
-
-我看到《庆余年》卡牌预售2000万的时候，第一反应是：这东西真的好到值得花这么多钱买吗？还是因为它是"限量版"、"有收藏价值"？
-
-现在的年轻人，花299元买一个《诡秘之主》盲盒，里面可能有价值数千元的稀有款。这种"赌"的快感，和买彩票有什么区别？但它被包装成了"收藏"、"投资"。
-
-更可怕的是，IP证券化让这种"赌性"扩展到了更大的规模。你不只是赌盲盒里有什么，你是赌这个IP的未来价值。当"我喜欢"变成"我投资"，我们失去了什么？</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">刘润</div>
-        <div class="stance-content emotion-serious">我必须说，IP证券化在商业逻辑上是必然的。
-
-传统出版业的问题是：作者一次性卖掉版权，后续收益跟他无关。改编影视、游戏赚多少，作者拿不到。IP证券化解决的就是这个问题——把未来收益权代币化，让粉丝和创作者都能分享IP成长的红利。
-
-阅文的模式本质上是RWA（现实世界资产代币化）的文化版本。医疗行业已经验证了这条路。IP收益权代币化，将单个IP的长期收益拆分为小额代币，通过合规交易所面向全球投资者发行。
-
-这不是投机，这是金融基础设施的完善，让文化资产获得它应有的流动性。</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 立场</div>
-    <div class="slide-number">06 / 17</div>
-  </section>
-
-  <section class="slide" data-title="Round 2: 文化价值与金融逻辑的博弈">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2</div>
-      <h2 class="quote-large anim-in anim-delay-1">文化价值与金融逻辑的博弈</h2>
-      <div class="gold-line anim-in anim-delay-2"></div>
-      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">IP证券化是解放创作者还是改变创作动机？</p>
-    </div>
-    <div class="deck-footer">Round 2 | 文化价值与金融逻辑的博弈</div>
-    <div class="slide-number">07 / 17</div>
-  </section>
-
-  <section class="slide" data-title="R2 碰撞(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">纳西姆·塔勒布</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">刘润</span>
-        </div>
-        <div class="clash-type attack-logic">逻辑漏洞</div>
-        <div class="clash-content emotion-serious">刘润，你说金融基础设施的完善是必然。但谁来承担"完善"过程中的代价？散户投资者看到IP代币的高收益冲进去，结果项目失败，血本无归。"完善"的代价由谁来付？华尔街的次贷危机就是"完善"的结果。</div>
-        
-      </div>
-
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">项飙</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">冯唐</span>
-        </div>
-        <div class="clash-type attack-logic">逻辑漏洞</div>
-        <div class="clash-content emotion-serious">冯唐，你说创作者应该拿大头。但你有没有想过，当创作者自己都想"拿大头"的时候，他们还能不能创作出好作品？IP证券化会不会改变创作者的激励机制，让他们从"我想讲好故事"变成"我怎样才能让代币升值"？</div>
-        
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 碰撞</div>
-    <div class="slide-number">08 / 17</div>
-  </section>
-
-  <section class="slide" data-title="R2 碰撞(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">吴晓波</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">李诞</span>
-        </div>
-        <div class="clash-type attack-reality">现实矛盾</div>
-        <div class="clash-content emotion-serious">李诞，你说"真诚"很重要。但什么是真诚？一个作者为了"真诚"饿死了，这算真诚吗？商业化至少让创作者能活下去，才能继续创作。</div>
-        
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 碰撞</div>
-    <div class="slide-number">09 / 17</div>
-  </section>
-
-  <section class="slide" data-title="Round 3: 寻找情感资产化的边界">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3</div>
-      <h2 class="quote-large anim-in anim-delay-1">寻找情感资产化的边界</h2>
-      <div class="gold-line anim-in anim-delay-2"></div>
-      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">如何在文化价值与金融逻辑之间找到平衡？</p>
-    </div>
-    <div class="deck-footer">Round 3 | 寻找情感资产化的边界</div>
-    <div class="slide-number">10 / 17</div>
-  </section>
-
-  <section class="slide" data-title="R3 案例(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3: REALITY (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
-      <div class="cases-container">
-        
-      <div class="reality-case anim-in">
-        <div class="case-header">
-          <div class="case-name neon-orange">《庆余年》IP代币化案例</div>
-          <div class="case-source">[来源：阅文集团2025中期财报]</div>
-        </div>
-        <div class="case-content">阅文集团提出将《庆余年》IP收益权代币化：底层锚定资产为已验证市场价值的热门IP未来衍生收益权（影视改编、游戏授权、周边销售等），将单个IP的长期收益拆分为小额代币。</div>
-        <div class="case-outcome neon-red">代价：IP价值从粉丝情感变成可交易的金融资产，但情感联结可能因此改变性质</div>
-        <div class="case-lesson neon-gold">教训：金融化让IP价值"可量化"，但"可量化"不等于"真实价值"——情感价值是主观的、不可复制的</div>
-      </div>
-
-      <div class="reality-case anim-in">
-        <div class="case-header">
-          <div class="case-name neon-orange">《诡秘之主》盲盒二级市场</div>
-          <div class="case-source">[来源：天猫潮玩榜2025数据]</div>
-        </div>
-        <div class="case-content">《诡秘之主》盲盒在无影视改编的情况下，仅凭网文影响力即实现12万只销量跻身天猫热销榜前三。部分稀有卡二级市场溢价超300%。</div>
-        <div class="case-outcome neon-red">代价：粉丝为"赌"稀有卡的快感付费，而非为"故事"付费</div>
-        <div class="case-lesson neon-gold">教训：当"拥有"取代"体验"，收藏变成了另一种形式的"金融投机"</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 案例</div>
-    <div class="slide-number">11 / 17</div>
-  </section>
-
-  <section class="slide" data-title="R3 案例(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3: REALITY (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
-      <div class="cases-container">
-        
-      <div class="reality-case anim-in">
-        <div class="case-header">
-          <div class="case-name neon-orange">阅文IP衍生品GMV爆发</div>
-          <div class="case-source">[来源：阅文集团2025年中期业绩会]</div>
-        </div>
-        <div class="case-content">2025年上半年，阅文IP衍生品业务GMV达到4.8亿元，几乎追平2024年全年5亿元的总额。实体及场景化IP衍生品如潮玩、收藏卡等商品日益流行。</div>
-        <div class="case-outcome neon-red">代价：IP正深度融入用户日常生活，成为情感连接、陪伴和社交身份的重要媒介</div>
-        <div class="case-lesson neon-gold">教训："谷子经济"的崛起证明：情感消费是一个真实且巨大的市场，但它也可能走向"过度金融化"</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 案例</div>
-    <div class="slide-number">12 / 17</div>
-  </section>
-
-  <section class="slide" data-title="R3 代价">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 4: COST</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
-      
-      <div class="cost-discussion anim-in">
-        <div class="cost-scenario neon-gold">如果所有人都把"我喜欢"变成"我投资"，会发生什么？</div>
-        <div class="cost-list">
-          
-          <div class="cost-item">
-            <div class="cost-name neon-red">创作动机的根本改变</div>
-            <div class="cost-analysis">当创作者时刻想着"我的代币价格"，他们还能不能创作出真诚的故事？IP证券化可能让创作者从"讲故事"变成"炒IP"。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">阅读体验的商品化</div>
-            <div class="cost-analysis">当"我喜欢《庆余年》"变成"我持有《庆余年》代币"，读者与作品的关系发生了根本性的变化。阅读不再是纯粹的情感体验，而是一种"投资行为"。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">文化话语权的金融转移</div>
-            <div class="cost-analysis">少数拥有大量资本的投资者将决定哪些文化内容"值得"存在。这对文化多样性是一个巨大的威胁——不是因为"审查"，而是因为"市场选择"。</div>
-          </div>
-        </div>
-        <div class="worst-case">
-          <div class="worst-label neon-red">最坏情况</div>
-          <div class="worst-content">当"故事好不好"变得没有"代币涨不涨"重要，创作者的动力会发生根本性的变化。文学的多样性将被金融逻辑杀死。</div>
-        </div>
-        
-          <div class="survivor-bias">
-            <div class="survivor-label neon-purple">幸存者偏差</div>
-            <div class="survivor-content">你只看到《庆余年》代币的成功，看不到同期有多少IP证券化项目失败、投资者血本无归。</div>
-          </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 代价</div>
-    <div class="slide-number">13 / 17</div>
-  </section>
-
-  <section class="slide" data-title="R3 人性">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
-      
-      <div class="human-nature anim-in">
-        <div class="human-question neon-purple">为什么我们会把"喜欢"变成"拥有"？</div>
-        <div class="human-analysis">占有欲是人类的基本心理——当我们"拥有"一个东西，我们感觉更安全、更稳定。但当"拥有"延伸到"情感连接"，我们失去了什么？
-
-《庆余年》的读者群不只是"消费者"，他们是一个"社群"。社群的力量来自于共同的阅读体验，而不是"持有多少代币"。当"喜欢"变成"拥有"，社群就变成了"股东会"。
-
-更深层的问题是：我们为什么需要"拥有"情感？情感的本质是"体验"，而不是"占有"。IP证券化把"体验"变成了"占有"，这可能是情感商品化的最深层表现。</div>
-        <div class="human-examples">
-          <div class="examples-label">现实例子</div>
-          
-          <div class="example-item">• 《庆余年》卡牌预售2000万——人们买的不是"故事"，是"限量版"的稀缺感</div>
-          <div class="example-item">• 《诡秘之主》稀有卡溢价300%——"赌"的快感取代了"读"的乐趣</div>
-          <div class="example-item">• 阅文IP代币化——把"情感联结"变成"金融资产"</div>
-        </div>
-        <div class="human-conclusion neon-gold">IP证券化最危险的地方不是金融风险，是它改变了我们与故事的关系。当"我喜欢"变成"我投资"，我们失去了故事最珍贵的东西——无功利的审美愉悦。</div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 人性</div>
-    <div class="slide-number">14 / 17</div>
-  </section>
-
-  <section class="slide" data-title="R3 升级">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
-      
-      <div class="cognitive-upgrade anim-in">
-        <div class="upgrade-comparison">
-          <div class="old-thinking">
-            <div class="thinking-label neon-red">旧思维</div>
-            <div class="thinking-content">IP证券化让创作者获利，是文化产业的升级</div>
-          </div>
-          <div class="upgrade-arrow">→</div>
-          <div class="new-thinking">
-            <div class="thinking-label neon-green">新思维</div>
-            <div class="thinking-content">IP证券化可能解放创作者，但也可能改变创作动机——从"讲好故事"变成"让代币升值"。关键问题是：谁能在这个过程中保持初心？</div>
-          </div>
-        </div>
-        <div class="complexity">
-          <div class="complexity-label neon-cyan">复杂性</div>
-          <div class="complexity-content">情感资产化是一个不可逆转的趋势，但"不可逆"不等于"不可控"。问题不是要不要金融化，而是如何金融化——哪些IP可以证券化、证券化的边界在哪里、谁来监管？</div>
-        </div>
-        <div class="actionable">
-          <div class="actionable-label neon-gold">可执行洞见</div>
-          <div class="actionable-content">对于创作者：守住创作的初心，故事是给读者讲的，不是给投资者讲的。
-
-对于读者：不要让"拥有"取代"体验"。真正重要的不是拥有多少IP代币，而是在阅读中获得了多少感动。
-
-对于监管者：建立"文化资产特别监管区"，区分"可以证券化"和"不可以证券化"的内容。</div>
-        </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 升级</div>
-    <div class="slide-number">15 / 17</div>
-  </section>
-
-  <section class="slide" data-title="最终洞见">
-    <div class="slide-content">
-      <div class="section-label anim-in">FINAL INSIGHT</div>
-      <div class="quote-large anim-in anim-delay-1">IP证券化是一个不可逆转的趋势，但需要建立明确的边界：哪些IP可以证券化、哪些不可以？文化价值的评判不能完全交给市场。守住创作初心和阅读体验的本真性，是对抗金融逻辑的最后防线。</div>
-    </div>
-    <div class="deck-footer">最终洞见</div>
-    <div class="slide-number">16 / 17</div>
-  </section>
-
-  <section class="slide" data-title="开放问题">
-    <div class="slide-content">
-      <div class="section-label anim-in">OPEN QUESTIONS</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">留给读者的问题</h3>
-      <div class="headline-item anim-in"><strong>Q1:</strong> 当"故事好不好"和"代币涨不涨"产生冲突时，你会选择什么？</div>
-<div class="headline-item anim-in"><strong>Q2:</strong> IP证券化会催生更多好故事，还是会让创作变得更功利？</div>
-<div class="headline-item anim-in"><strong>Q3:</strong> 在情感被彻底商品化的时代，我们还能找到纯粹的艺术体验吗？</div>
-    </div>
-    <div class="deck-footer">开放问题</div>
-    <div class="slide-number">17 / 17</div>
-  </section>
-
-<div class="toc-backdrop" id="tocBackdrop"></div>
-<div class="toc-panel" id="tocPanel">
-<div class="toc-title">目录</div>
-<div id="tocList"></div>
-</div>
-<div class="nav-bar">
-<div class="nav-left">
-<button class="nav-btn" id="btnToc">☰ 目录</button>
-<button class="nav-btn" id="btnPrev">◀ 上一页</button>
-<button class="nav-btn" id="btnNext">下一页 ▶</button>
-</div>
-<div class="nav-right">
-<span class="nav-title" id="slideTitle"></span>
-<span class="nav-counter" id="slideCounter"></span>
-</div>
-</div>
-<div class="nav-dots" id="navDots"></div>
+  </div>
 </div>
 
+
+<div class="slide" id="s2">
+  <div class="frame">
+    <div class="paper-texture"></div>
+    <div class="note-header">
+      <span class="note-round">Round 1</span>
+    </div>
+    <h2 class="note-question">情感资产证券化的本质</h2>
+
+
+    <div class="notes-container">
+      <div class="note-entry">
+        <div class="note-speaker">吴晓波</div>
+        <div class="note-content">我追踪中国文化产业二十年，从来没见过这么激进的变化。阅文集团2025年上半年IP衍生品GMV达到4.8亿元，接近去年全年总额。《庆余年》影视卡牌预售GMV达2000万元，创影视类收藏卡牌历史纪录。 这说明情感消费已经不是边缘现象，而是主流。年轻人愿意为《诡秘之主》的盲盒花费数百元，为稀有卡二级市场溢价超300%。这不是消费，这是信仰变现。 阅文提出IP代币化：底层锚定资产选择已验证市场价值的热门IP（如《庆余年》《诡秘之主》）的未来衍生收益权，将其分割为数字权益凭证。这本质上是把"情绪共鸣"这个最不可量化的东西，变成了可交易的金融资产。 我必须问：这种金融化，是文化的胜利还是文化的透支？</div>
+      </div>
+      <div class="note-entry">
+        <div class="note-speaker">纳西姆·塔勒布</div>
+        <div class="note-content">我必须提出严重警告。 IP证券化是一个完美的反脆弱陷阱——它在短期内看起来稳定，但一旦遇到黑天鹅事件，就会崩溃。 让我分析三个致命问题： 第一，估值模型依赖历史数据。《庆余年》的IP价值建立在已有的读者基础、改编成功、粉丝忠诚度上。但这些因素会变。一旦主创团队出问题、改编质量下降、粉丝群体迁移，IP价值可能归零。用历史数据预测未来，这是平均斯坦思维，不是极端斯坦思维。 第二，流动性幻觉。代币化确实提高了流动性，但流动性是把双刃剑。一旦投资者可以在二级市场自由买卖，IP的运营方就失去了对股东的约束力。短期资本可能逼迫IP做出损害长期价值的决策。 第三，谁来定价？IP价值是主观的——它取决于读者的情感投入，而情感是不可量化的。用数学模型给情感定价，这是对人类认知的傲慢。</div>
+      </div>
+      <div class="note-entry">
+        <div class="note-speaker">项飙</div>
+        <div class="note-content">你们谈的都是效率和金融工具，我想谈谈情感本身被商品化的后果。 《情感符号的转译与增值》这篇学术论文揭示了一个关键机制：出版机构通过将图书内容转化为可识别、可参与、可再创作的情感符号，实现IP衍生与用户连接的双向赋能。这个过程被描述为"出版物-IP衍生品-用户社群"三元交互模型。 问题在于：一旦情感被证券化，它就不再是纯粹的情感了。你持有的代币价格会影响你对《诡秘之主》的情感吗？当你看到《庆余年》代币价格下跌，你会对这部作品失去信心吗？ 资本化的情感已经不是情感，是投资品。当"我喜欢这本书"变成"我持有这本书的代币"，我们与作品的关系发生了根本性的异化。</div>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+
+<div class="slide" id="s3">
+  <div class="frame">
+    <div class="paper-texture"></div>
+    <div class="note-header">
+      <span class="note-round">Round 2</span>
+    </div>
+    <h2 class="note-question">文化价值与金融逻辑的博弈</h2>
+
+
+  </div>
+</div>
+
+
+<div class="slide" id="s4">
+  <div class="frame">
+    <div class="paper-texture"></div>
+    <div class="note-header">
+      <span class="note-round">Round 3</span>
+    </div>
+    <h2 class="note-question">寻找情感资产化的边界</h2>
+
+
+    <div class="rain-insight">
+      <div class="insight-marker">~</div>
+      <div class="insight-text">IP证券化可能解放创作者，但也可能改变创作动机——从"讲好故事"变成"让代币升值"。关键问题是：谁能在这个过程中保持初心？</div>
+    </div>
+
+
+  </div>
+</div>
+
+<div id="nav">
+  <button class="nav-btn" id="prevBtn">◀</button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn">▶</button>
+</div>
+<div id="counter">1 / 1</div>
 <script>
 (function(){
-var deck=document.getElementById("deck");
-var slides=deck.querySelectorAll(".slide");
-var total=slides.length;
-var cur=0;
-var dots=document.getElementById("navDots");
-var tocList=document.getElementById("tocList");
-var titleEl=document.getElementById("slideTitle");
-var counterEl=document.getElementById("slideCounter");
-var tocPanel=document.getElementById("tocPanel");
-var tocBackdrop=document.getElementById("tocBackdrop");
-var progressBar=document.getElementById("progressBar");
-
-for(var i=0;i<total;i++){
-  var d=document.createElement("button");
-  d.className="nd";
-  d.setAttribute("data-i",i);
-  d.onclick=(function(idx){return function(){go(idx)}})(i);
-  dots.appendChild(d);
-  var t=document.createElement("div");
-  t.className="toc-item";
-  t.setAttribute("data-i",i);
-  t.innerHTML='<span class="toc-label">'+(slides[i].getAttribute("data-title")||"Slide "+(i+1))+'</span><span class="toc-page">'+String(i+1).padStart(2,"0")+'</span>';
-  t.onclick=(function(idx){return function(){go(idx);closeTOC()}})(i);
-  tocList.appendChild(t);
-}
-
-function go(n){
-  if(n<0||n>=total)return;
-  slides[cur].classList.remove("active");
-  dots.children[cur].classList.remove("active");
-  tocList.children[cur].classList.remove("active");
-  cur=n;
-  slides[cur].classList.add("active");
-  dots.children[cur].classList.add("active");
-  tocList.children[cur].classList.add("active");
-  titleEl.textContent=slides[cur].getAttribute("data-title")||"";
-  counterEl.textContent=(cur+1)+" / "+total;
-  progressBar.style.width=((cur+1)/total*100)+"%";
-  slides[cur].scrollTop=0;
-}
-function toggleTOC(){tocPanel.classList.toggle("open");tocBackdrop.classList.toggle("open")}
-function closeTOC(){tocPanel.classList.remove("open");tocBackdrop.classList.remove("open")}
-
-document.addEventListener("keydown",function(e){
-  if(e.key==="ArrowRight"||e.key==="ArrowDown"||e.key===" "||e.key==="PageDown"){e.preventDefault();go(cur+1)}
-  else if(e.key==="ArrowLeft"||e.key==="ArrowUp"||e.key==="PageUp"){e.preventDefault();go(cur-1)}
-  else if(e.key==="Home"){e.preventDefault();go(0)}
-  else if(e.key==="End"){e.preventDefault();go(total-1)}
-  else if(e.key==="Escape"){closeTOC();go(0)}
-  else if(e.key==="t"||e.key==="T"){toggleTOC()}
-});
-var wheelTimer=null;
-deck.addEventListener("wheel",function(e){
-  e.preventDefault();
-  if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},400)}
-  if(e.deltaY>0)go(cur+1);
-  else if(e.deltaY<0)go(cur-1);
-},{passive:false});
-var touchX=0,touchY=0;
-deck.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX;touchY=e.touches[0].clientY});
-deck.addEventListener("touchend",function(e){
-  var dx=touchX-e.changedTouches[0].clientX,dy=touchY-e.changedTouches[0].clientY;
-  if(Math.abs(dy)>Math.abs(dx)){if(dy>50)go(cur+1);else if(dy<-50)go(cur-1)}
-  else{if(dx>50)go(cur+1);else if(dx<-50)go(cur-1)}
-});
-deck.addEventListener("click",function(e){
-  if(e.target.closest(".nav-btn,.nd,.toc-item,.toc-panel,.toc-backdrop"))return;
-  var x=e.clientX/window.innerWidth;
-  if(x<0.3)go(cur-1);else if(x>0.7)go(cur+1);
-});
-document.getElementById("btnToc").addEventListener("click",function(e){e.stopPropagation();toggleTOC()});
-document.getElementById("btnPrev").addEventListener("click",function(e){e.stopPropagation();go(cur-1)});
-document.getElementById("btnNext").addEventListener("click",function(e){e.stopPropagation();go(cur+1)});
-tocBackdrop.addEventListener("click",closeTOC);
-go(0);
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let cur = 0;
+  const dots = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progress');
+  
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => go(i);
+    dots.appendChild(d);
+  });
+  
+  function go(n) {
+    if (n < 0 || n >= total) return;
+    slides[cur].classList.remove('visible');
+    dots.children[cur].classList.remove('active');
+    cur = n;
+    slides[cur].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    slides[cur].classList.add('visible');
+    dots.children[cur].classList.add('active');
+    counter.textContent = (cur + 1) + ' / ' + total;
+    const pct = Math.min(100, ((cur + 1) / total) * 100);
+    progress.style.width = pct + '%';
+  }
+  
+  document.getElementById('prevBtn').onclick = () => go(cur - 1);
+  document.getElementById('nextBtn').onclick = () => go(cur + 1);
+  
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      go(cur + 1);
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      go(cur - 1);
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      go(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      go(total - 1);
+    }
+  });
+  
+  let wheelTimer = null;
+  document.addEventListener('wheel', e => {
+    e.preventDefault();
+    if (wheelTimer) return;
+    wheelTimer = setTimeout(() => wheelTimer = null, 400);
+    if (e.deltaY > 0) go(cur + 1);
+    else if (e.deltaY < 0) go(cur - 1);
+  }, { passive: false });
+  
+  document.body.addEventListener('click', e => {
+    if (e.target.closest('.nav-btn, .dot, .expert-card, .note-entry, .question-card, .conclusion-item, .rain-insight, .clash-block, #nav')) return;
+    go(cur + 1);
+  });
+  
+  go(0);
 })();
 </script>
 </body>

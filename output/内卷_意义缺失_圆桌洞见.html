@@ -2,1255 +2,1354 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>内卷时代的意义缺失 圆桌洞见</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>内卷时代的意义缺失</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 <style>
-  :root{
-    /* ============ 主题色(默认:🖋 墨水经典) ============ */
-    --ink:#0a0a0b;
-    --ink-rgb:10,10,11;
-    --paper:#f1efea;
-    --paper-rgb:241,239,234;
-    --paper-tint:#e8e5de;
-    --ink-tint:#18181a;
-    --text-dim:rgba(241,239,234,0.5);
+:root {
+  --bg-deep: #0A0A0A;
+  --bg: #111111;
+  --bg-card: rgba(255,255,255,0.04);
+  --bg-card-hover: rgba(255,255,255,0.08);
+  --fg: #F5F5F5;
+  --fg-muted: #A0A0A0;
+  --fg-dim: #606060;
+  --accent: #D4A04A;
+  --accent-soft: rgba(212,160,74,0.12);
+  --accent-glow: rgba(212,160,74,0.25);
+  --copper: #C07A3E;
+  --clash: #ff4757;
+  --clash-soft: rgba(255,71,87,0.12);
+  --clash-glow: rgba(255,71,87,0.35);
+  --insight: #00d4aa;
+  --insight-soft: rgba(0,212,170,0.12);
+  --insight-glow: rgba(0,212,170,0.40);
+  --border: rgba(255,255,255,0.08);
+  --border-accent: rgba(212,160,74,0.30);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --font-display: 'Noto Serif SC', serif;
+  --font-body: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
 
-    /* ============ 强调色 ============ */
-    --accent:#c23b22;
-    --accent-rgb:194,59,34;
-    --gold:#d4a843;
-    --gold-rgb:212,168,67;
-    --blue:#4a6a9a;
-    --purple:#8a4aaa;
-    --green:#3a8a5c;
-    --cyan:#4a9a9a;
-    --orange:#d4843a;
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* ============ 字体(跨主题固定) ============ */
-    --mono:"IBM Plex Mono","SF Mono",monospace;
-    --serif-zh:"Noto Serif SC","Source Han Serif SC","STSong",serif;
-    --sans-zh:"Noto Sans SC","Source Han Sans SC","PingFang SC",sans-serif;
+html {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
 
-    /* ============ 间距 ============ */
-    --radius:10px;
-    --ease:cubic-bezier(.4,0,.2,1);
+body {
+  display: flex;
+  flex-direction: row;
+  width: max-content;
+  height: 100vh;
+  background: var(--bg-deep);
+  color: var(--fg);
+  font-family: var(--font-body);
+  line-height: 1.85;
+  opacity: 0;
+  animation: fadeIn 0.8s ease forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg-deep);
+}
+
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}
+
+.mesh-gradient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: 
+    radial-gradient(ellipse 70% 50% at 10% 20%, rgba(212,160,74,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 40% at 90% 80%, rgba(0,212,170,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse 30% 25% at 50% 50%, rgba(255,71,87,0.03) 0%, transparent 50%);
+}
+
+.slide {
+  width: 100vw;
+  height: 100vh;
+  min-width: 100vw;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  scroll-snap-align: start;
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  overflow: hidden;
+}
+
+.slide.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.stagger-item {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.slide.visible .stagger-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.slide.visible .stagger-item:nth-child(1) { transition-delay: 0.1s; }
+.slide.visible .stagger-item:nth-child(2) { transition-delay: 0.2s; }
+.slide.visible .stagger-item:nth-child(3) { transition-delay: 0.3s; }
+.slide.visible .stagger-item:nth-child(4) { transition-delay: 0.4s; }
+.slide.visible .stagger-item:nth-child(5) { transition-delay: 0.5s; }
+.slide.visible .stagger-item:nth-child(6) { transition-delay: 0.6s; }
+.slide.visible .stagger-item:nth-child(7) { transition-delay: 0.7s; }
+.slide.visible .stagger-item:nth-child(8) { transition-delay: 0.8s; }
+
+.slide-cover {
+  background: linear-gradient(135deg, #1A1A2E 0%, #16213E 50%, #0F0F23 100%);
+  color: var(--fg);
+  padding: clamp(40px, 5vh, 80px) clamp(48px, 5vw, 100px);
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.slide-cover::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+  opacity: 0.5;
+  animation: cover-glow 6s ease-in-out infinite;
+}
+
+@keyframes cover-glow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+.slide-cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(255,255,255,0.02) 59px, rgba(255,255,255,0.02) 60px),
+    repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(255,255,255,0.02) 59px, rgba(255,255,255,0.02) 60px);
+  pointer-events: none;
+}
+
+.cover-decor-line {
+  position: absolute;
+  top: 20%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212,160,74,0.2), transparent);
+}
+
+.cover-decor-line-2 {
+  position: absolute;
+  bottom: 30%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,170,0.15), transparent);
+}
+
+.cover-logo {
+  font-family: var(--font-mono);
+  font-size: clamp(18px, 2vw, 28px);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  position: relative;
+  z-index: 2;
+}
+
+.cover-logo span {
+  display: block;
+  padding-left: 1em;
+  font-weight: 400;
+  color: var(--fg-muted);
+  font-size: 0.85em;
+}
+
+.cover-body {
+  max-width: 70%;
+  position: relative;
+  z-index: 2;
+}
+
+.cover-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  background: linear-gradient(135deg, var(--accent-soft), rgba(212,160,74,0.06));
+  border: 1px solid var(--border-accent);
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1vw, 13px);
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: clamp(20px, 3vh, 36px);
+  position: relative;
+  overflow: hidden;
+}
+
+.cover-badge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(212,160,74,0.2), transparent);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.cover-body h1 {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: clamp(16px, 2vh, 28px);
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--fg), var(--fg-muted));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cover-body .cover-sub {
+  font-family: var(--font-display);
+  font-size: clamp(16px, 1.8vw, 26px);
+  font-weight: 400;
+  margin-bottom: clamp(8px, 1vh, 16px);
+  color: var(--fg-muted);
+  line-height: 1.6;
+}
+
+.cover-body .cover-date {
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1.2vw, 16px);
+  color: var(--fg-dim);
+  letter-spacing: 0.02em;
+}
+
+.cover-footer {
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 0.9vw, 12px);
+  color: var(--fg-dim);
+  letter-spacing: 0.08em;
+  position: relative;
+  z-index: 2;
+}
+
+.slide-content {
+  background: var(--bg);
+  padding: clamp(24px, 3vh, 48px) clamp(40px, 4vw, 80px);
+  overflow: hidden;
+  position: relative;
+}
+
+.slide-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.3;
+}
+
+.breadcrumb {
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 1vw, 13px);
+  color: var(--fg-dim);
+  text-align: right;
+  margin-bottom: clamp(12px, 1.5vh, 20px);
+  letter-spacing: 0.02em;
+}
+
+.slide-title {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 2.5vw, 36px);
+  font-weight: 800;
+  color: var(--fg);
+  line-height: 1.35;
+  margin-bottom: clamp(16px, 2vh, 28px);
+  letter-spacing: -0.01em;
+  position: relative;
+  padding-left: 28px;
+}
+
+.slide-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 5px;
+  background: linear-gradient(180deg, var(--accent), var(--copper));
+  border-radius: 3px;
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+
+.stats-flex {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  margin: clamp(32px, 4vh, 56px) 0;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 80px;
+  background: linear-gradient(180deg, transparent, var(--border-accent), transparent);
+  margin: 0 20px;
+  flex-shrink: 0;
+}
+
+.stat-item {
+  text-align: center;
+  padding: clamp(20px, 2.5vh, 32px) clamp(28px, 3vw, 48px);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stat-item:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+.stat-item:hover::before {
+  opacity: 1;
+}
+
+.stat-number {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4vw, 52px);
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 10px;
+  letter-spacing: -0.02em;
+}
+
+.stat-label {
+  font-family: var(--font-body);
+  font-size: clamp(12px, 1.2vw, 16px);
+  color: var(--fg-muted);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.experts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(18px, 2vw, 26px);
+  margin-top: clamp(24px, 3vh, 36px);
+}
+
+.expert-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: clamp(24px, 3vh, 36px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.expert-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.expert-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-accent);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+}
+
+.expert-card:hover::before {
+  opacity: 1;
+}
+
+.expert-avatar {
+  width: clamp(52px, 5vw, 68px);
+  height: clamp(52px, 5vw, 68px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(18px, 2vw, 26px);
+  margin-bottom: clamp(14px, 1.8vh, 22px);
+  transition: all 0.3s ease;
+}
+
+.expert-card:hover .expert-avatar {
+  transform: translateY(-4px);
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.expert-avatar.role-leader {
+  background: linear-gradient(135deg, var(--accent), var(--copper));
+  color: var(--bg-deep);
+}
+
+.expert-avatar.role-challenger {
+  background: linear-gradient(135deg, var(--clash), #c44a2e);
+  color: #fff;
+}
+
+.expert-avatar.role-observer {
+  background: linear-gradient(135deg, var(--insight), #358568);
+  color: #fff;
+}
+
+.expert-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(14px, 1.4vw, 18px);
+  margin-bottom: 6px;
+  color: var(--fg);
+  letter-spacing: 0.01em;
+}
+
+.expert-role {
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1vw, 13px);
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: clamp(10px, 1.2vh, 14px);
+}
+
+.expert-desc {
+  font-family: var(--font-body);
+  font-size: clamp(12px, 1.2vw, 15px);
+  color: var(--fg-muted);
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+.speech-cards {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2vh, 22px);
+  margin-top: clamp(20px, 2.5vh, 28px);
+}
+
+.speech-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: clamp(24px, 3vh, 36px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.speech-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--copper), transparent);
+  opacity: 0.6;
+}
+
+.speech-card:hover {
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+}
+
+.speech-meta {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 1.8vw, 18px);
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+}
+
+.speaker-avatar {
+  width: clamp(44px, 4vw, 56px);
+  height: clamp(44px, 4vw, 56px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(15px, 1.5vw, 20px);
+  transition: all 0.3s ease;
+}
+
+.speech-card:hover .speaker-avatar {
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+
+.speaker-avatar.role-leader {
+  background: linear-gradient(135deg, var(--accent), var(--copper));
+  color: var(--bg-deep);
+}
+
+.speaker-avatar.role-challenger {
+  background: linear-gradient(135deg, var(--clash), #c44a2e);
+  color: #fff;
+}
+
+.speaker-avatar.role-observer {
+  background: linear-gradient(135deg, var(--insight), #358568);
+  color: #fff;
+}
+
+.speaker-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(14px, 1.4vw, 18px);
+  color: var(--fg);
+  letter-spacing: 0.01em;
+}
+
+.speaker-role {
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1vw, 13px);
+  color: var(--fg-muted);
+  letter-spacing: 0.04em;
+}
+
+.speech-content {
+  font-family: var(--font-body);
+  font-size: clamp(13px, 1.3vw, 16px);
+  line-height: 1.9;
+  color: var(--fg-muted);
+  letter-spacing: 0.01em;
+}
+
+.clash-block {
+  background: linear-gradient(135deg, var(--clash-soft), rgba(212,160,74,0.06));
+  border: 1px solid rgba(255,71,87,0.25);
+  border-radius: var(--radius);
+  padding: clamp(24px, 3vh, 36px);
+  margin-top: clamp(20px, 2.5vh, 28px);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 40px var(--clash-glow), inset 0 0 60px rgba(255,71,87,0.05);
+}
+
+.clash-block::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(180deg, var(--clash), #c44a2e);
+  border-radius: 0 5px 5px 0;
+  box-shadow: 0 0 20px var(--clash-glow);
+}
+
+.clash-block::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 5px;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--clash), transparent);
+  opacity: 0.4;
+}
+
+.clash-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1.2vw, 14px);
+  font-weight: 700;
+  color: var(--clash);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+}
+
+.clash-item {
+  margin-bottom: clamp(12px, 1.5vh, 16px);
+  padding-bottom: clamp(12px, 1.5vh, 16px);
+  border-bottom: 1px solid rgba(255,71,87,0.15);
+}
+
+.clash-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.clash-speaker {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(13px, 1.3vw, 16px);
+  color: var(--accent);
+  margin-bottom: 8px;
+  letter-spacing: 0.01em;
+}
+
+.clash-text {
+  font-family: var(--font-body);
+  font-size: clamp(12px, 1.2vw, 15px);
+  line-height: 1.8;
+  color: var(--fg-muted);
+  letter-spacing: 0.01em;
+}
+
+.insight-block {
+  background: linear-gradient(135deg, var(--insight-soft), rgba(0,212,170,0.04));
+  border: 1px solid rgba(0,212,170,0.30);
+  border-radius: var(--radius);
+  padding: clamp(28px, 3.5vh, 40px);
+  margin-top: clamp(20px, 2.5vh, 28px);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 50px var(--insight-glow), inset 0 0 80px rgba(0,212,170,0.05);
+}
+
+.insight-block::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(180deg, var(--insight), #358568);
+  border-radius: 0 5px 5px 0;
+  box-shadow: 0 0 25px var(--insight-glow);
+}
+
+.insight-block::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 5px;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--insight), transparent);
+  opacity: 0.5;
+}
+
+.insight-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1.2vw, 14px);
+  font-weight: 700;
+  color: var(--insight);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+}
+
+.insight-core {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2vw, 26px);
+  font-weight: 800;
+  color: var(--fg);
+  line-height: 1.45;
+  margin-bottom: clamp(12px, 1.5vh, 16px);
+  letter-spacing: -0.01em;
+}
+
+.insight-explain {
+  font-family: var(--font-body);
+  font-size: clamp(13px, 1.3vw, 16px);
+  line-height: 1.85;
+  color: var(--fg-muted);
+  letter-spacing: 0.01em;
+}
+
+.conclusions-grid {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2vh, 22px);
+  margin-top: clamp(20px, 2.5vh, 28px);
+}
+
+.conclusion-item {
+  display: flex;
+  gap: clamp(16px, 2vw, 22px);
+  align-items: flex-start;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: clamp(20px, 2.5vh, 28px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.conclusion-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.conclusion-item:hover {
+  background: var(--bg-card-hover);
+  transform: translateX(8px);
+  box-shadow: 0 8px 30px rgba(212,160,74,0.15);
+}
+
+.conclusion-item:hover::before {
+  opacity: 1;
+}
+
+.conclusion-num {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 3.5vw, 44px);
+  font-weight: 800;
+  color: var(--accent);
+  opacity: 0.4;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.conclusion-text {
+  font-family: var(--font-body);
+  font-size: clamp(14px, 1.4vw, 18px);
+  line-height: 1.7;
+  color: var(--fg);
+  flex: 1;
+  letter-spacing: 0.01em;
+}
+
+.question-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: clamp(22px, 2.8vh, 32px);
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(14px, 1.8vw, 18px);
+  overflow: hidden;
+  position: relative;
+}
+
+.question-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.question-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent);
+  transform: translateX(8px);
+  box-shadow: 0 8px 30px rgba(212,160,74,0.15);
+}
+
+.question-card:hover::before {
+  opacity: 1;
+}
+
+.question-card .question-expand {
+  display: none;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-body);
+  font-size: clamp(12px, 1.2vw, 15px);
+  color: var(--fg-dim);
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+.question-card:hover .question-expand {
+  display: block;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.question-number {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(16px, 1.6vw, 22px);
+  color: var(--accent);
+  opacity: 0.5;
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+
+.question-text {
+  font-family: var(--font-body);
+  font-size: clamp(13px, 1.3vw, 16px);
+  color: var(--fg);
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+}
+
+#nav {
+  position: fixed;
+  bottom: clamp(16px, 2vh, 24px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.2vw, 16px);
+  z-index: 100;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(20px);
+  padding: clamp(10px, 1.2vh, 14px) clamp(18px, 2vw, 28px);
+  border-radius: 100px;
+  border: 1px solid var(--border);
+}
+
+.nav-btn {
+  width: clamp(36px, 3.5vw, 44px);
+  height: clamp(36px, 3.5vw, 44px);
+  border: none;
+  background: var(--bg-card);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(12px, 1.2vw, 14px);
+  color: var(--fg);
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  background: var(--accent);
+  color: var(--bg-deep);
+  transform: scale(1.1);
+}
+
+.dots {
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dot:hover {
+  background: rgba(255,255,255,0.5);
+  transform: scale(1.2);
+}
+
+.dot.active {
+  background: var(--accent);
+  transform: scale(1.4);
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+#counter {
+  position: fixed;
+  top: clamp(12px, 1.5vh, 20px);
+  right: clamp(16px, 2vw, 24px);
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 1.1vw, 14px);
+  color: var(--fg-muted);
+  z-index: 100;
+  background: rgba(0,0,0,0.6);
+  padding: 8px 16px;
+  border-radius: 100px;
+  backdrop-filter: blur(10px);
+  letter-spacing: 0.02em;
+}
+
+#progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 101;
+  background: var(--border);
+}
+
+#progressBar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--copper));
+  transition: width 0.2s ease-out;
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+@media (max-width: 768px) {
+  .experts-grid { grid-template-columns: repeat(2, 1fr); }
+  .cover-body { max-width: 85%; }
+  .stat-divider { display: none; }
+}
+
+@media (max-width: 480px) {
+  .experts-grid { grid-template-columns: 1fr; }
+  .stats-flex { flex-direction: column; gap: 14px; }
+  .stat-item { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
-
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans-zh);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-
-  /* ============ Deck 容器 ============ */
-  #deck{position:relative;width:100vw;height:100vh;overflow:hidden}
-
-  /* ============ 进度条 ============ */
-  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:1000;transition:width .5s var(--ease);box-shadow:0 0 12px rgba(var(--accent-rgb),.3)}
-
-  /* ============ 幻灯片 ============ */
-  .deck{position:relative;width:100%;height:100%}
-  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;overflow:hidden}
-  .slide-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
-  .slide.active{display:flex}
-  .slide.hero{justify-content:center;align-items:center;text-align:center}
-  .slide.title-slide{justify-content:center;align-items:center;text-align:center}
-
-  /* ============ 入场动画(Guizang风格) ============ */
-  [data-anim]{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
-  .slide.active [data-anim]{opacity:1;transform:translateY(0)}
-  .slide.active [data-anim]:nth-child(1){transition-delay:.1s}
-  .slide.active [data-anim]:nth-child(2){transition-delay:.18s}
-  .slide.active [data-anim]:nth-child(3){transition-delay:.26s}
-  .slide.active [data-anim]:nth-child(4){transition-delay:.34s}
-  .slide.active [data-anim]:nth-child(5){transition-delay:.42s}
-  .slide.active [data-anim]:nth-child(6){transition-delay:.5s}
-
-  /* ============ 内容区(book-distillation范式) ============ */
-  .frame{width:100%;max-width:1100px;margin:0 auto;flex:1;display:flex;flex-direction:column}
-  .slide-content{flex:1;display:flex;flex-direction:column}
-
-  /* ============ Magazine Chrome(Guizang风格) ============ */
-  .chrome{display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.5;margin-bottom:3vh}
-  .chrome .left,.chrome .right{display:flex;gap:2em;align-items:center}
-  .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
-
-  /* ============ 底部元数据(render_v8兼容) ============ */
-  .deck-footer{margin-top:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
-  .slide-number{position:absolute;bottom:2vh;right:3vw;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.35)}
-
-  /* ============ Section Label ============ */
-  .section-label{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
-
-  /* ============ 封面 ============ */
-  .cover-badge{display:inline-block;padding:6px 20px;border:1px solid var(--accent);border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4vh}
-  .cover-title{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .cover-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:4vh;line-height:1.8;max-width:600px}
-  .cover-stats{display:flex;gap:4vh;flex-wrap:wrap;justify-content:center}
-  .cover-stat{text-align:center}
-  .cover-stat-num{font-family:var(--mono);font-size:2.5rem;font-weight:900;color:var(--accent)}
-  .cover-stat-label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.5);margin-top:.5vh}
-
-  /* ============ 封面标题(render_v8) ============ */
-  .hero-dark{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;flex:1}
-  .title-main{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .title-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:2vh;line-height:1.8}
-  .gold-line{width:80px;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));margin:3vh auto;border-radius:2px}
-
-  /* ============ 标题系统 ============ */
-  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
-  .h-hero{font-family:var(--serif-zh);font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.2;margin-bottom:3vh}
-  .h-xl{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.4rem,3vw,2.2rem);line-height:1.3;margin-bottom:2vh}
-  .h-lg{font-family:var(--serif-zh);font-weight:600;font-size:clamp(1.1rem,2vw,1.5rem);line-height:1.4;margin-bottom:1.5vh}
-  .h-md{font-weight:600;font-size:1.1rem;margin-bottom:1vh}
-  .lead{font-size:1rem;line-height:1.85;color:rgba(var(--paper-rgb),.8);max-width:700px}
-  .meta-row{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.4);display:flex;gap:2em;flex-wrap:wrap;margin-top:3vh}
-
-  /* ============ 大号引用(render_v8) ============ */
-  .quote-large{font-family:var(--serif-zh);font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:600;line-height:1.6;color:rgba(var(--paper-rgb),.9);max-width:800px;margin:0 auto}
-
-  /* ============ 分割线 ============ */
-  .rule{width:100%;height:1px;background:rgba(var(--paper-rgb),.15);margin:3vh 0}
-
-  /* ============ 标签 ============ */
-  .tag{display:inline-block;padding:4px 12px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;margin:3px}
-  .tag-gold{background:rgba(var(--gold-rgb),.15);color:var(--gold);border:1px solid rgba(var(--gold-rgb),.2)}
-  .tag-red{background:rgba(var(--accent-rgb),.15);color:var(--accent);border:1px solid rgba(var(--accent-rgb),.2)}
-  .tag-blue{background:rgba(74,106,154,.15);color:var(--blue);border:1px solid rgba(74,106,154,.2)}
-  .tag-purple{background:rgba(138,74,170,.15);color:var(--purple);border:1px solid rgba(138,74,170,.2)}
-  .tag-green{background:rgba(58,138,92,.15);color:var(--green);border:1px solid rgba(58,138,92,.2)}
-
-  /* ============ 霓虹强调色(render_v8) ============ */
-  .neon-gold{color:var(--gold)}.neon-red{color:var(--accent)}.neon-cyan{color:var(--cyan)}.neon-purple{color:var(--purple)}.neon-orange{color:var(--orange)}.neon-green{color:var(--green)}
-
-  /* ============ 网格系统 ============ */
-  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:2vh 2vw}
-  @media(max-width:768px){.grid-2{grid-template-columns:1fr}}
-
-  /* ============ 发言块(原生) ============ */
-  .sp{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2.5vw;margin-bottom:2vh;position:relative}
-  .sp::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
-  .sh{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh}
-  .speaker-avatar{width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:var(--ink);background:var(--accent);flex-shrink:0}
-  .sn{font-weight:700;font-size:1rem}
-  .sr{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4);padding:3px 8px;background:rgba(var(--paper-rgb),.06);border-radius:3px}
-  .st{font-size:.95rem;line-height:2;color:rgba(var(--paper-rgb),.85)}
-  .st strong{color:var(--paper);font-weight:700}
-  .st em{color:var(--gold);font-style:normal;font-weight:600}
-
-  /* ============ 碰撞块(原生) ============ */
-  .cb{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;position:relative}
-  .cb::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
-  .cb.blue{border-color:rgba(74,106,154,.3)}.cb.blue::before{background:var(--blue)}
-  .cb.purple{border-color:rgba(138,74,170,.3)}.cb.purple::before{background:var(--purple)}
-  .cb.green{border-color:rgba(58,138,92,.3)}.cb.green::before{background:var(--green)}
-  .cb.orange{border-color:rgba(var(--gold-rgb),.3)}.cb.orange::before{background:var(--gold)}
-  .cl{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;color:var(--accent);font-weight:600}
-  .cl.blue{color:var(--blue)}.cl.purple{color:var(--purple)}.cl.green{color:var(--green)}.cl.orange{color:var(--gold)}
-
-  /* ============ 洞见卡 ============ */
-  .insight-c{background:linear-gradient(135deg,rgba(var(--paper-rgb),.04) 0%,rgba(var(--paper-rgb),.08) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh;position:relative;overflow:hidden}
-  .insight-c::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold))}
-  .insight-q{font-family:var(--serif-zh);font-size:1.1rem;font-weight:700;color:var(--gold);line-height:1.6;margin-bottom:1vh}
-  .insight-a{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.75)}
-
-  /* ============ 卡片 ============ */
-  .card{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
-  .card-num{font-family:var(--mono);font-weight:900;font-size:1.8rem;color:var(--accent);opacity:.4;margin-bottom:1vh}
-  .card-title{font-weight:700;font-size:1rem;margin-bottom:1vh}
-  .card-body{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
-  .card-source{font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);margin-top:1vh}
-
-  /* ============ 专家卡片(render_v8) ============ */
-  .card-rise{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--green)}
-  .card-fall{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--accent)}
-  .speaker-header{display:flex;align-items:center;gap:16px;margin-bottom:2vh}
-  .speaker-name{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem}
-  .speaker-role{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:2px}
-  .expert-profile{display:flex;flex-direction:column;gap:1vh}
-  .profile-item{font-size:.9rem;line-height:1.7;color:rgba(var(--paper-rgb),.8)}
-  .profile-label{color:var(--gold);font-weight:600}
-
-  /* ============ 立场表达(render_v8) ============ */
-  .stance-item{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;border-left:3px solid var(--gold)}
-  .stance-expert{font-family:var(--serif-zh);font-weight:700;font-size:1rem;margin-bottom:1vh}
-  .stance-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
-  .stances-grid{display:flex;flex-direction:column;gap:1.5vh}
-
-  /* ============ 碰撞轮次(render_v8) ============ */
-  .clash-round{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;position:relative}
-  .clash-round::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
-  .clash-header{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh;flex-wrap:wrap}
-  .clash-attacker{font-weight:700;font-size:1rem}
-  .clash-target{font-weight:700;font-size:1rem}
-  .clash-arrow{color:rgba(var(--paper-rgb),.3);font-size:1.2rem}
-  .clash-type{display:inline-block;padding:3px 10px;border-radius:3px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.5vh;font-weight:600}
-  .clash-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
-  .counter-attack{margin-top:2vh;padding-top:2vh;border-top:1px dashed rgba(var(--paper-rgb),.1)}
-  .counter-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .counter-content{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
-  .clash-container{display:flex;flex-direction:column;gap:2vh}
-
-  /* ============ 攻击类型色 ============ */
-  .attack-logic{background:rgba(74,106,154,.15);color:var(--blue)}
-  .attack-interest{background:rgba(var(--accent-rgb),.15);color:var(--accent)}
-  .attack-reality{background:rgba(var(--gold-rgb),.15);color:var(--gold)}
-  .attack-human{background:rgba(138,74,170,.15);color:var(--purple)}
-  .attack-failure{background:rgba(58,138,92,.15);color:var(--green)}
-
-  /* ============ 现实案例(render_v8) ============ */
-  .reality-case{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--orange)}
-  .case-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5vh;flex-wrap:wrap;gap:8px}
-  .case-name{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem}
-  .case-source{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4)}
-  .case-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:1.5vh}
-  .case-outcome{font-size:.9rem;font-weight:600;margin-bottom:1vh}
-  .case-lesson{font-size:.9rem;font-weight:600}
-  .cases-container{display:flex;flex-direction:column;gap:2vh}
-
-  /* ============ 代价讨论(render_v8) ============ */
-  .cost-discussion{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh}
-  .cost-scenario{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem;margin-bottom:2vh}
-  .cost-list{display:flex;flex-direction:column;gap:1.5vh;margin-bottom:2vh}
-  .cost-item{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:1.5vh 2vw;border-left:3px solid var(--accent)}
-  .cost-name{font-weight:700;font-size:.95rem;margin-bottom:.5vh}
-  .cost-analysis{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
-  .worst-case{background:rgba(var(--accent-rgb),.08);border:1px solid rgba(var(--accent-rgb),.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
-  .worst-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .worst-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
-  .survivor-bias{background:rgba(138,74,170,.08);border:1px solid rgba(138,74,170,.15);border-radius:6px;padding:2vh 2vw}
-  .survivor-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .survivor-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
-
-  /* ============ 人性层(render_v8) ============ */
-  .human-nature{background:linear-gradient(135deg,rgba(var(--paper-rgb),.03) 0%,rgba(var(--paper-rgb),.06) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
-  .human-question{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem;margin-bottom:2vh;line-height:1.5}
-  .human-analysis{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:2vh}
-  .human-examples{margin-bottom:2vh}
-  .examples-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1vh;font-weight:600}
-  .example-item{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8);padding:.5vh 0}
-  .human-conclusion{font-size:.95rem;font-weight:600;line-height:1.7}
-
-  /* ============ 认知升级(render_v8) ============ */
-  .cognitive-upgrade{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
-  .upgrade-comparison{display:grid;grid-template-columns:1fr auto 1fr;gap:2vw;align-items:start;margin-bottom:2vh}
-  @media(max-width:768px){.upgrade-comparison{grid-template-columns:1fr}.upgrade-arrow{transform:rotate(90deg)}}
-  .old-thinking,.new-thinking{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:2vh 1.5vw}
-  .old-thinking{border-left:3px solid var(--accent)}
-  .new-thinking{border-left:3px solid var(--green)}
-  .thinking-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .thinking-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
-  .upgrade-arrow{font-size:1.5rem;color:rgba(var(--paper-rgb),.3);display:flex;align-items:center;justify-content:center;padding-top:3vh}
-  .complexity{background:rgba(74,106,154,.08);border:1px solid rgba(74,106,154,.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
-  .complexity-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .complexity-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
-  .actionable{background:rgba(var(--gold-rgb),.08);border:1px solid rgba(var(--gold-rgb),.15);border-radius:6px;padding:2vh 2vw}
-  .actionable-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
-  .actionable-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
-
-  /* ============ 情绪样式 ============ */
-  .emotion-sarcasm{border-left:3px solid var(--purple);padding-left:12px;font-style:italic}
-  .emotion-helplessness{opacity:.75;font-style:italic}
-  .emotion-anger{color:var(--accent);font-weight:600}
-  .emotion-hesitation{opacity:.8;font-style:italic}
-  .emotion-self-deprecation{opacity:.7;font-style:italic}
-  .emotion-cold-laugh{color:var(--purple)}
-  .emotion-silence{opacity:.5;font-style:italic}
-  .emotion-serious{color:rgba(var(--paper-rgb),.85)}
-
-  /* ============ 指标 ============ */
-  .metrics{display:flex;gap:2vw;flex-wrap:wrap;margin-bottom:3vh}
-  .metric{flex:1;min-width:100px;text-align:center;background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 1.5vw}
-  .metric-val{font-family:var(--mono);font-weight:900;font-size:clamp(1.5rem,3vw,2.5rem);color:var(--accent)}
-  .metric-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:.5vh}
-
-  /* ============ 开放问题 ============ */
-  .oq{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
-  .oq-num{font-family:var(--mono);font-weight:900;font-size:1.2rem;color:var(--accent);opacity:.3;margin-bottom:1vh}
-  .oq-text{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
-  .headline-item{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.85);padding:1.5vh 0;border-bottom:1px solid rgba(var(--paper-rgb),.06)}
-  .headline-item:last-child{border-bottom:none}
-  .headline-item strong{color:var(--gold);margin-right:8px}
-
-  /* ============ 引用 ============ */
-  .quote{font-family:var(--serif-zh);font-size:1rem;font-style:italic;line-height:1.8;padding:2vh 2.5vw;border-left:3px solid var(--gold);background:rgba(var(--gold-rgb),.05);margin:2vh 0;color:rgba(var(--paper-rgb),.85)}
-
-  /* ============ TOC ============ */
-  .toc-panel{position:fixed;top:0;left:0;width:min(340px,80vw);height:100vh;background:rgba(var(--ink-rgb),.97);backdrop-filter:blur(20px);z-index:100;transform:translateX(-100%);transition:transform .35s var(--ease);padding:3vh 2.5vw;overflow-y:auto;border-right:1px solid rgba(var(--paper-rgb),.08)}
-  .toc-panel.open{transform:translateX(0)}
-  .toc-title{font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:3vh;padding-bottom:2vh;border-bottom:1px solid rgba(var(--paper-rgb),.1)}
-  .toc-item{display:flex;justify-content:space-between;padding:1.2vh 1.5vw;margin-bottom:.5vh;cursor:pointer;border-radius:6px;border-left:2px solid transparent;font-size:.9rem;color:rgba(var(--paper-rgb),.7);transition:all .2s}
-  .toc-item:hover{background:rgba(var(--paper-rgb),.06);color:var(--paper)}
-  .toc-item.active{background:rgba(var(--paper-rgb),.08);color:var(--accent);border-left-color:var(--accent);font-weight:600}
-  .toc-label{flex:1}
-  .toc-page{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.35)}
-  .toc-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;opacity:0;pointer-events:none;transition:opacity .3s}
-  .toc-backdrop.open{opacity:1;pointer-events:auto}
-
-  /* ============ 导航栏 ============ */
-  .nav-bar{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 3vw;background:rgba(var(--ink-rgb),.9);backdrop-filter:blur(10px);z-index:50;border-top:1px solid rgba(var(--paper-rgb),.06)}
-  .nav-left,.nav-right{display:flex;align-items:center;gap:12px}
-  .nav-btn{background:none;border:1px solid rgba(var(--paper-rgb),.12);color:rgba(var(--paper-rgb),.7);padding:8px 16px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;cursor:pointer;transition:all .2s}
-  .nav-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(var(--accent-rgb),.1)}
-  .nav-title{font-size:12px;color:rgba(var(--paper-rgb),.5);max-width:40vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .nav-counter{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.4)}
-
-  /* ============ 导航点 ============ */
-  .nav-dots{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:6px}
-  .nd{width:6px;height:6px;border-radius:50%;background:rgba(var(--paper-rgb),.15);cursor:pointer;transition:all .3s var(--ease);border:none;padding:0}
-  .nd.active{background:var(--accent);height:20px;border-radius:3px;box-shadow:0 0 8px rgba(var(--accent-rgb),.4)}
-  .nd:hover{background:rgba(var(--paper-rgb),.4)}
-
-  /* ============ 入场动画延迟(render_v8兼容) ============ */
-  .anim-in{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
-  .slide.active .anim-in{opacity:1;transform:translateY(0)}
-  .slide.active .anim-in:nth-child(1){transition-delay:.1s}
-  .slide.active .anim-in:nth-child(2){transition-delay:.18s}
-  .slide.active .anim-in:nth-child(3){transition-delay:.26s}
-  .slide.active .anim-in:nth-child(4){transition-delay:.34s}
-  .slide.active .anim-in:nth-child(5){transition-delay:.42s}
-  .slide.active .anim-in:nth-child(6){transition-delay:.5s}
-  .anim-delay-1{transition-delay:.18s !important}
-  .anim-delay-2{transition-delay:.26s !important}
-  .anim-delay-3{transition-delay:.34s !important}
-  .anim-delay-4{transition-delay:.42s !important}
-  .anim-delay-5{transition-delay:.5s !important}
-  .anim-delay-6{transition-delay:.58s !important}
-
-  /* ============ 响应式 ============ */
-  @media(max-width:1024px){.slide{padding:4vh 5vw 8vh}}
-  @media(max-width:768px){
-    .slide{padding:3vh 4vw 7vh}
-    .cover-stats{gap:2vh}
-    .metrics{flex-direction:column}
-    .nav-dots,.nav-title{display:none}
-    .nav-bar{padding:0 2vw}
-  }
+}
 </style>
 </head>
 <body>
-<div class="deck" id="deck">
-<div class="progress-bar" id="progressBar"></div>
-
-
-  <section class="slide hero active" data-title="封面">
-    <div class="slide-content hero-dark">
-      <div class="section-label anim-in">ROUNDTABLE DISCUSSION V8.0</div>
-      <h1 class="title-main anim-in anim-delay-1">内卷时代的意义缺失</h1>
-      <div class="title-sub anim-in anim-delay-2"></div>
-      <div class="gold-line anim-in anim-delay-3"></div>
-      <p style="font-size:14px;color:var(--text-dim);letter-spacing:0.1em;" class="anim-in anim-delay-4">从知识讨论到生存博弈</p>
-    </div>
-    <div class="deck-footer">内卷时代的意义缺失 | V8级圆桌洞见</div>
-    <div class="slide-number">01 / 31</div>
-  </section>
-
-  <section class="slide" data-title="专家档案(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">EXPERT PROFILES (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
-      <div class="grid-2">
-        
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#1a5f2a">项</div>
-          <div>
-            <div class="speaker-name neon-gold">项飙</div>
-            <div class="speaker-role">人类学家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          
-        </div>
-      </div>
-
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#8a2a4a">韩</div>
-          <div>
-            <div class="speaker-name neon-gold">韩炳哲</div>
-            <div class="speaker-role">哲学家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          
-        </div>
-      </div>
-
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#2a6a8a">傅</div>
-          <div>
-            <div class="speaker-name neon-gold">傅盛</div>
-            <div class="speaker-role">科技企业家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          
-        </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">专家档案</div>
-    <div class="slide-number">02 / 31</div>
-  </section>
-
-  <section class="slide" data-title="专家档案(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">EXPERT PROFILES (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
-      <div class="grid-2">
-        
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#e65100">李</div>
-          <div>
-            <div class="speaker-name neon-gold">李诞</div>
-            <div class="speaker-role">脱口秀演员</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          
-        </div>
-      </div>
-
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#4a2d8a">弗</div>
-          <div>
-            <div class="speaker-name neon-gold">弗洛姆</div>
-            <div class="speaker-role">精神分析学家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          
-        </div>
-      </div>
-
-      <div class="card card-rise anim-in">
-        <div class="speaker-header">
-          <div class="speaker-avatar" style="background:#6a4a2a">理</div>
-          <div>
-            <div class="speaker-name neon-gold">理查德·佛罗里达</div>
-            <div class="speaker-role">城市经济学家</div>
-          </div>
-        </div>
-        <div class="expert-profile">
-          
-        </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">专家档案</div>
-    <div class="slide-number">03 / 31</div>
-  </section>
-
-  <section class="slide" data-title="Round 1: 内卷的结构性根源">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1</div>
-      <h2 class="quote-large anim-in anim-delay-1">内卷的结构性根源</h2>
-      <div class="gold-line anim-in anim-delay-2"></div>
-      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">内卷是个人问题还是系统问题？</p>
-    </div>
-    <div class="deck-footer">Round 1 | 内卷的结构性根源</div>
-    <div class="slide-number">04 / 31</div>
-  </section>
-
-  <section class="slide" data-title="R1 立场(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
-      <div class="stances-grid">
-        
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">项飙</div>
-        <div class="stance-content emotion-serious">内卷的本质是'自我锁定'。当上升通道关闭，存量竞争就变成了零和游戏——你的收益就是别人的损失。结果呢？所有人都很累，但整体没有进步。就像跑步机上跑步——你跑得越来越快，但你还在原地。内卷不是'努力'的问题，是'环境'的问题。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">韩炳哲</div>
-        <div class="stance-content emotion-serious">内卷是一种'系统性的自我剥削'。在绩效逻辑下，你的'时间'、'精力'、'健康'都成了可剥削的资源。你不是'被迫'内卷，而是'主动'内卷——因为内卷的逻辑已经内化成你自己的价值观：你必须不断进步、不断优化、不断证明自己。这种自我剥削比外部剥削更有效——你无法反抗自己。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">傅盛</div>
-        <div class="stance-content emotion-serious">内卷是企业竞争加剧的自然结果。僧多粥少，每个参与者都在拼命。当市场增长放缓，内卷就不可避免。企业的应对是'差异化竞争'——找到自己的细分市场，建立护城河。个人的应对是'能力升级'——从同质竞争转向稀缺能力建设。</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 立场</div>
-    <div class="slide-number">05 / 31</div>
-  </section>
-
-  <section class="slide" data-title="R1 立场(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
-      <div class="stances-grid">
-        
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">李诞</div>
-        <div class="stance-content emotion-serious">你们把内卷说得太复杂了。我就问一句：为什么996的互联网公司还在招人？因为有人愿意干啊。内卷的本质是：有人愿意用命换钱，你就不得不也用命换钱。什么'上升通道关闭'、'系统问题'——说白了就是：你不卷，有人卷。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">弗洛姆</div>
-        <div class="stance-content emotion-serious">内卷是一种'逃避自由'的现代形式。人类在现代获得了前所未有的自由——选择职业、选择生活方式、选择价值观。但这种自由带来了焦虑：我选的对吗？我的选择有意义吗？内卷是一种逃避这种焦虑的方式：我不用思考'为什么'，只要'更努力'就行了。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">理查德·佛罗里达</div>
-        <div class="stance-content emotion-serious">内卷是全球创意经济的'副作用'。当所有人都涌向少数'明星城市'和'明星行业'，竞争就不可避免。解决方案是'去中心化'——让更多城市、更多行业成为'有价值的选择'。</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 立场</div>
-    <div class="slide-number">06 / 31</div>
-  </section>
-
-  <section class="slide" data-title="R1 碰撞(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">韩炳哲</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">傅盛</span>
-        </div>
-        <div class="clash-type attack-interest">利益冲突</div>
-        <div class="clash-content emotion-serious">你说内卷的应对是'差异化竞争'——但这不是在解决问题，是在为系统辩护。当整个系统以'竞争'为逻辑，你的'差异化'只是让你在同一个跑步机上换了个跑道。更根本的问题是：为什么我们必须在这个跑步机上？</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你说'为什么要跑'是根本问题——但这个问题可以反过来问：'为什么不跑？'当跑可以带来收益，不跑就意味着失去机会。你可以把这种'竞争'当成'压迫'，也可以当成'激励机制'。市场经济的逻辑是：竞争驱动创新，激励驱动努力。</div>
-          </div>
-      </div>
-
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">项飙</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">李诞</span>
-        </div>
-        <div class="clash-type attack-reality">现实矛盾</div>
-        <div class="clash-content emotion-serious">你说内卷是因为'有人愿意卷'——但你有没有想过，为什么有人愿意卷？是因为他们觉得'卷了有希望'。当上升通道还存在，哪怕只有1%的希望，很多人就会拼命。一旦所有人都觉得'希望没了'，内卷就会变成'躺平'。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你说'躺平是别人的胜利'——但这就是内卷逻辑的核心：你不能停下，因为你一停下就'输了'。但谁定义了这个'比赛'？谁说人生就是一场零和游戏？</div>
-          </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 碰撞</div>
-    <div class="slide-number">07 / 31</div>
-  </section>
-
-  <section class="slide" data-title="R1 碰撞(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">弗洛姆</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">项飙</span>
-        </div>
-        <div class="clash-type attack-human">人性弱点</div>
-        <div class="clash-content emotion-serious">你说内卷是'上升通道关闭'的结果——但上升通道打开的时候，你不也在内卷吗？20年前的互联网创业潮，难道不是另一种内卷？问题是：人类的'相对位置感'是永远不会满足的——哪怕蛋糕在变大，你还是要比邻居更大。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你说'欲望问题'——但欲望是被塑造的。20年前人们想要的是'万元户'，现在想要的是'财务自由'。这些'想要'是被媒体、广告、成功学塑造的。我们需要追问的不是'如何在内卷中胜出'，而是'我们为什么觉得必须胜出'。</div>
-          </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 碰撞</div>
-    <div class="slide-number">08 / 31</div>
-  </section>
-
-  <section class="slide" data-title="R1 案例">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3: REALITY </div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
-      <div class="cases-container">
-        
-      <div class="reality-case anim-in">
-        <div class="case-header">
-          <div class="case-name neon-orange">深圳三和人才市场的'躺平族'</div>
-          <div class="case-source">社会调查 2018</div>
-        </div>
-        <div class="case-content">深圳三和人才市场聚集了一群放弃内卷的青年：他们打日结工，干一天玩三天，不买房、不结婚、不生孩子。他们被主流社会视为'失败者'，但他们自己认为这是一种'反抗'。</div>
-        <div class="case-outcome neon-red">代价：成为社会热点，引发关于工作伦理的广泛讨论</div>
-        <div class="case-lesson neon-gold">教训：当内卷变得无法承受，'退出'成为一些人的选择</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 案例</div>
-    <div class="slide-number">09 / 31</div>
-  </section>
-
-  <section class="slide" data-title="R1 代价">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 4: COST</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
-      
-      <div class="cost-discussion anim-in">
-        <div class="cost-scenario neon-gold">内卷继续加剧，躺平成为大规模现象</div>
-        <div class="cost-list">
-          
-          <div class="cost-item">
-            <div class="cost-name neon-red">生育率的崩塌</div>
-            <div class="cost-analysis">当内卷让人没有时间、精力、金钱来养孩子，生育意愿就会下降。这将进一步加剧少子化，造成劳动力短缺、养老压力、社会保障体系崩溃。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">心理健康危机</div>
-            <div class="cost-analysis">长期内卷导致焦虑、抑郁、睡眠障碍等心理健康问题高发。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">创新能力的萎缩</div>
-            <div class="cost-analysis">当所有人都在存量竞争中没有精力思考和创新，整个社会的创新活力就会下降。</div>
-          </div>
-        </div>
-        <div class="worst-case">
-          <div class="worst-label neon-red">最坏情况</div>
-          <div class="worst-content">2050年，内卷已经内化成文化基因：中国成为全球最'卷'的社会，但也是最'空心化'的社会——人们在物质上达到了一定水平，但在意义感和幸福感上极度匮乏。</div>
-        </div>
-        
-          <div class="survivor-bias">
-            <div class="survivor-label neon-purple">幸存者偏差</div>
-            <div class="survivor-content">我们只看到那些在内卷中'胜出'的人。但我们没有看到的是：那些在内卷中精疲力竭的人，那些被内卷淘汰的人，那些在内卷中失去了健康、关系和意义感的人。</div>
-          </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 代价</div>
-    <div class="slide-number">10 / 31</div>
-  </section>
-
-  <section class="slide" data-title="R1 人性">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
-      
-      <div class="human-nature anim-in">
-        <div class="human-question neon-purple">人类是否天生具有'竞争本能'？</div>
-        <div class="human-analysis">进化心理学认为竞争是进化的驱动力。但人类的竞争本能与动物的竞争有一个关键区别：人类的竞争是'社会建构'的——我们竞争'什么'是由文化决定的。在传统社会，人们竞争土地、妻子、地位；在现代社会，人们竞争学历、收入、消费。问题是：这种'社会建构的竞争'是可以被改变的。</div>
-        <div class="human-examples">
-          <div class="examples-label">现实例子</div>
-          
-          <div class="example-item">• 北欧社会的'去竞争化'——更强调合作而非竞争</div>
-        </div>
-        <div class="human-conclusion neon-gold">竞争是人类天性的一部分，但不是天性的全部。合作、给予、社群同样是人类的本能。问题在于现代社会系统性地强化了'竞争'，压制了'合作'。</div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 人性</div>
-    <div class="slide-number">11 / 31</div>
-  </section>
-
-  <section class="slide" data-title="R1 升级">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
-      
-      <div class="cognitive-upgrade anim-in">
-        <div class="upgrade-comparison">
-          <div class="old-thinking">
-            <div class="thinking-label neon-red">旧思维</div>
-            <div class="thinking-content">内卷是个人选择的问题</div>
-          </div>
-          <div class="upgrade-arrow">→</div>
-          <div class="new-thinking">
-            <div class="thinking-label neon-green">新思维</div>
-            <div class="thinking-content">内卷是系统性问题，需要系统性解决</div>
-          </div>
-        </div>
-        <div class="complexity">
-          <div class="complexity-label neon-cyan">复杂性</div>
-          <div class="complexity-content">内卷不是简单的'个人不努力'或'系统有问题'，而是两者的互动。当系统奖励内卷，个人就会内卷；当内卷成为文化，个人就很难退出。解决内卷需要改变激励结构——让'不内卷'也成为可行的选择。</div>
-        </div>
-        <div class="actionable">
-          <div class="actionable-label neon-gold">可执行洞见</div>
-          <div class="actionable-content">作为个人：定期审视自己的'内卷'——我这么努力是为了什么？这是我真正想要的吗？作为企业：建立'不以内卷为导向'的绩效文化——重视效率而非工时。</div>
-        </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 1 | 升级</div>
-    <div class="slide-number">12 / 31</div>
-  </section>
-
-  <section class="slide" data-title="Round 2: 躺平：反抗还是逃避？">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2</div>
-      <h2 class="quote-large anim-in anim-delay-1">躺平：反抗还是逃避？</h2>
-      <div class="gold-line anim-in anim-delay-2"></div>
-      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">躺平能否真正解决内卷问题？</p>
-    </div>
-    <div class="deck-footer">Round 2 | 躺平：反抗还是逃避？</div>
-    <div class="slide-number">13 / 31</div>
-  </section>
-
-  <section class="slide" data-title="R2 立场(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
-      <div class="stances-grid">
-        
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">项飙</div>
-        <div class="stance-content emotion-serious">躺平是一种'弱者的反抗'。它不是在挑战内卷的逻辑——'人生就是竞争'——而是拒绝参与其中。躺平者承认内卷的存在，选择退出。但这种退出是'个体性的'，不是'集体性的'——一个人躺平，10个人还在卷。除非形成集体行动，否则躺平无法改变系统。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">韩炳哲</div>
-        <div class="stance-content emotion-serious">躺平是资本主义的'内在反动'。它不是在否定资本主义的逻辑——'个人负责自己的命运'——而是用最彻底的方式执行它：我连'自我剥削'都懒得做了。但躺平没有创造新的可能，它只是'不在场'。当所有人都躺平，资本主义会雇佣机器；当你一个人躺平，你就被系统淘汰。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">傅盛</div>
-        <div class="stance-content emotion-serious">躺平是一个经济信号：现有系统和激励出问题了。如果躺平的人足够多，企业就招不到人，不得不提高待遇、改善环境。这是市场自我调节的方式。但问题在于：当前躺平还不够成规模，个体躺平只是'用脚投票'，效果有限。</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 立场</div>
-    <div class="slide-number">14 / 31</div>
-  </section>
-
-  <section class="slide" data-title="R2 立场(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
-      <div class="stances-grid">
-        
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">李诞</div>
-        <div class="stance-content emotion-serious">躺平就是认输。什么'弱者的反抗'、'资本主义的内在反动'——说白了就是：你卷不过人家，就说不卷了。不卷可以，但你要承担不卷的后果：没钱、没地位、没社会认可。你能承受吗？大多数嘴上说躺平的人，身体还是很诚实的。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">弗洛姆</div>
-        <div class="stance-content emotion-serious">躺平是一种'逃避自由'。现代人面对自由的可能性：选择职业、选择生活、选择价值观——但这种自由带来了沉重的负担：我必须为我的选择负责，我可能选错，我可能失败。躺平是一种逃避这种负担的方式：我不选择，所以我不用负责。但这种逃避的代价是：我也失去了真正的自由。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">理查德·佛罗里达</div>
-        <div class="stance-content emotion-serious">躺平需要'经济基础'。三和的躺平族之所以能躺，是因为他们的物质需求极低；中产阶层的躺平尝试之所以失败，是因为他们的'体面生活'需要持续的收入。所以躺平是一种'特权'——要么你足够穷（物欲极低），要么你足够富（不需要为钱工作）。</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 立场</div>
-    <div class="slide-number">15 / 31</div>
-  </section>
-
-  <section class="slide" data-title="R2 碰撞">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH </div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">项飙</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">李诞</span>
-        </div>
-        <div class="clash-type attack-logic">逻辑漏洞</div>
-        <div class="clash-content emotion-serious">你说躺平是'认输'——但'认输'的前提是有比赛。如果比赛本身就不公平——有人出生在终点，有人出生在起点——那'认输'有什么问题？你说躺平要'承担后果'——但这些后果是谁定的？凭什么'有钱有地位'就是成功？</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你说价值标准是'强加的'——但这个标准不是凭空产生的。在市场竞争的社会里，'有钱有地位'确实意味着更多的选择权。你可以不认同这个标准，但你不能忽视它的实际影响。</div>
-          </div>
-      </div>
-
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">弗洛姆</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">韩炳哲</span>
-        </div>
-        <div class="clash-type attack-human">人性弱点</div>
-        <div class="clash-content emotion-serious">你说躺平是'逃避自由'——但逃避和自由之间是什么关系？如果'自由'意味着'必须不断做选择、不断证明自己'，那这种'自由'本身就是一种负担。躺平不参与这个游戏，是否意味着'逃避自由'？</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你说'不选择的自由'——但这种自由在现代社会是可能的吗？当你走进超市，你需要选择；当你找工作，你需要选择。'不选择的自由'在小共同体里是可能的，但在现代社会里，它只是'被迫选择不选择'。</div>
-          </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 碰撞</div>
-    <div class="slide-number">16 / 31</div>
-  </section>
-
-  <section class="slide" data-title="R2 案例">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3: REALITY </div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
-      <div class="cases-container">
-        
-      <div class="reality-case anim-in">
-        <div class="case-header">
-          <div class="case-name neon-orange">韩国'三抛世代'</div>
-          <div class="case-source">韩国统计厅 2022</div>
-        </div>
-        <div class="case-content">韩国年轻人创造了'三抛世代'（抛弃恋爱、抛弃结婚、抛弃生育），后来扩展到'七抛'（再加梦想和希望）。韩国生育率跌破0.8，全球最低。</div>
-        <div class="case-outcome neon-red">代价：韩国面临严重的人口危机</div>
-        <div class="case-lesson neon-gold">教训：当内卷到极致，反抗会延伸到'不生育'</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 案例</div>
-    <div class="slide-number">17 / 31</div>
-  </section>
-
-  <section class="slide" data-title="R2 代价">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 4: COST</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
-      
-      <div class="cost-discussion anim-in">
-        <div class="cost-scenario neon-gold">躺平成为主流选择</div>
-        <div class="cost-list">
-          
-          <div class="cost-item">
-            <div class="cost-name neon-red">经济活力下降</div>
-            <div class="cost-analysis">如果大规模躺平，消费萎缩，投资下降，创新动力减弱，经济进入'日本式'的长期停滞。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">代际矛盾激化</div>
-            <div class="cost-analysis">当年轻人躺平，老年人工作，谁来养老？</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">国家竞争力下降</div>
-            <div class="cost-analysis">在全球竞争的环境下，一个'躺平'的社会会被竞争对手超越。</div>
-          </div>
-        </div>
-        <div class="worst-case">
-          <div class="worst-label neon-red">最坏情况</div>
-          <div class="worst-content">2050年，中国社会分裂成两极：一极是继续内卷的'中产焦虑者'，一极是彻底躺平的'低欲望者'。社会流动性接近冻结，阶层固化。</div>
-        </div>
-        
-          <div class="survivor-bias">
-            <div class="survivor-label neon-purple">幸存者偏差</div>
-            <div class="survivor-content">我们只看到那些'成功躺平'的人——他们似乎过得很轻松、很自在。但我们没有看到的是：那些躺平但仍然焦虑的人，那些想躺平但躺不起的人。</div>
-          </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 代价</div>
-    <div class="slide-number">18 / 31</div>
-  </section>
-
-  <section class="slide" data-title="R2 人性">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
-      
-      <div class="human-nature anim-in">
-        <div class="human-question neon-purple">人类是否需要'意义'才能感到满足？</div>
-        <div class="human-analysis">存在主义心理学认为'意义感'是人类的基本需求。内卷提供了一种'虚假的意义感'：我这么努力，一定是有意义的吧？躺平的问题不在于'不努力'，而在于'没有替代意义'。当内卷的意义感消失，躺平者需要找到新的意义来源，否则会陷入存在性空虚。</div>
-        <div class="human-examples">
-          <div class="examples-label">现实例子</div>
-          
-          <div class="example-item">• 退休综合征——当工作赋予的意义消失，很多人陷入抑郁</div>
-        </div>
-        <div class="human-conclusion neon-gold">躺平可以是一种'退出'，但它不能解决意义问题。如果躺平没有新的意义支撑，它只是'暂时性的逃避'。</div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 人性</div>
-    <div class="slide-number">19 / 31</div>
-  </section>
-
-  <section class="slide" data-title="R2 升级">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
-      
-      <div class="cognitive-upgrade anim-in">
-        <div class="upgrade-comparison">
-          <div class="old-thinking">
-            <div class="thinking-label neon-red">旧思维</div>
-            <div class="thinking-content">躺平是对内卷的有效反抗</div>
-          </div>
-          <div class="upgrade-arrow">→</div>
-          <div class="new-thinking">
-            <div class="thinking-label neon-green">新思维</div>
-            <div class="thinking-content">躺平是内卷逻辑的延伸，而非真正的超越</div>
-          </div>
-        </div>
-        <div class="complexity">
-          <div class="complexity-label neon-cyan">复杂性</div>
-          <div class="complexity-content">躺平的问题在于它只是'拒绝参与'，而非'建立替代'。在一个以内卷为逻辑的社会里，躺平无法改变逻辑本身——它只是个体层面的'不参与'。真正的超越需要'建立替代'——新的价值体系、新的生活方式、新的社会契约。</div>
-        </div>
-        <div class="actionable">
-          <div class="actionable-label neon-gold">可执行洞见</div>
-          <div class="actionable-content">作为个人：躺平之前先问自己——我躺平之后做什么？有没有新的意义来源？作为社会：建立'不以内卷为前提'的制度——基本收入、免费医疗、养老保障。当生存不成为问题，内卷的逻辑才会松动。</div>
-        </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 2 | 升级</div>
-    <div class="slide-number">20 / 31</div>
-  </section>
-
-  <section class="slide" data-title="Round 3: 超越内卷的可能性">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3</div>
-      <h2 class="quote-large anim-in anim-delay-1">超越内卷的可能性</h2>
-      <div class="gold-line anim-in anim-delay-2"></div>
-      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">如何才能真正超越内卷？</p>
-    </div>
-    <div class="deck-footer">Round 3 | 超越内卷的可能性</div>
-    <div class="slide-number">21 / 31</div>
-  </section>
-
-  <section class="slide" data-title="R3 立场(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
-      <div class="stances-grid">
-        
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">项飙</div>
-        <div class="stance-content emotion-serious">超越内卷需要'重建附近'。当个人的意义感不再只来自'向上流动'，而是来自社区、家庭、具体的人与人关系，内卷的压力就会减轻。'附近'不是抽象的，它是具体的：你的邻居、你常去的咖啡馆、你的朋友圈子。当'附近'有意义，'远方'的焦虑就会减轻。重建附近是一种'战略性的撤退'——不是放弃竞争，而是降低竞争的重要性。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">韩炳哲</div>
-        <div class="stance-content emotion-serious">超越内卷需要'拒绝绩效社会'的逻辑。绩效社会告诉你：你必须不断优化、不断进步、不断证明自己。它的核心假设是：你现在是不够好的，你需要变得更好。躺平和内卷都是这个逻辑的变体——要么'更努力地卷'，要么'彻底躺平'。真正的超越是拒绝这个逻辑：我不需要证明自己，我只是'存在'。这需要一种'存在主义的态度'。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">傅盛</div>
-        <div class="stance-content emotion-serious">超越内卷需要'创造增量'。当蛋糕在变大，每个人都能分到更多，内卷的压力就会减轻。科技发展、新市场开拓、新产业崛起——这些都能创造增量空间。问题在于：增量空间需要被创造，而不是等待被发现。企业家的使命就是创造增量——通过创新，通过开拓，通过解决未解决的问题。</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 立场</div>
-    <div class="slide-number">22 / 31</div>
-  </section>
-
-  <section class="slide" data-title="R3 立场(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
-      <div class="stances-grid">
-        
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">李诞</div>
-        <div class="stance-content emotion-serious">超越内卷需要'接受平凡'。我们大多数人就是普通人，不会改变世界，不会功成名就，就是过完普通的一生。接受这个事实，你就不会那么焦虑了。不接受，你就得继续卷。但接受平凡不是躺平——接受平凡是：努力，但接受结果；卷，但不被卷消耗。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">弗洛姆</div>
-        <div class="stance-content emotion-serious">超越内卷需要'重新定义成功'。当成功不再是'比他人更好'，而是'成为更好的自己'，内卷的逻辑就会失效。这需要一种'内在的转变'：从'外在标准'转向'内在标准'。但问题是：这种转变需要'安全感'——当你为生存焦虑时，你无法关注'内在成长'。所以超越内卷需要社会条件——当基本需求被满足，人们才有可能追求'内在成长'。</div>
-      </div>
-
-      <div class="stance-item anim-in">
-        <div class="stance-expert neon-gold">理查德·佛罗里达</div>
-        <div class="stance-content emotion-serious">超越内卷需要'重新设计激励'。当社会的评价体系多元化——不只是金钱和地位，而是创造、健康、社区——内卷的压力就会分散。'创意阶层'的价值多元化已经开始了：越来越多的人追求'有意义的工作'、'灵活的时间'、'社区的连接'。问题在于：这个转变需要时间，也需要制度支持。</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 立场</div>
-    <div class="slide-number">23 / 31</div>
-  </section>
-
-  <section class="slide" data-title="R3 碰撞(1/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (1/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">韩炳哲</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">项飙</span>
-        </div>
-        <div class="clash-type attack-logic">逻辑漏洞</div>
-        <div class="clash-content emotion-serious">你说'重建附近'——但附近能提供意义感吗？在原子化的城市社会，'附近'往往是陌生人。你的邻居你不认识，你楼下的咖啡馆老板只认钱。'重建附近'是一个美好的愿景，但在现代社会，它需要的前提——稳定居住、社区参与——越来越稀缺。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你说'附近'的前提不存在——但这些前提正在被创造。远程工作让人们可以在小城市生活，社区组织在年轻人中重新兴起，'附近'的概念正在被重新定义。你说它不可能，但可能性正在被创造。</div>
-          </div>
-      </div>
-
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">傅盛</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">弗洛姆</span>
-        </div>
-        <div class="clash-type attack-interest">利益冲突</div>
-        <div class="clash-content emotion-serious">你说超越内卷需要'重新定义成功'——但谁有权力'重新定义'成功？是哲学家吗？是政府吗？如果大多数人仍然认为'有钱就是成功'，你如何'改变'这个共识？你的'内在标准'是精英的标准——它对已经'成功'的人才有效，对还在为生存焦虑的人无效。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你说'内在标准'是精英的标准——但这恰恰是问题所在：我们把'生存焦虑'当成理所当然，而不是当成需要解决的问题。如果社会保障足够好，人们就不需要用'外在成功'来获得安全感。'内在标准'不是精英的特权，它是可以被大众化的——但这需要社会变革。</div>
-          </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 碰撞</div>
-    <div class="slide-number">24 / 31</div>
-  </section>
-
-  <section class="slide" data-title="R3 碰撞(2/2)">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH (2/2)</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
-      <div class="clash-container">
-        
-      <div class="clash-round anim-in">
-        <div class="clash-header">
-          <span class="clash-attacker neon-red">李诞</span>
-          <span class="clash-arrow">→</span>
-          <span class="clash-target neon-cyan">韩炳哲</span>
-        </div>
-        <div class="clash-type attack-human">人性弱点</div>
-        <div class="clash-content emotion-serious">你说超越内卷需要'拒绝绩效逻辑'——但你说起来容易做起来难。你能'不需要证明自己'吗？当你走在街上，所有人都在用'成就'来定义彼此，你如何能'只是存在'？这种'存在主义的态度'需要极强的内心力量——大多数人没有这种力量。</div>
-        
-          <div class="counter-attack">
-            <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content emotion-serious">你说'存在主义的态度'需要极强的内心力量——但这种力量不是天生的，它是可以被培养的。冥想、正念、哲学——这些工具可以帮助人们建立'内在的锚'。问题不在于大多数人'没有这种力量'，而在于我们没有教他们如何获得这种力量。</div>
-          </div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 碰撞</div>
-    <div class="slide-number">25 / 31</div>
-  </section>
-
-  <section class="slide" data-title="R3 案例">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3: REALITY </div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
-      <div class="cases-container">
-        
-      <div class="reality-case anim-in">
-        <div class="case-header">
-          <div class="case-name neon-orange">北欧模式</div>
-          <div class="case-source">联合国幸福报告 2023</div>
-        </div>
-        <div class="case-content">北欧国家（芬兰、丹麦、挪威）在联合国幸福报告中长期排名前列。它们的共同特点：高税收、高福利、强社会安全网、重视工作生活平衡。在这些国家，内卷压力明显低于其他国家——因为生存不成为问题，人们可以追求'内在价值'。但批评者指出：北欧模式依赖高税收和资源丰富，它在其他地方可能难以复制。</div>
-        <div class="case-outcome neon-red">代价：成为全球羡慕的对象，但复制困难</div>
-        <div class="case-lesson neon-gold">教训：超越内卷需要'社会基础设施'——但这种设施在不同国家、不同文化下需要不同的实现方式</div>
-      </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 案例</div>
-    <div class="slide-number">26 / 31</div>
-  </section>
-
-  <section class="slide" data-title="R3 代价">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 4: COST</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
-      
-      <div class="cost-discussion anim-in">
-        <div class="cost-scenario neon-gold">社会成功超越内卷</div>
-        <div class="cost-list">
-          
-          <div class="cost-item">
-            <div class="cost-name neon-red">竞争动力的丧失</div>
-            <div class="cost-analysis">如果'躺平'成为主流，社会可能失去创新和进步的动力。竞争在扭曲后是问题，但在适度情况下，它是人类进步的重要驱动力。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">经济模式的转型</div>
-            <div class="cost-analysis">以内卷为燃料的经济体需要彻底转型：从'增长导向'到'幸福导向'。这个转型需要时间、资源、政治意愿。</div>
-          </div>
-          <div class="cost-item">
-            <div class="cost-name neon-red">文化惯性的阻力</div>
-            <div class="cost-analysis">'成功学'、'上进'、'努力改变命运'——这些观念根深蒂固。改变需要一代人甚至几代人的时间。</div>
-          </div>
-        </div>
-        <div class="worst-case">
-          <div class="worst-label neon-red">最坏情况</div>
-          <div class="worst-content">超越内卷变成了新的'内卷'：'躺平'成为一种'时尚'，那些'躺得不够平'的人成为新的失败者。我们只是换了一种形式在比较。</div>
-        </div>
-        
-          <div class="survivor-bias">
-            <div class="survivor-label neon-purple">幸存者偏差</div>
-            <div class="survivor-content">我们只看到那些'成功超越内卷'的人——他们找到了新的意义感、新的生活方式。但我们没有看到的是：那些尝试超越但失败的人，那些在转型过程中被淘汰的人，那些'旧秩序'的既得利益者。</div>
-          </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 代价</div>
-    <div class="slide-number">27 / 31</div>
-  </section>
-
-  <section class="slide" data-title="R3 人性">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
-      
-      <div class="human-nature anim-in">
-        <div class="human-question neon-purple">人类是否能够从'外在动机'转向'内在动机'？</div>
-        <div class="human-analysis">自我决定理论区分了'外在动机'（金钱、地位、奖励）和'内在动机'（兴趣、意义、成长）。研究表明：内在动机带来更持久的满足和更好的心理健康。但从外在动机转向内在动机需要前提：基本需求被满足、安全感存在、没有生存焦虑。在内卷的社会里，这个前提往往不存在。</div>
-        <div class="human-examples">
-          <div class="examples-label">现实例子</div>
-          
-          <div class="example-item">• 北欧国家的'内在动机'文化——高福利让人们可以追求内在价值</div>
-          <div class="example-item">• FIRE运动——通过财务独立来实现动机转换</div>
-        </div>
-        <div class="human-conclusion neon-gold">超越内卷需要'外在条件'和'内在转变'的结合：社会提供安全感，个人发展内在价值。</div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 人性</div>
-    <div class="slide-number">28 / 31</div>
-  </section>
-
-  <section class="slide" data-title="R3 升级">
-    <div class="slide-content">
-      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
-      
-      <div class="cognitive-upgrade anim-in">
-        <div class="upgrade-comparison">
-          <div class="old-thinking">
-            <div class="thinking-label neon-red">旧思维</div>
-            <div class="thinking-content">内卷是无法解决的，因为人性如此</div>
-          </div>
-          <div class="upgrade-arrow">→</div>
-          <div class="new-thinking">
-            <div class="thinking-label neon-green">新思维</div>
-            <div class="thinking-content">内卷是一种可以改变的社会安排，而不是不可改变的人性</div>
-          </div>
-        </div>
-        <div class="complexity">
-          <div class="complexity-label neon-cyan">复杂性</div>
-          <div class="complexity-content">超越内卷不是个人层面的'觉醒'，而是社会层面的'变革'：需要改变激励结构（减少生存焦虑）、需要新的价值叙事（重新定义成功）、需要社会基础设施（让'不内卷'成为可能）。这是一个系统性工程，没有单一解决方案。</div>
-        </div>
-        <div class="actionable">
-          <div class="actionable-label neon-gold">可执行洞见</div>
-          <div class="actionable-content">作为个人：找到'内卷之外'的意义——不只是工作，还有关系、兴趣、贡献。作为社区：创造'附近的意义'——真实的连接、互惠的关系、归属感。作为社会：建立'反内卷'的制度——基本收入、弹性工作、评价多元化。</div>
-        </div>
-      </div>
-    </div>
-    <div class="deck-footer">Round 3 | 升级</div>
-    <div class="slide-number">29 / 31</div>
-  </section>
-
-  <section class="slide" data-title="最终洞见">
-    <div class="slide-content">
-      <div class="section-label anim-in">FINAL INSIGHT</div>
-      <div class="quote-large anim-in anim-delay-1">内卷是一种系统性的社会病症：它既是个人选择的累积，也是制度激励的产物。躺平是内卷逻辑的延伸，而非真正的超越——因为它只是'拒绝参与'，而不是'建立替代'。真正超越内卷需要：改变激励结构（让不内卷成为可能）、重建意义来源（社区、关系、贡献）、重新定义成功（从外在标准到内在标准）。这不是个人觉醒的问题，而是社会变革的课题。当社会提供了安全感，个人才有可能追求'内在成长'；当'附近'有意义，'远方'的焦虑才会减轻。内卷的终点不是躺平，而是重建一种新的生活哲学：在竞争中保持清醒，在努力中保持从容，在成就中保持平凡。</div>
-    </div>
-    <div class="deck-footer">最终洞见</div>
-    <div class="slide-number">30 / 31</div>
-  </section>
-
-  <section class="slide" data-title="开放问题">
-    <div class="slide-content">
-      <div class="section-label anim-in">OPEN QUESTIONS</div>
-      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">留给读者的问题</h3>
-      <div class="headline-item anim-in"><strong>Q1:</strong> 当内卷和躺平都成了'表演'，真正的超越如何可能？</div>
-<div class="headline-item anim-in"><strong>Q2:</strong> 在全球化竞争的时代，'重建附近'能否对抗'全球内卷'？</div>
-<div class="headline-item anim-in"><strong>Q3:</strong> 当意义感来自内心而非外在，社会如何提供'安全感'这个前提？</div>
-    </div>
-    <div class="deck-footer">开放问题</div>
-    <div class="slide-number">31 / 31</div>
-  </section>
-
-<div class="toc-backdrop" id="tocBackdrop"></div>
-<div class="toc-panel" id="tocPanel">
-<div class="toc-title">目录</div>
-<div id="tocList"></div>
-</div>
-<div class="nav-bar">
-<div class="nav-left">
-<button class="nav-btn" id="btnToc">☰ 目录</button>
-<button class="nav-btn" id="btnPrev">◀ 上一页</button>
-<button class="nav-btn" id="btnNext">下一页 ▶</button>
-</div>
-<div class="nav-right">
-<span class="nav-title" id="slideTitle"></span>
-<span class="nav-counter" id="slideCounter"></span>
-</div>
-</div>
-<div class="nav-dots" id="navDots"></div>
+<div class="mesh-gradient"></div>
+<div class="noise-overlay"></div>
+<div id="progress">
+  <div id="progressBar"></div>
 </div>
 
+<div class="slide slide-cover">
+  <div class="cover-logo">圆桌洞见<span>Roundtable Insight</span></div>
+  <div class="cover-body">
+    <h1>内卷时代的意义缺失</h1>
+    <p class="cover-sub"></p>
+    <p class="cover-date">6 位专家 · 3 轮讨论</p>
+  </div>
+  <div class="cover-footer">本报告由 AI 专家圆桌生成</div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">专家阵容</div>
+  <h2 class="slide-title">内卷时代的意义缺失</h2>
+  <div class="experts-grid">
+    <div class="expert-card">
+      <div class="expert-avatar">项</div>
+      <div class="expert-name">项飙</div>
+      <div class="expert-role">人类学家</div>
+      <div class="expert-desc">...</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">韩</div>
+      <div class="expert-name">韩炳哲</div>
+      <div class="expert-role">哲学家</div>
+      <div class="expert-desc">...</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">傅</div>
+      <div class="expert-name">傅盛</div>
+      <div class="expert-role">科技企业家</div>
+      <div class="expert-desc">...</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">李</div>
+      <div class="expert-name">李诞</div>
+      <div class="expert-role">脱口秀演员</div>
+      <div class="expert-desc">...</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">弗</div>
+      <div class="expert-name">弗洛姆</div>
+      <div class="expert-role">精神分析学家</div>
+      <div class="expert-desc">...</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">理</div>
+      <div class="expert-name">理查德·佛罗里达</div>
+      <div class="expert-role">城市经济学家</div>
+      <div class="expert-desc">...</div>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 1 / 3</div>
+  <h2 class="slide-title">内卷的结构性根源</h2>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 1 发言</div>
+  <div class="speech-cards">
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#c23b22">项</div>
+            <div>
+              <div class="speaker-name">项飙</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">内卷的本质是'自我锁定'。当上升通道关闭，存量竞争就变成了零和游戏——你的收益就是别人的损失。结果呢？所有人都很累，但整体没有进步。就像跑步机上跑步——你跑得越来越快，但你还在原地。内卷不是'努力'的问题，是'环境'的问题。</div>
+        </div>
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#3a8a5c">韩</div>
+            <div>
+              <div class="speaker-name">韩炳哲</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">内卷是一种'系统性的自我剥削'。在绩效逻辑下，你的'时间'、'精力'、'健康'都成了可剥削的资源。你不是'被迫'内卷，而是'主动'内卷——因为内卷的逻辑已经内化成你自己的价值观：你必须不断进步、不断优化、不断证明自己。这种自我剥削比外部剥削更有效——你无法反抗自己。</div>
+        </div>
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#8a4aaa">傅</div>
+            <div>
+              <div class="speaker-name">傅盛</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">内卷是企业竞争加剧的自然结果。僧多粥少，每个参与者都在拼命。当市场增长放缓，内卷就不可避免。企业的应对是'差异化竞争'——找到自己的细分市场，建立护城河。个人的应对是'能力升级'——从同质竞争转向稀缺能力建设。</div>
+        </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 1 碰撞</div>
+  <div class="clash-block">
+        <div class="clash-item">
+          <div class="clash-speaker">韩炳哲</div>
+          <div class="clash-text">你说内卷的应对是'差异化竞争'——但这不是在解决问题，是在为系统辩护。当整个系统以'竞争'为逻辑，你的'差异化'只是让你在同一个跑步机上换了个跑道。更根本的问题是：为什么我们必须在这个跑步机上？</div>
+        </div>
+        <div class="clash-item">
+          <div class="clash-speaker">项飙</div>
+          <div class="clash-text">你说内卷是因为'有人愿意卷'——但你有没有想过，为什么有人愿意卷？是因为他们觉得'卷了有希望'。当上升通道还存在，哪怕只有1%的希望，很多人就会拼命。一旦所有人都觉得'希望没了'，内卷就会变成'躺平'。</div>
+        </div>
+        <div class="clash-item">
+          <div class="clash-speaker">弗洛姆</div>
+          <div class="clash-text">你说内卷是'上升通道关闭'的结果——但上升通道打开的时候，你不也在内卷吗？20年前的互联网创业潮，难道不是另一种内卷？问题是：人类的'相对位置感'是永远不会满足的——哪怕蛋糕在变大，你还是要比邻居更大。</div>
+        </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 1 洞见</div>
+  <div class="insight-block">
+    <div class="insight-q">内卷是系统性问题，需要系统性解决</div>
+    <div class="insight-a">内卷不是简单的'个人不努力'或'系统有问题'，而是两者的互动。当系统奖励内卷，个人就会内卷；当内卷成为文化，个人就很难退出。解决内卷需要改变激励结构——让'不内卷'也成为可行的选择。</div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 2 / 3</div>
+  <h2 class="slide-title">躺平：反抗还是逃避？</h2>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 2 发言</div>
+  <div class="speech-cards">
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#c23b22">项</div>
+            <div>
+              <div class="speaker-name">项飙</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">躺平是一种'弱者的反抗'。它不是在挑战内卷的逻辑——'人生就是竞争'——而是拒绝参与其中。躺平者承认内卷的存在，选择退出。但这种退出是'个体性的'，不是'集体性的'——一个人躺平，10个人还在卷。除非形成集体行动，否则躺平无法改变系统。</div>
+        </div>
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#3a8a5c">韩</div>
+            <div>
+              <div class="speaker-name">韩炳哲</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">躺平是资本主义的'内在反动'。它不是在否定资本主义的逻辑——'个人负责自己的命运'——而是用最彻底的方式执行它：我连'自我剥削'都懒得做了。但躺平没有创造新的可能，它只是'不在场'。当所有人都躺平，资本主义会雇佣机器；当你一个人躺平，你就被系统淘汰。</div>
+        </div>
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#8a4aaa">傅</div>
+            <div>
+              <div class="speaker-name">傅盛</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">躺平是一个经济信号：现有系统和激励出问题了。如果躺平的人足够多，企业就招不到人，不得不提高待遇、改善环境。这是市场自我调节的方式。但问题在于：当前躺平还不够成规模，个体躺平只是'用脚投票'，效果有限。</div>
+        </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 2 碰撞</div>
+  <div class="clash-block">
+        <div class="clash-item">
+          <div class="clash-speaker">项飙</div>
+          <div class="clash-text">你说躺平是'认输'——但'认输'的前提是有比赛。如果比赛本身就不公平——有人出生在终点，有人出生在起点——那'认输'有什么问题？你说躺平要'承担后果'——但这些后果是谁定的？凭什么'有钱有地位'就是成功？</div>
+        </div>
+        <div class="clash-item">
+          <div class="clash-speaker">弗洛姆</div>
+          <div class="clash-text">你说躺平是'逃避自由'——但逃避和自由之间是什么关系？如果'自由'意味着'必须不断做选择、不断证明自己'，那这种'自由'本身就是一种负担。躺平不参与这个游戏，是否意味着'逃避自由'？</div>
+        </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 2 洞见</div>
+  <div class="insight-block">
+    <div class="insight-q">躺平是内卷逻辑的延伸，而非真正的超越</div>
+    <div class="insight-a">躺平的问题在于它只是'拒绝参与'，而非'建立替代'。在一个以内卷为逻辑的社会里，躺平无法改变逻辑本身——它只是个体层面的'不参与'。真正的超越需要'建立替代'——新的价值体系、新的生活方式、新的社会契约。</div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 3 / 3</div>
+  <h2 class="slide-title">超越内卷的可能性</h2>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 3 发言</div>
+  <div class="speech-cards">
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#c23b22">项</div>
+            <div>
+              <div class="speaker-name">项飙</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">超越内卷需要'重建附近'。当个人的意义感不再只来自'向上流动'，而是来自社区、家庭、具体的人与人关系，内卷的压力就会减轻。'附近'不是抽象的，它是具体的：你的邻居、你常去的咖啡馆、你的朋友圈子。当'附近'有意义，'远方'的焦虑就会减轻。重建附近是一种'战略性的撤退'——不是放弃竞争，而是降低竞争的重要性。</div>
+        </div>
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#3a8a5c">韩</div>
+            <div>
+              <div class="speaker-name">韩炳哲</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">超越内卷需要'拒绝绩效社会'的逻辑。绩效社会告诉你：你必须不断优化、不断进步、不断证明自己。它的核心假设是：你现在是不够好的，你需要变得更好。躺平和内卷都是这个逻辑的变体——要么'更努力地卷'，要么'彻底躺平'。真正的超越是拒绝这个逻辑：我不需要证明自己，我只是'存在'。这需要一种'存在主义的态度'。</div>
+        </div>
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#8a4aaa">傅</div>
+            <div>
+              <div class="speaker-name">傅盛</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">超越内卷需要'创造增量'。当蛋糕在变大，每个人都能分到更多，内卷的压力就会减轻。科技发展、新市场开拓、新产业崛起——这些都能创造增量空间。问题在于：增量空间需要被创造，而不是等待被发现。企业家的使命就是创造增量——通过创新，通过开拓，通过解决未解决的问题。</div>
+        </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 3 碰撞</div>
+  <div class="clash-block">
+        <div class="clash-item">
+          <div class="clash-speaker">韩炳哲</div>
+          <div class="clash-text">你说'重建附近'——但附近能提供意义感吗？在原子化的城市社会，'附近'往往是陌生人。你的邻居你不认识，你楼下的咖啡馆老板只认钱。'重建附近'是一个美好的愿景，但在现代社会，它需要的前提——稳定居住、社区参与——越来越稀缺。</div>
+        </div>
+        <div class="clash-item">
+          <div class="clash-speaker">傅盛</div>
+          <div class="clash-text">你说超越内卷需要'重新定义成功'——但谁有权力'重新定义'成功？是哲学家吗？是政府吗？如果大多数人仍然认为'有钱就是成功'，你如何'改变'这个共识？你的'内在标准'是精英的标准——它对已经'成功'的人才有效，对还在为生存焦虑的人无效。</div>
+        </div>
+        <div class="clash-item">
+          <div class="clash-speaker">李诞</div>
+          <div class="clash-text">你说超越内卷需要'拒绝绩效逻辑'——但你说起来容易做起来难。你能'不需要证明自己'吗？当你走在街上，所有人都在用'成就'来定义彼此，你如何能'只是存在'？这种'存在主义的态度'需要极强的内心力量——大多数人没有这种力量。</div>
+        </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 3 洞见</div>
+  <div class="insight-block">
+    <div class="insight-q">内卷是一种可以改变的社会安排，而不是不可改变的人性</div>
+    <div class="insight-a">超越内卷不是个人层面的'觉醒'，而是社会层面的'变革'：需要改变激励结构（减少生存焦虑）、需要新的价值叙事（重新定义成功）、需要社会基础设施（让'不内卷'成为可能）。这是一个系统性工程，没有单一解决方案。</div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">核心结论</div>
+  <h2 class="slide-title">圆桌洞见总结</h2>
+  <div class="conclusions-grid">
+        <div class="conclusion-item">
+          <div class="conclusion-num">1</div>
+          <div class="conclusion-text">内卷是一种系统性的社会病症：它既是个人选择的累积，也是制度激励的产物。躺平是内卷逻辑的延伸，而非真正的超越——因为它只是'拒绝参与'，而不是'建立替代'。真正超越内卷需要：改变激励结构（让不内卷成为可能）、重建意义来源（社区、关系、贡献）、重新定义成功（从外在标准到内在标准）。这不是个人觉醒的问题，而是社会变革的课题。当社会提供了安全感，个人才有可能追求'内在成长'；当'附近'有意义，'远方'的焦虑才会减轻。内卷的终点不是躺平，而是重建一种新的生活哲学：在竞争中保持清醒，在努力中保持从容，在成就中保持平凡。</div>
+        </div>
+        <div class="conclusion-item">
+          <div class="conclusion-num">2</div>
+          <div class="conclusion-text">当内卷和躺平都成了'表演'，真正的超越如何可能？</div>
+        </div>
+        <div class="conclusion-item">
+          <div class="conclusion-num">3</div>
+          <div class="conclusion-text">在全球化竞争的时代，'重建附近'能否对抗'全球内卷'？</div>
+        </div>
+        <div class="conclusion-item">
+          <div class="conclusion-num">4</div>
+          <div class="conclusion-text">当意义感来自内心而非外在，社会如何提供'安全感'这个前提？</div>
+        </div>
+  </div>
+</div>
+
+<div id="nav">
+  <button class="nav-btn" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+</div>
+<div id="counter">1 / 1</div>
 <script>
 (function(){
-var deck=document.getElementById("deck");
-var slides=deck.querySelectorAll(".slide");
-var total=slides.length;
-var cur=0;
-var dots=document.getElementById("navDots");
-var tocList=document.getElementById("tocList");
-var titleEl=document.getElementById("slideTitle");
-var counterEl=document.getElementById("slideCounter");
-var tocPanel=document.getElementById("tocPanel");
-var tocBackdrop=document.getElementById("tocBackdrop");
-var progressBar=document.getElementById("progressBar");
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let cur = 0;
+  const dotsContainer = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progressBar');
 
-for(var i=0;i<total;i++){
-  var d=document.createElement("button");
-  d.className="nd";
-  d.setAttribute("data-i",i);
-  d.onclick=(function(idx){return function(){go(idx)}})(i);
-  dots.appendChild(d);
-  var t=document.createElement("div");
-  t.className="toc-item";
-  t.setAttribute("data-i",i);
-  t.innerHTML='<span class="toc-label">'+(slides[i].getAttribute("data-title")||"Slide "+(i+1))+'</span><span class="toc-page">'+String(i+1).padStart(2,"0")+'</span>';
-  t.onclick=(function(idx){return function(){go(idx);closeTOC()}})(i);
-  tocList.appendChild(t);
-}
+  slides.forEach((s, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => go(i);
+    dotsContainer.appendChild(dot);
+  });
 
-function go(n){
-  if(n<0||n>=total)return;
-  slides[cur].classList.remove("active");
-  dots.children[cur].classList.remove("active");
-  tocList.children[cur].classList.remove("active");
-  cur=n;
-  slides[cur].classList.add("active");
-  dots.children[cur].classList.add("active");
-  tocList.children[cur].classList.add("active");
-  titleEl.textContent=slides[cur].getAttribute("data-title")||"";
-  counterEl.textContent=(cur+1)+" / "+total;
-  progressBar.style.width=((cur+1)/total*100)+"%";
-  slides[cur].scrollTop=0;
-}
-function toggleTOC(){tocPanel.classList.toggle("open");tocBackdrop.classList.toggle("open")}
-function closeTOC(){tocPanel.classList.remove("open");tocBackdrop.classList.remove("open")}
+  function go(n) {
+    if (n < 0 || n >= total) return;
+    slides[cur].classList.remove('visible');
+    dotsContainer.children[cur]?.classList.remove('active');
+    cur = n;
+    slides[cur].scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' });
+    slides[cur].classList.add('visible');
+    dotsContainer.children[cur]?.classList.add('active');
+    counter.textContent = (cur + 1) + ' / ' + total;
+    const pct = Math.min(100, ((cur + 1) / total) * 100);
+    progress.style.width = pct + '%';
+  }
 
-document.addEventListener("keydown",function(e){
-  if(e.key==="ArrowRight"||e.key==="ArrowDown"||e.key===" "||e.key==="PageDown"){e.preventDefault();go(cur+1)}
-  else if(e.key==="ArrowLeft"||e.key==="ArrowUp"||e.key==="PageUp"){e.preventDefault();go(cur-1)}
-  else if(e.key==="Home"){e.preventDefault();go(0)}
-  else if(e.key==="End"){e.preventDefault();go(total-1)}
-  else if(e.key==="Escape"){closeTOC();go(0)}
-  else if(e.key==="t"||e.key==="T"){toggleTOC()}
-});
-var wheelTimer=null;
-deck.addEventListener("wheel",function(e){
-  e.preventDefault();
-  if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},400)}
-  if(e.deltaY>0)go(cur+1);
-  else if(e.deltaY<0)go(cur-1);
-},{passive:false});
-var touchX=0,touchY=0;
-deck.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX;touchY=e.touches[0].clientY});
-deck.addEventListener("touchend",function(e){
-  var dx=touchX-e.changedTouches[0].clientX,dy=touchY-e.changedTouches[0].clientY;
-  if(Math.abs(dy)>Math.abs(dx)){if(dy>50)go(cur+1);else if(dy<-50)go(cur-1)}
-  else{if(dx>50)go(cur+1);else if(dx<-50)go(cur-1)}
-});
-deck.addEventListener("click",function(e){
-  if(e.target.closest(".nav-btn,.nd,.toc-item,.toc-panel,.toc-backdrop"))return;
-  var x=e.clientX/window.innerWidth;
-  if(x<0.3)go(cur-1);else if(x>0.7)go(cur+1);
-});
-document.getElementById("btnToc").addEventListener("click",function(e){e.stopPropagation();toggleTOC()});
-document.getElementById("btnPrev").addEventListener("click",function(e){e.stopPropagation();go(cur-1)});
-document.getElementById("btnNext").addEventListener("click",function(e){e.stopPropagation();go(cur+1)});
-tocBackdrop.addEventListener("click",closeTOC);
-go(0);
+  document.getElementById('prevBtn').onclick = () => go(cur - 1);
+  document.getElementById('nextBtn').onclick = () => go(cur + 1);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      go(cur + 1);
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      go(cur - 1);
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      go(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      go(total - 1);
+    }
+  });
+
+  let wheelTimer = null;
+  document.addEventListener('wheel', e => {
+    e.preventDefault();
+    if (wheelTimer) return;
+    wheelTimer = setTimeout(() => wheelTimer = null, 400);
+    if (e.deltaY > 0 || e.deltaX > 0) go(cur + 1);
+    else if (e.deltaY < 0 || e.deltaX < 0) go(cur - 1);
+  }, { passive: false });
+
+  document.body.addEventListener('click', e => {
+    if (e.target.closest('.nav-dot, .dots, .nav-btn, .expert-card, .speech-card, .clash-block, .insight-block, .question-card, .conclusion-item, .stat-item')) return;
+    go(cur + 1);
+  });
+
+  go(0);
 })();
 </script>
 </body>

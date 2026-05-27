@@ -91,6 +91,7 @@ body::after {
   transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   background-image: radial-gradient(circle at 1px 1px, var(--dot) 1px, transparent 1px);
   background-size: 32px 32px;
+  overflow: hidden;
 }
 .section.visible { opacity: 1; pointer-events: auto; }
 .section.visible .animate-in { animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
@@ -101,7 +102,7 @@ body::after {
 .section.visible .delay-4 { animation-delay: 0.5s; opacity: 0; }
 .section.visible .delay-5 { animation-delay: 0.65s; opacity: 0; }
 .section-cover { justify-content: center; align-items: center; text-align: center; padding: 48px; }
-.section-round { padding: 64px 72px; overflow-y: auto; }
+.section-round { padding: 64px 72px; overflow: hidden; }
 .section-round::-webkit-scrollbar { width: 4px; }
 .section-round::-webkit-scrollbar-track { background: transparent; }
 .section-round::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 2px; }

@@ -83,7 +83,7 @@ body::after {
 .section {
   position: absolute;
   top: 0; left: 0;
-  width: 100%; height: 100%;
+  width: 100%; height: 100vh;
   display: flex;
   flex-direction: column;
   opacity: 0;
@@ -101,7 +101,7 @@ body::after {
 .section.visible .delay-4 { animation-delay: 0.5s; opacity: 0; }
 .section.visible .delay-5 { animation-delay: 0.65s; opacity: 0; }
 .section-cover { justify-content: center; align-items: center; text-align: center; padding: 48px; }
-.section-round { padding: 64px 72px; overflow-y: auto; }
+.section-round { padding: 64px 72px; overflow: hidden; }
 .section-round::-webkit-scrollbar { width: 4px; }
 .section-round::-webkit-scrollbar-track { background: transparent; }
 .section-round::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 2px; }

@@ -1,0 +1,341 @@
+{
+  "start_time": "2026-05-27T11:56:51.415935",
+  "end_time": "2026-05-27T11:56:51.676762",
+  "mode": "auto",
+  "total_rounds": 10,
+  "target_score": 80.0,
+  "target_reached": false,
+  "duration_seconds": 0.37923622131347656,
+  "score_progression": [
+    63.1,
+    34.2,
+    61.7,
+    73.3,
+    65.0,
+    63.1,
+    63.8,
+    47.9,
+    58.3,
+    60.0
+  ],
+  "rounds": [
+    {
+      "round": 1,
+      "discussion": "AI生成叙事_金融定价_v8.json",
+      "book_title": "AI生成叙事_金融定价",
+      "score": 63.1,
+      "grade": "D",
+      "expert_upgrades": {
+        "吴军": {
+          "old_version": 18,
+          "new_version": 19
+        },
+        "李诞": {
+          "old_version": 22,
+          "new_version": 23
+        },
+        "刘润": {
+          "old_version": 13,
+          "new_version": 14
+        },
+        "罗翔": {
+          "old_version": 14,
+          "new_version": 15
+        },
+        "凯文·凯利": {
+          "old_version": 11,
+          "new_version": 12
+        }
+      }
+    },
+    {
+      "round": 2,
+      "discussion": "儒释道批判性分析_v8.json",
+      "book_title": "儒释道批判性分析",
+      "score": 34.2,
+      "grade": "F",
+      "expert_upgrades": {
+        "孔子": {
+          "old_version": 7,
+          "new_version": 8
+        },
+        "老子": {
+          "old_version": 7,
+          "new_version": 8
+        },
+        "尼采": {
+          "old_version": 7,
+          "new_version": 8
+        },
+        "西蒙娜·德·波伏娃": {
+          "old_version": 7,
+          "new_version": 8
+        },
+        "许知远": {
+          "old_version": 7,
+          "new_version": 8
+        },
+        "项飙": {
+          "old_version": 13,
+          "new_version": 14
+        }
+      }
+    },
+    {
+      "round": 3,
+      "discussion": "反乌托邦_叙事_v8.json",
+      "book_title": "反乌托邦_叙事",
+      "score": 61.7,
+      "grade": "D",
+      "expert_upgrades": {
+        "阿西莫夫": {
+          "old_version": 6,
+          "new_version": 7
+        },
+        "尼克·博斯特罗姆": {
+          "old_version": 6,
+          "new_version": 7
+        },
+        "尤瓦尔·赫拉利": {
+          "old_version": 9,
+          "new_version": 10
+        },
+        "吴军": {
+          "old_version": 19,
+          "new_version": 20
+        },
+        "冯唐": {
+          "old_version": 12,
+          "new_version": 13
+        },
+        "李诞": {
+          "old_version": 23,
+          "new_version": 24
+        }
+      }
+    },
+    {
+      "round": 4,
+      "discussion": "情感资产_证券化_v8.json",
+      "book_title": "情感资产_证券化",
+      "score": 73.3,
+      "grade": "C",
+      "expert_upgrades": {
+        "吴晓波": {
+          "old_version": 3,
+          "new_version": 4
+        },
+        "项飙": {
+          "old_version": 14,
+          "new_version": 15
+        },
+        "冯唐": {
+          "old_version": 13,
+          "new_version": 14
+        },
+        "李诞": {
+          "old_version": 24,
+          "new_version": 25
+        },
+        "刘润": {
+          "old_version": 14,
+          "new_version": 15
+        }
+      }
+    },
+    {
+      "round": 5,
+      "discussion": "数字永生_哀悼经济学_v8.json",
+      "book_title": "数字永生_哀悼经济学",
+      "score": 65.0,
+      "grade": "D",
+      "expert_upgrades": {
+        "罗翔": {
+          "old_version": 15,
+          "new_version": 16
+        },
+        "弗洛伊德": {
+          "old_version": 3,
+          "new_version": 4
+        },
+        "尤瓦尔·赫拉利": {
+          "old_version": 10,
+          "new_version": 11
+        },
+        "项飙": {
+          "old_version": 15,
+          "new_version": 16
+        },
+        "冯唐": {
+          "old_version": 14,
+          "new_version": 15
+        },
+        "李诞": {
+          "old_version": 25,
+          "new_version": 26
+        }
+      }
+    },
+    {
+      "round": 6,
+      "discussion": "无用阶级_v8.json",
+      "book_title": "无用阶级",
+      "score": 63.1,
+      "grade": "D",
+      "expert_upgrades": {
+        "吴军": {
+          "old_version": 20,
+          "new_version": 21
+        },
+        "李诞": {
+          "old_version": 26,
+          "new_version": 27
+        },
+        "刘润": {
+          "old_version": 15,
+          "new_version": 16
+        },
+        "罗翔": {
+          "old_version": 16,
+          "new_version": 17
+        },
+        "凯文·凯利": {
+          "old_version": 12,
+          "new_version": 13
+        }
+      }
+    },
+    {
+      "round": 7,
+      "discussion": "段永平投资问答语录_v8.json",
+      "book_title": "段永平投资问答语录",
+      "score": 63.8,
+      "grade": "D",
+      "expert_upgrades": {
+        "巴菲特": {
+          "old_version": 3,
+          "new_version": 4
+        },
+        "芒格": {
+          "old_version": 2,
+          "new_version": 3
+        },
+        "塔勒布": {
+          "old_version": 3,
+          "new_version": 4
+        },
+        "柯林斯": {
+          "old_version": 3,
+          "new_version": 4
+        },
+        "达利欧": {
+          "old_version": 2,
+          "new_version": 3
+        },
+        "吴军": {
+          "old_version": 21,
+          "new_version": 22
+        }
+      }
+    },
+    {
+      "round": 8,
+      "discussion": "穷查理宝典_v8.json",
+      "book_title": "穷查理宝典",
+      "score": 47.9,
+      "grade": "F",
+      "expert_upgrades": {
+        "巴菲特": {
+          "old_version": 4,
+          "new_version": 5
+        },
+        "塔勒布": {
+          "old_version": 4,
+          "new_version": 5
+        },
+        "丹尼尔·卡尼曼": {
+          "old_version": 3,
+          "new_version": 4
+        },
+        "丹尼尔·戈尔曼": {
+          "old_version": 2,
+          "new_version": 3
+        },
+        "吴军": {
+          "old_version": 22,
+          "new_version": 23
+        },
+        "柯林斯": {
+          "old_version": 4,
+          "new_version": 5
+        }
+      }
+    },
+    {
+      "round": 9,
+      "discussion": "自我资本化_生存意义_v8.json",
+      "book_title": "自我资本化_生存意义",
+      "score": 58.3,
+      "grade": "F",
+      "expert_upgrades": {
+        "马克思": {
+          "old_version": 2,
+          "new_version": 3
+        },
+        "弗洛姆": {
+          "old_version": 2,
+          "new_version": 3
+        },
+        "罗翔": {
+          "old_version": 17,
+          "new_version": 18
+        },
+        "项飙": {
+          "old_version": 16,
+          "new_version": 17
+        },
+        "冯唐": {
+          "old_version": 15,
+          "new_version": 16
+        },
+        "李诞": {
+          "old_version": 27,
+          "new_version": 28
+        }
+      }
+    },
+    {
+      "round": 10,
+      "discussion": "赛博庇护所_心理代偿_v8.json",
+      "book_title": "赛博庇护所_心理代偿",
+      "score": 60.0,
+      "grade": "D",
+      "expert_upgrades": {
+        "项飙": {
+          "old_version": 17,
+          "new_version": 18
+        },
+        "丹尼尔·卡尼曼": {
+          "old_version": 4,
+          "new_version": 5
+        },
+        "尤瓦尔·赫拉利": {
+          "old_version": 11,
+          "new_version": 12
+        },
+        "菲利普·津巴多": {
+          "old_version": 2,
+          "new_version": 3
+        },
+        "冯唐": {
+          "old_version": 16,
+          "new_version": 17
+        },
+        "李诞": {
+          "old_version": 28,
+          "new_version": 29
+        }
+      }
+    }
+  ]
+}

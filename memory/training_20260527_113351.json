@@ -1,0 +1,175 @@
+{
+  "start_time": "2026-05-27T11:33:51.151496",
+  "end_time": "2026-05-27T11:33:51.252960",
+  "mode": "auto",
+  "total_rounds": 5,
+  "target_score": 85.0,
+  "target_reached": false,
+  "duration_seconds": 0.12791681289672852,
+  "score_progression": [
+    63.1,
+    34.2,
+    61.7,
+    73.3,
+    65.0
+  ],
+  "rounds": [
+    {
+      "round": 1,
+      "discussion": "AI生成叙事_金融定价_v8.json",
+      "book_title": "AI生成叙事_金融定价",
+      "score": 63.1,
+      "grade": "D",
+      "expert_upgrades": {
+        "吴军": {
+          "old_version": 10,
+          "new_version": 11
+        },
+        "李诞": {
+          "old_version": 10,
+          "new_version": 11
+        },
+        "刘润": {
+          "old_version": 7,
+          "new_version": 8
+        },
+        "罗翔": {
+          "old_version": 7,
+          "new_version": 8
+        },
+        "凯文·凯利": {
+          "old_version": 7,
+          "new_version": 8
+        }
+      }
+    },
+    {
+      "round": 2,
+      "discussion": "儒释道批判性分析_v8.json",
+      "book_title": "儒释道批判性分析",
+      "score": 34.2,
+      "grade": "F",
+      "expert_upgrades": {
+        "孔子": {
+          "old_version": 4,
+          "new_version": 5
+        },
+        "老子": {
+          "old_version": 4,
+          "new_version": 5
+        },
+        "尼采": {
+          "old_version": 4,
+          "new_version": 5
+        },
+        "西蒙娜·德·波伏娃": {
+          "old_version": 4,
+          "new_version": 5
+        },
+        "许知远": {
+          "old_version": 4,
+          "new_version": 5
+        },
+        "项飙": {
+          "old_version": 4,
+          "new_version": 5
+        }
+      }
+    },
+    {
+      "round": 3,
+      "discussion": "反乌托邦_叙事_v8.json",
+      "book_title": "反乌托邦_叙事",
+      "score": 61.7,
+      "grade": "D",
+      "expert_upgrades": {
+        "阿西莫夫": {
+          "old_version": 4,
+          "new_version": 5
+        },
+        "尼克·博斯特罗姆": {
+          "old_version": 4,
+          "new_version": 5
+        },
+        "尤瓦尔·赫拉利": {
+          "old_version": 4,
+          "new_version": 5
+        },
+        "吴军": {
+          "old_version": 11,
+          "new_version": 12
+        },
+        "冯唐": {
+          "old_version": 4,
+          "new_version": 5
+        },
+        "李诞": {
+          "old_version": 11,
+          "new_version": 12
+        }
+      }
+    },
+    {
+      "round": 4,
+      "discussion": "情感资产_证券化_v8.json",
+      "book_title": "情感资产_证券化",
+      "score": 73.3,
+      "grade": "C",
+      "expert_upgrades": {
+        "吴晓波": {
+          "old_version": 1,
+          "new_version": 2
+        },
+        "项飙": {
+          "old_version": 5,
+          "new_version": 6
+        },
+        "冯唐": {
+          "old_version": 5,
+          "new_version": 6
+        },
+        "李诞": {
+          "old_version": 12,
+          "new_version": 13
+        },
+        "刘润": {
+          "old_version": 8,
+          "new_version": 9
+        }
+      }
+    },
+    {
+      "round": 5,
+      "discussion": "数字永生_哀悼经济学_v8.json",
+      "book_title": "数字永生_哀悼经济学",
+      "score": 65.0,
+      "grade": "D",
+      "expert_upgrades": {
+        "罗翔": {
+          "old_version": 8,
+          "new_version": 9
+        },
+        "弗洛伊德": {
+          "old_version": 1,
+          "new_version": 2
+        },
+        "尤瓦尔·赫拉利": {
+          "old_version": 5,
+          "new_version": 6
+        },
+        "项飙": {
+          "old_version": 6,
+          "new_version": 7
+        },
+        "冯唐": {
+          "old_version": 6,
+          "new_version": 7
+        },
+        "李诞": {
+          "old_version": 13,
+          "new_version": 14
+        }
+      }
+    }
+  ]
+}

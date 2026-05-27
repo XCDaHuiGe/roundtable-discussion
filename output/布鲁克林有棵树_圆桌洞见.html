@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -9,8 +9,7 @@
 :root{--ink:#0a0a0b;--paper:#f1efea;--accent:#c9a227;--red:#e94560;--blue:#3498db;--purple:#9b59b6;--orange:#f39c12;--green:#2ecc71;--radius:6px;--ease:cubic-bezier(.25,.46,.45,.94)}
 html,body{height:100%;overflow:hidden;font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:var(--ink);color:var(--paper)}
 .deck{position:relative;width:100vw;height:100vh;overflow:hidden}
-.slide{position:absolute;inset:0;display:none;flex-direction:column;padding:5vh 6vw;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.12) transparent}
-.slide::-webkit-scrollbar{width:4px}.slide::-webkit-scrollbar-track{background:transparent}.slide::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
+.slide{position:absolute;inset:0;height:100vh;display:none;flex-direction:column;padding:5vh 6vw;overflow:hidden}
 .slide.active{display:flex}
 .slide.hero{justify-content:center;align-items:center;text-align:center;overflow:hidden}
 .slide.title-slide{justify-content:center;align-items:center;text-align:center}

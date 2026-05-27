@@ -72,7 +72,7 @@ body::after{
 
 .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--accent));z-index:1000;transition:width .5s var(--ease-smooth);box-shadow:0 0 16px rgba(var(--gold-rgb),.4)}
 
-.slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.12) transparent}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw;height:100vh;overflow:hidden;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.12) transparent}
 .slide::-webkit-scrollbar{width:4px}.slide::-webkit-scrollbar-track{background:transparent}.slide::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
 .slide.active{display:flex}
 .slide.hero{justify-content:center;align-items:center;text-align:center}

@@ -1,0 +1,105 @@
+{
+  "total": 80.0,
+  "grade": "B",
+  "dimensions": {
+    "attack_efficiency": {
+      "score": 100.0,
+      "weight": 0.25,
+      "weighted": 25.0,
+      "details": {
+        "total": 3,
+        "effective": 3,
+        "details": [
+          {
+            "attacker": "纳西姆·塔勒布",
+            "target": "刘润",
+            "type": "逻辑漏洞",
+            "effective": true,
+            "has_counter": false,
+            "has_evidence": false,
+            "has_logic": false,
+            "has_specific": true
+          },
+          {
+            "attacker": "项飙",
+            "target": "冯唐",
+            "type": "逻辑漏洞",
+            "effective": true,
+            "has_counter": false,
+            "has_evidence": false,
+            "has_logic": false,
+            "has_specific": true
+          },
+          {
+            "attacker": "吴晓波",
+            "target": "李诞",
+            "type": "现实矛盾",
+            "effective": true,
+            "has_counter": false,
+            "has_evidence": false,
+            "has_logic": false,
+            "has_specific": true
+          }
+        ]
+      }
+    },
+    "defense_rate": {
+      "score": 66.7,
+      "weight": 0.2,
+      "weighted": 13.3,
+      "details": {
+        "total_defended": 3,
+        "successful": 2
+      }
+    },
+    "evidence_hit": {
+      "score": 55.6,
+      "weight": 0.15,
+      "weighted": 8.3,
+      "details": {
+        "total_speeches": 9,
+        "with_evidence": 5
+      }
+    },
+    "style_recognition": {
+      "score": 100.0,
+      "weight": 0.15,
+      "weighted": 15.0,
+      "details": {
+        "total": 6,
+        "distinctive": 6
+      }
+    },
+    "cognitive_contribution": {
+      "score": 66.7,
+      "weight": 0.1,
+      "weighted": 6.7,
+      "details": {
+        "total_rounds": 3,
+        "with_reversal": 2
+      }
+    },
+    "case_quality": {
+      "score": 66.7,
+      "weight": 0.1,
+      "weighted": 6.7,
+      "details": {
+        "total_rounds": 3,
+        "with_cases": 2,
+        "total_cases": 4
+      }
+    },
+    "structure": {
+      "score": 100.0,
+      "weight": 0.05,
+      "weighted": 5.0,
+      "details": {
+        "title": true,
+        "experts": true,
+        "rounds": true,
+        "final_insight": true,
+        "open_questions": true
+      }
+    }
+  }
+}

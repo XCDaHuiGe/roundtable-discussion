@@ -1,0 +1,207 @@
+{
+  "total": 22.9,
+  "grade": "F",
+  "version": "2.0",
+  "dimensions": {
+    "attack_efficiency": {
+      "score": 0.0,
+      "weight": 0.25,
+      "weighted": 0.0,
+      "details": {
+        "total": 2,
+        "effective": 0,
+        "details": [
+          {
+            "attacker": "韩非子",
+            "target": "丁元英",
+            "type": "现实矛盾",
+            "effective": false,
+            "base_pass": false,
+            "logic_pass": false,
+            "counter_pass": true,
+            "evidence_pass": false,
+            "target_pass": false,
+            "evidence_types": [],
+            "content_length": 47
+          },
+          {
+            "attacker": "阿伦特",
+            "target": "丁元英",
+            "type": "人性弱点",
+            "effective": false,
+            "base_pass": false,
+            "logic_pass": false,
+            "counter_pass": false,
+            "evidence_pass": false,
+            "target_pass": false,
+            "evidence_types": [],
+            "content_length": 44
+          }
+        ]
+      }
+    },
+    "defense_rate": {
+      "score": 50.0,
+      "weight": 0.2,
+      "weighted": 10.0,
+      "details": {
+        "total_defended": 2,
+        "successful": 1,
+        "details": [
+          {
+            "target": "丁元英",
+            "attacker": "韩非子",
+            "explicit_counter": true,
+            "implicit_response": false,
+            "successful": true,
+            "atk_keywords": []
+          },
+          {
+            "target": "丁元英",
+            "attacker": "阿伦特",
+            "explicit_counter": false,
+            "implicit_response": false,
+            "successful": false,
+            "atk_keywords": [
+              "你说遵循",
+              "事物规律",
+              "但规律是",
+              "谁定义的",
+              "是强者定",
+              "义的"
+            ]
+          }
+        ]
+      }
+    },
+    "evidence_hit": {
+      "score": 0.0,
+      "weight": 0.15,
+      "weighted": 0.0,
+      "details": {
+        "total_speeches": 6,
+        "with_evidence": 0,
+        "pattern_distribution": {
+          "direct_quote": 0,
+          "chapter_ref": 0,
+          "data_figure": 1,
+          "source_cite": 0,
+          "scene_desc": 0,
+          "concrete_case": 0,
+          "time_anchor": 0,
+          "expert_cite": 0
+        }
+      }
+    },
+    "style_recognition": {
+      "score": 0.0,
+      "weight": 0.15,
+      "weighted": 0.0,
+      "details": {
+        "total": 4,
+        "distinctive": 0,
+        "details": [
+          {
+            "expert": "丁元英",
+            "match_ratio": 0.0,
+            "matched_words": [],
+            "template_count": 0,
+            "length": 19,
+            "distinctive": false
+          },
+          {
+            "expert": "芮小丹",
+            "match_ratio": 0.0,
+            "matched_words": [],
+            "template_count": 0,
+            "length": 27,
+            "distinctive": false
+          },
+          {
+            "expert": "韩非子",
+            "match_ratio": 0.1,
+            "matched_words": [
+              "扯淡"
+            ],
+            "template_count": 0,
+            "length": 19,
+            "distinctive": false
+          },
+          {
+            "expert": "阿伦特",
+            "match_ratio": 0.0,
+            "matched_words": [],
+            "template_count": 0,
+            "length": 23,
+            "distinctive": false
+          }
+        ]
+      }
+    },
+    "cognitive_contribution": {
+      "score": 0.0,
+      "weight": 0.1,
+      "weighted": 0.0,
+      "details": {
+        "total_rounds": 1,
+        "with_upgrade": 0,
+        "details": [
+          {
+            "round": 1,
+            "upgrade_quality": false,
+            "has_human_depth": false,
+            "has_cost_depth": false,
+            "new_thinking_length": 25,
+            "has_actionable": false,
+            "has_complexity": false
+          }
+        ]
+      }
+    },
+    "case_quality": {
+      "score": 100.0,
+      "weight": 0.1,
+      "weighted": 10.0,
+      "details": {
+        "total_rounds": 1,
+        "with_cases": 1,
+        "round_details": [
+          {
+            "round": 1,
+            "has_case": true,
+            "cases": [
+              {
+                "name": "德国工业4.0",
+                "complete": true,
+                "checks": {
+                  "has_name": true,
+                  "has_source": true,
+                  "has_content": true,
+                  "has_outcome": true
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "structure": {
+      "score": 57.1,
+      "weight": 0.05,
+      "weighted": 2.9,
+      "details": {
+        "checks": {
+          "title": true,
+          "experts": true,
+          "rounds": false,
+          "final_insight": true,
+          "open_questions": true,
+          "round_1_full_participation": false,
+          "avg_stance_length": false
+        },
+        "avg_stance_length": 22.0,
+        "total_stances": 4
+      }
+    }
+  }
+}

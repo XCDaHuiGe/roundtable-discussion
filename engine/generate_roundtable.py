@@ -357,24 +357,34 @@ def generate_round_clashes(
     kwargs = {**LLM_DEFAULTS, **(llm_kwargs or {})}
 
     stance_summary = "\n".join([
-        f"- {s['expert']}: {s['stance'][:100]}..."
+        f"- {s['expert']}: {s['stance'][:120]}..."
         for s in stances
     ])
+
+    expert_list = ", ".join([e['name'] for e in experts])
 
     prompt = f"""《{book_title}》圆桌讨论 - Round {round_info['round_number']} 碰撞环节
 
 主题：{round_info['topic']}
+
+参与专家：{expert_list}
 
 各专家立场摘要：
 {stance_summary}
 
 请生成 4-6 个专家之间的直接碰撞（互相反驳）。
 
-碰撞要求：
-1. 攻击要具体、有理有据
+【关键要求】每个碰撞必须有完整的"攻击+反击"结构：
+1. 攻击要具体、有理有据，引用对方原文
 2. 攻击类型：逻辑漏洞、利益冲突、现实矛盾、人性弱点、失败案例
-3. 每个碰撞包含：攻击者、目标、攻击内容
-4. 部分碰撞可以有反击
+3. 反击必须：承认对方部分观点，然后指出核心错误，给出替代方案
+4. 反击长度不少于攻击长度的60%，不能只是简单否认
+
+【质量标准】
+- 优秀的反击示例："你说的X有道理，但忽视了Y。实际上，当考虑到Z，情况是这样的——"
+- 糟糕的反击示例："你的观点是错的。"（没有具体理由）
+- 每个 clash 必须同时包含 attack_content 和 counter_attack 两个字段
+- counter_attack 不能为空或null，必须是对抗性回应
 
 返回 JSON 格式：
 {{
@@ -383,17 +393,22 @@ def generate_round_clashes(
       "attacker": "攻击者名",
       "target": "目标名",
       "attack_type": "逻辑漏洞|利益冲突|现实矛盾|人性弱点|失败案例",
-      "attack_content": "攻击内容（150-300字）",
+      "attack_content": "攻击内容（150-400字），必须引用对方原文并指出具体错误",
       "emotion": "serious|anger|sarcasm",
-      "counter_attack": "反击内容（可选）"
+      "counter_attack": "反击内容（150-300字），承认部分观点后反驳，给出替代方案"
     }}
   ]
 }}"""
 
-    result = call_llm_json(prompt, "你是圆桌讨论的碰撞导演，确保专家之间产生真正的思想交锋。", **kwargs)
+    result = call_llm_json(prompt, "你是圆桌讨论的碰撞导演，每个碰撞必须有完整的攻击+反击结构。反击不是简单否定，而是更深层的思考碰撞。", **kwargs)
 
     if result["success"] and result["data"]:
-        return result["data"].get("clash_rounds", [])
+        clashes = result["data"].get("clash_rounds", [])
+        # 确保每个 clash 都有 counter_attack
+        for clash in clashes:
+            if not clash.get("counter_attack"):
+                clash["counter_attack"] = f"{clash.get('target', '')}的反驳未能有效回应攻击。"
+        return clashes
     return []
 
 

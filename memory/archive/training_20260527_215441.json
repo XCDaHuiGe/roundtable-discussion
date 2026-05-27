@@ -1,0 +1,91 @@
+{
+  "version": "V3.0",
+  "start_time": "2026-05-27T21:54:41.361948",
+  "end_time": "2026-05-27T21:54:41.412261",
+  "mode": "evolution",
+  "total_rounds": 3,
+  "target_score": 60.0,
+  "target_reached": true,
+  "duration_seconds": 0.07123804092407227,
+  "score_progression": [
+    59.0,
+    59.0,
+    68.3
+  ],
+  "total_strategy_merges": 0,
+  "total_material_replacements": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "discussion": "遥远的救世主_V8.json",
+      "book_title": "芮小丹的擅长攻击：—正好对上万维钢的弱点：———这是一场不对等的战斗。万维钢如何自救？",
+      "score": 59.0,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 2,
+      "discussion": "遥远的救世主_V8.json",
+      "book_title": "训练场景：阿伦特专门攻击丁元英的弱点：—。丁元英需要在5分钟内构建防御。怎么防？",
+      "score": 59.0,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 3,
+      "discussion": "反乌托邦_叙事_v8.json",
+      "book_title": "面对\"科技伦理先驱：我提出机器人三定律，是因为我相信科技可以被设计得更安全\"和\"AGI可能带来的极端",
+      "score": 68.3,
+      "grade": "D",
+      "topic_source": "evolution",
+      "evolutions": {
+        "阿西莫夫": {
+          "old_version": 1,
+          "new_version": 1,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "尼克·博斯特罗姆": {
+          "old_version": 2,
+          "new_version": 3,
+          "strategy_merges": [],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": 0.0
+        },
+        "尤瓦尔·赫拉利": {
+          "old_version": 1,
+          "new_version": 1,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "吴军": {
+          "old_version": 3,
+          "new_version": 3,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.014854426619132503
+        },
+        "冯唐": {
+          "old_version": 1,
+          "new_version": 1,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "李诞": {
+          "old_version": 2,
+          "new_version": 2,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.01520450053215752
+        }
+      }
+    }
+  ]
+}

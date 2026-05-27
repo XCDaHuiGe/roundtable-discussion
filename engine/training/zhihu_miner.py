@@ -15,7 +15,7 @@ import urllib.request
 from datetime import datetime
 from typing import Dict, List, Optional
 
-MCP_URL = "http://127.0.0.1:18060/mcp"
+MCP_URL = "http://127.0.0.1:18061/mcp"
 
 
 def mcp_call(tool_name: str, arguments: Dict) -> Optional[Dict]:

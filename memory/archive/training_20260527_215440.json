@@ -1,0 +1,72 @@
+{
+  "version": "V3.0",
+  "start_time": "2026-05-27T21:54:40.483061",
+  "end_time": "2026-05-27T21:54:40.522109",
+  "mode": "evolution",
+  "total_rounds": 2,
+  "target_score": 60.0,
+  "target_reached": true,
+  "duration_seconds": 0.06032609939575195,
+  "score_progression": [
+    59.0,
+    76.4
+  ],
+  "total_strategy_merges": 0,
+  "total_material_replacements": 0,
+  "rounds": [
+    {
+      "round": 1,
+      "discussion": "遥远的救世主_V8.json",
+      "book_title": "芮小丹的擅长攻击：—正好对上韩非子的弱点：———这是一场不对等的战斗。韩非子如何自救？",
+      "score": 59.0,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 2,
+      "discussion": "AI生成叙事_金融定价_v8.json",
+      "book_title": "\"人性尊严不能被还原为经济价值，人是因为\"是人\"而有价值，不是因为\"有用\"才有价值\"vs\"证明制度比",
+      "score": 76.4,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "吴军": {
+          "old_version": 3,
+          "new_version": 3,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "李诞": {
+          "old_version": 2,
+          "new_version": 2,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "刘润": {
+          "old_version": 3,
+          "new_version": 3,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "罗翔": {
+          "old_version": 2,
+          "new_version": 2,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.8758140579384683
+        },
+        "凯文·凯利": {
+          "old_version": 1,
+          "new_version": 1,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    }
+  ]
+}

@@ -1,16 +1,36 @@
 # -*- coding: utf-8 -*-
 """
-多轮训练编排器：设定训练轮数、心跳输出、轮次总结、最终总结。
+多轮训练编排器 V4.0：融合增强式训练 + AI策略提取 + 严格评分
+
+核心升级（V4.0 vs V3.0）：
+- 用 scorer_v2 替代 scorer（严格评分，解决评分虚高问题）
+- 用 llm_extractor 替代 extractor（AI深度分析策略质量）
+- 用 fusion_engine 替代 evolution_engine（融合增强式升级）
+- 支持 --engine v3/v4 参数选择新旧引擎
+- 保持向后兼容（默认使用V3引擎）
+
+核心升级（V3.0 vs V2.0）：
+- 用 EvolutionEngine 替代旧的 upgrader（策略融合+素材精选替换）
+- 集成 DebateArena（对抗自训练，无需人给话题）
+- 增强心跳输出（每轮开始/进行中/结束）
+- 增强轮次总结（进化指标、密度变化）
+- 增强最终总结（维度趋势、专家进化路径、策略密度变化）
 
 用法：
-    # 自动模式（轮转使用 V8 JSON）
-    python engine/training/orchestrator.py --rounds 5 --mode auto --library expert-library
+    # V4引擎（推荐，融合增强式训练）
+    python engine/training/orchestrator.py --rounds 5 --mode evolution --library expert-library --engine v4
+
+    # V3引擎（向后兼容）
+    python engine/training/orchestrator.py --rounds 5 --mode evolution --library expert-library --engine v3
 
     # 人给话题模式
-    python engine/training/orchestrator.py --rounds 3 --mode human --json content/段永平_v8.json --library expert-library
+    python engine/training/orchestrator.py --rounds 3 --mode human --json content/段永平_v8.json --engine v4
+
+    # 自动模式（轮转使用已有 V8 JSON）
+    python engine/training/orchestrator.py --rounds 5 --mode auto --library expert-library
 
     # 带目标分数
-    python engine/training/orchestrator.py --rounds 10 --mode auto --library expert-library --target-score 85
+    python engine/training/orchestrator.py --rounds 10 --mode auto --library expert-library --target-score 85 --engine v4
 """
 
 import argparse
@@ -27,11 +47,17 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 from training.scorer import score_discussion
 from training.extractor import extract
-from training.upgrader import upgrade_expert, parse_version
 from training.trainer import TrainingSession
-from training.miner import MaterialReader
-from training.topic_builder import build_topics_from_material
 from training.topic_generator import generate_topics, load_experts
+
+# V3.0 新模块
+from training.evolution_engine import EvolutionEngine, EvolutionResult
+from training.debate_arena import DebateArena, DebateTopic
+
+# V4.0 新模块
+from training.scorer_v2 import score_discussion as score_discussion_v2
+from training.llm_extractor import LLMStrategyExtractor
+from training.fusion_engine import FusionEngine, FusionResult as FusionResultV4
 
 
 # ─── 数据结构 ────────────────────────────────────────────
@@ -42,7 +68,8 @@ class RoundResult:
     discussion_file: str
     book_title: str
     score_result: Dict
-    expert_upgrades: Dict[str, Dict] = field(default_factory=dict)
+    expert_evolutions: Dict[str, EvolutionResult] = field(default_factory=dict)
+    topic_source: str = ''  # 'human' | 'auto' | 'evolution'
     timestamp: str = ''
 
     def __post_init__(self):
@@ -56,10 +83,13 @@ class FinalSummary:
     mode: str
     score_progression: List[float] = field(default_factory=list)
     dimension_trends: Dict[str, List[float]] = field(default_factory=dict)
-    experts_upgraded: Dict[str, Dict] = field(default_factory=dict)
+    expert_evolution_paths: Dict[str, Dict] = field(default_factory=dict)
+    density_changes: Dict[str, List[float]] = field(default_factory=dict)
     target_score: float = 85.0
     target_reached: bool = False
     duration_seconds: float = 0.0
+    total_strategy_merges: int = 0
+    total_material_replacements: int = 0
 
 
 # ─── 编排器 ──────────────────────────────────────────────
@@ -68,14 +98,17 @@ class TrainingOrchestrator:
 
     def __init__(self, library_dir: str, content_dir: str = 'content',
                  log_dir: str = 'memory', target_score: float = 85.0,
-                 use_material: bool = False):
+                 engine_version: str = 'v3'):
         self.library_dir = library_dir
         self.content_dir = content_dir
         self.log_dir = log_dir
         self.target_score = target_score
-        self.use_material = use_material
+        self.engine_version = engine_version
         self.session = TrainingSession(library_dir, log_dir)
-        self.material_reader = MaterialReader(content_dir) if use_material else None
+        self.evolution_engine = EvolutionEngine(library_dir)
+        self.debate_arena = DebateArena(library_dir)
+        self.fusion_engine = FusionEngine(library_dir) if engine_version == 'v4' else None
+        self.llm_extractor = LLMStrategyExtractor() if engine_version == 'v4' else None
         os.makedirs(log_dir, exist_ok=True)
 
     def run(self, rounds: int, mode: str, json_path: str = None,
@@ -85,30 +118,35 @@ class TrainingOrchestrator:
         all_rounds: List[RoundResult] = []
         self._emit_header(rounds, mode)
 
-        # 素材模式：预先生成话题计划
-        material_topics = []
-        if self.use_material and mode == 'auto':
-            material_topics = self._prepare_material_topics(rounds)
+        # 进化模式：预先生成对抗话题
+        evolution_topics = []
+        if mode == 'evolution':
+            evolution_topics = self.debate_arena.generate_training_plan(rounds)
+            self._emit_evolution_plan(evolution_topics)
 
         for round_num in range(1, rounds + 1):
             # 心跳：轮次开始
             self._emit_heartbeat(round_num, rounds, "START")
 
-            # 素材模式：尝试从本地素材构建话题
-            mined_topic = None
-            if self.use_material and mode == 'auto':
-                mined_topic = self._try_build_topic_from_material(round_num, rounds, material_topics)
+            # 根据模式选择讨论文件
+            if mode == 'evolution':
+                topic_idx = (round_num - 1) % len(evolution_topics) if evolution_topics else 0
+                debate_topic = evolution_topics[topic_idx] if topic_idx < len(evolution_topics) else None
+                discussion = self._select_evolution_discussion(round_num, debate_topic)
+                result = self._run_round(round_num, rounds, discussion,
+                                         topic_source='evolution',
+                                         debate_topic=debate_topic)
+            elif mode == 'human':
+                result = self._run_round(round_num, rounds, json_path,
+                                         topic_source='human')
+            else:  # auto
+                discussion = self._select_auto_discussion(round_num)
+                if not discussion:
+                    self._emit_heartbeat(round_num, rounds, "SKIP", "无可用讨论文件")
+                    continue
+                result = self._run_round(round_num, rounds, discussion,
+                                         topic_source='auto')
 
-            # 选择讨论文件
-            discussion = self._select_discussion_file(round_num, mode, json_path, expert_name)
-            if not discussion:
-                self._emit_heartbeat(round_num, rounds, "SKIP", "无可用讨论文件")
-                continue
-
-            # 执行单轮
-            result = self._run_round(round_num, rounds, discussion)
-            if mined_topic:
-                result.book_title = f"{result.book_title} [话题: {mined_topic[:40]}]"
             all_rounds.append(result)
 
             # 轮次总结
@@ -130,19 +168,27 @@ class TrainingOrchestrator:
 
         return summary
 
-    def _run_round(self, round_num: int, total: int, discussion: str) -> RoundResult:
-        """执行单轮训练：评分→提取→升级。"""
-        book_title = os.path.basename(discussion).replace('_v8.json', '').replace('_V8.json', '')
+    def _run_round(self, round_num: int, total: int, discussion: str,
+                   topic_source: str = 'auto',
+                   debate_topic: DebateTopic = None) -> RoundResult:
+        """执行单轮训练：评分→提取→进化升级。"""
+        book_title = os.path.basename(discussion).replace('_v8.json', '').replace('_V8.json', '') if discussion else ''
+        if debate_topic:
+            book_title = debate_topic.topic[:50]
 
-        # 评分
-        self._emit_heartbeat(round_num, total, "SCORING", os.path.basename(discussion))
+        # 心跳：评分中
+        self._emit_heartbeat(round_num, total, "SCORING", os.path.basename(discussion) if discussion else book_title)
         try:
-            score_result = score_discussion(discussion)
+            if self.engine_version == 'v4':
+                score_result = score_discussion_v2(discussion)
+            else:
+                score_result = score_discussion(discussion)
         except Exception as e:
             self._emit_heartbeat(round_num, total, "ERROR", f"评分失败: {e}")
             return RoundResult(
-                round_num=round_num, discussion_file=discussion,
-                book_title=book_title, score_result={'total': 0, 'grade': 'F', 'dimensions': {}}
+                round_num=round_num, discussion_file=discussion or '',
+                book_title=book_title, score_result={'total': 0, 'grade': 'F', 'dimensions': {}},
+                topic_source=topic_source
             )
 
         score_total = score_result.get('total', 0)
@@ -155,193 +201,136 @@ class TrainingOrchestrator:
         # 提取策略
         self._emit_heartbeat(round_num, total, "EXTRACT", book_title)
         try:
-            extraction = extract(discussion)
+            if self.engine_version == 'v4' and self.llm_extractor:
+                extraction = self.llm_extractor.extract(discussion)
+            else:
+                extraction = extract(discussion)
         except Exception as e:
             self._emit_heartbeat(round_num, total, "ERROR", f"提取失败: {e}")
             return RoundResult(
-                round_num=round_num, discussion_file=discussion,
-                book_title=book_title, score_result=score_result
+                round_num=round_num, discussion_file=discussion or '',
+                book_title=book_title, score_result=score_result,
+                topic_source=topic_source
             )
 
-        # 升级专家
+        # 评分阈值：统一使用60分（让更多讨论能触发进化）
+        MIN_EVOLVE_SCORE = 60.0
+        if score_total < MIN_EVOLVE_SCORE:
+            self._emit_heartbeat(round_num, total, "SKIP",
+                                 f"评分 {score_total:.1f} < {MIN_EVOLVE_SCORE}，跳过进化")
+            return RoundResult(
+                round_num=round_num,
+                discussion_file=discussion or '',
+                book_title=book_title,
+                score_result=score_result,
+                topic_source=topic_source,
+            )
+
+        # 进化升级专家
         attack_eff = dims.get('attack_efficiency', {}).get('score', 0.0)
         defense_rate_val = dims.get('defense_rate', {}).get('score', 0.0)
-        upgrades = {}
+        evolutions = {}
 
-        upgrade_parts = []
+        self._emit_heartbeat(round_num, total, "EVOLVE", book_title)
         for expert_name, expert_data in extraction.get('experts', {}).items():
-            expert_md = self.session.find_expert_md(expert_name)
-            if not expert_md:
-                continue
-
-            old_version = 0
+            strategy = {
+                'attack_strategy': expert_data.get('attack_strategy', {}),
+                'defense_weakness': expert_data.get('defense_weakness', {}),
+                'style_fingerprint': expert_data.get('style_fingerprint', {}),
+                'evidence_preference': expert_data.get('evidence_preference', {}),
+                'interaction_pattern': expert_data.get('interaction_pattern', {}),
+            }
             try:
-                with open(expert_md, 'r', encoding='utf-8') as f:
-                    old_content = f.read()
-                old_version = parse_version(old_content)
-            except Exception:
-                pass
-
-            strategy = self.session._build_strategy_template(expert_data, dims)
-
-            try:
-                new_content = upgrade_expert(
-                    expert_md, strategy,
-                    topic=book_title,
-                    score=score_total,
-                    attack_eff=attack_eff,
-                    defense_rate=defense_rate_val,
-                )
-                new_version = parse_version(new_content)
-                speech_count = expert_data.get('speech_count', 0)
-                attack_count = len([s for s in expert_data.get('speeches', []) if s.get('type') == 'attack'])
-
-                upgrades[expert_name] = {
-                    'file': expert_md,
-                    'old_version': old_version,
-                    'new_version': new_version,
-                    'speech_count': speech_count,
-                    'attack_count': attack_count,
-                }
-                upgrade_parts.append(f"{expert_name} V{old_version}→V{new_version}")
+                if self.engine_version == 'v4' and self.fusion_engine:
+                    md_path = self.fusion_engine.find_expert_md(expert_name)
+                    if md_path:
+                        self.fusion_engine.upgrade_expert(md_path, strategy, score_total)
+                        self._emit_heartbeat(round_num, total, "FUSED",
+                                             f"{expert_name} 融合增强完成")
+                else:
+                    evo_result = self.evolution_engine.evolve(
+                        expert_name, strategy,
+                        topic=book_title,
+                        score=score_total,
+                        attack_eff=attack_eff,
+                        defense_rate=defense_rate_val,
+                    )
+                    if evo_result:
+                        evolutions[expert_name] = evo_result
+                        v_str = f"V{evo_result.old_version}→V{evo_result.new_version}"
+                        m_str = f"{len(evo_result.strategy_merges)}策略"
+                        r_str = f"{len(evo_result.material_replacements)}替换"
+                        self._emit_heartbeat(round_num, total, "EVOLVED",
+                                             f"{expert_name} {v_str} ({m_str}, {r_str})")
             except Exception as e:
-                upgrade_parts.append(f"{expert_name} ERR:{e}")
+                self._emit_heartbeat(round_num, total, "EVO_ERR",
+                                     f"{expert_name}: {e}")
 
-        if upgrade_parts:
-            self._emit_heartbeat(round_num, total, "UPGRADE", " | ".join(upgrade_parts))
-        else:
-            self._emit_heartbeat(round_num, total, "UPGRADE", "无专家升级")
-
-        elapsed = time.time()
-        self._emit_heartbeat(round_num, total, "COMPLETE", f"Round {round_num} done")
+        if not evolutions and self.engine_version != 'v4':
+            self._emit_heartbeat(round_num, total, "EVOLVE", "无专家进化")
 
         return RoundResult(
             round_num=round_num,
-            discussion_file=discussion,
+            discussion_file=discussion or '',
             book_title=book_title,
             score_result=score_result,
-            expert_upgrades=upgrades,
+            expert_evolutions=evolutions,
+            topic_source=topic_source,
         )
 
-    def _prepare_material_topics(self, total_rounds: int) -> List[Dict]:
-        """预先生成话题计划（基于已有素材 + 专家信念差异）"""
-        topics = []
-
-        # 获取已有 V8 文件的书名
-        v8_files = sorted(glob.glob(os.path.join(self.content_dir, '*_v8.json')))
-        book_names = []
-        for f in v8_files:
-            name = os.path.basename(f).replace('_v8.json', '').replace('_V8.json', '')
-            book_names.append(name)
-
-        if not book_names:
-            return topics
-
-        # 获取已有素材的书名
-        available_materials = self.material_reader.list_available()
-
-        # 交替：奇数轮=有素材的书，偶数轮=专家信念差异
-        for i in range(total_rounds):
-            if i % 2 == 0:
-                # 优先选有素材的书
-                book = book_names[i % len(book_names)]
-                has_material = book in available_materials
-                topics.append({
-                    'type': 'book',
-                    'keyword': book,
-                    'has_material': has_material,
-                })
-            else:
-                # 通用模式：从专家信念差异获取关键词
-                expert_topics = generate_topics(self.library_dir, 1)
-                if expert_topics:
-                    kw = expert_topics[0].get('topic', '')[:30]
-                    topics.append({'type': 'topic', 'keyword': kw})
-                else:
-                    topics.append({'type': 'topic', 'keyword': book_names[0] if book_names else '投资'})
-
-        return topics
-
-    def _try_build_topic_from_material(self, round_num: int, total: int,
-                                        material_topics: List[Dict]) -> Optional[str]:
-        """尝试从本地素材构建话题（不进行网络请求）"""
-        idx = (round_num - 1) % len(material_topics) if material_topics else 0
-        if idx >= len(material_topics):
-            return None
-
-        topic_info = material_topics[idx]
-        keyword = topic_info['keyword']
-
-        # 检查是否有本地素材
-        if not self.material_reader.exists(keyword):
-            self._emit_heartbeat(round_num, total, "NO_MATERIAL",
-                                 f"{keyword[:30]} — 无素材，用已有V8")
-            return None
-
-        self._emit_heartbeat(round_num, total, "MATERIAL", f"{keyword[:30]}")
-
-        try:
-            # 从素材构建话题
-            material_path = self.material_reader._find_material(keyword)
-            if material_path:
-                built_topics = build_topics_from_material(
-                    material_path, self.library_dir, count=1
-                )
-                if built_topics:
-                    topic_text = built_topics[0]['topic']
-                    self._emit_heartbeat(round_num, total, "TOPIC",
-                                         topic_text[:50])
-                    return topic_text
-        except Exception as e:
-            self._emit_heartbeat(round_num, total, "TOPIC_ERR", str(e)[:50])
-
-        return None
-
-    def _select_discussion_file(self, round_num: int, mode: str,
-                                 json_path: str = None,
-                                 expert_name: str = None) -> Optional[str]:
-        """选择讨论文件。"""
-        if mode == 'human':
-            return json_path
-
-        if mode == 'auto':
+    def _select_evolution_discussion(self, round_num: int,
+                                      debate_topic: DebateTopic = None) -> str:
+        """进化模式选择讨论文件"""
+        if debate_topic:
+            # 尝试找包含这两个专家的已有讨论
             v8_files = sorted(glob.glob(os.path.join(self.content_dir, '*_v8.json')))
-            if not v8_files:
-                return None
-            idx = (round_num - 1) % len(v8_files)
-            return v8_files[idx]
-
-        if mode == 'replay':
-            v8_files = sorted(glob.glob(os.path.join(self.content_dir, '*_v8.json')))
-            # 找包含目标专家的文件
-            matching = []
             for f in v8_files:
                 try:
                     with open(f, 'r', encoding='utf-8-sig') as fh:
                         d = json.load(fh)
                     names = [e['name'] for e in d.get('experts', [])]
-                    if expert_name in names:
-                        matching.append(f)
+                    if debate_topic.expert1 in names or debate_topic.expert2 in names:
+                        return f
                 except Exception:
                     continue
-            if not matching:
-                return v8_files[0] if v8_files else None
-            idx = (round_num - 1) % len(matching)
-            return matching[idx]
 
-        return None
+        # 回退到轮转
+        return self._select_auto_discussion(round_num)
+
+    def _select_auto_discussion(self, round_num: int) -> Optional[str]:
+        """自动模式选择讨论文件"""
+        v8_files = sorted(glob.glob(os.path.join(self.content_dir, '*_v8.json')))
+        if not v8_files:
+            return None
+        idx = (round_num - 1) % len(v8_files)
+        return v8_files[idx]
 
     # ─── 输出格式 ─────────────────────────────────────────
 
     def _emit_header(self, rounds: int, mode: str):
-        """输出训练头信息。"""
+        """输出训练头信息"""
+        expert_count = len(self.debate_arena.profiles)
+        conflict_count = len(self.debate_arena.get_all_conflicts())
+        engine_name = 'V4.0 融合增强式' if self.engine_version == 'v4' else 'V3.0 进化式'
         print(f"\n{'='*60}")
-        print(f"  圆桌会议训练引擎")
+        print(f"  圆桌会议训练引擎 {engine_name}")
         print(f"  模式: {mode} | 轮次: {rounds} | 目标: {self.target_score}")
+        print(f"  专家库: {expert_count} 位专家 | {conflict_count} 个信念冲突点")
         print(f"{'='*60}\n")
 
+    def _emit_evolution_plan(self, topics: List[DebateTopic]):
+        """输出进化训练计划"""
+        print(f"  EVOLUTION PLAN")
+        print(f"  {'─'*56}")
+        for t in topics:
+            print(f"  Round {t.round_num}: {t.expert1} vs {t.expert2}")
+            print(f"  话题: {t.topic[:55]}...")
+            print(f"  信念: {t.belief1[:25]} ↔ {t.belief2[:25]}")
+            print()
+        print(f"  {'─'*56}\n")
+
     def _emit_heartbeat(self, round_num: int, total: int, phase: str, detail: str = ''):
-        """输出心跳行。"""
+        """输出心跳行"""
         tag = f"[{round_num}/{total}]"
         phase_str = f"{phase:<10}"
         line = f"  {tag} {phase_str}"
@@ -350,7 +339,7 @@ class TrainingOrchestrator:
         print(line)
 
     def _emit_round_summary(self, round_num: int, total: int, result: RoundResult):
-        """输出轮次总结。"""
+        """输出轮次总结"""
         dims = result.score_result.get('dimensions', {})
         score_total = result.score_result.get('total', 0)
         grade = result.score_result.get('grade', 'F')
@@ -358,7 +347,7 @@ class TrainingOrchestrator:
         print(f"\n  {'─'*56}")
         print(f"  ROUND {round_num}/{total} SUMMARY")
         print(f"  {'─'*56}")
-        print(f"  Discussion: {os.path.basename(result.discussion_file)}")
+        print(f"  Source: {result.topic_source} | Topic: {result.book_title[:40]}")
         print(f"  Score: {score_total:.1f} ({grade})")
         print()
 
@@ -378,26 +367,36 @@ class TrainingOrchestrator:
             cn = dim_names_cn.get(dim_name, dim_name)
             print(f"  {cn:<12} {dim.get('score', 0):>5.1f}% {dim.get('weight', 0)*100:>5.0f}% {dim.get('weighted', 0):>5.1f}")
 
-        # 专家升级
-        if result.expert_upgrades:
+        # 专家进化详情
+        if result.expert_evolutions:
             print()
-            print(f"  Expert Upgrades:")
-            for name, info in result.expert_upgrades.items():
-                old_v = info.get('old_version', 0)
-                new_v = info.get('new_version', 0)
-                sp = info.get('speech_count', 0)
-                atk = info.get('attack_count', 0)
-                print(f"    {name:<12} V{old_v}→V{new_v}  ({sp} speeches, {atk} attacks)")
+            print(f"  EXPERT EVOLUTIONS:")
+            for name, evo in result.expert_evolutions.items():
+                print(f"    {name}: V{evo.old_version}→V{evo.new_version}")
+                if evo.strategy_merges:
+                    for m in evo.strategy_merges:
+                        print(f"      + 策略融合: {m}")
+                if evo.material_replacements:
+                    for r in evo.material_replacements:
+                        print(f"      ~ 素材替换: {r}")
+                delta = evo.density_delta
+                sign = '+' if delta > 0 else ''
+                print(f"      密度变化: {sign}{delta:.1f}%")
 
         print(f"  {'─'*56}\n")
 
     def _emit_final_summary(self, summary: FinalSummary):
-        """输出最终总结。"""
+        """输出最终总结"""
+        engine_name = 'V4.0 FUSION' if self.engine_version == 'v4' else 'V3.0 EVOLUTION'
         print(f"\n{'='*60}")
-        print(f"  TRAINING COMPLETE")
+        print(f"  TRAINING COMPLETE — {engine_name} REPORT")
         print(f"{'='*60}")
-        print(f"  Mode: {summary.mode} | Rounds: {summary.total_rounds} | Duration: {summary.duration_seconds:.1f}s")
+        print(f"  Mode: {summary.mode} | Rounds: {summary.total_rounds}")
+        print(f"  Duration: {summary.duration_seconds:.1f}s")
         print(f"  Target: {summary.target_score} | Reached: {'YES' if summary.target_reached else 'NO'}")
+        if self.engine_version == 'v3':
+            print(f"  Total Strategy Merges: {summary.total_strategy_merges}")
+            print(f"  Total Material Replacements: {summary.total_material_replacements}")
 
         # 分数趋势
         if summary.score_progression:
@@ -408,8 +407,9 @@ class TrainingOrchestrator:
                 bar_len = int(s / max_score * 30) if max_score > 0 else 0
                 bar = '\u2588' * bar_len + '\u2591' * (30 - bar_len)
                 print(f"  Round {i}: {s:>5.1f}  {bar}")
-            delta = summary.score_progression[-1] - summary.score_progression[0]
-            print(f"  Delta:   {delta:+.1f} points")
+            if len(summary.score_progression) > 1:
+                delta = summary.score_progression[-1] - summary.score_progression[0]
+                print(f"  Delta:   {delta:+.1f} points")
 
         # 维度趋势
         if summary.dimension_trends:
@@ -434,22 +434,38 @@ class TrainingOrchestrator:
                     delta = end - start
                     print(f"  {cn:<12} {start:>5.1f}% {end:>5.1f}% {delta:>+5.1f}")
 
-        # 专家进化
-        if summary.experts_upgraded:
+        # 专家进化路径
+        if summary.expert_evolution_paths:
             print()
-            print(f"  EXPERT EVOLUTION")
-            for name, info in sorted(summary.experts_upgraded.items()):
+            print(f"  EXPERT EVOLUTION PATHS")
+            for name, info in sorted(summary.expert_evolution_paths.items()):
                 first_v = info.get('first_version', 1)
                 last_v = info.get('last_version', 1)
-                trained_rounds = info.get('rounds', [])
-                v_str = f"V{first_v}→V{last_v}"
-                r_str = ','.join(str(r) for r in trained_rounds)
-                print(f"    {name:<12} {v_str}  (rounds: {r_str})")
+                merges = info.get('total_merges', 0)
+                replacements = info.get('total_replacements', 0)
+                rounds_trained = info.get('rounds', [])
+                print(f"    {name}: V{first_v}→V{last_v} "
+                      f"({merges}策略融合, {replacements}素材替换, "
+                      f"轮次: {','.join(str(r) for r in rounds_trained)})")
+
+        # 密度变化
+        if summary.density_changes:
+            print()
+            print(f"  DENSITY EVOLUTION (Alloy Model)")
+            for name, densities in summary.density_changes.items():
+                if len(densities) > 1:
+                    start_d = densities[0]
+                    end_d = densities[-1]
+                    change = end_d - start_d
+                    sign = '+' if change > 0 else ''
+                    print(f"    {name}: {start_d:.1f}% → {end_d:.1f}% ({sign}{change:.1f}%)")
+                elif densities:
+                    print(f"    {name}: {densities[0]:.1f}%")
 
         print(f"\n{'='*60}\n")
 
     def _format_dims_short(self, dims: Dict) -> str:
-        """格式化维度分数为简短字符串。"""
+        """格式化维度分数为简短字符串"""
         short_names = {
             'attack_efficiency': 'atk',
             'defense_rate': 'def',
@@ -467,7 +483,7 @@ class TrainingOrchestrator:
 
     def _build_final_summary(self, all_rounds: List[RoundResult],
                               mode: str, duration: float) -> FinalSummary:
-        """构建最终总结。"""
+        """构建最终总结"""
         summary = FinalSummary(
             total_rounds=len(all_rounds),
             mode=mode,
@@ -489,20 +505,29 @@ class TrainingOrchestrator:
                 scores.append(dim_data.get('score', 0))
             summary.dimension_trends[dim] = scores
 
-        # 专家进化
+        # 专家进化路径
         for r in all_rounds:
-            for name, info in r.expert_upgrades.items():
-                if name not in summary.experts_upgraded:
-                    summary.experts_upgraded[name] = {
-                        'first_version': info.get('old_version', 1),
-                        'last_version': info.get('new_version', 1),
+            for name, evo in r.expert_evolutions.items():
+                if name not in summary.expert_evolution_paths:
+                    summary.expert_evolution_paths[name] = {
+                        'first_version': evo.old_version,
+                        'last_version': evo.new_version,
                         'rounds': [],
-                        'final_score': 0,
+                        'total_merges': 0,
+                        'total_replacements': 0,
                     }
-                entry = summary.experts_upgraded[name]
-                entry['last_version'] = info.get('new_version', entry['last_version'])
+                entry = summary.expert_evolution_paths[name]
+                entry['last_version'] = evo.new_version
                 entry['rounds'].append(r.round_num)
-                entry['final_score'] = r.score_result.get('total', 0)
+                entry['total_merges'] += len(evo.strategy_merges)
+                entry['total_replacements'] += len(evo.material_replacements)
+                summary.total_strategy_merges += len(evo.strategy_merges)
+                summary.total_material_replacements += len(evo.material_replacements)
+
+                # 密度变化
+                if name not in summary.density_changes:
+                    summary.density_changes[name] = []
+                summary.density_changes[name].append(evo.density_delta)
 
         # 是否达标
         if summary.score_progression:
@@ -511,8 +536,9 @@ class TrainingOrchestrator:
         return summary
 
     def _save_log(self, all_rounds: List[RoundResult], summary: FinalSummary):
-        """保存训练日志。"""
+        """保存训练日志"""
         log = {
+            'version': 'V3.0',
             'start_time': all_rounds[0].timestamp if all_rounds else '',
             'end_time': datetime.now().isoformat(),
             'mode': summary.mode,
@@ -521,6 +547,8 @@ class TrainingOrchestrator:
             'target_reached': summary.target_reached,
             'duration_seconds': summary.duration_seconds,
             'score_progression': summary.score_progression,
+            'total_strategy_merges': summary.total_strategy_merges,
+            'total_material_replacements': summary.total_material_replacements,
             'rounds': [
                 {
                     'round': r.round_num,
@@ -528,12 +556,16 @@ class TrainingOrchestrator:
                     'book_title': r.book_title,
                     'score': r.score_result.get('total', 0),
                     'grade': r.score_result.get('grade', 'F'),
-                    'expert_upgrades': {
+                    'topic_source': r.topic_source,
+                    'evolutions': {
                         name: {
-                            'old_version': info.get('old_version', 0),
-                            'new_version': info.get('new_version', 0),
+                            'old_version': evo.old_version,
+                            'new_version': evo.new_version,
+                            'strategy_merges': evo.strategy_merges,
+                            'material_replacements': evo.material_replacements,
+                            'density_delta': evo.density_delta,
                         }
-                        for name, info in r.expert_upgrades.items()
+                        for name, evo in r.expert_evolutions.items()
                     },
                 }
                 for r in all_rounds
@@ -552,18 +584,18 @@ class TrainingOrchestrator:
 # ─── CLI ─────────────────────────────────────────────────
 
 def main():
-    parser = argparse.ArgumentParser(description='圆桌会议多轮训练编排器')
+    parser = argparse.ArgumentParser(description='圆桌会议训练编排器 V4.0')
     parser.add_argument('--rounds', type=int, default=3, help='训练轮次')
-    parser.add_argument('--mode', choices=['auto', 'human', 'replay'], default='auto',
-                        help='训练模式')
+    parser.add_argument('--mode', choices=['auto', 'human', 'evolution', 'replay'],
+                        default='evolution', help='训练模式')
     parser.add_argument('--json', help='讨论 JSON 路径（human 模式）')
     parser.add_argument('--library', default='expert-library', help='专家库目录')
     parser.add_argument('--content', default='content', help='讨论内容目录')
     parser.add_argument('--expert', help='目标专家名（replay 模式）')
     parser.add_argument('--target-score', type=float, default=85.0, help='目标分数')
     parser.add_argument('--log-dir', default='memory', help='日志目录')
-    parser.add_argument('--use-material', action='store_true',
-                        help='使用本地素材构建话题（需先用 SKILL Phase 0 采风）')
+    parser.add_argument('--engine', choices=['v3', 'v4'], default='v3',
+                        help='引擎版本: v3(进化式) / v4(融合增强式)')
 
     args = parser.parse_args()
     sys.stdout.reconfigure(encoding='utf-8')
@@ -573,7 +605,7 @@ def main():
         content_dir=args.content,
         log_dir=args.log_dir,
         target_score=args.target_score,
-        use_material=args.use_material,
+        engine_version=args.engine,
     )
 
     if args.mode == 'human' and not args.json:

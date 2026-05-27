@@ -1,0 +1,359 @@
+{
+  "version": "V3.0",
+  "start_time": "2026-05-27T15:51:07.814588",
+  "end_time": "2026-05-27T15:51:08.064070",
+  "mode": "auto",
+  "total_rounds": 5,
+  "target_score": 85.0,
+  "target_reached": false,
+  "duration_seconds": 0.26386070251464844,
+  "score_progression": [
+    70.3,
+    76.4,
+    67.1,
+    40.8,
+    68.3
+  ],
+  "total_strategy_merges": 40,
+  "total_material_replacements": 9,
+  "rounds": [
+    {
+      "round": 1,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "AI创意边际成本归零",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "auto",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 17,
+          "new_version": 18,
+          "strategy_merges": [
+            "攻击模式: 逻辑漏洞",
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [],
+          "density_delta": -59.773269689737475
+        },
+        "刘润": {
+          "old_version": 23,
+          "new_version": 24,
+          "strategy_merges": [
+            "攻击模式: 逻辑漏洞",
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [
+            "新增发言（新角度，共6条）"
+          ],
+          "density_delta": -58.101071975497696
+        },
+        "李诞": {
+          "old_version": 43,
+          "new_version": 44,
+          "strategy_merges": [
+            "攻击模式: 现实矛盾",
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [],
+          "density_delta": -61.554192229038854
+        },
+        "冯唐": {
+          "old_version": 27,
+          "new_version": 28,
+          "strategy_merges": [
+            "攻击模式: 现实矛盾",
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [
+            "新增发言（新角度，共6条）"
+          ],
+          "density_delta": -56.41961444881153
+        },
+        "项飙": {
+          "old_version": 28,
+          "new_version": 29,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [
+            "新增发言（新角度，共6条）"
+          ],
+          "density_delta": -53.59971835944376
+        },
+        "吴军": {
+          "old_version": 33,
+          "new_version": 34,
+          "strategy_merges": [
+            "攻击模式: 数据反驳",
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [],
+          "density_delta": -53.56768100734522
+        }
+      }
+    },
+    {
+      "round": 2,
+      "discussion": "AI生成叙事_金融定价_v8.json",
+      "book_title": "AI生成叙事_金融定价",
+      "score": 76.4,
+      "grade": "C",
+      "topic_source": "auto",
+      "evolutions": {
+        "吴军": {
+          "old_version": 34,
+          "new_version": 35,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.016142050040355127
+        },
+        "李诞": {
+          "old_version": 44,
+          "new_version": 45,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.016622340425531915
+        },
+        "刘润": {
+          "old_version": 24,
+          "new_version": 25,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.024366471734892786
+        },
+        "罗翔": {
+          "old_version": 27,
+          "new_version": 28,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [],
+          "density_delta": -60.92282188248296
+        },
+        "凯文·凯利": {
+          "old_version": 18,
+          "new_version": 19,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.02966478789676654
+        }
+      }
+    },
+    {
+      "round": 3,
+      "discussion": "中产生活的叙事性破产_v8.json",
+      "book_title": "中产生活的叙事性破产",
+      "score": 67.1,
+      "grade": "D",
+      "topic_source": "auto",
+      "evolutions": {
+        "吴晓波": {
+          "old_version": 7,
+          "new_version": 8,
+          "strategy_merges": [
+            "攻击模式: 逻辑漏洞",
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [],
+          "density_delta": -41.47553516819572
+        },
+        "项飙": {
+          "old_version": 29,
+          "new_version": 30,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "冯唐": {
+          "old_version": 28,
+          "new_version": 29,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "李诞": {
+          "old_version": 45,
+          "new_version": 46,
+          "strategy_merges": [
+            "攻击模式: 人性弱点",
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [
+            "新增发言（新角度，共6条）",
+            "替换最弱金句"
+          ],
+          "density_delta": 2.6923716137610105
+        },
+        "刘润": {
+          "old_version": 25,
+          "new_version": 26,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [
+            "新增发言（新角度，共4条）"
+          ],
+          "density_delta": 6.967113276492083
+        },
+        "罗翔": {
+          "old_version": 28,
+          "new_version": 29,
+          "strategy_merges": [
+            "攻击模式: 逻辑漏洞",
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.6363422106999764
+        }
+      }
+    },
+    {
+      "round": 4,
+      "discussion": "儒释道批判性分析_v8.json",
+      "book_title": "儒释道批判性分析",
+      "score": 40.8,
+      "grade": "F",
+      "topic_source": "auto",
+      "evolutions": {
+        "孔子": {
+          "old_version": 1,
+          "new_version": 2,
+          "strategy_merges": [
+            "攻击模式: 逻辑漏洞",
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": -4.295116037409075
+        },
+        "老子": {
+          "old_version": 1,
+          "new_version": 2,
+          "strategy_merges": [
+            "攻击模式: 逻辑漏洞",
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [
+            "新增发言（新角度，共6条）",
+            "新增金句"
+          ],
+          "density_delta": 2.948861515490855
+        },
+        "尼采": {
+          "old_version": 10,
+          "new_version": 11,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [],
+          "density_delta": -44.366091522880716
+        },
+        "西蒙娜·德·波伏娃": {
+          "old_version": 10,
+          "new_version": 11,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [],
+          "density_delta": -19.881305637982198
+        },
+        "许知远": {
+          "old_version": 10,
+          "new_version": 11,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [],
+          "density_delta": -47.47255921432698
+        },
+        "项飙": {
+          "old_version": 30,
+          "new_version": 31,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.03793626707132018
+        }
+      }
+    },
+    {
+      "round": 5,
+      "discussion": "反乌托邦_叙事_v8.json",
+      "book_title": "反乌托邦_叙事",
+      "score": 68.3,
+      "grade": "D",
+      "topic_source": "auto",
+      "evolutions": {
+        "阿西莫夫": {
+          "old_version": 9,
+          "new_version": 10,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [],
+          "density_delta": -47.48575259805565
+        },
+        "尼克·博斯特罗姆": {
+          "old_version": 9,
+          "new_version": 10,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [],
+          "density_delta": -49.65034965034965
+        },
+        "尤瓦尔·赫拉利": {
+          "old_version": 17,
+          "new_version": 18,
+          "strategy_merges": [
+            "攻击模式: 逻辑漏洞",
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [],
+          "density_delta": -49.27181495532982
+        },
+        "吴军": {
+          "old_version": 35,
+          "new_version": 36,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.06455777921239508
+        },
+        "冯唐": {
+          "old_version": 29,
+          "new_version": 30,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.06441915396177797
+        },
+        "李诞": {
+          "old_version": 46,
+          "new_version": 47,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞攻击"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.04855154555753358
+        }
+      }
+    }
+  ]
+}

@@ -14,6 +14,7 @@
 """
 
 import json
+import re
 import sys
 import os
 from pathlib import Path
@@ -181,6 +182,143 @@ def build_extraction_prompt(expert_name: str, speeches: List[Dict],
     return prompt
 
 
+def compute_strategy_data(speeches: List[Dict], interactions: List[Dict],
+                          expert_name: str) -> Dict:
+    """从原始发言和碰撞数据中计算结构化策略数据。
+
+    这是进化引擎需要的输入格式：attack_strategy / defense_weakness / style_fingerprint
+    
+    升级：即使没有counter_attack，也能从stance发言中提取策略
+    """
+    attacks = [s for s in speeches if s['type'] == 'attack']
+    defenses = [s for s in speeches if s['type'] == 'defense']
+    stances = [s for s in speeches if s['type'] == 'stance']
+
+    # === 攻击策略：从攻击发言或stance发言中提取 ===
+    attack_strategy = {'best_angle': '', 'applicable_when': '', 'kill_rating': '中'}
+    
+    # 如果有攻击发言，从中提取
+    if attacks:
+        best_attack = max(attacks, key=lambda a: len(a.get('content', '')))
+        content = best_attack.get('content', '')
+        attack_type = best_attack.get('attack_type', '')
+        target = best_attack.get('target', '')
+        angle = attack_type if attack_type else content[:80].replace('\n', ' ')
+        rating = '高' if len(content) > 300 else '中' if len(content) > 100 else '低'
+        attack_strategy = {
+            'best_angle': angle,
+            'applicable_when': f'对手({target})立场偏激时' if target else '对手立场偏激时',
+            'kill_rating': rating,
+        }
+    # 如果没有攻击发言，从stance中寻找反驳内容
+    elif stances:
+        for s in stances:
+            content = s.get('content', '')
+            # 检查是否包含反驳关键词
+            if any(kw in content for kw in ['但是', '然而', '问题是', '你说的', '我不认同', '不同意']):
+                angle = content[:80].replace('\n', ' ')
+                rating = '高' if len(content) > 300 else '中'
+                attack_strategy = {
+                    'best_angle': angle,
+                    'applicable_when': '对手观点有明显漏洞时',
+                    'kill_rating': rating,
+                }
+                break
+
+    # === 阿御弱点：从防御发言或被攻击的stance中提取 ===
+    defense_weakness = {'broken_by': '', 'fix_strategy': ''}
+    
+    # 如果有防御发言，从中提取
+    if defenses:
+        weakest_defense = min(defenses, key=lambda d: len(d.get('content', '')))
+        attacker = weakest_defense.get('attacker', '')
+        defense_weakness = {
+            'broken_by': attacker if attacker else '逻辑漏洞',
+            'fix_strategy': weakest_defense.get('content', '')[:100] if weakest_defense.get('content') else '需要更充分的论据',
+        }
+    # 如果没有防御发言，从交互中找被攻击的记录
+    elif interactions:
+        # 找到该专家作为target的交互
+        as_target = [i for i in interactions if i.get('target') == expert_name]
+        if as_target:
+            # 被攻击但没有反击，说明防御失败
+            attack = as_target[0]
+            attack_type = attack.get('attack_type', '逻辑漏洞')
+            defense_weakness = {
+                'broken_by': attack_type,
+                'fix_strategy': '需要准备针对此类攻击的回应',
+            }
+
+    # === 风格指纹：最像这个人会说的话 ===
+    style_fingerprint = {'most_authentic_line': '', 'weakest_line': ''}
+    all_contents = [s.get('content', '') for s in speeches if s.get('content')]
+    if all_contents:
+        # 最有深度的发言 = 最长的
+        best_line = max(all_contents, key=len)
+        # 最弱的发言 = 最短的（排除空的）
+        non_empty = [c for c in all_contents if len(c) > 20]
+        worst_line = min(non_empty, key=len) if non_empty else ''
+        style_fingerprint = {
+            'most_authentic_line': best_line,
+            'weakest_line': worst_line,
+        }
+
+    # === 证据偏好 ===
+    evidence_preference = {'most_effective_type': '', 'ranking': []}
+    evidence_types = []
+    for s in speeches:
+        content = s.get('content', '')
+        if re.search(r'\d+%|\d+万|\d+亿|\d+美元', content):
+            evidence_types.append('数据')
+        if re.search(r'第.{1,3}章|情节|原文|书中', content):
+            evidence_types.append('文本引用')
+        if re.search(r'案例|比如|例如|事实上', content):
+            evidence_types.append('案例')
+        if re.search(r'就像|好比|本质上|说白了', content):
+            evidence_types.append('类比隐喻')
+    if evidence_types:
+        from collections import Counter
+        counts = Counter(evidence_types)
+        ranking = [t for t, _ in counts.most_common()]
+        evidence_preference = {
+            'most_effective_type': ranking[0] if ranking else '',
+            'ranking': ranking,
+        }
+
+    # === 交互模式 ===
+    interaction_pattern = {'best_opponent': '', 'worst_opponent': ''}
+    expert_interactions = [
+        i for i in interactions
+        if i['attacker'] == expert_name or i['target'] == expert_name
+    ]
+    if expert_interactions:
+        # 有counter_attack的交互 = 成功防御 = 好对手
+        successful = [i for i in expert_interactions if i.get('has_counter')]
+        failed = [i for i in expert_interactions if not i.get('has_counter')]
+        if successful:
+            best_opp = successful[0]
+            interaction_pattern['best_opponent'] = (
+                best_opp['target'] if best_opp['attacker'] == expert_name else best_opp['attacker']
+            )
+        if failed:
+            worst_opp = failed[0]
+            interaction_pattern['worst_opponent'] = (
+                worst_opp['target'] if worst_opp['attacker'] == expert_name else worst_opp['attacker']
+            )
+
+    return {
+        'attack_modes': [{'angle': attack_strategy['best_angle'],
+                          'scenario': attack_strategy['applicable_when'],
+                          'rating': attack_strategy['kill_rating']}] if attack_strategy['best_angle'] else [],
+        'attack_strategy': attack_strategy,
+        'defense_weakness': defense_weakness,
+        'style_fingerprint': style_fingerprint,
+        'evidence_preference': evidence_preference,
+        'interaction_pattern': interaction_pattern,
+        'speeches': all_contents,
+    }
+
+
 def extract(json_path: str, output_path: str = None) -> Dict:
     """主提取函数"""
     data = load_discussion(json_path)
@@ -199,12 +337,19 @@ def extract(json_path: str, output_path: str = None) -> Dict:
         if not name:
             continue
         speeches = extract_expert_speeches(data, name)
+        strategy_data = compute_strategy_data(speeches, interactions, name)
         prompt = build_extraction_prompt(name, speeches, interactions, book_title)
         result['experts'][name] = {
             'expert_info': expert,
             'speech_count': len(speeches),
             'speeches': speeches,
-            'extraction_prompt': prompt
+            'extraction_prompt': prompt,
+            'attack_modes': strategy_data['attack_modes'],
+            'attack_strategy': strategy_data['attack_strategy'],
+            'defense_weakness': strategy_data['defense_weakness'],
+            'style_fingerprint': strategy_data['style_fingerprint'],
+            'evidence_preference': strategy_data['evidence_preference'],
+            'interaction_pattern': strategy_data['interaction_pattern'],
         }
 
     if output_path:

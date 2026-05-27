@@ -1,0 +1,82 @@
+{
+  "version": "V3.0",
+  "start_time": "2026-05-27T21:58:05.146955",
+  "end_time": "2026-05-27T21:58:05.151786",
+  "mode": "auto",
+  "total_rounds": 1,
+  "target_score": 60.0,
+  "target_reached": true,
+  "duration_seconds": 0.06358528137207031,
+  "score_progression": [
+    70.3
+  ],
+  "total_strategy_merges": 7,
+  "total_material_replacements": 0,
+  "rounds": [
+    {
+      "round": 1,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "AI创意边际成本归零",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "auto",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 1,
+          "new_version": 2,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.26400704018773835
+        },
+        "刘润": {
+          "old_version": 3,
+          "new_version": 4,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.7676348547717842
+        },
+        "李诞": {
+          "old_version": 2,
+          "new_version": 3,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.13681970203709334
+        },
+        "冯唐": {
+          "old_version": 1,
+          "new_version": 2,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.19169329073482427
+        },
+        "项飙": {
+          "old_version": 3,
+          "new_version": 4,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.6006493506493507
+        },
+        "吴军": {
+          "old_version": 3,
+          "new_version": 4,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.13366998366255756
+        }
+      }
+    }
+  ]
+}

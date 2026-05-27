@@ -1,0 +1,95 @@
+{
+  "total": 59.0,
+  "grade": "F",
+  "dimensions": {
+    "attack_efficiency": {
+      "score": 100.0,
+      "weight": 0.25,
+      "weighted": 25.0,
+      "details": {
+        "total": 2,
+        "effective": 2,
+        "details": [
+          {
+            "attacker": "韩非子",
+            "target": "丁元英",
+            "type": "现实矛盾",
+            "effective": true,
+            "has_counter": true,
+            "has_evidence": false,
+            "has_logic": false,
+            "has_specific": false
+          },
+          {
+            "attacker": "阿伦特",
+            "target": "丁元英",
+            "type": "人性弱点",
+            "effective": true,
+            "has_counter": true,
+            "has_evidence": false,
+            "has_logic": false,
+            "has_specific": false
+          }
+        ]
+      }
+    },
+    "defense_rate": {
+      "score": 50.0,
+      "weight": 0.2,
+      "weighted": 10.0,
+      "details": {
+        "total_defended": 2,
+        "successful": 1
+      }
+    },
+    "evidence_hit": {
+      "score": 0.0,
+      "weight": 0.15,
+      "weighted": 0.0,
+      "details": {
+        "total_speeches": 6,
+        "with_evidence": 0
+      }
+    },
+    "style_recognition": {
+      "score": 0.0,
+      "weight": 0.15,
+      "weighted": 0.0,
+      "details": {
+        "total": 4,
+        "distinctive": 0
+      }
+    },
+    "cognitive_contribution": {
+      "score": 100.0,
+      "weight": 0.1,
+      "weighted": 10.0,
+      "details": {
+        "total_rounds": 1,
+        "with_reversal": 1
+      }
+    },
+    "case_quality": {
+      "score": 100.0,
+      "weight": 0.1,
+      "weighted": 10.0,
+      "details": {
+        "total_rounds": 1,
+        "with_cases": 1,
+        "total_cases": 1
+      }
+    },
+    "structure": {
+      "score": 80.0,
+      "weight": 0.05,
+      "weighted": 4.0,
+      "details": {
+        "title": true,
+        "experts": true,
+        "rounds": false,
+        "final_insight": true,
+        "open_questions": true
+      }
+    }
+  }
+}

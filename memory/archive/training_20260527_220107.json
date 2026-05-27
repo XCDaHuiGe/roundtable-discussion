@@ -1,0 +1,4403 @@
+{
+  "version": "V3.0",
+  "start_time": "2026-05-27T22:01:05.096911",
+  "end_time": "2026-05-27T22:01:07.739181",
+  "mode": "evolution",
+  "total_rounds": 100,
+  "target_score": 100.0,
+  "target_reached": false,
+  "duration_seconds": 2.707282304763794,
+  "score_progression": [
+    68.3,
+    59.0,
+    59.0,
+    59.0,
+    40.8,
+    59.0,
+    59.0,
+    59.0,
+    68.3,
+    59.0,
+    59.0,
+    40.8,
+    59.0,
+    40.8,
+    80.3,
+    59.0,
+    80.3,
+    70.3,
+    40.8,
+    68.3,
+    76.4,
+    68.3,
+    70.3,
+    80.3,
+    70.3,
+    80.3,
+    80.3,
+    80.3,
+    80.3,
+    40.8,
+    70.3,
+    71.7,
+    40.8,
+    70.3,
+    40.8,
+    77.1,
+    40.8,
+    40.8,
+    40.8,
+    77.1,
+    61.7,
+    68.3,
+    40.8,
+    70.3,
+    70.3,
+    80.3,
+    77.1,
+    70.3,
+    70.3,
+    70.3,
+    67.1,
+    68.3,
+    66.7,
+    80.3,
+    77.1,
+    70.3,
+    68.3,
+    70.3,
+    71.7,
+    80.3,
+    66.7,
+    40.8,
+    70.3,
+    68.3,
+    80.3,
+    66.7,
+    77.1,
+    77.1,
+    71.7,
+    70.3,
+    70.3,
+    51.2,
+    66.7,
+    80.3,
+    80.3,
+    70.3,
+    70.3,
+    70.3,
+    61.7,
+    40.8,
+    70.3,
+    40.8,
+    67.1,
+    67.1,
+    77.1,
+    70.3,
+    70.3,
+    76.4,
+    70.3,
+    40.8,
+    70.3,
+    80.3,
+    70.3,
+    80.3,
+    80.3,
+    70.3,
+    40.8,
+    40.8,
+    40.8,
+    40.8
+  ],
+  "total_strategy_merges": 349,
+  "total_material_replacements": 33,
+  "rounds": [
+    {
+      "round": 1,
+      "discussion": "反乌托邦_叙事_v8.json",
+      "book_title": "面对\"算法让市场更有效，但这不意味着真正的风险消失了，只是换了形式\"和\"科技伦理先驱：我提出机器人三",
+      "score": 68.3,
+      "grade": "D",
+      "topic_source": "evolution",
+      "evolutions": {
+        "阿西莫夫": {
+          "old_version": 2,
+          "new_version": 3,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "尼克·博斯特罗姆": {
+          "old_version": 5,
+          "new_version": 6,
+          "strategy_merges": [],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": 0.0
+        },
+        "尤瓦尔·赫拉利": {
+          "old_version": 2,
+          "new_version": 3,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "吴军": {
+          "old_version": 4,
+          "new_version": 4,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "冯唐": {
+          "old_version": 3,
+          "new_version": 4,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.021159542953872196
+        },
+        "李诞": {
+          "old_version": 3,
+          "new_version": 3,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 2,
+      "discussion": "遥远的救世主_V8.json",
+      "book_title": "训练场景：万维钢专门攻击阿伦特的弱点：—。阿伦特需要在5分钟内构建防御。怎么防？",
+      "score": 59.0,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 3,
+      "discussion": "遥远的救世主_V8.json",
+      "book_title": "训练场景：丁元英专门攻击阿伦特的弱点：—。阿伦特需要在5分钟内构建防御。怎么防？",
+      "score": 59.0,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 4,
+      "discussion": "遥远的救世主_V8.json",
+      "book_title": "韩非子的擅长攻击：—正好对上阿伦特的弱点：———这是一场不对等的战斗。阿伦特如何自救？",
+      "score": 59.0,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 5,
+      "discussion": "儒释道批判性分析_v8.json",
+      "book_title": "如果孔子是对的（人性本善，通过教育和修身可以达到仁的境界），韩非子的世界观就要崩塌。反之亦然。谁的证",
+      "score": 40.8,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 6,
+      "discussion": "遥远的救世主_V8.json",
+      "book_title": "芮小丹的擅长攻击：—正好对上韩非子的弱点：———这是一场不对等的战斗。韩非子如何自救？",
+      "score": 59.0,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 7,
+      "discussion": "遥远的救世主_V8.json",
+      "book_title": "训练场景：芮小丹专门攻击万维钢的弱点：—。万维钢需要在5分钟内构建防御。怎么防？",
+      "score": 59.0,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 8,
+      "discussion": "遥远的救世主_V8.json",
+      "book_title": "万维钢的擅长攻击：—正好对上韩非子的弱点：———这是一场不对等的战斗。韩非子如何自救？",
+      "score": 59.0,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 9,
+      "discussion": "反乌托邦_叙事_v8.json",
+      "book_title": "如果塔勒布是对的（AI生成的\"完美同质化\"信息会让市场在黑天鹅来临时加速崩溃，而非分散风险），阿西莫",
+      "score": 68.3,
+      "grade": "D",
+      "topic_source": "evolution",
+      "evolutions": {
+        "阿西莫夫": {
+          "old_version": 3,
+          "new_version": 4,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "尼克·博斯特罗姆": {
+          "old_version": 6,
+          "new_version": 7,
+          "strategy_merges": [],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": 0.0
+        },
+        "尤瓦尔·赫拉利": {
+          "old_version": 3,
+          "new_version": 4,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "吴军": {
+          "old_version": 4,
+          "new_version": 4,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "冯唐": {
+          "old_version": 4,
+          "new_version": 5,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "李诞": {
+          "old_version": 3,
+          "new_version": 3,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 10,
+      "discussion": "遥远的救世主_V8.json",
+      "book_title": "训练场景：万维钢专门攻击丁元英的弱点：—。丁元英需要在5分钟内构建防御。怎么防？",
+      "score": 59.0,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 11,
+      "discussion": "遥远的救世主_V8.json",
+      "book_title": "训练场景：韩非子专门攻击丁元英的弱点：—。丁元英需要在5分钟内构建防御。怎么防？",
+      "score": 59.0,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 12,
+      "discussion": "儒释道批判性分析_v8.json",
+      "book_title": "如果孔子是对的（人性本善，通过教育和修身可以达到仁的境界），阿伦特的世界观就要崩塌。反之亦然。谁的证",
+      "score": 40.8,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 13,
+      "discussion": "遥远的救世主_V8.json",
+      "book_title": "芮小丹的擅长攻击：—正好对上丁元英的弱点：———这是一场不对等的战斗。丁元英如何自救？",
+      "score": 59.0,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 14,
+      "discussion": "儒释道批判性分析_v8.json",
+      "book_title": "\"上善若水，柔弱胜刚强，最高明的力量是不争\"vs\"人性本恶，必须用法律约束\"：老子和韩非子的根本分歧",
+      "score": 40.8,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 15,
+      "discussion": "AI情感代理人的亲密关系_v8.json",
+      "book_title": "面对\"社会秩序崩溃\"和\"逃避自由：现代人用\"自我资本化\"逃避真正自由带来的责任和不确定性\"的对立，一",
+      "score": 80.3,
+      "grade": "B",
+      "topic_source": "evolution",
+      "evolutions": {
+        "项飙": {
+          "old_version": 5,
+          "new_version": 6,
+          "strategy_merges": [
+            "防御模式: 丹尼尔·卡尼曼"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.14624634384140398
+        },
+        "丹尼尔·卡尼曼": {
+          "old_version": 3,
+          "new_version": 4,
+          "strategy_merges": [
+            "防御模式: 弗洛姆"
+          ],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": 0.1988510826336721
+        },
+        "弗洛姆": {
+          "old_version": 3,
+          "new_version": 4,
+          "strategy_merges": [
+            "防御模式: 傅盛"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.27272727272727276
+        }
+      }
+    },
+    {
+      "round": 16,
+      "discussion": "遥远的救世主_V8.json",
+      "book_title": "芮小丹的擅长攻击：—正好对上阿伦特的弱点：———这是一场不对等的战斗。阿伦特如何自救？",
+      "score": 59.0,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 17,
+      "discussion": "AI情感代理人的亲密关系_v8.json",
+      "book_title": "孔子坚信\"社会秩序建立在礼的基础上，各安其位才能和谐\"，弗洛姆坚持\"逃避自由：现代人用\"自我资本化\"",
+      "score": 80.3,
+      "grade": "B",
+      "topic_source": "evolution",
+      "evolutions": {
+        "项飙": {
+          "old_version": 6,
+          "new_version": 7,
+          "strategy_merges": [
+            "防御模式: 丹尼尔·卡尼曼"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "丹尼尔·卡尼曼": {
+          "old_version": 4,
+          "new_version": 5,
+          "strategy_merges": [
+            "防御模式: 弗洛姆"
+          ],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": 0.0
+        },
+        "弗洛姆": {
+          "old_version": 4,
+          "new_version": 5,
+          "strategy_merges": [
+            "防御模式: 傅盛"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 18,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "\"段永平用实证证明：知道自己不做什么，是比知道自己做什么更强大的竞争优势\"vs\"大家把AI当作\"竞争",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 2,
+          "new_version": 3,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 1.2058823529411764
+        },
+        "刘润": {
+          "old_version": 4,
+          "new_version": 5,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.857202592515158
+        },
+        "李诞": {
+          "old_version": 3,
+          "new_version": 4,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "冯唐": {
+          "old_version": 5,
+          "new_version": 6,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "项飙": {
+          "old_version": 7,
+          "new_version": 8,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.01622586402725945
+        },
+        "吴军": {
+          "old_version": 4,
+          "new_version": 5,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 19,
+      "discussion": "儒释道批判性分析_v8.json",
+      "book_title": "面对\"上善若水，柔弱胜刚强，最高明的力量是不争\"和\"平庸之恶比极端之恶更可怕\"的对立，一个没有预设立",
+      "score": 40.8,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 20,
+      "discussion": "反乌托邦_叙事_v8.json",
+      "book_title": "\"科技伦理先驱：我提出机器人三定律，是因为我相信科技可以被设计得更安全\"vs\"存在性风险：某些技术可",
+      "score": 68.3,
+      "grade": "D",
+      "topic_source": "evolution",
+      "evolutions": {
+        "阿西莫夫": {
+          "old_version": 4,
+          "new_version": 5,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "尼克·博斯特罗姆": {
+          "old_version": 7,
+          "new_version": 8,
+          "strategy_merges": [],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": 0.0
+        },
+        "尤瓦尔·赫拉利": {
+          "old_version": 4,
+          "new_version": 5,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "吴军": {
+          "old_version": 5,
+          "new_version": 5,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "冯唐": {
+          "old_version": 6,
+          "new_version": 7,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "李诞": {
+          "old_version": 4,
+          "new_version": 4,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 21,
+      "discussion": "AI生成叙事_金融定价_v8.json",
+      "book_title": "\"人性尊严不能被还原为经济价值，人是因为\"是人\"而有价值，不是因为\"有用\"才有价值\"vs\"证明制度比",
+      "score": 76.4,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "吴军": {
+          "old_version": 5,
+          "new_version": 6,
+          "strategy_merges": [
+            "防御模式: 认知碰撞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "李诞": {
+          "old_version": 4,
+          "new_version": 5,
+          "strategy_merges": [
+            "防御模式: 认知碰撞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "刘润": {
+          "old_version": 5,
+          "new_version": 6,
+          "strategy_merges": [
+            "防御模式: 认知碰撞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.642620232172471
+        },
+        "罗翔": {
+          "old_version": 2,
+          "new_version": 3,
+          "strategy_merges": [
+            "防御模式: 认知碰撞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.6901157613535174
+        },
+        "凯文·凯利": {
+          "old_version": 3,
+          "new_version": 4,
+          "strategy_merges": [
+            "防御模式: 认知碰撞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 22,
+      "discussion": "反乌托邦_叙事_v8.json",
+      "book_title": "如果强制菲利普·津巴多用论证方式：类比隐喻来论证自己的观点，会发生什么？方法论的边界在哪里？",
+      "score": 68.3,
+      "grade": "D",
+      "topic_source": "evolution",
+      "evolutions": {
+        "阿西莫夫": {
+          "old_version": 5,
+          "new_version": 6,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.12586532410320958
+        },
+        "尼克·博斯特罗姆": {
+          "old_version": 8,
+          "new_version": 9,
+          "strategy_merges": [],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": -0.1234949058351343
+        },
+        "尤瓦尔·赫拉利": {
+          "old_version": 5,
+          "new_version": 6,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.095488183337312
+        },
+        "吴军": {
+          "old_version": 6,
+          "new_version": 6,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": -0.05913660555884093
+        },
+        "冯唐": {
+          "old_version": 7,
+          "new_version": 8,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.08462026655383964
+        },
+        "李诞": {
+          "old_version": 5,
+          "new_version": 5,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": -0.06052352852171282
+        }
+      }
+    },
+    {
+      "round": 23,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "吴晓波用论证方式：类比隐喻，项飙用论证方式：逻辑推演——同一个问题，两种方法得出的结论会差多远？",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 4,
+          "new_version": 5,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.058122638767800064
+        },
+        "刘润": {
+          "old_version": 6,
+          "new_version": 7,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.0411946446961895
+        },
+        "李诞": {
+          "old_version": 5,
+          "new_version": 6,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.03028009084027252
+        },
+        "冯唐": {
+          "old_version": 8,
+          "new_version": 9,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.04234596654668643
+        },
+        "项飙": {
+          "old_version": 8,
+          "new_version": 9,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.03244646333549643
+        },
+        "吴军": {
+          "old_version": 6,
+          "new_version": 7,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.02958579881656805
+        }
+      }
+    },
+    {
+      "round": 24,
+      "discussion": "AI情感代理人的亲密关系_v8.json",
+      "book_title": "万维钢用论证方式：类比隐喻，弗洛姆用论证方式：案例归纳——同一个问题，两种方法得出的结论会差多远？",
+      "score": 80.3,
+      "grade": "B",
+      "topic_source": "evolution",
+      "evolutions": {
+        "项飙": {
+          "old_version": 9,
+          "new_version": 10,
+          "strategy_merges": [
+            "防御模式: 丹尼尔·卡尼曼"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.03245699448231094
+        },
+        "丹尼尔·卡尼曼": {
+          "old_version": 5,
+          "new_version": 6,
+          "strategy_merges": [
+            "防御模式: 弗洛姆"
+          ],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": -0.02205071664829107
+        },
+        "弗洛姆": {
+          "old_version": 5,
+          "new_version": 6,
+          "strategy_merges": [
+            "防御模式: 傅盛"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.030220610456331218
+        }
+      }
+    },
+    {
+      "round": 25,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "吴军最看重\"最看重：理性决策\"，尤瓦尔·赫拉利最看重\"最看重：专业能力\"——如果资源有限只能保一个，",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 5,
+          "new_version": 6,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.05815644082582146
+        },
+        "刘润": {
+          "old_version": 7,
+          "new_version": 8,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.041211621677313
+        },
+        "李诞": {
+          "old_version": 6,
+          "new_version": 7,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.03027092477675193
+        },
+        "冯唐": {
+          "old_version": 9,
+          "new_version": 10,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.06349206349206349
+        },
+        "项飙": {
+          "old_version": 10,
+          "new_version": 11,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.016223231667748216
+        },
+        "吴军": {
+          "old_version": 7,
+          "new_version": 8,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.02957704821058858
+        }
+      }
+    },
+    {
+      "round": 26,
+      "discussion": "AI情感代理人的亲密关系_v8.json",
+      "book_title": "在真实决策中，\"最看重：表达自由\"和\"最看重：理性决策\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 80.3,
+      "grade": "B",
+      "topic_source": "evolution",
+      "evolutions": {
+        "项飙": {
+          "old_version": 11,
+          "new_version": 12,
+          "strategy_merges": [
+            "防御模式: 丹尼尔·卡尼曼"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "丹尼尔·卡尼曼": {
+          "old_version": 6,
+          "new_version": 7,
+          "strategy_merges": [
+            "防御模式: 弗洛姆"
+          ],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": 0.022055580061755623
+        },
+        "弗洛姆": {
+          "old_version": 6,
+          "new_version": 7,
+          "strategy_merges": [
+            "防御模式: 傅盛"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.03022974607013301
+        }
+      }
+    },
+    {
+      "round": 27,
+      "discussion": "AI情感代理人的亲密关系_v8.json",
+      "book_title": "在真实决策中，\"最看重：专业能力\"和\"最看重：实证研究\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 80.3,
+      "grade": "B",
+      "topic_source": "evolution",
+      "evolutions": {
+        "项飙": {
+          "old_version": 12,
+          "new_version": 13,
+          "strategy_merges": [
+            "防御模式: 丹尼尔·卡尼曼"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.016220600162206
+        },
+        "丹尼尔·卡尼曼": {
+          "old_version": 7,
+          "new_version": 8,
+          "strategy_merges": [
+            "防御模式: 弗洛姆"
+          ],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": 0.02205071664829107
+        },
+        "弗洛姆": {
+          "old_version": 7,
+          "new_version": 8,
+          "strategy_merges": [
+            "防御模式: 傅盛"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.030220610456331218
+        }
+      }
+    },
+    {
+      "round": 28,
+      "discussion": "AI情感代理人的亲密关系_v8.json",
+      "book_title": "如果强制弗洛姆用论证方式：逻辑推演来论证自己的观点，会发生什么？方法论的边界在哪里？",
+      "score": 80.3,
+      "grade": "B",
+      "topic_source": "evolution",
+      "evolutions": {
+        "项飙": {
+          "old_version": 13,
+          "new_version": 14,
+          "strategy_merges": [
+            "防御模式: 丹尼尔·卡尼曼"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.12974375608173855
+        },
+        "丹尼尔·卡尼曼": {
+          "old_version": 8,
+          "new_version": 9,
+          "strategy_merges": [
+            "防御模式: 弗洛姆"
+          ],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": -0.1763668430335097
+        },
+        "弗洛姆": {
+          "old_version": 8,
+          "new_version": 9,
+          "strategy_merges": [
+            "防御模式: 傅盛"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.2416918429003021
+        }
+      }
+    },
+    {
+      "round": 29,
+      "discussion": "AI情感代理人的亲密关系_v8.json",
+      "book_title": "阿伦特用论证方式：逻辑推演，弗洛姆用论证方式：案例归纳——同一个问题，两种方法得出的结论会差多远？",
+      "score": 80.3,
+      "grade": "B",
+      "topic_source": "evolution",
+      "evolutions": {
+        "项飙": {
+          "old_version": 14,
+          "new_version": 15,
+          "strategy_merges": [
+            "防御模式: 丹尼尔·卡尼曼"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.11367327054238388
+        },
+        "丹尼尔·卡尼曼": {
+          "old_version": 9,
+          "new_version": 10,
+          "strategy_merges": [
+            "防御模式: 弗洛姆"
+          ],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": 0.17667844522968199
+        },
+        "弗洛姆": {
+          "old_version": 9,
+          "new_version": 10,
+          "strategy_merges": [
+            "防御模式: 傅盛"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.24227740763173833
+        }
+      }
+    },
+    {
+      "round": 30,
+      "discussion": "儒释道批判性分析_v8.json",
+      "book_title": "在真实决策中，\"最看重：真理追求\"和\"最看重：专业能力\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 40.8,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 31,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "凯文·凯利最看重\"最看重：专业能力\"，阿伦特最看重\"最看重：真理追求\"——如果资源有限只能保一个，选",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 6,
+          "new_version": 7,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "刘润": {
+          "old_version": 8,
+          "new_version": 9,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "李诞": {
+          "old_version": 7,
+          "new_version": 8,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "冯唐": {
+          "old_version": 10,
+          "new_version": 11,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "项飙": {
+          "old_version": 15,
+          "new_version": 16,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.016220600162206
+        },
+        "吴军": {
+          "old_version": 8,
+          "new_version": 9,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 32,
+      "discussion": "数字永生_哀悼经济学_v8.json",
+      "book_title": "在真实决策中，\"最看重：理性决策\"和\"最看重：专业能力\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 71.7,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "罗翔": {
+          "old_version": 3,
+          "new_version": 4,
+          "strategy_merges": [
+            "攻击模式: 利益冲突"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "弗洛伊德": {
+          "old_version": 1,
+          "new_version": 2,
+          "strategy_merges": [],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": 2.28956228956229
+        },
+        "尤瓦尔·赫拉利": {
+          "old_version": 6,
+          "new_version": 6,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.09557945041816009
+        },
+        "项飙": {
+          "old_version": 16,
+          "new_version": 17,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.04865390853065196
+        },
+        "冯唐": {
+          "old_version": 11,
+          "new_version": 12,
+          "strategy_merges": [
+            "防御模式: 利益冲突"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "李诞": {
+          "old_version": 8,
+          "new_version": 9,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 33,
+      "discussion": "儒释道批判性分析_v8.json",
+      "book_title": "芒格最看重\"最看重：专业能力\"，尼采最看重\"最看重：真理追求\"——如果资源有限只能保一个，选哪个？",
+      "score": 40.8,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 34,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "弗洛姆用论证方式：案例归纳，项飙用论证方式：逻辑推演——同一个问题，两种方法得出的结论会差多远？",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 7,
+          "new_version": 8,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.058122638767800064
+        },
+        "刘润": {
+          "old_version": 9,
+          "new_version": 10,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.02059732234809475
+        },
+        "李诞": {
+          "old_version": 9,
+          "new_version": 10,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.015130882130428205
+        },
+        "冯唐": {
+          "old_version": 12,
+          "new_version": 13,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.04230118443316413
+        },
+        "项飙": {
+          "old_version": 17,
+          "new_version": 18,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -1.509005354535129
+        },
+        "吴军": {
+          "old_version": 9,
+          "new_version": 10,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.014784151389710232
+        }
+      }
+    },
+    {
+      "round": 35,
+      "discussion": "儒释道批判性分析_v8.json",
+      "book_title": "如果强制孔子用论证方式：逻辑推演来论证自己的观点，会发生什么？方法论的边界在哪里？",
+      "score": 40.8,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 36,
+      "discussion": "段永平投资问答语录_v8.json",
+      "book_title": "塔勒布用论证方式：逻辑推演，万维钢用论证方式：类比隐喻——同一个问题，两种方法得出的结论会差多远？",
+      "score": 77.1,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "巴菲特": {
+          "old_version": 1,
+          "new_version": 2,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.8528057308545114
+        },
+        "芒格": {
+          "old_version": 1,
+          "new_version": 1,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.878997568730129
+        },
+        "塔勒布": {
+          "old_version": 1,
+          "new_version": 2,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [
+            "新增发言（新角度，共5条）"
+          ],
+          "density_delta": 10.584727513665728
+        },
+        "柯林斯": {
+          "old_version": 1,
+          "new_version": 2,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.8700191404210893
+        },
+        "达利欧": {
+          "old_version": 1,
+          "new_version": 2,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 1.1803588290840417
+        },
+        "吴军": {
+          "old_version": 10,
+          "new_version": 11,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [
+            "替换最弱金句"
+          ],
+          "density_delta": 2.114446251663463
+        }
+      }
+    },
+    {
+      "round": 37,
+      "discussion": "儒释道批判性分析_v8.json",
+      "book_title": "老子用论证方式：自然隐喻，尤瓦尔·赫拉利用论证方式：逻辑推演——同一个问题，两种方法得出的结论会差多",
+      "score": 40.8,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 38,
+      "discussion": "儒释道批判性分析_v8.json",
+      "book_title": "巴菲特最看重\"最看重：理性决策\"，许知远最看重\"最看重：专业能力\"——如果资源有限只能保一个，选哪个",
+      "score": 40.8,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 39,
+      "discussion": "儒释道批判性分析_v8.json",
+      "book_title": "如果强制尼克·博斯特罗姆用论证方式：类比隐喻来论证自己的观点，会发生什么？方法论的边界在哪里？",
+      "score": 40.8,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 40,
+      "discussion": "段永平投资问答语录_v8.json",
+      "book_title": "如果强制马克思用论证方式：逻辑推演来论证自己的观点，会发生什么？方法论的边界在哪里？",
+      "score": 77.1,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "巴菲特": {
+          "old_version": 2,
+          "new_version": 3,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.11838322340605445
+        },
+        "芒格": {
+          "old_version": 1,
+          "new_version": 1,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": -0.12977382276603633
+        },
+        "塔勒布": {
+          "old_version": 2,
+          "new_version": 3,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.1048532055122828
+        },
+        "柯林斯": {
+          "old_version": 2,
+          "new_version": 3,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.12075211316198034
+        },
+        "达利欧": {
+          "old_version": 2,
+          "new_version": 3,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.1399906672888474
+        },
+        "吴军": {
+          "old_version": 11,
+          "new_version": 12,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.10136113524471474
+        }
+      }
+    },
+    {
+      "round": 41,
+      "discussion": "自我资本化_生存意义_v8.json",
+      "book_title": "在真实决策中，\"最看重：专业能力\"和\"最看重：理性决策\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 61.7,
+      "grade": "D",
+      "topic_source": "evolution",
+      "evolutions": {
+        "马克思": {
+          "old_version": 1,
+          "new_version": 1,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 1.518506801645049
+        },
+        "弗洛姆": {
+          "old_version": 10,
+          "new_version": 10,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.060422960725075525
+        },
+        "罗翔": {
+          "old_version": 4,
+          "new_version": 4,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "项飙": {
+          "old_version": 18,
+          "new_version": 19,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.032948929159802305
+        },
+        "冯唐": {
+          "old_version": 13,
+          "new_version": 14,
+          "strategy_merges": [
+            "攻击模式: 两位理论家说得深刻，但我想泼点冷水。  在座的各位，有没有想",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.04231908590774439
+        },
+        "李诞": {
+          "old_version": 10,
+          "new_version": 11,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.03026634382566586
+        }
+      }
+    },
+    {
+      "round": 42,
+      "discussion": "反乌托邦_叙事_v8.json",
+      "book_title": "在真实决策中，\"最看重：专业能力\"和\"最看重：理性决策\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 68.3,
+      "grade": "D",
+      "topic_source": "evolution",
+      "evolutions": {
+        "阿西莫夫": {
+          "old_version": 6,
+          "new_version": 7,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.1260239445494644
+        },
+        "尼克·博斯特罗姆": {
+          "old_version": 9,
+          "new_version": 10,
+          "strategy_merges": [],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": 0.1545595054095827
+        },
+        "尤瓦尔·赫拉利": {
+          "old_version": 6,
+          "new_version": 7,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.023872045834328
+        },
+        "吴军": {
+          "old_version": 12,
+          "new_version": 12,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.11595883461371213
+        },
+        "冯唐": {
+          "old_version": 14,
+          "new_version": 15,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "李诞": {
+          "old_version": 11,
+          "new_version": 11,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 43,
+      "discussion": "儒释道批判性分析_v8.json",
+      "book_title": "在真实决策中，\"最看重：仁义道德\"和\"最看重：真理追求\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 40.8,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 44,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "凯文·凯利最看重\"最看重：专业能力\"，老子最看重\"最看重：自然之道\"——如果资源有限只能保一个，选哪",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 8,
+          "new_version": 9,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.08723466123873219
+        },
+        "刘润": {
+          "old_version": 10,
+          "new_version": 11,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.04120313143798929
+        },
+        "李诞": {
+          "old_version": 11,
+          "new_version": 12,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "冯唐": {
+          "old_version": 15,
+          "new_version": 16,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "项飙": {
+          "old_version": 19,
+          "new_version": 20,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "吴军": {
+          "old_version": 12,
+          "new_version": 13,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [
+            "替换最弱金句"
+          ],
+          "density_delta": -5.8636166208194584
+        }
+      }
+    },
+    {
+      "round": 45,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "如果强制丹尼尔·卡尼曼用论证方式：逻辑推演来论证自己的观点，会发生什么？方法论的边界在哪里？",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 9,
+          "new_version": 10,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.08715862870424172
+        },
+        "刘润": {
+          "old_version": 11,
+          "new_version": 12,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.08237232289950577
+        },
+        "李诞": {
+          "old_version": 12,
+          "new_version": 13,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.0605143721633888
+        },
+        "冯唐": {
+          "old_version": 16,
+          "new_version": 17,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.08460236886632826
+        },
+        "项飙": {
+          "old_version": 20,
+          "new_version": 21,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.06587615283267458
+        },
+        "吴军": {
+          "old_version": 13,
+          "new_version": 14,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.06151953245155337
+        }
+      }
+    },
+    {
+      "round": 46,
+      "discussion": "AI情感代理人的亲密关系_v8.json",
+      "book_title": "如果强制马克思用论证方式：案例归纳来论证自己的观点，会发生什么？方法论的边界在哪里？",
+      "score": 80.3,
+      "grade": "B",
+      "topic_source": "evolution",
+      "evolutions": {
+        "项飙": {
+          "old_version": 21,
+          "new_version": 22,
+          "strategy_merges": [
+            "防御模式: 丹尼尔·卡尼曼"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.06591957811470006
+        },
+        "丹尼尔·卡尼曼": {
+          "old_version": 10,
+          "new_version": 11,
+          "strategy_merges": [
+            "防御模式: 弗洛姆"
+          ],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": -0.13227513227513227
+        },
+        "弗洛姆": {
+          "old_version": 10,
+          "new_version": 11,
+          "strategy_merges": [
+            "防御模式: 傅盛"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.24154589371980675
+        }
+      }
+    },
+    {
+      "round": 47,
+      "discussion": "段永平投资问答语录_v8.json",
+      "book_title": "塔勒布最看重\"最看重：真理追求\"，马克思最看重\"最看重：理性决策\"——如果资源有限只能保一个，选哪个",
+      "score": 77.1,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "巴菲特": {
+          "old_version": 3,
+          "new_version": 4,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.13545546901456146
+        },
+        "芒格": {
+          "old_version": 1,
+          "new_version": 1,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.1485056617783553
+        },
+        "塔勒布": {
+          "old_version": 3,
+          "new_version": 4,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.11995801469485678
+        },
+        "柯林斯": {
+          "old_version": 3,
+          "new_version": 4,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.1381692573402418
+        },
+        "达利欧": {
+          "old_version": 3,
+          "new_version": 4,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.1869158878504673
+        },
+        "吴军": {
+          "old_version": 14,
+          "new_version": 15,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.06155740227762388
+        }
+      }
+    },
+    {
+      "round": 48,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "吴军用论证方式：数据实证，弗洛姆用论证方式：案例归纳——同一个问题，两种方法得出的结论会差多远？",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 10,
+          "new_version": 11,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.05815644082582146
+        },
+        "刘润": {
+          "old_version": 12,
+          "new_version": 13,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.041220115416323165
+        },
+        "李诞": {
+          "old_version": 13,
+          "new_version": 14,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.030275507114744173
+        },
+        "冯唐": {
+          "old_version": 17,
+          "new_version": 18,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.04233700254022015
+        },
+        "项飙": {
+          "old_version": 22,
+          "new_version": 23,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.09894459102902375
+        },
+        "吴军": {
+          "old_version": 15,
+          "new_version": 16,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.030759766225776686
+        }
+      }
+    },
+    {
+      "round": 49,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "如果强制马克思用论证方式：逻辑推演来论证自己的观点，会发生什么？方法论的边界在哪里？",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 11,
+          "new_version": 12,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.17436791630340018
+        },
+        "刘润": {
+          "old_version": 13,
+          "new_version": 14,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.12360939431396785
+        },
+        "李诞": {
+          "old_version": 14,
+          "new_version": 15,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.09079903147699758
+        },
+        "冯唐": {
+          "old_version": 18,
+          "new_version": 19,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.12695725772323319
+        },
+        "项飙": {
+          "old_version": 23,
+          "new_version": 24,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.09884678747940692
+        },
+        "吴军": {
+          "old_version": 16,
+          "new_version": 17,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.0923076923076923
+        }
+      }
+    },
+    {
+      "round": 50,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "吴军用论证方式：数据实证，丹尼尔·戈尔曼用论证方式：逻辑推演——同一个问题，两种方法得出的结论会差多",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 12,
+          "new_version": 13,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.23289665211062593
+        },
+        "刘润": {
+          "old_version": 14,
+          "new_version": 15,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.16501650165016502
+        },
+        "李诞": {
+          "old_version": 15,
+          "new_version": 16,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.12117540139351711
+        },
+        "冯唐": {
+          "old_version": 19,
+          "new_version": 20,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.1694915254237288
+        },
+        "项飙": {
+          "old_version": 24,
+          "new_version": 25,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.13192612137203166
+        },
+        "吴军": {
+          "old_version": 17,
+          "new_version": 18,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.12319063751154913
+        }
+      }
+    },
+    {
+      "round": 51,
+      "discussion": "中产生活的叙事性破产_v8.json",
+      "book_title": "吴晓波最看重\"最看重：表达自由\"，柯林斯最看重\"最看重：专业能力\"——如果资源有限只能保一个，选哪个",
+      "score": 67.1,
+      "grade": "D",
+      "topic_source": "evolution",
+      "evolutions": {
+        "吴晓波": {
+          "old_version": 1,
+          "new_version": 2,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 1.6699410609037328
+        },
+        "项飙": {
+          "old_version": 25,
+          "new_version": 26,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.016469038208168644
+        },
+        "冯唐": {
+          "old_version": 20,
+          "new_version": 21,
+          "strategy_merges": [
+            "防御模式: 人性弱点"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "李诞": {
+          "old_version": 16,
+          "new_version": 17,
+          "strategy_merges": [
+            "攻击模式: 人性弱点",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "刘润": {
+          "old_version": 15,
+          "new_version": 16,
+          "strategy_merges": [
+            "攻击模式: 从商业逻辑看，中产困境的核心问题是\"沉没成本谬误\"和\"锚定效",
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.06177924217462932
+        },
+        "罗翔": {
+          "old_version": 4,
+          "new_version": 4,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 52,
+      "discussion": "反乌托邦_叙事_v8.json",
+      "book_title": "在真实决策中，\"最看重：理性决策\"和\"最看重：真理追求\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 68.3,
+      "grade": "D",
+      "topic_source": "evolution",
+      "evolutions": {
+        "阿西莫夫": {
+          "old_version": 7,
+          "new_version": 8,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.031466331025802395
+        },
+        "尼克·博斯特罗姆": {
+          "old_version": 10,
+          "new_version": 11,
+          "strategy_merges": [],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": 0.030864197530864196
+        },
+        "尤瓦尔·赫拉利": {
+          "old_version": 7,
+          "new_version": 8,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "吴军": {
+          "old_version": 18,
+          "new_version": 18,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "冯唐": {
+          "old_version": 21,
+          "new_version": 22,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "李诞": {
+          "old_version": 17,
+          "new_version": 17,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 53,
+      "discussion": "赛博庇护所_心理代偿_v8.json",
+      "book_title": "在真实决策中，\"最看重：表达自由\"和\"最看重：实证研究\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 66.7,
+      "grade": "D",
+      "topic_source": "evolution",
+      "evolutions": {
+        "项飙": {
+          "old_version": 26,
+          "new_version": 27,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [
+            "替换最弱发言（质量升级）"
+          ],
+          "density_delta": 1.3502387617322575
+        },
+        "丹尼尔·卡尼曼": {
+          "old_version": 11,
+          "new_version": 11,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.17660044150110377
+        },
+        "尤瓦尔·赫拉利": {
+          "old_version": 8,
+          "new_version": 8,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "菲利普·津巴多": {
+          "old_version": 1,
+          "new_version": 1,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 1.5364916773367476
+        },
+        "冯唐": {
+          "old_version": 22,
+          "new_version": 23,
+          "strategy_merges": [
+            "攻击模式: 你们这些学者总是把问题想得太复杂。在我看来，虚拟世界的兴起就",
+            "防御模式: 利益冲突"
+          ],
+          "material_replacements": [
+            "新增发言（新角度，共6条）"
+          ],
+          "density_delta": 8.650592216582066
+        },
+        "李诞": {
+          "old_version": 17,
+          "new_version": 18,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 54,
+      "discussion": "AI情感代理人的亲密关系_v8.json",
+      "book_title": "在真实决策中，\"最看重：表达自由\"和\"最看重：理性决策\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 80.3,
+      "grade": "B",
+      "topic_source": "evolution",
+      "evolutions": {
+        "项飙": {
+          "old_version": 27,
+          "new_version": 28,
+          "strategy_merges": [
+            "防御模式: 丹尼尔·卡尼曼"
+          ],
+          "material_replacements": [],
+          "density_delta": 1.4459788789601948
+        },
+        "丹尼尔·卡尼曼": {
+          "old_version": 11,
+          "new_version": 12,
+          "strategy_merges": [
+            "防御模式: 弗洛姆"
+          ],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": 0.0
+        },
+        "弗洛姆": {
+          "old_version": 11,
+          "new_version": 12,
+          "strategy_merges": [
+            "防御模式: 傅盛"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.24213075060532688
+        }
+      }
+    },
+    {
+      "round": 55,
+      "discussion": "段永平投资问答语录_v8.json",
+      "book_title": "在真实决策中，\"最看重：专业能力\"和\"最看重：表达自由\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 77.1,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "巴菲特": {
+          "old_version": 4,
+          "new_version": 5,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "芒格": {
+          "old_version": 1,
+          "new_version": 1,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "塔勒布": {
+          "old_version": 4,
+          "new_version": 5,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "柯林斯": {
+          "old_version": 4,
+          "new_version": 5,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "达利欧": {
+          "old_version": 4,
+          "new_version": 5,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "吴军": {
+          "old_version": 18,
+          "new_version": 19,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 56,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "在真实决策中，\"最看重：专业能力\"和\"最看重：真理追求\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 13,
+          "new_version": 14,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "刘润": {
+          "old_version": 16,
+          "new_version": 17,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "李诞": {
+          "old_version": 18,
+          "new_version": 19,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "冯唐": {
+          "old_version": 23,
+          "new_version": 24,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "项飙": {
+          "old_version": 28,
+          "new_version": 29,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "吴军": {
+          "old_version": 19,
+          "new_version": 20,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 57,
+      "discussion": "反乌托邦_叙事_v8.json",
+      "book_title": "阿西莫夫最看重\"最看重：表达自由\"，弗洛伊德最看重\"最看重：专业能力\"——如果资源有限只能保一个，选",
+      "score": 68.3,
+      "grade": "D",
+      "topic_source": "evolution",
+      "evolutions": {
+        "阿西莫夫": {
+          "old_version": 8,
+          "new_version": 9,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "尼克·博斯特罗姆": {
+          "old_version": 11,
+          "new_version": 12,
+          "strategy_merges": [],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": 0.0
+        },
+        "尤瓦尔·赫拉利": {
+          "old_version": 8,
+          "new_version": 9,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "吴军": {
+          "old_version": 20,
+          "new_version": 20,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "冯唐": {
+          "old_version": 24,
+          "new_version": 25,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "李诞": {
+          "old_version": 19,
+          "new_version": 19,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 58,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "如果强制李诞用论证方式：数据实证来论证自己的观点，会发生什么？方法论的边界在哪里？",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 14,
+          "new_version": 15,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.26139994191112403
+        },
+        "刘润": {
+          "old_version": 17,
+          "new_version": 18,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.1854522975479085
+        },
+        "李诞": {
+          "old_version": 19,
+          "new_version": 20,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.1361573373676248
+        },
+        "冯唐": {
+          "old_version": 25,
+          "new_version": 26,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.17519953280124587
+        },
+        "项飙": {
+          "old_version": 29,
+          "new_version": 30,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.1441383728379244
+        },
+        "吴军": {
+          "old_version": 20,
+          "new_version": 21,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.13841894801599508
+        }
+      }
+    },
+    {
+      "round": 59,
+      "discussion": "数字永生_哀悼经济学_v8.json",
+      "book_title": "在真实决策中，\"最看重：真理追求\"和\"最看重：专业能力\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 71.7,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "罗翔": {
+          "old_version": 4,
+          "new_version": 5,
+          "strategy_merges": [
+            "攻击模式: 利益冲突"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "弗洛伊德": {
+          "old_version": 2,
+          "new_version": 3,
+          "strategy_merges": [],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": 0.0
+        },
+        "尤瓦尔·赫拉利": {
+          "old_version": 9,
+          "new_version": 9,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "项飙": {
+          "old_version": 30,
+          "new_version": 31,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.14434643143544507
+        },
+        "冯唐": {
+          "old_version": 26,
+          "new_version": 27,
+          "strategy_merges": [
+            "防御模式: 利益冲突"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.17550702028081125
+        },
+        "李诞": {
+          "old_version": 20,
+          "new_version": 21,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.13634297833661566
+        }
+      }
+    },
+    {
+      "round": 60,
+      "discussion": "AI情感代理人的亲密关系_v8.json",
+      "book_title": "在真实决策中，\"最看重：专业能力\"和\"最看重：实证研究\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 80.3,
+      "grade": "B",
+      "topic_source": "evolution",
+      "evolutions": {
+        "项飙": {
+          "old_version": 31,
+          "new_version": 32,
+          "strategy_merges": [
+            "防御模式: 丹尼尔·卡尼曼"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "丹尼尔·卡尼曼": {
+          "old_version": 12,
+          "new_version": 13,
+          "strategy_merges": [
+            "防御模式: 弗洛姆"
+          ],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": 0.0
+        },
+        "弗洛姆": {
+          "old_version": 12,
+          "new_version": 13,
+          "strategy_merges": [
+            "防御模式: 傅盛"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 61,
+      "discussion": "赛博庇护所_心理代偿_v8.json",
+      "book_title": "丁元英最看重\"最看重：专业能力\"，菲利普·津巴多最看重\"最看重：实证研究\"——如果资源有限只能保一个",
+      "score": 66.7,
+      "grade": "D",
+      "topic_source": "evolution",
+      "evolutions": {
+        "项飙": {
+          "old_version": 32,
+          "new_version": 33,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "丹尼尔·卡尼曼": {
+          "old_version": 13,
+          "new_version": 13,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "尤瓦尔·赫拉利": {
+          "old_version": 9,
+          "new_version": 9,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "菲利普·津巴多": {
+          "old_version": 1,
+          "new_version": 1,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "冯唐": {
+          "old_version": 27,
+          "new_version": 28,
+          "strategy_merges": [
+            "攻击模式: 你们这些学者总是把问题想得太复杂。在我看来，虚拟世界的兴起就",
+            "防御模式: 利益冲突"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "李诞": {
+          "old_version": 21,
+          "new_version": 22,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 62,
+      "discussion": "儒释道批判性分析_v8.json",
+      "book_title": "孔子用论证方式：类比隐喻，老子用论证方式：自然隐喻——同一个问题，两种方法得出的结论会差多远？",
+      "score": 40.8,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 63,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "在真实决策中，\"最看重：专业能力\"和\"最看重：实证研究\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 15,
+          "new_version": 16,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.262085032032615
+        },
+        "刘润": {
+          "old_version": 18,
+          "new_version": 19,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.18579686209744012
+        },
+        "李诞": {
+          "old_version": 22,
+          "new_version": 23,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "冯唐": {
+          "old_version": 28,
+          "new_version": 29,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "项飙": {
+          "old_version": 33,
+          "new_version": 34,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "吴军": {
+          "old_version": 21,
+          "new_version": 22,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.13861081164330818
+        }
+      }
+    },
+    {
+      "round": 64,
+      "discussion": "反乌托邦_叙事_v8.json",
+      "book_title": "如果强制尤瓦尔·赫拉利用论证方式：案例归纳来论证自己的观点，会发生什么？方法论的边界在哪里？",
+      "score": 68.3,
+      "grade": "D",
+      "topic_source": "evolution",
+      "evolutions": {
+        "阿西莫夫": {
+          "old_version": 9,
+          "new_version": 10,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.09436929852154766
+        },
+        "尼克·博斯特罗姆": {
+          "old_version": 12,
+          "new_version": 13,
+          "strategy_merges": [],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": -0.12341869793273681
+        },
+        "尤瓦尔·赫拉利": {
+          "old_version": 9,
+          "new_version": 10,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.07159904534606205
+        },
+        "吴军": {
+          "old_version": 22,
+          "new_version": 22,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": -0.06151953245155337
+        },
+        "冯唐": {
+          "old_version": 29,
+          "new_version": 30,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.07786645902277595
+        },
+        "李诞": {
+          "old_version": 23,
+          "new_version": 23,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": -0.0605143721633888
+        }
+      }
+    },
+    {
+      "round": 65,
+      "discussion": "AI情感代理人的亲密关系_v8.json",
+      "book_title": "如果强制弗洛姆用论证方式：类比隐喻来论证自己的观点，会发生什么？方法论的边界在哪里？",
+      "score": 80.3,
+      "grade": "B",
+      "topic_source": "evolution",
+      "evolutions": {
+        "项飙": {
+          "old_version": 34,
+          "new_version": 35,
+          "strategy_merges": [
+            "防御模式: 丹尼尔·卡尼曼"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.12812299807815503
+        },
+        "丹尼尔·卡尼曼": {
+          "old_version": 13,
+          "new_version": 14,
+          "strategy_merges": [
+            "防御模式: 弗洛姆"
+          ],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": -0.17628911414720141
+        },
+        "弗洛姆": {
+          "old_version": 13,
+          "new_version": 14,
+          "strategy_merges": [
+            "防御模式: 傅盛"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.24154589371980675
+        }
+      }
+    },
+    {
+      "round": 66,
+      "discussion": "赛博庇护所_心理代偿_v8.json",
+      "book_title": "在真实决策中，\"最看重：专业能力\"和\"最看重：实证研究\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 66.7,
+      "grade": "D",
+      "topic_source": "evolution",
+      "evolutions": {
+        "项飙": {
+          "old_version": 35,
+          "new_version": 36,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.12828736369467605
+        },
+        "丹尼尔·卡尼曼": {
+          "old_version": 14,
+          "new_version": 14,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.17660044150110377
+        },
+        "尤瓦尔·赫拉利": {
+          "old_version": 10,
+          "new_version": 10,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.09553379508000956
+        },
+        "菲利普·津巴多": {
+          "old_version": 1,
+          "new_version": 1,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "冯唐": {
+          "old_version": 30,
+          "new_version": 31,
+          "strategy_merges": [
+            "攻击模式: 你们这些学者总是把问题想得太复杂。在我看来，虚拟世界的兴起就",
+            "防御模式: 利益冲突"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.07792713812585232
+        },
+        "李诞": {
+          "old_version": 23,
+          "new_version": 24,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.060551014229488345
+        }
+      }
+    },
+    {
+      "round": 67,
+      "discussion": "段永平投资问答语录_v8.json",
+      "book_title": "芒格用论证方式：逻辑推演，马克思用论证方式：数据实证——同一个问题，两种方法得出的结论会差多远？",
+      "score": 77.1,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "巴菲特": {
+          "old_version": 5,
+          "new_version": 6,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.033818058843422386
+        },
+        "芒格": {
+          "old_version": 1,
+          "new_version": 1,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": -0.03707136237256719
+        },
+        "塔勒布": {
+          "old_version": 5,
+          "new_version": 6,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.029953571963456643
+        },
+        "柯林斯": {
+          "old_version": 5,
+          "new_version": 6,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.03449465332873405
+        },
+        "达利欧": {
+          "old_version": 5,
+          "new_version": 6,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.046641791044776115
+        },
+        "吴军": {
+          "old_version": 22,
+          "new_version": 23,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.03077870113881194
+        }
+      }
+    },
+    {
+      "round": 68,
+      "discussion": "段永平投资问答语录_v8.json",
+      "book_title": "芒格最看重\"最看重：专业能力\"，阿伦特最看重\"最看重：真理追求\"——如果资源有限只能保一个，选哪个？",
+      "score": 77.1,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "巴菲特": {
+          "old_version": 6,
+          "new_version": 7,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.03382949932341001
+        },
+        "芒格": {
+          "old_version": 1,
+          "new_version": 1,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.037085110328203226
+        },
+        "塔勒布": {
+          "old_version": 6,
+          "new_version": 7,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0299625468164794
+        },
+        "柯林斯": {
+          "old_version": 6,
+          "new_version": 7,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.03450655624568668
+        },
+        "达利欧": {
+          "old_version": 6,
+          "new_version": 7,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.04666355576294914
+        },
+        "吴军": {
+          "old_version": 23,
+          "new_version": 24,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.03076923076923077
+        }
+      }
+    },
+    {
+      "round": 69,
+      "discussion": "数字永生_哀悼经济学_v8.json",
+      "book_title": "在真实决策中，\"最看重：专业能力\"和\"最看重：实证研究\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 71.7,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "罗翔": {
+          "old_version": 5,
+          "new_version": 6,
+          "strategy_merges": [
+            "攻击模式: 利益冲突"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.022109219544550078
+        },
+        "弗洛伊德": {
+          "old_version": 3,
+          "new_version": 4,
+          "strategy_merges": [],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": 0.0
+        },
+        "尤瓦尔·赫拉利": {
+          "old_version": 10,
+          "new_version": 10,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "项飙": {
+          "old_version": 36,
+          "new_version": 37,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "冯唐": {
+          "old_version": 31,
+          "new_version": 32,
+          "strategy_merges": [
+            "防御模式: 利益冲突"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "李诞": {
+          "old_version": 24,
+          "new_version": 25,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 70,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "如果强制项飙用论证方式：数据实证来论证自己的观点，会发生什么？方法论的边界在哪里？",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 16,
+          "new_version": 17,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.26139994191112403
+        },
+        "刘润": {
+          "old_version": 19,
+          "new_version": 20,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.1854522975479085
+        },
+        "李诞": {
+          "old_version": 25,
+          "new_version": 26,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.1361573373676248
+        },
+        "冯唐": {
+          "old_version": 32,
+          "new_version": 33,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.17519953280124587
+        },
+        "项飙": {
+          "old_version": 37,
+          "new_version": 38,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.1441383728379244
+        },
+        "吴军": {
+          "old_version": 24,
+          "new_version": 25,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.13841894801599508
+        }
+      }
+    },
+    {
+      "round": 71,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "刘润最看重\"最看重：专业能力\"，菲利普·津巴多最看重\"最看重：实证研究\"——如果资源有限只能保一个，",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 17,
+          "new_version": 18,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.262085032032615
+        },
+        "刘润": {
+          "old_version": 20,
+          "new_version": 21,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.18579686209744012
+        },
+        "李诞": {
+          "old_version": 26,
+          "new_version": 27,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.13634297833661566
+        },
+        "冯唐": {
+          "old_version": 33,
+          "new_version": 34,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.17550702028081125
+        },
+        "项飙": {
+          "old_version": 38,
+          "new_version": 39,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.14434643143544507
+        },
+        "吴军": {
+          "old_version": 25,
+          "new_version": 26,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.13861081164330818
+        }
+      }
+    },
+    {
+      "round": 72,
+      "discussion": "穷查理宝典_v8.json",
+      "book_title": "丹尼尔·戈尔曼最看重\"最看重：专业能力\"，菲利普·津巴多最看重\"最看重：实证研究\"——如果资源有限只",
+      "score": 51.2,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 73,
+      "discussion": "赛博庇护所_心理代偿_v8.json",
+      "book_title": "芮小丹用论证方式：逻辑推演，菲利普·津巴多用论证方式：案例归纳——同一个问题，两种方法得出的结论会差",
+      "score": 66.7,
+      "grade": "D",
+      "topic_source": "evolution",
+      "evolutions": {
+        "项飙": {
+          "old_version": 39,
+          "new_version": 40,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "丹尼尔·卡尼曼": {
+          "old_version": 14,
+          "new_version": 14,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "尤瓦尔·赫拉利": {
+          "old_version": 10,
+          "new_version": 10,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "菲利普·津巴多": {
+          "old_version": 1,
+          "new_version": 1,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "冯唐": {
+          "old_version": 34,
+          "new_version": 35,
+          "strategy_merges": [
+            "攻击模式: 你们这些学者总是把问题想得太复杂。在我看来，虚拟世界的兴起就",
+            "防御模式: 利益冲突"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "李诞": {
+          "old_version": 27,
+          "new_version": 28,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 74,
+      "discussion": "AI情感代理人的亲密关系_v8.json",
+      "book_title": "尼采用论证方式：逻辑推演，丹尼尔·卡尼曼用论证方式：数据实证——同一个问题，两种方法得出的结论会差多",
+      "score": 80.3,
+      "grade": "B",
+      "topic_source": "evolution",
+      "evolutions": {
+        "项飙": {
+          "old_version": 40,
+          "new_version": 41,
+          "strategy_merges": [
+            "防御模式: 丹尼尔·卡尼曼"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "丹尼尔·卡尼曼": {
+          "old_version": 14,
+          "new_version": 15,
+          "strategy_merges": [
+            "防御模式: 弗洛姆"
+          ],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": 0.0
+        },
+        "弗洛姆": {
+          "old_version": 14,
+          "new_version": 15,
+          "strategy_merges": [
+            "防御模式: 傅盛"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.24213075060532688
+        }
+      }
+    },
+    {
+      "round": 75,
+      "discussion": "AI情感代理人的亲密关系_v8.json",
+      "book_title": "巴菲特最看重\"最看重：理性决策\"，弗洛姆最看重\"最看重：实证研究\"——如果资源有限只能保一个，选哪个",
+      "score": 80.3,
+      "grade": "B",
+      "topic_source": "evolution",
+      "evolutions": {
+        "项飙": {
+          "old_version": 41,
+          "new_version": 42,
+          "strategy_merges": [
+            "防御模式: 丹尼尔·卡尼曼"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "丹尼尔·卡尼曼": {
+          "old_version": 15,
+          "new_version": 16,
+          "strategy_merges": [
+            "防御模式: 弗洛姆"
+          ],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": 0.0
+        },
+        "弗洛姆": {
+          "old_version": 15,
+          "new_version": 16,
+          "strategy_merges": [
+            "防御模式: 傅盛"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 76,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "李诞最看重\"最看重：专业能力\"，西蒙娜·德·波伏娃最看重\"最看重：真理追求\"——如果资源有限只能保一",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 18,
+          "new_version": 19,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "刘润": {
+          "old_version": 21,
+          "new_version": 22,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "李诞": {
+          "old_version": 28,
+          "new_version": 29,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0151285930408472
+        },
+        "冯唐": {
+          "old_version": 35,
+          "new_version": 36,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "项飙": {
+          "old_version": 42,
+          "new_version": 43,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "吴军": {
+          "old_version": 26,
+          "new_version": 27,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 77,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "在真实决策中，\"最看重：理性决策\"和\"最看重：社会公正\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 19,
+          "new_version": 20,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "刘润": {
+          "old_version": 22,
+          "new_version": 23,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "李诞": {
+          "old_version": 29,
+          "new_version": 30,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "冯唐": {
+          "old_version": 36,
+          "new_version": 37,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "项飙": {
+          "old_version": 43,
+          "new_version": 44,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "吴军": {
+          "old_version": 27,
+          "new_version": 28,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.015379883112888343
+        }
+      }
+    },
+    {
+      "round": 78,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "吴军最看重\"最看重：理性决策\"，阿西莫夫最看重\"最看重：表达自由\"——如果资源有限只能保一个，选哪个",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 20,
+          "new_version": 21,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "刘润": {
+          "old_version": 23,
+          "new_version": 24,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "李诞": {
+          "old_version": 30,
+          "new_version": 31,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "冯唐": {
+          "old_version": 37,
+          "new_version": 38,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "项飙": {
+          "old_version": 44,
+          "new_version": 45,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "吴军": {
+          "old_version": 28,
+          "new_version": 29,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 79,
+      "discussion": "自我资本化_生存意义_v8.json",
+      "book_title": "在真实决策中，\"最看重：表达自由\"和\"最看重：理性决策\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 61.7,
+      "grade": "D",
+      "topic_source": "evolution",
+      "evolutions": {
+        "马克思": {
+          "old_version": 1,
+          "new_version": 1,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "弗洛姆": {
+          "old_version": 16,
+          "new_version": 16,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "罗翔": {
+          "old_version": 6,
+          "new_version": 6,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "项飙": {
+          "old_version": 45,
+          "new_version": 46,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "冯唐": {
+          "old_version": 38,
+          "new_version": 39,
+          "strategy_merges": [
+            "攻击模式: 两位理论家说得深刻，但我想泼点冷水。  在座的各位，有没有想",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "李诞": {
+          "old_version": 31,
+          "new_version": 32,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.015126304643775526
+        }
+      }
+    },
+    {
+      "round": 80,
+      "discussion": "儒释道批判性分析_v8.json",
+      "book_title": "塔勒布最看重\"最看重：真理追求\"，许知远最看重\"最看重：专业能力\"——如果资源有限只能保一个，选哪个",
+      "score": 40.8,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 81,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "在真实决策中，\"最看重：表达自由\"和\"最看重：专业能力\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 21,
+          "new_version": 22,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "刘润": {
+          "old_version": 24,
+          "new_version": 25,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "李诞": {
+          "old_version": 32,
+          "new_version": 33,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "冯唐": {
+          "old_version": 39,
+          "new_version": 40,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "项飙": {
+          "old_version": 46,
+          "new_version": 47,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -1.4413837283792441
+        },
+        "吴军": {
+          "old_version": 29,
+          "new_version": 30,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 82,
+      "discussion": "儒释道批判性分析_v8.json",
+      "book_title": "如果强制许知远用论证方式：类比隐喻来论证自己的观点，会发生什么？方法论的边界在哪里？",
+      "score": 40.8,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 83,
+      "discussion": "中产生活的叙事性破产_v8.json",
+      "book_title": "如果强制菲利普·津巴多用论证方式：类比隐喻来论证自己的观点，会发生什么？方法论的边界在哪里？",
+      "score": 67.1,
+      "grade": "D",
+      "topic_source": "evolution",
+      "evolutions": {
+        "吴晓波": {
+          "old_version": 2,
+          "new_version": 3,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.12882447665056362
+        },
+        "项飙": {
+          "old_version": 47,
+          "new_version": 48,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.06499837504062399
+        },
+        "冯唐": {
+          "old_version": 40,
+          "new_version": 41,
+          "strategy_merges": [
+            "防御模式: 人性弱点"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.07786645902277595
+        },
+        "李诞": {
+          "old_version": 33,
+          "new_version": 34,
+          "strategy_merges": [
+            "攻击模式: 人性弱点",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.0605143721633888
+        },
+        "刘润": {
+          "old_version": 25,
+          "new_version": 26,
+          "strategy_merges": [
+            "攻击模式: 从商业逻辑看，中产困境的核心问题是\"沉没成本谬误\"和\"锚定效",
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.082423243354626
+        },
+        "罗翔": {
+          "old_version": 6,
+          "new_version": 6,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": -0.08841732979664013
+        }
+      }
+    },
+    {
+      "round": 84,
+      "discussion": "中产生活的叙事性破产_v8.json",
+      "book_title": "如果强制西蒙娜·德·波伏娃用论证方式：类比隐喻来论证自己的观点，会发生什么？方法论的边界在哪里？",
+      "score": 67.1,
+      "grade": "D",
+      "topic_source": "evolution",
+      "evolutions": {
+        "吴晓波": {
+          "old_version": 3,
+          "new_version": 4,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.06449532408900355
+        },
+        "项飙": {
+          "old_version": 48,
+          "new_version": 49,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.03252032520325203
+        },
+        "冯唐": {
+          "old_version": 41,
+          "new_version": 42,
+          "strategy_merges": [
+            "防御模式: 人性弱点"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.03896356906292616
+        },
+        "李诞": {
+          "old_version": 34,
+          "new_version": 35,
+          "strategy_merges": [
+            "攻击模式: 人性弱点",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.030275507114744173
+        },
+        "刘润": {
+          "old_version": 26,
+          "new_version": 27,
+          "strategy_merges": [
+            "攻击模式: 从商业逻辑看，中产困境的核心问题是\"沉没成本谬误\"和\"锚定效",
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.04124561765312436
+        },
+        "罗翔": {
+          "old_version": 6,
+          "new_version": 6,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.04424778761061947
+        }
+      }
+    },
+    {
+      "round": 85,
+      "discussion": "段永平投资问答语录_v8.json",
+      "book_title": "如果强制达利欧用论证方式：数据实证来论证自己的观点，会发生什么？方法论的边界在哪里？",
+      "score": 77.1,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "巴菲特": {
+          "old_version": 7,
+          "new_version": 8,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.13527223537368954
+        },
+        "芒格": {
+          "old_version": 1,
+          "new_version": 1,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": -0.14828544949026876
+        },
+        "塔勒布": {
+          "old_version": 7,
+          "new_version": 8,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.11981428785382657
+        },
+        "柯林斯": {
+          "old_version": 7,
+          "new_version": 8,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.1379786133149362
+        },
+        "达利欧": {
+          "old_version": 7,
+          "new_version": 8,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.18656716417910446
+        },
+        "吴军": {
+          "old_version": 30,
+          "new_version": 31,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.1383976626172536
+        }
+      }
+    },
+    {
+      "round": 86,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "如果强制阿西莫夫用论证方式：逻辑推演来论证自己的观点，会发生什么？方法论的边界在哪里？",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 22,
+          "new_version": 23,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.20331106593087425
+        },
+        "刘润": {
+          "old_version": 27,
+          "new_version": 28,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.1030715316429602
+        },
+        "李诞": {
+          "old_version": 35,
+          "new_version": 36,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.07566585956416465
+        },
+        "冯唐": {
+          "old_version": 42,
+          "new_version": 43,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.09737098344693282
+        },
+        "项飙": {
+          "old_version": 49,
+          "new_version": 50,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.0812743823146944
+        },
+        "吴军": {
+          "old_version": 31,
+          "new_version": 32,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.015398829688943641
+        }
+      }
+    },
+    {
+      "round": 87,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "在真实决策中，\"最看重：理性决策\"和\"最看重：专业能力\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 23,
+          "new_version": 24,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.2037252619324796
+        },
+        "刘润": {
+          "old_version": 28,
+          "new_version": 29,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.14444903012794055
+        },
+        "李诞": {
+          "old_version": 36,
+          "new_version": 37,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.10601241859760716
+        },
+        "冯唐": {
+          "old_version": 43,
+          "new_version": 44,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.13645224171539963
+        },
+        "项飙": {
+          "old_version": 50,
+          "new_version": 51,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.1138766878151944
+        },
+        "吴军": {
+          "old_version": 32,
+          "new_version": 33,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.10777521170130869
+        }
+      }
+    },
+    {
+      "round": 88,
+      "discussion": "AI生成叙事_金融定价_v8.json",
+      "book_title": "如果强制菲利普·津巴多用论证方式：逻辑推演来论证自己的观点，会发生什么？方法论的边界在哪里？",
+      "score": 76.4,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "吴军": {
+          "old_version": 33,
+          "new_version": 34,
+          "strategy_merges": [
+            "防御模式: 认知碰撞"
+          ],
+          "material_replacements": [
+            "替换最弱金句"
+          ],
+          "density_delta": -1.8763457397723777
+        },
+        "李诞": {
+          "old_version": 37,
+          "new_version": 38,
+          "strategy_merges": [
+            "防御模式: 认知碰撞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.0605143721633888
+        },
+        "刘润": {
+          "old_version": 29,
+          "new_version": 30,
+          "strategy_merges": [
+            "防御模式: 认知碰撞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.082423243354626
+        },
+        "罗翔": {
+          "old_version": 6,
+          "new_version": 7,
+          "strategy_merges": [
+            "防御模式: 认知碰撞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.044228217602830605
+        },
+        "凯文·凯利": {
+          "old_version": 24,
+          "new_version": 25,
+          "strategy_merges": [
+            "防御模式: 认知碰撞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.11617775196049956
+        }
+      }
+    },
+    {
+      "round": 89,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "菲利普·津巴多用论证方式：案例归纳，项飙用论证方式：逻辑推演——同一个问题，两种方法得出的结论会差多",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 25,
+          "new_version": 26,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.11631288165164291
+        },
+        "刘润": {
+          "old_version": 30,
+          "new_version": 31,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.08249123530624872
+        },
+        "李诞": {
+          "old_version": 38,
+          "new_version": 39,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.060551014229488345
+        },
+        "冯唐": {
+          "old_version": 44,
+          "new_version": 45,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "项飙": {
+          "old_version": 51,
+          "new_version": 52,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "吴军": {
+          "old_version": 34,
+          "new_version": 35,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.06269592476489029
+        }
+      }
+    },
+    {
+      "round": 90,
+      "discussion": "儒释道批判性分析_v8.json",
+      "book_title": "在真实决策中，\"最看重：专业能力\"和\"最看重：自然之道\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 40.8,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 91,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "如果强制菲利普·津巴多用论证方式：逻辑推演来论证自己的观点，会发生什么？方法论的边界在哪里？",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 26,
+          "new_version": 27,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.11617775196049956
+        },
+        "刘润": {
+          "old_version": 31,
+          "new_version": 32,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.082423243354626
+        },
+        "李诞": {
+          "old_version": 39,
+          "new_version": 40,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.0605143721633888
+        },
+        "冯唐": {
+          "old_version": 45,
+          "new_version": 46,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.07786645902277595
+        },
+        "项飙": {
+          "old_version": 52,
+          "new_version": 53,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.04874878128046799
+        },
+        "吴军": {
+          "old_version": 35,
+          "new_version": 36,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.06265664160401002
+        }
+      }
+    },
+    {
+      "round": 92,
+      "discussion": "AI情感代理人的亲密关系_v8.json",
+      "book_title": "如果强制丹尼尔·卡尼曼用论证方式：逻辑推演来论证自己的观点，会发生什么？方法论的边界在哪里？",
+      "score": 80.3,
+      "grade": "B",
+      "topic_source": "evolution",
+      "evolutions": {
+        "项飙": {
+          "old_version": 53,
+          "new_version": 54,
+          "strategy_merges": [
+            "防御模式: 丹尼尔·卡尼曼"
+          ],
+          "material_replacements": [],
+          "density_delta": 1.4469192001300601
+        },
+        "丹尼尔·卡尼曼": {
+          "old_version": 16,
+          "new_version": 17,
+          "strategy_merges": [
+            "防御模式: 弗洛姆"
+          ],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": -0.08814455707360071
+        },
+        "弗洛姆": {
+          "old_version": 16,
+          "new_version": 17,
+          "strategy_merges": [
+            "防御模式: 傅盛"
+          ],
+          "material_replacements": [],
+          "density_delta": -0.12077294685990338
+        }
+      }
+    },
+    {
+      "round": 93,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "刘润最看重\"最看重：专业能力\"，尼克·博斯特罗姆最看重\"最看重：真理追求\"——如果资源有限只能保一个",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 27,
+          "new_version": 28,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.11631288165164291
+        },
+        "刘润": {
+          "old_version": 32,
+          "new_version": 33,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.08249123530624872
+        },
+        "李诞": {
+          "old_version": 40,
+          "new_version": 41,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.060551014229488345
+        },
+        "冯唐": {
+          "old_version": 46,
+          "new_version": 47,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.07792713812585232
+        },
+        "项飙": {
+          "old_version": 54,
+          "new_version": 55,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0641025641025641
+        },
+        "吴军": {
+          "old_version": 36,
+          "new_version": 37,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.06269592476489029
+        }
+      }
+    },
+    {
+      "round": 94,
+      "discussion": "AI情感代理人的亲密关系_v8.json",
+      "book_title": "在真实决策中，\"最看重：专业能力\"和\"最看重：实证研究\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 80.3,
+      "grade": "B",
+      "topic_source": "evolution",
+      "evolutions": {
+        "项飙": {
+          "old_version": 55,
+          "new_version": 56,
+          "strategy_merges": [
+            "防御模式: 丹尼尔·卡尼曼"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "丹尼尔·卡尼曼": {
+          "old_version": 17,
+          "new_version": 18,
+          "strategy_merges": [
+            "防御模式: 弗洛姆"
+          ],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": 0.08822232024702249
+        },
+        "弗洛姆": {
+          "old_version": 17,
+          "new_version": 18,
+          "strategy_merges": [
+            "防御模式: 傅盛"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.12091898428053204
+        }
+      }
+    },
+    {
+      "round": 95,
+      "discussion": "AI情感代理人的亲密关系_v8.json",
+      "book_title": "在真实决策中，\"最看重：自然之道\"和\"最看重：实证研究\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 80.3,
+      "grade": "B",
+      "topic_source": "evolution",
+      "evolutions": {
+        "项飙": {
+          "old_version": 56,
+          "new_version": 57,
+          "strategy_merges": [
+            "防御模式: 丹尼尔·卡尼曼"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "丹尼尔·卡尼曼": {
+          "old_version": 18,
+          "new_version": 19,
+          "strategy_merges": [
+            "防御模式: 弗洛姆"
+          ],
+          "material_replacements": [
+            "新增金句"
+          ],
+          "density_delta": 0.0
+        },
+        "弗洛姆": {
+          "old_version": 18,
+          "new_version": 19,
+          "strategy_merges": [
+            "防御模式: 傅盛"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 96,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "李诞用论证方式：逻辑推演，丹尼尔·卡尼曼用论证方式：数据实证——同一个问题，两种方法得出的结论会差多",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 28,
+          "new_version": 29,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "刘润": {
+          "old_version": 33,
+          "new_version": 34,
+          "strategy_merges": [
+            "攻击模式: 从投资逻辑看，算力霸权是确定性最高的赛道。  不管AI创意最",
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "李诞": {
+          "old_version": 41,
+          "new_version": 42,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "冯唐": {
+          "old_version": 47,
+          "new_version": 48,
+          "strategy_merges": [
+            "防御模式: 数据反驳"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "项飙": {
+          "old_version": 57,
+          "new_version": 58,
+          "strategy_merges": [
+            "防御模式: 逻辑漏洞"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        },
+        "吴军": {
+          "old_version": 37,
+          "new_version": 38,
+          "strategy_merges": [
+            "防御模式: 现实矛盾"
+          ],
+          "material_replacements": [],
+          "density_delta": 0.0
+        }
+      }
+    },
+    {
+      "round": 97,
+      "discussion": "儒释道批判性分析_v8.json",
+      "book_title": "在真实决策中，\"最看重：仁义道德\"和\"最看重：专业能力\"冲突时，人们实际上怎么选？理想和现实差多远？",
+      "score": 40.8,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 98,
+      "discussion": "儒释道批判性分析_v8.json",
+      "book_title": "西蒙娜·德·波伏娃用论证方式：逻辑推演，马克思用论证方式：数据实证——同一个问题，两种方法得出的结论",
+      "score": 40.8,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 99,
+      "discussion": "儒释道批判性分析_v8.json",
+      "book_title": "柯林斯最看重\"最看重：专业能力\"，西蒙娜·德·波伏娃最看重\"最看重：真理追求\"——如果资源有限只能保",
+      "score": 40.8,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 100,
+      "discussion": "儒释道批判性分析_v8.json",
+      "book_title": "西蒙娜·德·波伏娃最看重\"最看重：真理追求\"，韩非子最看重\"最看重：专业能力\"——如果资源有限只能保",
+      "score": 40.8,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    }
+  ]
+}

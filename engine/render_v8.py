@@ -22,6 +22,16 @@ class RoundtableRendererV8:
     
     def render_expert_card(self, expert: Dict) -> str:
         """渲染专家档案卡"""
+        profile_items = ""
+        if 'core_belief' in expert:
+            profile_items += f'<div class="profile-item"><span class="profile-label">核心信念：</span>{expert["core_belief"]}</div>'
+        if 'interest' in expert:
+            profile_items += f'<div class="profile-item"><span class="profile-label">利益相关：</span>{expert["interest"]}</div>'
+        if 'fear' in expert:
+            profile_items += f'<div class="profile-item"><span class="profile-label">恐惧：</span>{expert["fear"]}</div>'
+        if 'bias' in expert:
+            profile_items += f'<div class="profile-item"><span class="profile-label">偏见：</span>{expert["bias"]}</div>'
+        
         return f'''
       <div class="card card-rise anim-in">
         <div class="speaker-header">
@@ -32,10 +42,7 @@ class RoundtableRendererV8:
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>{expert['core_belief']}</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>{expert['interest']}</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>{expert['fear']}</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>{expert['bias']}</div>
+          {profile_items}
         </div>
       </div>'''
     
@@ -195,10 +202,10 @@ class RoundtableRendererV8:
         return type_map.get(attack_type, "attack-logic")
     
     def render_round(self, round_data: Dict, slide_num: int, total_slides: int) -> tuple:
-        """渲染一个完整轮次（V8级结构）"""
+        """渲染一个完整轮次（V8级结构）- 支持内容分页"""
         slides = []
+        ITEMS_PER_PAGE = 3
         
-        # 标题页
         slides.append(f'''
   <section class="slide" data-title="Round {round_data['round_number']}: {round_data['topic']}">
     <div class="slide-content">
@@ -212,14 +219,16 @@ class RoundtableRendererV8:
   </section>''')
         slide_num += 1
         
-        # Round1: 立场表达
         stances = round_data.get('stances', [])
         if stances:
-            stances_html = "\n".join([self.render_stance(s) for s in stances])
-            slides.append(f'''
-  <section class="slide" data-title="R{round_data['round_number']} 立场">
+            stance_chunks = [stances[i:i+ITEMS_PER_PAGE] for i in range(0, len(stances), ITEMS_PER_PAGE)]
+            for chunk_idx, chunk in enumerate(stance_chunks):
+                stances_html = "\n".join([self.render_stance(s) for s in chunk])
+                page_label = f"({chunk_idx+1}/{len(stance_chunks)})" if len(stance_chunks) > 1 else ""
+                slides.append(f'''
+  <section class="slide" data-title="R{round_data['round_number']} 立场{page_label}">
     <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES</div>
+      <div class="section-label anim-in">ROUND 1: STANCES {page_label}</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
       <div class="stances-grid">
         {stances_html}
@@ -228,16 +237,18 @@ class RoundtableRendererV8:
     <div class="deck-footer">Round {round_data['round_number']} | 立场</div>
     <div class="slide-number">{str(slide_num).zfill(2)} / {total_slides}</div>
   </section>''')
-            slide_num += 1
+                slide_num += 1
         
-        # Round2: 互相反驳
         clash_rounds = round_data.get('clash_rounds', [])
         if clash_rounds:
-            clashes_html = "\n".join([self.render_clash(c) for c in clash_rounds])
-            slides.append(f'''
-  <section class="slide" data-title="R{round_data['round_number']} 碰撞">
+            clash_chunks = [clash_rounds[i:i+2] for i in range(0, len(clash_rounds), 2)]
+            for chunk_idx, chunk in enumerate(clash_chunks):
+                clashes_html = "\n".join([self.render_clash(c) for c in chunk])
+                page_label = f"({chunk_idx+1}/{len(clash_chunks)})" if len(clash_chunks) > 1 else ""
+                slides.append(f'''
+  <section class="slide" data-title="R{round_data['round_number']} 碰撞{page_label}">
     <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH</div>
+      <div class="section-label anim-in">ROUND 2: CLASH {page_label}</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
       <div class="clash-container">
         {clashes_html}
@@ -246,16 +257,20 @@ class RoundtableRendererV8:
     <div class="deck-footer">Round {round_data['round_number']} | 碰撞</div>
     <div class="slide-number">{str(slide_num).zfill(2)} / {total_slides}</div>
   </section>''')
-            slide_num += 1
+                slide_num += 1
         
-        # Round3: 现实案例
         reality_cases = round_data.get('reality_cases', [])
         if reality_cases:
-            cases_html = "\n".join([self.render_reality_case(c) for c in reality_cases if c])
-            slides.append(f'''
-  <section class="slide" data-title="R{round_data['round_number']} 案例">
+            case_chunks = [reality_cases[i:i+2] for i in range(0, len(reality_cases), 2)]
+            for chunk_idx, chunk in enumerate(case_chunks):
+                cases_html = "\n".join([self.render_reality_case(c) for c in chunk if c])
+                if not cases_html:
+                    continue
+                page_label = f"({chunk_idx+1}/{len(case_chunks)})" if len(case_chunks) > 1 else ""
+                slides.append(f'''
+  <section class="slide" data-title="R{round_data['round_number']} 案例{page_label}">
     <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3: REALITY</div>
+      <div class="section-label anim-in">ROUND 3: REALITY {page_label}</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
       <div class="cases-container">
         {cases_html}
@@ -264,9 +279,8 @@ class RoundtableRendererV8:
     <div class="deck-footer">Round {round_data['round_number']} | 案例</div>
     <div class="slide-number">{str(slide_num).zfill(2)} / {total_slides}</div>
   </section>''')
-            slide_num += 1
+                slide_num += 1
         
-        # Round4: 代价讨论
         cost_discussion = round_data.get('cost_discussion', {})
         if cost_discussion:
             cost_html = self.render_cost_discussion(cost_discussion)
@@ -282,7 +296,6 @@ class RoundtableRendererV8:
   </section>''')
             slide_num += 1
         
-        # Round5: 人性层
         human_nature = round_data.get('human_nature', {})
         if human_nature:
             human_html = self.render_human_nature(human_nature)
@@ -298,7 +311,6 @@ class RoundtableRendererV8:
   </section>''')
             slide_num += 1
         
-        # Round6: 认知升级
         cognitive_upgrade = round_data.get('cognitive_upgrade', {})
         if cognitive_upgrade:
             upgrade_html = self.render_cognitive_upgrade(cognitive_upgrade)
@@ -317,23 +329,31 @@ class RoundtableRendererV8:
         return "\n".join(slides), slide_num
     
     def _count_slides(self, data: Dict) -> int:
-        """计算总slide数"""
+        """计算总slide数 - 支持分页"""
+        ITEMS_PER_PAGE = 3
         count = 1  # 封面
-        count += 1  # 专家档案
+        
+        experts = data.get('experts', [])
+        expert_pages = max(1, (len(experts) + ITEMS_PER_PAGE - 1) // ITEMS_PER_PAGE)
+        count += expert_pages
+        
         for r in data['rounds']:
             count += 1  # 标题页
             if r.get('stances'):
-                count += 1  # 立场
+                stance_pages = max(1, (len(r['stances']) + ITEMS_PER_PAGE - 1) // ITEMS_PER_PAGE)
+                count += stance_pages
             if r.get('clash_rounds'):
-                count += 1  # 碰撞
+                clash_pages = max(1, (len(r['clash_rounds']) + 1) // 2)
+                count += clash_pages
             if r.get('reality_cases'):
-                count += 1  # 案例
+                case_pages = max(1, (len([c for c in r['reality_cases'] if c]) + 1) // 2)
+                count += case_pages
             if r.get('cost_discussion'):
-                count += 1  # 代价
+                count += 1
             if r.get('human_nature'):
-                count += 1  # 人性
+                count += 1
             if r.get('cognitive_upgrade'):
-                count += 1  # 升级
+                count += 1
         count += 1  # 最终洞见
         count += 1  # 开放问题
         return count
@@ -359,12 +379,16 @@ class RoundtableRendererV8:
   </section>''')
         slide_num += 1
         
-        # 专家档案
-        experts_html = "\n".join([self.render_expert_card(e) for e in content['experts']])
-        slides.append(f'''
-  <section class="slide" data-title="专家档案">
+        experts = content['experts']
+        ITEMS_PER_PAGE = 3
+        expert_chunks = [experts[i:i+ITEMS_PER_PAGE] for i in range(0, len(experts), ITEMS_PER_PAGE)]
+        for chunk_idx, chunk in enumerate(expert_chunks):
+            experts_html = "\n".join([self.render_expert_card(e) for e in chunk])
+            page_label = f"({chunk_idx+1}/{len(expert_chunks)})" if len(expert_chunks) > 1 else ""
+            slides.append(f'''
+  <section class="slide" data-title="专家档案{page_label}">
     <div class="slide-content">
-      <div class="section-label anim-in">EXPERT PROFILES</div>
+      <div class="section-label anim-in">EXPERT PROFILES {page_label}</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
       <div class="grid-2">
         {experts_html}
@@ -373,7 +397,7 @@ class RoundtableRendererV8:
     <div class="deck-footer">专家档案</div>
     <div class="slide-number">{str(slide_num).zfill(2)} / {total_slides}</div>
   </section>''')
-        slide_num += 1
+            slide_num += 1
         
         # 各轮次
         for round_data in content['rounds']:

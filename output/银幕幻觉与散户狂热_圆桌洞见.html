@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>银幕幻觉与散户狂热 圆桌洞见</title>
+<style>
+  :root{
+    /* ============ 主题色(默认:🖋 墨水经典) ============ */
+    --ink:#0a0a0b;
+    --ink-rgb:10,10,11;
+    --paper:#f1efea;
+    --paper-rgb:241,239,234;
+    --paper-tint:#e8e5de;
+    --ink-tint:#18181a;
+    --text-dim:rgba(241,239,234,0.5);
+
+    /* ============ 强调色 ============ */
+    --accent:#c23b22;
+    --accent-rgb:194,59,34;
+    --gold:#d4a843;
+    --gold-rgb:212,168,67;
+    --blue:#4a6a9a;
+    --purple:#8a4aaa;
+    --green:#3a8a5c;
+    --cyan:#4a9a9a;
+    --orange:#d4843a;
+
+    /* ============ 字体(跨主题固定) ============ */
+    --mono:"IBM Plex Mono","SF Mono",monospace;
+    --serif-zh:"Noto Serif SC","Source Han Serif SC","STSong",serif;
+    --sans-zh:"Noto Sans SC","Source Han Sans SC","PingFang SC",sans-serif;
+
+    /* ============ 间距 ============ */
+    --radius:10px;
+    --ease:cubic-bezier(.4,0,.2,1);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans-zh);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+  /* ============ Deck 容器 ============ */
+  #deck{position:relative;width:100vw;height:100vh;overflow:hidden}
+
+  /* ============ 进度条 ============ */
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:1000;transition:width .5s var(--ease);box-shadow:0 0 12px rgba(var(--accent-rgb),.3)}
+
+  /* ============ 幻灯片 ============ */
+  .deck{position:relative;width:100%;height:100%}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;overflow:hidden}
+  .slide-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
+  .slide.active{display:flex}
+  .slide.hero{justify-content:center;align-items:center;text-align:center}
+  .slide.title-slide{justify-content:center;align-items:center;text-align:center}
+
+  /* ============ 入场动画(Guizang风格) ============ */
+  [data-anim]{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .slide.active [data-anim]{opacity:1;transform:translateY(0)}
+  .slide.active [data-anim]:nth-child(1){transition-delay:.1s}
+  .slide.active [data-anim]:nth-child(2){transition-delay:.18s}
+  .slide.active [data-anim]:nth-child(3){transition-delay:.26s}
+  .slide.active [data-anim]:nth-child(4){transition-delay:.34s}
+  .slide.active [data-anim]:nth-child(5){transition-delay:.42s}
+  .slide.active [data-anim]:nth-child(6){transition-delay:.5s}
+
+  /* ============ 内容区(book-distillation范式) ============ */
+  .frame{width:100%;max-width:1100px;margin:0 auto;flex:1;display:flex;flex-direction:column}
+  .slide-content{flex:1;display:flex;flex-direction:column}
+
+  /* ============ Magazine Chrome(Guizang风格) ============ */
+  .chrome{display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.5;margin-bottom:3vh}
+  .chrome .left,.chrome .right{display:flex;gap:2em;align-items:center}
+  .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
+
+  /* ============ 底部元数据(render_v8兼容) ============ */
+  .deck-footer{margin-top:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
+  .slide-number{position:absolute;bottom:2vh;right:3vw;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.35)}
+
+  /* ============ Section Label ============ */
+  .section-label{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
+
+  /* ============ 封面 ============ */
+  .cover-badge{display:inline-block;padding:6px 20px;border:1px solid var(--accent);border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4vh}
+  .cover-title{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:4vh;line-height:1.8;max-width:600px}
+  .cover-stats{display:flex;gap:4vh;flex-wrap:wrap;justify-content:center}
+  .cover-stat{text-align:center}
+  .cover-stat-num{font-family:var(--mono);font-size:2.5rem;font-weight:900;color:var(--accent)}
+  .cover-stat-label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.5);margin-top:.5vh}
+
+  /* ============ 封面标题(render_v8) ============ */
+  .hero-dark{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;flex:1}
+  .title-main{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .title-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:2vh;line-height:1.8}
+  .gold-line{width:80px;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));margin:3vh auto;border-radius:2px}
+
+  /* ============ 标题系统 ============ */
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
+  .h-hero{font-family:var(--serif-zh);font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.2;margin-bottom:3vh}
+  .h-xl{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.4rem,3vw,2.2rem);line-height:1.3;margin-bottom:2vh}
+  .h-lg{font-family:var(--serif-zh);font-weight:600;font-size:clamp(1.1rem,2vw,1.5rem);line-height:1.4;margin-bottom:1.5vh}
+  .h-md{font-weight:600;font-size:1.1rem;margin-bottom:1vh}
+  .lead{font-size:1rem;line-height:1.85;color:rgba(var(--paper-rgb),.8);max-width:700px}
+  .meta-row{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.4);display:flex;gap:2em;flex-wrap:wrap;margin-top:3vh}
+
+  /* ============ 大号引用(render_v8) ============ */
+  .quote-large{font-family:var(--serif-zh);font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:600;line-height:1.6;color:rgba(var(--paper-rgb),.9);max-width:800px;margin:0 auto}
+
+  /* ============ 分割线 ============ */
+  .rule{width:100%;height:1px;background:rgba(var(--paper-rgb),.15);margin:3vh 0}
+
+  /* ============ 标签 ============ */
+  .tag{display:inline-block;padding:4px 12px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;margin:3px}
+  .tag-gold{background:rgba(var(--gold-rgb),.15);color:var(--gold);border:1px solid rgba(var(--gold-rgb),.2)}
+  .tag-red{background:rgba(var(--accent-rgb),.15);color:var(--accent);border:1px solid rgba(var(--accent-rgb),.2)}
+  .tag-blue{background:rgba(74,106,154,.15);color:var(--blue);border:1px solid rgba(74,106,154,.2)}
+  .tag-purple{background:rgba(138,74,170,.15);color:var(--purple);border:1px solid rgba(138,74,170,.2)}
+  .tag-green{background:rgba(58,138,92,.15);color:var(--green);border:1px solid rgba(58,138,92,.2)}
+
+  /* ============ 霓虹强调色(render_v8) ============ */
+  .neon-gold{color:var(--gold)}.neon-red{color:var(--accent)}.neon-cyan{color:var(--cyan)}.neon-purple{color:var(--purple)}.neon-orange{color:var(--orange)}.neon-green{color:var(--green)}
+
+  /* ============ 网格系统 ============ */
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:2vh 2vw}
+  @media(max-width:768px){.grid-2{grid-template-columns:1fr}}
+
+  /* ============ 发言块(原生) ============ */
+  .sp{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2.5vw;margin-bottom:2vh;position:relative}
+  .sp::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .sh{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh}
+  .speaker-avatar{width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:var(--ink);background:var(--accent);flex-shrink:0}
+  .sn{font-weight:700;font-size:1rem}
+  .sr{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4);padding:3px 8px;background:rgba(var(--paper-rgb),.06);border-radius:3px}
+  .st{font-size:.95rem;line-height:2;color:rgba(var(--paper-rgb),.85)}
+  .st strong{color:var(--paper);font-weight:700}
+  .st em{color:var(--gold);font-style:normal;font-weight:600}
+
+  /* ============ 碰撞块(原生) ============ */
+  .cb{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;position:relative}
+  .cb::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .cb.blue{border-color:rgba(74,106,154,.3)}.cb.blue::before{background:var(--blue)}
+  .cb.purple{border-color:rgba(138,74,170,.3)}.cb.purple::before{background:var(--purple)}
+  .cb.green{border-color:rgba(58,138,92,.3)}.cb.green::before{background:var(--green)}
+  .cb.orange{border-color:rgba(var(--gold-rgb),.3)}.cb.orange::before{background:var(--gold)}
+  .cl{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;color:var(--accent);font-weight:600}
+  .cl.blue{color:var(--blue)}.cl.purple{color:var(--purple)}.cl.green{color:var(--green)}.cl.orange{color:var(--gold)}
+
+  /* ============ 洞见卡 ============ */
+  .insight-c{background:linear-gradient(135deg,rgba(var(--paper-rgb),.04) 0%,rgba(var(--paper-rgb),.08) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh;position:relative;overflow:hidden}
+  .insight-c::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold))}
+  .insight-q{font-family:var(--serif-zh);font-size:1.1rem;font-weight:700;color:var(--gold);line-height:1.6;margin-bottom:1vh}
+  .insight-a{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.75)}
+
+  /* ============ 卡片 ============ */
+  .card{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
+  .card-num{font-family:var(--mono);font-weight:900;font-size:1.8rem;color:var(--accent);opacity:.4;margin-bottom:1vh}
+  .card-title{font-weight:700;font-size:1rem;margin-bottom:1vh}
+  .card-body{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
+  .card-source{font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);margin-top:1vh}
+
+  /* ============ 专家卡片(render_v8) ============ */
+  .card-rise{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--green)}
+  .card-fall{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--accent)}
+  .speaker-header{display:flex;align-items:center;gap:16px;margin-bottom:2vh}
+  .speaker-name{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem}
+  .speaker-role{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:2px}
+  .expert-profile{display:flex;flex-direction:column;gap:1vh}
+  .profile-item{font-size:.9rem;line-height:1.7;color:rgba(var(--paper-rgb),.8)}
+  .profile-label{color:var(--gold);font-weight:600}
+
+  /* ============ 立场表达(render_v8) ============ */
+  .stance-item{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;border-left:3px solid var(--gold)}
+  .stance-expert{font-family:var(--serif-zh);font-weight:700;font-size:1rem;margin-bottom:1vh}
+  .stance-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
+  .stances-grid{display:flex;flex-direction:column;gap:1.5vh}
+
+  /* ============ 碰撞轮次(render_v8) ============ */
+  .clash-round{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;position:relative}
+  .clash-round::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .clash-header{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh;flex-wrap:wrap}
+  .clash-attacker{font-weight:700;font-size:1rem}
+  .clash-target{font-weight:700;font-size:1rem}
+  .clash-arrow{color:rgba(var(--paper-rgb),.3);font-size:1.2rem}
+  .clash-type{display:inline-block;padding:3px 10px;border-radius:3px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.5vh;font-weight:600}
+  .clash-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
+  .counter-attack{margin-top:2vh;padding-top:2vh;border-top:1px dashed rgba(var(--paper-rgb),.1)}
+  .counter-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .counter-content{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
+  .clash-container{display:flex;flex-direction:column;gap:2vh}
+
+  /* ============ 攻击类型色 ============ */
+  .attack-logic{background:rgba(74,106,154,.15);color:var(--blue)}
+  .attack-interest{background:rgba(var(--accent-rgb),.15);color:var(--accent)}
+  .attack-reality{background:rgba(var(--gold-rgb),.15);color:var(--gold)}
+  .attack-human{background:rgba(138,74,170,.15);color:var(--purple)}
+  .attack-failure{background:rgba(58,138,92,.15);color:var(--green)}
+
+  /* ============ 现实案例(render_v8) ============ */
+  .reality-case{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--orange)}
+  .case-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5vh;flex-wrap:wrap;gap:8px}
+  .case-name{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem}
+  .case-source{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4)}
+  .case-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:1.5vh}
+  .case-outcome{font-size:.9rem;font-weight:600;margin-bottom:1vh}
+  .case-lesson{font-size:.9rem;font-weight:600}
+  .cases-container{display:flex;flex-direction:column;gap:2vh}
+
+  /* ============ 代价讨论(render_v8) ============ */
+  .cost-discussion{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh}
+  .cost-scenario{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem;margin-bottom:2vh}
+  .cost-list{display:flex;flex-direction:column;gap:1.5vh;margin-bottom:2vh}
+  .cost-item{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:1.5vh 2vw;border-left:3px solid var(--accent)}
+  .cost-name{font-weight:700;font-size:.95rem;margin-bottom:.5vh}
+  .cost-analysis{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .worst-case{background:rgba(var(--accent-rgb),.08);border:1px solid rgba(var(--accent-rgb),.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
+  .worst-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .worst-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+  .survivor-bias{background:rgba(138,74,170,.08);border:1px solid rgba(138,74,170,.15);border-radius:6px;padding:2vh 2vw}
+  .survivor-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .survivor-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+
+  /* ============ 人性层(render_v8) ============ */
+  .human-nature{background:linear-gradient(135deg,rgba(var(--paper-rgb),.03) 0%,rgba(var(--paper-rgb),.06) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
+  .human-question{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem;margin-bottom:2vh;line-height:1.5}
+  .human-analysis{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:2vh}
+  .human-examples{margin-bottom:2vh}
+  .examples-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1vh;font-weight:600}
+  .example-item{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8);padding:.5vh 0}
+  .human-conclusion{font-size:.95rem;font-weight:600;line-height:1.7}
+
+  /* ============ 认知升级(render_v8) ============ */
+  .cognitive-upgrade{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
+  .upgrade-comparison{display:grid;grid-template-columns:1fr auto 1fr;gap:2vw;align-items:start;margin-bottom:2vh}
+  @media(max-width:768px){.upgrade-comparison{grid-template-columns:1fr}.upgrade-arrow{transform:rotate(90deg)}}
+  .old-thinking,.new-thinking{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:2vh 1.5vw}
+  .old-thinking{border-left:3px solid var(--accent)}
+  .new-thinking{border-left:3px solid var(--green)}
+  .thinking-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .thinking-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+  .upgrade-arrow{font-size:1.5rem;color:rgba(var(--paper-rgb),.3);display:flex;align-items:center;justify-content:center;padding-top:3vh}
+  .complexity{background:rgba(74,106,154,.08);border:1px solid rgba(74,106,154,.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
+  .complexity-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .complexity-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .actionable{background:rgba(var(--gold-rgb),.08);border:1px solid rgba(var(--gold-rgb),.15);border-radius:6px;padding:2vh 2vw}
+  .actionable-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .actionable-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 情绪样式 ============ */
+  .emotion-sarcasm{border-left:3px solid var(--purple);padding-left:12px;font-style:italic}
+  .emotion-helplessness{opacity:.75;font-style:italic}
+  .emotion-anger{color:var(--accent);font-weight:600}
+  .emotion-hesitation{opacity:.8;font-style:italic}
+  .emotion-self-deprecation{opacity:.7;font-style:italic}
+  .emotion-cold-laugh{color:var(--purple)}
+  .emotion-silence{opacity:.5;font-style:italic}
+  .emotion-serious{color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 指标 ============ */
+  .metrics{display:flex;gap:2vw;flex-wrap:wrap;margin-bottom:3vh}
+  .metric{flex:1;min-width:100px;text-align:center;background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 1.5vw}
+  .metric-val{font-family:var(--mono);font-weight:900;font-size:clamp(1.5rem,3vw,2.5rem);color:var(--accent)}
+  .metric-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:.5vh}
+
+  /* ============ 开放问题 ============ */
+  .oq{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
+  .oq-num{font-family:var(--mono);font-weight:900;font-size:1.2rem;color:var(--accent);opacity:.3;margin-bottom:1vh}
+  .oq-text{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .headline-item{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.85);padding:1.5vh 0;border-bottom:1px solid rgba(var(--paper-rgb),.06)}
+  .headline-item:last-child{border-bottom:none}
+  .headline-item strong{color:var(--gold);margin-right:8px}
+
+  /* ============ 引用 ============ */
+  .quote{font-family:var(--serif-zh);font-size:1rem;font-style:italic;line-height:1.8;padding:2vh 2.5vw;border-left:3px solid var(--gold);background:rgba(var(--gold-rgb),.05);margin:2vh 0;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ TOC ============ */
+  .toc-panel{position:fixed;top:0;left:0;width:min(340px,80vw);height:100vh;background:rgba(var(--ink-rgb),.97);backdrop-filter:blur(20px);z-index:100;transform:translateX(-100%);transition:transform .35s var(--ease);padding:3vh 2.5vw;overflow-y:auto;border-right:1px solid rgba(var(--paper-rgb),.08)}
+  .toc-panel.open{transform:translateX(0)}
+  .toc-title{font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:3vh;padding-bottom:2vh;border-bottom:1px solid rgba(var(--paper-rgb),.1)}
+  .toc-item{display:flex;justify-content:space-between;padding:1.2vh 1.5vw;margin-bottom:.5vh;cursor:pointer;border-radius:6px;border-left:2px solid transparent;font-size:.9rem;color:rgba(var(--paper-rgb),.7);transition:all .2s}
+  .toc-item:hover{background:rgba(var(--paper-rgb),.06);color:var(--paper)}
+  .toc-item.active{background:rgba(var(--paper-rgb),.08);color:var(--accent);border-left-color:var(--accent);font-weight:600}
+  .toc-label{flex:1}
+  .toc-page{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.35)}
+  .toc-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;opacity:0;pointer-events:none;transition:opacity .3s}
+  .toc-backdrop.open{opacity:1;pointer-events:auto}
+
+  /* ============ 导航栏 ============ */
+  .nav-bar{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 3vw;background:rgba(var(--ink-rgb),.9);backdrop-filter:blur(10px);z-index:50;border-top:1px solid rgba(var(--paper-rgb),.06)}
+  .nav-left,.nav-right{display:flex;align-items:center;gap:12px}
+  .nav-btn{background:none;border:1px solid rgba(var(--paper-rgb),.12);color:rgba(var(--paper-rgb),.7);padding:8px 16px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;cursor:pointer;transition:all .2s}
+  .nav-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(var(--accent-rgb),.1)}
+  .nav-title{font-size:12px;color:rgba(var(--paper-rgb),.5);max-width:40vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-counter{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.4)}
+
+  /* ============ 导航点 ============ */
+  .nav-dots{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:6px}
+  .nd{width:6px;height:6px;border-radius:50%;background:rgba(var(--paper-rgb),.15);cursor:pointer;transition:all .3s var(--ease);border:none;padding:0}
+  .nd.active{background:var(--accent);height:20px;border-radius:3px;box-shadow:0 0 8px rgba(var(--accent-rgb),.4)}
+  .nd:hover{background:rgba(var(--paper-rgb),.4)}
+
+  /* ============ 入场动画延迟(render_v8兼容) ============ */
+  .anim-in{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .slide.active .anim-in{opacity:1;transform:translateY(0)}
+  .slide.active .anim-in:nth-child(1){transition-delay:.1s}
+  .slide.active .anim-in:nth-child(2){transition-delay:.18s}
+  .slide.active .anim-in:nth-child(3){transition-delay:.26s}
+  .slide.active .anim-in:nth-child(4){transition-delay:.34s}
+  .slide.active .anim-in:nth-child(5){transition-delay:.42s}
+  .slide.active .anim-in:nth-child(6){transition-delay:.5s}
+  .anim-delay-1{transition-delay:.18s !important}
+  .anim-delay-2{transition-delay:.26s !important}
+  .anim-delay-3{transition-delay:.34s !important}
+  .anim-delay-4{transition-delay:.42s !important}
+  .anim-delay-5{transition-delay:.5s !important}
+  .anim-delay-6{transition-delay:.58s !important}
+
+  /* ============ 响应式 ============ */
+  @media(max-width:1024px){.slide{padding:4vh 5vw 8vh}}
+  @media(max-width:768px){
+    .slide{padding:3vh 4vw 7vh}
+    .cover-stats{gap:2vh}
+    .metrics{flex-direction:column}
+    .nav-dots,.nav-title{display:none}
+    .nav-bar{padding:0 2vw}
+  }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+<div class="progress-bar" id="progressBar"></div>
+
+
+  <section class="slide hero active" data-title="封面">
+    <div class="slide-content hero-dark">
+      <div class="section-label anim-in">ROUNDTABLE DISCUSSION V8.0</div>
+      <h1 class="title-main anim-in anim-delay-1">银幕幻觉与散户狂热</h1>
+      <div class="title-sub anim-in anim-delay-2">影视叙事如何重塑大众对金融杠杆的浪漫化想象，科技平台又如何利用此情绪进行量化套利？</div>
+      <div class="gold-line anim-in anim-delay-3"></div>
+      <p style="font-size:14px;color:var(--text-dim);letter-spacing:0.1em;" class="anim-in anim-delay-4">从知识讨论到生存博弈</p>
+    </div>
+    <div class="deck-footer">银幕幻觉与散户狂热 | V8级圆桌洞见</div>
+    <div class="slide-number">01 / 34</div>
+  </section>
+
+  <section class="slide" data-title="专家档案(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">EXPERT PROFILES (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
+      <div class="grid-2">
+        
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#8a2a4a">纳</div>
+          <div>
+            <div class="speaker-name neon-gold">纳西姆·塔勒布</div>
+            <div class="speaker-role">风险管理专家</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          <div class="profile-item"><span class="profile-label">核心信念：</span>反脆弱性思维：有些系统从冲击中获益</div><div class="profile-item"><span class="profile-label">利益相关：</span>散户狂热背后的认知偏见</div><div class="profile-item"><span class="profile-label">恐惧：</span>散户被系统性收割</div><div class="profile-item"><span class="profile-label">偏见：</span>可能过度强调风险</div>
+        </div>
+      </div>
+
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#c23b22">吴</div>
+          <div>
+            <div class="speaker-name neon-gold">吴晓波</div>
+            <div class="speaker-role">财经作家</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          <div class="profile-item"><span class="profile-label">核心信念：</span>商业趋势观察者，相信资本是文化传播的放大器</div><div class="profile-item"><span class="profile-label">利益相关：</span>影视如何影响大众的金融认知</div><div class="profile-item"><span class="profile-label">恐惧：</span>大众被影视叙事误导</div><div class="profile-item"><span class="profile-label">偏见：</span>对商业化可能过于乐观</div>
+        </div>
+      </div>
+
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#6a4a8a">李</div>
+          <div>
+            <div class="speaker-name neon-gold">李诞</div>
+            <div class="speaker-role">脱口秀演员</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          <div class="profile-item"><span class="profile-label">核心信念：</span>真诚的表达比精密的计算更重要</div><div class="profile-item"><span class="profile-label">利益相关：</span>普通人如何被金融叙事操控</div><div class="profile-item"><span class="profile-label">恐惧：</span>散户被"造神"叙事收割</div><div class="profile-item"><span class="profile-label">偏见：</span>倾向解构宏大叙事</div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">专家档案</div>
+    <div class="slide-number">02 / 34</div>
+  </section>
+
+  <section class="slide" data-title="专家档案(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">EXPERT PROFILES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
+      <div class="grid-2">
+        
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#4a8a2d">巴</div>
+          <div>
+            <div class="speaker-name neon-gold">巴菲特</div>
+            <div class="speaker-role">价值投资大师</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          <div class="profile-item"><span class="profile-label">核心信念：</span>长期持有、基本面分析、企业护城河</div><div class="profile-item"><span class="profile-label">利益相关：</span>散户为什么总是亏钱</div><div class="profile-item"><span class="profile-label">恐惧：</span>散户被短期投机毁掉</div><div class="profile-item"><span class="profile-label">偏见：</span>可能过度强调长期投资</div>
+        </div>
+      </div>
+
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#2d5a8e">项</div>
+          <div>
+            <div class="speaker-name neon-gold">项飙</div>
+            <div class="speaker-role">人类学家</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          <div class="profile-item"><span class="profile-label">核心信念：</span>附近消失理论：真实社会连接的瓦解</div><div class="profile-item"><span class="profile-label">利益相关：</span>金融狂热背后的社会心理</div><div class="profile-item"><span class="profile-label">恐惧：</span>社会被金融逻辑殖民</div><div class="profile-item"><span class="profile-label">偏见：</span>可能忽视金融的积极作用</div>
+        </div>
+      </div>
+
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#e65100">冯</div>
+          <div>
+            <div class="speaker-name neon-gold">冯唐</div>
+            <div class="speaker-role">作家/商业顾问</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          <div class="profile-item"><span class="profile-label">核心信念：</span>商业逻辑的务实主义者</div><div class="profile-item"><span class="profile-label">利益相关：</span>如何在金融狂热中保持理性</div><div class="profile-item"><span class="profile-label">恐惧：</span>散户被情绪操控</div><div class="profile-item"><span class="profile-label">偏见：</span>对资本力量可能过于接受</div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">专家档案</div>
+    <div class="slide-number">03 / 34</div>
+  </section>
+
+  <section class="slide" data-title="Round 1: 影视如何制造金融幻觉">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1</div>
+      <h2 class="quote-large anim-in anim-delay-1">影视如何制造金融幻觉</h2>
+      <div class="gold-line anim-in anim-delay-2"></div>
+      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">影视叙事是如何让散户对金融杠杆产生浪漫化想象的？</p>
+    </div>
+    <div class="deck-footer">Round 1 | 影视如何制造金融幻觉</div>
+    <div class="slide-number">04 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R1 立场(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">吴晓波</div>
+        <div class="stance-content emotion-serious">影视是大众金融认知的"第一课堂"。大多数人没有读过金融教科书，但他们看过《华尔街之狼》《大空头》《亿万》。
+
+这些影视作品塑造了一个"金融神话"：金融市场是一个"聪明人"的游戏，只要你够聪明、够大胆，你就能赚大钱。它们把"投机"包装成了"投资"，把"赌博"包装成了"策略"。
+
+《华尔街之狼》的乔丹·贝尔福特用垃圾股票忽悠散户、操纵股价、洗钱成性。但在影视叙事中，他被塑造成了一个"反英雄"——虽然道德有问题，但"聪明"、"有魅力"。这种叙事让散户觉得：只要我够聪明，我也能像他一样赚大钱。
+
+问题是：大多数散户不是乔丹·贝尔福特。他们是被收割的"韭菜"。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">李诞</div>
+        <div class="stance-content emotion-serious">我是一个脱口秀演员，我每天都被各种"金融叙事"轰炸。
+
+社交媒体上到处是"股神"——"我用10万赚了100万"、"我靠炒股实现了财务自由"。这些"股神"的故事被包装成了"励志故事"，让人觉得：只要我跟着他们学，我也能赚大钱。
+
+但真相是什么？"他推的票，你躺着就行"——这种话术在社交媒体上就是毒药。因为它给你一个幻觉：有人替你懂了，你躺着就行。但真相是：他赚的是你的手续费，你亏的是你的本金。
+
+影视叙事也是这样——它让你觉得金融市场是一个"浪漫"的地方，有"天才"、有"冒险"、有"暴富"。但实际上，金融市场是一个"残酷"的地方——大多数人亏钱，少数人赚钱。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">塔勒布</div>
+        <div class="stance-content emotion-serious">影视叙事的核心问题是：它只展示"赢家"，不展示"输家"。
+
+你看过《大空头》——那些做空次贷的人赚了大钱。但你没看到的是：有多少人做空次贷亏了大钱？有多少人做空太早，被市场"轧空"了？有多少人做空对了，但仓位太小，没赚到什么钱？
+
+这就是"幸存者偏差"——你只看到赢家的故事，看不到输家的故事。影视叙事放大了这种偏差，让散户觉得：只要我够聪明，我也能成为赢家。
+
+但真相是：在金融市场中，"聪明"不是最重要的。"纪律"、"耐心"、"风险管理"才是最重要的。但这些"无聊"的东西，影视不会展示。</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 立场</div>
+    <div class="slide-number">05 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R1 立场(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">巴菲特</div>
+        <div class="stance-content emotion-serious">我从来不看那些"金融电影"。因为它们展示的不是投资，是投机。
+
+投资的本质是什么？是买一个好公司的股票，长期持有，分享公司的成长。这很"无聊"——没有"冒险"、没有"刺激"、没有"暴富"。
+
+但影视不会展示"无聊"的东西。它们需要"戏剧性"——暴涨暴跌、惊天逆转、天才对决。所以它们展示的是"投机"，不是"投资"。
+
+散户被这些"戏剧性"的叙事误导了。他们觉得投资应该"刺激"、应该"快"、应该"暴富"。所以他们追涨杀跌、频繁交易、加杠杆。结果是什么？大多数人亏钱。
+
+我几十年的年均回报超过20%。怎么做到的？就是"无聊"地持有好公司。但这个"无聊"的故事，没有电影会拍。</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 立场</div>
+    <div class="slide-number">06 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R1 碰撞">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">塔勒布</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">吴晓波</span>
+        </div>
+        <div class="clash-type attack-logic">逻辑漏洞</div>
+        <div class="clash-content emotion-serious">吴晓波，你说"影视是大众金融认知的第一课堂"。但你有没有想过，这个"课堂"教的是错误的知识？影视展示的是"幸存者偏差"——只展示赢家，不展示输家。散户从这个"课堂"学到的不是"如何投资"，而是"如何赌博"。</div>
+        
+      </div>
+
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">李诞</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">巴菲特</span>
+        </div>
+        <div class="clash-type attack-reality">现实矛盾</div>
+        <div class="clash-content emotion-serious">巴菲特，你说"无聊地持有好公司"就能赚钱。但你有没有想过，你的"无聊"是建立在你已经成功的基础上的？你有几十亿美元的本金，你当然可以"无聊"地持有。但散户只有几万块钱，他们需要"快"地赚钱——因为他们的生活成本在涨，他们的工资不涨。</div>
+        
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 碰撞</div>
+    <div class="slide-number">07 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R1 案例">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 3: REALITY </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
+      <div class="cases-container">
+        
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">游戏驿站散户抱团潮</div>
+          <div class="case-source">[来源：知乎 - 楚山]</div>
+        </div>
+        <div class="case-content">2021年美股散户抱团潮，游戏驿站股价1个月暴涨17倍。散户被"打败华尔街"的叙事驱动，疯狂买入。但最终，大多数散户亏钱离场。</div>
+        <div class="case-outcome neon-red">代价：大多数散户亏钱离场</div>
+        <div class="case-lesson neon-gold">教训："打败华尔街"的叙事很浪漫，但现实很残酷——散户没有信息优势、资金优势、技术优势</div>
+      </div>
+
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">《华尔街之狼》的叙事误导</div>
+          <div class="case-source">[来源：知乎 - 知乎问题]</div>
+        </div>
+        <div class="case-content">《华尔街之狼》被包装成"黑色喜剧"，但本质上是"人性警示录"。乔丹·贝尔福特用垃圾股票忽悠散户、操纵股价、洗钱成性。但在影视叙事中，他被塑造成了一个"反英雄"。</div>
+        <div class="case-outcome neon-red">代价：散户被"反英雄"叙事误导</div>
+        <div class="case-lesson neon-gold">教训：影视叙事把"投机"包装成了"投资"，把"赌博"包装成了"策略"</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 案例</div>
+    <div class="slide-number">08 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R1 代价">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 4: COST</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
+      
+      <div class="cost-discussion anim-in">
+        <div class="cost-scenario neon-gold">如果散户完全相信影视叙事，会发生什么？</div>
+        <div class="cost-list">
+          
+          <div class="cost-item">
+            <div class="cost-name neon-red">散户被系统性收割</div>
+            <div class="cost-analysis">当散户相信"聪明就能赚钱"时，他们会频繁交易、追涨杀跌、加杠杆。这些行为的唯一受益者是券商（手续费）和庄家（对手盘）。散户是被收割的对象。</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-name neon-red">金融市场的不稳定</div>
+            <div class="cost-analysis">当大量散户被"叙事"驱动进入市场时，市场会变得不稳定——暴涨暴跌、泡沫破裂。这不仅伤害散户，也伤害整个经济。</div>
+          </div>
+        </div>
+        <div class="worst-case">
+          <div class="worst-label neon-red">最坏情况</div>
+          <div class="worst-content">金融市场变成"叙事驱动"的赌场——价格不再反映基本面，只反映"故事"的好坏。</div>
+        </div>
+        
+          <div class="survivor-bias">
+            <div class="survivor-label neon-purple">幸存者偏差</div>
+            <div class="survivor-content">你只看到那些靠"叙事"赚钱的散户，看不到那些亏钱的散户。</div>
+          </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 代价</div>
+    <div class="slide-number">09 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R1 人性">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
+      
+      <div class="human-nature anim-in">
+        <div class="human-question neon-purple">为什么我们容易被"金融叙事"操控？</div>
+        <div class="human-analysis">人类有一种"故事偏好"——我们更容易被"故事"说服，而不是被"数据"说服。一个好的故事可以绕过我们的理性思考，直接触动我们的情感。
+
+金融叙事利用了这种"故事偏好"——它把复杂的金融现象包装成了简单的"故事"：有"英雄"（股神）、有"冒险"（投机）、有"奖赏"（暴富）。这种"故事"比"长期持有好公司"更有吸引力。
+
+更深层的问题是：我们渴望"快速致富"。这是一种进化遗留——在原始环境中，"快速获得资源"意味着生存优势。金融市场利用了这种"快速致富"的渴望。</div>
+        <div class="human-examples">
+          <div class="examples-label">现实例子</div>
+          
+          <div class="example-item">• 游戏驿站散户抱团潮——"打败华尔街"的叙事驱动</div>
+          <div class="example-item">• 《华尔街之狼》——"反英雄"叙事误导散户</div>
+          <div class="example-item">• 社交媒体"股神"——"他推的票，你躺着就行"</div>
+        </div>
+        <div class="human-conclusion neon-gold">我们容易被金融叙事操控，是因为我们渴望"故事"和"快速致富"。金融叙事利用了这种渴望，把"投机"包装成了"投资"。</div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 人性</div>
+    <div class="slide-number">10 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R1 升级">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
+      
+      <div class="cognitive-upgrade anim-in">
+        <div class="upgrade-comparison">
+          <div class="old-thinking">
+            <div class="thinking-label neon-red">旧思维</div>
+            <div class="thinking-content">影视是娱乐，不会影响投资决策</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="new-thinking">
+            <div class="thinking-label neon-green">新思维</div>
+            <div class="thinking-content">影视是大众金融认知的"第一课堂"——它塑造了我们对金融市场的想象。当这种想象是错误的时，我们的投资决策也会是错误的。</div>
+          </div>
+        </div>
+        <div class="complexity">
+          <div class="complexity-label neon-cyan">复杂性</div>
+          <div class="complexity-content">金融叙事的影响是潜移默化的——你可能觉得自己没有被影视影响，但你的"金融直觉"已经被影视塑造了。比如，你觉得"投资应该刺激"、"快"、"暴富"——这些"直觉"都来自影视叙事。</div>
+        </div>
+        <div class="actionable">
+          <div class="actionable-label neon-gold">可执行洞见</div>
+          <div class="actionable-content">对于散户：
+1. 不要相信"股神"的故事——你看到的是赢家，看不到输家
+2. 不要追求"刺激"——真正的投资是"无聊"的
+3. 不要被"叙事"驱动——用数据和逻辑做决策
+
+对于社会：
+1. 金融教育应该包括"叙事批判"——教人识别金融叙事的套路
+2. 社交媒体应该标注"金融建议"的风险</div>
+        </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 升级</div>
+    <div class="slide-number">11 / 34</div>
+  </section>
+
+  <section class="slide" data-title="Round 2: 散户狂热的心理机制">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2</div>
+      <h2 class="quote-large anim-in anim-delay-1">散户狂热的心理机制</h2>
+      <div class="gold-line anim-in anim-delay-2"></div>
+      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">散户为什么会反复被"收割"？背后的心理机制是什么？</p>
+    </div>
+    <div class="deck-footer">Round 2 | 散户狂热的心理机制</div>
+    <div class="slide-number">12 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R2 立场">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">塔勒布</div>
+        <div class="stance-content emotion-serious">散户反复被"收割"的根本原因是：他们不理解"概率"。
+
+人类的大脑不是为"概率思维"设计的。我们习惯"确定性思维"——要么成功，要么失败。但金融市场是"概率性"的——任何事情都有可能发生，只是概率不同。
+
+散户不理解"概率"，所以他们会被"极端事件"误导。他们看到有人"1个月赚10倍"，就觉得"我也能"。但他们不知道："1个月赚10倍"的概率是万分之一，"1个月亏90%"的概率是十分之一。
+
+更深层的问题是：散户不理解"期望值"。他们只看到"可能赚多少"，没看到"可能亏多少"。一个"期望值为负"的游戏，在散户眼里可能是"好机会"。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">项飙</div>
+        <div class="stance-content emotion-serious">散户狂热的背后是"社会焦虑"。
+
+当代社会有一种"不进则退"的焦虑——房价在涨、物价在涨、教育成本在涨，但工资不涨。普通人觉得：如果我不"快"地赚钱，我就会被社会淘汰。
+
+金融市场被包装成了"快速致富"的渠道——"10万变100万"、"靠炒股实现财务自由"。这些"故事"缓解了普通人的焦虑——"只要我够聪明，我也能翻身"。
+
+但真相是：金融市场不是"翻身"的渠道，是"被收割"的渠道。普通人的对手是机构、是算法、是信息优势。他们没有赢的可能。
+
+散户狂热不是"贪婪"，是"焦虑"。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">冯唐</div>
+        <div class="stance-content emotion-serious">散户反复被"收割"的原因是：他们不尊重"专业"。
+
+金融市场是一个"专业"的领域——你需要理解财务报表、估值模型、风险管理、行为金融。这些知识需要多年的学习和实践。
+
+但散户不尊重"专业"。他们觉得："投资很简单——低买高卖"。他们不学习、不研究、不分析。他们靠"直觉"、靠"消息"、靠"感觉"投资。
+
+结果是什么？他们被"专业"的机构收割。机构有信息优势、有技术优势、有资金优势。散户什么优势都没有，只有"勇气"。但"勇气"在金融市场不是优势，是"自杀"。</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 立场</div>
+    <div class="slide-number">13 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R2 碰撞">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">项飙</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">冯唐</span>
+        </div>
+        <div class="clash-type attack-logic">逻辑漏洞</div>
+        <div class="clash-content emotion-serious">冯唐，你说散户"不尊重专业"。但你有没有想过，"专业"的门槛是谁设置的？是金融行业自己设置的。他们把金融搞得很复杂，让普通人不得不依赖"专业人士"。然后他们收高额的管理费、手续费。散户不是"不尊重专业"，是"被专业剥削"。</div>
+        
+      </div>
+
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">塔勒布</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">项飙</span>
+        </div>
+        <div class="clash-type attack-reality">现实矛盾</div>
+        <div class="clash-content emotion-serious">项飙，你说散户狂热是"焦虑"不是"贪婪"。但"焦虑"和"贪婪"是同一枚硬币的两面——"焦虑"驱动"贪婪"，"贪婪"加剧"焦虑"。散户因为焦虑而贪婪，因为贪婪而焦虑。这是一个恶性循环。</div>
+        
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 碰撞</div>
+    <div class="slide-number">14 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R2 案例">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 3: REALITY </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
+      <div class="cases-container">
+        
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">"当擦鞋童都开始谈论股票"</div>
+          <div class="case-source">[来源：知乎 - 楚山]</div>
+        </div>
+        <div class="case-content">"没有任何一个市场能够在散户主导、高杠杆泛滥、估值脱离基本面的情况下持续上涨。"这是经典的投资格言。当连"擦鞋童"都在谈论股票时，就是市场见顶的信号。</div>
+        <div class="case-outcome neon-red">代价：散户在市场见顶时入场，在市场见底时离场</div>
+        <div class="case-lesson neon-gold">教训：散户的行为模式是"反向指标"——他们最乐观的时候，是风险最大的时候</div>
+      </div>
+
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">社交媒体"股神"的话术</div>
+          <div class="case-source">[来源：知乎 - 寻halo]</div>
+        </div>
+        <div class="case-content">"他推的票，你躺着就行"——这种话术在社交媒体上就是毒药。因为它给你一个幻觉：有人替你懂了，你躺着就行。但真相是：他赚的是你的手续费，你亏的是你的本金。</div>
+        <div class="case-outcome neon-red">代价：散户被"股神"话术误导</div>
+        <div class="case-lesson neon-gold">教训：社交媒体上的"股神"不是"神"，是"商人"——他们赚的是你的手续费，不是帮你赚钱</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 案例</div>
+    <div class="slide-number">15 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R2 代价">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 4: COST</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
+      
+      <div class="cost-discussion anim-in">
+        <div class="cost-scenario neon-gold">如果散户理解了"概率"，会发生什么？</div>
+        <div class="cost-list">
+          
+          <div class="cost-item">
+            <div class="cost-name neon-red">金融行业的收入下降</div>
+            <div class="cost-analysis">如果散户理解了"概率"，他们会减少交易频率、避免高杠杆、不追涨杀跌。这会导致券商的手续费收入下降，金融机构的利润减少。</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-name neon-red">市场的流动性下降</div>
+            <div class="cost-analysis">散户是市场流动性的重要来源。如果散户减少交易，市场的流动性会下降，价格发现效率会降低。</div>
+          </div>
+        </div>
+        <div class="worst-case">
+          <div class="worst-label neon-red">最坏情况</div>
+          <div class="worst-content">散户"觉醒"后退出金融市场——市场的流动性枯竭，价格发现机制失效。</div>
+        </div>
+        
+          <div class="survivor-bias">
+            <div class="survivor-label neon-purple">幸存者偏差</div>
+            <div class="survivor-content">你只看到那些"理解概率"后赚钱的散户，看不到那些"不理解概率"但碰巧赚钱的散户。</div>
+          </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 代价</div>
+    <div class="slide-number">16 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R2 人性">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
+      
+      <div class="human-nature anim-in">
+        <div class="human-question neon-purple">为什么我们不擅长"概率思维"？</div>
+        <div class="human-analysis">人类的大脑是为"确定性环境"进化的。在原始环境中，"确定性"意味着安全——你知道老虎在哪里，你就能避开它。但金融市场是"概率性"的——任何事情都有可能发生。
+
+我们的大脑不擅长处理"概率"——我们倾向于把"小概率事件"当作"不可能事件"，把"大概率事件"当作"必然事件"。这种"概率偏见"导致了散户的错误决策。</div>
+        <div class="human-examples">
+          <div class="examples-label">现实例子</div>
+          
+          <div class="example-item">• "1个月赚10倍"的概率是万分之一</div>
+          <div class="example-item">• "当擦鞋童都开始谈论股票"是市场见顶信号</div>
+          <div class="example-item">• 社交媒体"股神"的话术是"毒药"</div>
+        </div>
+        <div class="human-conclusion neon-gold">我们不擅长概率思维，是因为我们的大脑是为"确定性环境"进化的。金融市场是"概率性"的，所以我们容易犯错。</div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 人性</div>
+    <div class="slide-number">17 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R2 升级">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
+      
+      <div class="cognitive-upgrade anim-in">
+        <div class="upgrade-comparison">
+          <div class="old-thinking">
+            <div class="thinking-label neon-red">旧思维</div>
+            <div class="thinking-content">散户亏钱是因为"贪婪"</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="new-thinking">
+            <div class="thinking-label neon-green">新思维</div>
+            <div class="thinking-content">散户亏钱不仅仅是因为"贪婪"，更是因为"焦虑"和"概率盲"。焦虑驱动了贪婪，概率盲放大了贪婪。要解决散户亏损问题，不仅要控制贪婪，还要缓解焦虑、培养概率思维。</div>
+          </div>
+        </div>
+        <div class="complexity">
+          <div class="complexity-label neon-cyan">复杂性</div>
+          <div class="complexity-content">散户狂热是一个多因素问题——心理因素（贪婪、焦虑、概率盲）、社会因素（不进则退的焦虑）、制度因素（金融行业的信息不对称）。单一的解决方案（比如"教育散户"）是不够的。</div>
+        </div>
+        <div class="actionable">
+          <div class="actionable-label neon-gold">可执行洞见</div>
+          <div class="actionable-content">对于散户：
+1. 学习概率思维——理解"期望值"和"方差"
+2. 不要被"故事"驱动——用数据做决策
+3. 承认自己是"普通人"——不要和机构比
+
+对于社会：
+1. 缓解社会焦虑——让普通人不觉得"不进则退"
+2. 金融教育应该包括"概率思维"
+3. 监管社交媒体上的"金融建议"</div>
+        </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 升级</div>
+    <div class="slide-number">18 / 34</div>
+  </section>
+
+  <section class="slide" data-title="Round 3: 平台套利的真相">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 3</div>
+      <h2 class="quote-large anim-in anim-delay-1">平台套利的真相</h2>
+      <div class="gold-line anim-in anim-delay-2"></div>
+      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">科技平台如何利用散户的情绪进行量化套利？</p>
+    </div>
+    <div class="deck-footer">Round 3 | 平台套利的真相</div>
+    <div class="slide-number">19 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R3 立场">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">塔勒布</div>
+        <div class="stance-content emotion-serious">科技平台是散户的"隐形对手"。
+
+散户以为他们的对手是"市场"——市场价格的涨跌。但实际上，他们的对手是"算法"——平台的量化算法。
+
+这些算法做什么？它们分析散户的行为模式——什么时候买入、什么时候卖出、什么消息会触发什么反应。然后它们"反向操作"——散户买入时，算法卖出；散户卖出时，算法买入。
+
+散户以为自己在"投资"，实际上是在和"算法"对赌。而算法有信息优势、有速度优势、有资金优势。散户什么优势都没有。
+
+这就是"量化套利"的本质——利用散户的情绪波动来赚钱。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">刘润</div>
+        <div class="stance-content emotion-serious">从商业逻辑看，平台套利是"信息不对称"的必然结果。
+
+传统金融市场也有"信息不对称"——机构比散户有更多信息。但互联网平台把这种"信息不对称"放大了——它们不仅有"信息"优势，还有"行为"优势。
+
+传统机构知道"基本面"——公司的财务数据、行业趋势。互联网平台知道"行为面"——散户的情绪、偏好、交易模式。"行为面"比"基本面"更有价值——因为它可以预测散户的"下一步动作"。
+
+所以，平台套利不是"道德问题"，是"结构问题"。只要"信息不对称"存在，套利就会存在。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">冯唐</div>
+        <div class="stance-content emotion-serious">散户应该认清一个事实：在金融市场中，你不是"玩家"，是"产品"。
+
+平台的商业模式是什么？是"流量变现"。它们吸引散户来交易，然后通过"高频交易"、"订单流支付"、"数据分析"来赚钱。散户的交易行为是平台的"数据资产"——它们分析散户的行为模式，然后卖给机构。
+
+你以为你在"投资"，实际上你在"被投资"——平台在"投资"你的行为数据。
+
+所以，散户的第一课是：认清自己在金融市场中的位置——你不是"玩家"，是"产品"。</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 立场</div>
+    <div class="slide-number">20 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R3 碰撞">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">塔勒布</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">刘润</span>
+        </div>
+        <div class="clash-type attack-logic">逻辑漏洞</div>
+        <div class="clash-content emotion-serious">刘润，你说平台套利是"结构问题"不是"道德问题"。但"结构问题"和"道德问题"不是互斥的。当平台利用信息不对称来"收割"散户时，这既是"结构问题"也是"道德问题"。你不能用"结构"来为"不道德"开脱。</div>
+        
+      </div>
+
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">李诞</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">冯唐</span>
+        </div>
+        <div class="clash-type attack-reality">现实矛盾</div>
+        <div class="clash-content emotion-serious">冯唐，你说散户是"产品"不是"玩家"。但你有没有想过，散户知道自己是"产品"吗？他们以为自己是"玩家"——他们在"投资"、在"交易"、在"赚钱"。他们不知道自己的行为数据被平台"卖"给了机构。这不就是"欺骗"吗？</div>
+        
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 碰撞</div>
+    <div class="slide-number">21 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R3 案例">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 3: REALITY </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
+      <div class="cases-container">
+        
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">订单流支付（PFOF）</div>
+          <div class="case-source">[来源：金融市场观察]</div>
+        </div>
+        <div class="case-content">券商把散户的订单流"卖"给高频交易商。高频交易商通过"抢先交易"来获利。散户以为自己在"免费交易"，实际上他们在被"收割"。</div>
+        <div class="case-outcome neon-red">代价：散户的交易行为成为平台的"数据资产"</div>
+        <div class="case-lesson neon-gold">教训："免费"的商业模式——你不是"客户"，是"产品"</div>
+      </div>
+
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">社交媒体情绪分析</div>
+          <div class="case-source">[来源：行业观察]</div>
+        </div>
+        <div class="case-content">量化基金通过分析社交媒体上的情绪来预测市场走势。当散户在社交媒体上"恐慌"时，量化基金"抄底"；当散户"贪婪"时，量化基金"出货"。</div>
+        <div class="case-outcome neon-red">代价：散户的情绪成为量化基金的"套利工具"</div>
+        <div class="case-lesson neon-gold">教训：你的"情绪"是别人的"利润"——当你感到恐慌或贪婪时，有人在利用你的情绪赚钱</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 案例</div>
+    <div class="slide-number">22 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R3 代价">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 4: COST</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
+      
+      <div class="cost-discussion anim-in">
+        <div class="cost-scenario neon-gold">如果散户知道自己是"产品"，会发生什么？</div>
+        <div class="cost-list">
+          
+          <div class="cost-item">
+            <div class="cost-name neon-red">散户的信任崩塌</div>
+            <div class="cost-analysis">如果散户知道自己是"产品"而不是"玩家"，他们对金融平台的信任会崩塌。这会导致交易量下降、平台收入减少。</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-name neon-red">金融市场的"去散户化"</div>
+            <div class="cost-analysis">如果散户退出金融市场，市场的参与者会变成"机构对机构"。这会降低市场的多样性，增加系统性风险。</div>
+          </div>
+        </div>
+        <div class="worst-case">
+          <div class="worst-label neon-red">最坏情况</div>
+          <div class="worst-content">散户"觉醒"后大规模退出金融市场——市场流动性枯竭，价格发现机制失效。</div>
+        </div>
+        
+          <div class="survivor-bias">
+            <div class="survivor-label neon-purple">幸存者偏差</div>
+            <div class="survivor-content">你只看到那些"认清现实"后退出的散户，看不到那些"不认清现实"但碰巧赚钱的散户。</div>
+          </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 代价</div>
+    <div class="slide-number">23 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R3 人性">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
+      
+      <div class="human-nature anim-in">
+        <div class="human-question neon-purple">为什么我们愿意成为"产品"？</div>
+        <div class="human-analysis">我们愿意成为"产品"，是因为我们不知道自己是"产品"。平台用"免费"、"便捷"、"社交"来吸引我们，让我们觉得自己是"客户"。但实际上，我们的行为数据才是平台的"产品"。
+
+这是一种"认知不对称"——平台知道我们是"产品"，但我们不知道。当这种"认知不对称"被揭露时，我们会感到被"欺骗"和"背叛"。</div>
+        <div class="human-examples">
+          <div class="examples-label">现实例子</div>
+          
+          <div class="example-item">• 订单流支付——散户的订单被"卖"给高频交易商</div>
+          <div class="example-item">• 社交媒体情绪分析——散户的情绪成为套利工具</div>
+          <div class="example-item">• "免费"商业模式——你不是"客户"，是"产品"</div>
+        </div>
+        <div class="human-conclusion neon-gold">我们愿意成为"产品"，是因为我们不知道自己是"产品"。平台用"免费"和"便捷"来掩盖"你是产品"的真相。</div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 人性</div>
+    <div class="slide-number">24 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R3 升级">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
+      
+      <div class="cognitive-upgrade anim-in">
+        <div class="upgrade-comparison">
+          <div class="old-thinking">
+            <div class="thinking-label neon-red">旧思维</div>
+            <div class="thinking-content">平台是"中立"的交易渠道</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="new-thinking">
+            <div class="thinking-label neon-green">新思维</div>
+            <div class="thinking-content">平台不是"中立"的——它们有利益冲突。它们的收入来源不是"帮助你赚钱"，而是"利用你的交易行为赚钱"。当你理解了这一点，你就能更好地保护自己。</div>
+          </div>
+        </div>
+        <div class="complexity">
+          <div class="complexity-label neon-cyan">复杂性</div>
+          <div class="complexity-content">平台套利是一个"信息不对称"问题——平台知道你的行为模式，但你不知道平台在做什么。要解决这个问题，需要提高信息透明度、加强监管、培养散户的"平台素养"。</div>
+        </div>
+        <div class="actionable">
+          <div class="actionable-label neon-gold">可执行洞见</div>
+          <div class="actionable-content">对于散户：
+1. 认清自己在金融市场中的位置——你不是"玩家"，是"产品"
+2. 不要"免费"交易——"免费"意味着你是"产品"
+3. 保护你的行为数据——不要让平台"卖"你的数据
+
+对于监管：
+1. 禁止或限制订单流支付
+2. 要求平台公开"数据使用" policy
+3. 加强对社交媒体"金融建议"的监管</div>
+        </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 升级</div>
+    <div class="slide-number">25 / 34</div>
+  </section>
+
+  <section class="slide" data-title="Round 4: 如何在狂热中保持清醒">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 4</div>
+      <h2 class="quote-large anim-in anim-delay-1">如何在狂热中保持清醒</h2>
+      <div class="gold-line anim-in anim-delay-2"></div>
+      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">散户如何在金融狂热中保持理性？</p>
+    </div>
+    <div class="deck-footer">Round 4 | 如何在狂热中保持清醒</div>
+    <div class="slide-number">26 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R4 立场">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">巴菲特</div>
+        <div class="stance-content emotion-serious">保持清醒的方法很简单：不要做"聪明"的事，做"正确"的事。
+
+"聪明"的事是什么？追热点、听消息、加杠杆、频繁交易。这些事看起来"聪明"，但长期来看，它们会让你亏钱。
+
+"正确"的事是什么？买好公司的股票，长期持有，不折腾。这些事看起来"无聊"，但长期来看，它们会让你赚钱。
+
+我几十年的年均回报超过20%。怎么做到的？就是做"正确"的事，不做"聪明"的事。
+
+散户的问题是：他们太想"聪明"了。他们想"战胜市场"、想"抓住机会"、想"快速致富"。但这些"聪明"的想法，恰恰是他们亏钱的原因。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">塔勒布</div>
+        <div class="stance-content emotion-serious">保持清醒的方法是：接受"不确定性"。
+
+散户的错误是：他们想"确定"——确定哪只股票会涨、确定什么时候买入、确定什么时候卖出。但金融市场是"不确定"的——任何事情都有可能发生。
+
+当你接受"不确定性"时，你就不会被"确定性"的叙事误导——"这只股票一定会涨"、"这个机会一定赚钱"。你知道：没有什么是"一定"的。
+
+所以，保持清醒的方法是：承认你不知道。你不知道哪只股票会涨，你不知道什么时候是底，你不知道什么时候是顶。当你承认你不知道时，你就会更谨慎、更保守、更长期。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">项飙</div>
+        <div class="stance-content emotion-serious">保持清醒的方法是：不要被"社会焦虑"驱动。
+
+散户狂热的背后是"社会焦虑"——不进则退、不赚就亏、不投就落后。当你被这种焦虑驱动时，你会做出不理性的决策——追涨杀跌、频繁交易、加杠杆。
+
+所以，保持清醒的方法是：缓解焦虑。不要觉得"不投资就亏了"，不要觉得"别人都赚了我不能落后"。投资是长期的事，不是短期的事。
+
+当你不被焦虑驱动时，你就能更理性地做决策。</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 4 | 立场</div>
+    <div class="slide-number">27 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R4 碰撞">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">李诞</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">巴菲特</span>
+        </div>
+        <div class="clash-type attack-reality">现实矛盾</div>
+        <div class="clash-content emotion-serious">巴菲特，你说"做正确的事不做聪明的事"。但你有没有想过，"正确"的事需要"本金"？你有几十亿美元，你当然可以"长期持有"。但散户只有几万块钱，他们需要"快"地赚钱——因为他们的生活成本在涨，他们的工资不涨。你的"正确"是建立在你已经成功的基础上的。</div>
+        
+      </div>
+
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">塔勒布</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">项飙</span>
+        </div>
+        <div class="clash-type attack-logic">逻辑漏洞</div>
+        <div class="clash-content emotion-serious">项飙，你说"缓解焦虑"就能保持清醒。但"焦虑"不是"选择"——你不能选择"不焦虑"。焦虑是"社会结构"决定的——当房价在涨、物价在涨、工资不涨时，焦虑是"正常"的反应。你不能要求一个"焦虑"的人"不焦虑"。</div>
+        
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 4 | 碰撞</div>
+    <div class="slide-number">28 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R4 案例">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 3: REALITY </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
+      <div class="cases-container">
+        
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">沃尔特·施洛斯的"无聊"投资</div>
+          <div class="case-source">[来源：Bilibili - 巴菲特相关视频]</div>
+        </div>
+        <div class="case-content">沃尔特·施洛斯"不上电视，不接受采访，没有分析师团队"，却近半个世纪年均超20%回报。他的投资方法很"无聊"——买被低估的股票，长期持有。</div>
+        <div class="case-outcome neon-red">代价：近半个世纪年均超20%回报</div>
+        <div class="case-lesson neon-gold">教训："无聊"的投资方法，长期来看比"聪明"的方法更有效</div>
+      </div>
+
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">杠铃策略——在黑天鹅中获益</div>
+          <div class="case-source">[来源：Bilibili - 多个创作者]</div>
+        </div>
+        <div class="case-content">塔勒布的杠铃策略："拒绝中庸：不买一堆相关性强、同涨同跌的基金/股票。拥抱两极：大量资产追求'绝对安全'，小部分资产追求'无限可能'。核心收益来自两端，而非中间。"</div>
+        <div class="case-outcome neon-red">代价：暴跌时损失有限，暴涨时身在局中</div>
+        <div class="case-lesson neon-gold">教训：保持清醒的方法不是"预测市场"，而是"接受不确定性"并设计好"应对方案"</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 4 | 案例</div>
+    <div class="slide-number">29 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R4 代价">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 4: COST</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
+      
+      <div class="cost-discussion anim-in">
+        <div class="cost-scenario neon-gold">如果所有散户都"保持清醒"，会发生什么？</div>
+        <div class="cost-list">
+          
+          <div class="cost-item">
+            <div class="cost-name neon-red">市场的"投机性"下降</div>
+            <div class="cost-analysis">如果所有散户都"保持清醒"，他们会减少交易频率、避免高杠杆、不追涨杀跌。这会导致市场的"投机性"下降，波动率降低。</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-name neon-red">金融行业的收入下降</div>
+            <div class="cost-analysis">散户的交易行为是金融行业的重要收入来源。如果散户"保持清醒"，金融行业的手续费、佣金、管理费收入会下降。</div>
+          </div>
+        </div>
+        <div class="worst-case">
+          <div class="worst-label neon-red">最坏情况</div>
+          <div class="worst-content">散户"集体清醒"后退出金融市场——市场流动性枯竭，价格发现机制失效。</div>
+        </div>
+        
+          <div class="survivor-bias">
+            <div class="survivor-label neon-purple">幸存者偏差</div>
+            <div class="survivor-content">你只看到那些"保持清醒"后赚钱的散户，看不到那些"不保持清醒"但碰巧赚钱的散户。</div>
+          </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 4 | 代价</div>
+    <div class="slide-number">30 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R4 人性">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
+      
+      <div class="human-nature anim-in">
+        <div class="human-question neon-purple">为什么我们渴望"快速致富"？</div>
+        <div class="human-analysis">人类有一种"即时满足"的偏好——我们更喜欢"现在就能得到"的东西，而不是"未来才能得到"的东西。这种偏好是进化遗留——在原始环境中，"即时获得资源"意味着生存优势。
+
+金融市场利用了这种"即时满足"的偏好——"10万变100万"、"靠炒股实现财务自由"。这些"故事"满足了我们"快速致富"的渴望。
+
+但"快速致富"的代价是"快速致贫"——当你追求"快速"时，你也承担了"高风险"。大多数散户不是"快速致富"，是"快速致贫"。</div>
+        <div class="human-examples">
+          <div class="examples-label">现实例子</div>
+          
+          <div class="example-item">• 沃尔特·施洛斯的"无聊"投资——近半个世纪年均超20%回报</div>
+          <div class="example-item">• 杠铃策略——接受不确定性，设计应对方案</div>
+          <div class="example-item">• "当擦鞋童都开始谈论股票"是市场见顶信号</div>
+        </div>
+        <div class="human-conclusion neon-gold">我们渴望"快速致富"，是因为我们偏好"即时满足"。但"快速致富"的代价是"快速致贫"。保持清醒的方法是：接受"慢"，接受"无聊"，接受"不确定"。</div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 4 | 人性</div>
+    <div class="slide-number">31 / 34</div>
+  </section>
+
+  <section class="slide" data-title="R4 升级">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
+      
+      <div class="cognitive-upgrade anim-in">
+        <div class="upgrade-comparison">
+          <div class="old-thinking">
+            <div class="thinking-label neon-red">旧思维</div>
+            <div class="thinking-content">保持清醒就是"不贪婪"</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="new-thinking">
+            <div class="thinking-label neon-green">新思维</div>
+            <div class="thinking-content">保持清醒不仅仅是"不贪婪"，更是"接受不确定性"和"缓解社会焦虑"。贪婪只是表象，深层原因是焦虑和概率盲。要真正保持清醒，需要从"认知"和"情感"两个层面入手。</div>
+          </div>
+        </div>
+        <div class="complexity">
+          <div class="complexity-label neon-cyan">复杂性</div>
+          <div class="complexity-content">保持清醒是一个"系统性"问题——不是散户"个人"的问题，是"社会结构"的问题。当社会给散户"不进则退"的压力时，散户很难"保持清醒"。</div>
+        </div>
+        <div class="actionable">
+          <div class="actionable-label neon-gold">可执行洞见</div>
+          <div class="actionable-content">对于散户：
+1. 接受"不确定性"——你不知道哪只股票会涨
+2. 做"正确"的事不做"聪明"的事
+3. 不要被"社会焦虑"驱动
+
+对于社会：
+1. 缓解"不进则退"的社会焦虑
+2. 金融教育应该包括"概率思维"和"情绪管理"
+3. 监管社交媒体上的"金融叙事"</div>
+        </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 4 | 升级</div>
+    <div class="slide-number">32 / 34</div>
+  </section>
+
+  <section class="slide" data-title="最终洞见">
+    <div class="slide-content">
+      <div class="section-label anim-in">FINAL INSIGHT</div>
+      <div class="quote-large anim-in anim-delay-1">银幕幻觉和散户狂热的本质是"叙事操控"——影视和社交媒体用"故事"来操控散户的情绪和决策。保持清醒的方法不是"不贪婪"，而是"识别叙事"——当你看到一个"好得不像真的"的故事时，它很可能就是"不像真的"。</div>
+    </div>
+    <div class="deck-footer">最终洞见</div>
+    <div class="slide-number">33 / 34</div>
+  </section>
+
+  <section class="slide" data-title="开放问题">
+    <div class="slide-content">
+      <div class="section-label anim-in">OPEN QUESTIONS</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">留给读者的问题</h3>
+      <div class="headline-item anim-in"><strong>Q1:</strong> 如果你知道自己的"情绪"是别人的"利润"，你还会"情绪化"地交易吗？</div>
+<div class="headline-item anim-in"><strong>Q2:</strong> 金融市场应该为"散户"服务，还是为"机构"服务？</div>
+<div class="headline-item anim-in"><strong>Q3:</strong> 在"叙事驱动"的金融市场中，"真相"还有价值吗？</div>
+    </div>
+    <div class="deck-footer">开放问题</div>
+    <div class="slide-number">34 / 34</div>
+  </section>
+
+<div class="toc-backdrop" id="tocBackdrop"></div>
+<div class="toc-panel" id="tocPanel">
+<div class="toc-title">目录</div>
+<div id="tocList"></div>
+</div>
+<div class="nav-bar">
+<div class="nav-left">
+<button class="nav-btn" id="btnToc">☰ 目录</button>
+<button class="nav-btn" id="btnPrev">◀ 上一页</button>
+<button class="nav-btn" id="btnNext">下一页 ▶</button>
+</div>
+<div class="nav-right">
+<span class="nav-title" id="slideTitle"></span>
+<span class="nav-counter" id="slideCounter"></span>
+</div>
+</div>
+<div class="nav-dots" id="navDots"></div>
+</div>
+
+<script>
+(function(){
+var deck=document.getElementById("deck");
+var slides=deck.querySelectorAll(".slide");
+var total=slides.length;
+var cur=0;
+var dots=document.getElementById("navDots");
+var tocList=document.getElementById("tocList");
+var titleEl=document.getElementById("slideTitle");
+var counterEl=document.getElementById("slideCounter");
+var tocPanel=document.getElementById("tocPanel");
+var tocBackdrop=document.getElementById("tocBackdrop");
+var progressBar=document.getElementById("progressBar");
+
+for(var i=0;i<total;i++){
+  var d=document.createElement("button");
+  d.className="nd";
+  d.setAttribute("data-i",i);
+  d.onclick=(function(idx){return function(){go(idx)}})(i);
+  dots.appendChild(d);
+  var t=document.createElement("div");
+  t.className="toc-item";
+  t.setAttribute("data-i",i);
+  t.innerHTML='<span class="toc-label">'+(slides[i].getAttribute("data-title")||"Slide "+(i+1))+'</span><span class="toc-page">'+String(i+1).padStart(2,"0")+'</span>';
+  t.onclick=(function(idx){return function(){go(idx);closeTOC()}})(i);
+  tocList.appendChild(t);
+}
+
+function go(n){
+  if(n<0||n>=total)return;
+  slides[cur].classList.remove("active");
+  dots.children[cur].classList.remove("active");
+  tocList.children[cur].classList.remove("active");
+  cur=n;
+  slides[cur].classList.add("active");
+  dots.children[cur].classList.add("active");
+  tocList.children[cur].classList.add("active");
+  titleEl.textContent=slides[cur].getAttribute("data-title")||"";
+  counterEl.textContent=(cur+1)+" / "+total;
+  progressBar.style.width=((cur+1)/total*100)+"%";
+  slides[cur].scrollTop=0;
+}
+function toggleTOC(){tocPanel.classList.toggle("open");tocBackdrop.classList.toggle("open")}
+function closeTOC(){tocPanel.classList.remove("open");tocBackdrop.classList.remove("open")}
+
+document.addEventListener("keydown",function(e){
+  if(e.key==="ArrowRight"||e.key==="ArrowDown"||e.key===" "||e.key==="PageDown"){e.preventDefault();go(cur+1)}
+  else if(e.key==="ArrowLeft"||e.key==="ArrowUp"||e.key==="PageUp"){e.preventDefault();go(cur-1)}
+  else if(e.key==="Home"){e.preventDefault();go(0)}
+  else if(e.key==="End"){e.preventDefault();go(total-1)}
+  else if(e.key==="Escape"){closeTOC();go(0)}
+  else if(e.key==="t"||e.key==="T"){toggleTOC()}
+});
+var wheelTimer=null;
+deck.addEventListener("wheel",function(e){
+  e.preventDefault();
+  if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},400)}
+  if(e.deltaY>0)go(cur+1);
+  else if(e.deltaY<0)go(cur-1);
+},{passive:false});
+var touchX=0,touchY=0;
+deck.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX;touchY=e.touches[0].clientY});
+deck.addEventListener("touchend",function(e){
+  var dx=touchX-e.changedTouches[0].clientX,dy=touchY-e.changedTouches[0].clientY;
+  if(Math.abs(dy)>Math.abs(dx)){if(dy>50)go(cur+1);else if(dy<-50)go(cur-1)}
+  else{if(dx>50)go(cur+1);else if(dx<-50)go(cur-1)}
+});
+deck.addEventListener("click",function(e){
+  if(e.target.closest(".nav-btn,.nd,.toc-item,.toc-panel,.toc-backdrop"))return;
+  var x=e.clientX/window.innerWidth;
+  if(x<0.3)go(cur-1);else if(x>0.7)go(cur+1);
+});
+document.getElementById("btnToc").addEventListener("click",function(e){e.stopPropagation();toggleTOC()});
+document.getElementById("btnPrev").addEventListener("click",function(e){e.stopPropagation();go(cur-1)});
+document.getElementById("btnNext").addEventListener("click",function(e){e.stopPropagation();go(cur+1)});
+tocBackdrop.addEventListener("click",closeTOC);
+go(0);
+})();
+</script>
+</body>
+</html>

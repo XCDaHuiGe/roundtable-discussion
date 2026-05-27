@@ -57,16 +57,21 @@ class RoundtableRendererV8:
     
     def render_clash(self, clash: Dict) -> str:
         """渲染碰撞轮次"""
-        attack_type_class = self._get_attack_type_class(clash['attack_type'])
+        attack_type_class = self._get_attack_type_class(clash.get('attack_type', '逻辑漏洞'))
         emotion_class = self._get_emotion_class(clash.get('emotion', 'serious'))
         
+        attack_content = clash.get('attack_content', clash.get('attack', ''))
+        if not attack_content:
+            return ""
+        
         counter_html = ""
-        if clash.get('counter_attack'):
+        counter_attack = clash.get('counter_attack', clash.get('counter', ''))
+        if counter_attack:
             counter_emotion_class = self._get_emotion_class(clash.get('counter_emotion', 'serious'))
             counter_html = f'''
           <div class="counter-attack">
             <div class="counter-label neon-cyan">反击</div>
-            <div class="counter-content {counter_emotion_class}">{clash['counter_attack']}</div>
+            <div class="counter-content {counter_emotion_class}">{counter_attack}</div>
           </div>'''
         
         return f'''
@@ -76,8 +81,8 @@ class RoundtableRendererV8:
           <span class="clash-arrow">→</span>
           <span class="clash-target neon-cyan">{clash['target']}</span>
         </div>
-        <div class="clash-type {attack_type_class}">{clash['attack_type']}</div>
-        <div class="clash-content {emotion_class}">{clash['attack_content']}</div>
+        <div class="clash-type {attack_type_class}">{clash.get('attack_type', '逻辑漏洞')}</div>
+        <div class="clash-content {emotion_class}">{attack_content}</div>
         {counter_html}
       </div>'''
     

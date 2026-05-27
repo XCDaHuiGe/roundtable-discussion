@@ -47,8 +47,8 @@
 
   /* ============ 幻灯片 ============ */
   .deck{position:relative;width:100%;height:100%}
-  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;height:100vh;overflow:hidden}
-  .slide::-webkit-scrollbar{width:4px}.slide::-webkit-scrollbar-track{background:transparent}.slide::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;overflow:hidden}
+  .slide-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
   .slide.active{display:flex}
   .slide.hero{justify-content:center;align-items:center;text-align:center}
   .slide.title-slide{justify-content:center;align-items:center;text-align:center}
@@ -339,12 +339,12 @@
       <p style="font-size:14px;color:var(--text-dim);letter-spacing:0.1em;" class="anim-in anim-delay-4">从知识讨论到生存博弈</p>
     </div>
     <div class="deck-footer">反乌托邦叙事的自我实现 | V8级圆桌洞见</div>
-    <div class="slide-number">01 / 13</div>
+    <div class="slide-number">01 / 17</div>
   </section>
 
-  <section class="slide" data-title="专家档案">
+  <section class="slide" data-title="专家档案(1/2)">
     <div class="slide-content">
-      <div class="section-label anim-in">EXPERT PROFILES</div>
+      <div class="section-label anim-in">EXPERT PROFILES (1/2)</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
       <div class="grid-2">
         
@@ -357,10 +357,7 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>科技伦理先驱：我提出机器人三定律，是因为我相信科技可以被设计得更安全</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>科幻小说如何塑造公众对AI的认知</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>反乌托邦叙事可能成为AI发展的绊脚石</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>对科技可能性的乐观可能低估了真实风险</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>科技伦理先驱：我提出机器人三定律，是因为我相信科技可以被设计得更安全</div><div class="profile-item"><span class="profile-label">利益相关：</span>科幻小说如何塑造公众对AI的认知</div><div class="profile-item"><span class="profile-label">恐惧：</span>反乌托邦叙事可能成为AI发展的绊脚石</div><div class="profile-item"><span class="profile-label">偏见：</span>对科技可能性的乐观可能低估了真实风险</div>
         </div>
       </div>
 
@@ -373,10 +370,7 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>存在性风险：某些技术可能终结人类文明本身</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>AGI可能带来的极端风险</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>我们可能正在创造一个无法控制的超级智能</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>哲学推理可能与工程现实脱节</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>存在性风险：某些技术可能终结人类文明本身</div><div class="profile-item"><span class="profile-label">利益相关：</span>AGI可能带来的极端风险</div><div class="profile-item"><span class="profile-label">恐惧：</span>我们可能正在创造一个无法控制的超级智能</div><div class="profile-item"><span class="profile-label">偏见：</span>哲学推理可能与工程现实脱节</div>
         </div>
       </div>
 
@@ -389,13 +383,21 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>历史是想象的共同体：叙事塑造现实，包括对AI的认知</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>反乌托邦叙事如何成为文化焦虑的载体</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>AI叙事可能成为权力博弈的工具</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>宏观叙事可能忽视个体经验</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>历史是想象的共同体：叙事塑造现实，包括对AI的认知</div><div class="profile-item"><span class="profile-label">利益相关：</span>反乌托邦叙事如何成为文化焦虑的载体</div><div class="profile-item"><span class="profile-label">恐惧：</span>AI叙事可能成为权力博弈的工具</div><div class="profile-item"><span class="profile-label">偏见：</span>宏观叙事可能忽视个体经验</div>
         </div>
       </div>
+      </div>
+    </div>
+    <div class="deck-footer">专家档案</div>
+    <div class="slide-number">02 / 17</div>
+  </section>
 
+  <section class="slide" data-title="专家档案(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">EXPERT PROFILES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
+      <div class="grid-2">
+        
       <div class="card card-rise anim-in">
         <div class="speaker-header">
           <div class="speaker-avatar" style="background:#8a2a4a">吴</div>
@@ -405,10 +407,7 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>技术发展有其规律，AI是工具而非实体</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>公众对AI的误解来自何处</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>过度恐惧可能阻碍AI的积极应用</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>技术视角可能忽视社会和心理维度</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>技术发展有其规律，AI是工具而非实体</div><div class="profile-item"><span class="profile-label">利益相关：</span>公众对AI的误解来自何处</div><div class="profile-item"><span class="profile-label">恐惧：</span>过度恐惧可能阻碍AI的积极应用</div><div class="profile-item"><span class="profile-label">偏见：</span>技术视角可能忽视社会和心理维度</div>
         </div>
       </div>
 
@@ -421,10 +420,7 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>商业视角：叙事是一种战略工具，谁掌控叙事谁就掌控权力</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>"AI威胁论"如何成为商业博弈的筹码</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>监管可能被大公司用来维护市场垄断</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>商业视角可能过于务实而忽视伦理</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>商业视角：叙事是一种战略工具，谁掌控叙事谁就掌控权力</div><div class="profile-item"><span class="profile-label">利益相关：</span>"AI威胁论"如何成为商业博弈的筹码</div><div class="profile-item"><span class="profile-label">恐惧：</span>监管可能被大公司用来维护市场垄断</div><div class="profile-item"><span class="profile-label">偏见：</span>商业视角可能过于务实而忽视伦理</div>
         </div>
       </div>
 
@@ -437,16 +433,13 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>好故事才能卖座——普通人关心的是AI"好不好用"，不是AI"会不会杀人"</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>流行文化如何塑造大众对AI的认知</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>宏大叙事掩盖了真实但"不戏剧化"的问题</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>解构视角可能过于犬儒</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>好故事才能卖座——普通人关心的是AI"好不好用"，不是AI"会不会杀人"</div><div class="profile-item"><span class="profile-label">利益相关：</span>流行文化如何塑造大众对AI的认知</div><div class="profile-item"><span class="profile-label">恐惧：</span>宏大叙事掩盖了真实但"不戏剧化"的问题</div><div class="profile-item"><span class="profile-label">偏见：</span>解构视角可能过于犬儒</div>
         </div>
       </div>
       </div>
     </div>
     <div class="deck-footer">专家档案</div>
-    <div class="slide-number">02 / 13</div>
+    <div class="slide-number">03 / 17</div>
   </section>
 
   <section class="slide" data-title="Round 1: 反乌托邦叙事的文化力量">
@@ -457,12 +450,12 @@
       <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">从《弗兰肯斯坦》到《银翼杀手》，科幻如何塑造了我们对AI的恐惧？</p>
     </div>
     <div class="deck-footer">Round 1 | 反乌托邦叙事的文化力量</div>
-    <div class="slide-number">03 / 13</div>
+    <div class="slide-number">04 / 17</div>
   </section>
 
-  <section class="slide" data-title="R1 立场">
+  <section class="slide" data-title="R1 立场(1/2)">
     <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES</div>
+      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
       <div class="stances-grid">
         
@@ -502,7 +495,18 @@ AI的风险不是"现在已经实现"，而是"未来可能实现"。
 
 但这种宗教框架是有问题的。它预设了"存在一个更高的权威"。对于无神论者来说，"扮演上帝"这个概念本身就没有意义。</div>
       </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 立场</div>
+    <div class="slide-number">05 / 17</div>
+  </section>
 
+  <section class="slide" data-title="R1 立场(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
       <div class="stance-item anim-in">
         <div class="stance-expert neon-gold">吴军</div>
         <div class="stance-content emotion-serious">作为计算机科学家，我必须说：大多数科幻小说的AI描写都是"错的"。
@@ -542,7 +546,7 @@ OpenAI一边说"我们需要超级对齐"，一边发布GPT-4o。"AI威胁论"�
       </div>
     </div>
     <div class="deck-footer">Round 1 | 立场</div>
-    <div class="slide-number">04 / 13</div>
+    <div class="slide-number">06 / 17</div>
   </section>
 
   <section class="slide" data-title="Round 2: 叙事、现实与监管的复杂关系">
@@ -553,12 +557,12 @@ OpenAI一边说"我们需要超级对齐"，一边发布GPT-4o。"AI威胁论"�
       <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">反乌托邦叙事是过度反应还是必要的风险提示？</p>
     </div>
     <div class="deck-footer">Round 2 | 叙事、现实与监管的复杂关系</div>
-    <div class="slide-number">05 / 13</div>
+    <div class="slide-number">07 / 17</div>
   </section>
 
-  <section class="slide" data-title="R2 碰撞">
+  <section class="slide" data-title="R2 碰撞(1/2)">
     <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH</div>
+      <div class="section-label anim-in">ROUND 2: CLASH (1/2)</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
       <div class="clash-container">
         
@@ -583,7 +587,18 @@ OpenAI一边说"我们需要超级对齐"，一边发布GPT-4o。"AI威胁论"�
         <div class="clash-content emotion-serious">赫拉利，你说"西方宗教文化"导致AI恐惧。但中国也有AI恐惧，难道中国也有同样的宗教传统？反乌托邦叙事在全球的传播，更可能是好莱坞电影和商业利益的推动，而非宗教。</div>
         
       </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 碰撞</div>
+    <div class="slide-number">08 / 17</div>
+  </section>
 
+  <section class="slide" data-title="R2 碰撞(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
       <div class="clash-round anim-in">
         <div class="clash-header">
           <span class="clash-attacker neon-red">李诞</span>
@@ -597,7 +612,7 @@ OpenAI一边说"我们需要超级对齐"，一边发布GPT-4o。"AI威胁论"�
       </div>
     </div>
     <div class="deck-footer">Round 2 | 碰撞</div>
-    <div class="slide-number">06 / 13</div>
+    <div class="slide-number">09 / 17</div>
   </section>
 
   <section class="slide" data-title="Round 3: 寻找超越叙事的AI治理路径">
@@ -608,12 +623,12 @@ OpenAI一边说"我们需要超级对齐"，一边发布GPT-4o。"AI威胁论"�
       <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">如何在反乌托邦叙事与AI发展之间找到平衡？</p>
     </div>
     <div class="deck-footer">Round 3 | 寻找超越叙事的AI治理路径</div>
-    <div class="slide-number">07 / 13</div>
+    <div class="slide-number">10 / 17</div>
   </section>
 
-  <section class="slide" data-title="R3 案例">
+  <section class="slide" data-title="R3 案例(1/2)">
     <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3: REALITY</div>
+      <div class="section-label anim-in">ROUND 3: REALITY (1/2)</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
       <div class="cases-container">
         
@@ -640,7 +655,18 @@ OpenAI一边说"我们需要超级对齐"，一边发布GPT-4o。"AI威胁论"�
         <div class="case-outcome neon-red">代价：AI研究者群体对风险的评估存在根本性分歧</div>
         <div class="case-lesson neon-gold">教训：专家共识不存在——"AI风险"不是一个科学问题，而是一个价值判断问题</div>
       </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 案例</div>
+    <div class="slide-number">11 / 17</div>
+  </section>
 
+  <section class="slide" data-title="R3 案例(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 3: REALITY (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
+      <div class="cases-container">
+        
       <div class="reality-case anim-in">
         <div class="case-header">
           <div class="case-name neon-orange">科幻电影的AI叙事演变</div>
@@ -655,7 +681,7 @@ OpenAI一边说"我们需要超级对齐"，一边发布GPT-4o。"AI威胁论"�
       </div>
     </div>
     <div class="deck-footer">Round 3 | 案例</div>
-    <div class="slide-number">08 / 13</div>
+    <div class="slide-number">12 / 17</div>
   </section>
 
   <section class="slide" data-title="R3 代价">
@@ -692,7 +718,7 @@ OpenAI一边说"我们需要超级对齐"，一边发布GPT-4o。"AI威胁论"�
       </div>
     </div>
     <div class="deck-footer">Round 3 | 代价</div>
-    <div class="slide-number">09 / 13</div>
+    <div class="slide-number">13 / 17</div>
   </section>
 
   <section class="slide" data-title="R3 人性">
@@ -718,7 +744,7 @@ OpenAI一边说"我们需要超级对齐"，一边发布GPT-4o。"AI威胁论"�
       </div>
     </div>
     <div class="deck-footer">Round 3 | 人性</div>
-    <div class="slide-number">10 / 13</div>
+    <div class="slide-number">14 / 17</div>
   </section>
 
   <section class="slide" data-title="R3 升级">
@@ -753,7 +779,7 @@ OpenAI一边说"我们需要超级对齐"，一边发布GPT-4o。"AI威胁论"�
       </div>
     </div>
     <div class="deck-footer">Round 3 | 升级</div>
-    <div class="slide-number">11 / 13</div>
+    <div class="slide-number">15 / 17</div>
   </section>
 
   <section class="slide" data-title="最终洞见">
@@ -762,7 +788,7 @@ OpenAI一边说"我们需要超级对齐"，一边发布GPT-4o。"AI威胁论"�
       <div class="quote-large anim-in anim-delay-1">反乌托邦叙事满足了人类对戏剧性的需求，但它不是AI的"地图"，只是AI的"漫画"。我们需要区分"叙事的警示功能"和"叙事对决策的误导"——当叙事开始"塑造"决策而非"提醒"决策时，真正的AI问题（偏见、权力集中、技术滥用）就可能被掩盖。</div>
     </div>
     <div class="deck-footer">最终洞见</div>
-    <div class="slide-number">12 / 13</div>
+    <div class="slide-number">16 / 17</div>
   </section>
 
   <section class="slide" data-title="开放问题">
@@ -774,7 +800,7 @@ OpenAI一边说"我们需要超级对齐"，一边发布GPT-4o。"AI威胁论"�
 <div class="headline-item anim-in"><strong>Q3:</strong> 当"AI威胁论"成为商业博弈的工具，我们如何保护公共利益不被叙事劫持？</div>
     </div>
     <div class="deck-footer">开放问题</div>
-    <div class="slide-number">13 / 13</div>
+    <div class="slide-number">17 / 17</div>
   </section>
 
 <div class="toc-backdrop" id="tocBackdrop"></div>
@@ -851,16 +877,10 @@ document.addEventListener("keydown",function(e){
 });
 var wheelTimer=null;
 deck.addEventListener("wheel",function(e){
-  var sl=slides[cur];
-  var atTop=sl.scrollTop<=0;
-  var atBottom=sl.scrollTop+sl.clientHeight>=sl.scrollHeight-2;
-  if(e.deltaY>0&&atBottom){
-    if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},350);go(cur+1)}
-    e.preventDefault();
-  }else if(e.deltaY<0&&atTop){
-    if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},350);go(cur-1)}
-    e.preventDefault();
-  }
+  e.preventDefault();
+  if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},400)}
+  if(e.deltaY>0)go(cur+1);
+  else if(e.deltaY<0)go(cur-1);
 },{passive:false});
 var touchX=0,touchY=0;
 deck.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX;touchY=e.touches[0].clientY});

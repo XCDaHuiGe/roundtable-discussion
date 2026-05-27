@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AI创意边际成本归零 圆桌洞见</title>
+<style>
+  :root{
+    /* ============ 主题色(默认:🖋 墨水经典) ============ */
+    --ink:#0a0a0b;
+    --ink-rgb:10,10,11;
+    --paper:#f1efea;
+    --paper-rgb:241,239,234;
+    --paper-tint:#e8e5de;
+    --ink-tint:#18181a;
+    --text-dim:rgba(241,239,234,0.5);
+
+    /* ============ 强调色 ============ */
+    --accent:#c23b22;
+    --accent-rgb:194,59,34;
+    --gold:#d4a843;
+    --gold-rgb:212,168,67;
+    --blue:#4a6a9a;
+    --purple:#8a4aaa;
+    --green:#3a8a5c;
+    --cyan:#4a9a9a;
+    --orange:#d4843a;
+
+    /* ============ 字体(跨主题固定) ============ */
+    --mono:"IBM Plex Mono","SF Mono",monospace;
+    --serif-zh:"Noto Serif SC","Source Han Serif SC","STSong",serif;
+    --sans-zh:"Noto Sans SC","Source Han Sans SC","PingFang SC",sans-serif;
+
+    /* ============ 间距 ============ */
+    --radius:10px;
+    --ease:cubic-bezier(.4,0,.2,1);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans-zh);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+  /* ============ Deck 容器 ============ */
+  #deck{position:relative;width:100vw;height:100vh;overflow:hidden}
+
+  /* ============ 进度条 ============ */
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:1000;transition:width .5s var(--ease);box-shadow:0 0 12px rgba(var(--accent-rgb),.3)}
+
+  /* ============ 幻灯片 ============ */
+  .deck{position:relative;width:100%;height:100%}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;overflow:hidden}
+  .slide-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
+  .slide.active{display:flex}
+  .slide.hero{justify-content:center;align-items:center;text-align:center}
+  .slide.title-slide{justify-content:center;align-items:center;text-align:center}
+
+  /* ============ 入场动画(Guizang风格) ============ */
+  [data-anim]{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .slide.active [data-anim]{opacity:1;transform:translateY(0)}
+  .slide.active [data-anim]:nth-child(1){transition-delay:.1s}
+  .slide.active [data-anim]:nth-child(2){transition-delay:.18s}
+  .slide.active [data-anim]:nth-child(3){transition-delay:.26s}
+  .slide.active [data-anim]:nth-child(4){transition-delay:.34s}
+  .slide.active [data-anim]:nth-child(5){transition-delay:.42s}
+  .slide.active [data-anim]:nth-child(6){transition-delay:.5s}
+
+  /* ============ 内容区(book-distillation范式) ============ */
+  .frame{width:100%;max-width:1100px;margin:0 auto;flex:1;display:flex;flex-direction:column}
+  .slide-content{flex:1;display:flex;flex-direction:column}
+
+  /* ============ Magazine Chrome(Guizang风格) ============ */
+  .chrome{display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.5;margin-bottom:3vh}
+  .chrome .left,.chrome .right{display:flex;gap:2em;align-items:center}
+  .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
+
+  /* ============ 底部元数据(render_v8兼容) ============ */
+  .deck-footer{margin-top:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
+  .slide-number{position:absolute;bottom:2vh;right:3vw;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.35)}
+
+  /* ============ Section Label ============ */
+  .section-label{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
+
+  /* ============ 封面 ============ */
+  .cover-badge{display:inline-block;padding:6px 20px;border:1px solid var(--accent);border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4vh}
+  .cover-title{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:4vh;line-height:1.8;max-width:600px}
+  .cover-stats{display:flex;gap:4vh;flex-wrap:wrap;justify-content:center}
+  .cover-stat{text-align:center}
+  .cover-stat-num{font-family:var(--mono);font-size:2.5rem;font-weight:900;color:var(--accent)}
+  .cover-stat-label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.5);margin-top:.5vh}
+
+  /* ============ 封面标题(render_v8) ============ */
+  .hero-dark{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;flex:1}
+  .title-main{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .title-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:2vh;line-height:1.8}
+  .gold-line{width:80px;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));margin:3vh auto;border-radius:2px}
+
+  /* ============ 标题系统 ============ */
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
+  .h-hero{font-family:var(--serif-zh);font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.2;margin-bottom:3vh}
+  .h-xl{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.4rem,3vw,2.2rem);line-height:1.3;margin-bottom:2vh}
+  .h-lg{font-family:var(--serif-zh);font-weight:600;font-size:clamp(1.1rem,2vw,1.5rem);line-height:1.4;margin-bottom:1.5vh}
+  .h-md{font-weight:600;font-size:1.1rem;margin-bottom:1vh}
+  .lead{font-size:1rem;line-height:1.85;color:rgba(var(--paper-rgb),.8);max-width:700px}
+  .meta-row{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.4);display:flex;gap:2em;flex-wrap:wrap;margin-top:3vh}
+
+  /* ============ 大号引用(render_v8) ============ */
+  .quote-large{font-family:var(--serif-zh);font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:600;line-height:1.6;color:rgba(var(--paper-rgb),.9);max-width:800px;margin:0 auto}
+
+  /* ============ 分割线 ============ */
+  .rule{width:100%;height:1px;background:rgba(var(--paper-rgb),.15);margin:3vh 0}
+
+  /* ============ 标签 ============ */
+  .tag{display:inline-block;padding:4px 12px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;margin:3px}
+  .tag-gold{background:rgba(var(--gold-rgb),.15);color:var(--gold);border:1px solid rgba(var(--gold-rgb),.2)}
+  .tag-red{background:rgba(var(--accent-rgb),.15);color:var(--accent);border:1px solid rgba(var(--accent-rgb),.2)}
+  .tag-blue{background:rgba(74,106,154,.15);color:var(--blue);border:1px solid rgba(74,106,154,.2)}
+  .tag-purple{background:rgba(138,74,170,.15);color:var(--purple);border:1px solid rgba(138,74,170,.2)}
+  .tag-green{background:rgba(58,138,92,.15);color:var(--green);border:1px solid rgba(58,138,92,.2)}
+
+  /* ============ 霓虹强调色(render_v8) ============ */
+  .neon-gold{color:var(--gold)}.neon-red{color:var(--accent)}.neon-cyan{color:var(--cyan)}.neon-purple{color:var(--purple)}.neon-orange{color:var(--orange)}.neon-green{color:var(--green)}
+
+  /* ============ 网格系统 ============ */
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:2vh 2vw}
+  @media(max-width:768px){.grid-2{grid-template-columns:1fr}}
+
+  /* ============ 发言块(原生) ============ */
+  .sp{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2.5vw;margin-bottom:2vh;position:relative}
+  .sp::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .sh{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh}
+  .speaker-avatar{width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:var(--ink);background:var(--accent);flex-shrink:0}
+  .sn{font-weight:700;font-size:1rem}
+  .sr{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4);padding:3px 8px;background:rgba(var(--paper-rgb),.06);border-radius:3px}
+  .st{font-size:.95rem;line-height:2;color:rgba(var(--paper-rgb),.85)}
+  .st strong{color:var(--paper);font-weight:700}
+  .st em{color:var(--gold);font-style:normal;font-weight:600}
+
+  /* ============ 碰撞块(原生) ============ */
+  .cb{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;position:relative}
+  .cb::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .cb.blue{border-color:rgba(74,106,154,.3)}.cb.blue::before{background:var(--blue)}
+  .cb.purple{border-color:rgba(138,74,170,.3)}.cb.purple::before{background:var(--purple)}
+  .cb.green{border-color:rgba(58,138,92,.3)}.cb.green::before{background:var(--green)}
+  .cb.orange{border-color:rgba(var(--gold-rgb),.3)}.cb.orange::before{background:var(--gold)}
+  .cl{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;color:var(--accent);font-weight:600}
+  .cl.blue{color:var(--blue)}.cl.purple{color:var(--purple)}.cl.green{color:var(--green)}.cl.orange{color:var(--gold)}
+
+  /* ============ 洞见卡 ============ */
+  .insight-c{background:linear-gradient(135deg,rgba(var(--paper-rgb),.04) 0%,rgba(var(--paper-rgb),.08) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh;position:relative;overflow:hidden}
+  .insight-c::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold))}
+  .insight-q{font-family:var(--serif-zh);font-size:1.1rem;font-weight:700;color:var(--gold);line-height:1.6;margin-bottom:1vh}
+  .insight-a{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.75)}
+
+  /* ============ 卡片 ============ */
+  .card{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
+  .card-num{font-family:var(--mono);font-weight:900;font-size:1.8rem;color:var(--accent);opacity:.4;margin-bottom:1vh}
+  .card-title{font-weight:700;font-size:1rem;margin-bottom:1vh}
+  .card-body{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
+  .card-source{font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);margin-top:1vh}
+
+  /* ============ 专家卡片(render_v8) ============ */
+  .card-rise{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--green)}
+  .card-fall{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--accent)}
+  .speaker-header{display:flex;align-items:center;gap:16px;margin-bottom:2vh}
+  .speaker-name{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem}
+  .speaker-role{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:2px}
+  .expert-profile{display:flex;flex-direction:column;gap:1vh}
+  .profile-item{font-size:.9rem;line-height:1.7;color:rgba(var(--paper-rgb),.8)}
+  .profile-label{color:var(--gold);font-weight:600}
+
+  /* ============ 立场表达(render_v8) ============ */
+  .stance-item{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;border-left:3px solid var(--gold)}
+  .stance-expert{font-family:var(--serif-zh);font-weight:700;font-size:1rem;margin-bottom:1vh}
+  .stance-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
+  .stances-grid{display:flex;flex-direction:column;gap:1.5vh}
+
+  /* ============ 碰撞轮次(render_v8) ============ */
+  .clash-round{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;position:relative}
+  .clash-round::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .clash-header{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh;flex-wrap:wrap}
+  .clash-attacker{font-weight:700;font-size:1rem}
+  .clash-target{font-weight:700;font-size:1rem}
+  .clash-arrow{color:rgba(var(--paper-rgb),.3);font-size:1.2rem}
+  .clash-type{display:inline-block;padding:3px 10px;border-radius:3px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.5vh;font-weight:600}
+  .clash-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
+  .counter-attack{margin-top:2vh;padding-top:2vh;border-top:1px dashed rgba(var(--paper-rgb),.1)}
+  .counter-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .counter-content{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
+  .clash-container{display:flex;flex-direction:column;gap:2vh}
+
+  /* ============ 攻击类型色 ============ */
+  .attack-logic{background:rgba(74,106,154,.15);color:var(--blue)}
+  .attack-interest{background:rgba(var(--accent-rgb),.15);color:var(--accent)}
+  .attack-reality{background:rgba(var(--gold-rgb),.15);color:var(--gold)}
+  .attack-human{background:rgba(138,74,170,.15);color:var(--purple)}
+  .attack-failure{background:rgba(58,138,92,.15);color:var(--green)}
+
+  /* ============ 现实案例(render_v8) ============ */
+  .reality-case{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--orange)}
+  .case-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5vh;flex-wrap:wrap;gap:8px}
+  .case-name{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem}
+  .case-source{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4)}
+  .case-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:1.5vh}
+  .case-outcome{font-size:.9rem;font-weight:600;margin-bottom:1vh}
+  .case-lesson{font-size:.9rem;font-weight:600}
+  .cases-container{display:flex;flex-direction:column;gap:2vh}
+
+  /* ============ 代价讨论(render_v8) ============ */
+  .cost-discussion{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh}
+  .cost-scenario{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem;margin-bottom:2vh}
+  .cost-list{display:flex;flex-direction:column;gap:1.5vh;margin-bottom:2vh}
+  .cost-item{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:1.5vh 2vw;border-left:3px solid var(--accent)}
+  .cost-name{font-weight:700;font-size:.95rem;margin-bottom:.5vh}
+  .cost-analysis{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .worst-case{background:rgba(var(--accent-rgb),.08);border:1px solid rgba(var(--accent-rgb),.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
+  .worst-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .worst-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+  .survivor-bias{background:rgba(138,74,170,.08);border:1px solid rgba(138,74,170,.15);border-radius:6px;padding:2vh 2vw}
+  .survivor-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .survivor-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+
+  /* ============ 人性层(render_v8) ============ */
+  .human-nature{background:linear-gradient(135deg,rgba(var(--paper-rgb),.03) 0%,rgba(var(--paper-rgb),.06) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
+  .human-question{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem;margin-bottom:2vh;line-height:1.5}
+  .human-analysis{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:2vh}
+  .human-examples{margin-bottom:2vh}
+  .examples-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1vh;font-weight:600}
+  .example-item{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8);padding:.5vh 0}
+  .human-conclusion{font-size:.95rem;font-weight:600;line-height:1.7}
+
+  /* ============ 认知升级(render_v8) ============ */
+  .cognitive-upgrade{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
+  .upgrade-comparison{display:grid;grid-template-columns:1fr auto 1fr;gap:2vw;align-items:start;margin-bottom:2vh}
+  @media(max-width:768px){.upgrade-comparison{grid-template-columns:1fr}.upgrade-arrow{transform:rotate(90deg)}}
+  .old-thinking,.new-thinking{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:2vh 1.5vw}
+  .old-thinking{border-left:3px solid var(--accent)}
+  .new-thinking{border-left:3px solid var(--green)}
+  .thinking-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .thinking-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+  .upgrade-arrow{font-size:1.5rem;color:rgba(var(--paper-rgb),.3);display:flex;align-items:center;justify-content:center;padding-top:3vh}
+  .complexity{background:rgba(74,106,154,.08);border:1px solid rgba(74,106,154,.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
+  .complexity-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .complexity-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .actionable{background:rgba(var(--gold-rgb),.08);border:1px solid rgba(var(--gold-rgb),.15);border-radius:6px;padding:2vh 2vw}
+  .actionable-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .actionable-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 情绪样式 ============ */
+  .emotion-sarcasm{border-left:3px solid var(--purple);padding-left:12px;font-style:italic}
+  .emotion-helplessness{opacity:.75;font-style:italic}
+  .emotion-anger{color:var(--accent);font-weight:600}
+  .emotion-hesitation{opacity:.8;font-style:italic}
+  .emotion-self-deprecation{opacity:.7;font-style:italic}
+  .emotion-cold-laugh{color:var(--purple)}
+  .emotion-silence{opacity:.5;font-style:italic}
+  .emotion-serious{color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 指标 ============ */
+  .metrics{display:flex;gap:2vw;flex-wrap:wrap;margin-bottom:3vh}
+  .metric{flex:1;min-width:100px;text-align:center;background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 1.5vw}
+  .metric-val{font-family:var(--mono);font-weight:900;font-size:clamp(1.5rem,3vw,2.5rem);color:var(--accent)}
+  .metric-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:.5vh}
+
+  /* ============ 开放问题 ============ */
+  .oq{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
+  .oq-num{font-family:var(--mono);font-weight:900;font-size:1.2rem;color:var(--accent);opacity:.3;margin-bottom:1vh}
+  .oq-text{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .headline-item{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.85);padding:1.5vh 0;border-bottom:1px solid rgba(var(--paper-rgb),.06)}
+  .headline-item:last-child{border-bottom:none}
+  .headline-item strong{color:var(--gold);margin-right:8px}
+
+  /* ============ 引用 ============ */
+  .quote{font-family:var(--serif-zh);font-size:1rem;font-style:italic;line-height:1.8;padding:2vh 2.5vw;border-left:3px solid var(--gold);background:rgba(var(--gold-rgb),.05);margin:2vh 0;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ TOC ============ */
+  .toc-panel{position:fixed;top:0;left:0;width:min(340px,80vw);height:100vh;background:rgba(var(--ink-rgb),.97);backdrop-filter:blur(20px);z-index:100;transform:translateX(-100%);transition:transform .35s var(--ease);padding:3vh 2.5vw;overflow-y:auto;border-right:1px solid rgba(var(--paper-rgb),.08)}
+  .toc-panel.open{transform:translateX(0)}
+  .toc-title{font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:3vh;padding-bottom:2vh;border-bottom:1px solid rgba(var(--paper-rgb),.1)}
+  .toc-item{display:flex;justify-content:space-between;padding:1.2vh 1.5vw;margin-bottom:.5vh;cursor:pointer;border-radius:6px;border-left:2px solid transparent;font-size:.9rem;color:rgba(var(--paper-rgb),.7);transition:all .2s}
+  .toc-item:hover{background:rgba(var(--paper-rgb),.06);color:var(--paper)}
+  .toc-item.active{background:rgba(var(--paper-rgb),.08);color:var(--accent);border-left-color:var(--accent);font-weight:600}
+  .toc-label{flex:1}
+  .toc-page{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.35)}
+  .toc-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;opacity:0;pointer-events:none;transition:opacity .3s}
+  .toc-backdrop.open{opacity:1;pointer-events:auto}
+
+  /* ============ 导航栏 ============ */
+  .nav-bar{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 3vw;background:rgba(var(--ink-rgb),.9);backdrop-filter:blur(10px);z-index:50;border-top:1px solid rgba(var(--paper-rgb),.06)}
+  .nav-left,.nav-right{display:flex;align-items:center;gap:12px}
+  .nav-btn{background:none;border:1px solid rgba(var(--paper-rgb),.12);color:rgba(var(--paper-rgb),.7);padding:8px 16px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;cursor:pointer;transition:all .2s}
+  .nav-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(var(--accent-rgb),.1)}
+  .nav-title{font-size:12px;color:rgba(var(--paper-rgb),.5);max-width:40vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-counter{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.4)}
+
+  /* ============ 导航点 ============ */
+  .nav-dots{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:6px}
+  .nd{width:6px;height:6px;border-radius:50%;background:rgba(var(--paper-rgb),.15);cursor:pointer;transition:all .3s var(--ease);border:none;padding:0}
+  .nd.active{background:var(--accent);height:20px;border-radius:3px;box-shadow:0 0 8px rgba(var(--accent-rgb),.4)}
+  .nd:hover{background:rgba(var(--paper-rgb),.4)}
+
+  /* ============ 入场动画延迟(render_v8兼容) ============ */
+  .anim-in{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .slide.active .anim-in{opacity:1;transform:translateY(0)}
+  .slide.active .anim-in:nth-child(1){transition-delay:.1s}
+  .slide.active .anim-in:nth-child(2){transition-delay:.18s}
+  .slide.active .anim-in:nth-child(3){transition-delay:.26s}
+  .slide.active .anim-in:nth-child(4){transition-delay:.34s}
+  .slide.active .anim-in:nth-child(5){transition-delay:.42s}
+  .slide.active .anim-in:nth-child(6){transition-delay:.5s}
+  .anim-delay-1{transition-delay:.18s !important}
+  .anim-delay-2{transition-delay:.26s !important}
+  .anim-delay-3{transition-delay:.34s !important}
+  .anim-delay-4{transition-delay:.42s !important}
+  .anim-delay-5{transition-delay:.5s !important}
+  .anim-delay-6{transition-delay:.58s !important}
+
+  /* ============ 响应式 ============ */
+  @media(max-width:1024px){.slide{padding:4vh 5vw 8vh}}
+  @media(max-width:768px){
+    .slide{padding:3vh 4vw 7vh}
+    .cover-stats{gap:2vh}
+    .metrics{flex-direction:column}
+    .nav-dots,.nav-title{display:none}
+    .nav-bar{padding:0 2vw}
+  }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+<div class="progress-bar" id="progressBar"></div>
+
+
+  <section class="slide hero active" data-title="封面">
+    <div class="slide-content hero-dark">
+      <div class="section-label anim-in">ROUNDTABLE DISCUSSION V8.0</div>
+      <h1 class="title-main anim-in anim-delay-1">AI创意边际成本归零</h1>
+      <div class="title-sub anim-in anim-delay-2">当AI击穿文学与电影的生产壁垒，投资逻辑将押注算力霸权还是人类原生稀缺性？</div>
+      <div class="gold-line anim-in anim-delay-3"></div>
+      <p style="font-size:14px;color:var(--text-dim);letter-spacing:0.1em;" class="anim-in anim-delay-4">从知识讨论到生存博弈</p>
+    </div>
+    <div class="deck-footer">AI创意边际成本归零 | V8级圆桌洞见</div>
+    <div class="slide-number">01 / 37</div>
+  </section>
+
+  <section class="slide" data-title="专家档案(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">EXPERT PROFILES (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
+      <div class="grid-2">
+        
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#2d8a4e">凯</div>
+          <div>
+            <div class="speaker-name neon-gold">凯文·凯利</div>
+            <div class="speaker-role">技术趋势观察家</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          <div class="profile-item"><span class="profile-label">核心信念：</span>技术进步是不可逆转的力量，拥抱变化才能生存</div><div class="profile-item"><span class="profile-label">利益相关：</span>AI如何重塑创意产业的生产关系</div><div class="profile-item"><span class="profile-label">恐惧：</span>人类创意被算法同质化</div><div class="profile-item"><span class="profile-label">偏见：</span>对技术进步过于乐观</div>
+        </div>
+      </div>
+
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#4a6a9a">刘</div>
+          <div>
+            <div class="speaker-name neon-gold">刘润</div>
+            <div class="speaker-role">商业顾问</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          <div class="profile-item"><span class="profile-label">核心信念：</span>交易成本理论：商业本质是降低交易成本</div><div class="profile-item"><span class="profile-label">利益相关：</span>AI如何改变创意产业的成本结构</div><div class="profile-item"><span class="profile-label">恐惧：</span>创意产业的价值链被彻底颠覆</div><div class="profile-item"><span class="profile-label">偏见：</span>对效率提升可能过于乐观</div>
+        </div>
+      </div>
+
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#6a4a8a">李</div>
+          <div>
+            <div class="speaker-name neon-gold">李诞</div>
+            <div class="speaker-role">脱口秀演员</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          <div class="profile-item"><span class="profile-label">核心信念：</span>真诚的表达比精密的计算更重要</div><div class="profile-item"><span class="profile-label">利益相关：</span>AI生成内容对创作者生存空间的挤压</div><div class="profile-item"><span class="profile-label">恐惧：</span>创意产业变成算力军备竞赛</div><div class="profile-item"><span class="profile-label">偏见：</span>倾向解构宏大叙事</div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">专家档案</div>
+    <div class="slide-number">02 / 37</div>
+  </section>
+
+  <section class="slide" data-title="专家档案(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">EXPERT PROFILES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
+      <div class="grid-2">
+        
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#e65100">冯</div>
+          <div>
+            <div class="speaker-name neon-gold">冯唐</div>
+            <div class="speaker-role">作家/商业顾问</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          <div class="profile-item"><span class="profile-label">核心信念：</span>商业逻辑的务实主义者</div><div class="profile-item"><span class="profile-label">利益相关：</span>创作者如何在AI时代保持价值</div><div class="profile-item"><span class="profile-label">恐惧：</span>写作变成可被AI替代的技能</div><div class="profile-item"><span class="profile-label">偏见：</span>对资本力量可能过于接受</div>
+        </div>
+      </div>
+
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#2d5a8e">项</div>
+          <div>
+            <div class="speaker-name neon-gold">项飙</div>
+            <div class="speaker-role">人类学家</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          <div class="profile-item"><span class="profile-label">核心信念：</span>附近消失理论：真实社会连接的瓦解</div><div class="profile-item"><span class="profile-label">利益相关：</span>AI创意生产如何改变人与内容的关系</div><div class="profile-item"><span class="profile-label">恐惧：</span>创意变成纯粹的算法优化</div><div class="profile-item"><span class="profile-label">偏见：</span>可能忽视商业化对创作的积极作用</div>
+        </div>
+      </div>
+
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#8a4a2d">吴</div>
+          <div>
+            <div class="speaker-name neon-gold">吴军</div>
+            <div class="speaker-role">技术史学家</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          <div class="profile-item"><span class="profile-label">核心信念：</span>历史总是重复，技术革命有其规律</div><div class="profile-item"><span class="profile-label">利益相关：</span>AI创意革命在技术史中的位置</div><div class="profile-item"><span class="profile-label">恐惧：</span>人类失去创意的主导权</div><div class="profile-item"><span class="profile-label">偏见：</span>可能过度依赖历史类比</div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">专家档案</div>
+    <div class="slide-number">03 / 37</div>
+  </section>
+
+  <section class="slide" data-title="Round 1: 创意边际成本归零的真相">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1</div>
+      <h2 class="quote-large anim-in anim-delay-1">创意边际成本归零的真相</h2>
+      <div class="gold-line anim-in anim-delay-2"></div>
+      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">AI让创意生产的边际成本趋近于零，这对创意产业意味着什么？</p>
+    </div>
+    <div class="deck-footer">Round 1 | 创意边际成本归零的真相</div>
+    <div class="slide-number">04 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R1 立场(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">凯文·凯利</div>
+        <div class="stance-content emotion-serious">我在《必然》中写过，未来的一切都将被复制和分享。AI让创意边际成本归零，这不是威胁，是解放。
+
+想想看，过去一个作家花三年写一本书，现在AI可以在几小时内生成初稿。这不是说作家没用了，而是说作家可以把精力放在真正有价值的地方——打磨思想、塑造风格、表达独特的人生体验。
+
+陶哲轩说得对，AI已经让"想法生成"的成本几乎降到了零。但真正的瓶颈从未改变——验证想法、完善想法、让想法产生实际影响。这才是人类创意的真正价值所在。
+
+我见过太多技术革命，每次都有人说"完了，人类要被替代了"。但每次革命之后，人类都找到了新的价值点。这次也不会例外。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">刘润</div>
+        <div class="stance-content emotion-serious">从商业逻辑看，AI让创意边际成本归零，本质上是瓦解了成本定价的底层基石。
+
+过去，一本书的价格 = 作者的时间成本 + 出版成本 + 发行成本。当AI让创作时间趋近于零，成本定价就失效了。取而代之的是价值定价——这本书对读者有多大的价值？
+
+这意味着创意产业的核心竞争力从"生产能力"转移到了"创意密度"和"更新频率"。一个人一台服务器，每天自动生产100条带货视频，单条视频的边际成本不到3分钱。这不是科幻，这是正在发生的现实。
+
+商业竞争的核心从"资金壁垒"转移到了"创意密度"。谁能更快地产生更好的创意，谁就赢了。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">李诞</div>
+        <div class="stance-content emotion-serious">我是一个讲脱口秀的，我每天都担心AI会不会替代我。
+
+后来我想明白了：AI可以生成笑话，但它不能理解为什么这个笑话好笑。它可以从海量数据中学习"什么词搭配什么词会让人笑"，但它不知道"笑"背后是什么。
+
+脱口秀的本质不是"笑料"，是"真诚"。是演员把自己的痛苦、困惑、荒诞感拿出来，和观众分享。AI没有痛苦，没有困惑，它只有数据。
+
+但我担心的是另一件事：当AI可以让任何人"创作"出看起来不错的内容时，真正的创作者反而被淹没了。你花三年写的小说，和AI花三小时生成的小说，在市场上可能卖同样的价钱。这才是最可怕的。</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 立场</div>
+    <div class="slide-number">05 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R1 立场(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">冯唐</div>
+        <div class="stance-content emotion-serious">我写了二十年小说，又做了十年商业咨询。从两个角度看AI创意边际成本归零。
+
+作为作家，我不担心AI替代我。因为写作的本质不是"文字组合"，是"人生体验的提炼"。AI没有经历过失恋、丧亲、中年危机，它写不出真正触动人心的东西。它可以模仿我的风格，但它没有我的人生。
+
+作为商业顾问，我看到的是机会。过去，一个好创意需要大量资金来实现——拍一部电影要几千万，出一本书要几十万。现在AI把实现成本降到了几乎零。这意味着更多的好创意能被看到，而不是被资金门槛挡在门外。
+
+但我必须问：当所有人都能"创作"时，什么才是真正的稀缺性？答案是"原创性"——不是"我能写"，而是"我想到了别人没想到的东西"。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">项飙</div>
+        <div class="stance-content emotion-serious">你们都在谈效率和商业价值，我想谈谈人的关系。
+
+当AI让创意边际成本归零，人与内容的关系发生了根本性的变化。过去，你读一本书，你知道作者花了三年时间写它。这种"时间投入"本身就是价值的一部分——它代表了作者对这个主题的认真程度。
+
+现在，AI可以在几小时内生成一本书。你读它的时候，还会像读一个作家花三年写的书那样认真对待吗？
+
+更深层的问题是：当创意变得如此廉价，我们还会珍惜创意吗？当每个人都能"创作"，"创作"这个词还有意义吗？
+
+我担心的不是AI替代人类创意，而是AI让"创意"这个概念本身贬值了。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">吴军</div>
+        <div class="stance-content emotion-serious">从技术史的角度看，AI创意边际成本归零是第三次"内容生产革命"。
+
+第一次是印刷术——让书籍从手抄本的奢侈品变成了大众商品。第二次是互联网——让信息发布从专业机构变成了人人可及。第三次就是AI——让内容生产从人类劳动变成了机器自动化。
+
+每次革命都有相同的模式：旧的生产者恐慌，新的生产者崛起，内容总量爆炸式增长，但高质量内容的比例下降。
+
+印刷术之后，书籍数量暴增，但真正的好书比例反而下降了。互联网之后，信息量暴增，但真正有价值的信息比例下降了。AI之后，内容量会再次暴增，但真正有深度的内容比例也会下降。
+
+这不是人类创意的终结，而是创意的"通货膨胀"。当创意变得廉价，真正稀缺的是"有深度的创意"。</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 立场</div>
+    <div class="slide-number">06 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R1 碰撞(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">李诞</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">凯文·凯利</span>
+        </div>
+        <div class="clash-type attack-reality">现实矛盾</div>
+        <div class="clash-content emotion-serious">凯文·凯利，你说"每次革命之后人类都找到了新的价值点"。但你有没有想过，这次可能不一样？以前的革命替代的是体力劳动，这次替代的是脑力劳动。当机器能想出比人更好的创意时，人类的"新价值点"在哪里？你说"验证想法"是人类的价值，但AI在验证方面也比人强——它能处理更多的数据，做更多的A/B测试。</div>
+        
+      </div>
+
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">项飙</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">刘润</span>
+        </div>
+        <div class="clash-type attack-logic">逻辑漏洞</div>
+        <div class="clash-content emotion-serious">刘润，你说"创意密度"和"更新频率"是新的竞争力。但这不就是把创意产业变成了另一种形式的"内卷"吗？当每个人都在疯狂产出内容，结果是什么？是内容的通货膨胀——每条内容的价值都趋近于零。你用商业逻辑分析创意产业，但创意不是标准化产品，不能用"效率"来衡量。</div>
+        
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 碰撞</div>
+    <div class="slide-number">07 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R1 碰撞(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">吴军</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">冯唐</span>
+        </div>
+        <div class="clash-type attack-logic">数据反驳</div>
+        <div class="clash-content emotion-serious">冯唐，你说"AI没有人生体验所以写不出好作品"。但你有没有想过，AI可以从海量人类作品中"学习"人生体验？它不需要自己经历失恋，它只需要读一千万个关于失恋的故事。从某种意义上说，AI的"人生体验"比任何单个人都丰富——因为它读过所有人的故事。</div>
+        
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 碰撞</div>
+    <div class="slide-number">08 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R1 案例">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 3: REALITY </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
+      <div class="cases-container">
+        
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">一人一台服务器日产100条视频</div>
+          <div class="case-source">[来源：知乎 - 陈东方创业日记]</div>
+        </div>
+        <div class="case-content">一个人用AI每天自动生产100条带货视频，单条视频的边际成本不到3分钱。传统内容生产是线性的，需要人力逐条制作，而AI让内容生产变成了指数级增长。</div>
+        <div class="case-outcome neon-red">代价：内容产量暴增，但单条内容价值趋近于零</div>
+        <div class="case-lesson neon-gold">教训：当创意边际成本归零，竞争核心从"生产能力"转移到"创意密度"和"更新频率"</div>
+      </div>
+
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">陶哲轩论AI与想法验证</div>
+          <div class="case-source">[来源：知乎 - 段小草]</div>
+        </div>
+        <div class="case-content">陶哲轩指出，AI已经将"想法生成"的成本几乎降到了零，但真正的瓶颈从未改变——验证想法、完善想法、让想法产生实际影响。AI带来的是"验证地狱"：当你可以无限生成想法时，如何筛选出真正有价值的那一个？</div>
+        <div class="case-outcome neon-red">代价：想法变得廉价，验证变得昂贵</div>
+        <div class="case-lesson neon-gold">教训：创意的真正价值不在于"生成"，而在于"验证"和"执行"</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 案例</div>
+    <div class="slide-number">09 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R1 代价">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 4: COST</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
+      
+      <div class="cost-discussion anim-in">
+        <div class="cost-scenario neon-gold">如果所有创意都可以由AI在几秒内生成，会发生什么？</div>
+        <div class="cost-list">
+          
+          <div class="cost-item">
+            <div class="cost-name neon-red">创意的通货膨胀</div>
+            <div class="cost-analysis">当创意变得如此廉价，每条创意的价值都趋近于零。就像货币超发会导致通胀一样，创意超发会导致"创意通胀"——内容总量爆炸式增长，但单条内容的价值急剧下降。</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-name neon-red">原创性的贬值</div>
+            <div class="cost-analysis">当AI可以"创作"出看起来不错的内容时，真正的原创性反而被淹没了。你花三年写的小说，和AI花三小时生成的小说，在市场上可能卖同样的价钱。</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-name neon-red">创作者的生存危机</div>
+            <div class="cost-analysis">当创意边际成本归零，创意产业的"中产阶级"——那些靠创意谋生但不是顶级创作者的人——将面临生存危机。他们既没有顶级创作者的品牌溢价，也没有AI的效率优势。</div>
+          </div>
+        </div>
+        <div class="worst-case">
+          <div class="worst-label neon-red">最坏情况</div>
+          <div class="worst-content">创意产业变成算力军备竞赛——谁的算力更强，谁就能生成更多的内容，占据更多的市场份额。人类创作者被彻底边缘化。</div>
+        </div>
+        
+          <div class="survivor-bias">
+            <div class="survivor-label neon-purple">幸存者偏差</div>
+            <div class="survivor-content">你只看到那些成功利用AI的创作者，看不到那些被AI替代的创作者。那些"找到了新价值点"的人，是因为他们本来就站在金字塔顶端。</div>
+          </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 代价</div>
+    <div class="slide-number">10 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R1 人性">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
+      
+      <div class="human-nature anim-in">
+        <div class="human-question neon-purple">为什么我们会对"AI创意"感到不安？</div>
+        <div class="human-analysis">人类对AI创意的不安，本质上是对"独特性"的执念。我们希望自己是独特的——我的想法、我的创意、我的表达，都是独一无二的。当AI可以"创作"出和我一样好甚至更好的内容时，我的"独特性"就被剥夺了。
+
+更深层的问题是：创意不仅仅是"产出"，它是人类自我表达的方式。当我写一首诗、画一幅画、讲一个故事，我不仅仅是在"产出内容"，我是在表达"我是谁"。AI没有"我是谁"，它只有"我学到了什么"。</div>
+        <div class="human-examples">
+          <div class="examples-label">现实例子</div>
+          
+          <div class="example-item">• 陶哲轩：AI让想法变得廉价，真正的瓶颈是验证</div>
+          <div class="example-item">• 一人一台服务器日产100条视频，边际成本不到3分钱</div>
+          <div class="example-item">• "标准化智力"的边际成本归零，努力的杠杆率也随之归零</div>
+        </div>
+        <div class="human-conclusion neon-gold">AI创意边际成本归零最深层的威胁不是替代人类创意，而是改变了我们与创意的关系。当创意变得如此廉价，我们还会珍惜创意吗？</div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 人性</div>
+    <div class="slide-number">11 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R1 升级">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
+      
+      <div class="cognitive-upgrade anim-in">
+        <div class="upgrade-comparison">
+          <div class="old-thinking">
+            <div class="thinking-label neon-red">旧思维</div>
+            <div class="thinking-content">AI让创意边际成本归零，是创意产业的解放</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="new-thinking">
+            <div class="thinking-label neon-green">新思维</div>
+            <div class="thinking-content">AI让创意边际成本归零，确实解放了生产能力，但也带来了"创意通胀"——当所有人都能创作时，单条创意的价值趋近于零。真正的稀缺性从"创意能力"转移到了"创意深度"和"验证能力"。</div>
+          </div>
+        </div>
+        <div class="complexity">
+          <div class="complexity-label neon-cyan">复杂性</div>
+          <div class="complexity-content">创意边际成本归零是一个不可逆转的趋势，但"不可逆"不等于"不可控"。问题不是要不要AI创意，而是如何在AI创意泛滥的时代，保持人类创意的独特性和深度。</div>
+        </div>
+        <div class="actionable">
+          <div class="actionable-label neon-gold">可执行洞见</div>
+          <div class="actionable-content">对于创作者：不要和AI比"产量"，要比"深度"。AI可以生成一百个故事，但它写不出一个真正触动人心的故事。
+
+对于投资者：不要投资"AI创意生产"，要投资"AI创意筛选"。当创意变得廉价，筛选出真正有价值的创意才是核心竞争力。
+
+对于社会：重新定义"创意价值"——不是"能创作"，而是"创作了什么"。</div>
+        </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 升级</div>
+    <div class="slide-number">12 / 37</div>
+  </section>
+
+  <section class="slide" data-title="Round 2: 算力霸权vs人类稀缺性">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2</div>
+      <h2 class="quote-large anim-in anim-delay-1">算力霸权vs人类稀缺性</h2>
+      <div class="gold-line anim-in anim-delay-2"></div>
+      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">当AI创意生产依赖算力，投资逻辑会押注算力霸权还是人类原生稀缺性？</p>
+    </div>
+    <div class="deck-footer">Round 2 | 算力霸权vs人类稀缺性</div>
+    <div class="slide-number">13 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R2 立场">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">刘润</div>
+        <div class="stance-content emotion-serious">从投资逻辑看，算力霸权是确定性最高的赛道。
+
+不管AI创意最终谁能胜出，底层都需要算力。就像淘金热中最赚钱的不是淘金者，而是卖铲子的人。英伟达的市值已经证明了这一点——它的市值超过了所有AI应用公司的总和。
+
+但问题在于：算力是标准化的，而创意是非标准化的。投资算力，你买到的是确定性；投资创意，你买到的是不确定性。从风险管理的角度，押注算力是更理性的选择。
+
+然而，这也意味着创意产业的价值链正在被重构——算力提供商拿走了大部分利润，而创意生产者只能分到残羹剩饭。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">项飙</div>
+        <div class="stance-content emotion-serious">算力霸权的背后是一种新形式的"数字殖民"。
+
+过去，殖民者通过控制土地和资源来控制生产。现在，算力提供商通过控制计算资源来控制创意生产。当创意生产依赖于少数几家公司的算力时，创意的多样性就受到了威胁。
+
+更深层的问题是：算力是集中的，而创意应该是分散的。当创意生产依赖于集中的算力，创意就不再是"个人表达"，而是"算力输出"。这与创意的本质是矛盾的。
+
+我认为，真正的创意稀缺性不在于"能创作"，而在于"有话要说"。算力可以让你创作，但它不能让你有话要说。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">吴军</div>
+        <div class="stance-content emotion-serious">从技术史看，每次内容生产革命都有一个"基础设施层"和"应用层"。印刷术的基础设施是印刷机，应用层是书籍内容。互联网的基础设施是服务器和网络，应用层是网站和应用。AI的基础设施是算力，应用层是AI生成内容。
+
+历史规律是：基础设施层在早期获得最大利润，但随着竞争加剧，利润会向应用层转移。印刷机制造商在早期赚了很多钱，但最终赚更多钱的是出版社和作者。互联网基础设施提供商在早期赚了很多钱，但最终赚更多钱的是谷歌、脸书这样的应用公司。
+
+所以，短期看算力霸权是确定性最高的投资。但长期看，真正有价值的是"能用算力创造出独特价值"的创意人才。</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 立场</div>
+    <div class="slide-number">14 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R2 碰撞">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">项飙</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">刘润</span>
+        </div>
+        <div class="clash-type attack-logic">逻辑漏洞</div>
+        <div class="clash-content emotion-serious">刘润，你说"算力霸权是确定性最高的赛道"。但你有没有想过，当所有人都押注算力时，算力本身也会变成"内卷"？英伟达的市值已经超过了所有AI应用公司的总和，这不就是泡沫的信号吗？当年互联网泡沫时，思科的市值也超过了所有互联网公司的总和，结果呢？</div>
+        
+      </div>
+
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">李诞</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">吴军</span>
+        </div>
+        <div class="clash-type attack-reality">现实矛盾</div>
+        <div class="clash-content emotion-serious">吴军，你说"利润会从基础设施层向应用层转移"。但你有没有想过，这次可能不一样？以前的基础设施是"通用"的——印刷机可以印任何书，服务器可以跑任何网站。但AI算力是"专用"的——它被少数几家大公司控制，而且这些公司同时也在做应用层。它们既卖铲子，又自己挖金子。这种垂直整合会让利润永远留在基础设施层。</div>
+        
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 碰撞</div>
+    <div class="slide-number">15 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R2 案例">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 3: REALITY </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
+      <div class="cases-container">
+        
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">英伟达市值超越所有AI应用公司</div>
+          <div class="case-source">[来源：金融市场数据]</div>
+        </div>
+        <div class="case-content">英伟达的市值一度超过了所有AI应用公司的总和，成为AI革命中最大的赢家。这印证了"卖铲子比挖金子更赚钱"的逻辑。</div>
+        <div class="case-outcome neon-red">代价：算力提供商获得最大利润，创意生产者只能分到残羹剩饭</div>
+        <div class="case-lesson neon-gold">教训：在AI创意革命中，控制基础设施的人控制了价值链</div>
+      </div>
+
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">"标准化智力"边际成本归零</div>
+          <div class="case-source">[来源：知乎 - OrthoMind]</div>
+        </div>
+        <div class="case-content">当"标准化智力"的边际成本归零，努力的杠杆率(Leverage Ratio)也随之归零。竞争规则瞬间回退到了最原始的状态——那些拥有"非标准化"能力的人（创意、人脉、直觉）将获得不成比例的回报。</div>
+        <div class="case-outcome neon-red">代价：标准化能力贬值，非标准化能力升值</div>
+        <div class="case-lesson neon-gold">教训：在AI时代，真正的稀缺性不是"能做什么"，而是"想到了什么别人没想到的"</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 案例</div>
+    <div class="slide-number">16 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R2 代价">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 4: COST</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
+      
+      <div class="cost-discussion anim-in">
+        <div class="cost-scenario neon-gold">如果投资逻辑全面押注算力霸权，会发生什么？</div>
+        <div class="cost-list">
+          
+          <div class="cost-item">
+            <div class="cost-name neon-red">创意多样性的丧失</div>
+            <div class="cost-analysis">当创意生产依赖于少数几家公司的算力，创意就不再是"个人表达"，而是"算力输出"。所有AI生成的内容都会趋向同质化，因为它们都使用相同的底层模型和算力。</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-name neon-red">创意产业的"空心化"</div>
+            <div class="cost-analysis">当算力提供商拿走了大部分利润，创意生产者就失去了创新的动力。创意产业变成了"算力产业"的附庸，失去了独立的价值创造能力。</div>
+          </div>
+        </div>
+        <div class="worst-case">
+          <div class="worst-label neon-red">最坏情况</div>
+          <div class="worst-content">创意产业变成算力军备竞赛——谁的算力更强，谁就能生成更多的内容，占据更多的市场份额。人类创作者被彻底边缘化，创意多样性丧失殆尽。</div>
+        </div>
+        
+          <div class="survivor-bias">
+            <div class="survivor-label neon-purple">幸存者偏差</div>
+            <div class="survivor-content">你只看到英伟达的成功，看不到有多少AI应用公司因为算力成本过高而倒闭。</div>
+          </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 代价</div>
+    <div class="slide-number">17 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R2 人性">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
+      
+      <div class="human-nature anim-in">
+        <div class="human-question neon-purple">为什么我们会倾向于押注"确定性"而非"不确定性"？</div>
+        <div class="human-analysis">人类天生厌恶不确定性——这是进化留下的本能。在原始环境中，不确定性意味着危险。所以当我们面对投资选择时，我们倾向于选择"确定性更高"的选项，即使"不确定性更高"的选项可能有更高的回报。
+
+算力霸权是"确定性"的——不管AI创意最终谁能胜出，底层都需要算力。而人类创意是"不确定性"的——你不知道哪个创意会成功，哪个会失败。
+
+但历史告诉我们，真正改变世界的往往是"不确定性"——那些看似不可能的创意，最终改变了整个产业。</div>
+        <div class="human-examples">
+          <div class="examples-label">现实例子</div>
+          
+          <div class="example-item">• 英伟达市值超越所有AI应用公司</div>
+          <div class="example-item">• "标准化智力"边际成本归零，努力杠杆率归零</div>
+          <div class="example-item">• 淘金热中最赚钱的是卖铲子的人</div>
+        </div>
+        <div class="human-conclusion neon-gold">押注算力霸权是理性的选择，但理性不等于正确。真正改变世界的往往是那些"非理性"的创意——那些看似不可能、但最终改变了整个产业的想法。</div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 人性</div>
+    <div class="slide-number">18 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R2 升级">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
+      
+      <div class="cognitive-upgrade anim-in">
+        <div class="upgrade-comparison">
+          <div class="old-thinking">
+            <div class="thinking-label neon-red">旧思维</div>
+            <div class="thinking-content">算力霸权是确定性最高的投资</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="new-thinking">
+            <div class="thinking-label neon-green">新思维</div>
+            <div class="thinking-content">算力霸权确实是短期确定性最高的投资，但长期看，真正有价值的是"能用算力创造出独特价值"的创意人才。基础设施层的利润最终会向应用层转移——前提是应用层能创造出真正的差异化价值。</div>
+          </div>
+        </div>
+        <div class="complexity">
+          <div class="complexity-label neon-cyan">复杂性</div>
+          <div class="complexity-content">投资逻辑的选择不仅是一个经济问题，更是一个价值观问题。你选择押注算力霸权，意味着你相信"效率"比"创意"更重要。你选择押注人类稀缺性，意味着你相信"独特性"比"效率"更有价值。</div>
+        </div>
+        <div class="actionable">
+          <div class="actionable-label neon-gold">可执行洞见</div>
+          <div class="actionable-content">对于投资者：短期押注算力，长期押注创意。算力是基础设施，创意是应用层。基础设施的利润最终会向应用层转移。
+
+对于创作者：不要和AI比"效率"，要比"独特性"。AI可以生成一百个故事，但它写不出一个真正触动人心的故事。
+
+对于社会：警惕算力霸权对创意多样性的威胁。创意的价值在于多样性，而不在于效率。</div>
+        </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 升级</div>
+    <div class="slide-number">19 / 37</div>
+  </section>
+
+  <section class="slide" data-title="Round 3: 创作者如何在AI时代生存">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 3</div>
+      <h2 class="quote-large anim-in anim-delay-1">创作者如何在AI时代生存</h2>
+      <div class="gold-line anim-in anim-delay-2"></div>
+      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">当AI可以生成看起来不错的内容，真正的创作者如何保持自己的价值？</p>
+    </div>
+    <div class="deck-footer">Round 3 | 创作者如何在AI时代生存</div>
+    <div class="slide-number">20 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R3 立场(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">李诞</div>
+        <div class="stance-content emotion-serious">我每天都在想这个问题：AI会不会替代脱口秀演员？
+
+我的答案是：不会，但前提是你得真的有话要说。
+
+AI可以学习"什么词搭配什么词会让人笑"，但它不知道"笑"背后是什么。脱口秀的本质不是"笑料"，是"真诚"——是演员把自己的痛苦、困惑、荒诞感拿出来，和观众分享。
+
+我见过太多"技术完美"但"灵魂空洞"的脱口秀。演员的节奏、停顿、表情都完美，但就是不好笑。为什么？因为他没有真正想说的话。他在"表演"脱口秀，而不是"表达"自己。
+
+AI也是一样。它可以"生成"脱口秀，但它不能"表达"脱口秀。区别在于：生成是技术，表达是灵魂。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">冯唐</div>
+        <div class="stance-content emotion-serious">作为作家，我有一个简单的原则：写只有我能写的东西。
+
+AI可以模仿我的风格，但它没有我的人生。它没有经历过我在内蒙古的童年，没有经历过我在协和医学院的训练，没有经历过我在麦肯锡的咨询生涯。这些经历塑造了我的视角，而这个视角是独一无二的。
+
+所以，创作者的生存策略很简单：不要写"任何人都能写"的东西，要写"只有你能写"的东西。你的独特性不在于你的文字技巧，而在于你的人生经历和思考角度。
+
+AI可以生成一百个故事，但它写不出一个"冯唐的故事"。因为"冯唐的故事"不仅仅是文字，它是我的人生。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">凯文·凯利</div>
+        <div class="stance-content emotion-serious">我认为创作者应该把AI看作"创意放大器"，而不是"创意替代品"。
+
+过去，一个作家需要花大量时间在"低价值"工作上——查资料、整理笔记、写初稿。现在AI可以帮你做这些工作，让你把精力集中在"高价值"工作上——打磨思想、塑造风格、表达独特的人生体验。
+
+这就像计算器没有替代数学家，而是让数学家可以专注于更高级的数学问题。AI没有替代创作者，而是让创作者可以专注于更高级的创意工作。
+
+关键是你怎么用AI。如果你用AI来"替代"你的创意，你会变得平庸。如果你用AI来"放大"你的创意，你会变得更强。</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 立场</div>
+    <div class="slide-number">21 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R3 立场(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">项飙</div>
+        <div class="stance-content emotion-serious">你们都在谈"如何用AI"，我想谈谈"为什么要创作"。
+
+创作的本质不是"产出内容"，是"建立连接"。当我写一本书，我不仅仅是在"产出文字"，我是在和读者建立一种精神上的连接。读者读我的书，感受到我的思考、我的情感、我的困惑，然后他们会在自己的生活中找到共鸣。
+
+AI可以"产出内容"，但它不能"建立连接"。因为它没有真实的思考、真实的情感、真实的困惑。它只有数据和算法。
+
+所以，创作者的真正价值不在于"产出内容"，而在于"建立连接"。如果你的创作能让人感到"我不是一个人"，那你的价值就永远不会被AI替代。</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 立场</div>
+    <div class="slide-number">22 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R3 碰撞">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">冯唐</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">凯文·凯利</span>
+        </div>
+        <div class="clash-type attack-reality">现实矛盾</div>
+        <div class="clash-content emotion-serious">凯文·凯利，你说AI是"创意放大器"。但你有没有想过，大多数创作者不是"顶级创作者"？他们是"中产创作者"——靠写作为生，但不是畅销书作家。对这些人来说，AI不是"放大器"，是"替代品"。当AI可以生成"看起来不错"的内容时，谁还需要他们？</div>
+        
+      </div>
+
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">李诞</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">项飙</span>
+        </div>
+        <div class="clash-type attack-logic">逻辑漏洞</div>
+        <div class="clash-content emotion-serious">项飙，你说"创作的本质是建立连接"。但你有没有想过，AI也可以"建立连接"？现在有很多人和AI聊天机器人建立了"情感连接"——他们觉得AI理解他们、关心他们。如果AI可以"建立连接"，那人类创作者的"连接"价值还剩多少？</div>
+        
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 碰撞</div>
+    <div class="slide-number">23 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R3 案例">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 3: REALITY </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
+      <div class="cases-container">
+        
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">AI生成内容的同质化</div>
+          <div class="case-source">[来源：行业观察]</div>
+        </div>
+        <div class="case-content">当大量内容由AI生成时，内容趋向同质化——因为AI学习的是"最可能被喜欢"的模式，而不是"最独特"的表达。结果是：内容总量暴增，但真正有辨识度的内容比例下降。</div>
+        <div class="case-outcome neon-red">代价：内容通货膨胀，独特性成为稀缺资源</div>
+        <div class="case-lesson neon-gold">教训：在AI内容泛滥的时代，"独特性"比"质量"更有价值——因为质量可以被AI复制，但独特性不能</div>
+      </div>
+
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">GitHub赛博永生开源项目</div>
+          <div class="case-source">[来源：Bilibili - AI-GitHub]</div>
+        </div>
+        <div class="case-content">通过聊天记录将人物特征蒸馏成AI数字分身的开源项目爆火，包括同事.skill、前任.skill等。这一技术路径将数字永生从商业服务推向个人DIY。</div>
+        <div class="case-outcome neon-red">代价：AI可以"模仿"一个人的风格，但不能"成为"那个人</div>
+        <div class="case-lesson neon-gold">教训：创作者的价值不在于"风格"，而在于"风格背后的人生经历和思考角度"</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 案例</div>
+    <div class="slide-number">24 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R3 代价">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 4: COST</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
+      
+      <div class="cost-discussion anim-in">
+        <div class="cost-scenario neon-gold">如果所有创作者都用AI来"放大"创意，会发生什么？</div>
+        <div class="cost-list">
+          
+          <div class="cost-item">
+            <div class="cost-name neon-red">创意的同质化</div>
+            <div class="cost-analysis">当所有创作者都使用相同的AI工具，他们的创意会趋向同质化。因为AI学习的是"最可能被喜欢"的模式，它会引导创作者走向"最受欢迎"的方向，而不是"最独特"的方向。</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-name neon-red">创作者的"工具化"</div>
+            <div class="cost-analysis">当创作者依赖AI来"放大"创意时，他们可能会变成"AI的操作员"，而不是"创意的源头"。他们的价值不再是"我想到了什么"，而是"我怎么用AI"。</div>
+          </div>
+        </div>
+        <div class="worst-case">
+          <div class="worst-label neon-red">最坏情况</div>
+          <div class="worst-content">创意产业变成"AI操作员"的天下——真正的创意人才被边缘化，而"会用AI"的人占据了市场。</div>
+        </div>
+        
+          <div class="survivor-bias">
+            <div class="survivor-label neon-purple">幸存者偏差</div>
+            <div class="survivor-content">你只看到那些成功用AI放大创意的创作者，看不到那些被AI替代的创作者。</div>
+          </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 代价</div>
+    <div class="slide-number">25 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R3 人性">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
+      
+      <div class="human-nature anim-in">
+        <div class="human-question neon-purple">为什么我们渴望"独特性"？</div>
+        <div class="human-analysis">人类对独特性的渴望，本质上是对"存在感"的需求。我们希望自己是"特别的"——不是人群中的一张脸，而是一个有独特价值的个体。当AI可以"创作"出和我们一样好的内容时，我们的"独特性"就被剥夺了，我们的"存在感"就受到了威胁。
+
+但真正的独特性不在于"能力"，而在于"经历"。每个人的人生经历都是独一无二的——你的童年、你的爱情、你的挫折、你的成长。这些经历塑造了你的视角，而这个视角是AI永远无法复制的。</div>
+        <div class="human-examples">
+          <div class="examples-label">现实例子</div>
+          
+          <div class="example-item">• 冯唐：写只有我能写的东西——我的人生经历是独一无二的</div>
+          <div class="example-item">• 李诞：脱口秀的本质是真诚——AI没有痛苦，没有困惑</div>
+          <div class="example-item">• GitHub赛博永生项目：AI可以模仿风格，但不能成为那个人</div>
+        </div>
+        <div class="human-conclusion neon-gold">创作者的真正价值不在于"能力"（AI可以复制），而在于"经历"（AI无法复制）。你的独特性不是你的文字技巧，而是你的人生故事。</div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 人性</div>
+    <div class="slide-number">26 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R3 升级">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
+      
+      <div class="cognitive-upgrade anim-in">
+        <div class="upgrade-comparison">
+          <div class="old-thinking">
+            <div class="thinking-label neon-red">旧思维</div>
+            <div class="thinking-content">创作者应该用AI来放大创意</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="new-thinking">
+            <div class="thinking-label neon-green">新思维</div>
+            <div class="thinking-content">用AI放大创意是必要的策略，但真正的生存之道是"写只有你能写的东西"——你的人生经历、你的思考角度、你的情感体验，这些是AI永远无法复制的。</div>
+          </div>
+        </div>
+        <div class="complexity">
+          <div class="complexity-label neon-cyan">复杂性</div>
+          <div class="complexity-content">AI时代的创作者面临一个悖论：用AI可以提高效率，但过度依赖AI会丧失独特性。关键在于找到"效率"和"独特性"之间的平衡点。</div>
+        </div>
+        <div class="actionable">
+          <div class="actionable-label neon-gold">可执行洞见</div>
+          <div class="actionable-content">对于创作者：
+1. 不要和AI比产量，要比深度
+2. 写只有你能写的东西——你的人生经历是独一无二的
+3. 把AI当作工具，而不是替代品
+4. 专注于"建立连接"，而不是"产出内容"
+
+对于读者：
+1. 珍惜那些"有灵魂"的作品
+2. 不要被"高质量"的AI内容迷惑
+3. 支持真正的创作者，而不是AI生成内容</div>
+        </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 升级</div>
+    <div class="slide-number">27 / 37</div>
+  </section>
+
+  <section class="slide" data-title="Round 4: 新秩序的代价与希望">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 4</div>
+      <h2 class="quote-large anim-in anim-delay-1">新秩序的代价与希望</h2>
+      <div class="gold-line anim-in anim-delay-2"></div>
+      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">创意边际成本归零的时代，我们失去了什么，又得到了什么？</p>
+    </div>
+    <div class="deck-footer">Round 4 | 新秩序的代价与希望</div>
+    <div class="slide-number">28 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R4 立场(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">吴军</div>
+        <div class="stance-content emotion-serious">每次技术革命都有赢家和输家。印刷术让手抄本工人失业，但让知识民主化。互联网让传统媒体衰落，但让信息自由流通。AI让创意边际成本归零，会让一部分创作者失业，但会让创意民主化。
+
+关键是：我们如何帮助那些"输家"转型？历史上，每次革命都有过渡期的痛苦。但长期来看，人类总是找到了新的价值点。
+
+我认为，AI创意革命的最终结果是：创意产业的"金字塔"会变得更陡——顶端的创作者会获得更大的回报，底部的创作者会被AI替代，中间的创作者需要找到新的定位。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">项飙</div>
+        <div class="stance-content emotion-serious">你们都在谈"效率"和"价值"，我想谈谈"意义"。
+
+当创意变得如此廉价，创作的意义是什么？过去，一个人花三年写一本书，这本书就承载了三年的生命。现在，AI可以在几小时内生成一本书。这本书承载了什么？
+
+我担心的不是AI替代人类创意，而是AI让"创作"这个行为本身失去了意义。当创作变得如此容易，我们还会珍惜创作吗？
+
+也许，真正的创意价值不在于"产出"，而在于"过程"。创作的过程——思考、挣扎、突破——本身就是有意义的。AI可以让产出变得更容易，但它不能让过程变得更有意义。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">凯文·凯利</div>
+        <div class="stance-content emotion-serious">我认为AI创意边际成本归零，最终会让创意产业变得更民主。
+
+过去，只有少数人有资源进行创意生产——你需要资金、设备、团队。现在，AI让任何人都可以进行创意生产。一个农村的孩子，只要有电脑和网络，就可以创作出和专业人士一样好的内容。
+
+这意味着创意产业的"入场门槛"被大大降低了。更多的人可以参与创意，更多的声音可以被听到，更多的故事可以被讲述。
+
+当然，这也会带来"内容洪水"的问题。但历史告诉我们，人类有能力从洪水筛选出真正有价值的东西。互联网带来了信息洪水，但谷歌帮助我们筛选。AI会带来内容洪水，但新的筛选工具也会出现。</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 4 | 立场</div>
+    <div class="slide-number">29 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R4 立场(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">李诞</div>
+        <div class="stance-content emotion-serious">说实话，我不知道AI创意边际成本归零最终会带来什么。
+
+我知道的是：我不会停止创作。因为创作对我来说不是"工作"，是"活着的方式"。我讲脱口秀不是为了赚钱，是因为我有话要说。AI可以生成笑话，但它不能替代我"有话要说"的冲动。
+
+也许，AI创意革命最终会筛选出那些"真正有话要说"的创作者。那些只是为了赚钱而创作的人会被AI替代，那些为了表达自己而创作的人会留下来。
+
+这不是坏事。这会让创意产业变得更纯粹——留下来的都是真正热爱创作的人。</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 4 | 立场</div>
+    <div class="slide-number">30 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R4 碰撞">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">项飙</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">凯文·凯利</span>
+        </div>
+        <div class="clash-type attack-logic">逻辑漏洞</div>
+        <div class="clash-content emotion-serious">凯文·凯利，你说AI会让创意产业变得更民主。但你有没有想过，"民主"不等于"平等"？当所有人都能创作时，谁的声音会被听到？还是那些有资源、有渠道、有粉丝的人。AI降低了创作门槛，但没有降低"被听到"的门槛。</div>
+        
+      </div>
+
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">吴军</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">李诞</span>
+        </div>
+        <div class="clash-type attack-reality">现实矛盾</div>
+        <div class="clash-content emotion-serious">李诞，你说"创作是活着的方式"。但你有没有想过，对于那些靠创作谋生的人来说，创作不仅仅是"活着的方式"，还是"活下去的手段"？当AI替代了他们的工作，他们怎么活下去？你的"纯粹"是建立在你已经成功的基础上的。</div>
+        
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 4 | 碰撞</div>
+    <div class="slide-number">31 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R4 案例">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 3: REALITY </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
+      <div class="cases-container">
+        
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">AI提升人类创作者存在的意义</div>
+          <div class="case-source">[来源：知乎 - 兔兔2025]</div>
+        </div>
+        <div class="case-content">"迅猛发展"不仅仅指计算速度的提升或模型参数的增加，而是指技术性执行的民主化与边际成本的归零。当技术性执行变得廉价，人类创作者的"创意"和"独特性"反而变得更加珍贵。</div>
+        <div class="case-outcome neon-red">代价：技术执行民主化，创意独特性升值</div>
+        <div class="case-lesson neon-gold">教训：AI创意边际成本归零不是终结，而是重新定义了"创意价值"——从"能创作"到"创作了什么独特的"</div>
+      </div>
+
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">竞争规则回退到最原始状态</div>
+          <div class="case-source">[来源：知乎 - OrthoMind]</div>
+        </div>
+        <div class="case-content">当"标准化智力"的边际成本归零，努力的杠杆率(Leverage Ratio)也随之归零。竞争规则瞬间回退到了最原始的状态——那些拥有"非标准化"能力的人（创意、人脉、直觉）将获得不成比例的回报。</div>
+        <div class="case-outcome neon-red">代价：标准化能力贬值，非标准化能力升值</div>
+        <div class="case-lesson neon-gold">教训：在AI时代，真正的稀缺性不是"能做什么"，而是"想到了什么别人没想到的"</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 4 | 案例</div>
+    <div class="slide-number">32 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R4 代价">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 4: COST</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
+      
+      <div class="cost-discussion anim-in">
+        <div class="cost-scenario neon-gold">如果我们接受"创意边际成本归零"是不可逆转的趋势，我们应该如何应对？</div>
+        <div class="cost-list">
+          
+          <div class="cost-item">
+            <div class="cost-name neon-red">创意产业的"中产阶级"消失</div>
+            <div class="cost-analysis">当AI可以生成"足够好"的内容时，那些"中产创作者"——靠创作谋生但不是顶级创作者的人——将面临生存危机。他们既没有顶级创作者的品牌溢价，也没有AI的效率优势。</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-name neon-red">创作意义的危机</div>
+            <div class="cost-analysis">当创作变得如此容易，创作的意义是什么？过去，创作是"艰难的"，所以"有价值的"。现在，创作是"容易的"，所以"廉价的"？</div>
+          </div>
+        </div>
+        <div class="worst-case">
+          <div class="worst-label neon-red">最坏情况</div>
+          <div class="worst-content">创意产业变成"算力军备竞赛"——谁的算力更强，谁就能生成更多的内容，占据更多的市场份额。人类创作者被彻底边缘化。</div>
+        </div>
+        
+          <div class="survivor-bias">
+            <div class="survivor-label neon-purple">幸存者偏差</div>
+            <div class="survivor-content">你只看到那些成功转型的创作者，看不到那些被时代淘汰的创作者。</div>
+          </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 4 | 代价</div>
+    <div class="slide-number">33 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R4 人性">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
+      
+      <div class="human-nature anim-in">
+        <div class="human-question neon-purple">我们为什么需要"创作"？</div>
+        <div class="human-analysis">创作是人类最基本的需求之一——它源于"表达"的冲动。我们创作不是为了"产出内容"，而是为了"表达自己"。当我们感到快乐、悲伤、困惑、愤怒时，我们想要表达出来——通过文字、音乐、绘画、表演。
+
+AI没有"表达"的冲动，因为它没有情感。它可以"生成"内容，但它不能"表达"内容。因为表达需要一个"自我"——一个有情感、有经历、有观点的自我。AI没有自我，它只有数据和算法。</div>
+        <div class="human-examples">
+          <div class="examples-label">现实例子</div>
+          
+          <div class="example-item">• 李诞：创作是活着的方式，不是工作</div>
+          <div class="example-item">• 项飙：创作的意义不在于产出，而在于过程</div>
+          <div class="example-item">• 陶哲轩：AI让想法变得廉价，真正的瓶颈是验证</div>
+        </div>
+        <div class="human-conclusion neon-gold">创作的意义不在于"产出"，而在于"表达"。AI可以让产出变得更容易，但它不能让表达变得更有意义。只要人类还有表达的冲动，创作就永远不会被AI替代。</div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 4 | 人性</div>
+    <div class="slide-number">34 / 37</div>
+  </section>
+
+  <section class="slide" data-title="R4 升级">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
+      
+      <div class="cognitive-upgrade anim-in">
+        <div class="upgrade-comparison">
+          <div class="old-thinking">
+            <div class="thinking-label neon-red">旧思维</div>
+            <div class="thinking-content">AI创意边际成本归零是威胁</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="new-thinking">
+            <div class="thinking-label neon-green">新思维</div>
+            <div class="thinking-content">AI创意边际成本归零既不是纯粹的威胁，也不是纯粹的机会。它是一个"重新洗牌"——旧的创意价值链被打破，新的价值链正在形成。关键在于：你在新的价值链中处于什么位置？</div>
+          </div>
+        </div>
+        <div class="complexity">
+          <div class="complexity-label neon-cyan">复杂性</div>
+          <div class="complexity-content">创意边际成本归零的影响是复杂的、多维的。它既会带来"创意民主化"的机会，也会带来"创意通胀"的挑战。它既会淘汰"中产创作者"，也会提升"顶级创作者"的价值。它既会让创作变得更容易，也会让创作的意义变得更模糊。</div>
+        </div>
+        <div class="actionable">
+          <div class="actionable-label neon-gold">可执行洞见</div>
+          <div class="actionable-content">对于整个社会：
+1. 重新定义"创意价值"——不是"能创作"，而是"创作了什么独特的"
+2. 建立新的"创意筛选"机制——帮助人们从内容洪水中找到真正有价值的东西
+3. 关注"中产创作者"的转型——他们是创意产业的中坚力量
+
+对于每个人：
+1. 不要害怕AI，要学会用AI
+2. 不要和AI比效率，要比独特性
+3. 创作的意义不在于产出，而在于表达</div>
+        </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 4 | 升级</div>
+    <div class="slide-number">35 / 37</div>
+  </section>
+
+  <section class="slide" data-title="最终洞见">
+    <div class="slide-content">
+      <div class="section-label anim-in">FINAL INSIGHT</div>
+      <div class="quote-large anim-in anim-delay-1">AI创意边际成本归零不是人类创意的终结，而是创意价值的重新定义。当"能创作"变得廉价，"创作了什么独特的"变得珍贵。真正的稀缺性不在于创意能力，而在于创意深度——你的人生经历、你的思考角度、你的情感体验，这些是AI永远无法复制的。</div>
+    </div>
+    <div class="deck-footer">最终洞见</div>
+    <div class="slide-number">36 / 37</div>
+  </section>
+
+  <section class="slide" data-title="开放问题">
+    <div class="slide-content">
+      <div class="section-label anim-in">OPEN QUESTIONS</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">留给读者的问题</h3>
+      <div class="headline-item anim-in"><strong>Q1:</strong> 当AI可以生成"足够好"的内容时，我们还需要"伟大"的创作吗？</div>
+<div class="headline-item anim-in"><strong>Q2:</strong> 创意产业的"中产阶级"会消失吗？如果会，这意味着什么？</div>
+<div class="headline-item anim-in"><strong>Q3:</strong> 创作的意义是什么？是"产出"还是"表达"？</div>
+    </div>
+    <div class="deck-footer">开放问题</div>
+    <div class="slide-number">37 / 37</div>
+  </section>
+
+<div class="toc-backdrop" id="tocBackdrop"></div>
+<div class="toc-panel" id="tocPanel">
+<div class="toc-title">目录</div>
+<div id="tocList"></div>
+</div>
+<div class="nav-bar">
+<div class="nav-left">
+<button class="nav-btn" id="btnToc">☰ 目录</button>
+<button class="nav-btn" id="btnPrev">◀ 上一页</button>
+<button class="nav-btn" id="btnNext">下一页 ▶</button>
+</div>
+<div class="nav-right">
+<span class="nav-title" id="slideTitle"></span>
+<span class="nav-counter" id="slideCounter"></span>
+</div>
+</div>
+<div class="nav-dots" id="navDots"></div>
+</div>
+
+<script>
+(function(){
+var deck=document.getElementById("deck");
+var slides=deck.querySelectorAll(".slide");
+var total=slides.length;
+var cur=0;
+var dots=document.getElementById("navDots");
+var tocList=document.getElementById("tocList");
+var titleEl=document.getElementById("slideTitle");
+var counterEl=document.getElementById("slideCounter");
+var tocPanel=document.getElementById("tocPanel");
+var tocBackdrop=document.getElementById("tocBackdrop");
+var progressBar=document.getElementById("progressBar");
+
+for(var i=0;i<total;i++){
+  var d=document.createElement("button");
+  d.className="nd";
+  d.setAttribute("data-i",i);
+  d.onclick=(function(idx){return function(){go(idx)}})(i);
+  dots.appendChild(d);
+  var t=document.createElement("div");
+  t.className="toc-item";
+  t.setAttribute("data-i",i);
+  t.innerHTML='<span class="toc-label">'+(slides[i].getAttribute("data-title")||"Slide "+(i+1))+'</span><span class="toc-page">'+String(i+1).padStart(2,"0")+'</span>';
+  t.onclick=(function(idx){return function(){go(idx);closeTOC()}})(i);
+  tocList.appendChild(t);
+}
+
+function go(n){
+  if(n<0||n>=total)return;
+  slides[cur].classList.remove("active");
+  dots.children[cur].classList.remove("active");
+  tocList.children[cur].classList.remove("active");
+  cur=n;
+  slides[cur].classList.add("active");
+  dots.children[cur].classList.add("active");
+  tocList.children[cur].classList.add("active");
+  titleEl.textContent=slides[cur].getAttribute("data-title")||"";
+  counterEl.textContent=(cur+1)+" / "+total;
+  progressBar.style.width=((cur+1)/total*100)+"%";
+  slides[cur].scrollTop=0;
+}
+function toggleTOC(){tocPanel.classList.toggle("open");tocBackdrop.classList.toggle("open")}
+function closeTOC(){tocPanel.classList.remove("open");tocBackdrop.classList.remove("open")}
+
+document.addEventListener("keydown",function(e){
+  if(e.key==="ArrowRight"||e.key==="ArrowDown"||e.key===" "||e.key==="PageDown"){e.preventDefault();go(cur+1)}
+  else if(e.key==="ArrowLeft"||e.key==="ArrowUp"||e.key==="PageUp"){e.preventDefault();go(cur-1)}
+  else if(e.key==="Home"){e.preventDefault();go(0)}
+  else if(e.key==="End"){e.preventDefault();go(total-1)}
+  else if(e.key==="Escape"){closeTOC();go(0)}
+  else if(e.key==="t"||e.key==="T"){toggleTOC()}
+});
+var wheelTimer=null;
+deck.addEventListener("wheel",function(e){
+  e.preventDefault();
+  if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},400)}
+  if(e.deltaY>0)go(cur+1);
+  else if(e.deltaY<0)go(cur-1);
+},{passive:false});
+var touchX=0,touchY=0;
+deck.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX;touchY=e.touches[0].clientY});
+deck.addEventListener("touchend",function(e){
+  var dx=touchX-e.changedTouches[0].clientX,dy=touchY-e.changedTouches[0].clientY;
+  if(Math.abs(dy)>Math.abs(dx)){if(dy>50)go(cur+1);else if(dy<-50)go(cur-1)}
+  else{if(dx>50)go(cur+1);else if(dx<-50)go(cur-1)}
+});
+deck.addEventListener("click",function(e){
+  if(e.target.closest(".nav-btn,.nd,.toc-item,.toc-panel,.toc-backdrop"))return;
+  var x=e.clientX/window.innerWidth;
+  if(x<0.3)go(cur-1);else if(x>0.7)go(cur+1);
+});
+document.getElementById("btnToc").addEventListener("click",function(e){e.stopPropagation();toggleTOC()});
+document.getElementById("btnPrev").addEventListener("click",function(e){e.stopPropagation();go(cur-1)});
+document.getElementById("btnNext").addEventListener("click",function(e){e.stopPropagation();go(cur+1)});
+tocBackdrop.addEventListener("click",closeTOC);
+go(0);
+})();
+</script>
+</body>
+</html>

@@ -47,8 +47,9 @@
 
   /* ============ 幻灯片 ============ */
   .deck{position:relative;width:100%;height:100%}
-  .slide{position:absolute;inset:0;height:100vh;display:none;flex-direction:column;padding:6vh 8vw 10vh;overflow:hidden}
-.slide.active{display:flex}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;overflow:hidden}
+  .slide-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
+  .slide.active{display:flex}
   .slide.hero{justify-content:center;align-items:center;text-align:center}
   .slide.title-slide{justify-content:center;align-items:center;text-align:center}
 
@@ -338,12 +339,12 @@
       <p style="font-size:14px;color:var(--text-dim);letter-spacing:0.1em;" class="anim-in anim-delay-4">从知识讨论到生存博弈</p>
     </div>
     <div class="deck-footer">《穷查理宝典》圆桌洞见 | V8级圆桌洞见</div>
-    <div class="slide-number">01 / 13</div>
+    <div class="slide-number">01 / 18</div>
   </section>
 
-  <section class="slide" data-title="专家档案">
+  <section class="slide" data-title="专家档案(1/2)">
     <div class="slide-content">
-      <div class="section-label anim-in">EXPERT PROFILES</div>
+      <div class="section-label anim-in">EXPERT PROFILES (1/2)</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
       <div class="grid-2">
         
@@ -356,10 +357,7 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>买股票就是买公司，用合理价格买优秀企业比用便宜价格买普通企业好得多</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>段永平是价值投资在中国最忠实的实践者，验证了巴菲特体系的跨文化可行性</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>段永平的体系被机械模仿而非真正理解，最终在市场考验中失败</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>倾向于认为段永平的成功是'认知胜利'而非'时代红利'</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>买股票就是买公司，用合理价格买优秀企业比用便宜价格买普通企业好得多</div><div class="profile-item"><span class="profile-label">利益相关：</span>段永平是价值投资在中国最忠实的实践者，验证了巴菲特体系的跨文化可行性</div><div class="profile-item"><span class="profile-label">恐惧：</span>段永平的体系被机械模仿而非真正理解，最终在市场考验中失败</div><div class="profile-item"><span class="profile-label">偏见：</span>倾向于认为段永平的成功是'认知胜利'而非'时代红利'</div>
         </div>
       </div>
 
@@ -372,10 +370,7 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>反脆弱性：有些事物能从冲击、不确定性和波动中获益</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>段永平的集中持仓+长期持有策略在尾部风险面前极为脆弱</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>段永平的成功建立在一系列不可能预测的'正面黑天鹅'之上</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>系统性低估个体认知能力，倾向于认为'懂企业'是一种幻觉</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>反脆弱性：有些事物能从冲击、不确定性和波动中获益</div><div class="profile-item"><span class="profile-label">利益相关：</span>段永平的集中持仓+长期持有策略在尾部风险面前极为脆弱</div><div class="profile-item"><span class="profile-label">恐惧：</span>段永平的成功建立在一系列不可能预测的'正面黑天鹅'之上</div><div class="profile-item"><span class="profile-label">偏见：</span>系统性低估个体认知能力，倾向于认为'懂企业'是一种幻觉</div>
         </div>
       </div>
 
@@ -388,13 +383,21 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>待填充</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>待填充</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>待填充</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>待填充</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>待填充</div><div class="profile-item"><span class="profile-label">利益相关：</span>待填充</div><div class="profile-item"><span class="profile-label">恐惧：</span>待填充</div><div class="profile-item"><span class="profile-label">偏见：</span>待填充</div>
         </div>
       </div>
+      </div>
+    </div>
+    <div class="deck-footer">专家档案</div>
+    <div class="slide-number">02 / 18</div>
+  </section>
 
+  <section class="slide" data-title="专家档案(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">EXPERT PROFILES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
+      <div class="grid-2">
+        
       <div class="card card-rise anim-in">
         <div class="speaker-header">
           <div class="speaker-avatar" style="background:#333333">丹</div>
@@ -404,10 +407,7 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>待填充</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>待填充</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>待填充</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>待填充</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>待填充</div><div class="profile-item"><span class="profile-label">利益相关：</span>待填充</div><div class="profile-item"><span class="profile-label">恐惧：</span>待填充</div><div class="profile-item"><span class="profile-label">偏见：</span>待填充</div>
         </div>
       </div>
 
@@ -420,10 +420,7 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>科技发展以浪潮形式推进，顺势者昌逆势者亡；简单即是美</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>段永平是中国第一个用实业思维做投资的实践者，具有划时代意义</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>段永平的实业经验既是他的护城河，也是他的认知边界</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>对中国市场的独特性可能过于乐观</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>科技发展以浪潮形式推进，顺势者昌逆势者亡；简单即是美</div><div class="profile-item"><span class="profile-label">利益相关：</span>段永平是中国第一个用实业思维做投资的实践者，具有划时代意义</div><div class="profile-item"><span class="profile-label">恐惧：</span>段永平的实业经验既是他的护城河，也是他的认知边界</div><div class="profile-item"><span class="profile-label">偏见：</span>对中国市场的独特性可能过于乐观</div>
         </div>
       </div>
 
@@ -436,16 +433,13 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>卓越企业的共同特征是'第五级经理人'+飞轮效应+知道不做什么</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>段永平用实证证明：知道自己不做什么，是比知道自己做什么更强大的竞争优势</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>段永平的体系无法被普通人真正复制，因为它依赖特定的个人能力和资本条件</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>倾向于用实证数据说话，但可能低估了'洞见'和'直觉'的价值</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>卓越企业的共同特征是'第五级经理人'+飞轮效应+知道不做什么</div><div class="profile-item"><span class="profile-label">利益相关：</span>段永平用实证证明：知道自己不做什么，是比知道自己做什么更强大的竞争优势</div><div class="profile-item"><span class="profile-label">恐惧：</span>段永平的体系无法被普通人真正复制，因为它依赖特定的个人能力和资本条件</div><div class="profile-item"><span class="profile-label">偏见：</span>倾向于用实证数据说话，但可能低估了'洞见'和'直觉'的价值</div>
         </div>
       </div>
       </div>
     </div>
     <div class="deck-footer">专家档案</div>
-    <div class="slide-number">02 / 13</div>
+    <div class="slide-number">03 / 18</div>
   </section>
 
   <section class="slide" data-title="Round 1: 段永平投资哲学的底层逻辑是否站得住脚？">
@@ -456,12 +450,12 @@
       <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">买股票就是买公司——这句话有1%的人真懂就了不起，做到就更难</p>
     </div>
     <div class="deck-footer">Round 1 | 段永平投资哲学的底层逻辑是否站得住脚？</div>
-    <div class="slide-number">03 / 13</div>
+    <div class="slide-number">04 / 18</div>
   </section>
 
-  <section class="slide" data-title="R1 立场">
+  <section class="slide" data-title="R1 立场(1/2)">
     <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES</div>
+      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
       <div class="stances-grid">
         
@@ -491,7 +485,18 @@
 
 芒格说'逆向思考'是成功的关键。这在原则上是对的，但在实践中，'知道你会死在何处'并不自动告诉你'你应该去哪里'。我的研究表明，即使人们知道自己的偏误，也很难克服它们。知识≠行动。</div>
       </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 立场</div>
+    <div class="slide-number">05 / 18</div>
+  </section>
 
+  <section class="slide" data-title="R1 立场(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
       <div class="stance-item anim-in">
         <div class="stance-expert neon-gold">戈尔曼</div>
         <div class="stance-content emotion-serious">芒格的多元思维模型与情商理论有深刻的共鸣。他强调的很多心理倾向——如社会认同、奖励超级反应——都与情商研究的核心发现一致：高情商的人能识别并管理这些心理倾向对自己的影响。
@@ -521,7 +526,7 @@
       </div>
     </div>
     <div class="deck-footer">Round 1 | 立场</div>
-    <div class="slide-number">04 / 13</div>
+    <div class="slide-number">06 / 18</div>
   </section>
 
   <section class="slide" data-title="Round 2: 段永平投资体系的局限在哪里？">
@@ -532,12 +537,12 @@
       <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">成功是认知的胜利还是时代的红利？实业经验是优势还是局限？</p>
     </div>
     <div class="deck-footer">Round 2 | 段永平投资体系的局限在哪里？</div>
-    <div class="slide-number">05 / 13</div>
+    <div class="slide-number">07 / 18</div>
   </section>
 
-  <section class="slide" data-title="R2 碰撞">
+  <section class="slide" data-title="R2 碰撞(1/3)">
     <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH</div>
+      <div class="section-label anim-in">ROUND 2: CLASH (1/3)</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
       <div class="clash-container">
         
@@ -562,7 +567,18 @@
         <div class="clash-content emotion-serious">塔勒布你说2008年金融危机，但你忽略了一个事实：我们活下来了。你说预见到危机才算成功，但'反脆弱'的定义是：不是预测风险，而是能够在冲击中变得更强。伯克希尔在2008年不仅没有倒下，还趁机收购了多家优质资产。这正是芒格框架的体现：'知道你会死在何处'不是预测死亡，而是确保死亡不会杀死你。</div>
         
       </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 碰撞</div>
+    <div class="slide-number">08 / 18</div>
+  </section>
 
+  <section class="slide" data-title="R2 碰撞(2/3)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH (2/3)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
       <div class="clash-round anim-in">
         <div class="clash-header">
           <span class="clash-attacker neon-red">卡尼曼</span>
@@ -584,7 +600,18 @@
         <div class="clash-content emotion-serious">卡尼曼你说芒格'没有充分讨论知道什么是对的'，但这正是我批评他的地方。他的检查清单是'避免错误'的工具，但缺乏'识别正确'的指南。情商理论的核心是：不仅要避免负面情绪，还要培养积极情绪（如同理心、好奇心）来支持决策。芒格的框架更像'心理免疫系统'，而不是'心理成长系统'。</div>
         
       </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 碰撞</div>
+    <div class="slide-number">09 / 18</div>
+  </section>
 
+  <section class="slide" data-title="R2 碰撞(3/3)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH (3/3)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
       <div class="clash-round anim-in">
         <div class="clash-header">
           <span class="clash-attacker neon-red">柯林斯</span>
@@ -609,7 +636,7 @@
       </div>
     </div>
     <div class="deck-footer">Round 2 | 碰撞</div>
-    <div class="slide-number">06 / 13</div>
+    <div class="slide-number">10 / 18</div>
   </section>
 
   <section class="slide" data-title="Round 3: 段永平投资哲学对普通人的启示与局限">
@@ -620,12 +647,12 @@
       <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">如何从段永平的成功中提取可执行的洞见，而不是机械模仿</p>
     </div>
     <div class="deck-footer">Round 3 | 段永平投资哲学对普通人的启示与局限</div>
-    <div class="slide-number">07 / 13</div>
+    <div class="slide-number">11 / 18</div>
   </section>
 
-  <section class="slide" data-title="R3 案例">
+  <section class="slide" data-title="R3 案例(1/2)">
     <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3: REALITY</div>
+      <div class="section-label anim-in">ROUND 3: REALITY (1/2)</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
       <div class="cases-container">
         
@@ -660,7 +687,18 @@
         <div class="case-outcome neon-red">代价：回报超20倍，但一旦苹果出现根本性危机，整个资产面临灭顶之灾</div>
         <div class="case-lesson neon-gold">教训：集中持仓的前提是'真懂'——段永平懂消费电子、懂乔布斯、懂生态系统</div>
       </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 案例</div>
+    <div class="slide-number">12 / 18</div>
+  </section>
 
+  <section class="slide" data-title="R3 案例(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 3: REALITY (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
+      <div class="cases-container">
+        
       <div class="reality-case anim-in">
         <div class="case-header">
           <div class="case-name neon-orange">做空百度（教训）</div>
@@ -683,7 +721,7 @@
       </div>
     </div>
     <div class="deck-footer">Round 3 | 案例</div>
-    <div class="slide-number">08 / 13</div>
+    <div class="slide-number">13 / 18</div>
   </section>
 
   <section class="slide" data-title="R3 代价">
@@ -720,7 +758,7 @@
       </div>
     </div>
     <div class="deck-footer">Round 3 | 代价</div>
-    <div class="slide-number">09 / 13</div>
+    <div class="slide-number">14 / 18</div>
   </section>
 
   <section class="slide" data-title="R3 人性">
@@ -742,7 +780,7 @@
       </div>
     </div>
     <div class="deck-footer">Round 3 | 人性</div>
-    <div class="slide-number">10 / 13</div>
+    <div class="slide-number">15 / 18</div>
   </section>
 
   <section class="slide" data-title="R3 升级">
@@ -773,7 +811,7 @@
       </div>
     </div>
     <div class="deck-footer">Round 3 | 升级</div>
-    <div class="slide-number">11 / 13</div>
+    <div class="slide-number">16 / 18</div>
   </section>
 
   <section class="slide" data-title="最终洞见">
@@ -782,7 +820,7 @@
       <div class="quote-large anim-in anim-delay-1">芒格的多元思维模型本质上是'认知保险'——它不能保证你成功，但能大大降低你犯致命错误的概率。</div>
     </div>
     <div class="deck-footer">最终洞见</div>
-    <div class="slide-number">12 / 13</div>
+    <div class="slide-number">17 / 18</div>
   </section>
 
   <section class="slide" data-title="开放问题">
@@ -794,7 +832,7 @@
 <div class="headline-item anim-in"><strong>Q3:</strong> 普通人能否找到一条介于'完全模仿段永平'和'全部买指数基金'之间的中间路径？</div>
     </div>
     <div class="deck-footer">开放问题</div>
-    <div class="slide-number">13 / 13</div>
+    <div class="slide-number">18 / 18</div>
   </section>
 
 <div class="toc-backdrop" id="tocBackdrop"></div>
@@ -871,16 +909,10 @@ document.addEventListener("keydown",function(e){
 });
 var wheelTimer=null;
 deck.addEventListener("wheel",function(e){
-  var sl=slides[cur];
-  var atTop=sl.scrollTop<=0;
-  var atBottom=sl.scrollTop+sl.clientHeight>=sl.scrollHeight-2;
-  if(e.deltaY>0&&atBottom){
-    if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},350);go(cur+1)}
-    e.preventDefault();
-  }else if(e.deltaY<0&&atTop){
-    if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},350);go(cur-1)}
-    e.preventDefault();
-  }
+  e.preventDefault();
+  if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},400)}
+  if(e.deltaY>0)go(cur+1);
+  else if(e.deltaY<0)go(cur-1);
 },{passive:false});
 var touchX=0,touchY=0;
 deck.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX;touchY=e.touches[0].clientY});

@@ -47,8 +47,8 @@
 
   /* ============ 幻灯片 ============ */
   .deck{position:relative;width:100%;height:100%}
-  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;height:100vh;overflow:hidden}
-  .slide::-webkit-scrollbar{width:4px}.slide::-webkit-scrollbar-track{background:transparent}.slide::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;overflow:hidden}
+  .slide-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
   .slide.active{display:flex}
   .slide.hero{justify-content:center;align-items:center;text-align:center}
   .slide.title-slide{justify-content:center;align-items:center;text-align:center}
@@ -339,12 +339,12 @@
       <p style="font-size:14px;color:var(--text-dim);letter-spacing:0.1em;" class="anim-in anim-delay-4">从知识讨论到生存博弈</p>
     </div>
     <div class="deck-footer">数字永生的哀悼经济学 | V8级圆桌洞见</div>
-    <div class="slide-number">01 / 13</div>
+    <div class="slide-number">01 / 17</div>
   </section>
 
-  <section class="slide" data-title="专家档案">
+  <section class="slide" data-title="专家档案(1/2)">
     <div class="slide-content">
-      <div class="section-label anim-in">EXPERT PROFILES</div>
+      <div class="section-label anim-in">EXPERT PROFILES (1/2)</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
       <div class="grid-2">
         
@@ -357,10 +357,7 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>法治的要义是对权力的限制，技术可以是中立的但掌握技术的人不是</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>谁有权"复活"一个人——数字遗产的法律空白</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>最脆弱的人群（丧亲者）成为被收割的消费者</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>可能过于强调法律规制而忽视情感需求</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>法治的要义是对权力的限制，技术可以是中立的但掌握技术的人不是</div><div class="profile-item"><span class="profile-label">利益相关：</span>谁有权"复活"一个人——数字遗产的法律空白</div><div class="profile-item"><span class="profile-label">恐惧：</span>最脆弱的人群（丧亲者）成为被收割的消费者</div><div class="profile-item"><span class="profile-label">偏见：</span>可能过于强调法律规制而忽视情感需求</div>
         </div>
       </div>
 
@@ -373,10 +370,7 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>正常的哀悼需要接受丧失，AI复活可能打断这个过程</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>AI复活对哀伤心理机制的干预</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>持续的AI对话可能形成"病理性哀悼"</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>纯理论视角可能忽视个体差异和特殊情况</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>正常的哀悼需要接受丧失，AI复活可能打断这个过程</div><div class="profile-item"><span class="profile-label">利益相关：</span>AI复活对哀伤心理机制的干预</div><div class="profile-item"><span class="profile-label">恐惧：</span>持续的AI对话可能形成"病理性哀悼"</div><div class="profile-item"><span class="profile-label">偏见：</span>纯理论视角可能忽视个体差异和特殊情况</div>
         </div>
       </div>
 
@@ -389,13 +383,21 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>生命意义来自于有限性，AI永生可能消解这种意义</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>AI复活如何改变人类对死亡的基本认知</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>当死亡可以被"延续"，活着还有什么意义？</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>宏观历史视角可能忽视个体情感需求</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>生命意义来自于有限性，AI永生可能消解这种意义</div><div class="profile-item"><span class="profile-label">利益相关：</span>AI复活如何改变人类对死亡的基本认知</div><div class="profile-item"><span class="profile-label">恐惧：</span>当死亡可以被"延续"，活着还有什么意义？</div><div class="profile-item"><span class="profile-label">偏见：</span>宏观历史视角可能忽视个体情感需求</div>
         </div>
       </div>
+      </div>
+    </div>
+    <div class="deck-footer">专家档案</div>
+    <div class="slide-number">02 / 17</div>
+  </section>
 
+  <section class="slide" data-title="专家档案(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">EXPERT PROFILES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
+      <div class="grid-2">
+        
       <div class="card card-rise anim-in">
         <div class="speaker-header">
           <div class="speaker-avatar" style="background:#2d5a8e">项</div>
@@ -405,10 +407,7 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>死亡从来不只是个人事件，它有社会整合功能</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>AI复活如何瓦解死亡的社会意义</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>当哀悼变成私人行为，社会凝聚力会被削弱</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>可能过于强调社会功能而忽视个人选择</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>死亡从来不只是个人事件，它有社会整合功能</div><div class="profile-item"><span class="profile-label">利益相关：</span>AI复活如何瓦解死亡的社会意义</div><div class="profile-item"><span class="profile-label">恐惧：</span>当哀悼变成私人行为，社会凝聚力会被削弱</div><div class="profile-item"><span class="profile-label">偏见：</span>可能过于强调社会功能而忽视个人选择</div>
         </div>
       </div>
 
@@ -421,10 +420,7 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>商业模式本身不是问题，问题在于如何设计更公平的商业模式</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>哀悼机器人作为情感经济的市场潜力</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>商业化可能加剧对脆弱人群的剥削</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>商业视角可能过于务实</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>商业模式本身不是问题，问题在于如何设计更公平的商业模式</div><div class="profile-item"><span class="profile-label">利益相关：</span>哀悼机器人作为情感经济的市场潜力</div><div class="profile-item"><span class="profile-label">恐惧：</span>商业化可能加剧对脆弱人群的剥削</div><div class="profile-item"><span class="profile-label">偏见：</span>商业视角可能过于务实</div>
         </div>
       </div>
 
@@ -437,16 +433,13 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>活着比正确更重要——有时候"不正确"但"有效"的方法，比"正确"但"无效"的方法更好</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>普通人在丧亲之痛中的真实需求</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>理论分析可能脱离真实的人性需求</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>个人情感视角可能过于主观</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>活着比正确更重要——有时候"不正确"但"有效"的方法，比"正确"但"无效"的方法更好</div><div class="profile-item"><span class="profile-label">利益相关：</span>普通人在丧亲之痛中的真实需求</div><div class="profile-item"><span class="profile-label">恐惧：</span>理论分析可能脱离真实的人性需求</div><div class="profile-item"><span class="profile-label">偏见：</span>个人情感视角可能过于主观</div>
         </div>
       </div>
       </div>
     </div>
     <div class="deck-footer">专家档案</div>
-    <div class="slide-number">02 / 13</div>
+    <div class="slide-number">03 / 17</div>
   </section>
 
   <section class="slide" data-title="Round 1: AI复活的技术现实与伦理困境">
@@ -457,12 +450,12 @@
       <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">当殡葬业拥抱AI、哀悼机器人兴起——这是疗愈还是剥削？</p>
     </div>
     <div class="deck-footer">Round 1 | AI复活的技术现实与伦理困境</div>
-    <div class="slide-number">03 / 13</div>
+    <div class="slide-number">04 / 17</div>
   </section>
 
-  <section class="slide" data-title="R1 立场">
+  <section class="slide" data-title="R1 立场(1/2)">
     <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES</div>
+      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
       <div class="stances-grid">
         
@@ -504,7 +497,18 @@ AI"复活"技术的危险在于：它打断了这个过程。
 
 更关键的是：AI"对话"会改变你对"死亡"的认知。当"死亡"可以被"技术复活"，人们还会认为"死亡是不可逆的"吗？如果生者可以"永远"与逝者保持联系，"死亡"的终结性就被消解了。这会从根本上改变人类的生死观。</div>
       </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 立场</div>
+    <div class="slide-number">05 / 17</div>
+  </section>
 
+  <section class="slide" data-title="R1 立场(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
       <div class="stance-item anim-in">
         <div class="stance-expert neon-gold">项飙</div>
         <div class="stance-content emotion-serious">我关心的不是技术，是"死亡"在社会结构中的位置。
@@ -546,7 +550,7 @@ AI"复活"技术的问题在于：它把"死亡"变成了"私人的延续"。你
       </div>
     </div>
     <div class="deck-footer">Round 1 | 立场</div>
-    <div class="slide-number">04 / 13</div>
+    <div class="slide-number">06 / 17</div>
   </section>
 
   <section class="slide" data-title="Round 2: 情感疗愈与商业剥削的边界">
@@ -557,12 +561,12 @@ AI"复活"技术的问题在于：它把"死亡"变成了"私人的延续"。你
       <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">AI复活是给生者的礼物还是对脆弱时刻的商业收割？</p>
     </div>
     <div class="deck-footer">Round 2 | 情感疗愈与商业剥削的边界</div>
-    <div class="slide-number">05 / 13</div>
+    <div class="slide-number">07 / 17</div>
   </section>
 
-  <section class="slide" data-title="R2 碰撞">
+  <section class="slide" data-title="R2 碰撞(1/2)">
     <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH</div>
+      <div class="section-label anim-in">ROUND 2: CLASH (1/2)</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
       <div class="clash-container">
         
@@ -587,7 +591,18 @@ AI"复活"技术的问题在于：它把"死亡"变成了"私人的延续"。你
         <div class="clash-content emotion-serious">李诞，你说"先活下去"。但AI对话让人"活"下去了吗？研究表明，哀伤周期延长40%。这不是疗愈，这是成瘾——每次"对话"给你短暂的安慰，但让你的悲伤永远无法痊愈。</div>
         
       </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 碰撞</div>
+    <div class="slide-number">08 / 17</div>
+  </section>
 
+  <section class="slide" data-title="R2 碰撞(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
       <div class="clash-round anim-in">
         <div class="clash-header">
           <span class="clash-attacker neon-red">尤瓦尔·赫拉利</span>
@@ -601,7 +616,7 @@ AI"复活"技术的问题在于：它把"死亡"变成了"私人的延续"。你
       </div>
     </div>
     <div class="deck-footer">Round 2 | 碰撞</div>
-    <div class="slide-number">06 / 13</div>
+    <div class="slide-number">09 / 17</div>
   </section>
 
   <section class="slide" data-title="Round 3: 寻找哀悼经济学的伦理边界">
@@ -612,12 +627,12 @@ AI"复活"技术的问题在于：它把"死亡"变成了"私人的延续"。你
       <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">如何在尊重死亡与科技慰藉之间找到平衡？</p>
     </div>
     <div class="deck-footer">Round 3 | 寻找哀悼经济学的伦理边界</div>
-    <div class="slide-number">07 / 13</div>
+    <div class="slide-number">10 / 17</div>
   </section>
 
-  <section class="slide" data-title="R3 案例">
+  <section class="slide" data-title="R3 案例(1/2)">
     <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3: REALITY</div>
+      <div class="section-label anim-in">ROUND 3: REALITY (1/2)</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
       <div class="cases-container">
         
@@ -640,7 +655,18 @@ AI"复活"技术的问题在于：它把"死亡"变成了"私人的延续"。你
         <div class="case-outcome neon-red">代价：AI对话可能延长而非治愈哀伤</div>
         <div class="case-lesson neon-gold">教训：未完成的告别才是哀伤的核心——AI让你"永远不说再见"，但这种"永远"本身就是痛苦</div>
       </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 案例</div>
+    <div class="slide-number">11 / 17</div>
+  </section>
 
+  <section class="slide" data-title="R3 案例(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 3: REALITY (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
+      <div class="cases-container">
+        
       <div class="reality-case anim-in">
         <div class="case-header">
           <div class="case-name neon-orange">殡葬业AI转型</div>
@@ -653,7 +679,7 @@ AI"复活"技术的问题在于：它把"死亡"变成了"私人的延续"。你
       </div>
     </div>
     <div class="deck-footer">Round 3 | 案例</div>
-    <div class="slide-number">08 / 13</div>
+    <div class="slide-number">12 / 17</div>
   </section>
 
   <section class="slide" data-title="R3 代价">
@@ -690,7 +716,7 @@ AI"复活"技术的问题在于：它把"死亡"变成了"私人的延续"。你
       </div>
     </div>
     <div class="deck-footer">Round 3 | 代价</div>
-    <div class="slide-number">09 / 13</div>
+    <div class="slide-number">13 / 17</div>
   </section>
 
   <section class="slide" data-title="R3 人性">
@@ -718,7 +744,7 @@ AI"复活"的问题在于：它给你一个"不用放下"的幻觉。你以为�
       </div>
     </div>
     <div class="deck-footer">Round 3 | 人性</div>
-    <div class="slide-number">10 / 13</div>
+    <div class="slide-number">14 / 17</div>
   </section>
 
   <section class="slide" data-title="R3 升级">
@@ -753,7 +779,7 @@ AI"复活"的问题在于：它给你一个"不用放下"的幻觉。你以为�
       </div>
     </div>
     <div class="deck-footer">Round 3 | 升级</div>
-    <div class="slide-number">11 / 13</div>
+    <div class="slide-number">15 / 17</div>
   </section>
 
   <section class="slide" data-title="最终洞见">
@@ -762,7 +788,7 @@ AI"复活"的问题在于：它给你一个"不用放下"的幻觉。你以为�
       <div class="quote-large anim-in anim-delay-1">AI"复活"可能对某些人确实有帮助，但它也可能打断正常的哀悼过程。疗愈不是"保持联系"，而是"带着爱继续前行"。真正的告别，才是悲伤教给我们的人生最后一课。</div>
     </div>
     <div class="deck-footer">最终洞见</div>
-    <div class="slide-number">12 / 13</div>
+    <div class="slide-number">16 / 17</div>
   </section>
 
   <section class="slide" data-title="开放问题">
@@ -774,7 +800,7 @@ AI"复活"的问题在于：它给你一个"不用放下"的幻觉。你以为�
 <div class="headline-item anim-in"><strong>Q3:</strong> 在一个可以"永远告别不了"的世界里，我们如何重新定义"死亡"的意义？</div>
     </div>
     <div class="deck-footer">开放问题</div>
-    <div class="slide-number">13 / 13</div>
+    <div class="slide-number">17 / 17</div>
   </section>
 
 <div class="toc-backdrop" id="tocBackdrop"></div>
@@ -851,16 +877,10 @@ document.addEventListener("keydown",function(e){
 });
 var wheelTimer=null;
 deck.addEventListener("wheel",function(e){
-  var sl=slides[cur];
-  var atTop=sl.scrollTop<=0;
-  var atBottom=sl.scrollTop+sl.clientHeight>=sl.scrollHeight-2;
-  if(e.deltaY>0&&atBottom){
-    if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},350);go(cur+1)}
-    e.preventDefault();
-  }else if(e.deltaY<0&&atTop){
-    if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},350);go(cur-1)}
-    e.preventDefault();
-  }
+  e.preventDefault();
+  if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},400)}
+  if(e.deltaY>0)go(cur+1);
+  else if(e.deltaY<0)go(cur-1);
 },{passive:false});
 var touchX=0,touchY=0;
 deck.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX;touchY=e.touches[0].clientY});

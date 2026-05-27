@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>碳中和叙事的权力博弈 圆桌洞见</title>
+<style>
+  :root{
+    /* ============ 主题色(默认:🖋 墨水经典) ============ */
+    --ink:#0a0a0b;
+    --ink-rgb:10,10,11;
+    --paper:#f1efea;
+    --paper-rgb:241,239,234;
+    --paper-tint:#e8e5de;
+    --ink-tint:#18181a;
+    --text-dim:rgba(241,239,234,0.5);
+
+    /* ============ 强调色 ============ */
+    --accent:#c23b22;
+    --accent-rgb:194,59,34;
+    --gold:#d4a843;
+    --gold-rgb:212,168,67;
+    --blue:#4a6a9a;
+    --purple:#8a4aaa;
+    --green:#3a8a5c;
+    --cyan:#4a9a9a;
+    --orange:#d4843a;
+
+    /* ============ 字体(跨主题固定) ============ */
+    --mono:"IBM Plex Mono","SF Mono",monospace;
+    --serif-zh:"Noto Serif SC","Source Han Serif SC","STSong",serif;
+    --sans-zh:"Noto Sans SC","Source Han Sans SC","PingFang SC",sans-serif;
+
+    /* ============ 间距 ============ */
+    --radius:10px;
+    --ease:cubic-bezier(.4,0,.2,1);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans-zh);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+  /* ============ Deck 容器 ============ */
+  #deck{position:relative;width:100vw;height:100vh;overflow:hidden}
+
+  /* ============ 进度条 ============ */
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:1000;transition:width .5s var(--ease);box-shadow:0 0 12px rgba(var(--accent-rgb),.3)}
+
+  /* ============ 幻灯片 ============ */
+  .deck{position:relative;width:100%;height:100%}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;overflow:hidden}
+  .slide-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
+  .slide.active{display:flex}
+  .slide.hero{justify-content:center;align-items:center;text-align:center}
+  .slide.title-slide{justify-content:center;align-items:center;text-align:center}
+
+  /* ============ 入场动画(Guizang风格) ============ */
+  [data-anim]{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .slide.active [data-anim]{opacity:1;transform:translateY(0)}
+  .slide.active [data-anim]:nth-child(1){transition-delay:.1s}
+  .slide.active [data-anim]:nth-child(2){transition-delay:.18s}
+  .slide.active [data-anim]:nth-child(3){transition-delay:.26s}
+  .slide.active [data-anim]:nth-child(4){transition-delay:.34s}
+  .slide.active [data-anim]:nth-child(5){transition-delay:.42s}
+  .slide.active [data-anim]:nth-child(6){transition-delay:.5s}
+
+  /* ============ 内容区(book-distillation范式) ============ */
+  .frame{width:100%;max-width:1100px;margin:0 auto;flex:1;display:flex;flex-direction:column}
+  .slide-content{flex:1;display:flex;flex-direction:column}
+
+  /* ============ Magazine Chrome(Guizang风格) ============ */
+  .chrome{display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.5;margin-bottom:3vh}
+  .chrome .left,.chrome .right{display:flex;gap:2em;align-items:center}
+  .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
+
+  /* ============ 底部元数据(render_v8兼容) ============ */
+  .deck-footer{margin-top:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
+  .slide-number{position:absolute;bottom:2vh;right:3vw;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.35)}
+
+  /* ============ Section Label ============ */
+  .section-label{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
+
+  /* ============ 封面 ============ */
+  .cover-badge{display:inline-block;padding:6px 20px;border:1px solid var(--accent);border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4vh}
+  .cover-title{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:4vh;line-height:1.8;max-width:600px}
+  .cover-stats{display:flex;gap:4vh;flex-wrap:wrap;justify-content:center}
+  .cover-stat{text-align:center}
+  .cover-stat-num{font-family:var(--mono);font-size:2.5rem;font-weight:900;color:var(--accent)}
+  .cover-stat-label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.5);margin-top:.5vh}
+
+  /* ============ 封面标题(render_v8) ============ */
+  .hero-dark{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;flex:1}
+  .title-main{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .title-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:2vh;line-height:1.8}
+  .gold-line{width:80px;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));margin:3vh auto;border-radius:2px}
+
+  /* ============ 标题系统 ============ */
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
+  .h-hero{font-family:var(--serif-zh);font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.2;margin-bottom:3vh}
+  .h-xl{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.4rem,3vw,2.2rem);line-height:1.3;margin-bottom:2vh}
+  .h-lg{font-family:var(--serif-zh);font-weight:600;font-size:clamp(1.1rem,2vw,1.5rem);line-height:1.4;margin-bottom:1.5vh}
+  .h-md{font-weight:600;font-size:1.1rem;margin-bottom:1vh}
+  .lead{font-size:1rem;line-height:1.85;color:rgba(var(--paper-rgb),.8);max-width:700px}
+  .meta-row{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.4);display:flex;gap:2em;flex-wrap:wrap;margin-top:3vh}
+
+  /* ============ 大号引用(render_v8) ============ */
+  .quote-large{font-family:var(--serif-zh);font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:600;line-height:1.6;color:rgba(var(--paper-rgb),.9);max-width:800px;margin:0 auto}
+
+  /* ============ 分割线 ============ */
+  .rule{width:100%;height:1px;background:rgba(var(--paper-rgb),.15);margin:3vh 0}
+
+  /* ============ 标签 ============ */
+  .tag{display:inline-block;padding:4px 12px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;margin:3px}
+  .tag-gold{background:rgba(var(--gold-rgb),.15);color:var(--gold);border:1px solid rgba(var(--gold-rgb),.2)}
+  .tag-red{background:rgba(var(--accent-rgb),.15);color:var(--accent);border:1px solid rgba(var(--accent-rgb),.2)}
+  .tag-blue{background:rgba(74,106,154,.15);color:var(--blue);border:1px solid rgba(74,106,154,.2)}
+  .tag-purple{background:rgba(138,74,170,.15);color:var(--purple);border:1px solid rgba(138,74,170,.2)}
+  .tag-green{background:rgba(58,138,92,.15);color:var(--green);border:1px solid rgba(58,138,92,.2)}
+
+  /* ============ 霓虹强调色(render_v8) ============ */
+  .neon-gold{color:var(--gold)}.neon-red{color:var(--accent)}.neon-cyan{color:var(--cyan)}.neon-purple{color:var(--purple)}.neon-orange{color:var(--orange)}.neon-green{color:var(--green)}
+
+  /* ============ 网格系统 ============ */
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:2vh 2vw}
+  @media(max-width:768px){.grid-2{grid-template-columns:1fr}}
+
+  /* ============ 发言块(原生) ============ */
+  .sp{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2.5vw;margin-bottom:2vh;position:relative}
+  .sp::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .sh{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh}
+  .speaker-avatar{width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:var(--ink);background:var(--accent);flex-shrink:0}
+  .sn{font-weight:700;font-size:1rem}
+  .sr{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4);padding:3px 8px;background:rgba(var(--paper-rgb),.06);border-radius:3px}
+  .st{font-size:.95rem;line-height:2;color:rgba(var(--paper-rgb),.85)}
+  .st strong{color:var(--paper);font-weight:700}
+  .st em{color:var(--gold);font-style:normal;font-weight:600}
+
+  /* ============ 碰撞块(原生) ============ */
+  .cb{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;position:relative}
+  .cb::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .cb.blue{border-color:rgba(74,106,154,.3)}.cb.blue::before{background:var(--blue)}
+  .cb.purple{border-color:rgba(138,74,170,.3)}.cb.purple::before{background:var(--purple)}
+  .cb.green{border-color:rgba(58,138,92,.3)}.cb.green::before{background:var(--green)}
+  .cb.orange{border-color:rgba(var(--gold-rgb),.3)}.cb.orange::before{background:var(--gold)}
+  .cl{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;color:var(--accent);font-weight:600}
+  .cl.blue{color:var(--blue)}.cl.purple{color:var(--purple)}.cl.green{color:var(--green)}.cl.orange{color:var(--gold)}
+
+  /* ============ 洞见卡 ============ */
+  .insight-c{background:linear-gradient(135deg,rgba(var(--paper-rgb),.04) 0%,rgba(var(--paper-rgb),.08) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh;position:relative;overflow:hidden}
+  .insight-c::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold))}
+  .insight-q{font-family:var(--serif-zh);font-size:1.1rem;font-weight:700;color:var(--gold);line-height:1.6;margin-bottom:1vh}
+  .insight-a{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.75)}
+
+  /* ============ 卡片 ============ */
+  .card{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
+  .card-num{font-family:var(--mono);font-weight:900;font-size:1.8rem;color:var(--accent);opacity:.4;margin-bottom:1vh}
+  .card-title{font-weight:700;font-size:1rem;margin-bottom:1vh}
+  .card-body{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
+  .card-source{font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);margin-top:1vh}
+
+  /* ============ 专家卡片(render_v8) ============ */
+  .card-rise{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--green)}
+  .card-fall{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--accent)}
+  .speaker-header{display:flex;align-items:center;gap:16px;margin-bottom:2vh}
+  .speaker-name{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem}
+  .speaker-role{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:2px}
+  .expert-profile{display:flex;flex-direction:column;gap:1vh}
+  .profile-item{font-size:.9rem;line-height:1.7;color:rgba(var(--paper-rgb),.8)}
+  .profile-label{color:var(--gold);font-weight:600}
+
+  /* ============ 立场表达(render_v8) ============ */
+  .stance-item{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;border-left:3px solid var(--gold)}
+  .stance-expert{font-family:var(--serif-zh);font-weight:700;font-size:1rem;margin-bottom:1vh}
+  .stance-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
+  .stances-grid{display:flex;flex-direction:column;gap:1.5vh}
+
+  /* ============ 碰撞轮次(render_v8) ============ */
+  .clash-round{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;position:relative}
+  .clash-round::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .clash-header{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh;flex-wrap:wrap}
+  .clash-attacker{font-weight:700;font-size:1rem}
+  .clash-target{font-weight:700;font-size:1rem}
+  .clash-arrow{color:rgba(var(--paper-rgb),.3);font-size:1.2rem}
+  .clash-type{display:inline-block;padding:3px 10px;border-radius:3px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.5vh;font-weight:600}
+  .clash-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
+  .counter-attack{margin-top:2vh;padding-top:2vh;border-top:1px dashed rgba(var(--paper-rgb),.1)}
+  .counter-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .counter-content{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
+  .clash-container{display:flex;flex-direction:column;gap:2vh}
+
+  /* ============ 攻击类型色 ============ */
+  .attack-logic{background:rgba(74,106,154,.15);color:var(--blue)}
+  .attack-interest{background:rgba(var(--accent-rgb),.15);color:var(--accent)}
+  .attack-reality{background:rgba(var(--gold-rgb),.15);color:var(--gold)}
+  .attack-human{background:rgba(138,74,170,.15);color:var(--purple)}
+  .attack-failure{background:rgba(58,138,92,.15);color:var(--green)}
+
+  /* ============ 现实案例(render_v8) ============ */
+  .reality-case{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--orange)}
+  .case-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5vh;flex-wrap:wrap;gap:8px}
+  .case-name{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem}
+  .case-source{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4)}
+  .case-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:1.5vh}
+  .case-outcome{font-size:.9rem;font-weight:600;margin-bottom:1vh}
+  .case-lesson{font-size:.9rem;font-weight:600}
+  .cases-container{display:flex;flex-direction:column;gap:2vh}
+
+  /* ============ 代价讨论(render_v8) ============ */
+  .cost-discussion{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh}
+  .cost-scenario{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem;margin-bottom:2vh}
+  .cost-list{display:flex;flex-direction:column;gap:1.5vh;margin-bottom:2vh}
+  .cost-item{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:1.5vh 2vw;border-left:3px solid var(--accent)}
+  .cost-name{font-weight:700;font-size:.95rem;margin-bottom:.5vh}
+  .cost-analysis{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .worst-case{background:rgba(var(--accent-rgb),.08);border:1px solid rgba(var(--accent-rgb),.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
+  .worst-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .worst-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+  .survivor-bias{background:rgba(138,74,170,.08);border:1px solid rgba(138,74,170,.15);border-radius:6px;padding:2vh 2vw}
+  .survivor-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .survivor-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+
+  /* ============ 人性层(render_v8) ============ */
+  .human-nature{background:linear-gradient(135deg,rgba(var(--paper-rgb),.03) 0%,rgba(var(--paper-rgb),.06) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
+  .human-question{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem;margin-bottom:2vh;line-height:1.5}
+  .human-analysis{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:2vh}
+  .human-examples{margin-bottom:2vh}
+  .examples-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1vh;font-weight:600}
+  .example-item{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8);padding:.5vh 0}
+  .human-conclusion{font-size:.95rem;font-weight:600;line-height:1.7}
+
+  /* ============ 认知升级(render_v8) ============ */
+  .cognitive-upgrade{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
+  .upgrade-comparison{display:grid;grid-template-columns:1fr auto 1fr;gap:2vw;align-items:start;margin-bottom:2vh}
+  @media(max-width:768px){.upgrade-comparison{grid-template-columns:1fr}.upgrade-arrow{transform:rotate(90deg)}}
+  .old-thinking,.new-thinking{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:2vh 1.5vw}
+  .old-thinking{border-left:3px solid var(--accent)}
+  .new-thinking{border-left:3px solid var(--green)}
+  .thinking-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .thinking-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+  .upgrade-arrow{font-size:1.5rem;color:rgba(var(--paper-rgb),.3);display:flex;align-items:center;justify-content:center;padding-top:3vh}
+  .complexity{background:rgba(74,106,154,.08);border:1px solid rgba(74,106,154,.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
+  .complexity-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .complexity-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .actionable{background:rgba(var(--gold-rgb),.08);border:1px solid rgba(var(--gold-rgb),.15);border-radius:6px;padding:2vh 2vw}
+  .actionable-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .actionable-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 情绪样式 ============ */
+  .emotion-sarcasm{border-left:3px solid var(--purple);padding-left:12px;font-style:italic}
+  .emotion-helplessness{opacity:.75;font-style:italic}
+  .emotion-anger{color:var(--accent);font-weight:600}
+  .emotion-hesitation{opacity:.8;font-style:italic}
+  .emotion-self-deprecation{opacity:.7;font-style:italic}
+  .emotion-cold-laugh{color:var(--purple)}
+  .emotion-silence{opacity:.5;font-style:italic}
+  .emotion-serious{color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 指标 ============ */
+  .metrics{display:flex;gap:2vw;flex-wrap:wrap;margin-bottom:3vh}
+  .metric{flex:1;min-width:100px;text-align:center;background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 1.5vw}
+  .metric-val{font-family:var(--mono);font-weight:900;font-size:clamp(1.5rem,3vw,2.5rem);color:var(--accent)}
+  .metric-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:.5vh}
+
+  /* ============ 开放问题 ============ */
+  .oq{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
+  .oq-num{font-family:var(--mono);font-weight:900;font-size:1.2rem;color:var(--accent);opacity:.3;margin-bottom:1vh}
+  .oq-text{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .headline-item{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.85);padding:1.5vh 0;border-bottom:1px solid rgba(var(--paper-rgb),.06)}
+  .headline-item:last-child{border-bottom:none}
+  .headline-item strong{color:var(--gold);margin-right:8px}
+
+  /* ============ 引用 ============ */
+  .quote{font-family:var(--serif-zh);font-size:1rem;font-style:italic;line-height:1.8;padding:2vh 2.5vw;border-left:3px solid var(--gold);background:rgba(var(--gold-rgb),.05);margin:2vh 0;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ TOC ============ */
+  .toc-panel{position:fixed;top:0;left:0;width:min(340px,80vw);height:100vh;background:rgba(var(--ink-rgb),.97);backdrop-filter:blur(20px);z-index:100;transform:translateX(-100%);transition:transform .35s var(--ease);padding:3vh 2.5vw;overflow-y:auto;border-right:1px solid rgba(var(--paper-rgb),.08)}
+  .toc-panel.open{transform:translateX(0)}
+  .toc-title{font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:3vh;padding-bottom:2vh;border-bottom:1px solid rgba(var(--paper-rgb),.1)}
+  .toc-item{display:flex;justify-content:space-between;padding:1.2vh 1.5vw;margin-bottom:.5vh;cursor:pointer;border-radius:6px;border-left:2px solid transparent;font-size:.9rem;color:rgba(var(--paper-rgb),.7);transition:all .2s}
+  .toc-item:hover{background:rgba(var(--paper-rgb),.06);color:var(--paper)}
+  .toc-item.active{background:rgba(var(--paper-rgb),.08);color:var(--accent);border-left-color:var(--accent);font-weight:600}
+  .toc-label{flex:1}
+  .toc-page{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.35)}
+  .toc-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;opacity:0;pointer-events:none;transition:opacity .3s}
+  .toc-backdrop.open{opacity:1;pointer-events:auto}
+
+  /* ============ 导航栏 ============ */
+  .nav-bar{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 3vw;background:rgba(var(--ink-rgb),.9);backdrop-filter:blur(10px);z-index:50;border-top:1px solid rgba(var(--paper-rgb),.06)}
+  .nav-left,.nav-right{display:flex;align-items:center;gap:12px}
+  .nav-btn{background:none;border:1px solid rgba(var(--paper-rgb),.12);color:rgba(var(--paper-rgb),.7);padding:8px 16px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;cursor:pointer;transition:all .2s}
+  .nav-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(var(--accent-rgb),.1)}
+  .nav-title{font-size:12px;color:rgba(var(--paper-rgb),.5);max-width:40vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-counter{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.4)}
+
+  /* ============ 导航点 ============ */
+  .nav-dots{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:6px}
+  .nd{width:6px;height:6px;border-radius:50%;background:rgba(var(--paper-rgb),.15);cursor:pointer;transition:all .3s var(--ease);border:none;padding:0}
+  .nd.active{background:var(--accent);height:20px;border-radius:3px;box-shadow:0 0 8px rgba(var(--accent-rgb),.4)}
+  .nd:hover{background:rgba(var(--paper-rgb),.4)}
+
+  /* ============ 入场动画延迟(render_v8兼容) ============ */
+  .anim-in{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .slide.active .anim-in{opacity:1;transform:translateY(0)}
+  .slide.active .anim-in:nth-child(1){transition-delay:.1s}
+  .slide.active .anim-in:nth-child(2){transition-delay:.18s}
+  .slide.active .anim-in:nth-child(3){transition-delay:.26s}
+  .slide.active .anim-in:nth-child(4){transition-delay:.34s}
+  .slide.active .anim-in:nth-child(5){transition-delay:.42s}
+  .slide.active .anim-in:nth-child(6){transition-delay:.5s}
+  .anim-delay-1{transition-delay:.18s !important}
+  .anim-delay-2{transition-delay:.26s !important}
+  .anim-delay-3{transition-delay:.34s !important}
+  .anim-delay-4{transition-delay:.42s !important}
+  .anim-delay-5{transition-delay:.5s !important}
+  .anim-delay-6{transition-delay:.58s !important}
+
+  /* ============ 响应式 ============ */
+  @media(max-width:1024px){.slide{padding:4vh 5vw 8vh}}
+  @media(max-width:768px){
+    .slide{padding:3vh 4vw 7vh}
+    .cover-stats{gap:2vh}
+    .metrics{flex-direction:column}
+    .nav-dots,.nav-title{display:none}
+    .nav-bar{padding:0 2vw}
+  }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+<div class="progress-bar" id="progressBar"></div>
+
+
+  <section class="slide hero active" data-title="封面">
+    <div class="slide-content hero-dark">
+      <div class="section-label anim-in">ROUNDTABLE DISCUSSION V8.0</div>
+      <h1 class="title-main anim-in anim-delay-1">碳中和叙事的权力博弈</h1>
+      <div class="title-sub anim-in anim-delay-2"></div>
+      <div class="gold-line anim-in anim-delay-3"></div>
+      <p style="font-size:14px;color:var(--text-dim);letter-spacing:0.1em;" class="anim-in anim-delay-4">从知识讨论到生存博弈</p>
+    </div>
+    <div class="deck-footer">碳中和叙事的权力博弈 | V8级圆桌洞见</div>
+    <div class="slide-number">01 / 32</div>
+  </section>
+
+  <section class="slide" data-title="专家档案(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">EXPERT PROFILES (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
+      <div class="grid-2">
+        
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#1a5f2a">项</div>
+          <div>
+            <div class="speaker-name neon-gold">项飙</div>
+            <div class="speaker-role">人类学家</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          
+        </div>
+      </div>
+
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#8a2a4a">纳</div>
+          <div>
+            <div class="speaker-name neon-gold">纳西姆·塔勒布</div>
+            <div class="speaker-role">统计学家</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          
+        </div>
+      </div>
+
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#2a6a8a">杨</div>
+          <div>
+            <div class="speaker-name neon-gold">杨克勤</div>
+            <div class="speaker-role">环保活动家</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">专家档案</div>
+    <div class="slide-number">02 / 32</div>
+  </section>
+
+  <section class="slide" data-title="专家档案(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">EXPERT PROFILES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
+      <div class="grid-2">
+        
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#e65100">李</div>
+          <div>
+            <div class="speaker-name neon-gold">李诞</div>
+            <div class="speaker-role">脱口秀演员</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          
+        </div>
+      </div>
+
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#6a4a8a">冯</div>
+          <div>
+            <div class="speaker-name neon-gold">冯唐</div>
+            <div class="speaker-role">战略管理专家</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          
+        </div>
+      </div>
+
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#4a2d8a">尤</div>
+          <div>
+            <div class="speaker-name neon-gold">尤瓦尔·赫拉利</div>
+            <div class="speaker-role">历史学家</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">专家档案</div>
+    <div class="slide-number">03 / 32</div>
+  </section>
+
+  <section class="slide" data-title="Round 1: 碳中和的政治经济学">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1</div>
+      <h2 class="quote-large anim-in anim-delay-1">碳中和的政治经济学</h2>
+      <div class="gold-line anim-in anim-delay-2"></div>
+      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">碳中和是环保运动还是资本游戏？</p>
+    </div>
+    <div class="deck-footer">Round 1 | 碳中和的政治经济学</div>
+    <div class="slide-number">04 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R1 立场(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">项飙</div>
+        <div class="stance-content emotion-serious">碳中和叙事正在制造一种新的'环保焦虑'——好像个人的碳足迹决定地球的命运。但这是把责任'个人化'，掩盖了真正的问题：全球碳排放的80%来自100家公司。你在海边度假时选择不用一次性塑料，这是好的；但把气候变化的责任推给个人，实际上是在为真正的排放者开脱。碳中和叙事需要警惕：它可能成为一种新的'规训技术'，让普通人感到内疚，而让真正的责任者逃脱。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">纳西姆·塔勒布</div>
+        <div class="stance-content emotion-serious">碳中和是一个'风险转移'的游戏。富裕国家向发展中国家购买'碳信用'，好像二氧化碳可以被重新打包、运输、储存在某个地方。这在统计学上是荒谬的——碳排放是全球性的，但'碳抵消'是地方性的。挪威砍树换取碳信用，声称自己'碳中和'了，但全球的碳总量没有变化。这种叙事在数学上是欺诈，在伦理上是殖民主义。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">杨克勤</div>
+        <div class="stance-content emotion-serious">你们把碳中和'妖魔化'了。碳中和的核心是'定价外部性'——让污染者付出代价，而不是让全社会承担。这在经济学上是正确的。问题不在于碳中和本身，而在于'如何实施'。碳边境调节机制、碳交易市场、碳税——这些都是工具，关键是它们是否被正确设计。碳中和不是资本游戏，它是第一次尝试把'生态成本'计入经济体系。</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 立场</div>
+    <div class="slide-number">05 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R1 立场(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">李诞</div>
+        <div class="stance-content emotion-serious">你们说的都太正经了。我想说一个简单的事：我坐飞机从北京到上海，碳排放多少？碳中和告诉我：可以买碳信用抵消。好，那我买了。我的良心安宁了，我可以继续坐飞机了。所以碳中和本质上是什么？是一种'赎罪券'——买了就能抵消罪恶感。你说这和宗教的赎罪券有什么区别？宗教至少还让你忏悔，碳中和连忏悔都省了。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">冯唐</div>
+        <div class="stance-content emotion-serious">碳中和是一个巨大的商业机会，也是一个巨大的权力转移工具。谁掌握碳交易市场？谁定义'碳信用'的标准？谁审核碳抵消项目？这些权力集中在少数国家和机构手中。碳中和不是在拯救地球，而是在重新定义全球权力格局。它可能成为新的贸易壁垒、新的金融工具、新的地缘政治筹码。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">尤瓦尔·赫拉利</div>
+        <div class="stance-content emotion-serious">从历史的角度，碳中和是第一次全球性的'神圣叙事'——它用气候危机的紧迫性团结了全人类，也用'净零排放'的愿景提供了一个共同目标。这种叙事力量是真实的：它正在改变政策、改变投资、改变消费者行为。但神圣叙事也是危险的——它可能带来狂热，可能压制异见，可能被权力劫持。碳中和需要'祛魅'，需要被理性审视。</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 立场</div>
+    <div class="slide-number">06 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R1 碰撞(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">塔勒布</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">杨克勤</span>
+        </div>
+        <div class="clash-type attack-logic">逻辑漏洞</div>
+        <div class="clash-content emotion-serious">你说碳中和是'定价外部性'——但碳排放的外部性真的能被'定价'吗？气候变化的代价是几千上万年的，跨越几代人，跨越国界——这种'外部性'在原则上是不可量化的。你把一个不可量化的问题'量化'了，然后在'量化'的基础上构建整个政策框架——这是科学还是魔术？</div>
+        
+          <div class="counter-attack">
+            <div class="counter-label neon-cyan">反击</div>
+            <div class="counter-content emotion-serious">你的批评混淆了'完美的解决方案'和'不完美的现实'。是的，碳排放的长期代价不可精确量化——但这不意味着我们不应该尝试。医学也无法精确量化每种治疗的长期代价，但我们还是在做决策。'不可精确量化'不等于'应该放弃'。你的'完美主义'批判，实际上是在为'什么都不做'辩护。</div>
+          </div>
+      </div>
+
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">项飙</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">尤瓦尔·赫拉利</span>
+        </div>
+        <div class="clash-type attack-reality">现实矛盾</div>
+        <div class="clash-content emotion-serious">你说碳中和是'神圣叙事'——但神圣叙事的问题不在于'叙事'，而在于'谁在讲述'。碳中和叙事的讲述者是谁？是发达国家、是跨国企业、是华尔街。他们讲述的'净零'愿景，服务的是谁的利益？是他们的利益。你的'祛魅'批判是对的，但你应该问的是：谁有能力'祛魅'？谁的声音在叙事中被压制了？</div>
+        
+          <div class="counter-attack">
+            <div class="counter-label neon-cyan">反击</div>
+            <div class="counter-content emotion-serious">你的'谁在讲述'批判是有力的，但它不意味着'叙事本身是错的'。即使碳中和叙事被某些利益集团劫持，气候变化的核心事实仍然存在。我们不能因为叙事被污染就否认现实。你说'谁的声音被压制了'——但压制异见的不只是叙事，还有既得利益。碳中和叙事的问题和解决方案是两件事。</div>
+          </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 碰撞</div>
+    <div class="slide-number">07 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R1 碰撞(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">李诞</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">冯唐</span>
+        </div>
+        <div class="clash-type attack-interest">利益冲突</div>
+        <div class="clash-content emotion-serious">你说碳中和是'权力转移工具'——但你作为战略专家，是不是在用'阴谋论'来否定气候行动？你的'碳中和=地缘政治筹码'论，听起来很有洞察力，但实际上是在为'什么都不做'提供借口。如果所有气候政策都是'权力游戏'，那普通人应该怎么行动？你的分析有没有建设性的一面？</div>
+        
+          <div class="counter-attack">
+            <div class="counter-label neon-cyan">反击</div>
+            <div class="counter-content emotion-serious">你的质疑是合理的——我的'权力分析'确实可能变成'虚无主义'。但我的目的不是'什么都不做'，而是'做正确的事'。碳中和作为一个'权力工具'，可以被好的目的使用，也可以被坏的目的使用。关键在于：谁在设计规则，谁在执行监督，公众如何参与。我不是说'碳中和是阴谋'，我是说'碳中和需要被正确设计'。</div>
+          </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 碰撞</div>
+    <div class="slide-number">08 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R1 案例">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 3: REALITY </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
+      <div class="cases-container">
+        
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">欧盟碳边境调节机制（CBAM）</div>
+          <div class="case-source">欧盟 2023</div>
+        </div>
+        <div class="case-content">欧盟于2023年启动碳边境调节机制，对进口商品征收'碳关税'。表面上是防止'碳泄漏'（企业把高排放生产转移到监管较松的地区），实际上可能成为新的贸易壁垒。发展中国家指责这是'气候殖民主义'——发达国家先排放工业化，现在轮到发展中国家减排，还要为出口到欧洲的商品付碳关税。</div>
+        <div class="case-outcome neon-red">代价：引发全球贸易紧张，多国提出抗议</div>
+        <div class="case-lesson neon-gold">教训：碳中和政策的实施往往服务于贸易利益，而非纯粹的气候目标</div>
+      </div>
+
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">加州森林碳信用丑闻</div>
+          <div class="case-source">The Guardian 2023</div>
+        </div>
+        <div class="case-content">2023年，多家媒体报道：加州碳市场的大量森林碳信用项目存在'重复计算'和'高估减排量'的问题。一项独立研究发现，加州碳市场声称的减排量被高估了30-40%。这些碳信用被卖给航空公司、石油公司来'抵消'它们的排放，但实际上减排并没有发生。</div>
+        <div class="case-outcome neon-red">代价：加州空气资源委员会启动调查</div>
+        <div class="case-lesson neon-gold">教训：碳信用体系的监管机制存在严重漏洞</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 案例</div>
+    <div class="slide-number">09 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R1 代价">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 4: COST</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
+      
+      <div class="cost-discussion anim-in">
+        <div class="cost-scenario neon-gold">碳中和成为全球主导的经济框架</div>
+        <div class="cost-list">
+          
+          <div class="cost-item">
+            <div class="cost-name neon-red">发展中国家的'碳债务'</div>
+            <div class="cost-analysis">碳中和框架要求发展中国家限制排放，这意味着它们无法复制发达国家的发展路径。它们被要求'提前'工业化，无法享受'后来者优势'。这可能固化全球不平等的格局。</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-name neon-red">中小企业的合规成本</div>
+            <div class="cost-analysis">碳中和带来的碳定价、碳披露、碳审计等要求，对大公司是可控的，对中小企业可能是致命的。它们没有资源聘请碳顾问、建设碳核算系统、参与碳交易。</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-name neon-red">'绿色通胀'</div>
+            <div class="cost-analysis">为实现碳中和，需要对能源系统、交通系统、农业系统进行大规模改造。这些改造的成本最终会转嫁到消费者身上——'绿色'可能意味着'更贵'。</div>
+          </div>
+        </div>
+        <div class="worst-case">
+          <div class="worst-label neon-red">最坏情况</div>
+          <div class="worst-content">2050年，碳中和成为一个'赢者通吃'的游戏。拥有碳技术和碳市场的国家和企业成为新的'碳霸权'，而发展中国家和弱势群体成为'碳债务'的承担者。气候变化没有解决，公平问题更加严重。</div>
+        </div>
+        
+          <div class="survivor-bias">
+            <div class="survivor-label neon-purple">幸存者偏差</div>
+            <div class="survivor-content">我们只看到碳中和的'成功案例'——碳排放下降、绿色能源增长、ESG投资兴起。但我们没有看到的是：那些因为'碳关税'而失去出口市场的农民，那些因为'合规成本'而倒闭的小企业，那些因为'绿色转型'而失业的工人。</div>
+          </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 代价</div>
+    <div class="slide-number">10 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R1 人性">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
+      
+      <div class="human-nature anim-in">
+        <div class="human-question neon-purple">人类是否有能力为'几代人之后'的利益做出牺牲？</div>
+        <div class="human-analysis">行为经济学告诉我们，人类天生倾向于'即时满足'，对'远期后果'不敏感。气候变化的影响是几十年甚至几代人才会显现的——这超出了人类正常的决策时间框架。碳中和要求我们为'未来的自己'和'后代'做出牺牲，但人类的认知系统不擅长处理这种'抽象的远期利益'。</div>
+        <div class="human-examples">
+          <div class="examples-label">现实例子</div>
+          
+          <div class="example-item">• 人们愿意为退休储蓄——因为退休是'可想象的未来'</div>
+          <div class="example-item">• 人们不愿意为气候变化减排——因为气候变化是'不可想象的未来'</div>
+        </div>
+        <div class="human-conclusion neon-gold">碳中和的成功取决于我们能否克服'时间贴现'的认知偏见——为远期利益牺牲近期利益。这需要的不仅是技术解决方案，更是认知和文化层面的转变。</div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 人性</div>
+    <div class="slide-number">11 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R1 升级">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
+      
+      <div class="cognitive-upgrade anim-in">
+        <div class="upgrade-comparison">
+          <div class="old-thinking">
+            <div class="thinking-label neon-red">旧思维</div>
+            <div class="thinking-content">碳中和是应对气候变化的唯一正确路径</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="new-thinking">
+            <div class="thinking-label neon-green">新思维</div>
+            <div class="thinking-content">碳中和是一个不完美的工具，它需要被正确设计和实施才能发挥作用</div>
+          </div>
+        </div>
+        <div class="complexity">
+          <div class="complexity-label neon-cyan">复杂性</div>
+          <div class="complexity-content">碳中和的核心逻辑——让污染者付出代价——在经济学上是正确的。但实施层面存在大量问题：碳定价的不确定性、碳信用的监管漏洞、发展中国家的公平关切、中小企业的合规负担。碳中和不是'免费的午餐'，它有真实的成本和真实的分配效应。</div>
+        </div>
+        <div class="actionable">
+          <div class="actionable-label neon-gold">可执行洞见</div>
+          <div class="actionable-content">作为个人：不要把碳中和当成'赎罪券'，也不要陷入'环保内疚'。作为企业：把碳管理当成战略机遇，而非合规负担。作为政策制定者：确保碳政策的公平性——谁付出，谁受益，谁承担成本。</div>
+        </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 升级</div>
+    <div class="slide-number">12 / 32</div>
+  </section>
+
+  <section class="slide" data-title="Round 2: 气候行动的现实困境">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2</div>
+      <h2 class="quote-large anim-in anim-delay-1">气候行动的现实困境</h2>
+      <div class="gold-line anim-in anim-delay-2"></div>
+      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">气候目标是否过于理想化而不可实现？</p>
+    </div>
+    <div class="deck-footer">Round 2 | 气候行动的现实困境</div>
+    <div class="slide-number">13 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R2 立场(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">项飙</div>
+        <div class="stance-content emotion-serious">气候目标的'宏大叙事'掩盖了一个现实：能源转型需要时间，基础设施更替需要几十年，而政治周期只有4-5年。'2050年净零'是一个好听的口号，但它需要连续几十年的政策一致性——在任何民主国家这都是不可能的。更现实的问题是：如何在'理想目标'和'现实约束'之间找到可操作的路径？</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">塔勒布</div>
+        <div class="stance-content emotion-serious">气候模型是'垃圾进，垃圾出'。过去30年的气候预测充满了系统性错误——过热或过冷的极端预测都失败了。更重要的是，气候系统是'非线性'的，存在'黑天鹅'风险。我们不应该把所有政策都押注在一个'中央预测'上。真正稳健的策略是'韧性建设'——不管气候怎么变，一个有韧性的社会都能应对。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">杨克勤</div>
+        <div class="stance-content emotion-serious">你说'气候目标不可实现'——但这不是放弃的理由。历史上，很多被认为'不可能'的目标都实现了：登月、消除天花、废除奴隶制。'不可能'往往只是'还没有找到方法'。气候行动需要的是'政治意愿'和'技术创新'，而不是'宿命论'。问题不是'能不能'，而是'想不想'。</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 立场</div>
+    <div class="slide-number">14 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R2 立场(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">李诞</div>
+        <div class="stance-content emotion-serious">你们专家讨论'能不能实现'太抽象了。我问一个问题：普通人为什么要关心气候目标？因为'地球会毁灭'？但地球不会毁灭——它已经存在了45亿年，气候变化不会让它消失。'人类会毁灭'？也不对——人类适应能力很强。说到底，'气候危机'叙事是一种'恐惧营销'，它卖的是焦虑，不是解决方案。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">冯唐</div>
+        <div class="stance-content emotion-serious">气候目标的实现需要'利益结构'的根本改变。目前全球能源体系由化石燃料主导，相关利益集团年产值超过数万亿美元。他们有强大的政治游说能力。气候行动的本质是与这些利益集团的博弈。你不能同时'打败'能源巨头又'依赖'他们——要么硬刚，要么妥协，没有中间路线。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">尤瓦尔·赫拉利</div>
+        <div class="stance-content emotion-serious">历史上，人类曾经能够为'集体长远利益'做出集体行动：打败法西斯、登月、臭氧层修复。这些成功有一个共同点：威胁是'清晰可见的'、'行动路径是明确的'、'领导力是存在的'。气候行动目前缺少这些要素——威胁是'缓慢的'、路径是'模糊的'、领导力是'缺失的'。我们需要的不只是'减排'，而是'政治动员'。</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 立场</div>
+    <div class="slide-number">15 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R2 碰撞(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">塔勒布</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">杨克勤</span>
+        </div>
+        <div class="clash-type attack-logic">逻辑漏洞</div>
+        <div class="clash-content emotion-serious">你说'问题是想不想，不是能不能'——但'想'本身就是一个问题。谁'想'？普通选民'想'吗？他们在加油站看到油价上涨时会'想'减排吗？民主政治的现实是：气候行动需要选票，而选民往往选择短期利益。你把'政治意愿不足'归结为'道德问题'，但实际上它是'制度问题'。</div>
+        
+          <div class="counter-attack">
+            <div class="counter-label neon-cyan">反击</div>
+            <div class="counter-content emotion-serious">你的批评混淆了'个人意愿'和'集体行动'。是的，民主制度下短期利益往往胜过长期利益——但这不意味着'不可能'。历史上，民主国家也曾为长期目标做出牺牲：战后福利国家、冷战军备竞赛。问题是'如何设计激励'，而不是'民主制度是否可行'。碳定价就是一种'激励设计'——让减排成为有利可图的事。</div>
+          </div>
+      </div>
+
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">李诞</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">尤瓦尔·赫拉利</span>
+        </div>
+        <div class="clash-type attack-human">人性弱点</div>
+        <div class="clash-content emotion-serious">你说臭氧层修复是'成功案例'——但你知道臭氧层修复为什么成功吗？因为它只需要禁用一种产品（氟利昂），而且有现成的替代品。气候问题涉及整个能源系统、交通系统、农业系统——这不是'登月'，这是'同时登月、登火星、登木星'。你把'气候挑战'和'臭氧挑战'相提并论，是在误导公众。</div>
+        
+          <div class="counter-attack">
+            <div class="counter-label neon-cyan">反击</div>
+            <div class="counter-content emotion-serious">你的'难度类比'是有道理的——气候问题确实比臭氧问题更复杂。但'更复杂'不等于'不可能'。问题不在于'规模'，而在于'路径'。臭氧层修复成功的关键是：明确了问题（氟利昂）、找到了替代品（R-410A等）、建立了国际合作（蒙特利尔议定书）。气候行动需要同样的三要素——明确问题、找到替代品、建立合作。目前第二项正在突破，第一项基本明确，第三项最缺。</div>
+          </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 碰撞</div>
+    <div class="slide-number">16 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R2 碰撞(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">冯唐</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">项飙</span>
+        </div>
+        <div class="clash-type attack-interest">利益冲突</div>
+        <div class="clash-content emotion-serious">你说'政治周期短于能源转型周期'——但你有没有想过，这恰恰是'市场'发挥作用的地方？政府制定碳定价规则，企业基于长期预期做投资决策——政治周期的短期波动可以被市场的长期预期抵消。你的悲观主义忽视了资本的'前瞻性'。很多能源公司已经在为'后化石燃料时代'做战略布局。</div>
+        
+          <div class="counter-attack">
+            <div class="counter-label neon-cyan">反击</div>
+            <div class="counter-content emotion-serious">你说'市场有前瞻性'——但市场的'前瞻性'是有方向的：它押注在'高回报'的领域。能源转型需要的基础设施投资（电网改造、充电桩、氢能网络）投资回报周期长、风险高。单纯依靠市场，不会自动产生足够的投资。你说企业'在做战略布局'——但他们的布局速度和减排需求的速度匹配吗？</div>
+          </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 碰撞</div>
+    <div class="slide-number">17 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R2 案例">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 3: REALITY </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
+      <div class="cases-container">
+        
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">德国能源转型的困境</div>
+          <div class="case-source">德国政府 2023</div>
+        </div>
+        <div class="case-content">德国是全球能源转型的'模范生'——大力投资可再生能源、弃核、淘汰煤电。但2022年能源危机暴露了转型的代价：电价飙升、天然气短缺、不得不重启煤电厂。德国案例说明：能源转型不是线性过程，它可能遭遇'挫折'、需要'妥协'、面临'权衡'。</div>
+        <div class="case-outcome neon-red">代价：德国被迫延长煤电厂寿命，推迟部分减排目标</div>
+        <div class="case-lesson neon-gold">教训：能源转型需要'韧性'，不能只追求'速度'</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 案例</div>
+    <div class="slide-number">18 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R2 代价">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 4: COST</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
+      
+      <div class="cost-discussion anim-in">
+        <div class="cost-scenario neon-gold">全球气温升幅超过2°C</div>
+        <div class="cost-list">
+          
+          <div class="cost-item">
+            <div class="cost-name neon-red">气候难民危机</div>
+            <div class="cost-analysis">海平面上升、极端天气加剧将导致数亿人迁移。孟加拉国、越南沿海地区、撒哈拉以南非洲——这些地区的人口将面临生存威胁。这不仅是人道主义危机，也是地缘政治危机的根源。</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-name neon-red">农业系统崩溃</div>
+            <div class="cost-analysis">气候变化将导致粮食产量下降、水资源短缺、土地退化。在全球人口仍在增长的背景下，农业系统的压力将带来严重的粮食安全问题。</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-name neon-red">生态系统退化</div>
+            <div class="cost-analysis">珊瑚礁消亡、热带雨林退化、物种灭绝——这些损失是不可逆的。它们不仅有生态价值，也有经济价值（旅游、渔业、碳汇）。</div>
+          </div>
+        </div>
+        <div class="worst-case">
+          <div class="worst-label neon-red">最坏情况</div>
+          <div class="worst-content">2100年，全球平均气温上升3-4°C。沿海城市被淹，内陆干旱，粮食减产30-50%，大规模气候难民流动，地缘冲突加剧。人类文明没有崩溃，但生活质量大幅下降——特别是对穷人来说。</div>
+        </div>
+        
+          <div class="survivor-bias">
+            <div class="survivor-label neon-purple">幸存者偏差</div>
+            <div class="survivor-content">我们只看到气候行动的'成功案例'——可再生能源成本下降、碳市场增长、ESG投资兴起。但我们没有看到的是：那些因为'绿色转型'而失业的工人，那些因为'碳关税'而失去市场的农民，那些因为'能源危机'而付不起电费的穷人。</div>
+          </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 代价</div>
+    <div class="slide-number">19 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R2 人性">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
+      
+      <div class="human-nature anim-in">
+        <div class="human-question neon-purple">人类是否有能力避免'悲剧的喜剧'式的集体行动失败？</div>
+        <div class="human-analysis">气候问题是'公地悲剧'的全球版本——每个人都知道应该减排，但每个人都有搭便车的动机。历史上，'公地悲剧'往往通过'私有化'或'政府管制'来解决。但气候变化是全球性的，没有'世界政府'来强制执行。解决方案可能是'非正式的国际合作'——但这种合作的稳定性取决于各方的'利益计算'。</div>
+        <div class="human-examples">
+          <div class="examples-label">现实例子</div>
+          
+          <div class="example-item">• 臭氧层修复——国际合作的成功案例</div>
+          <div class="example-item">• 核军备控制——不完美的合作案例</div>
+        </div>
+        <div class="human-conclusion neon-gold">气候行动的可能性取决于'合作激励机制'的设计。碳定价、国际碳市场、气候基金——这些机制的目标是让减排成为'有利可图的事'。但激励只是手段，最终还是需要政治意愿和公众支持。</div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 人性</div>
+    <div class="slide-number">20 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R2 升级">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
+      
+      <div class="cognitive-upgrade anim-in">
+        <div class="upgrade-comparison">
+          <div class="old-thinking">
+            <div class="thinking-label neon-red">旧思维</div>
+            <div class="thinking-content">只要有足够的政治意愿，气候目标就能实现</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="new-thinking">
+            <div class="thinking-label neon-green">新思维</div>
+            <div class="thinking-content">气候目标能否实现取决于技术、成本、政治和公平的综合博弈</div>
+          </div>
+        </div>
+        <div class="complexity">
+          <div class="complexity-label neon-cyan">复杂性</div>
+          <div class="complexity-content">气候问题不是一个'工程问题'——它是一个'系统问题'，涉及技术、经济、政治、文化。'减排目标'只是冰山一角，下面是整个能源体系、交通体系、农业体系的重构。这个重构需要几十年，需要几代人的努力，需要国际合作，也需要国内改革。</div>
+        </div>
+        <div class="actionable">
+          <div class="actionable-label neon-gold">可执行洞见</div>
+          <div class="actionable-content">作为个人：支持'碳定价'——让污染者付出代价是最有效的减排机制。作为企业：制定'内部碳价格'——把碳成本计入投资决策。作为政府：设计'公平转型'政策——确保绿色转型不加剧不平等。作为公民：参与'气候民主'——让你的声音被听到。</div>
+        </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 升级</div>
+    <div class="slide-number">21 / 32</div>
+  </section>
+
+  <section class="slide" data-title="Round 3: 超越碳中和的可能性">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 3</div>
+      <h2 class="quote-large anim-in anim-delay-1">超越碳中和的可能性</h2>
+      <div class="gold-line anim-in anim-delay-2"></div>
+      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">除了碳中和，我们还有什么替代方案？</p>
+    </div>
+    <div class="deck-footer">Round 3 | 超越碳中和的可能性</div>
+    <div class="slide-number">22 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R3 立场(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">项飙</div>
+        <div class="stance-content emotion-serious">碳中和思维是一种'技术乐观主义'——它相信技术可以解决所有问题。但历史上，技术进步往往会带来新的问题。更现实的方向是'减量主义'——不是'中和'排放，而是'减少'排放；不是'维持'消费水平，而是'降低'消费水平。我们需要重新定义'好生活'的标准——它不是'更多'，而是'足够'。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">塔勒布</div>
+        <div class="stance-content emotion-serious">碳中和是一种'中心化思维'——它需要一个中央权威来定义标准、分配配额、监督执行。这种思维在'稳定环境'下有效，但在'极端不确定'环境下可能失效。更稳健的策略是'分布式韧性'——每个社区、每个国家、每个人都应该建立应对气候冲击的能力，而不是依赖一个全球性的'碳市场'。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">杨克勤</div>
+        <div class="stance-content emotion-serious">碳中和之外没有'银弹'。每个替代方案都有其局限性：'减量主义'在政治上不可行（没有人会投票支持'降低生活水平'）；'分布式韧性'在应对系统性风险方面不够有效。碳中和仍然是目前最系统性的框架——它的优势在于：它可以把减排目标'量化'，让市场机制发挥作用。问题不是'要不要碳中和'，而是'如何让碳中和更有效'。</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 立场</div>
+    <div class="slide-number">23 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R3 立场(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">李诞</div>
+        <div class="stance-content emotion-serious">你们讨论的'替代方案'太复杂了。普通人关心的不是'哪个方案更有效'，而是'哪个方案让我生活更好'。如果碳中和意味着'更贵的能源'、'更少的肉类'、'更贵的航空旅行'——普通人会说：'我不在乎气候，我在乎我的钱包。'所以真正的问题是：如何让气候行动和普通人的利益一致？</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">冯唐</div>
+        <div class="stance-content emotion-serious">碳中和的替代方案可能不是'另一个方案'，而是'多个方案的组合'：碳定价、碳边境调节、能源补贴退出、技术研发支持、金融监管（限制化石燃料投资）——每种工具都有其适用范围和局限性。问题是：如何设计一个'政策组合'，让它比单一工具更有效，同时避免'政策打架'？</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">尤瓦尔·赫拉利</div>
+        <div class="stance-content emotion-serious">碳中和是一个'工业时代'的解决方案——它用'量化'和'市场'来处理问题。但气候危机的根源是工业文明的'增长逻辑'——'更多'被视为'更好'。真正的解决方案可能是'后工业文明'的价值观转变：从'增长'转向'稳态'，从'消费'转向'分享'，从'控制自然'转向'与自然共处'。这不是技术问题，而是文明问题。</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 立场</div>
+    <div class="slide-number">24 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R3 碰撞(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">项飙</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">杨克勤</span>
+        </div>
+        <div class="clash-type attack-logic">逻辑漏洞</div>
+        <div class="clash-content emotion-serious">你说'碳中和是最系统的框架'——但'系统性'不等于'有效性'。碳中和框架的核心是'碳市场'——但碳市场本身就是一个问题。它创造了'碳交易商'这个新职业，它鼓励企业'交易碳信用'而不是'减少排放'，它把'减排'变成了一种金融产品。你的'系统性'实际上是在为一种复杂的、低效的机制辩护。</div>
+        
+          <div class="counter-attack">
+            <div class="counter-label neon-cyan">反击</div>
+            <div class="counter-content emotion-serious">你的批评针对的是'碳市场的当前实施'，不是'碳定价的原则'。是的，当前的碳市场有很多问题——监管漏洞、重复计算、金融投机——但这些问题是可以被修复的。关键是：碳定价提供了一个'价格信号'，让市场知道'减排是有成本的'。这个价格信号比任何行政命令都更有效，因为它利用了市场的力量，而不是与市场对抗。</div>
+          </div>
+      </div>
+
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">塔勒布</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">尤瓦尔·赫拉利</span>
+        </div>
+        <div class="clash-type attack-reality">现实矛盾</div>
+        <div class="clash-content emotion-serious">你说'文明转变'——但这种转变需要多长时间？需要几代人？人类文明在过去100年里没有实现'价值观转变'，凭什么在未来50年里可以实现？你的'后工业文明'愿景是一个美好的梦想，但它不是一个可以在'时间窗口内'实施的方案。在'梦想'和'现实'之间，我们需要的是'可操作的步骤'。</div>
+        
+          <div class="counter-attack">
+            <div class="counter-label neon-cyan">反击</div>
+            <div class="counter-content emotion-serious">你说'文明转变需要时间'——但这不是'不行动'的理由。价值观的转变可以在'关键时刻'加速——就像二战后福利国家观念的普及，1960年代民权运动的价值转变。气候危机本身就是一个'关键时刻'——它正在改变人们对'增长'、'消费'、'自然'的理解。问题是：我们是在'等待'转变，还是'推动'转变？</div>
+          </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 碰撞</div>
+    <div class="slide-number">25 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R3 碰撞(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">李诞</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">项飙</span>
+        </div>
+        <div class="clash-type attack-interest">利益冲突</div>
+        <div class="clash-content emotion-serious">你说'减量主义'——但谁'减量'？你吗？ Elon Musk吗？普通人减量10%，富豪减量1%——这公平吗？'减量主义'听起来很美好，但它面临同样的问题：如何分配减量的成本。如果'减量'意味着'穷人减少消费、富人继续浪费'，那它和碳中和一样，都可能成为'新的不平等工具'。</div>
+        
+          <div class="counter-attack">
+            <div class="counter-label neon-cyan">反击</div>
+            <div class="counter-content emotion-serious">你的'谁减量'质疑是合理的——但这不意味着'减量主义'是错的，'消费主义'是对的。问题不在于'是否减量'，而在于'如何公平分配减量成本'。碳中和有同样的问题：碳关税主要由发展中国家承担，碳市场的收益主要由富裕国家获益。'公平'是所有气候政策都需要面对的问题，不只是'减量主义'。</div>
+          </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 碰撞</div>
+    <div class="slide-number">26 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R3 案例">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 3: REALITY </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
+      <div class="cases-container">
+        
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">不丹的'国民幸福总值'</div>
+          <div class="case-source">不丹政府</div>
+        </div>
+        <div class="case-content">不丹是全球唯一一个用'国民幸福总值'（GNH）代替GDP的国家。它强调'精神幸福'、'文化价值'、'环境保护'和'善治'，而不是单纯的经济增长。不丹的碳排放量极低——人均约1.5吨，而美国超过15吨。但这能否成为全球范本？批评者指出：不丹的低排放是因为它的'低发展水平'，不是因为它的'价值观'。</div>
+        <div class="case-outcome neon-red">代价：不丹模式被广泛研究，但没有被广泛复制</div>
+        <div class="case-lesson neon-gold">教训：'后工业价值观'可能是解决方案，但它的可扩展性存疑</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 案例</div>
+    <div class="slide-number">27 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R3 代价">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 4: COST</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
+      
+      <div class="cost-discussion anim-in">
+        <div class="cost-scenario neon-gold">全球成功实现碳中和</div>
+        <div class="cost-list">
+          
+          <div class="cost-item">
+            <div class="cost-name neon-red">'绿色垄断'的形成</div>
+            <div class="cost-analysis">如果碳中和主要由少数国家和企业主导，它们可能成为新的'绿色垄断者'——掌握关键技术和碳市场规则。其他国家可能从'化石燃料依附'变成'绿色技术依附'。</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-name neon-red">'减排疲劳'</div>
+            <div class="cost-analysis">长期的高强度减排要求可能导致公众的'减排疲劳'——他们感觉自己的努力没有效果（因为气候变化仍在继续），从而放弃行动。</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-name neon-red">'碳市场泡沫'</div>
+            <div class="cost-analysis">如果碳定价机制被金融化，可能出现类似2008年金融危机的'碳市场泡沫'——碳信用变成投机工具，而不是减排工具。</div>
+          </div>
+        </div>
+        <div class="worst-case">
+          <div class="worst-label neon-red">最坏情况</div>
+          <div class="worst-content">2080年，全球碳中和'形式上'实现了——碳排放和碳吸收在账面上平衡。但真实的碳排放在继续，气候变化仍在发生。碳中和变成了一种'会计把戏'，而不是真正的气候行动。</div>
+        </div>
+        
+          <div class="survivor-bias">
+            <div class="survivor-label neon-purple">幸存者偏差</div>
+            <div class="survivor-content">我们只看到碳中和的'账面成功'——碳排放下降、碳市场增长、ESG投资兴起。但我们没有看到的是：那些因为'碳信用欺诈'而失效的减排项目，那些因为'碳关税'而被边缘化的弱势群体，那些因为'绿色转型'而被遗忘的社区。</div>
+          </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 代价</div>
+    <div class="slide-number">28 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R3 人性">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
+      
+      <div class="human-nature anim-in">
+        <div class="human-question neon-purple">人类是否能够从'增长逻辑'转向'稳态逻辑'？</div>
+        <div class="human-analysis">'增长逻辑'是工业文明的基石——GDP增长被视为社会进步的标志。但增长是有物理极限的——地球资源是有限的。'稳态逻辑'要求我们重新定义'进步'：不是'更多'，而是'更好'；不是'增长'，而是'平衡'。这种转变需要的不仅是政策，更是一种新的'幸福观'。</div>
+        <div class="human-examples">
+          <div class="examples-label">现实例子</div>
+          
+          <div class="example-item">• '幸福经济学'研究——GDP和幸福的相关性在发展到一定阶段后减弱</div>
+          <div class="example-item">• 极简主义运动——越来越多人开始质疑'消费=幸福'的等式</div>
+        </div>
+        <div class="human-conclusion neon-gold">从'增长'到'稳态'的转变是可能的，但它需要'价值观革命'——重新定义'好生活'的标准。这种革命不能被强制，只能被引导。</div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 人性</div>
+    <div class="slide-number">29 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R3 升级">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
+      
+      <div class="cognitive-upgrade anim-in">
+        <div class="upgrade-comparison">
+          <div class="old-thinking">
+            <div class="thinking-label neon-red">旧思维</div>
+            <div class="thinking-content">碳中和是解决气候问题的唯一方案</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="new-thinking">
+            <div class="thinking-label neon-green">新思维</div>
+            <div class="thinking-content">碳中和是当前最系统的框架，但它需要与其他方案结合才能有效</div>
+          </div>
+        </div>
+        <div class="complexity">
+          <div class="complexity-label neon-cyan">复杂性</div>
+          <div class="complexity-content">气候问题没有'银弹'——每一个方案都有其优势和局限。碳中和提供了一种'市场机制'，但它需要配合'公平分配'、'韧性建设'、'价值观转变'才能真正有效。问题的关键不是'哪个方案最好'，而是'如何设计政策组合'。</div>
+        </div>
+        <div class="actionable">
+          <div class="actionable-label neon-gold">可执行洞见</div>
+          <div class="actionable-content">作为个人：质疑'消费=幸福'的等式，探索'足够就好'的生活方式。作为企业：把'可持续性'从'合规成本'变成'竞争优势'。作为政府：设计'公平转型'政策，确保绿色转型不让任何人掉队。作为公民：参与'气候民主'，让气候行动反映普通人的利益和价值观。</div>
+        </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 升级</div>
+    <div class="slide-number">30 / 32</div>
+  </section>
+
+  <section class="slide" data-title="最终洞见">
+    <div class="slide-content">
+      <div class="section-label anim-in">FINAL INSIGHT</div>
+      <div class="quote-large anim-in anim-delay-1">碳中和不是一个纯粹的技术问题或经济问题，而是一个政治问题——它涉及利益分配、权力格局、价值观选择。碳中和叙事的危险不在于它'不够完美'，而在于它可能掩盖真实的利益冲突，把结构性变革变成'市场交易'。真正有效的气候行动需要的不仅是'碳定价'，还有'公平分配'、'民主参与'、'价值观反思'。气候危机的最终解决方案，可能不只是'中和碳排放'，而是'重新定义好生活'。</div>
+    </div>
+    <div class="deck-footer">最终洞见</div>
+    <div class="slide-number">31 / 32</div>
+  </section>
+
+  <section class="slide" data-title="开放问题">
+    <div class="slide-content">
+      <div class="section-label anim-in">OPEN QUESTIONS</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">留给读者的问题</h3>
+      <div class="headline-item anim-in"><strong>Q1:</strong> 碳中和是否会成为新的'不平等再生产'工具？</div>
+<div class="headline-item anim-in"><strong>Q2:</strong> 在气候行动中，'公平'和'效率'能否兼得？</div>
+<div class="headline-item anim-in"><strong>Q3:</strong> 从'增长逻辑'到'稳态逻辑'的转变，需要什么样的'价值观革命'？</div>
+    </div>
+    <div class="deck-footer">开放问题</div>
+    <div class="slide-number">32 / 32</div>
+  </section>
+
+<div class="toc-backdrop" id="tocBackdrop"></div>
+<div class="toc-panel" id="tocPanel">
+<div class="toc-title">目录</div>
+<div id="tocList"></div>
+</div>
+<div class="nav-bar">
+<div class="nav-left">
+<button class="nav-btn" id="btnToc">☰ 目录</button>
+<button class="nav-btn" id="btnPrev">◀ 上一页</button>
+<button class="nav-btn" id="btnNext">下一页 ▶</button>
+</div>
+<div class="nav-right">
+<span class="nav-title" id="slideTitle"></span>
+<span class="nav-counter" id="slideCounter"></span>
+</div>
+</div>
+<div class="nav-dots" id="navDots"></div>
+</div>
+
+<script>
+(function(){
+var deck=document.getElementById("deck");
+var slides=deck.querySelectorAll(".slide");
+var total=slides.length;
+var cur=0;
+var dots=document.getElementById("navDots");
+var tocList=document.getElementById("tocList");
+var titleEl=document.getElementById("slideTitle");
+var counterEl=document.getElementById("slideCounter");
+var tocPanel=document.getElementById("tocPanel");
+var tocBackdrop=document.getElementById("tocBackdrop");
+var progressBar=document.getElementById("progressBar");
+
+for(var i=0;i<total;i++){
+  var d=document.createElement("button");
+  d.className="nd";
+  d.setAttribute("data-i",i);
+  d.onclick=(function(idx){return function(){go(idx)}})(i);
+  dots.appendChild(d);
+  var t=document.createElement("div");
+  t.className="toc-item";
+  t.setAttribute("data-i",i);
+  t.innerHTML='<span class="toc-label">'+(slides[i].getAttribute("data-title")||"Slide "+(i+1))+'</span><span class="toc-page">'+String(i+1).padStart(2,"0")+'</span>';
+  t.onclick=(function(idx){return function(){go(idx);closeTOC()}})(i);
+  tocList.appendChild(t);
+}
+
+function go(n){
+  if(n<0||n>=total)return;
+  slides[cur].classList.remove("active");
+  dots.children[cur].classList.remove("active");
+  tocList.children[cur].classList.remove("active");
+  cur=n;
+  slides[cur].classList.add("active");
+  dots.children[cur].classList.add("active");
+  tocList.children[cur].classList.add("active");
+  titleEl.textContent=slides[cur].getAttribute("data-title")||"";
+  counterEl.textContent=(cur+1)+" / "+total;
+  progressBar.style.width=((cur+1)/total*100)+"%";
+  slides[cur].scrollTop=0;
+}
+function toggleTOC(){tocPanel.classList.toggle("open");tocBackdrop.classList.toggle("open")}
+function closeTOC(){tocPanel.classList.remove("open");tocBackdrop.classList.remove("open")}
+
+document.addEventListener("keydown",function(e){
+  if(e.key==="ArrowRight"||e.key==="ArrowDown"||e.key===" "||e.key==="PageDown"){e.preventDefault();go(cur+1)}
+  else if(e.key==="ArrowLeft"||e.key==="ArrowUp"||e.key==="PageUp"){e.preventDefault();go(cur-1)}
+  else if(e.key==="Home"){e.preventDefault();go(0)}
+  else if(e.key==="End"){e.preventDefault();go(total-1)}
+  else if(e.key==="Escape"){closeTOC();go(0)}
+  else if(e.key==="t"||e.key==="T"){toggleTOC()}
+});
+var wheelTimer=null;
+deck.addEventListener("wheel",function(e){
+  e.preventDefault();
+  if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},400)}
+  if(e.deltaY>0)go(cur+1);
+  else if(e.deltaY<0)go(cur-1);
+},{passive:false});
+var touchX=0,touchY=0;
+deck.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX;touchY=e.touches[0].clientY});
+deck.addEventListener("touchend",function(e){
+  var dx=touchX-e.changedTouches[0].clientX,dy=touchY-e.changedTouches[0].clientY;
+  if(Math.abs(dy)>Math.abs(dx)){if(dy>50)go(cur+1);else if(dy<-50)go(cur-1)}
+  else{if(dx>50)go(cur+1);else if(dx<-50)go(cur-1)}
+});
+deck.addEventListener("click",function(e){
+  if(e.target.closest(".nav-btn,.nd,.toc-item,.toc-panel,.toc-backdrop"))return;
+  var x=e.clientX/window.innerWidth;
+  if(x<0.3)go(cur-1);else if(x>0.7)go(cur+1);
+});
+document.getElementById("btnToc").addEventListener("click",function(e){e.stopPropagation();toggleTOC()});
+document.getElementById("btnPrev").addEventListener("click",function(e){e.stopPropagation();go(cur-1)});
+document.getElementById("btnNext").addEventListener("click",function(e){e.stopPropagation();go(cur+1)});
+tocBackdrop.addEventListener("click",closeTOC);
+go(0);
+})();
+</script>
+</body>
+</html>

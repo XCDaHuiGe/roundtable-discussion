@@ -47,8 +47,8 @@
 
   /* ============ 幻灯片 ============ */
   .deck{position:relative;width:100%;height:100%}
-  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;height:100vh;overflow:hidden}
-  .slide::-webkit-scrollbar{width:4px}.slide::-webkit-scrollbar-track{background:transparent}.slide::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;overflow:hidden}
+  .slide-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
   .slide.active{display:flex}
   .slide.hero{justify-content:center;align-items:center;text-align:center}
   .slide.title-slide{justify-content:center;align-items:center;text-align:center}
@@ -339,12 +339,12 @@
       <p style="font-size:14px;color:var(--text-dim);letter-spacing:0.1em;" class="anim-in anim-delay-4">从知识讨论到生存博弈</p>
     </div>
     <div class="deck-footer">情感资产的证券化 | V8级圆桌洞见</div>
-    <div class="slide-number">01 / 13</div>
+    <div class="slide-number">01 / 17</div>
   </section>
 
-  <section class="slide" data-title="专家档案">
+  <section class="slide" data-title="专家档案(1/2)">
     <div class="slide-content">
-      <div class="section-label anim-in">EXPERT PROFILES</div>
+      <div class="section-label anim-in">EXPERT PROFILES (1/2)</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
       <div class="grid-2">
         
@@ -357,10 +357,7 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>商业趋势观察者，相信资本是文化传播的放大器</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>阅文集团IP证券化的商业模式创新</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>文化价值被金融逻辑稀释</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>对商业化可能过于乐观</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>商业趋势观察者，相信资本是文化传播的放大器</div><div class="profile-item"><span class="profile-label">利益相关：</span>阅文集团IP证券化的商业模式创新</div><div class="profile-item"><span class="profile-label">恐惧：</span>文化价值被金融逻辑稀释</div><div class="profile-item"><span class="profile-label">偏见：</span>对商业化可能过于乐观</div>
         </div>
       </div>
 
@@ -373,10 +370,7 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>反脆弱性思维：有些系统从冲击中获益</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>IP证券化的尾部风险与流动性幻觉</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>IP价值依赖历史数据，无法预测黑天鹅</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>系统性低估金融创新的短期价值</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>反脆弱性思维：有些系统从冲击中获益</div><div class="profile-item"><span class="profile-label">利益相关：</span>IP证券化的尾部风险与流动性幻觉</div><div class="profile-item"><span class="profile-label">恐惧：</span>IP价值依赖历史数据，无法预测黑天鹅</div><div class="profile-item"><span class="profile-label">偏见：</span>系统性低估金融创新的短期价值</div>
         </div>
       </div>
 
@@ -389,13 +383,21 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>附近消失理论：真实社会连接的瓦解</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>情感证券化如何改变人与文化作品的关系</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>情感被彻底商品化后失去无用之用</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>可能忽视商业化对创作的积极作用</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>附近消失理论：真实社会连接的瓦解</div><div class="profile-item"><span class="profile-label">利益相关：</span>情感证券化如何改变人与文化作品的关系</div><div class="profile-item"><span class="profile-label">恐惧：</span>情感被彻底商品化后失去无用之用</div><div class="profile-item"><span class="profile-label">偏见：</span>可能忽视商业化对创作的积极作用</div>
         </div>
       </div>
+      </div>
+    </div>
+    <div class="deck-footer">专家档案</div>
+    <div class="slide-number">02 / 17</div>
+  </section>
 
+  <section class="slide" data-title="专家档案(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">EXPERT PROFILES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
+      <div class="grid-2">
+        
       <div class="card card-rise anim-in">
         <div class="speaker-header">
           <div class="speaker-avatar" style="background:#e65100">冯</div>
@@ -405,10 +407,7 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>商业逻辑的务实主义者</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>创作者权益保护与利益分配机制</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>创作者被平台收割</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>对资本力量可能过于接受</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>商业逻辑的务实主义者</div><div class="profile-item"><span class="profile-label">利益相关：</span>创作者权益保护与利益分配机制</div><div class="profile-item"><span class="profile-label">恐惧：</span>创作者被平台收割</div><div class="profile-item"><span class="profile-label">偏见：</span>对资本力量可能过于接受</div>
         </div>
       </div>
 
@@ -421,10 +420,7 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>真诚的表达比精密的计算更重要</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>创作者如何在资本化时代保持初心</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>代币价格取代故事质量成为创作动机</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>倾向解构宏大叙事</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>真诚的表达比精密的计算更重要</div><div class="profile-item"><span class="profile-label">利益相关：</span>创作者如何在资本化时代保持初心</div><div class="profile-item"><span class="profile-label">恐惧：</span>代币价格取代故事质量成为创作动机</div><div class="profile-item"><span class="profile-label">偏见：</span>倾向解构宏大叙事</div>
         </div>
       </div>
 
@@ -437,16 +433,13 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>交易成本理论：商业本质是降低交易成本</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>IP证券化如何完善文化资产的流动性</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>过度金融化可能扭曲创作激励</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>对效率提升可能过于乐观</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>交易成本理论：商业本质是降低交易成本</div><div class="profile-item"><span class="profile-label">利益相关：</span>IP证券化如何完善文化资产的流动性</div><div class="profile-item"><span class="profile-label">恐惧：</span>过度金融化可能扭曲创作激励</div><div class="profile-item"><span class="profile-label">偏见：</span>对效率提升可能过于乐观</div>
         </div>
       </div>
       </div>
     </div>
     <div class="deck-footer">专家档案</div>
-    <div class="slide-number">02 / 13</div>
+    <div class="slide-number">03 / 17</div>
   </section>
 
   <section class="slide" data-title="Round 1: 情感资产证券化的本质">
@@ -457,12 +450,12 @@
       <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">阅文集团将IP收益权代币化，是文化价值变现还是透支？</p>
     </div>
     <div class="deck-footer">Round 1 | 情感资产证券化的本质</div>
-    <div class="slide-number">03 / 13</div>
+    <div class="slide-number">04 / 17</div>
   </section>
 
-  <section class="slide" data-title="R1 立场">
+  <section class="slide" data-title="R1 立场(1/2)">
     <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES</div>
+      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
       <div class="stances-grid">
         
@@ -502,7 +495,18 @@ IP证券化是一个完美的反脆弱陷阱——它在短期内看起来稳定
 
 资本化的情感已经不是情感，是投资品。当"我喜欢这本书"变成"我持有这本书的代币"，我们与作品的关系发生了根本性的异化。</div>
       </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 立场</div>
+    <div class="slide-number">05 / 17</div>
+  </section>
 
+  <section class="slide" data-title="R1 立场(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
       <div class="stance-item anim-in">
         <div class="stance-expert neon-gold">冯唐</div>
         <div class="stance-content emotion-serious">塔勒布的担忧有一定道理，但解决方案不是拒绝金融化，而是设计更好的金融工具。
@@ -538,7 +542,7 @@ IP证券化是一个完美的反脆弱陷阱——它在短期内看起来稳定
       </div>
     </div>
     <div class="deck-footer">Round 1 | 立场</div>
-    <div class="slide-number">04 / 13</div>
+    <div class="slide-number">06 / 17</div>
   </section>
 
   <section class="slide" data-title="Round 2: 文化价值与金融逻辑的博弈">
@@ -549,12 +553,12 @@ IP证券化是一个完美的反脆弱陷阱——它在短期内看起来稳定
       <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">IP证券化是解放创作者还是改变创作动机？</p>
     </div>
     <div class="deck-footer">Round 2 | 文化价值与金融逻辑的博弈</div>
-    <div class="slide-number">05 / 13</div>
+    <div class="slide-number">07 / 17</div>
   </section>
 
-  <section class="slide" data-title="R2 碰撞">
+  <section class="slide" data-title="R2 碰撞(1/2)">
     <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH</div>
+      <div class="section-label anim-in">ROUND 2: CLASH (1/2)</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
       <div class="clash-container">
         
@@ -579,7 +583,18 @@ IP证券化是一个完美的反脆弱陷阱——它在短期内看起来稳定
         <div class="clash-content emotion-serious">冯唐，你说创作者应该拿大头。但你有没有想过，当创作者自己都想"拿大头"的时候，他们还能不能创作出好作品？IP证券化会不会改变创作者的激励机制，让他们从"我想讲好故事"变成"我怎样才能让代币升值"？</div>
         
       </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 碰撞</div>
+    <div class="slide-number">08 / 17</div>
+  </section>
 
+  <section class="slide" data-title="R2 碰撞(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
       <div class="clash-round anim-in">
         <div class="clash-header">
           <span class="clash-attacker neon-red">吴晓波</span>
@@ -593,7 +608,7 @@ IP证券化是一个完美的反脆弱陷阱——它在短期内看起来稳定
       </div>
     </div>
     <div class="deck-footer">Round 2 | 碰撞</div>
-    <div class="slide-number">06 / 13</div>
+    <div class="slide-number">09 / 17</div>
   </section>
 
   <section class="slide" data-title="Round 3: 寻找情感资产化的边界">
@@ -604,12 +619,12 @@ IP证券化是一个完美的反脆弱陷阱——它在短期内看起来稳定
       <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">如何在文化价值与金融逻辑之间找到平衡？</p>
     </div>
     <div class="deck-footer">Round 3 | 寻找情感资产化的边界</div>
-    <div class="slide-number">07 / 13</div>
+    <div class="slide-number">10 / 17</div>
   </section>
 
-  <section class="slide" data-title="R3 案例">
+  <section class="slide" data-title="R3 案例(1/2)">
     <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3: REALITY</div>
+      <div class="section-label anim-in">ROUND 3: REALITY (1/2)</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
       <div class="cases-container">
         
@@ -632,7 +647,18 @@ IP证券化是一个完美的反脆弱陷阱——它在短期内看起来稳定
         <div class="case-outcome neon-red">代价：粉丝为"赌"稀有卡的快感付费，而非为"故事"付费</div>
         <div class="case-lesson neon-gold">教训：当"拥有"取代"体验"，收藏变成了另一种形式的"金融投机"</div>
       </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 案例</div>
+    <div class="slide-number">11 / 17</div>
+  </section>
 
+  <section class="slide" data-title="R3 案例(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 3: REALITY (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
+      <div class="cases-container">
+        
       <div class="reality-case anim-in">
         <div class="case-header">
           <div class="case-name neon-orange">阅文IP衍生品GMV爆发</div>
@@ -645,7 +671,7 @@ IP证券化是一个完美的反脆弱陷阱——它在短期内看起来稳定
       </div>
     </div>
     <div class="deck-footer">Round 3 | 案例</div>
-    <div class="slide-number">08 / 13</div>
+    <div class="slide-number">12 / 17</div>
   </section>
 
   <section class="slide" data-title="R3 代价">
@@ -682,7 +708,7 @@ IP证券化是一个完美的反脆弱陷阱——它在短期内看起来稳定
       </div>
     </div>
     <div class="deck-footer">Round 3 | 代价</div>
-    <div class="slide-number">09 / 13</div>
+    <div class="slide-number">13 / 17</div>
   </section>
 
   <section class="slide" data-title="R3 人性">
@@ -708,7 +734,7 @@ IP证券化是一个完美的反脆弱陷阱——它在短期内看起来稳定
       </div>
     </div>
     <div class="deck-footer">Round 3 | 人性</div>
-    <div class="slide-number">10 / 13</div>
+    <div class="slide-number">14 / 17</div>
   </section>
 
   <section class="slide" data-title="R3 升级">
@@ -743,7 +769,7 @@ IP证券化是一个完美的反脆弱陷阱——它在短期内看起来稳定
       </div>
     </div>
     <div class="deck-footer">Round 3 | 升级</div>
-    <div class="slide-number">11 / 13</div>
+    <div class="slide-number">15 / 17</div>
   </section>
 
   <section class="slide" data-title="最终洞见">
@@ -752,7 +778,7 @@ IP证券化是一个完美的反脆弱陷阱——它在短期内看起来稳定
       <div class="quote-large anim-in anim-delay-1">IP证券化是一个不可逆转的趋势，但需要建立明确的边界：哪些IP可以证券化、哪些不可以？文化价值的评判不能完全交给市场。守住创作初心和阅读体验的本真性，是对抗金融逻辑的最后防线。</div>
     </div>
     <div class="deck-footer">最终洞见</div>
-    <div class="slide-number">12 / 13</div>
+    <div class="slide-number">16 / 17</div>
   </section>
 
   <section class="slide" data-title="开放问题">
@@ -764,7 +790,7 @@ IP证券化是一个完美的反脆弱陷阱——它在短期内看起来稳定
 <div class="headline-item anim-in"><strong>Q3:</strong> 在情感被彻底商品化的时代，我们还能找到纯粹的艺术体验吗？</div>
     </div>
     <div class="deck-footer">开放问题</div>
-    <div class="slide-number">13 / 13</div>
+    <div class="slide-number">17 / 17</div>
   </section>
 
 <div class="toc-backdrop" id="tocBackdrop"></div>
@@ -841,16 +867,10 @@ document.addEventListener("keydown",function(e){
 });
 var wheelTimer=null;
 deck.addEventListener("wheel",function(e){
-  var sl=slides[cur];
-  var atTop=sl.scrollTop<=0;
-  var atBottom=sl.scrollTop+sl.clientHeight>=sl.scrollHeight-2;
-  if(e.deltaY>0&&atBottom){
-    if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},350);go(cur+1)}
-    e.preventDefault();
-  }else if(e.deltaY<0&&atTop){
-    if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},350);go(cur-1)}
-    e.preventDefault();
-  }
+  e.preventDefault();
+  if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},400)}
+  if(e.deltaY>0)go(cur+1);
+  else if(e.deltaY<0)go(cur-1);
 },{passive:false});
 var touchX=0,touchY=0;
 deck.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX;touchY=e.touches[0].clientY});

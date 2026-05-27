@@ -47,8 +47,8 @@
 
   /* ============ 幻灯片 ============ */
   .deck{position:relative;width:100%;height:100%}
-  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;height:100vh;overflow:hidden}
-  .slide::-webkit-scrollbar{width:4px}.slide::-webkit-scrollbar-track{background:transparent}.slide::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;overflow:hidden}
+  .slide-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
   .slide.active{display:flex}
   .slide.hero{justify-content:center;align-items:center;text-align:center}
   .slide.title-slide{justify-content:center;align-items:center;text-align:center}
@@ -339,12 +339,12 @@
       <p style="font-size:14px;color:var(--text-dim);letter-spacing:0.1em;" class="anim-in anim-delay-4">从知识讨论到生存博弈</p>
     </div>
     <div class="deck-footer">自我资本化的深渊 | V8级圆桌洞见</div>
-    <div class="slide-number">01 / 13</div>
+    <div class="slide-number">01 / 17</div>
   </section>
 
-  <section class="slide" data-title="专家档案">
+  <section class="slide" data-title="专家档案(1/2)">
     <div class="slide-content">
-      <div class="section-label anim-in">EXPERT PROFILES</div>
+      <div class="section-label anim-in">EXPERT PROFILES (1/2)</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
       <div class="grid-2">
         
@@ -357,10 +357,7 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>异化理论：资本主义把人的劳动、关系、甚至存在本身都变成了商品</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>"自我资本化"如何成为资本主义内在殖民的新阶段</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>资本逻辑渗透到最深的心理层面，人类失去反抗的能力</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>对结构性的强调可能忽视个体的能动性</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>异化理论：资本主义把人的劳动、关系、甚至存在本身都变成了商品</div><div class="profile-item"><span class="profile-label">利益相关：</span>"自我资本化"如何成为资本主义内在殖民的新阶段</div><div class="profile-item"><span class="profile-label">恐惧：</span>资本逻辑渗透到最深的心理层面，人类失去反抗的能力</div><div class="profile-item"><span class="profile-label">偏见：</span>对结构性的强调可能忽视个体的能动性</div>
         </div>
       </div>
 
@@ -373,10 +370,7 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>逃避自由：现代人用"自我资本化"逃避真正自由带来的责任和不确定性</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>"自我资本化"如何成为逃避真正自我的心理机制</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>人类失去存在性的价值感，永远陷入"不够好"的焦虑</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>对心理机制的强调可能忽视物质条件</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>逃避自由：现代人用"自我资本化"逃避真正自由带来的责任和不确定性</div><div class="profile-item"><span class="profile-label">利益相关：</span>"自我资本化"如何成为逃避真正自我的心理机制</div><div class="profile-item"><span class="profile-label">恐惧：</span>人类失去存在性的价值感，永远陷入"不够好"的焦虑</div><div class="profile-item"><span class="profile-label">偏见：</span>对心理机制的强调可能忽视物质条件</div>
         </div>
       </div>
 
@@ -389,13 +383,21 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>人性尊严不能被还原为经济价值，人是因为"是人"而有价值，不是因为"有用"才有价值</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>"自我资本化"话语如何被用来正当化不平等</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>把"失败"归咎于个人，让结构性不平等变得"可以接受"</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>可能过于强调法律和伦理而忽视现实压力</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>人性尊严不能被还原为经济价值，人是因为"是人"而有价值，不是因为"有用"才有价值</div><div class="profile-item"><span class="profile-label">利益相关：</span>"自我资本化"话语如何被用来正当化不平等</div><div class="profile-item"><span class="profile-label">恐惧：</span>把"失败"归咎于个人，让结构性不平等变得"可以接受"</div><div class="profile-item"><span class="profile-label">偏见：</span>可能过于强调法律和伦理而忽视现实压力</div>
         </div>
       </div>
+      </div>
+    </div>
+    <div class="deck-footer">专家档案</div>
+    <div class="slide-number">02 / 17</div>
+  </section>
 
+  <section class="slide" data-title="专家档案(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">EXPERT PROFILES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
+      <div class="grid-2">
+        
       <div class="card card-rise anim-in">
         <div class="speaker-header">
           <div class="speaker-avatar" style="background:#4a2d8a">项</div>
@@ -405,10 +407,7 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>"附近"消失：自我资本化正在瓦解公共生活和真实的人际连接</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>自我资本化如何破坏社会的共情能力和公共性</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>当所有人都变成"自我企业家"，谁还关心公共事务？</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>社会学视角可能忽视经济压力的现实性</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>"附近"消失：自我资本化正在瓦解公共生活和真实的人际连接</div><div class="profile-item"><span class="profile-label">利益相关：</span>自我资本化如何破坏社会的共情能力和公共性</div><div class="profile-item"><span class="profile-label">恐惧：</span>当所有人都变成"自我企业家"，谁还关心公共事务？</div><div class="profile-item"><span class="profile-label">偏见：</span>社会学视角可能忽视经济压力的现实性</div>
         </div>
       </div>
 
@@ -421,10 +420,7 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>务实主义：在有限的现实条件下，自我资本化可能是普通人唯一可行的策略</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>"自我资本化"的阶层差异和条件性</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>批评"自我资本化"的道德家们忽视了没有选择的人</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>务实视角可能过于接受现状</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>务实主义：在有限的现实条件下，自我资本化可能是普通人唯一可行的策略</div><div class="profile-item"><span class="profile-label">利益相关：</span>"自我资本化"的阶层差异和条件性</div><div class="profile-item"><span class="profile-label">恐惧：</span>批评"自我资本化"的道德家们忽视了没有选择的人</div><div class="profile-item"><span class="profile-label">偏见：</span>务实视角可能过于接受现状</div>
         </div>
       </div>
 
@@ -437,16 +433,13 @@
           </div>
         </div>
         <div class="expert-profile">
-          <div class="profile-item"><span class="profile-label">核心信念：</span>人间不值得，但活着本身就是意义——解构一切宏大叙事，揭示"表演"背后的真实</div>
-          <div class="profile-item"><span class="profile-label">利益相关：</span>普通人如何在自我资本化的时代保持"真诚"</div>
-          <div class="profile-item"><span class="profile-label">恐惧：</span>所有人都在"表演"成功，忘了自己真正想要的是什么</div>
-          <div class="profile-item"><span class="profile-label">偏见：</span>解构视角可能过于虚无</div>
+          <div class="profile-item"><span class="profile-label">核心信念：</span>人间不值得，但活着本身就是意义——解构一切宏大叙事，揭示"表演"背后的真实</div><div class="profile-item"><span class="profile-label">利益相关：</span>普通人如何在自我资本化的时代保持"真诚"</div><div class="profile-item"><span class="profile-label">恐惧：</span>所有人都在"表演"成功，忘了自己真正想要的是什么</div><div class="profile-item"><span class="profile-label">偏见：</span>解构视角可能过于虚无</div>
         </div>
       </div>
       </div>
     </div>
     <div class="deck-footer">专家档案</div>
-    <div class="slide-number">02 / 13</div>
+    <div class="slide-number">03 / 17</div>
   </section>
 
   <section class="slide" data-title="Round 1: 自我资本化的时代特征">
@@ -457,12 +450,12 @@
       <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">"投资自己"成为时代最强音——这是赋能还是规训？</p>
     </div>
     <div class="deck-footer">Round 1 | 自我资本化的时代特征</div>
-    <div class="slide-number">03 / 13</div>
+    <div class="slide-number">04 / 17</div>
   </section>
 
-  <section class="slide" data-title="R1 立场">
+  <section class="slide" data-title="R1 立场(1/2)">
     <div class="slide-content">
-      <div class="section-label anim-in">ROUND 1: STANCES</div>
+      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
       <div class="stances-grid">
         
@@ -498,7 +491,18 @@
 
 "自我资本化"话语是对这个原则的根本挑战。</div>
       </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 立场</div>
+    <div class="slide-number">05 / 17</div>
+  </section>
 
+  <section class="slide" data-title="R1 立场(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
       <div class="stance-item anim-in">
         <div class="stance-expert neon-gold">项飙</div>
         <div class="stance-content emotion-serious">我想从一个被忽视的角度切入："自我资本化"正在破坏社会的"公共性"。
@@ -538,7 +542,7 @@
       </div>
     </div>
     <div class="deck-footer">Round 1 | 立场</div>
-    <div class="slide-number">04 / 13</div>
+    <div class="slide-number">06 / 17</div>
   </section>
 
   <section class="slide" data-title="Round 2: 金融逻辑对生活世界的殖民">
@@ -549,12 +553,12 @@
       <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">"自我资本化"是生存策略还是人性异化？</p>
     </div>
     <div class="deck-footer">Round 2 | 金融逻辑对生活世界的殖民</div>
-    <div class="slide-number">05 / 13</div>
+    <div class="slide-number">07 / 17</div>
   </section>
 
-  <section class="slide" data-title="R2 碰撞">
+  <section class="slide" data-title="R2 碰撞(1/2)">
     <div class="slide-content">
-      <div class="section-label anim-in">ROUND 2: CLASH</div>
+      <div class="section-label anim-in">ROUND 2: CLASH (1/2)</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
       <div class="clash-container">
         
@@ -579,7 +583,18 @@
         <div class="clash-content emotion-serious">李诞，你说"没有人活在当下"。但你有没有想过：也许"活在当下"本身也是另一种逃避——逃避对未来的规划和责任？当所有人都"躺平"，谁来承担社会运转所需的劳动？</div>
         
       </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 碰撞</div>
+    <div class="slide-number">08 / 17</div>
+  </section>
 
+  <section class="slide" data-title="R2 碰撞(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
       <div class="clash-round anim-in">
         <div class="clash-header">
           <span class="clash-attacker neon-red">罗翔</span>
@@ -593,7 +608,7 @@
       </div>
     </div>
     <div class="deck-footer">Round 2 | 碰撞</div>
-    <div class="slide-number">06 / 13</div>
+    <div class="slide-number">09 / 17</div>
   </section>
 
   <section class="slide" data-title="Round 3: 寻找超越资本逻辑的生活方式">
@@ -604,12 +619,12 @@
       <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">如何在金融化的时代守护人的意义感？</p>
     </div>
     <div class="deck-footer">Round 3 | 寻找超越资本逻辑的生活方式</div>
-    <div class="slide-number">07 / 13</div>
+    <div class="slide-number">10 / 17</div>
   </section>
 
-  <section class="slide" data-title="R3 案例">
+  <section class="slide" data-title="R3 案例(1/2)">
     <div class="slide-content">
-      <div class="section-label anim-in">ROUND 3: REALITY</div>
+      <div class="section-label anim-in">ROUND 3: REALITY (1/2)</div>
       <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
       <div class="cases-container">
         
@@ -638,7 +653,18 @@
         <div class="case-outcome neon-red">代价：人际关系是幸福的最强预测因子，而非"自我资本"</div>
         <div class="case-lesson neon-gold">教训：在自我资本化的时代，"投资自己"可能恰恰让人远离了最让人幸福的东西——真实的人际关系</div>
       </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 案例</div>
+    <div class="slide-number">11 / 17</div>
+  </section>
 
+  <section class="slide" data-title="R3 案例(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 3: REALITY (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
+      <div class="cases-container">
+        
       <div class="reality-case anim-in">
         <div class="case-header">
           <div class="case-name neon-orange">"内卷"话语的兴起</div>
@@ -653,7 +679,7 @@
       </div>
     </div>
     <div class="deck-footer">Round 3 | 案例</div>
-    <div class="slide-number">08 / 13</div>
+    <div class="slide-number">12 / 17</div>
   </section>
 
   <section class="slide" data-title="R3 代价">
@@ -690,7 +716,7 @@
       </div>
     </div>
     <div class="deck-footer">Round 3 | 代价</div>
-    <div class="slide-number">09 / 13</div>
+    <div class="slide-number">13 / 17</div>
   </section>
 
   <section class="slide" data-title="R3 人性">
@@ -722,7 +748,7 @@
       </div>
     </div>
     <div class="deck-footer">Round 3 | 人性</div>
-    <div class="slide-number">10 / 13</div>
+    <div class="slide-number">14 / 17</div>
   </section>
 
   <section class="slide" data-title="R3 升级">
@@ -757,7 +783,7 @@
       </div>
     </div>
     <div class="deck-footer">Round 3 | 升级</div>
-    <div class="slide-number">11 / 13</div>
+    <div class="slide-number">15 / 17</div>
   </section>
 
   <section class="slide" data-title="最终洞见">
@@ -766,7 +792,7 @@
       <div class="quote-large anim-in anim-delay-1">"自我资本化"是结构性压力的个体化应对，而非真正的自由选择。真正的自由，可能始于承认：我已经够了。不是躺平，不是放弃，而是从"永远不够"的焦虑中解脱出来，去追求真正想要的生活。</div>
     </div>
     <div class="deck-footer">最终洞见</div>
-    <div class="slide-number">12 / 13</div>
+    <div class="slide-number">16 / 17</div>
   </section>
 
   <section class="slide" data-title="开放问题">
@@ -778,7 +804,7 @@
 <div class="headline-item anim-in"><strong>Q3:</strong> 如果"努力不一定成功"，我们为什么还要努力？</div>
     </div>
     <div class="deck-footer">开放问题</div>
-    <div class="slide-number">13 / 13</div>
+    <div class="slide-number">17 / 17</div>
   </section>
 
 <div class="toc-backdrop" id="tocBackdrop"></div>
@@ -855,16 +881,10 @@ document.addEventListener("keydown",function(e){
 });
 var wheelTimer=null;
 deck.addEventListener("wheel",function(e){
-  var sl=slides[cur];
-  var atTop=sl.scrollTop<=0;
-  var atBottom=sl.scrollTop+sl.clientHeight>=sl.scrollHeight-2;
-  if(e.deltaY>0&&atBottom){
-    if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},350);go(cur+1)}
-    e.preventDefault();
-  }else if(e.deltaY<0&&atTop){
-    if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},350);go(cur-1)}
-    e.preventDefault();
-  }
+  e.preventDefault();
+  if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},400)}
+  if(e.deltaY>0)go(cur+1);
+  else if(e.deltaY<0)go(cur-1);
 },{passive:false});
 var touchX=0,touchY=0;
 deck.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX;touchY=e.touches[0].clientY});

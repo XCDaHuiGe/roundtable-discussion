@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>算法推荐的注意力殖民 圆桌洞见</title>
+<style>
+  :root{
+    /* ============ 主题色(默认:🖋 墨水经典) ============ */
+    --ink:#0a0a0b;
+    --ink-rgb:10,10,11;
+    --paper:#f1efea;
+    --paper-rgb:241,239,234;
+    --paper-tint:#e8e5de;
+    --ink-tint:#18181a;
+    --text-dim:rgba(241,239,234,0.5);
+
+    /* ============ 强调色 ============ */
+    --accent:#c23b22;
+    --accent-rgb:194,59,34;
+    --gold:#d4a843;
+    --gold-rgb:212,168,67;
+    --blue:#4a6a9a;
+    --purple:#8a4aaa;
+    --green:#3a8a5c;
+    --cyan:#4a9a9a;
+    --orange:#d4843a;
+
+    /* ============ 字体(跨主题固定) ============ */
+    --mono:"IBM Plex Mono","SF Mono",monospace;
+    --serif-zh:"Noto Serif SC","Source Han Serif SC","STSong",serif;
+    --sans-zh:"Noto Sans SC","Source Han Sans SC","PingFang SC",sans-serif;
+
+    /* ============ 间距 ============ */
+    --radius:10px;
+    --ease:cubic-bezier(.4,0,.2,1);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans-zh);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+  /* ============ Deck 容器 ============ */
+  #deck{position:relative;width:100vw;height:100vh;overflow:hidden}
+
+  /* ============ 进度条 ============ */
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:1000;transition:width .5s var(--ease);box-shadow:0 0 12px rgba(var(--accent-rgb),.3)}
+
+  /* ============ 幻灯片 ============ */
+  .deck{position:relative;width:100%;height:100%}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;overflow:hidden}
+  .slide-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
+  .slide.active{display:flex}
+  .slide.hero{justify-content:center;align-items:center;text-align:center}
+  .slide.title-slide{justify-content:center;align-items:center;text-align:center}
+
+  /* ============ 入场动画(Guizang风格) ============ */
+  [data-anim]{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .slide.active [data-anim]{opacity:1;transform:translateY(0)}
+  .slide.active [data-anim]:nth-child(1){transition-delay:.1s}
+  .slide.active [data-anim]:nth-child(2){transition-delay:.18s}
+  .slide.active [data-anim]:nth-child(3){transition-delay:.26s}
+  .slide.active [data-anim]:nth-child(4){transition-delay:.34s}
+  .slide.active [data-anim]:nth-child(5){transition-delay:.42s}
+  .slide.active [data-anim]:nth-child(6){transition-delay:.5s}
+
+  /* ============ 内容区(book-distillation范式) ============ */
+  .frame{width:100%;max-width:1100px;margin:0 auto;flex:1;display:flex;flex-direction:column}
+  .slide-content{flex:1;display:flex;flex-direction:column}
+
+  /* ============ Magazine Chrome(Guizang风格) ============ */
+  .chrome{display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.5;margin-bottom:3vh}
+  .chrome .left,.chrome .right{display:flex;gap:2em;align-items:center}
+  .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
+
+  /* ============ 底部元数据(render_v8兼容) ============ */
+  .deck-footer{margin-top:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
+  .slide-number{position:absolute;bottom:2vh;right:3vw;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.35)}
+
+  /* ============ Section Label ============ */
+  .section-label{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
+
+  /* ============ 封面 ============ */
+  .cover-badge{display:inline-block;padding:6px 20px;border:1px solid var(--accent);border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4vh}
+  .cover-title{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:4vh;line-height:1.8;max-width:600px}
+  .cover-stats{display:flex;gap:4vh;flex-wrap:wrap;justify-content:center}
+  .cover-stat{text-align:center}
+  .cover-stat-num{font-family:var(--mono);font-size:2.5rem;font-weight:900;color:var(--accent)}
+  .cover-stat-label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.5);margin-top:.5vh}
+
+  /* ============ 封面标题(render_v8) ============ */
+  .hero-dark{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;flex:1}
+  .title-main{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .title-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:2vh;line-height:1.8}
+  .gold-line{width:80px;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));margin:3vh auto;border-radius:2px}
+
+  /* ============ 标题系统 ============ */
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
+  .h-hero{font-family:var(--serif-zh);font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.2;margin-bottom:3vh}
+  .h-xl{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.4rem,3vw,2.2rem);line-height:1.3;margin-bottom:2vh}
+  .h-lg{font-family:var(--serif-zh);font-weight:600;font-size:clamp(1.1rem,2vw,1.5rem);line-height:1.4;margin-bottom:1.5vh}
+  .h-md{font-weight:600;font-size:1.1rem;margin-bottom:1vh}
+  .lead{font-size:1rem;line-height:1.85;color:rgba(var(--paper-rgb),.8);max-width:700px}
+  .meta-row{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.4);display:flex;gap:2em;flex-wrap:wrap;margin-top:3vh}
+
+  /* ============ 大号引用(render_v8) ============ */
+  .quote-large{font-family:var(--serif-zh);font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:600;line-height:1.6;color:rgba(var(--paper-rgb),.9);max-width:800px;margin:0 auto}
+
+  /* ============ 分割线 ============ */
+  .rule{width:100%;height:1px;background:rgba(var(--paper-rgb),.15);margin:3vh 0}
+
+  /* ============ 标签 ============ */
+  .tag{display:inline-block;padding:4px 12px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;margin:3px}
+  .tag-gold{background:rgba(var(--gold-rgb),.15);color:var(--gold);border:1px solid rgba(var(--gold-rgb),.2)}
+  .tag-red{background:rgba(var(--accent-rgb),.15);color:var(--accent);border:1px solid rgba(var(--accent-rgb),.2)}
+  .tag-blue{background:rgba(74,106,154,.15);color:var(--blue);border:1px solid rgba(74,106,154,.2)}
+  .tag-purple{background:rgba(138,74,170,.15);color:var(--purple);border:1px solid rgba(138,74,170,.2)}
+  .tag-green{background:rgba(58,138,92,.15);color:var(--green);border:1px solid rgba(58,138,92,.2)}
+
+  /* ============ 霓虹强调色(render_v8) ============ */
+  .neon-gold{color:var(--gold)}.neon-red{color:var(--accent)}.neon-cyan{color:var(--cyan)}.neon-purple{color:var(--purple)}.neon-orange{color:var(--orange)}.neon-green{color:var(--green)}
+
+  /* ============ 网格系统 ============ */
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:2vh 2vw}
+  @media(max-width:768px){.grid-2{grid-template-columns:1fr}}
+
+  /* ============ 发言块(原生) ============ */
+  .sp{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2.5vw;margin-bottom:2vh;position:relative}
+  .sp::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .sh{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh}
+  .speaker-avatar{width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:var(--ink);background:var(--accent);flex-shrink:0}
+  .sn{font-weight:700;font-size:1rem}
+  .sr{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4);padding:3px 8px;background:rgba(var(--paper-rgb),.06);border-radius:3px}
+  .st{font-size:.95rem;line-height:2;color:rgba(var(--paper-rgb),.85)}
+  .st strong{color:var(--paper);font-weight:700}
+  .st em{color:var(--gold);font-style:normal;font-weight:600}
+
+  /* ============ 碰撞块(原生) ============ */
+  .cb{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;position:relative}
+  .cb::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .cb.blue{border-color:rgba(74,106,154,.3)}.cb.blue::before{background:var(--blue)}
+  .cb.purple{border-color:rgba(138,74,170,.3)}.cb.purple::before{background:var(--purple)}
+  .cb.green{border-color:rgba(58,138,92,.3)}.cb.green::before{background:var(--green)}
+  .cb.orange{border-color:rgba(var(--gold-rgb),.3)}.cb.orange::before{background:var(--gold)}
+  .cl{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;color:var(--accent);font-weight:600}
+  .cl.blue{color:var(--blue)}.cl.purple{color:var(--purple)}.cl.green{color:var(--green)}.cl.orange{color:var(--gold)}
+
+  /* ============ 洞见卡 ============ */
+  .insight-c{background:linear-gradient(135deg,rgba(var(--paper-rgb),.04) 0%,rgba(var(--paper-rgb),.08) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh;position:relative;overflow:hidden}
+  .insight-c::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold))}
+  .insight-q{font-family:var(--serif-zh);font-size:1.1rem;font-weight:700;color:var(--gold);line-height:1.6;margin-bottom:1vh}
+  .insight-a{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.75)}
+
+  /* ============ 卡片 ============ */
+  .card{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
+  .card-num{font-family:var(--mono);font-weight:900;font-size:1.8rem;color:var(--accent);opacity:.4;margin-bottom:1vh}
+  .card-title{font-weight:700;font-size:1rem;margin-bottom:1vh}
+  .card-body{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
+  .card-source{font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);margin-top:1vh}
+
+  /* ============ 专家卡片(render_v8) ============ */
+  .card-rise{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--green)}
+  .card-fall{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--accent)}
+  .speaker-header{display:flex;align-items:center;gap:16px;margin-bottom:2vh}
+  .speaker-name{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem}
+  .speaker-role{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:2px}
+  .expert-profile{display:flex;flex-direction:column;gap:1vh}
+  .profile-item{font-size:.9rem;line-height:1.7;color:rgba(var(--paper-rgb),.8)}
+  .profile-label{color:var(--gold);font-weight:600}
+
+  /* ============ 立场表达(render_v8) ============ */
+  .stance-item{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;border-left:3px solid var(--gold)}
+  .stance-expert{font-family:var(--serif-zh);font-weight:700;font-size:1rem;margin-bottom:1vh}
+  .stance-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
+  .stances-grid{display:flex;flex-direction:column;gap:1.5vh}
+
+  /* ============ 碰撞轮次(render_v8) ============ */
+  .clash-round{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;position:relative}
+  .clash-round::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .clash-header{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh;flex-wrap:wrap}
+  .clash-attacker{font-weight:700;font-size:1rem}
+  .clash-target{font-weight:700;font-size:1rem}
+  .clash-arrow{color:rgba(var(--paper-rgb),.3);font-size:1.2rem}
+  .clash-type{display:inline-block;padding:3px 10px;border-radius:3px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.5vh;font-weight:600}
+  .clash-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
+  .counter-attack{margin-top:2vh;padding-top:2vh;border-top:1px dashed rgba(var(--paper-rgb),.1)}
+  .counter-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .counter-content{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
+  .clash-container{display:flex;flex-direction:column;gap:2vh}
+
+  /* ============ 攻击类型色 ============ */
+  .attack-logic{background:rgba(74,106,154,.15);color:var(--blue)}
+  .attack-interest{background:rgba(var(--accent-rgb),.15);color:var(--accent)}
+  .attack-reality{background:rgba(var(--gold-rgb),.15);color:var(--gold)}
+  .attack-human{background:rgba(138,74,170,.15);color:var(--purple)}
+  .attack-failure{background:rgba(58,138,92,.15);color:var(--green)}
+
+  /* ============ 现实案例(render_v8) ============ */
+  .reality-case{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--orange)}
+  .case-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5vh;flex-wrap:wrap;gap:8px}
+  .case-name{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem}
+  .case-source{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4)}
+  .case-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:1.5vh}
+  .case-outcome{font-size:.9rem;font-weight:600;margin-bottom:1vh}
+  .case-lesson{font-size:.9rem;font-weight:600}
+  .cases-container{display:flex;flex-direction:column;gap:2vh}
+
+  /* ============ 代价讨论(render_v8) ============ */
+  .cost-discussion{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh}
+  .cost-scenario{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem;margin-bottom:2vh}
+  .cost-list{display:flex;flex-direction:column;gap:1.5vh;margin-bottom:2vh}
+  .cost-item{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:1.5vh 2vw;border-left:3px solid var(--accent)}
+  .cost-name{font-weight:700;font-size:.95rem;margin-bottom:.5vh}
+  .cost-analysis{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .worst-case{background:rgba(var(--accent-rgb),.08);border:1px solid rgba(var(--accent-rgb),.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
+  .worst-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .worst-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+  .survivor-bias{background:rgba(138,74,170,.08);border:1px solid rgba(138,74,170,.15);border-radius:6px;padding:2vh 2vw}
+  .survivor-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .survivor-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+
+  /* ============ 人性层(render_v8) ============ */
+  .human-nature{background:linear-gradient(135deg,rgba(var(--paper-rgb),.03) 0%,rgba(var(--paper-rgb),.06) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
+  .human-question{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem;margin-bottom:2vh;line-height:1.5}
+  .human-analysis{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:2vh}
+  .human-examples{margin-bottom:2vh}
+  .examples-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1vh;font-weight:600}
+  .example-item{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8);padding:.5vh 0}
+  .human-conclusion{font-size:.95rem;font-weight:600;line-height:1.7}
+
+  /* ============ 认知升级(render_v8) ============ */
+  .cognitive-upgrade{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
+  .upgrade-comparison{display:grid;grid-template-columns:1fr auto 1fr;gap:2vw;align-items:start;margin-bottom:2vh}
+  @media(max-width:768px){.upgrade-comparison{grid-template-columns:1fr}.upgrade-arrow{transform:rotate(90deg)}}
+  .old-thinking,.new-thinking{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:2vh 1.5vw}
+  .old-thinking{border-left:3px solid var(--accent)}
+  .new-thinking{border-left:3px solid var(--green)}
+  .thinking-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .thinking-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+  .upgrade-arrow{font-size:1.5rem;color:rgba(var(--paper-rgb),.3);display:flex;align-items:center;justify-content:center;padding-top:3vh}
+  .complexity{background:rgba(74,106,154,.08);border:1px solid rgba(74,106,154,.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
+  .complexity-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .complexity-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .actionable{background:rgba(var(--gold-rgb),.08);border:1px solid rgba(var(--gold-rgb),.15);border-radius:6px;padding:2vh 2vw}
+  .actionable-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .actionable-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 情绪样式 ============ */
+  .emotion-sarcasm{border-left:3px solid var(--purple);padding-left:12px;font-style:italic}
+  .emotion-helplessness{opacity:.75;font-style:italic}
+  .emotion-anger{color:var(--accent);font-weight:600}
+  .emotion-hesitation{opacity:.8;font-style:italic}
+  .emotion-self-deprecation{opacity:.7;font-style:italic}
+  .emotion-cold-laugh{color:var(--purple)}
+  .emotion-silence{opacity:.5;font-style:italic}
+  .emotion-serious{color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 指标 ============ */
+  .metrics{display:flex;gap:2vw;flex-wrap:wrap;margin-bottom:3vh}
+  .metric{flex:1;min-width:100px;text-align:center;background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 1.5vw}
+  .metric-val{font-family:var(--mono);font-weight:900;font-size:clamp(1.5rem,3vw,2.5rem);color:var(--accent)}
+  .metric-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:.5vh}
+
+  /* ============ 开放问题 ============ */
+  .oq{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
+  .oq-num{font-family:var(--mono);font-weight:900;font-size:1.2rem;color:var(--accent);opacity:.3;margin-bottom:1vh}
+  .oq-text{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .headline-item{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.85);padding:1.5vh 0;border-bottom:1px solid rgba(var(--paper-rgb),.06)}
+  .headline-item:last-child{border-bottom:none}
+  .headline-item strong{color:var(--gold);margin-right:8px}
+
+  /* ============ 引用 ============ */
+  .quote{font-family:var(--serif-zh);font-size:1rem;font-style:italic;line-height:1.8;padding:2vh 2.5vw;border-left:3px solid var(--gold);background:rgba(var(--gold-rgb),.05);margin:2vh 0;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ TOC ============ */
+  .toc-panel{position:fixed;top:0;left:0;width:min(340px,80vw);height:100vh;background:rgba(var(--ink-rgb),.97);backdrop-filter:blur(20px);z-index:100;transform:translateX(-100%);transition:transform .35s var(--ease);padding:3vh 2.5vw;overflow-y:auto;border-right:1px solid rgba(var(--paper-rgb),.08)}
+  .toc-panel.open{transform:translateX(0)}
+  .toc-title{font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:3vh;padding-bottom:2vh;border-bottom:1px solid rgba(var(--paper-rgb),.1)}
+  .toc-item{display:flex;justify-content:space-between;padding:1.2vh 1.5vw;margin-bottom:.5vh;cursor:pointer;border-radius:6px;border-left:2px solid transparent;font-size:.9rem;color:rgba(var(--paper-rgb),.7);transition:all .2s}
+  .toc-item:hover{background:rgba(var(--paper-rgb),.06);color:var(--paper)}
+  .toc-item.active{background:rgba(var(--paper-rgb),.08);color:var(--accent);border-left-color:var(--accent);font-weight:600}
+  .toc-label{flex:1}
+  .toc-page{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.35)}
+  .toc-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;opacity:0;pointer-events:none;transition:opacity .3s}
+  .toc-backdrop.open{opacity:1;pointer-events:auto}
+
+  /* ============ 导航栏 ============ */
+  .nav-bar{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 3vw;background:rgba(var(--ink-rgb),.9);backdrop-filter:blur(10px);z-index:50;border-top:1px solid rgba(var(--paper-rgb),.06)}
+  .nav-left,.nav-right{display:flex;align-items:center;gap:12px}
+  .nav-btn{background:none;border:1px solid rgba(var(--paper-rgb),.12);color:rgba(var(--paper-rgb),.7);padding:8px 16px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;cursor:pointer;transition:all .2s}
+  .nav-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(var(--accent-rgb),.1)}
+  .nav-title{font-size:12px;color:rgba(var(--paper-rgb),.5);max-width:40vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-counter{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.4)}
+
+  /* ============ 导航点 ============ */
+  .nav-dots{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:6px}
+  .nd{width:6px;height:6px;border-radius:50%;background:rgba(var(--paper-rgb),.15);cursor:pointer;transition:all .3s var(--ease);border:none;padding:0}
+  .nd.active{background:var(--accent);height:20px;border-radius:3px;box-shadow:0 0 8px rgba(var(--accent-rgb),.4)}
+  .nd:hover{background:rgba(var(--paper-rgb),.4)}
+
+  /* ============ 入场动画延迟(render_v8兼容) ============ */
+  .anim-in{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .slide.active .anim-in{opacity:1;transform:translateY(0)}
+  .slide.active .anim-in:nth-child(1){transition-delay:.1s}
+  .slide.active .anim-in:nth-child(2){transition-delay:.18s}
+  .slide.active .anim-in:nth-child(3){transition-delay:.26s}
+  .slide.active .anim-in:nth-child(4){transition-delay:.34s}
+  .slide.active .anim-in:nth-child(5){transition-delay:.42s}
+  .slide.active .anim-in:nth-child(6){transition-delay:.5s}
+  .anim-delay-1{transition-delay:.18s !important}
+  .anim-delay-2{transition-delay:.26s !important}
+  .anim-delay-3{transition-delay:.34s !important}
+  .anim-delay-4{transition-delay:.42s !important}
+  .anim-delay-5{transition-delay:.5s !important}
+  .anim-delay-6{transition-delay:.58s !important}
+
+  /* ============ 响应式 ============ */
+  @media(max-width:1024px){.slide{padding:4vh 5vw 8vh}}
+  @media(max-width:768px){
+    .slide{padding:3vh 4vw 7vh}
+    .cover-stats{gap:2vh}
+    .metrics{flex-direction:column}
+    .nav-dots,.nav-title{display:none}
+    .nav-bar{padding:0 2vw}
+  }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+<div class="progress-bar" id="progressBar"></div>
+
+
+  <section class="slide hero active" data-title="封面">
+    <div class="slide-content hero-dark">
+      <div class="section-label anim-in">ROUNDTABLE DISCUSSION V8.0</div>
+      <h1 class="title-main anim-in anim-delay-1">算法推荐的注意力殖民</h1>
+      <div class="title-sub anim-in anim-delay-2"></div>
+      <div class="gold-line anim-in anim-delay-3"></div>
+      <p style="font-size:14px;color:var(--text-dim);letter-spacing:0.1em;" class="anim-in anim-delay-4">从知识讨论到生存博弈</p>
+    </div>
+    <div class="deck-footer">算法推荐的注意力殖民 | V8级圆桌洞见</div>
+    <div class="slide-number">01 / 32</div>
+  </section>
+
+  <section class="slide" data-title="专家档案(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">EXPERT PROFILES (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
+      <div class="grid-2">
+        
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#8a2a4a">韩</div>
+          <div>
+            <div class="speaker-name neon-gold">韩炳哲</div>
+            <div class="speaker-role">哲学家</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          
+        </div>
+      </div>
+
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#333333">丹</div>
+          <div>
+            <div class="speaker-name neon-gold">丹尼尔·卡尼曼</div>
+            <div class="speaker-role">认知科学家</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          
+        </div>
+      </div>
+
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#1a5f2a">项</div>
+          <div>
+            <div class="speaker-name neon-gold">项飙</div>
+            <div class="speaker-role">人类学家</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">专家档案</div>
+    <div class="slide-number">02 / 32</div>
+  </section>
+
+  <section class="slide" data-title="专家档案(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">EXPERT PROFILES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
+      <div class="grid-2">
+        
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#2a6a8a">傅</div>
+          <div>
+            <div class="speaker-name neon-gold">傅盛</div>
+            <div class="speaker-role">科技企业家</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          
+        </div>
+      </div>
+
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#6a4a8a">尼</div>
+          <div>
+            <div class="speaker-name neon-gold">尼尔·波兹曼</div>
+            <div class="speaker-role">媒介理论家</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          
+        </div>
+      </div>
+
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#e65100">李</div>
+          <div>
+            <div class="speaker-name neon-gold">李诞</div>
+            <div class="speaker-role">脱口秀演员</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">专家档案</div>
+    <div class="slide-number">03 / 32</div>
+  </section>
+
+  <section class="slide" data-title="Round 1: 算法推荐的本质">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1</div>
+      <h2 class="quote-large anim-in anim-delay-1">算法推荐的本质</h2>
+      <div class="gold-line anim-in anim-delay-2"></div>
+      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">算法推荐是满足需求还是制造需求？</p>
+    </div>
+    <div class="deck-footer">Round 1 | 算法推荐的本质</div>
+    <div class="slide-number">04 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R1 立场(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">韩炳哲</div>
+        <div class="stance-content emotion-serious">算法推荐的本质是一种'数字化的全景敞视监狱'。你以为你在自由选择，实际上你的每一次点击、每一次停留都在被记录、分析、预测。这种'透明的监控'比福柯描述的监狱更可怕，因为它让你心甘情愿地交出自己的注意力主权。算法不是在满足你的需求，而是在塑造你的欲望——它让你以为你想要的，恰好是它想让你想要的。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">丹尼尔·卡尼曼</div>
+        <div class="stance-content emotion-serious">从认知科学的角度，算法推荐利用的是人类大脑的系统1——快速、自动、无意识的决策系统。当你刷短视频时，你不是在'选择'，而是在'反应'。算法通过优化'停留时间'这个指标，精准地击中了你的多巴胺回路。这不是阴谋论，这是行为设计的基本原理。Facebook的前高管 Chamath Palihapitiya 公开承认：我们设计的产品正在撕裂社会的运作方式。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">项飙</div>
+        <div class="stance-content emotion-serious">算法推荐正在加速'附近'的消失。过去，你的信息来源是你的邻居、你的同事、你的社区——这些'附近'的人构成了你的认知边界。现在，算法把你和全世界的'相似用户'连接起来，却让你对身边的人越来越陌生。你可能知道地球另一边一个网红的生日，却不知道你隔壁邻居的名字。算法创造了一种'虚拟的附近'，取代了真实的附近。</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 立场</div>
+    <div class="slide-number">05 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R1 立场(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">傅盛</div>
+        <div class="stance-content emotion-serious">你们都在批判算法推荐，但有没有想过：在算法出现之前，人类的注意力就是被'殖民'的——被电视、被报纸、被广告牌。算法推荐至少让广告变得更'相关'了。我作为创业者，看到的是算法让小商家能够精准触达目标用户，让内容创作者能够找到自己的受众。算法不是问题，问题是算法的商业模式——当'注意力时长'成为唯一的KPI，扭曲就不可避免。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">尼尔·波兹曼</div>
+        <div class="stance-content emotion-serious">我想提醒大家：媒介即隐喻。每一种媒介都在塑造我们理解世界的方式。印刷术让'理性论证'成为可能，电视让'娱乐'成为一切的尺度，而算法推荐正在创造一种新的隐喻：'你看到的就是你想看的'。这种隐喻的危险在于，它取消了'意外'和'偶然'的空间。真正的教育、真正的成长，往往发生在你被迫面对你不感兴趣的东西的时刻。算法推荐正在消灭这种时刻。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">李诞</div>
+        <div class="stance-content emotion-serious">你们说的都太严肃了。我作为一个内容创作者，想说一个特别简单的事：算法推荐让'有趣'变得比'有用'更重要。你知道为什么脱口秀这么火吗？因为算法喜欢'情绪波动'——笑、哭、愤怒、惊讶。平淡的、理性的、需要思考的内容，在算法面前毫无竞争力。所以你看现在的新闻标题越来越夸张，短视频越来越刺激，因为算法在奖励'极端'，惩罚'平庸'。我们不是在被算法殖民，我们是在被自己的情绪本能殖民——算法只是放大器。</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 立场</div>
+    <div class="slide-number">06 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R1 碰撞(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">韩炳哲</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">傅盛</span>
+        </div>
+        <div class="clash-type attack-interest">利益冲突</div>
+        <div class="clash-content emotion-serious">你说'算法让小商家触达目标用户'——但你有没有想过，这种'精准触达'的本质是什么？是让商家能够绕过用户的理性判断，直接操控用户的购买欲望。你以为你在帮小商家，实际上你在帮整个商业系统更高效地收割注意力。你的'务实主义'恰恰是问题的一部分。</div>
+        
+          <div class="counter-attack">
+            <div class="counter-label neon-cyan">反击</div>
+            <div class="counter-content emotion-serious">你的批判混淆了两个层次：技术本身和商业模式。算法推荐是一种中性的技术能力，它可以让小商家触达用户，也可以让公益组织触达需要帮助的人。问题不在于'精准触达'，而在于'触达之后做什么'。你把所有的责任都推给技术，却忽视了人的能动性——用户不是被动的容器，他们可以选择不点击、不购买、不沉迷。技术决定论的批判，本身就是一种对人类主体性的不信任。</div>
+          </div>
+      </div>
+
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">丹尼尔·卡尼曼</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">李诞</span>
+        </div>
+        <div class="clash-type attack-logic">逻辑漏洞</div>
+        <div class="clash-content emotion-serious">你说'算法只是放大器，问题在人类的情绪本能'——但这个论证有一个关键漏洞：放大器是有方向的。一个中性的放大器应该同时放大理性和冲动，但算法不是。算法优化的是'停留时间'，而'停留时间'和'情绪强度'高度正相关。这意味着算法系统性地偏向极端内容，这不是中性放大，这是定向扭曲。</div>
+        
+          <div class="counter-attack">
+            <div class="counter-label neon-cyan">反击</div>
+            <div class="counter-content emotion-serious">你说算法'定向扭曲'——但扭曲的标准是什么？你说'停留时间'不代表价值，但谁来定义'有价值的内容'？是你吗？是政府吗？是哲学家吗？在过去，'有价值的内容'是由精英把关人定义的——报纸编辑、电视台台长、大学教授。算法推荐至少把定义权交给了'大众的脚投票'。这不是完美，但比精英垄断要民主。你批判算法，但你没有提供更好的替代方案。</div>
+          </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 碰撞</div>
+    <div class="slide-number">07 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R1 碰撞(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">项飙</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">傅盛</span>
+        </div>
+        <div class="clash-type attack-reality">现实矛盾</div>
+        <div class="clash-content emotion-serious">你说'用户不是被动的容器，他们可以选择'——但你的产品团队在设计产品时，有没有把'用户可能沉迷'作为设计约束？还是把'用户沉迷'作为设计目标？你的KPI是'日活用户'、'使用时长'、'留存率'——这些指标的优化方向，恰恰是让用户'无法选择'。你一边说用户有选择权，一边设计产品来削弱这种选择权，这不是矛盾吗？</div>
+        
+          <div class="counter-attack">
+            <div class="counter-label neon-cyan">反击</div>
+            <div class="counter-content emotion-serious">你的质疑是合理的，但你把商业逻辑和产品设计混为一谈了。是的，我们的KPI包括使用时长——但使用时长不等于沉迷。用户可以在算法推荐的内容中获得真正的价值：学习新知识、发现新兴趣、连接同好。问题不在于'用户花多少时间'，而在于'用户花的时间是否值得'。更重要的是，你说我'削弱用户选择权'——但算法推荐恰恰是在扩大用户的选择范围。没有算法，你只能看到你朋友圈里的人在看什么；有了算法，你可以看到全世界最优质的内容。选择权的扩大，怎么就成了削弱？</div>
+          </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 碰撞</div>
+    <div class="slide-number">08 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R1 案例">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 3: REALITY </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
+      <div class="cases-container">
+        
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">TikTok的青少年成瘾诉讼</div>
+          <div class="case-source">美国多州检察长联合诉讼 2023</div>
+        </div>
+        <div class="case-content">2023年，美国41个州的检察长联合起诉TikTok，指控其算法故意设计成让青少年成瘾。诉讼文件显示，TikTok的内部研究早就知道其产品对青少年心理健康有负面影响，但公司选择了利润而非用户健康。算法优化的'停留时间'指标，系统性地推送极端内容给脆弱的青少年用户。</div>
+        <div class="case-outcome neon-red">代价：诉讼进行中，TikTok面临数十亿美元的潜在赔偿</div>
+        <div class="case-lesson neon-gold">教训：当算法优化的目标与用户长期利益不一致时，系统性的伤害就不可避免</div>
+      </div>
+
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">YouTube的'兔子洞'效应研究</div>
+          <div class="case-source">Mozilla基金会 2021</div>
+        </div>
+        <div class="case-content">Mozilla基金会的研究发现，YouTube的推荐算法会把用户从温和内容逐步引向极端内容。一个从'健身视频'开始的用户，可能会在30分钟内被引导到'阴谋论'视频。这不是偶然，而是算法优化'观看时长'的必然结果——极端内容的'停留时间'更长。</div>
+        <div class="case-outcome neon-red">代价：YouTube在压力下调整了部分推荐策略</div>
+        <div class="case-lesson neon-gold">教训：算法的'优化'是有方向的，而这个方向可能与公共利益背道而驰</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 案例</div>
+    <div class="slide-number">09 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R1 代价">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 4: COST</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
+      
+      <div class="cost-discussion anim-in">
+        <div class="cost-scenario neon-gold">算法推荐成为唯一的信息获取方式</div>
+        <div class="cost-list">
+          
+          <div class="cost-item">
+            <div class="cost-name neon-red">认知茧房的固化</div>
+            <div class="cost-analysis">当你只看到算法认为你想看的内容，你的世界观会越来越窄。你不会遇到挑战你既有观念的信息，不会遇到让你不舒服但可能改变你的观点。认知茧房不是一种'舒适的监狱'，而是一种'看不见的围墙'。</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-name neon-red">注意力的碎片化</div>
+            <div class="cost-analysis">算法推荐的内容格式（短视频、信息流）正在训练我们的大脑适应'碎片化'的信息摄入。深度阅读、长时间专注、复杂思考——这些能力在算法时代正在退化。不是因为我们变笨了，而是因为算法不奖励这些能力。</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-name neon-red">公共话语的极端化</div>
+            <div class="cost-analysis">当算法奖励'情绪强度'而非'论证质量'，公共讨论就会趋向极端。温和、理性、有 nuance 的观点被算法淹没，而极端、煽动、简化的观点被算法放大。民主政治所需的理性讨论空间，正在被算法侵蚀。</div>
+          </div>
+        </div>
+        <div class="worst-case">
+          <div class="worst-label neon-red">最坏情况</div>
+          <div class="worst-content">2035年，人类失去了'意外发现'的能力。每个人的信息环境都是算法精心定制的，没有人会遇到自己不感兴趣的东西。教育消失了，因为教育的本质是被迫面对未知；创新消失了，因为创新的本质是意外的连接；民主消失了，因为民主需要共同的事实基础，而每个人的事实都是不同的。</div>
+        </div>
+        
+          <div class="survivor-bias">
+            <div class="survivor-label neon-purple">幸存者偏差</div>
+            <div class="survivor-content">我们只看到算法推荐的'成功案例'——用户找到了喜欢的内容，商家找到了目标客户。但我们没有看到的是：那些被算法'错过'的内容创作者，那些被算法'埋没'的优质信息，那些因为不在算法推荐范围内而永远无法被发现的声音。</div>
+          </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 代价</div>
+    <div class="slide-number">10 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R1 人性">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
+      
+      <div class="human-nature anim-in">
+        <div class="human-question neon-purple">人类是否天生倾向于'舒适的信息茧房'？</div>
+        <div class="human-analysis">认知心理学的研究表明，人类天生有'确认偏误'——我们倾向于寻找支持我们既有观点的信息，而忽视挑战我们观点的信息。算法推荐只是把这个天生的倾向'技术化'了。但问题是：在算法出现之前，物理世界的'意外'会强制打破这种偏误——你可能会在书店偶然拿起一本挑战你世界观的书，你可能会在聚会上遇到一个完全不同的人。算法推荐正在消灭这种'强制性的意外'。</div>
+        <div class="human-examples">
+          <div class="examples-label">现实例子</div>
+          
+          <div class="example-item">• 社交媒体的'回音室'效应——人们越来越只听到和自己相同的声音</div>
+          <div class="example-item">• 新闻消费的'极化'——人们越来越只看'自己一边'的媒体</div>
+        </div>
+        <div class="human-conclusion neon-gold">人类确实有'舒适茧房'的倾向，但物理世界的'意外'会强制打破它。算法推荐的问题不在于它满足了这种倾向，而在于它消灭了打破这种倾向的'意外'。</div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 人性</div>
+    <div class="slide-number">11 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R1 升级">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
+      
+      <div class="cognitive-upgrade anim-in">
+        <div class="upgrade-comparison">
+          <div class="old-thinking">
+            <div class="thinking-label neon-red">旧思维</div>
+            <div class="thinking-content">算法推荐是中性的技术，问题在于使用者</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="new-thinking">
+            <div class="thinking-label neon-green">新思维</div>
+            <div class="thinking-content">算法推荐是有方向的系统，它的优化目标决定了它会塑造什么样的用户</div>
+          </div>
+        </div>
+        <div class="complexity">
+          <div class="complexity-label neon-cyan">复杂性</div>
+          <div class="complexity-content">算法推荐不是简单的'工具'，而是一个'生态系统'。它不只是响应你的需求，它还在塑造你的需求。问题不在于'用不用算法'，而在于'算法被设计成优化什么'。当优化目标是'停留时间'，系统就会奖励成瘾；当优化目标是'用户长期福祉'，系统就会奖励成长。</div>
+        </div>
+        <div class="actionable">
+          <div class="actionable-label neon-gold">可执行洞见</div>
+          <div class="actionable-content">作为用户：定期'算法断食'——故意去看一些算法没有推荐给你的内容。作为社会：要求算法平台公开其优化目标，并接受独立审计。作为政策制定者：探索'算法素养'教育，帮助公众理解算法如何影响他们的信息消费。</div>
+        </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 升级</div>
+    <div class="slide-number">12 / 32</div>
+  </section>
+
+  <section class="slide" data-title="Round 2: 算法与民主的张力">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2</div>
+      <h2 class="quote-large anim-in anim-delay-1">算法与民主的张力</h2>
+      <div class="gold-line anim-in anim-delay-2"></div>
+      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">算法推荐是否正在侵蚀民主政治的基础？</p>
+    </div>
+    <div class="deck-footer">Round 2 | 算法与民主的张力</div>
+    <div class="slide-number">13 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R2 立场(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">韩炳哲</div>
+        <div class="stance-content emotion-serious">算法推荐正在创造一种'数字化的暴政'——不是通过强制，而是通过诱惑。民主需要公民能够接触到多元的观点，能够在公共空间进行理性讨论。但算法推荐创造了无数个'私人定制的信息茧房'，每个人都在自己的茧房里自说自话。当没有人愿意听不同的声音，民主就只剩下形式了。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">丹尼尔·卡尼曼</div>
+        <div class="stance-content emotion-serious">从认知科学的角度，算法推荐正在系统性地削弱公民的'慢思考'能力。民主决策需要理性、需要权衡、需要考虑长远——这些都是系统2的能力。但算法优化的是系统1的反应：情绪、直觉、即时满足。当公民的大脑被训练成只用系统1思考，民主就退化成了'情绪的暴政'。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">项飙</div>
+        <div class="stance-content emotion-serious">我想提出一个更具体的问题：算法推荐正在改变'公共空间'的性质。过去的公共空间（广场、报纸、电视）是'共同的'——每个人看到的是相同的内容，这创造了讨论的基础。现在的算法推荐创造的是'私人的'信息环境——每个人看到的都是不同的。当没有共同的信息基础，'公共讨论'如何可能？</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 立场</div>
+    <div class="slide-number">14 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R2 立场(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">傅盛</div>
+        <div class="stance-content emotion-serious">你们把算法推荐妖魔化了。算法推荐也有积极的一面：它让边缘群体的声音能够被听见。在过去，媒体的'把关人'决定了什么声音能进入公共空间；现在，算法可以让一个小众博主的内容触达百万用户。这不是民主的衰退，而是民主的扩展。问题不在于算法本身，而在于算法的治理。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">尼尔·波兹曼</div>
+        <div class="stance-content emotion-serious">媒介形态决定公共话语的性质。印刷术创造了'理性公共讨论'的可能性，电视把公共讨论变成了'表演'，而算法推荐正在把公共讨论变成'情绪宣泄'。这不是任何人的错，这是媒介逻辑的必然结果。算法优化的是'参与度'，而'参与度'最高的内容是那些引发强烈情绪的内容——愤怒、恐惧、厌恶。理性的、nuanced的讨论在算法面前毫无竞争力。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">李诞</div>
+        <div class="stance-content emotion-serious">你们讨论的'民主'太抽象了。普通人关心的不是'公共讨论的质量'，而是'我的声音能不能被听到'。算法推荐至少给了普通人一个发声的渠道。在过去，只有精英才能进入公共空间；现在，一个普通人的一条短视频可以触达千万人。这不是民主的衰退，这是民主的'下沉'。也许'下沉'的质量不高，但它确实是更民主了。</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 立场</div>
+    <div class="slide-number">15 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R2 碰撞(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">韩炳哲</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">李诞</span>
+        </div>
+        <div class="clash-type attack-logic">逻辑漏洞</div>
+        <div class="clash-content emotion-serious">你说'算法让普通人发声'——但发声不等于被听见。算法推荐的逻辑是'赢家通吃'：头部内容获得80%的流量，长尾内容被淹没。你以为算法给了普通人发声的机会，实际上算法只是把'精英垄断'换成了'算法垄断'。一个普通人的一条短视频能触达千万人？是的，如果算法选择推荐它。但算法选择推荐的标准是什么？是'停留时间'，不是'价值'。你的'民主下沉'论，是一种技术乌托邦主义的幻觉。</div>
+        
+          <div class="counter-attack">
+            <div class="counter-label neon-cyan">反击</div>
+            <div class="counter-content emotion-serious">你的'算法垄断'论有一个关键假设：算法是'单一的'、'统一的'。但现实中，算法是多元的——抖音、快手、B站、YouTube、TikTok，每个平台的算法逻辑都不同。用户可以选择不同的平台，内容创作者也可以选择在多个平台分发。你说'赢家通吃'，但你有没有注意到：过去十年，'草根网红'的数量是指数级增长的。这不是'算法垄断'的结果，这是'算法竞争'的结果。你的批判是基于一个不存在的'单一算法'的假设。</div>
+          </div>
+      </div>
+
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">项飙</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">傅盛</span>
+        </div>
+        <div class="clash-type attack-reality">现实矛盾</div>
+        <div class="clash-content emotion-serious">你说'算法让边缘群体被听见'——但你有没有注意到，算法推荐的'边缘群体'往往是那些能够制造最大情绪波动的群体？温和的、理性的边缘群体在算法面前毫无竞争力。算法不是在'放大边缘声音'，而是在'放大极端声音'。你的'民主扩展'论，忽视了算法对'声音质量'的系统性扭曲。</div>
+        
+          <div class="counter-attack">
+            <div class="counter-label neon-cyan">反击</div>
+            <div class="counter-content emotion-serious">你的质疑是合理的，但你混淆了'算法的当前实现'和'算法的潜在可能'。是的，当前的算法确实倾向于放大极端声音——因为当前的算法优化的是'停留时间'。但这是商业模式的问题，不是技术本身的问题。如果算法优化的是'讨论质量'或'观点多样性'，结果会完全不同。你说算法扭曲了'声音质量'，但你没有区分'技术的扭曲'和'商业模式的扭曲'。这个区分很重要，因为它决定了我们是应该改变技术，还是改变商业模式。</div>
+          </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 碰撞</div>
+    <div class="slide-number">16 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R2 碰撞(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">丹尼尔·卡尼曼</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">李诞</span>
+        </div>
+        <div class="clash-type attack-human">人性弱点</div>
+        <div class="clash-content emotion-serious">你说'普通人关心的是自己的声音能不能被听到'——但你有没有想过，'被听到'和'被理解'是两件事？算法推荐可以让一条短视频获得千万次播放，但它不能保证这千万次播放中有多少是'理解'。事实上，算法优化的是'反应'，不是'理解'。你的'民主下沉'论，把'传播'等同于'民主'，这是一种危险的简化。</div>
+        
+          <div class="counter-attack">
+            <div class="counter-label neon-cyan">反击</div>
+            <div class="counter-content emotion-serious">你说'传播不等于民主'——但什么是'民主'？如果民主意味着'每个人都有平等的发言权'，那么算法推荐至少在形式上比传统媒体更民主。在过去，发言权是由财富、地位、关系决定的；现在，发言权至少部分地是由'内容质量'决定的。你批判算法没有带来'真正的民主'，但你有没有问过：在算法出现之前，'真正的民主'存在过吗？你的标准太高了，高到任何现实的方案都无法满足。</div>
+          </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 碰撞</div>
+    <div class="slide-number">17 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R2 案例">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 3: REALITY </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
+      <div class="cases-container">
+        
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">剑桥分析丑闻</div>
+          <div class="case-source">2018年Facebook数据泄露事件</div>
+        </div>
+        <div class="case-content">2018年，政治咨询公司剑桥分析被曝光利用Facebook的算法推荐系统，向数千万用户精准投放政治广告，影响了2016年美国大选和英国脱欧公投。算法推荐不只是'推荐内容'，它还可以'推荐政治立场'。当算法知道你的恐惧、你的愤怒、你的偏见，它就可以精准地向你推送强化这些情绪的政治信息。</div>
+        <div class="case-outcome neon-red">代价：Facebook被罚款50亿美元，剑桥分析破产</div>
+        <div class="case-lesson neon-gold">教训：算法推荐不只是信息工具，它还可以是政治操控工具</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 案例</div>
+    <div class="slide-number">18 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R2 代价">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 4: COST</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
+      
+      <div class="cost-discussion anim-in">
+        <div class="cost-scenario neon-gold">算法推荐成为政治宣传的主要渠道</div>
+        <div class="cost-list">
+          
+          <div class="cost-item">
+            <div class="cost-name neon-red">事实的消亡</div>
+            <div class="cost-analysis">当算法可以根据用户的情绪状态精准推送'定制化的事实'，'客观事实'这个概念就失去了意义。每个人都有自己的'算法事实'，没有人愿意相信'共同的事实'。民主政治需要共同的事实基础，而算法正在瓦解这个基础。</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-name neon-red">理性的边缘化</div>
+            <div class="cost-analysis">当算法奖励'情绪强度'而非'论证质量'，理性讨论就会被边缘化。政治讨论变成了'情绪的对决'，而不是'观点的交锋'。民主退化成了'多数人的暴政'——更准确地说，是'算法认为的多数人的情绪暴政'。</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-name neon-red">信任的崩塌</div>
+            <div class="cost-analysis">当人们意识到自己的信息环境是'算法定制'的，他们对所有信息的信任都会下降。不是信任某个特定的信息源，而是信任'信息'本身。这种普遍的不信任，是民主政治最致命的毒药。</div>
+          </div>
+        </div>
+        <div class="worst-case">
+          <div class="worst-label neon-red">最坏情况</div>
+          <div class="worst-content">2040年，选举不再是'观点的竞争'，而是'算法的竞争'。候选人不再需要提出政策主张，只需要雇佣最好的算法团队来操控选民的情绪。民主的形式还在，但民主的灵魂已经死了。</div>
+        </div>
+        
+          <div class="survivor-bias">
+            <div class="survivor-label neon-purple">幸存者偏差</div>
+            <div class="survivor-content">我们看到的是'算法让政治更高效'——候选人可以精准触达目标选民，选民可以更容易找到'和自己观点一致'的候选人。但我们没有看到的是：那些不在算法推荐范围内的政治观点，那些被算法'淹没'的理性声音，那些因为'不够有情绪价值'而永远无法进入公共讨论的议题。</div>
+          </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 代价</div>
+    <div class="slide-number">19 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R2 人性">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
+      
+      <div class="human-nature anim-in">
+        <div class="human-question neon-purple">人类是否天生容易被'情绪化内容'操控？</div>
+        <div class="human-analysis">进化心理学的研究表明，人类大脑对'威胁'、'愤怒'、'恐惧'等负面情绪特别敏感——这在进化上是有意义的，因为快速识别威胁可以提高生存率。但这种进化机制在算法时代变成了弱点：算法知道什么样的内容能触发你的情绪反应，而且它会持续优化这种触发。人类不是'天生愚蠢'，而是'天生被设计成对情绪敏感'——而算法正在利用这个设计。</div>
+        <div class="human-examples">
+          <div class="examples-label">现实例子</div>
+          
+          <div class="example-item">• 政治广告的'恐惧诉求'比'理性论证'更有效</div>
+          <div class="example-item">• 新闻的'坏消息偏好'——负面新闻比正面新闻获得更多关注</div>
+        </div>
+        <div class="human-conclusion neon-gold">人类确实容易被情绪化内容操控，但这不是'人性的弱点'，而是'进化的设计'。算法的问题不在于它利用了这个设计，而在于它把这个设计'武器化'了。</div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 人性</div>
+    <div class="slide-number">20 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R2 升级">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
+      
+      <div class="cognitive-upgrade anim-in">
+        <div class="upgrade-comparison">
+          <div class="old-thinking">
+            <div class="thinking-label neon-red">旧思维</div>
+            <div class="thinking-content">算法推荐是信息工具，与政治无关</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="new-thinking">
+            <div class="thinking-label neon-green">新思维</div>
+            <div class="thinking-content">算法推荐是政治工具，它的优化目标决定了公共讨论的质量</div>
+          </div>
+        </div>
+        <div class="complexity">
+          <div class="complexity-label neon-cyan">复杂性</div>
+          <div class="complexity-content">算法推荐不是'中性的信息管道'，而是'有方向的政治力量'。它的优化目标——停留时间、参与度、情绪强度——决定了什么样的政治声音会被放大，什么样的会被淹没。民主政治的未来，很大程度上取决于算法被设计成优化什么。</div>
+        </div>
+        <div class="actionable">
+          <div class="actionable-label neon-gold">可执行洞见</div>
+          <div class="actionable-content">作为公民：意识到你的信息环境是'算法定制'的，主动寻找'算法之外'的信息。作为政策制定者：探索'算法透明度'立法，要求平台公开其推荐逻辑。作为技术从业者：思考如何设计'促进理性讨论'而非'奖励情绪反应'的算法。</div>
+        </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 升级</div>
+    <div class="slide-number">21 / 32</div>
+  </section>
+
+  <section class="slide" data-title="Round 3: 算法治理的未来">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 3</div>
+      <h2 class="quote-large anim-in anim-delay-1">算法治理的未来</h2>
+      <div class="gold-line anim-in anim-delay-2"></div>
+      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">我们能否设计出'以人为本'的算法？</p>
+    </div>
+    <div class="deck-footer">Round 3 | 算法治理的未来</div>
+    <div class="slide-number">22 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R3 立场(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">韩炳哲</div>
+        <div class="stance-content emotion-serious">我不相信'以人为本的算法'这个概念。算法的本质是优化，而优化的本质是量化。当你把'人'量化成'用户画像'、'行为数据'、'偏好模型'，你就已经失去了'人'的本质。'以人为本'的算法是一个悖论——因为算法只能处理'可量化的'，而人最珍贵的部分是'不可量化的'：创造力、自由意志、爱。真正的解决方案不是'更好的算法'，而是'更少的算法'。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">丹尼尔·卡尼曼</div>
+        <div class="stance-content emotion-serious">我对'以人为本的算法'持谨慎乐观。从行为科学的角度，算法可以被设计成'助推'用户做出更好的选择——比如推荐更健康的食物、更有教育价值的内容、更理性的新闻来源。这不是'操控'，而是'选择架构'。问题不在于算法是否应该影响用户的选择，而在于算法应该被设计成推动用户走向哪个方向。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">项飙</div>
+        <div class="stance-content emotion-serious">我认为'以人为本的算法'需要重新定义'人'。当前的算法把'人'定义为'消费者'——一个需要被满足的欲望集合。但'人'不只是消费者，也是'公民'、'社区成员'、'思考者'。如果算法能够优化'社区连接'而不只是'个人满足'，优化'公共讨论质量'而不只是'参与度'，它可能会成为一种真正的'公共基础设施'。</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 立场</div>
+    <div class="slide-number">23 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R3 立场(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">傅盛</div>
+        <div class="stance-content emotion-serious">作为创业者，我必须说：'以人为本的算法'需要商业模式的支撑。当前的算法之所以'以停留时间为导向'，是因为广告模式决定了'用户时间=收入'。如果我们想要'以人为本的算法'，我们需要探索新的商业模式——订阅制、公共服务模式、或者用户直接付费。技术不是问题，商业模式才是。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">尼尔·波兹曼</div>
+        <div class="stance-content emotion-serious">我对'更好的算法'持怀疑态度。历史告诉我们，每一种新媒介都会带来新的问题，而'用技术解决技术问题'往往创造更多的问题。电视带来的问题不是'更好的电视'能解决的，同样，算法推荐带来的问题也不是'更好的算法'能解决的。真正的解决方案可能在于：培养公民的'媒介素养'，让他们能够批判性地使用算法，而不是被算法使用。</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">李诞</div>
+        <div class="stance-content emotion-serious">你们讨论的'以人为本的算法'太理想化了。现实是：用户想要的是'有趣的内容'，不是'对他们有益的内容'。如果你设计一个'以人为本'的算法，推荐的都是'有教育意义'的内容，用户会直接卸载你的App。真正的'以人为本'，应该是尊重用户的选择——即使这个选择对他们不利。你不能一边说'尊重用户'，一边替用户决定什么对他们好。</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 立场</div>
+    <div class="slide-number">24 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R3 碰撞(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">韩炳哲</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">丹尼尔·卡尼曼</span>
+        </div>
+        <div class="clash-type attack-logic">逻辑漏洞</div>
+        <div class="clash-content emotion-serious">你说算法可以被设计成'助推'用户做出更好的选择——但谁来定义'更好的选择'？你吗？政府吗？还是'行为科学家'？你的'选择架构'理论有一个根本的问题：它预设了一个'客观的更好'，但这个'客观的更好'是由谁定义的？当算法开始'为你好'，它就不再是工具，而是家长。你的'助推'理论，本质上是一种'温和的极权主义'。</div>
+        
+          <div class="counter-attack">
+            <div class="counter-label neon-cyan">反击</div>
+            <div class="counter-content emotion-serious">你的'温和极权主义'指控是不公平的。'助推'理论的核心是：保持用户的选择自由，只是改变'默认选项'。你仍然可以选择不健康的食物、不理性的新闻来源——只是你需要多花一点力气。这不是'极权'，这是'便利性的重新分配'。更重要的是：你说'谁来定义更好的选择'——但这个问题适用于所有的公共政策。红绿灯也是一种'助推'，你不会说红绿灯是'温和极权主义'吧？你的批判是对'选择架构'概念的根本误解。</div>
+          </div>
+      </div>
+
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">项飙</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">李诞</span>
+        </div>
+        <div class="clash-type attack-human">人性弱点</div>
+        <div class="clash-content emotion-serious">你说'真正的以人为本是尊重用户的选择'——但你有没有注意到，这个论证恰恰是烟草公司、垃圾食品公司、赌博公司最喜欢的论证？'我们只是满足用户需求'、'用户有自由选择'——这些是所有'有害产品'的标准辩护词。你的'尊重选择'论，忽视了一个关键问题：当选择是'被设计出来的'，'尊重选择'就是在尊重'设计者的操控'。</div>
+        
+          <div class="counter-attack">
+            <div class="counter-label neon-cyan">反击</div>
+            <div class="counter-content emotion-serious">你的'烟草公司类比'是不公平的。烟草和算法推荐有一个根本区别：烟草的危害是确定的、可测量的；算法推荐的'危害'是不确定的、有争议的。你说用户的选择是'被设计出来的'——但所有的选择都是在某种'设计'中做出的。你选择在超市买什么，是被'货架摆放'设计的；你选择看什么书，是被'书店推荐'设计的。算法推荐只是这种'设计'的数字版本。你把'算法设计'特殊化了，但你没有解释为什么'算法设计'比'超市货架设计'更邪恶。</div>
+          </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 碰撞</div>
+    <div class="slide-number">25 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R3 碰撞(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">傅盛</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">韩炳哲</span>
+        </div>
+        <div class="clash-type attack-reality">现实矛盾</div>
+        <div class="clash-content emotion-serious">你说'真正的解决方案是更少的算法'——但你能想象一个'没有算法'的数字世界吗？每天有500小时的视频上传到YouTube，没有算法推荐，用户怎么找到他们想看的内容？你的'更少算法'论是一种浪漫化的怀旧，它忽视了信息爆炸的现实。算法推荐不是'可选的奢侈品'，而是'必要的基础设施'。你的批判是精英式的傲慢——你有时间、有知识、有能力去'主动寻找'信息，但大多数人没有。</div>
+        
+          <div class="counter-attack">
+            <div class="counter-label neon-cyan">反击</div>
+            <div class="counter-content emotion-serious">你的'信息爆炸'论证是合理的，但你的结论是错的。我说'更少的算法'，不是说'没有算法'。我说的是：减少算法对我们注意力的控制，增加我们对算法的控制。具体来说：用户应该能够选择算法的优化目标——是'停留时间'，还是'观点多样性'，还是'教育价值'。当前的问题不是'有算法'，而是'算法的优化目标由平台决定，用户没有选择权'。你的'务实主义'恰恰是在为这种'平台垄断'辩护。</div>
+          </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 碰撞</div>
+    <div class="slide-number">26 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R3 案例">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 3: REALITY </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">现实案例</h3>
+      <div class="cases-container">
+        
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">欧盟《数字服务法》的算法透明度要求</div>
+          <div class="case-source">欧盟 2022</div>
+        </div>
+        <div class="case-content">2022年，欧盟通过《数字服务法》，要求大型在线平台公开其算法推荐的基本逻辑，并允许用户选择'不基于个人数据的推荐模式'。这是全球第一个系统性的'算法治理'立法。它的核心理念是：算法推荐是一种'公共权力'，应该受到'公共问责'。</div>
+        <div class="case-outcome neon-red">代价：法律已生效，平台正在合规中</div>
+        <div class="case-lesson neon-gold">教训：算法治理需要法律框架，而不能完全依赖市场自律</div>
+      </div>
+
+      <div class="reality-case anim-in">
+        <div class="case-header">
+          <div class="case-name neon-orange">Mastodon的'去中心化社交'实验</div>
+          <div class="case-source">开源社区 2016至今</div>
+        </div>
+        <div class="case-content">Mastodon是一个去中心化的社交网络，没有中央算法推荐，用户通过'关注'和'转发'来发现内容。它的设计理念是：把'信息发现'的控制权还给用户，而不是交给算法。虽然用户规模远小于Twitter/X，但它证明了一种'无算法'的社交模式是可能的。</div>
+        <div class="case-outcome neon-red">代价：用户规模稳定增长，但仍是小众选择</div>
+        <div class="case-lesson neon-gold">教训：'无算法'的社交模式是可能的，但它需要用户付出更多的注意力成本</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 案例</div>
+    <div class="slide-number">27 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R3 代价">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 4: COST</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">代价讨论</h3>
+      
+      <div class="cost-discussion anim-in">
+        <div class="cost-scenario neon-gold">全球实施严格的算法透明度法规</div>
+        <div class="cost-list">
+          
+          <div class="cost-item">
+            <div class="cost-name neon-red">创新的放缓</div>
+            <div class="cost-analysis">严格的算法监管可能会抑制平台的创新动力。当每一个算法调整都需要公开解释、接受审计，平台可能会变得保守，不敢尝试新的推荐策略。</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-name neon-red">合规成本的增加</div>
+            <div class="cost-analysis">算法透明度法规会增加平台的合规成本，这些成本最终会转嫁给用户——更高的广告频率、更低的内容创作者分成、或者直接的订阅费用。</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-name neon-red">全球竞争格局的改变</div>
+            <div class="cost-analysis">如果欧盟实施严格的算法监管而其他国家不跟进，可能会导致'监管套利'——平台把业务转移到监管较松的地区。这会削弱欧盟在全球数字经济中的竞争力。</div>
+          </div>
+        </div>
+        <div class="worst-case">
+          <div class="worst-label neon-red">最坏情况</div>
+          <div class="worst-content">算法监管成为'数字保护主义'的工具，各国以'保护用户'为名，实际上是在保护本国的科技产业。全球互联网分裂成多个'算法孤岛'，用户在不同地区看到完全不同的信息环境。</div>
+        </div>
+        
+          <div class="survivor-bias">
+            <div class="survivor-label neon-purple">幸存者偏差</div>
+            <div class="survivor-content">我们只看到算法监管的'成功案例'——欧盟保护了用户隐私，平台变得更透明。但我们没有看到的是：那些因为'合规成本过高'而倒闭的小型平台，那些因为'算法限制'而无法触达目标用户的中小企业，那些因为'监管不确定性'而放弃创新的创业者。</div>
+          </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 代价</div>
+    <div class="slide-number">28 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R3 人性">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 5: HUMAN NATURE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">人性层</h3>
+      
+      <div class="human-nature anim-in">
+        <div class="human-question neon-purple">人类是否能够'理性地'使用算法推荐？</div>
+        <div class="human-analysis">行为经济学的研究表明，人类的'理性'是有限的——我们容易被框架效应、锚定效应、确认偏误等认知偏误影响。算法推荐正是利用了这些偏误。但人类也有'元认知'的能力——我们可以意识到自己的偏误，并采取措施来纠正它。'算法素养'教育的目标，就是培养这种'元认知'能力。</div>
+        <div class="human-examples">
+          <div class="examples-label">现实例子</div>
+          
+          <div class="example-item">• 媒介素养教育在北欧国家的实践——教学生批判性地评估在线信息</div>
+          <div class="example-item">• 数字健康运动——鼓励用户'主动使用'而非'被动消费'数字内容</div>
+        </div>
+        <div class="human-conclusion neon-gold">人类可以'理性地'使用算法推荐，但这需要教育、需要练习、需要制度支持。把所有责任都推给'人性弱点'是一种逃避；把所有希望都寄托于'更好的算法'也是一种逃避。真正的解决方案是：培养公民的'算法素养'。</div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 人性</div>
+    <div class="slide-number">29 / 32</div>
+  </section>
+
+  <section class="slide" data-title="R3 升级">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
+      
+      <div class="cognitive-upgrade anim-in">
+        <div class="upgrade-comparison">
+          <div class="old-thinking">
+            <div class="thinking-label neon-red">旧思维</div>
+            <div class="thinking-content">算法推荐是技术问题，需要用技术手段解决</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="new-thinking">
+            <div class="thinking-label neon-green">新思维</div>
+            <div class="thinking-content">算法推荐是社会问题，需要用技术+制度+教育的综合手段解决</div>
+          </div>
+        </div>
+        <div class="complexity">
+          <div class="complexity-label neon-cyan">复杂性</div>
+          <div class="complexity-content">算法推荐的问题不是单一的——它既有技术维度（算法设计），也有制度维度（商业模式、法律监管），也有教育维度（媒介素养、算法素养）。任何单一的解决方案——无论是'更好的算法'、'更严的监管'、还是'更高的素养'——都不足以解决问题。真正的解决方案需要三个维度的协同。</div>
+        </div>
+        <div class="actionable">
+          <div class="actionable-label neon-gold">可执行洞见</div>
+          <div class="actionable-content">作为个人：培养'算法断食'的习惯，定期退出算法推荐的信息环境。作为平台：探索'用户可控'的推荐模式，让用户选择算法的优化目标。作为政策制定者：建立'算法审计'制度，要求平台对其算法的社会影响进行定期评估。作为教育者：把'算法素养'纳入公民教育体系。</div>
+        </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 升级</div>
+    <div class="slide-number">30 / 32</div>
+  </section>
+
+  <section class="slide" data-title="最终洞见">
+    <div class="slide-content">
+      <div class="section-label anim-in">FINAL INSIGHT</div>
+      <div class="quote-large anim-in anim-delay-1">算法推荐不是中性的信息工具，而是一种有方向的社会力量。它的优化目标——停留时间、参与度、情绪强度——决定了什么样的信息会被放大，什么样的会被淹没。民主政治、公共讨论、甚至人类的认知能力，都在被算法悄然重塑。问题不在于'用不用算法'，而在于'算法被设计成优化什么'。当我们把这个问题想清楚，'以人为本的算法'才有可能从口号变成现实。</div>
+    </div>
+    <div class="deck-footer">最终洞见</div>
+    <div class="slide-number">31 / 32</div>
+  </section>
+
+  <section class="slide" data-title="开放问题">
+    <div class="slide-content">
+      <div class="section-label anim-in">OPEN QUESTIONS</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">留给读者的问题</h3>
+      <div class="headline-item anim-in"><strong>Q1:</strong> 如果算法推荐是'必要的基础设施'，它应该由谁来治理——市场、政府，还是用户？</div>
+<div class="headline-item anim-in"><strong>Q2:</strong> '算法素养'能否成为公民教育的核心内容，就像'阅读素养'一样？</div>
+<div class="headline-item anim-in"><strong>Q3:</strong> 有没有可能设计一种算法，它的优化目标是'用户的长期福祉'而不是'用户的即时满足'？</div>
+    </div>
+    <div class="deck-footer">开放问题</div>
+    <div class="slide-number">32 / 32</div>
+  </section>
+
+<div class="toc-backdrop" id="tocBackdrop"></div>
+<div class="toc-panel" id="tocPanel">
+<div class="toc-title">目录</div>
+<div id="tocList"></div>
+</div>
+<div class="nav-bar">
+<div class="nav-left">
+<button class="nav-btn" id="btnToc">☰ 目录</button>
+<button class="nav-btn" id="btnPrev">◀ 上一页</button>
+<button class="nav-btn" id="btnNext">下一页 ▶</button>
+</div>
+<div class="nav-right">
+<span class="nav-title" id="slideTitle"></span>
+<span class="nav-counter" id="slideCounter"></span>
+</div>
+</div>
+<div class="nav-dots" id="navDots"></div>
+</div>
+
+<script>
+(function(){
+var deck=document.getElementById("deck");
+var slides=deck.querySelectorAll(".slide");
+var total=slides.length;
+var cur=0;
+var dots=document.getElementById("navDots");
+var tocList=document.getElementById("tocList");
+var titleEl=document.getElementById("slideTitle");
+var counterEl=document.getElementById("slideCounter");
+var tocPanel=document.getElementById("tocPanel");
+var tocBackdrop=document.getElementById("tocBackdrop");
+var progressBar=document.getElementById("progressBar");
+
+for(var i=0;i<total;i++){
+  var d=document.createElement("button");
+  d.className="nd";
+  d.setAttribute("data-i",i);
+  d.onclick=(function(idx){return function(){go(idx)}})(i);
+  dots.appendChild(d);
+  var t=document.createElement("div");
+  t.className="toc-item";
+  t.setAttribute("data-i",i);
+  t.innerHTML='<span class="toc-label">'+(slides[i].getAttribute("data-title")||"Slide "+(i+1))+'</span><span class="toc-page">'+String(i+1).padStart(2,"0")+'</span>';
+  t.onclick=(function(idx){return function(){go(idx);closeTOC()}})(i);
+  tocList.appendChild(t);
+}
+
+function go(n){
+  if(n<0||n>=total)return;
+  slides[cur].classList.remove("active");
+  dots.children[cur].classList.remove("active");
+  tocList.children[cur].classList.remove("active");
+  cur=n;
+  slides[cur].classList.add("active");
+  dots.children[cur].classList.add("active");
+  tocList.children[cur].classList.add("active");
+  titleEl.textContent=slides[cur].getAttribute("data-title")||"";
+  counterEl.textContent=(cur+1)+" / "+total;
+  progressBar.style.width=((cur+1)/total*100)+"%";
+  slides[cur].scrollTop=0;
+}
+function toggleTOC(){tocPanel.classList.toggle("open");tocBackdrop.classList.toggle("open")}
+function closeTOC(){tocPanel.classList.remove("open");tocBackdrop.classList.remove("open")}
+
+document.addEventListener("keydown",function(e){
+  if(e.key==="ArrowRight"||e.key==="ArrowDown"||e.key===" "||e.key==="PageDown"){e.preventDefault();go(cur+1)}
+  else if(e.key==="ArrowLeft"||e.key==="ArrowUp"||e.key==="PageUp"){e.preventDefault();go(cur-1)}
+  else if(e.key==="Home"){e.preventDefault();go(0)}
+  else if(e.key==="End"){e.preventDefault();go(total-1)}
+  else if(e.key==="Escape"){closeTOC();go(0)}
+  else if(e.key==="t"||e.key==="T"){toggleTOC()}
+});
+var wheelTimer=null;
+deck.addEventListener("wheel",function(e){
+  e.preventDefault();
+  if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},400)}
+  if(e.deltaY>0)go(cur+1);
+  else if(e.deltaY<0)go(cur-1);
+},{passive:false});
+var touchX=0,touchY=0;
+deck.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX;touchY=e.touches[0].clientY});
+deck.addEventListener("touchend",function(e){
+  var dx=touchX-e.changedTouches[0].clientX,dy=touchY-e.changedTouches[0].clientY;
+  if(Math.abs(dy)>Math.abs(dx)){if(dy>50)go(cur+1);else if(dy<-50)go(cur-1)}
+  else{if(dx>50)go(cur+1);else if(dx<-50)go(cur-1)}
+});
+deck.addEventListener("click",function(e){
+  if(e.target.closest(".nav-btn,.nd,.toc-item,.toc-panel,.toc-backdrop"))return;
+  var x=e.clientX/window.innerWidth;
+  if(x<0.3)go(cur-1);else if(x>0.7)go(cur+1);
+});
+document.getElementById("btnToc").addEventListener("click",function(e){e.stopPropagation();toggleTOC()});
+document.getElementById("btnPrev").addEventListener("click",function(e){e.stopPropagation();go(cur-1)});
+document.getElementById("btnNext").addEventListener("click",function(e){e.stopPropagation();go(cur+1)});
+tocBackdrop.addEventListener("click",closeTOC);
+go(0);
+})();
+</script>
+</body>
+</html>

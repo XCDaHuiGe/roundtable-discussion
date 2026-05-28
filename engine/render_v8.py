@@ -158,26 +158,34 @@ class RoundtableRendererV8:
         """渲染认知升级"""
         if not upgrade:
             return ""
+        old_thinking = upgrade.get('old_thinking', upgrade.get('complexity', '旧认知'))
+        new_thinking = upgrade.get('new_thinking', upgrade.get('actionable_insight', '新认知'))
+        complexity = upgrade.get('complexity', '')
+        actionable = upgrade.get('actionable_insight', upgrade.get('new_thinking', ''))
+        
+        complexity_html = f'''
+        <div class="complexity">
+          <div class="complexity-label neon-cyan">复杂性</div>
+          <div class="complexity-content">{complexity}</div>
+        </div>''' if complexity else ''
+        
         return f'''
       <div class="cognitive-upgrade anim-in">
         <div class="upgrade-comparison">
           <div class="old-thinking">
             <div class="thinking-label neon-red">旧思维</div>
-            <div class="thinking-content">{upgrade['old_thinking']}</div>
+            <div class="thinking-content">{old_thinking}</div>
           </div>
           <div class="upgrade-arrow">→</div>
           <div class="new-thinking">
             <div class="thinking-label neon-green">新思维</div>
-            <div class="thinking-content">{upgrade['new_thinking']}</div>
+            <div class="thinking-content">{new_thinking}</div>
           </div>
         </div>
-        <div class="complexity">
-          <div class="complexity-label neon-cyan">复杂性</div>
-          <div class="complexity-content">{upgrade['complexity']}</div>
-        </div>
+        {complexity_html}
         <div class="actionable">
           <div class="actionable-label neon-gold">可执行洞见</div>
-          <div class="actionable-content">{upgrade['actionable_insight']}</div>
+          <div class="actionable-content">{actionable}</div>
         </div>
       </div>'''
     

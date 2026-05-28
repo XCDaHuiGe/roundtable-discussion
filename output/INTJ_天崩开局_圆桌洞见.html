@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>天崩开局：INTJ的职场困局与破局</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0B0E14;
+  --bg: #111622;
+  --bg-card: rgba(255,255,255,0.03);
+  --bg-card-hover: rgba(255,255,255,0.06);
+  --fg: #ECEDEE;
+  --fg-muted: #8892A4;
+  --fg-dim: #4A5260;
+  --accent: #F0A030;
+  --accent-soft: rgba(240,160,48,0.10);
+  --accent-glow: rgba(240,160,48,0.25);
+  --red: #E74C3C;
+  --red-soft: rgba(231,76,60,0.12);
+  --blue: #3498DB;
+  --blue-soft: rgba(52,152,219,0.12);
+  --green: #2ECC71;
+  --green-soft: rgba(46,204,113,0.12);
+  --purple: #9B59B6;
+  --purple-soft: rgba(155,89,182,0.12);
+  --cyan: #00D4AA;
+  --border: rgba(255,255,255,0.06);
+  --border-accent: rgba(240,160,48,0.25);
+  --radius: 14px;
+  --radius-sm: 8px;
+  --font-display: 'Noto Serif SC', serif;
+  --font-body: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:smooth;font-size:16px;-webkit-font-smoothing:antialiased}
+body{display:flex;flex-direction:row;width:max-content;height:100vh;background:var(--bg-deep);color:var(--fg);font-family:var(--font-body);line-height:1.85;opacity:0;animation:fadeIn .8s ease forwards}
+@keyframes fadeIn{to{opacity:1}}
+::selection{background:var(--accent);color:var(--bg-deep)}
+.slide{width:100vw;height:100vh;min-width:100vw;display:flex;flex-direction:column;scroll-snap-align:start;opacity:0;transform:translateX(30px);transition:opacity .6s ease,transform .6s ease;overflow:hidden;position:relative}
+.slide.visible{opacity:1;transform:translateX(0)}
+.stagger-item{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease}
+.slide.visible .stagger-item{opacity:1;transform:translateY(0)}
+.slide.visible .stagger-item:nth-child(1){transition-delay:.1s}
+.slide.visible .stagger-item:nth-child(2){transition-delay:.2s}
+.slide.visible .stagger-item:nth-child(3){transition-delay:.3s}
+.slide.visible .stagger-item:nth-child(4){transition-delay:.4s}
+.slide.visible .stagger-item:nth-child(5){transition-delay:.5s}
+.slide.visible .stagger-item:nth-child(6){transition-delay:.6s}
+.slide.visible .stagger-item:nth-child(7){transition-delay:.7s}
+
+/* ─── Cover ─── */
+.slide-cover{background:linear-gradient(135deg,#0B0E14 0%,#1A1F2E 40%,#0F1420 100%);padding:clamp(40px,5vh,80px) clamp(48px,5vw,100px);justify-content:space-between;position:relative;overflow:hidden}
+.slide-cover::before{content:'';position:absolute;top:-30%;right:-10%;width:500px;height:500px;background:radial-gradient(circle,var(--accent-soft) 0%,transparent 70%);opacity:.4;animation:coverGlow 8s ease-in-out infinite}
+@keyframes coverGlow{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:.6;transform:scale(1.15)}}
+.slide-cover::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 59px,rgba(255,255,255,.02) 59px,rgba(255,255,255,.02) 60px),repeating-linear-gradient(0deg,transparent,transparent 59px,rgba(255,255,255,.02) 59px,rgba(255,255,255,.02) 60px);pointer-events:none}
+.cover-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;background:linear-gradient(135deg,var(--accent-soft),transparent);border:1px solid var(--border-accent);border-radius:100px;font-family:var(--font-mono);font-size:clamp(10px,1vw,13px);font-weight:500;color:var(--accent);letter-spacing:.08em;margin-bottom:clamp(20px,3vh,36px);position:relative;z-index:2;overflow:hidden}
+.cover-badge::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(240,160,48,.2),transparent);animation:shimmer 3s ease-in-out infinite}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.cover-body{max-width:75%;position:relative;z-index:2}
+.cover-body h1{font-family:var(--font-display);font-size:clamp(36px,4.5vw,64px);font-weight:900;line-height:1.15;margin-bottom:clamp(16px,2vh,28px);letter-spacing:-.02em;background:linear-gradient(135deg,var(--fg) 40%,var(--fg-muted) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cover-body .cover-sub{font-size:clamp(16px,1.5vw,22px);margin-bottom:clamp(8px,1vh,16px);color:var(--fg-muted);line-height:1.7;font-weight:400}
+.cover-body .cover-meta{font-family:var(--font-mono);font-size:clamp(11px,1vw,14px);color:var(--fg-dim);letter-spacing:.02em;margin-top:clamp(20px,3vh,32px)}
+.cover-footer{font-family:var(--font-mono);font-size:clamp(10px,.9vw,12px);color:var(--fg-dim);letter-spacing:.08em;position:relative;z-index:2}
+
+/* ─── Content Slides ─── */
+.slide-content{background:var(--bg);padding:clamp(24px,3vh,48px) clamp(40px,4vw,80px);overflow:hidden;position:relative}
+.slide-content::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.3}
+.breadcrumb{font-family:var(--font-mono);font-size:clamp(11px,1vw,13px);color:var(--fg-dim);text-align:right;margin-bottom:clamp(12px,1.5vh,20px);letter-spacing:.02em;flex-shrink:0}
+.slide-title{font-family:var(--font-display);font-size:clamp(22px,2.5vw,34px);font-weight:800;color:var(--fg);line-height:1.35;margin-bottom:clamp(16px,2vh,28px);letter-spacing:-.01em;padding-left:24px;position:relative;flex-shrink:0}
+.slide-title::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:4px;background:linear-gradient(180deg,var(--accent),var(--red));border-radius:2px}
+.slide-scroll{flex:1;overflow-y:auto;padding-right:8px}
+.slide-scroll::-webkit-scrollbar{width:4px}
+.slide-scroll::-webkit-scrollbar-track{background:transparent}
+.slide-scroll::-webkit-scrollbar-thumb{background:var(--fg-dim);border-radius:2px}
+
+/* ─── Expert Cards ─── */
+.experts-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(14px,1.5vw,22px);margin-top:clamp(20px,2.5vh,32px)}
+.expert-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:clamp(20px,2.5vh,32px);transition:all .3s ease;position:relative;overflow:hidden}
+.expert-card:hover{background:var(--bg-card-hover);border-color:var(--border-accent);transform:translateY(-4px)}
+.expert-avatar{width:clamp(48px,4vw,60px);height:clamp(48px,4vw,60px);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:clamp(18px,2vw,24px);margin-bottom:clamp(12px,1.5vh,18px)}
+.expert-card h3{font-family:var(--font-display);font-size:clamp(18px,1.6vw,22px);font-weight:700;margin-bottom:4px}
+.expert-card .expert-role{font-family:var(--font-mono);font-size:clamp(10px,.9vw,12px);color:var(--fg-dim);letter-spacing:.04em;margin-bottom:clamp(10px,1.2vh,16px)}
+.expert-card .expert-version{font-family:var(--font-mono);font-size:clamp(9px,.8vw,11px);color:var(--accent);margin-bottom:clamp(8px,1vh,12px);opacity:.6}
+.expert-card p{font-size:clamp(12px,1.1vw,14px);color:var(--fg-muted);line-height:1.7}
+
+/* ─── Stance Blocks ─── */
+.stance-block{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:clamp(16px,2vh,28px) clamp(20px,2.5vw,32px);margin-bottom:clamp(14px,1.8vh,22px);position:relative;overflow:hidden}
+.stance-block::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.stance-block.dalio::before{background:var(--accent)}
+.stance-block.munger::before{background:var(--purple)}
+.stance-block.xiangbiao::before{background:var(--blue)}
+.stance-block.dingyuan::before{background:var(--cyan)}
+.stance-header{display:flex;align-items:center;gap:clamp(10px,1vw,16px);margin-bottom:clamp(8px,1vh,14px)}
+.stance-header .name{font-family:var(--font-display);font-weight:700;font-size:clamp(16px,1.5vw,20px)}
+.stance-header .tag{font-family:var(--font-mono);font-size:clamp(9px,.85vw,12px);padding:3px 10px;border-radius:100px;letter-spacing:.04em}
+.stance-block p{font-size:clamp(13px,1.15vw,15px);color:var(--fg-muted);line-height:1.8}
+.stance-block .emotion{font-family:var(--font-mono);font-size:clamp(9px,.8vw,11px);color:var(--fg-dim);margin-top:clamp(8px,1vh,12px);letter-spacing:.04em}
+
+/* ─── Clash Blocks ─── */
+.clash-block{margin-bottom:clamp(16px,2vh,26px)}
+.clash-block .clash-header{display:flex;align-items:center;gap:clamp(8px,1vw,14px);margin-bottom:clamp(8px,1vh,12px);padding-bottom:clamp(8px,1vh,12px);border-bottom:1px solid var(--border)}
+.clash-block .vs{font-family:var(--font-mono);font-size:clamp(10px,.9vw,12px);color:var(--red);font-weight:600}
+.clash-block .attack{background:var(--red-soft);border-left:3px solid var(--red);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:clamp(14px,1.8vh,22px) clamp(18px,2vw,28px);margin-bottom:clamp(8px,1vh,14px)}
+.clash-block .counter{background:var(--green-soft);border-left:3px solid var(--green);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:clamp(14px,1.8vh,22px) clamp(18px,2vw,28px);margin-bottom:clamp(10px,1.2vh,16px)}
+.clash-block .speaker{font-family:var(--font-mono);font-size:clamp(10px,.9vw,12px);font-weight:600;margin-bottom:4px}
+.clash-block p{font-size:clamp(13px,1.1vw,14px);color:var(--fg-muted);line-height:1.7}
+
+/* ─── Insight Block ─── */
+.insight-block{background:linear-gradient(135deg,var(--green-soft),transparent);border:1px solid rgba(46,204,113,.2);border-radius:var(--radius);padding:clamp(20px,2.5vh,32px);margin-bottom:clamp(14px,1.8vh,22px)}
+.insight-block .insight-icon{color:var(--green);font-size:clamp(20px,2vw,28px);margin-bottom:8px}
+.insight-block .insight-speaker{font-family:var(--font-display);font-weight:700;font-size:clamp(16px,1.4vw,19px);margin-bottom:6px}
+.insight-block p{font-size:clamp(13px,1.15vw,15px);color:var(--fg-muted);line-height:1.8}
+
+/* ─── Conclusion ─── */
+.conclusion-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,1.5vw,22px);margin-top:clamp(20px,2.5vh,32px)}
+.option-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:clamp(20px,2.5vh,32px);text-align:center;transition:all .3s ease}
+.option-card:hover{border-color:var(--border-accent);transform:translateY(-4px)}
+.option-card .icon{font-size:clamp(32px,3.5vw,48px);margin-bottom:clamp(12px,1.5vh,20px)}
+.option-card h3{font-family:var(--font-display);font-size:clamp(18px,1.6vw,22px);font-weight:700;margin-bottom:clamp(8px,1vh,14px)}
+.option-card p{font-size:clamp(12px,1.05vw,14px);color:var(--fg-muted);line-height:1.7;margin-bottom:clamp(12px,1.5vh,18px)}
+.option-card .when{font-family:var(--font-mono);font-size:clamp(9px,.85vw,12px);color:var(--accent);padding:6px 14px;border:1px solid var(--border-accent);border-radius:100px;display:inline-block}
+
+/* ─── Framework ─── */
+.framework{display:flex;gap:clamp(20px,3vw,40px);align-items:stretch;margin-top:clamp(20px,2.5vh,32px);flex:1}
+.framework-step{flex:1;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:clamp(18px,2.2vh,30px);text-align:center;display:flex;flex-direction:column;justify-content:center;transition:all .3s ease}
+.framework-step:hover{border-color:var(--border-accent);transform:translateY(-4px)}
+.framework-step .step-num{font-family:var(--font-mono);font-size:clamp(28px,3vw,40px);font-weight:700;color:var(--accent);opacity:.6;margin-bottom:clamp(8px,1vh,14px)}
+.framework-step h4{font-family:var(--font-display);font-size:clamp(16px,1.4vw,20px);font-weight:700;margin-bottom:clamp(8px,1vh,12px)}
+.framework-step p{font-size:clamp(11px,1vw,13px);color:var(--fg-muted);line-height:1.7}
+.framework-arrow{display:flex;align-items:center;font-size:clamp(20px,2.5vw,32px);color:var(--fg-dim)}
+
+/* ─── Problem Slide ─── */
+.problem-box{background:var(--red-soft);border:1px solid rgba(231,76,60,.2);border-radius:var(--radius);padding:clamp(20px,2.5vh,32px);margin-bottom:clamp(16px,2vh,24px)}
+.problem-box p{font-size:clamp(14px,1.2vw,16px);color:var(--fg);line-height:1.8}
+.problem-box .highlight{color:var(--accent);font-weight:600}
+.question-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:clamp(20px,2.5vh,32px);margin-top:clamp(16px,2vh,24px)}
+.question-box h3{font-family:var(--font-display);font-size:clamp(18px,1.8vw,26px);font-weight:700;text-align:center;margin-bottom:clamp(12px,1.5vh,18px);color:var(--accent)}
+.question-box p{font-size:clamp(13px,1.1vw,14px);color:var(--fg-muted);line-height:1.8;text-align:center}
+
+/* ─── Navigation ─── */
+.nav{position:fixed;bottom:clamp(16px,2.5vh,32px);left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:100;flex-wrap:wrap;justify-content:center}
+.nav-dot{width:10px;height:10px;border-radius:50%;background:var(--fg-dim);border:none;cursor:pointer;transition:all .3s ease;padding:0}
+.nav-dot.active{background:var(--accent);box-shadow:0 0 12px var(--accent-glow);width:28px;border-radius:5px}
+.nav-dot:hover{background:var(--fg-muted)}
+.progress{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--red));z-index:100;transition:width .4s ease;width:0}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<!-- ─── SLIDE 1: COVER ─── -->
+<section class="slide slide-cover visible" data-section="cover">
+  <div class="cover-badge"><i class="fas fa-compass"></i> 圆桌洞见 · VOL.4</div>
+  <div class="cover-body">
+    <h1>天崩开局：<br>INTJ的职场困局与破局</h1>
+    <p class="cover-sub">当你的能力还在增长，但公司没有体系、领导只会催进度、加班正在掏空你的灵魂——<br>改变自己？适应环境？还是逃离？四位思想者给你最诚实的答案。</p>
+    <p class="cover-meta"><i class="far fa-calendar-alt"></i> 2026.05 &nbsp;·&nbsp; <i class="far fa-clock"></i> 8 分钟阅读</p>
+  </div>
+  <div class="cover-footer">达利欧 · 芒格 · 项飙 · 丁元英</div>
+</section>
+
+<!-- ─── SLIDE 2: PROBLEM ─── -->
+<section class="slide slide-content" data-section="problem">
+  <div class="breadcrumb">01 / 问题诊断</div>
+  <h2 class="slide-title stagger-item">你不是不行，是系统坏了</h2>
+  <div class="slide-scroll">
+    <div class="problem-box stagger-item">
+      <p><span class="highlight">INTJ的典型困境：</span>你有能力、有框架、有判断力——但你进了一个没有体系的公司。领导没有战术安排，没有战略方向，只会说"加快进度"。你每天被任务淹没，但不知道这些任务通往哪里。加班不是攻坚，是惯性。</p>
+    </div>
+    <div class="problem-box stagger-item" style="border-left-color:var(--accent);background:var(--accent-soft);border-left:3px solid var(--accent)">
+      <p><span class="highlight">认知失调的核心：</span>你的大脑是为了解决复杂问题而设计的，但你现在做的不是"解决问题"，是"填坑"。填完一个又来一个，没有积累，没有闭环，没有成长。这不是你不行——是你的能力被装进了一个错误的系统。</p>
+    </div>
+    <div class="question-box stagger-item">
+      <h3>三个选项，没有容易的</h3>
+      <p style="margin-bottom:12px"><strong style="color:var(--accent)">改变自己</strong> — 降低标准、接受混沌、学会在烂系统中自得其乐？</p>
+      <p style="margin-bottom:12px"><strong style="color:var(--purple)">适应环境</strong> — 找到在体系之外的生存策略、建立自己的保护层？</p>
+      <p style="margin-bottom:12px"><strong style="color:var(--red)">逃离</strong> — 止损、换一个更好的系统、但承担不确定性和沉没成本？</p>
+      <p style="color:var(--fg-dim);font-size:clamp(12px,1vw,13px)">四种顶级思维框架，给你答案。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SLIDE 3: EXPERTS ─── -->
+<section class="slide slide-content" data-section="experts">
+  <div class="breadcrumb">02 / 思想者阵容</div>
+  <h2 class="slide-title stagger-item">四位穿越过至暗时刻的人</h2>
+  <div class="slide-scroll">
+    <div class="experts-grid">
+      <div class="expert-card stagger-item">
+        <div class="expert-avatar" style="background:var(--accent-soft);color:var(--accent)">瑞</div>
+        <h3>达利欧</h3>
+        <div class="expert-role">桥水基金创始人 · 《原则》作者</div>
+        <div class="expert-version">V31 · 梦破碎后重建</div>
+        <p>从破产到管理千亿资产，他的原则体系是对抗混乱的终极武器。"痛苦+反思=进步"——这是他穿越每一次至暗时刻的公式。</p>
+      </div>
+      <div class="expert-card stagger-item">
+        <div class="expert-avatar" style="background:var(--purple-soft);color:var(--purple)">芒</div>
+        <h3>芒格</h3>
+        <div class="expert-role">伯克希尔副董事长 · 投资哲学家</div>
+        <div class="expert-version">V30 · 反过来想的智者</div>
+        <p>没有人比他更懂得"什么时候该走"。他的能力圈理论、逆向思维和人类误判心理学，是职场困局中最锋利的手术刀。</p>
+      </div>
+      <div class="expert-card stagger-item">
+        <div class="expert-avatar" style="background:var(--blue-soft);color:var(--blue)">项</div>
+        <h3>项飙</h3>
+        <div class="expert-role">人类学家 · 牛津大学教授</div>
+        <div class="expert-version">V78 · 附近的守望者</div>
+        <p>当宏大叙事压垮个体，他教你回到具体的人、具体的事。"附近在消失"——你的痛苦不是因为你不努力，而是因为你失去了对"附近"的感知。</p>
+      </div>
+      <div class="expert-card stagger-item">
+        <div class="expert-avatar" style="background:var(--cyan);color:#0B0E14">丁</div>
+        <h3>丁元英</h3>
+        <div class="expert-role">私募操盘手 · 《天道》原型</div>
+        <div class="expert-version">V33 · 见路不走的觉悟</div>
+        <p>"天道不以人的意志为转移。"他的强势文化哲学告诉你：不是所有的坚持都有意义，不是所有的放弃都是软弱。关键是——你活在规律里还是幻想里。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SLIDE 4: ROUND 1 — STANCES ─── -->
+<section class="slide slide-content" data-section="round1">
+  <div class="breadcrumb">03 / 立场阐述</div>
+  <h2 class="slide-title stagger-item">面对天崩开局，你的第一反应是什么？</h2>
+  <div class="slide-scroll">
+    <div class="stance-block dalio stagger-item">
+      <div class="stance-header">
+        <span class="name" style="color:var(--accent)">达利欧</span>
+        <span class="tag" style="background:var(--accent-soft);color:var(--accent)">系统优先</span>
+      </div>
+      <p>第一步不是决定走还是留，是诊断系统。你的痛苦不是因为你不努力——恰恰相反，你可能太努力了。但努力在错误的系统里只会加速崩溃。我问你三个问题：第一，这个公司的机制是否让正确的事情更容易发生？第二，你的领导是否具备"超越自身利益做决策"的能力？第三，你在这个系统中的位置，是让你成长还是消耗你？如果三个答案都是"不"，那你不是在坚持，你是在自残。痛苦+反思=进步——但前提是，你反思的是"系统"而不是"自己不够好"。</p>
+      <div class="emotion"><i class="far fa-face-meh"></i> 冷静 · 系统化</div>
+    </div>
+    <div class="stance-block munger stagger-item">
+      <div class="stance-header">
+        <span class="name" style="color:var(--purple)">芒格</span>
+        <span class="tag" style="background:var(--purple-soft);color:var(--purple)">逆向思维</span>
+      </div>
+      <p>我的方法很简单：反过来想。你不是问"我该不该走"——你应该问"什么情况下我绝对不会走"。列出你必须留下的条件：有成长空间？有值得跟的领导？有合理的回报？如果这些条件一个都不满足，那你留下的理由是什么？沉没成本不是理由。我见过太多聪明人，因为在一个烂项目里投入了两年，结果又耗了三年。能力圈法则同样适用于工作选择：知道自己的能力在哪里，更要知道自己的时间不应该浪费在哪里。最糟糕的决策不是"离开太早"，而是"留下太久"。</p>
+      <div class="emotion"><i class="far fa-face-smile"></i> 锐利 · 一针见血</div>
+    </div>
+    <div class="stance-block xiangbiao stagger-item">
+      <div class="stance-header">
+        <span class="name" style="color:var(--blue)">项飙</span>
+        <span class="tag" style="background:var(--blue-soft);color:var(--blue)">附近视角</span>
+      </div>
+      <p>大家都在谈"大环境不好"、"行业下行"——但这些宏大叙事正在杀死你的判断力。回到具体的问题：你今天工作是什么感受？你每天打开电脑时身体有没有排斥？你跟领导的每一次对话是在消耗你还是在滋养你？这些"附近"的感受比任何宏观分析都更真实。我观察到一种现象：当人陷入一个糟糕的系统时，反而会用更宏大的叙事来安慰自己——"我在积累经验"、"大环境就是这样"。这不是反思，这是自我麻痹。真正的觉察从放下这些叙事开始，回到你每天的真实感受。</p>
+      <div class="emotion"><i class="far fa-face-frown"></i> 洞察 · 直击本质</div>
+    </div>
+    <div class="stance-block dingyuan stagger-item">
+      <div class="stance-header">
+        <span class="name" style="color:var(--cyan)">丁元英</span>
+        <span class="tag" style="background:#0B0E14;color:var(--cyan)">天道规律</span>
+      </div>
+      <p>救主文化是弱势文化的根源。你期待领导给你方向、公司给你体系、环境给你安全感——这本身就是问题。天道不以人的意志为转移，规律的运行不会因为你痛苦就改变。强势文化造就强者，不是强在"能扛"，是强在"看清"。你看清了这家公司的运行规律吗？如果它是一个注定衰败的系统，你的坚持就是逆天而为。不是因为你不努力，是因为规律本身不站在你这边。见路不走——如果你已经看到了这条路通向哪里，为什么还要走？</p>
+      <div class="emotion"><i class="far fa-face-meh-blank"></i> 冷峻 · 赤裸真相</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SLIDE 5: ROUND 2 — CLASH 1 ─── -->
+<section class="slide slide-content" data-section="clash1">
+  <div class="breadcrumb">04 / 相互质疑</div>
+  <h2 class="slide-title stagger-item">达利欧 vs 项飙：系统还是附近？</h2>
+  <div class="slide-scroll">
+    <div class="clash-block stagger-item">
+      <div class="clash-header">
+        <span class="vs">⚡ 本质矛盾</span>
+        <span style="font-size:clamp(14px,1.3vw,17px);font-weight:600">达利欧</span>
+        <span style="color:var(--fg-dim)">追问</span>
+        <span style="font-size:clamp(14px,1.3vw,17px);font-weight:600;color:var(--blue)">项飙</span>
+      </div>
+      <div class="attack">
+        <div class="speaker" style="color:var(--accent)">达利欧：</div>
+        <p>项飙，你说回到"附近"的感受——但感受是主观的，系统问题是客观的。一个人可能今天感觉好明天感觉差，但公司有没有体系、领导有没有能力，这些是可以客观评估的。如果你的框架只教人关注微观感受，那你不就是让人在最需要理性决策的时候，跟着情绪走吗？</p>
+      </div>
+      <div class="counter">
+        <div class="speaker" style="color:var(--blue)">项飙：</div>
+        <p>瑞，你误会了。我说的"附近"不是情绪，是一种被全球化、被效率主义抹杀的感知能力。你说的系统——谁来定义系统好不好？用什么标准？你的原则体系本身就是一个宏大叙事。我见过太多人用你的"原则"为自己的妥协找理由——"按照原则，我要极度求真"——然后继续在一个不真不诚的环境里消耗自己。你的系统论最大的问题是：它假设人可以在任何环境中保持理性。但现实是，环境会吃掉你的理性。</p>
+      </div>
+    </div>
+    <div class="clash-block stagger-item">
+      <div class="clash-header">
+        <span class="vs">⚡ 现实解构</span>
+        <span style="font-size:clamp(14px,1.3vw,17px);font-weight:600;color:var(--blue)">项飙</span>
+        <span style="color:var(--fg-dim)">反问</span>
+        <span style="font-size:clamp(14px,1.3vw,17px);font-weight:600">达利欧</span>
+      </div>
+      <div class="attack">
+        <div class="speaker" style="color:var(--blue)">项飙：</div>
+        <p>达利欧，你的桥水确实很成功，但你的"原则"是建立在你拥有绝对控制权的前提下的。一个基层INTJ，体系他建不了，领导他选不了，公司文化他改不了——你的"原则"对他来说是不是有点奢侈？</p>
+      </div>
+      <div class="counter">
+        <div class="speaker" style="color:var(--accent)">达利欧：</div>
+        <p>恰恰相反。当你在底层的时候，原则更重要——因为那是你唯一可以控制的东西。桥水的成功不是因为我有权，而是因为我坚持用原则思考。一个INTJ在烂公司的处境，和我年轻时刚创业的处境一模一样。我没有抱怨环境不好，我建立了一套自己的决策系统。原则不是只有在金字塔顶端才能用，在你什么都没有的时候，原则是你的最后一道防线。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SLIDE 6: ROUND 3 — CLASH 2 ─── -->
+<section class="slide slide-content" data-section="clash2">
+  <div class="breadcrumb">05 / 深度交锋</div>
+  <h2 class="slide-title stagger-item">芒格 vs 丁元英：何时坚持，何时放弃？</h2>
+  <div class="slide-scroll">
+    <div class="clash-block stagger-item">
+      <div class="clash-header">
+        <span class="vs">⚡ 逻辑解构</span>
+        <span style="font-size:clamp(14px,1.3vw,17px);font-weight:600;color:var(--purple)">芒格</span>
+        <span style="color:var(--fg-dim)">挑战</span>
+        <span style="font-size:clamp(14px,1.3vw,17px);font-weight:600;color:var(--cyan)">丁元英</span>
+      </div>
+      <div class="attack">
+        <div class="speaker" style="color:var(--purple)">芒格：</div>
+        <p>丁元英，你说的"天道"看似深刻，但有一个致命的逻辑漏洞：如果你真的相信"规律不以人的意志为转移"，那么"离开"和"留下"有什么区别？反正都是规律决定的。你的哲学在解释世界方面很强大，但在指导决策方面，它给了人什么可操作的东西？你告诉一个INTJ"见路不走"——那他到底走哪条路？</p>
+      </div>
+      <div class="counter">
+        <div class="speaker" style="color:var(--cyan)">丁元英：</div>
+        <p>好问题。芒格。听清楚我说的不是"一切注定了所以什么都不用做"——我说的是"规律不以人的意志为转移，但人可以选择顺应还是对抗哪个规律"。见路不走的意思是：不重复别人走过的路，而是看规律本身指向哪里。一个INTJ最应该做的，不是问别人"我该不该走"，而是用自己的分析能力去判断——这个公司的规律指向的是增长还是衰败？如果是衰败，你做的事情就是在对抗地心引力。我的"天道"不是消极的宿命论，是最积极的清醒。你看清了，你就知道怎么选。</p>
+      </div>
+    </div>
+    <div class="clash-block stagger-item">
+      <div class="clash-header">
+        <span class="vs">⚡ 反例证伪</span>
+        <span style="font-size:clamp(14px,1.3vw,17px);font-weight:600;color:var(--cyan)">丁元英</span>
+        <span style="color:var(--fg-dim)">反诘</span>
+        <span style="font-size:clamp(14px,1.3vw,17px);font-weight:600;color:var(--purple)">芒格</span>
+      </div>
+      <div class="attack">
+        <div class="speaker" style="color:var(--cyan)">丁元英：</div>
+        <p>芒格，你说"反过来想"——但你有没有反过来想过你的能力圈理论本身？能力圈告诉人"知道自己不知道什么"，但INTJ的痛苦恰恰是：他知道自己的擅长，也知道当前环境在浪费他的擅长。他的能力圈明确，但他的环境不容许他运用。这种情况下你让他怎么办？收缩能力圈只会让他更痛苦。</p>
+      </div>
+      <div class="counter">
+        <div class="speaker" style="color:var(--purple)">芒格：</div>
+        <p>你误解了能力圈。能力圈不是你"能做什么"的清单，而是你"应该在什么领域发挥作用"的判断。如果一个INTJ在一个不需要战略思维只需要执行力的环境里，他的能力圈告诉他：这不是你的战场。能力圈的另一个名字叫"选择性放弃"。我放弃过无数投资机会，不是因为我不知道它们怎么做，而是因为我知道它们不在我的能力圈内。同样，一个INTJ应该放弃那些让他无法发挥战略思考能力的工作环境。这不是逃避，这是纪律。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SLIDE 7: ROUND 4 — INSIGHTS ─── -->
+<section class="slide slide-content" data-section="insights">
+  <div class="breadcrumb">06 / 认知升华</div>
+  <h2 class="slide-title stagger-item">四位智者的终极答案</h2>
+  <div class="slide-scroll">
+    <div class="insight-block stagger-item">
+      <div class="insight-icon"><i class="fas fa-lightbulb"></i></div>
+      <div class="insight-speaker" style="color:var(--accent)">达利欧 · 诊断先于决策</div>
+      <p>"不要急着走，也不要急着留。先用两周时间，以一个旁观者的身份诊断你所在的系统。写下来：公司的决策机制是什么样的？谁在做决定？基于什么信息？激励结构奖励什么行为？这个诊断本身就是你最重要的原则实践。做完诊断之后，你会清楚地知道：这个系统是可修复的，还是已经没救了。可修复就尝试改变系统，没救了就走——但走的时候，你知道自己为什么走，而不是因为情绪崩溃而走。"</p>
+    </div>
+    <div class="insight-block stagger-item">
+      <div class="insight-icon"><i class="fas fa-lightbulb"></i></div>
+      <div class="insight-speaker" style="color:var(--purple)">芒格 · 止损是最高级的智慧</div>
+      <p>"如果一匹马跑错了方向，勒住它才是仁慈。你已经在一匹死马上骑了多久？你害怕的其实不是离职，而是面对一个不确定的未来。但让我告诉你：确定性幻觉是最大的陷阱。你以为留下有安全感，但留下才是最大的风险——你在消耗你最宝贵的资产：时间、精力和创造力的黄金期。问自己那个永恒轮回的问题：如果现在这一刻将无限重复，你愿意这样活吗？"</p>
+    </div>
+    <div class="insight-block stagger-item">
+      <div class="insight-icon"><i class="fas fa-lightbulb"></i></div>
+      <div class="insight-speaker" style="color:var(--blue)">项飙 · 回到具体，拒绝宏大</div>
+      <p>"无论你最终是走是留，先做一件事：停止用宏大叙事解释你的痛苦。不要说'行业下行'、'大环境不好'——这些都是让你感觉更无力的借口。回到具体：你每天的工作中有没有哪怕一个让你感到充实的瞬间？有没有一个你可以信任的同事？有没有一个你能学到东西的项目？哪怕只有一个，你就有可以抓住的东西。如果有，先抓住它，让它成为你在混乱中的锚点。如果完全没有——那你不是在坚持，你是在表演坚持。"</p>
+    </div>
+    <div class="insight-block stagger-item">
+      <div class="insight-icon"><i class="fas fa-lightbulb"></i></div>
+      <div class="insight-speaker" style="color:var(--cyan)">丁元英 · 见路不走，看清再动</div>
+      <p>"在你做出任何决定之前，问自己一个最诚实的问题：我是因为害怕离开而留下，还是因为看到价值而留下？弱势文化的特征是'等靠要'——等领导开窍、靠公司变好、要环境改变。强势文化的特征是'看准了做'——看准了就行动，看不准就等待。INTJ最强的能力就是分析。用你的分析力去看清：这个公司的运行规律是什么？它三年后会变成什么样？你在其中扮演什么角色？看清了，答案就在那里。不需要别人告诉你。"</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SLIDE 8: FRAMEWORK ─── -->
+<section class="slide slide-content" data-section="framework">
+  <div class="breadcrumb">07 / 行动框架</div>
+  <h2 class="slide-title stagger-item">INTJ破局四步法</h2>
+  <div class="framework">
+    <div class="framework-step stagger-item">
+      <div class="step-num">01</div>
+      <h4>诊断系统</h4>
+      <p>达利欧式系统审计：两周时间，客观记录公司的决策机制、激励结构和运行规律。离开"我很痛苦"的主观感受，进入"系统有X个致命问题"的客观分析。</p>
+    </div>
+    <div class="framework-arrow stagger-item"><i class="fas fa-arrow-right"></i></div>
+    <div class="framework-step stagger-item">
+      <div class="step-num">02</div>
+      <h4>反向量表</h4>
+      <p>芒格式逆向思考：列出"什么情况下我绝对不会留下"。如果当前条件触发了三条以上，立即启动退出的备选方案，而不是继续忍耐。</p>
+    </div>
+    <div class="framework-arrow stagger-item"><i class="fas fa-arrow-right"></i></div>
+    <div class="framework-step stagger-item">
+      <div class="step-num">03</div>
+      <h4>附近锚点</h4>
+      <p>项飙式具体化：找到你在当前环境中唯一的具体价值——是一个人、一件事、还是一个技能？抓住它作为你的锚点，不被宏大叙事拖入自我麻痹。</p>
+    </div>
+    <div class="framework-arrow stagger-item"><i class="fas fa-arrow-right"></i></div>
+    <div class="framework-step stagger-item">
+      <div class="step-num">04</div>
+      <h4>天道决策</h4>
+      <p>丁元英式清醒：看清规律，然后行动。不救亡，不等靠要。无论是走是留，都必须是基于规律认知的主动选择，而不是被恐惧推动的被动反应。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SLIDE 9: THREE OPTIONS ─── -->
+<section class="slide slide-content" data-section="options">
+  <div class="breadcrumb">08 / 你的决策地图</div>
+  <h2 class="slide-title stagger-item">三个选项，四种视角，一个结论</h2>
+  <div class="slide-scroll">
+    <div class="conclusion-grid">
+      <div class="option-card stagger-item" style="border-top:3px solid var(--accent)">
+        <div class="icon">🛠️</div>
+        <h3>改变自己</h3>
+        <p>达利欧和项飙都认为：改变自己是需要的——但不是"降低标准"，而是"升级操作系统"。学会在混乱中建立自己的秩序，在无体系的环境中建立自己的微观体系。这不是妥协，这是元能力。</p>
+        <div class="when">适用：系统有修复可能</div>
+      </div>
+      <div class="option-card stagger-item" style="border-top:3px solid var(--purple)">
+        <div class="icon">🌊</div>
+        <h3>适应环境</h3>
+        <p>项飙提醒你：适应不是投降。找到环境中你唯一的"附近"价值点，像藤蔓一样抓住它生长。但芒格警告：适应不应该是无限期的。设定一个明确的"重新评估"时间点。</p>
+        <div class="when">适用：还有可抓住的锚点</div>
+      </div>
+      <div class="option-card stagger-item" style="border-top:3px solid var(--red)">
+        <div class="icon">🚀</div>
+        <h3>逃离</h3>
+        <p>四位智者出奇一致：当系统已经不可修复、环境中没有锚点、规律指向衰败——逃离不是失败，是止损。丁元英说"见路不走"——你知道这条路通向哪里，不走了。芒格说死在死马上是愚蠢的。达利欧说：离开是为了去一个让你成长的地方。</p>
+        <div class="when">适用：系统无救 + 无锚点</div>
+      </div>
+    </div>
+    <div class="problem-box stagger-item" style="margin-top:clamp(20px,2.5vh,32px);background:var(--accent-soft);border-color:var(--border-accent);text-align:center">
+      <p style="font-size:clamp(14px,1.2vw,16px);color:var(--fg)"><strong style="color:var(--accent)">最终检验标准：</strong> 如果你的能力在这个环境中一年后仍然无法积累出可迁移的价值——不是犹豫的时候，是离开的时候。INTJ的最大资产是他的分析力和战略思维，不要让它们在一个没有未来的系统里荒废。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── NAVIGATION ─── -->
+<div class="nav" id="navDots"></div>
+
+<script>
+const sections = document.querySelectorAll('.slide');
+const total = sections.length;
+let cur = 0;
+const dotsContainer = document.getElementById('navDots');
+const progress = document.getElementById('progress');
+
+sections.forEach((s, i) => {
+  const dot = document.createElement('button');
+  dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+  dot.onclick = () => go(i);
+  dotsContainer.appendChild(dot);
+});
+
+function go(n) {
+  if (n < 0 || n >= total) return;
+  sections[cur].classList.remove('visible');
+  dotsContainer.children[cur]?.classList.remove('active');
+  cur = n;
+  sections[cur].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  sections[cur].classList.add('visible');
+  dotsContainer.children[cur]?.classList.add('active');
+  const pct = Math.min(100, ((cur + 1) / total) * 100);
+  progress.style.width = pct + '%';
+}
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+    e.preventDefault(); go(cur + 1);
+  } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+    e.preventDefault(); go(cur - 1);
+  } else if (e.key === 'Home') { e.preventDefault(); go(0); }
+  else if (e.key === 'End') { e.preventDefault(); go(total - 1); }
+});
+
+// Wheel
+let wheelTimer = null;
+document.addEventListener('wheel', e => {
+  e.preventDefault();
+  if (wheelTimer) return;
+  wheelTimer = setTimeout(() => wheelTimer = null, 400);
+  if (e.deltaY > 0) go(cur + 1);
+  else if (e.deltaY < 0) go(cur - 1);
+}, { passive: false });
+
+// Click
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.nav-dot,.nav-dots,.expert-card,.stance-block,.clash-block,.insight-block,.option-card,.framework-step,.problem-box,.question-box')) return;
+  go(cur + 1);
+});
+</script>
+</body>
+</html>

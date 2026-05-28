@@ -1,0 +1,55 @@
+{
+  "batch": 7,
+  "rounds": [
+    {
+      "round": 161,
+      "expert1": "吴军",
+      "expert2": "阿西莫夫",
+      "belief1": "科技浪潮决定商业格局,顺势者昌",
+      "belief2": "科技可以被设计得更安全,但需要严格框架",
+      "topic": "路径之争：达到目的的最佳途径是科技浪潮决定商业格局,顺势者昌，还是科技可以被设计得更安全,但需要严格框架？方法决定结果。",
+      "conflict_type": "method",
+      "strength": "strong"
+    },
+    {
+      "round": 162,
+      "expert1": "刘润",
+      "expert2": "阿西莫夫",
+      "belief1": "解决问题比证明自己更重要",
+      "belief2": "理性是解决冲突的最高准则",
+      "topic": "路径之争：达到目的的最佳途径是解决问题比证明自己更重要，还是理性是解决冲突的最高准则？方法决定结果。",
+      "conflict_type": "method",
+      "strength": "moderate"
+    },
+    {
+      "round": 163,
+      "expert1": "许知远",
+      "expert2": "冯唐",
+      "belief1": "偏见比无知离真理更远",
+      "belief2": "用战略思维解决复杂问题",
+      "topic": "不可调和的矛盾：偏见比无知离真理更远。然而用战略思维解决复杂问题。真相究竟在哪一边？",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 164,
+      "expert1": "万维钢",
+      "expert2": "丹尼尔·戈尔曼",
+      "belief1": "用理工科思维理解世界",
+      "belief2": "情商比智商更能预测成功",
+      "topic": "两者都有道理，但哪个更优先？用理工科思维理解世界。情商比智商更能预测成功。当你必须做出选择时，什么更重要？",
+      "conflict_type": "value_priority",
+      "strength": "moderate"
+    },
+    {
+      "round": 165,
+      "expert1": "李诞",
+      "expert2": "芒格",
+      "belief1": "人间不值得不是放弃,是和生活和解",
+      "belief2": "多元思维模型是决策的本质",
+      "topic": "这是根本性的冲突：人间不值得不是放弃,是和生活和解。但多元思维模型是决策的本质。两者只能选一个，你站谁？",
+      "conflict_type": "direct",
+      "strength": "moderate"
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "batch": 15,
+  "rounds": [
+    {
+      "round": 301,
+      "expert1": "丁元英",
+      "expert2": "韩非子",
+      "belief1": "天道即自然规律",
+      "belief2": "以法为教,以吏为师",
+      "topic": "不可调和:天道即自然规律。然而以法为教,以吏为师。真相在哪一边?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 302,
+      "expert1": "孔子",
+      "expert2": "菲利普·津巴多",
+      "belief1": "仁者爱人,推己及人",
+      "belief2": "系统比个人更容易腐败",
+      "topic": "水火不容:仁者爱人,推己及人。但系统比个人更容易腐败。谁的证据更硬?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 303,
+      "expert1": "尼采",
+      "expert2": "芮小丹",
+      "belief1": "没有事实只有诠释",
+      "belief2": "爱是本能不需要理论",
+      "topic": "路径选择:没有事实只有诠释还是爱是本能不需要理论才是正解?",
+      "conflict_type": "method",
+      "strength": "strong"
+    },
+    {
+      "round": 304,
+      "expert1": "弗洛姆",
+      "expert2": "吴军",
+      "belief1": "爱是唯一理性的答案",
+      "belief2": "浪潮之巅顺势者昌",
+      "topic": "方法论之争:解决问题的最佳路径是爱是唯一理性的答案,还是浪潮之巅顺势者昌?",
+      "conflict_type": "method",
+      "strength": "strong"
+    },
+    {
+      "round": 305,
+      "expert1": "罗翔",
+      "expert2": "芮小丹",
+      "belief1": "法治优于人治",
+      "belief2": "人生不需要那么多为什么",
+      "topic": "方法论之争:解决问题的最佳路径是法治优于人治,还是人生不需要那么多为什么?",
+      "conflict_type": "method",
+      "strength": "strong"
+    }
+  ]
+}

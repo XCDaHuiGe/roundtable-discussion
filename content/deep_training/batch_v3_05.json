@@ -1,0 +1,55 @@
+{
+  "batch": 5,
+  "rounds": [
+    {
+      "round": 251,
+      "expert1": "吴晓波",
+      "expert2": "阿西莫夫",
+      "belief1": "商业的力量改变社会",
+      "belief2": "理性可以解决任何冲突",
+      "topic": "终极对立:商业的力量改变社会 vs 理性可以解决任何冲突。两者只能信一个,选哪个?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 252,
+      "expert1": "柯林斯",
+      "expert2": "丹尼尔·戈尔曼",
+      "belief1": "第五级经理人谦卑而坚定",
+      "belief2": "自我觉察是情商的基础",
+      "topic": "终极对立:第五级经理人谦卑而坚定 vs 自我觉察是情商的基础。两者只能信一个,选哪个?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 253,
+      "expert1": "菲利普·津巴多",
+      "expert2": "马克思",
+      "belief1": "英雄是敢于在情境中说的人",
+      "belief2": "人是一切社会关系的总和",
+      "topic": "路径选择:英雄是敢于在情境中说的人还是人是一切社会关系的总和才是正解?",
+      "conflict_type": "method",
+      "strength": "moderate"
+    },
+    {
+      "round": 254,
+      "expert1": "尤瓦尔·赫拉利",
+      "expert2": "李诞",
+      "belief1": "数据主义正在取代人文主义",
+      "belief2": "躺平是对无效奋斗的拒绝",
+      "topic": "价值排序之争:数据主义正在取代人文主义更重要,还是躺平是对无效奋斗的拒绝更重要?",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 255,
+      "expert1": "丁元英",
+      "expert2": "许知远",
+      "belief1": "规律不以人的意志为转移",
+      "belief2": "批判是知识分子的天职",
+      "topic": "什么更重要?规律不以人的意志为转移还是批判是知识分子的天职?",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    }
+  ]
+}

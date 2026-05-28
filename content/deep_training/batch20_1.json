@@ -1,0 +1,55 @@
+{
+  "batch": 1,
+  "rounds": [
+    {
+      "round": 111,
+      "expert1": "达利欧",
+      "expert2": "芒格",
+      "belief1": "经济周期是必然的，理解周期比对抗周期更重要",
+      "belief2": "多元思维模型才是决策的本质，单一周期理论不足以解释世界",
+      "topic": "达利欧说周期决定一切，芒格说思维模型决定一切。真正的投资智慧是顺势还是多元？",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 112,
+      "expert1": "菲利普·津巴多",
+      "expert2": "弗洛伊德",
+      "belief1": "环境塑造行为，好人也可能因坏环境作恶",
+      "belief2": "潜意识驱动一切，童年经历决定成年行为",
+      "topic": "人的行为是被环境塑造的（津巴多），还是被潜意识驱动的（弗洛伊德）？外部情境和内部本能谁更根本？",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 113,
+      "expert1": "芮小丹",
+      "expert2": "弗洛姆",
+      "belief1": "爱是自然的本能，不需要理论，需要真诚的实践",
+      "topic": "芮小丹说爱是本能无需学习，弗洛姆说爱是需要学习的艺术。两种爱的哲学谁更接近本质？",
+      "conflict_type": "value_priority",
+      "strength": "strong",
+      "belief2": "爱是一门艺术，需要知识和努力去学习"
+    },
+    {
+      "round": 114,
+      "expert1": "凯文·凯利",
+      "expert2": "阿西莫夫",
+      "belief1": "技术是生命的延伸，AI是进化的下一步",
+      "belief2": "科技必须遵循伦理框架，机器人三定律是底线",
+      "topic": "AI是进化必然（凯文·凯利），还是需要伦理约束（阿西莫夫）？对技术的态度应该开放还是谨慎？",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 115,
+      "expert1": "项飙",
+      "expert2": "许知远",
+      "belief1": "附近在消失，人们正在失去对身边世界的感知能力",
+      "belief2": "精英的偏见比大众的无知更可怕，批判需要超越",
+      "topic": "项飙说附近消失了，许知远说精英在堕落。当代社会最大的问题是什么？",
+      "conflict_type": "value_priority",
+      "strength": "moderate"
+    }
+  ]
+}

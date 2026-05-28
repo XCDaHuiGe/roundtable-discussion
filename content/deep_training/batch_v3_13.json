@@ -1,0 +1,55 @@
+{
+  "batch": 13,
+  "rounds": [
+    {
+      "round": 291,
+      "expert1": "达利欧",
+      "expert2": "柯林斯",
+      "belief1": "痛苦加反思等于进步",
+      "belief2": "第五级经理人谦卑而坚定",
+      "topic": "价值排序之争:痛苦加反思等于进步更重要,还是第五级经理人谦卑而坚定更重要?",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 292,
+      "expert1": "阿西莫夫",
+      "expert2": "芮小丹",
+      "belief1": "科技需要伦理导航",
+      "belief2": "去做比去想更重要",
+      "topic": "哪种方法更有效?科技需要伦理导航还是去做比去想更重要?",
+      "conflict_type": "method",
+      "strength": "strong"
+    },
+    {
+      "round": 293,
+      "expert1": "尼克·博斯特罗姆",
+      "expert2": "西蒙娜·德·波伏娃",
+      "belief1": "AI安全是文明优先事项",
+      "belief2": "处境无法定义你如何回应才定义你",
+      "topic": "路径选择:AI安全是文明优先事项还是处境无法定义你如何回应才定义你才是正解?",
+      "conflict_type": "method",
+      "strength": "moderate"
+    },
+    {
+      "round": 294,
+      "expert1": "凯文·凯利",
+      "expert2": "韩非子",
+      "belief1": "技术是生命的第七王国",
+      "belief2": "以法为教,以吏为师",
+      "topic": "方法论之争:解决问题的最佳路径是技术是生命的第七王国,还是以法为教,以吏为师?",
+      "conflict_type": "method",
+      "strength": "moderate"
+    },
+    {
+      "round": 295,
+      "expert1": "吴军",
+      "expert2": "老子",
+      "belief1": "简单的东西才是最好的",
+      "belief2": "知足者富,强行者有志",
+      "topic": "哪种方法更有效?简单的东西才是最好的还是知足者富,强行者有志?",
+      "conflict_type": "method",
+      "strength": "strong"
+    }
+  ]
+}

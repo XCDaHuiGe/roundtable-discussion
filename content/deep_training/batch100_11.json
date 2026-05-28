@@ -1,0 +1,55 @@
+{
+  "batch": 11,
+  "rounds": [
+    {
+      "round": 181,
+      "expert1": "万维钢",
+      "expert2": "吴晓波",
+      "belief1": "这个世界是由极少数人推动的",
+      "belief2": "理解商业才能理解当代中国",
+      "topic": "两者都有道理，但哪个更优先？这个世界是由极少数人推动的。理解商业才能理解当代中国。当你必须做出选择时，什么更重要？",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 182,
+      "expert1": "李诞",
+      "expert2": "尼采",
+      "belief1": "活着比正确更重要",
+      "belief2": "永恒轮回是最高形式的生命肯定",
+      "topic": "方法论的争锋：解决同一个问题，活着比正确更重要和永恒轮回是最高形式的生命肯定哪条路更有效？",
+      "conflict_type": "method",
+      "strength": "strong"
+    },
+    {
+      "round": 183,
+      "expert1": "菲利普·津巴多",
+      "expert2": "塔勒布",
+      "belief1": "英雄想象:普通人也可以成为英雄",
+      "belief2": "黑天鹅事件不可预测,应对比预测更重要",
+      "topic": "两种价值不可兼得时：追求英雄想象:普通人也可以成为英雄，还是坚守黑天鹅事件不可预测,应对比预测更重要？这是人生最艰难的选择题。",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 184,
+      "expert1": "丹尼尔·戈尔曼",
+      "expert2": "老子",
+      "belief1": "情绪智力可以被培养和提升",
+      "belief2": "大道至简,最深刻的道理往往最朴素",
+      "topic": "两种价值不可兼得时：追求情绪智力可以被培养和提升，还是坚守大道至简,最深刻的道理往往最朴素？这是人生最艰难的选择题。",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 185,
+      "expert1": "孔子",
+      "expert2": "万维钢",
+      "belief1": "克己复礼,社会和谐源于每个人做好自己的本分",
+      "belief2": "用理工科思维理解世界",
+      "topic": "不可调和的矛盾：克己复礼,社会和谐源于每个人做好自己的本分。然而用理工科思维理解世界。真相究竟在哪一边？",
+      "conflict_type": "direct",
+      "strength": "moderate"
+    }
+  ]
+}

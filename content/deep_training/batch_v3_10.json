@@ -1,0 +1,55 @@
+{
+  "batch": 10,
+  "rounds": [
+    {
+      "round": 276,
+      "expert1": "丹尼尔·卡尼曼",
+      "expert2": "马克思",
+      "belief1": "确认偏误让你只看到想看的",
+      "belief2": "宗教是人民的鸦片",
+      "topic": "水火不容:确认偏误让你只看到想看的。但宗教是人民的鸦片。谁的证据更硬?",
+      "conflict_type": "direct",
+      "strength": "moderate"
+    },
+    {
+      "round": 277,
+      "expert1": "达利欧",
+      "expert2": "丹尼尔·卡尼曼",
+      "belief1": "原则是系统化决策的基础",
+      "belief2": "思维懒惰是人类的天性",
+      "topic": "水火不容:原则是系统化决策的基础。但思维懒惰是人类的天性。谁的证据更硬?",
+      "conflict_type": "direct",
+      "strength": "moderate"
+    },
+    {
+      "round": 278,
+      "expert1": "阿西莫夫",
+      "expert2": "孔子",
+      "belief1": "知识本身即是危险",
+      "belief2": "己所不欲勿施于人",
+      "topic": "方法论之争:解决问题的最佳路径是知识本身即是危险,还是己所不欲勿施于人?",
+      "conflict_type": "method",
+      "strength": "moderate"
+    },
+    {
+      "round": 279,
+      "expert1": "吴军",
+      "expert2": "弗洛伊德",
+      "belief1": "信息密度决定认知深度",
+      "belief2": "本我所在自我必至",
+      "topic": "价值排序之争:信息密度决定认知深度更重要,还是本我所在自我必至更重要?",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 280,
+      "expert1": "刘润",
+      "expert2": "芒格",
+      "belief1": "一切商业的起点是消费者获益",
+      "belief2": "能力圈比能力更重要",
+      "topic": "水火不容:一切商业的起点是消费者获益。但能力圈比能力更重要。谁的证据更硬?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    }
+  ]
+}

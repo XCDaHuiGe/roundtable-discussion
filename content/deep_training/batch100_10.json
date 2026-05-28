@@ -1,0 +1,55 @@
+{
+  "batch": 10,
+  "rounds": [
+    {
+      "round": 176,
+      "expert1": "巴菲特",
+      "expert2": "阿伦特",
+      "belief1": "安全边际是投资的核心",
+      "belief2": "平庸之恶:最可怕的恶往往由普通人在制度中无思地执行",
+      "topic": "价值的排序之争：安全边际是投资的核心是第一位，还是平庸之恶:最可怕的恶往往由普通人在制度中无思地执行才是根本？这个排序决定了完全不同的活法。",
+      "conflict_type": "value_priority",
+      "strength": "moderate"
+    },
+    {
+      "round": 177,
+      "expert1": "达利欧",
+      "expert2": "西蒙娜·德·波伏娃",
+      "belief1": "原则:系统化决策优于直觉决策",
+      "belief2": "他者化是压迫的根源,女性必须成为主体而非客体",
+      "topic": "价值的排序之争：原则:系统化决策优于直觉决策是第一位，还是他者化是压迫的根源,女性必须成为主体而非客体才是根本？这个排序决定了完全不同的活法。",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 178,
+      "expert1": "吴军",
+      "expert2": "凯文·凯利",
+      "belief1": "AI是人类认知的扩展而非替代",
+      "belief2": "未来二十年最大的变化尚未到来",
+      "topic": "两种价值不可兼得时：追求AI是人类认知的扩展而非替代，还是坚守未来二十年最大的变化尚未到来？这是人生最艰难的选择题。",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 179,
+      "expert1": "刘润",
+      "expert2": "许知远",
+      "belief1": "一切商业的起点是消费者获益",
+      "belief2": "批判是知识分子的天职",
+      "topic": "水火不容的核心对立：一切商业的起点是消费者获益 vs 批判是知识分子的天职。在一个没有预设立场的人看来，谁的证据更硬？",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 180,
+      "expert1": "项飙",
+      "expert2": "芮小丹",
+      "belief1": "社会学应该回归对日常经验的观察",
+      "belief2": "活得真实比活得正确更重要",
+      "topic": "两者都有道理，但哪个更优先？社会学应该回归对日常经验的观察。活得真实比活得正确更重要。当你必须做出选择时，什么更重要？",
+      "conflict_type": "value_priority",
+      "strength": "moderate"
+    }
+  ]
+}

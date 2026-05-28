@@ -1,0 +1,55 @@
+{
+  "batch": 8,
+  "rounds": [
+    {
+      "round": 266,
+      "expert1": "项飙",
+      "expert2": "弗洛伊德",
+      "belief1": "关注具体的人而非抽象的概念",
+      "belief2": "人的历史就是一部压抑史",
+      "topic": "价值排序之争:关注具体的人而非抽象的概念更重要,还是人的历史就是一部压抑史更重要?",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 267,
+      "expert1": "吴晓波",
+      "expert2": "尼克·博斯特罗姆",
+      "belief1": "改革开放是当代中国的底层逻辑",
+      "belief2": "价值对齐是最硬的难题",
+      "topic": "什么更重要?改革开放是当代中国的底层逻辑还是价值对齐是最硬的难题?",
+      "conflict_type": "value_priority",
+      "strength": "moderate"
+    },
+    {
+      "round": 268,
+      "expert1": "冯唐",
+      "expert2": "万维钢",
+      "belief1": "战略的本质是取舍",
+      "belief2": "精英是推动进步的关键少数",
+      "topic": "终极对立:战略的本质是取舍 vs 精英是推动进步的关键少数。两者只能信一个,选哪个?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 269,
+      "expert1": "尤瓦尔·赫拉利",
+      "expert2": "罗翔",
+      "belief1": "AI和生物技术终结人类时代",
+      "belief2": "法律的目的是维护秩序而不是彰显权力",
+      "topic": "不能兼得时:AI和生物技术终结人类时代和法律的目的是维护秩序而不是彰显权力你优先选哪个?",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 270,
+      "expert1": "孔子",
+      "expert2": "尤瓦尔·赫拉利",
+      "belief1": "不患寡而患不均",
+      "belief2": "人类的故事是虚构共识",
+      "topic": "终极对立:不患寡而患不均 vs 人类的故事是虚构共识。两者只能信一个,选哪个?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    }
+  ]
+}

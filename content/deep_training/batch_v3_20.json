@@ -1,0 +1,55 @@
+{
+  "batch": 20,
+  "rounds": [
+    {
+      "round": 326,
+      "expert1": "达利欧",
+      "expert2": "阿西莫夫",
+      "belief1": "从更高的层面俯视自己",
+      "belief2": "暴力是无能者的最后手段",
+      "topic": "价值排序之争:从更高的层面俯视自己更重要,还是暴力是无能者的最后手段更重要?",
+      "conflict_type": "value_priority",
+      "strength": "moderate"
+    },
+    {
+      "round": 327,
+      "expert1": "尼克·博斯特罗姆",
+      "expert2": "阿伦特",
+      "belief1": "价值对齐是最硬的难题",
+      "belief2": "恶是表面的深渊",
+      "topic": "什么更重要?价值对齐是最硬的难题还是恶是表面的深渊?",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 328,
+      "expert1": "刘润",
+      "expert2": "吴晓波",
+      "belief1": "一切商业的起点是消费者获益",
+      "belief2": "制造业是中国经济的底盘",
+      "topic": "什么更重要?一切商业的起点是消费者获益还是制造业是中国经济的底盘?",
+      "conflict_type": "value_priority",
+      "strength": "moderate"
+    },
+    {
+      "round": 329,
+      "expert1": "项飙",
+      "expert2": "柯林斯",
+      "belief1": "全球化带来认同的焦虑",
+      "belief2": "第五级经理人谦卑而坚定",
+      "topic": "终极对立:全球化带来认同的焦虑 vs 第五级经理人谦卑而坚定。两者只能信一个,选哪个?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 330,
+      "expert1": "李诞",
+      "expert2": "冯唐",
+      "belief1": "活着比正确更重要",
+      "belief2": "成事心法是一生的修行",
+      "topic": "哪种方法更有效?活着比正确更重要还是成事心法是一生的修行?",
+      "conflict_type": "method",
+      "strength": "strong"
+    }
+  ]
+}

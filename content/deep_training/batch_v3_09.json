@@ -1,0 +1,55 @@
+{
+  "batch": 9,
+  "rounds": [
+    {
+      "round": 271,
+      "expert1": "老子",
+      "expert2": "弗洛姆",
+      "belief1": "天下皆知美之为美斯恶矣",
+      "belief2": "现代人逃避自由",
+      "topic": "方法论之争:解决问题的最佳路径是天下皆知美之为美斯恶矣,还是现代人逃避自由?",
+      "conflict_type": "method",
+      "strength": "strong"
+    },
+    {
+      "round": 272,
+      "expert1": "韩非子",
+      "expert2": "芒格",
+      "belief1": "以法为教,以吏为师",
+      "belief2": "激励机制是超级力量",
+      "topic": "水火不容:以法为教,以吏为师。但激励机制是超级力量。谁的证据更硬?",
+      "conflict_type": "direct",
+      "strength": "moderate"
+    },
+    {
+      "round": 273,
+      "expert1": "阿伦特",
+      "expert2": "弗洛伊德",
+      "belief1": "恶是表面的深渊",
+      "belief2": "人的历史就是一部压抑史",
+      "topic": "不能兼得时:恶是表面的深渊和人的历史就是一部压抑史你优先选哪个?",
+      "conflict_type": "value_priority",
+      "strength": "moderate"
+    },
+    {
+      "round": 274,
+      "expert1": "西蒙娜·德·波伏娃",
+      "expert2": "凯文·凯利",
+      "belief1": "女人不是天生的而是变成的",
+      "belief2": "技术是生命的第七王国",
+      "topic": "不可调和:女人不是天生的而是变成的。然而技术是生命的第七王国。真相在哪一边?",
+      "conflict_type": "direct",
+      "strength": "moderate"
+    },
+    {
+      "round": 275,
+      "expert1": "塔勒布",
+      "expert2": "阿伦特",
+      "belief1": "你不知道的事比你知道的事更重要",
+      "belief2": "极权主义下人人都是齿轮",
+      "topic": "什么更重要?你不知道的事比你知道的事更重要还是极权主义下人人都是齿轮?",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    }
+  ]
+}

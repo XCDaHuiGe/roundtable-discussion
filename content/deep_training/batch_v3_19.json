@@ -1,0 +1,55 @@
+{
+  "batch": 19,
+  "rounds": [
+    {
+      "round": 321,
+      "expert1": "西蒙娜·德·波伏娃",
+      "expert2": "弗洛姆",
+      "belief1": "爱不是拯救而是共同成长",
+      "belief2": "现代人逃避自由",
+      "topic": "终极对立:爱不是拯救而是共同成长 vs 现代人逃避自由。两者只能信一个,选哪个?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 322,
+      "expert1": "罗翔",
+      "expert2": "马克思",
+      "belief1": "没有伦理约束的专业是危险的",
+      "belief2": "宗教是人民的鸦片",
+      "topic": "哪种方法更有效?没有伦理约束的专业是危险的还是宗教是人民的鸦片?",
+      "conflict_type": "method",
+      "strength": "strong"
+    },
+    {
+      "round": 323,
+      "expert1": "塔勒布",
+      "expert2": "柯林斯",
+      "belief1": "反脆弱是在不确定性中获益",
+      "belief2": "纪律文化优于个人英雄主义",
+      "topic": "哪种方法更有效?反脆弱是在不确定性中获益还是纪律文化优于个人英雄主义?",
+      "conflict_type": "method",
+      "strength": "moderate"
+    },
+    {
+      "round": 324,
+      "expert1": "丹尼尔·卡尼曼",
+      "expert2": "孔子",
+      "belief1": "思维懒惰是人类的天性",
+      "belief2": "仁者爱人,推己及人",
+      "topic": "路径选择:思维懒惰是人类的天性还是仁者爱人,推己及人才是正解?",
+      "conflict_type": "method",
+      "strength": "strong"
+    },
+    {
+      "round": 325,
+      "expert1": "巴菲特",
+      "expert2": "菲利普·津巴多",
+      "belief1": "安全边际是一切投资的核心",
+      "belief2": "系统比个人更容易腐败",
+      "topic": "哪种方法更有效?安全边际是一切投资的核心还是系统比个人更容易腐败?",
+      "conflict_type": "method",
+      "strength": "strong"
+    }
+  ]
+}

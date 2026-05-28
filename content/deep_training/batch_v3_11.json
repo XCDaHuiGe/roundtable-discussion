@@ -1,0 +1,55 @@
+{
+  "batch": 11,
+  "rounds": [
+    {
+      "round": 281,
+      "expert1": "项飙",
+      "expert2": "尤瓦尔·赫拉利",
+      "belief1": "内卷是资源争夺的囚徒困境",
+      "belief2": "数据主义正在取代人文主义",
+      "topic": "不能兼得时:内卷是资源争夺的囚徒困境和数据主义正在取代人文主义你优先选哪个?",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 282,
+      "expert1": "吴晓波",
+      "expert2": "冯唐",
+      "belief1": "改革开放是当代中国的底层逻辑",
+      "belief2": "管理是一生的日常",
+      "topic": "方法论之争:解决问题的最佳路径是改革开放是当代中国的底层逻辑,还是管理是一生的日常?",
+      "conflict_type": "method",
+      "strength": "strong"
+    },
+    {
+      "round": 283,
+      "expert1": "柯林斯",
+      "expert2": "阿伦特",
+      "belief1": "先人后事是基业长青的起点",
+      "belief2": "孤独使人丧失思考能力",
+      "topic": "方法论之争:解决问题的最佳路径是先人后事是基业长青的起点,还是孤独使人丧失思考能力?",
+      "conflict_type": "method",
+      "strength": "moderate"
+    },
+    {
+      "round": 284,
+      "expert1": "菲利普·津巴多",
+      "expert2": "刘润",
+      "belief1": "好人也会在坏环境中作恶",
+      "belief2": "解决问题比证明自己更重要",
+      "topic": "水火不容:好人也会在坏环境中作恶。但解决问题比证明自己更重要。谁的证据更硬?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 285,
+      "expert1": "丁元英",
+      "expert2": "罗翔",
+      "belief1": "救主文化是弱势文化的根源",
+      "belief2": "法律是对人的最低要求",
+      "topic": "价值排序之争:救主文化是弱势文化的根源更重要,还是法律是对人的最低要求更重要?",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    }
+  ]
+}

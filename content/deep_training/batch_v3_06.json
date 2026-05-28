@@ -1,0 +1,55 @@
+{
+  "batch": 6,
+  "rounds": [
+    {
+      "round": 256,
+      "expert1": "老子",
+      "expert2": "巴菲特",
+      "belief1": "道可道非常道",
+      "belief2": "大潮退去才知道谁在裸泳",
+      "topic": "哪种方法更有效?道可道非常道还是大潮退去才知道谁在裸泳?",
+      "conflict_type": "method",
+      "strength": "moderate"
+    },
+    {
+      "round": 257,
+      "expert1": "尼采",
+      "expert2": "马克思",
+      "belief1": "幸福就是有能力增加负担",
+      "belief2": "人是一切社会关系的总和",
+      "topic": "不可调和:幸福就是有能力增加负担。然而人是一切社会关系的总和。真相在哪一边?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 258,
+      "expert1": "弗洛伊德",
+      "expert2": "柯林斯",
+      "belief1": "在潜意识中没有时间概念",
+      "belief2": "飞轮效应持续积累终将爆发",
+      "topic": "路径选择:在潜意识中没有时间概念还是飞轮效应持续积累终将爆发才是正解?",
+      "conflict_type": "method",
+      "strength": "strong"
+    },
+    {
+      "round": 259,
+      "expert1": "罗翔",
+      "expert2": "芒格",
+      "belief1": "正义如圆虽不能至心向往之",
+      "belief2": "激励机制是超级力量",
+      "topic": "哪种方法更有效?正义如圆虽不能至心向往之还是激励机制是超级力量?",
+      "conflict_type": "method",
+      "strength": "strong"
+    },
+    {
+      "round": 260,
+      "expert1": "塔勒布",
+      "expert2": "尼采",
+      "belief1": "你不知道的事比你知道的事更重要",
+      "belief2": "凡不能毁灭我的必使我强大",
+      "topic": "路径选择:你不知道的事比你知道的事更重要还是凡不能毁灭我的必使我强大才是正解?",
+      "conflict_type": "method",
+      "strength": "strong"
+    }
+  ]
+}

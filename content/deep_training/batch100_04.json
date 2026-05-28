@@ -1,0 +1,55 @@
+{
+  "batch": 4,
+  "rounds": [
+    {
+      "round": 146,
+      "expert1": "吴晓波",
+      "expert2": "柯林斯",
+      "belief1": "理解商业才能理解当代中国",
+      "belief2": "先人后事:找对的人上车",
+      "topic": "不可调和的矛盾：理解商业才能理解当代中国。然而先人后事:找对的人上车。真相究竟在哪一边？",
+      "conflict_type": "direct",
+      "strength": "moderate"
+    },
+    {
+      "round": 147,
+      "expert1": "万维钢",
+      "expert2": "丁元英",
+      "belief1": "这个世界是由极少数人推动的",
+      "belief2": "救主文化是弱者的思维,强势文化造就强者",
+      "topic": "两者都有道理，但哪个更优先？这个世界是由极少数人推动的。救主文化是弱者的思维,强势文化造就强者。当你必须做出选择时，什么更重要？",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 148,
+      "expert1": "李诞",
+      "expert2": "弗洛姆",
+      "belief1": "人间不值得不是放弃,是和生活和解",
+      "belief2": "占有还是存在,是两种根本不同的生存模式",
+      "topic": "不可调和的矛盾：人间不值得不是放弃,是和生活和解。然而占有还是存在,是两种根本不同的生存模式。真相究竟在哪一边？",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 149,
+      "expert1": "菲利普·津巴多",
+      "expert2": "冯唐",
+      "belief1": "斯坦福监狱实验证明情境的力量远超性格",
+      "belief2": "不着急,不害怕,不要脸",
+      "topic": "方法论的争锋：解决同一个问题，斯坦福监狱实验证明情境的力量远超性格和不着急,不害怕,不要脸哪条路更有效？",
+      "conflict_type": "method",
+      "strength": "moderate"
+    },
+    {
+      "round": 150,
+      "expert1": "尤瓦尔·赫拉利",
+      "expert2": "芮小丹",
+      "belief1": "人类的故事本质是虚构共识的演化",
+      "belief2": "爱是自然的本能,真诚比技巧重要",
+      "topic": "两者都有道理，但哪个更优先？人类的故事本质是虚构共识的演化。爱是自然的本能,真诚比技巧重要。当你必须做出选择时，什么更重要？",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    }
+  ]
+}

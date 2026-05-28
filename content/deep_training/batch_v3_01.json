@@ -1,0 +1,55 @@
+{
+  "batch": 1,
+  "rounds": [
+    {
+      "round": 231,
+      "expert1": "孔子",
+      "expert2": "芮小丹",
+      "belief1": "不患寡而患不均",
+      "belief2": "爱是本能不需要理论",
+      "topic": "水火不容:不患寡而患不均。但爱是本能不需要理论。谁的证据更硬?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 232,
+      "expert1": "老子",
+      "expert2": "万维钢",
+      "belief1": "大巧若拙,大辩若讷",
+      "belief2": "用理工科思维破除迷思",
+      "topic": "哪种方法更有效?大巧若拙,大辩若讷还是用理工科思维破除迷思?",
+      "conflict_type": "method",
+      "strength": "strong"
+    },
+    {
+      "round": 233,
+      "expert1": "韩非子",
+      "expert2": "李诞",
+      "belief1": "法不阿贵,绳不挠曲",
+      "belief2": "活着比正确更重要",
+      "topic": "什么更重要?法不阿贵,绳不挠曲还是活着比正确更重要?",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 234,
+      "expert1": "尼采",
+      "expert2": "孔子",
+      "belief1": "幸福就是有能力增加负担",
+      "belief2": "己所不欲勿施于人",
+      "topic": "水火不容:幸福就是有能力增加负担。但己所不欲勿施于人。谁的证据更硬?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 235,
+      "expert1": "马克思",
+      "expert2": "李诞",
+      "belief1": "哲学家只是解释世界问题在于改变世界",
+      "belief2": "笑是最高形式的思考",
+      "topic": "价值排序之争:哲学家只是解释世界问题在于改变世界更重要,还是笑是最高形式的思考更重要?",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    }
+  ]
+}

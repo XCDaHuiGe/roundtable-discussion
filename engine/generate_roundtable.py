@@ -18,7 +18,6 @@
 import json
 import os
 import sys
-import time
 import hashlib
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -416,22 +415,48 @@ def generate_round_reality(
     book_title: str,
     round_info: Dict,
     experts: List[Dict],
+    stances: List[Dict] = None,
+    clashes: List[Dict] = None,
     llm_kwargs: Dict = None,
 ) -> Dict:
-    """生成一轮的现实案例、代价讨论、人性层、认知升级"""
+    """生成一轮的现实案例、代价讨论、人性层、认知升级、综合答案"""
     kwargs = {**LLM_DEFAULTS, **(llm_kwargs or {})}
+
+    stance_text = ""
+    if stances:
+        stance_text = "\n各位专家立场：\n" + "\n".join([
+            f"- {s['expert']}: {s['stance'][:200]}"
+            for s in stances
+        ])
+
+    clash_text = ""
+    if clashes:
+        clash_text = "\n碰撞交锋：\n" + "\n".join([
+            f"- {c['attacker']} → {c['target']}: {c['attack_content'][:150]}\n  反击: {c.get('counter_attack', '')[:150]}"
+            for c in clashes
+        ])
 
     prompt = f"""《{book_title}》圆桌讨论 - Round {round_info['round_number']} 深度分析
 
 主题：{round_info['topic']}
 核心问题：{round_info['core_question']}
+{stance_text}
+{clash_text}
 
-请生成以下内容：
+请基于以上讨论内容，生成以下分析：
 
 1. 现实案例（2-3个）：与主题相关的真实案例
 2. 代价讨论：如果普通人盲目模仿，会付出什么代价？
 3. 人性层：从人性角度分析为什么大多数人无法做到
 4. 认知升级：从旧思维到新思维的升级路径
+5. 综合答案：整合所有专家的立场和碰撞结论，给出一个明确的、可执行的综合答案
+
+【综合答案要求】
+- 必须整合前面所有专家的观点，而不是另起炉灶
+- 必须明确指出哪些观点达成了共识，哪些仍存在分歧
+- 共识点 = 所有或多数专家都认同的结论
+- 分歧点 = 专家之间仍未达成一致的争议
+- 答案必须可执行，给出具体建议
 
 返回 JSON 格式：
 {{
@@ -463,6 +488,11 @@ def generate_round_reality(
     "new_thinking": "新思维",
     "complexity": "复杂性说明",
     "actionable_insight": "可执行洞见"
+  }},
+  "synthesis": {{
+    "answer": "综合答案（300-500字）：整合所有专家立场和碰撞结论，给出明确可执行的综合结论",
+    "consensus": ["共识点1：描述 + 哪些专家认同", "共识点2：描述 + 哪些专家认同"],
+    "disagreements": ["分歧点1：描述 + 各方立场", "分歧点2：描述 + 各方立场"]
   }}
 }}"""
 
@@ -470,7 +500,13 @@ def generate_round_reality(
 
     if result["success"] and result["data"]:
         return result["data"]
-    return {}
+    return {
+        "synthesis": {
+            "answer": "",
+            "consensus": [],
+            "disagreements": []
+        }
+    }
 
 
 def generate_final_insight(
@@ -482,7 +518,7 @@ def generate_final_insight(
     kwargs = {**LLM_DEFAULTS, **(llm_kwargs or {})}
 
     round_summaries = "\n".join([
-        f"Round {r['round_number']}: {r.get('topic', '')}"
+        f"Round {r['round_number']}: {r.get('topic', '')}\n综合答案：{r.get('synthesis', {}).get('answer', '无')[:200]}..."
         for r in rounds
     ])
 
@@ -491,23 +527,33 @@ def generate_final_insight(
 讨论轮次：
 {round_summaries}
 
-请生成：
-1. 一段精炼的最终洞见（50-100字）
+请基于各轮次的综合答案，生成：
+1. 一段精炼的最终洞见（200-400字），整合所有轮次的核心结论
 2. 3 个留给读者的开放问题
+3. 最终共识点（所有轮次都认同的观点）
+4. 最终分歧点（仍存在争议的观点）
 
 返回 JSON 格式：
 {{
   "final_insight": "最终洞见",
-  "open_questions": ["问题1", "问题2", "问题3"]
+  "open_questions": ["问题1", "问题2", "问题3"],
+  "final_consensus": ["共识点1", "共识点2"],
+  "final_disagreements": ["分歧点1", "分歧点2"]
 }}"""
 
     result = call_llm_json(prompt, "你是圆桌讨论的总结者，负责提炼最有价值的洞见。", **kwargs)
 
     if result["success"] and result["data"]:
-        return result["data"]
+        data = result["data"]
+        data.setdefault("final_consensus", [])
+        data.setdefault("final_disagreements", [])
+        data.setdefault("open_questions", [])
+        return data
     return {
         "final_insight": f"《{book_title}》的讨论揭示了多元视角碰撞的价值。",
         "open_questions": [f"《{book_title}》的核心主张在现实中如何验证？"],
+        "final_consensus": [],
+        "final_disagreements": [],
     }
 
 
@@ -582,7 +628,7 @@ def generate_roundtable(
 
         # 现实分析
         tracker.update(6 + i * 3, f"Round {round_num} 现实分析...")
-        reality = generate_round_reality(book_title, topic, experts, llm_kwargs)
+        reality = generate_round_reality(book_title, topic, experts, stances, clashes, llm_kwargs)
 
         round_data = {
             "round_number": round_num,
@@ -594,6 +640,11 @@ def generate_roundtable(
             "cost_discussion": reality.get("cost_discussion", {}),
             "human_nature": reality.get("human_nature", {}),
             "cognitive_upgrade": reality.get("cognitive_upgrade", {}),
+            "synthesis": reality.get("synthesis", {
+                "answer": "",
+                "consensus": [],
+                "disagreements": []
+            }),
         }
         rounds_data.append(round_data)
 
@@ -609,6 +660,8 @@ def generate_roundtable(
         "rounds": rounds_data,
         "final_insight": final.get("final_insight", ""),
         "open_questions": final.get("open_questions", []),
+        "final_consensus": final.get("final_consensus", []),
+        "final_disagreements": final.get("final_disagreements", []),
     }
 
     tracker.finish("生成完成")

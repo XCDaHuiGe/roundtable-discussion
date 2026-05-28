@@ -14,12 +14,12 @@ SCRIPT_DIR = Path(__file__).parent
 TEMPLATES_CONFIG = SCRIPT_DIR / "templates.json"
 
 TOPIC_TEMPLATES = {
-    "投资": ["consulting-report", "clean-review", "v3-magazine"],
-    "哲学": ["editorial", "rain-notes", "v2-starry"],
-    "科技": ["geek-report", "pixel-report", "dot-matrix", "v2-starry"],
+    "投资": ["consulting-report", "clean-review"],
+    "哲学": ["editorial", "rain-notes"],
+    "科技": ["geek-report", "pixel-report", "dot-matrix"],
     "AI": ["geek-report", "pixel-report", "consulting-report"],
-    "文学": ["editorial", "sunrise", "v3-magazine"],
-    "社会": ["dot-matrix", "editorial", "v2-starry"],
+    "文学": ["editorial", "sunrise"],
+    "社会": ["dot-matrix", "editorial"],
     "情感": ["rain-notes", "sunrise", "story-field"],
     "创意": ["y2k-brand", "editorial", "sunrise"],
 }

@@ -1,0 +1,9 @@
+{
+  "success": true,
+  "results": "## Search Results (3 results, 2907ms)\n\n### 1. Are AI existential risks real—and what should we do about them?\n- **URL**: https://www.brookings.edu/articles/are-ai-existential-risks-real-and-what-should-we-do-about-them/\n- Mark MacCarthy highlights the existential risks posed by AI while emphasizing the need to prioritize addressing its more immediate harms.\ndate: Jul 11, 2025\n\n### 2. [PDF] EXISTENTIAL RISK FROM AI\n- **URL**: https://shop.freiheit.org/download/P2@1939/989395/FNF_A4_Policy%20Paper_Existential%20Risk%20from%20AI_EN_web_final.pdf\n- The debate held today was already born in 2002, when. Nick Bostrom coined the term existential risk with his book. ‚Global Catastrophic Risks'. In this book ...\n\n### 3. Existential risk from artificial intelligence - Wikipedia\n- **URL**: https://en.wikipedia.org/wiki/Existential_risk_from_artificial_intelligence\n- Bostrom argues that if an advanced AI's instrumental goals conflict with humanity's goals, the AI might harm humanity in order to acquire more resources or prevent itself from being shut down, but only as a way to achieve its ultimate goal.\n\n",
+  "method": "anysearch",
+  "source": "web",
+  "weight": 0.7,
+  "cached_at": 1780026383.16702,
+  "query": "AI safety existential risk Bostrom"
+}

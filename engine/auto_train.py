@@ -179,8 +179,18 @@ def get_expert_profile(expert_name: str) -> Optional[Dict]:
 #  Phase 4: 评分 + 提取（机械操作）
 # ═══════════════════════════════════════════════════════════════
 
-def step4_score_and_extract(debate_json: Dict) -> Dict:
-    """评分和策略提取（机械操作）"""
+def step4_score_and_extract(debate_json: Dict, scores: Dict = None) -> Dict:
+    """评分和策略提取（机械操作）
+
+    Args:
+        debate_json: 辩论JSON
+        scores: Agent传入的6维度分数（可选，未传入时使用默认分数）
+
+    Returns:
+        {"score": {"total": 68.5, "grade": "C"}, "extraction": {...}}
+    """
+    from scorer_v3 import default_scores
+
     result = {'score': {}, 'extraction': {}}
 
     temp_path = os.path.join(MEMORY_DIR, '_temp_debate.json')
@@ -189,7 +199,8 @@ def step4_score_and_extract(debate_json: Dict) -> Dict:
         json.dump(debate_json, f, ensure_ascii=False, indent=2)
 
     try:
-        result['score'] = score_v3(debate_json)
+        scores_input = scores or default_scores()
+        result['score'] = score_v3(scores_input)
     except Exception as e:
         result['score'] = {'total': 0, 'grade': 'F', 'error': str(e)}
 

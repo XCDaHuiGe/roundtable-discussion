@@ -2,63 +2,60 @@
 
 > **一键触发，自动执行复杂任务**
 
+## 当前版本：V9.0
+
+**核心设计**：Agent=LLM，Python=机械操作
+
+| 角色 | 职责 |
+|:---|:---|
+| Agent（你） | 搜索、阅读、生成辩论、评分 |
+| Python模块 | 机械计算、文件保存、HTML渲染 |
+
+**零LLM依赖**：不依赖任何外部LLM API Key
+
+---
+
 ## 可用 Skills
 
 | Skill | 触发指令 | 功能 |
 |:---|:---|:---|
-| **roundtable-training-engine** | "训练N轮" | 专家能力进化式升级 |
-| **deep-training** | "深度训练N轮" | WebSearch + 知乎MCP + LLM辩论 |
+| **deep-training** | "深度训练N轮" | Agent生成辩论 → Python评分升级 |
 | **expert-training** | "训练专家 {名}" | 单专家档案训练 |
-
----
-
-## roundtable-training-engine
-
-**描述**：专家能力进化式升级引擎 V4.0
-
-**触发指令**：
-```
-"训练5轮"
-"对抗自训练"
-"生成10个话题并训练"
-"升级专家库"
-```
-
-**核心流程**：
-```
-讨论生成 → 评分 → 策略提取 → 融合增强 → 专家档案升级
-```
-
-**版本对比**：
-| 版本 | 评分逻辑 | 升级方式 |
-|:---|:---|:---|
-| V3 | OR逻辑（评分虚高） | 替换式 |
-| V4 | 严格评分（真实） | 融合增强式 |
 
 ---
 
 ## deep-training
 
-**描述**：深度训练引擎 V1.0
+**描述**：深度训练引擎 V9.0
 
 **触发指令**：
 ```
 "深度训练10轮"
 "专家辩论训练"
-"生成话题并辩论"
 ```
 
 **核心流程**：
 ```
-专家信念冲突 → LLM生成话题 → WebSearch搜索 → 知乎MCP采集 → LLM辩论 → 档案升级
+Agent生成话题 → Agent生成辩论 → Python评分 → Python提取策略 → Python升级专家
 ```
 
-**与快速训练的区别**：
-| 特性 | 快速训练 | 深度训练 |
-|:---|:---|:---|
-| 话题来源 | 本地JSON | LLM自主生成 |
-| 内容来源 | 本地文件 | WebSearch + 知乎MCP |
-| 辩论生成 | 无 | LLM多轮辩论 |
+**Python模块**：
+| 模块 | 功能 |
+|:---|:---|
+| `auto_train.py` | 训练入口（step1-step5） |
+| `scorer.py` | 6维度加权评分 |
+| `llm_extractor.py` | 策略提取（纯机械） |
+| `fusion_engine.py` | 融合增强升级 |
+
+**评分维度**：
+| 维度 | 权重 |
+|:---|:---|
+| reality_grounding | 25% |
+| contradiction_handling | 20% |
+| strategic_depth | 20% |
+| cross_domain_transfer | 15% |
+| novelty | 10% |
+| personality_consistency | 10% |
 
 ---
 
@@ -70,42 +67,114 @@
 ```
 "训练专家 孔子"
 "继续训练"
-"训练进度"
 ```
 
 **核心流程**：
 ```
-WebSearch搜索 → 知乎MCP采集 → 档案生成 → L1/L2/L3评估 → Git推送
+WebSearch搜索 → 知乎MCP采集 → 档案生成 → L1/L2/L3评估
 ```
-
-**三级评估体系**：
-| 级别 | 评估内容 | 通过标准 |
-|:---|:---|:---|
-| L1 | 信息完整度 | ≥70分 |
-| L2 | 仿真发言测试 | ≥80分 |
-| L3 | 去同质化测试 | ≥75分 |
 
 ---
 
-## 一键训练脚本
+## 进化闭环
 
+**核心逻辑**：Agent读取策略层 → 生成更好辩论 → Python升级策略层 → 下次Agent读取已进化的策略
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  1. Agent调用 get_expert_profile()                       │
+│     → 读取攻击模式、防御弱点、风格指纹                     │
+│                                                          │
+│  2. Agent根据策略层生成辩论                               │
+│     → 选择最佳攻击角度                                    │
+│     → 针对对手弱点攻击                                    │
+│     → 模仿专家风格                                        │
+│                                                          │
+│  3. Python评分 + 提取新策略                               │
+│     → step4_score_and_extract()                          │
+│                                                          │
+│  4. Python融合升级策略层                                  │
+│     → FusionEngine: MERGE/ENHANCE/BRANCH                 │
+│                                                          │
+│  5. 下次训练，Agent读取已进化的策略                        │
+│     → 进化闭环完成                                        │
+└─────────────────────────────────────────────────────────┘
+```
+
+**进化效果**：
+| 训练前 | 训练后 |
+|:---|:---|
+| 攻击模式: 1个 | 攻击模式: 2个（MERGE） |
+| 防御成功率: 0% | 防御成功率: 15%（ENHANCE） |
+| 弱点: 哲学思辨型 | 弱点: 已修补 |
+
+---
+
+## 专家库
+
+**路径**：`expert-library/experts/{category}/{name}.md`
+
+**三层架构**：
+| 层级 | 内容 | 对应Persona要素 | 更新频率 |
+|:---|:---|:---|:---|
+| 灵魂层 | 核心信念、价值观、**禁忌话题** | Role + Objectives + **Constraints** | 永不改变 |
+| 策略层 | 攻击模式、防御弱点、风格指纹 | Domain Scope + Interaction Style | 训练升级 |
+| 素材层 | 精选发言、核心案例、金句、**失败案例** | Examples + **Uncertainty Handling** | 每次积累 |
+
+**Persona 7要素完整覆盖**：
+```
+1. Role（角色） → 灵魂层：代表身份
+2. Domain Scope（范围） → 策略层：分析框架
+3. Objectives（目标） → 灵魂层：价值排序
+4. Constraints（约束） → 灵魂层：禁忌话题 ✅ 新增
+5. Interaction Style（风格） → 策略层：交互策略
+6. Examples（示例） → 素材层：精选发言、金句
+7. Uncertainty Handling → 素材层：失败案例 ✅ 新增
+```
+
+---
+
+## 评估体系
+
+### 内容质量验证
+
+**函数**：`validate_content(debate_json)`
+
+**检查项**：
+| 指标 | 标准 |
+|:---|:---|
+| 引用数量 | ≥ 2 |
+| 发言长度 | ≥ 100字 |
+| 碰撞轮次 | ≥ 1 |
+
+**返回**：`{"passed": True, "quote_count": 3, "issues": []}`
+
+---
+
+### 训练效果对比
+
+**函数**：`compare_performance(expert_name, topic, old_score, new_score)`
+
+**流程**：
+```
+1. 同一话题，旧版本专家辩论 → 评分
+2. 同一话题，新版本专家辩论 → 评分
+3. 对比分数差异 → 提升证据
+```
+
+**返回**：`{"improved": True, "delta": 15.5, "analysis": ["评分提升: 65 → 80 (+15)"]}`
+
+---
+
+## 渲染器
+
+**路径**：`engine/render_roundtable.py`
+
+**用法**：
 ```bash
-# 快速训练（本地文件）
-python train.py 100
-
-# 深度训练（需启动知乎MCP）
-说："深度训练10轮"
+python render_roundtable.py content/书名_v8.json --output output/书名_圆桌洞见.html
 ```
 
 ---
 
-## 知乎MCP服务
-
-```bash
-cd D:\vibe_coding\zhengliu\zhihu-mcp
-python main.py --port 18061
-```
-
----
-
-*版本：V7.0 · 更新时间：2026-05-28*
+*版本：V9.0 · 更新时间：2026-05-31*

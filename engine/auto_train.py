@@ -35,7 +35,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tra
 
 from training.debate_arena import DebateArena, DebateTopic
 from training.fusion_engine import FusionEngine
-from scorer_v3 import score_v3
+from scorer import score_discussion, default_scores
 from training.llm_extractor import LLMStrategyExtractor
 
 EXPERT_LIBRARY = os.path.join(os.path.dirname(__file__), '..', 'expert-library')
@@ -161,17 +161,27 @@ def step3_build_debate_template(topic: Dict) -> str:
 
 
 def get_expert_profile(expert_name: str) -> Optional[Dict]:
-    """获取专家档案信息（机械操作）"""
+    """获取专家档案信息（包含策略层，形成进化闭环）
+
+    Agent读取策略层后，可以：
+    - 根据attack_modes选择攻击角度
+    - 根据defense_modes识别对手弱点
+    - 根据weaknesses避免被攻击
+    """
     arena = DebateArena(EXPERT_LIBRARY)
     profile = arena.get_expert_profile(expert_name)
     if not profile:
         return None
+
     return {
         'name': profile.name,
         'beliefs': profile.beliefs[:3],
         'values': profile.values[:2],
         'thinking_style': profile.thinking_style,
         'argument_style': profile.argument_style,
+        'attack_modes': profile.attack_modes[:3],
+        'defense_modes': profile.defense_modes[:3],
+        'weaknesses': profile.weaknesses[:2],
     }
 
 
@@ -189,8 +199,6 @@ def step4_score_and_extract(debate_json: Dict, scores: Dict = None) -> Dict:
     Returns:
         {"score": {"total": 68.5, "grade": "C"}, "extraction": {...}}
     """
-    from scorer_v3 import default_scores
-
     result = {'score': {}, 'extraction': {}}
 
     temp_path = os.path.join(MEMORY_DIR, '_temp_debate.json')
@@ -200,7 +208,7 @@ def step4_score_and_extract(debate_json: Dict, scores: Dict = None) -> Dict:
 
     try:
         scores_input = scores or default_scores()
-        result['score'] = score_v3(scores_input)
+        result['score'] = score_discussion(scores_input)
     except Exception as e:
         result['score'] = {'total': 0, 'grade': 'F', 'error': str(e)}
 
@@ -328,6 +336,98 @@ def print_homogeneity_report(issues: list):
     if not issues:
         print(f"\n  ✅ 无同质化问题")
     print(f"{'='*60}")
+
+
+# ═══════════════════════════════════════════════════════════════
+#  评估函数
+# ═══════════════════════════════════════════════════════════════
+
+def validate_content(debate_json: Dict) -> Dict:
+    """验证内容质量（机械操作）
+
+    检查项：
+    - 引用数量 ≥ 2
+    - 每轮发言长度 ≥ 100字
+    - 碰撞轮次 ≥ 1
+
+    Returns:
+        {"passed": True, "quote_count": 3, "issues": []}
+    """
+    issues = []
+    total_quotes = 0
+    total_speeches = 0
+    short_speeches = 0
+
+    for round_data in debate_json.get('rounds', []):
+        for speech in round_data.get('speeches', []):
+            total_speeches += 1
+            content = speech.get('content', '')
+            if len(content) < 100:
+                short_speeches += 1
+                issues.append(f"发言过短: {speech.get('expert', '未知')} ({len(content)}字)")
+
+            if speech.get('quote'):
+                total_quotes += 1
+
+    if total_quotes < 2:
+        issues.append(f"引用不足: 仅{total_quotes}个引用，需要≥2")
+
+    clash_count = len(debate_json.get('clash_rounds', []))
+    if clash_count < 1:
+        issues.append("缺少碰撞轮次")
+
+    return {
+        'passed': len(issues) == 0,
+        'quote_count': total_quotes,
+        'speech_count': total_speeches,
+        'short_speeches': short_speeches,
+        'clash_count': clash_count,
+        'issues': issues,
+    }
+
+
+def compare_performance(
+    expert_name: str,
+    topic: Dict,
+    old_score: float,
+    new_score: float,
+    old_extraction: Dict = None,
+    new_extraction: Dict = None,
+) -> Dict:
+    """对比训练前后表现（机械操作）
+
+    Agent传入：
+    - 旧版本辩论评分
+    - 新版本辩论评分
+    - 策略提取结果（可选）
+
+    Returns:
+        {"improved": True, "delta": 15.5, "analysis": "..."}
+    """
+    delta = new_score - old_score
+    improved = delta > 0
+
+    analysis = []
+    if improved:
+        analysis.append(f"评分提升: {old_score:.1f} → {new_score:.1f} (+{delta:.1f})")
+    else:
+        analysis.append(f"评分下降: {old_score:.1f} → {new_score:.1f} (-{abs(delta):.1f})")
+
+    if old_extraction and new_extraction:
+        old_attack_count = len(old_extraction.get('experts', {}).get(expert_name, {}).get('attack_strategy', {}))
+        new_attack_count = len(new_extraction.get('experts', {}).get(expert_name, {}).get('attack_strategy', {}))
+        if new_attack_count > old_attack_count:
+            analysis.append(f"攻击模式增加: {old_attack_count} → {new_attack_count}")
+
+    return {
+        'expert': expert_name,
+        'topic': topic.get('topic', ''),
+        'old_score': old_score,
+        'new_score': new_score,
+        'delta': round(delta, 1),
+        'improved': improved,
+        'analysis': analysis,
+    }
 
 
 # ═══════════════════════════════════════════════════════════════

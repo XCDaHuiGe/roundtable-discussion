@@ -24,7 +24,7 @@ WEIGHTS = {
 }
 
 
-def score_v3(scores: dict) -> dict:
+def score_discussion(scores: dict) -> dict:
     """
     计算6维度加权总分
 

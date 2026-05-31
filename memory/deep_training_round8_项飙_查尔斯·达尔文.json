@@ -1,0 +1,213 @@
+{
+  "训练轮次": "第8轮",
+  "话题": "项飙（附近社会学） vs 达尔文（进化论）",
+  "专家": [
+    "项飙",
+    "查尔斯·达尔文"
+  ],
+  "核心冲突": "真正的社会学要从\"附近\"开始，理解具体的生活 ↔ 自然选择是理解生命演化的底层逻辑",
+  "素材长度": 35,
+  "辩论": {
+    "topic": "项飙（附近社会学） vs 达尔文（进化论）",
+    "experts": [
+      "项飙",
+      "查尔斯·达尔文"
+    ],
+    "source_material": {
+      "has_material": true,
+      "material_preview": "附近社会学与进化论对比"
+    },
+    "rounds": [
+      {
+        "round_number": 1,
+        "round_name": "立场阐述",
+        "synthesis": {
+          "summary": "附近社会学关注具体生活世界，进化论关注生命演化规律",
+          "consensus": [
+            "都从具体观察出发"
+          ],
+          "disagreements": [
+            "研究尺度不同：微观社会 vs 宏观生物"
+          ]
+        },
+        "speeches": [
+          {
+            "expert": "项飙",
+            "stance": "真正的社会学要从\"附近\"开始，理解具体的生活",
+            "content": "\"附近\"不是描述社会构造的单位，而是人构造社会的工具。我们生活在一个高度抽象化的世界中——可以联系千里之外的陌生人，却对楼下住了十年的邻居一无所知。附近的消失，是现代性困境的核心。",
+            "evidence": [
+              "《把自己作为方法》",
+              "浙江村研究"
+            ],
+            "quote": "附近不是乡愁，而是基于现代性的诉求来抵制那些消解人际关系的力量。",
+            "emotion": "calm"
+          },
+          {
+            "expert": "查尔斯·达尔文",
+            "stance": "自然选择是理解生命演化的底层逻辑",
+            "content": "我在加拉帕戈斯群岛观察到雀鸟喙形的差异——不同岛屿的食物来源不同，适应不同食物的喙形被自然选择保留。自然选择是理解生命演化的底层逻辑，它解释了物种如何从共同祖先演化而来。",
+            "evidence": [
+              "加拉帕戈斯雀鸟",
+              "南美化石"
+            ],
+            "quote": "这一观点，自有其壮丽。",
+            "emotion": "serious"
+          }
+        ]
+      },
+      {
+        "round_number": 2,
+        "round_name": "相互质疑",
+        "synthesis": {
+          "summary": "项飙质疑进化论的抽象性，达尔文质疑附近理论的解释力",
+          "consensus": [],
+          "disagreements": [
+            "抽象理论vs具体观察的优先级"
+          ]
+        },
+        "speeches": [
+          {
+            "expert": "项飙",
+            "target": "查尔斯·达尔文",
+            "attack_type": "抽象性质疑",
+            "content": "达尔文，你的进化论是一个宏大的抽象框架。但我想问你：当人们生活在\"附近消失\"的状态中，他们能理解进化论吗？抽象的理论如果不能落地到具体的生活，是否只是学术游戏？",
+            "evidence": [
+              "附近消失导致理解困难",
+              "抽象理论与具体生活的断裂"
+            ]
+          },
+          {
+            "expert": "查尔斯·达尔文",
+            "target": "项飙",
+            "attack_type": "解释力质疑",
+            "content": "项飙，你的\"附近\"理论能解释什么？它是一个描述性概念，还是一个解释性理论？我的进化论解释了物种如何演化，你的附近理论解释了什么？",
+            "evidence": [
+              "进化论的预测能力",
+              "附近理论的描述性质"
+            ]
+          }
+        ]
+      },
+      {
+        "round_number": 3,
+        "round_name": "回应辩护",
+        "synthesis": {
+          "summary": "双方承认各自理论的定位不同",
+          "consensus": [
+            "描述和解释都是科学的一部分"
+          ],
+          "disagreements": [
+            "优先级不同"
+          ]
+        },
+        "speeches": [
+          {
+            "expert": "项飙",
+            "content": "你说附近理论只是描述——但描述本身就是力量。当人们能够准确描述自己的困境，改变就已经开始。附近的消失不是一个抽象概念，它描述的是每个人每天都能感受到的现实。",
+            "defense_success_rate": 78
+          },
+          {
+            "expert": "查尔斯·达尔文",
+            "content": "你说进化论是抽象框架——但抽象框架来自具体观察。我的理论始于对雀鸟喙形的观察，始于对化石的比较。抽象不是逃避具体，而是从具体中提炼规律。",
+            "defense_success_rate": 75
+          }
+        ]
+      },
+      {
+        "round_number": 4,
+        "round_name": "认知升级",
+        "synthesis": {
+          "summary": "项飙认识到抽象框架来自具体观察，达尔文认识到描述本身就是力量",
+          "consensus": [
+            "具体观察→抽象框架→回到具体"
+          ],
+          "disagreements": []
+        },
+        "speeches": [
+          {
+            "expert": "项飙",
+            "old_view": "抽象理论只是学术游戏",
+            "new_view": "抽象框架来自具体观察",
+            "trigger": "达尔文的质疑：抽象来自具体",
+            "content": "我承认，抽象框架来自具体观察。达尔文的进化论始于对雀鸟的观察。附近理论也需要从具体观察中提炼抽象框架，而不是停留在描述层面。"
+          },
+          {
+            "expert": "查尔斯·达尔文",
+            "old_view": "描述不是科学",
+            "new_view": "描述是科学的起点",
+            "trigger": "项飙的质疑：描述本身就是力量",
+            "content": "我承认，描述是科学的起点。我的进化论始于对雀鸟喙形的描述。描述不是逃避解释，而是解释的基础。"
+          }
+        ]
+      }
+    ],
+    "clash_rounds": [
+      {
+        "attacker": "项飙",
+        "target": "查尔斯·达尔文",
+        "attack_type": "抽象性攻击",
+        "attack_content": "抽象的理论如果不能落地到具体的生活，是否只是学术游戏？",
+        "counter_attack": "抽象来自具体，不是逃避具体。"
+      }
+    ],
+    "key_quotes": [
+      {
+        "expert": "项飙",
+        "quote": "抽象框架来自具体观察。",
+        "impact": "high"
+      },
+      {
+        "expert": "查尔斯·达尔文",
+        "quote": "描述是科学的起点。",
+        "impact": "high"
+      }
+    ]
+  },
+  "评分": {
+    "total": 16.2,
+    "grade": "F",
+    "dimensions": {
+      "reality_grounding": {
+        "score": 21,
+        "weight": 0.25,
+        "weighted": 5.25
+      },
+      "contradiction_handling": {
+        "score": 17,
+        "weight": 0.2,
+        "weighted": 3.4
+      },
+      "strategic_depth": {
+        "score": 18,
+        "weight": 0.2,
+        "weighted": 3.6
+      },
+      "cross_domain_transfer": {
+        "score": 15,
+        "weight": 0.15,
+        "weighted": 2.25
+      },
+      "novelty": {
+        "score": 9,
+        "weight": 0.1,
+        "weighted": 0.9
+      },
+      "personality_consistency": {
+        "score": 8,
+        "weight": 0.1,
+        "weighted": 0.8
+      }
+    }
+  },
+  "策略提取": {
+    "book_title": "未知",
+    "source_file": "D:\\vibe_coding\\zhengliu\\圆桌会议\\memory\\..\\engine\\..\\memory\\_temp_debate.json",
+    "experts": {},
+    "quality_matrix": {}
+  },
+  "专家升级": {
+    "项飙": true,
+    "查尔斯·达尔文": true
+  },
+  "保存时间": "2026-05-31T11:09:06.931240"
+}

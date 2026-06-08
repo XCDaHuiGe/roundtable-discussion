@@ -11,3 +11,4 @@ desktop.ini
 *.tmp
 .trae/
 .worktrees/
+training_runs/

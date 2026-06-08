@@ -21,6 +21,21 @@
 |:---|:---|:---|
 | **deep-training** | "深度训练N轮" | Agent生成辩论 → Python评分升级 |
 | **expert-training** | "训练专家 {名}" | 单专家档案训练 |
+| **v11-auto-training** | "热点训练" / "自动训练" / "从互联网找争议话题训练" | 实时联网找中文热点 → 3轮圆桌训练 → Markdown产物 → 标准更新专家库 |
+
+---
+
+## V11 自动训练入口
+
+当用户要求"热点训练"、"自动训练"、"从互联网找争议话题训练"时，使用 V11 流程：
+
+1. 按 `docs/V11_AGENT_RESEARCH_PROTOCOL.md` 实时联网采集。
+2. 生成 prepared JSON。
+3. 运行 `python engine/v11_cli.py --input <prepared.json> --base-dir .`。
+4. 检查 `training_runs/` 下的 `full.md` 和 `report.md`。
+5. 根据训练结果用标准更新模式更新专家库。
+
+训练日志不提交 GitHub；专家库更新可以提交。
 
 ---
 

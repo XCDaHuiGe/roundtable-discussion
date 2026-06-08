@@ -1,325 +1,338 @@
-# Roundtable Skill V11 Automatic Training Design
+# 圆桌 Skill V11 自动训练升级设计
 
-## Purpose
+## 目标
 
-Upgrade the roundtable skill from a mixed V7/V9/V10 generation workspace into an automatic training system that improves content quality, output stability, and expert-library evolution.
+把当前混合了 V7、V9、V10 多套口径的圆桌系统，升级成一个可以自动训练、自动评分、自动修正、自动沉淀专家能力的洞见系统。
 
-The system has two primary entry points:
+系统有两个主要入口：
 
-- Book insight generation from `epub`, `docx`, `txt`, `md`, and degraded `pdf` input.
-- Real-time Chinese internet hot-topic training across all domains, including social issues, business, technology, AI, education, workplace, international topics, culture, personal growth, and relationships.
+- **书籍圆桌洞见**：支持 `epub`、`docx`、`txt`、`md`，以及质量较差时兜底使用的 `pdf`。
+- **中文互联网热点训练**：覆盖社会、商业、科技、AI、教育、职场、国际、文化、个人成长、两性关系等全领域热点。
 
-Training outputs Markdown. HTML is only produced on an explicit publish request.
+训练阶段只产出 Markdown。只有当用户明确要求“发布”时，才生成 HTML。
 
-## Confirmed Product Direction
+## 已确认的产品方向
 
-The main product is book-based roundtable insight. Hot-topic training is the automatic practice loop. Expert-library evolution is the long-term memory layer.
+主产品是 **书籍圆桌洞见**。  
+热点训练是自动练兵场。  
+专家库进化是长期记忆层。
 
-The design optimizes for:
+这次升级优先解决：
 
-- Source-grounded structure.
-- High-quality insight rather than summary.
-- Strong expert conflict.
-- Stable training artifacts.
-- Standard expert-library updates after training.
-- Minimal manual intervention.
+- 内容有来源、有结构。
+- 不是复述，而是产出高质量洞见。
+- 专家之间有真实冲突。
+- 训练产物稳定可追溯。
+- 训练结束后标准更新专家库。
+- 尽量减少人工干预。
 
-## Current Project Issues
+## 当前项目问题
 
-The local workspace currently mixes several generations of the system:
+本地工作区现在混合了几代系统：
 
-- `README.md` still describes V7/V8 behavior.
-- `SKILL.md` describes V9 training and adds V10 HTML fragment normalization.
-- `engine/generate_v6.py` appears to be the most mature current book-output generator.
-- `engine/page-fragment-normalizer.py` is the V10 HTML fragment normalizer.
-- Some generated HTML outputs contain duplicate navigation scripts.
-- Training artifacts and publish artifacts are not cleanly separated.
+- `README.md` 还停留在 V7/V8 说明。
+- `SKILL.md` 一边描述 V9 训练，一边追加了 V10 HTML 片段规范化。
+- `engine/generate_v6.py` 看起来是当前最成熟的书籍输出生成器。
+- `engine/page-fragment-normalizer.py` 是 V10 HTML 片段规范化器。
+- 部分生成 HTML 存在重复导航脚本问题。
+- 训练产物和发布产物没有清晰分层。
 
-The upgrade should first establish workflow boundaries before adding more generators.
+升级时应该先建立清晰的工作流边界，再继续增加生成器。
 
-## Entry Points
+## 输入入口
 
-### Book Entry
+### 书籍入口
 
-Supported inputs:
+支持输入：
 
 - `epub`
 - `docx`
 - `txt`
 - `md`
-- `pdf` as a lower-confidence fallback
+- `pdf`，作为低置信度兜底格式
 
-The book pipeline extracts content into source text blocks, then performs a two-layer reading process:
+书籍流程先把内容抽取成可引用的文本块，然后做两层阅读：
 
-1. Full-book structure understanding.
-2. High-tension issue extraction.
+1. 全书结构理解。
+2. 高张力议题提取。
 
-JSON may exist as an intermediate artifact, but Markdown is the training output and HTML is a publish output.
+JSON 可以作为中间产物存在，但训练输出是 Markdown，HTML 是发布输出。
 
-### Hot-Topic Entry
+### 热点入口
 
-The hot-topic pipeline uses real-time online search. It should not default to a stale cache.
+热点流程使用实时联网搜索，不默认使用过期缓存。
 
-Available source types:
+可使用的信息源类型：
 
-- Fact confirmation: Bing, news, official statements, primary reports.
-- Dispute positions: Zhihu MCP, Weibo, Xiaohongshu, Bilibili, public accounts, comment-section sampling where available.
-- Deep interpretation: long-form articles, columns, research, historical cases.
-- Noise filtering: remove pure gossip, rumor, title bait, duplicated reposts, and topics without cognitive value.
+- **事实确认层**：Bing、新闻、官方说明、原始报道。
+- **争议立场层**：知乎 MCP、微博、小红书、B站、公众号、可用时抽样评论区。
+- **深度解释层**：长文、专栏、研究、历史案例。
+- **噪声过滤层**：剔除纯八卦、谣言、标题党、重复搬运、没有认知增量的话题。
 
-Default mode:
+默认标准模式：
 
 ```text
-real-time search -> 30 candidates -> 10 high-controversy topics -> top 3 topics -> 3 training iterations per topic
+实时搜索 -> 30 个候选 -> 10 个高争议话题 -> 前 3 个话题 -> 每个话题 3 轮训练迭代
 ```
 
-## Training Artifacts
+## 训练产物
 
-Every training run creates a local run directory:
+每次训练创建一个本地运行目录：
 
 ```text
 training_runs/YYYY-MM-DD-hot-topics/
 training_runs/YYYY-MM-DD-book-<slug>/
 ```
 
-Training run directories are local-only and must not be committed to GitHub.
+`training_runs/` 是本地训练目录，不提交 GitHub。
 
-Each trained topic produces two Markdown files:
+每个训练话题产出两个 Markdown 文件：
 
 ```text
 <topic-slug>.full.md
 <topic-slug>.report.md
 ```
 
-### Full Log
+### 完整训练日志 full.md
 
-`full.md` records the complete training trace:
+`full.md` 记录完整训练过程：
 
-- Source list and source confidence.
-- Controversy map.
-- Expert selection rationale.
-- Original draft for each round.
-- Agent scores for each round.
-- Lowest-scoring dimension.
-- Local rewrite instructions.
-- Rewritten content.
-- Final scoring summary.
-- Expert-library update suggestions.
+- 来源列表和来源置信度。
+- 争议地图。
+- 专家选择理由。
+- 每一轮原稿。
+- 每一轮 Agent 评分。
+- 最低分项。
+- 局部重写指令。
+- 重写后的内容。
+- 最终评分摘要。
+- 专家库更新建议。
 
-### Final Report
+### 精简最终报告 report.md
 
-`report.md` is the readable final result:
+`report.md` 是最终可读报告：
 
-- One-sentence topic definition.
-- Controversy map.
-- Selected experts.
-- Final 3-round roundtable.
-- Key insights.
-- Preserved tensions.
-- Practical judgment.
-- Score summary.
+- 话题一句话定义。
+- 争议地图。
+- 入选专家。
+- 最终 3 轮圆桌。
+- 关键洞见。
+- 保留的张力。
+- 现实判断。
+- 评分摘要。
 
-## Hot-Topic Candidate Scoring
+## 热点候选评分
 
-Candidate topics are scored on:
+热点候选按以下维度评分：
 
-- Heat.
-- Position split.
-- Value conflict.
-- Practical relevance.
-- Expert-decomposability.
-- Non-gossip signal.
+- 热度。
+- 立场分裂程度。
+- 价值冲突强度。
+- 现实相关性。
+- 专家可拆解性。
+- 非八卦、非噪声信号。
 
-A topic should only enter the top 10 if it can support at least two strong opposing positions and has enough factual material for grounded discussion.
+一个话题只有在能形成至少两个强立场，并且有足够事实材料支撑讨论时，才应该进入前 10。
 
-## Expert Selection
+## 专家选择
 
-Each topic uses 6 automatically selected experts.
+每个话题默认自动选择 6 位专家。
 
-The selector should satisfy these role slots where possible:
+尽量满足以下角色槽位：
 
-- Reality or institution expert.
-- Economic or business expert.
-- Psychology or human-nature expert.
-- Philosophy or ethics expert.
-- Contrarian, risk, or black-swan expert.
-- Chinese lived-context expert.
+- 现实/制度专家。
+- 经济/商业专家。
+- 心理/人性专家。
+- 哲学/伦理专家。
+- 反直觉/风险/黑天鹅专家。
+- 中文现实语境专家。
 
-Selection considers:
+选择专家时综合考虑：
 
-- Topic fit.
-- Conflict complementarity.
-- Recent appearance frequency.
-- Expert growth needs.
-- Persona stability.
+- 主题匹配度。
+- 冲突互补度。
+- 近期出场频率。
+- 专家成长需求。
+- 专家人格稳定性。
 
-The selector should avoid repeatedly using the same strongest experts unless they are unusually appropriate for the topic.
+除非特别适合，否则不要总是使用同一批最强专家。
 
-## Three-Round Training Structure
+## 三轮训练结构
 
-Each topic uses exactly three rounds.
+每个话题固定三轮。
 
-### Round 1: Position Modeling
+### 第 1 轮：立场建模
 
-Each expert states a core judgment grounded in facts or dispute materials.
+每位专家提出核心判断，并且必须挂靠事实或争议材料。
 
-No pure opinion is allowed. Each position must connect to either a confirmed fact, platform dispute, historical analogy, or named real-world mechanism.
+不允许纯观点。每个立场都必须连接到以下至少一种材料：
 
-### Round 2: Cross-Attack
+- 已确认事实。
+- 平台争议。
+- 历史类比。
+- 明确的现实机制。
 
-Experts quote or clearly reference another expert's position, then attack:
+### 第 2 轮：交叉攻击
 
-- Logical gaps.
-- Real-world blind spots.
-- Value bias.
-- Hidden cost.
-- Missing stakeholder.
+专家必须引用或明确指向另一位专家的观点，然后攻击：
 
-Generic disagreement is not enough.
+- 逻辑漏洞。
+- 现实盲区。
+- 价值偏见。
+- 隐藏代价。
+- 被忽视的利益相关者。
 
-### Round 3: Insight Reconstruction
+泛泛反对不算合格攻击。
 
-The system does not force consensus.
+### 第 3 轮：洞见重构
 
-The round should produce:
+系统不强行达成共识。
 
-- Collapsed assumptions.
-- Preserved tensions.
-- Higher-level explanatory frame.
-- Practical judgment boundaries.
-- What an ordinary person or organization should watch next.
+这一轮要产出：
 
-## Agent Scoring And Rewrite Loop
+- 哪些假设坍塌了。
+- 哪些张力仍然保留。
+- 更高阶的解释框架。
+- 现实判断的边界条件。
+- 普通人或组织接下来应该观察什么。
 
-After every generated round, an Agent reviewer scores the content.
+## Agent 评分与重写循环
 
-Scoring dimensions:
+每一轮生成后，由 Agent 评审内容。
 
-- Faithfulness and factual robustness.
-- Insight delta.
-- Conflict strength.
-- Expert persona consistency.
-- Structural coherence.
-- Practical usefulness.
-- Empty-talk rate.
+评分维度：
 
-The lowest-scoring dimension drives the next rewrite.
+- 忠实度/事实稳健性。
+- 洞见增量。
+- 冲突强度。
+- 专家人格一致性。
+- 结构合理性。
+- 现实可用性。
+- 空话率。
 
-If a dimension falls below threshold, the system performs an automatic local rewrite of the weak section. The original and rewritten versions both remain in `full.md`; only the final version enters `report.md`.
+每轮最低分项驱动下一步重写。
 
-Example rewrite rules:
+如果某个维度低于阈值，系统自动局部重写薄弱段落。原稿和重写稿都保留在 `full.md`，只有最终版本进入 `report.md`。
 
-- Low factual robustness: add source-grounded facts and remove unsupported claims.
-- Low insight delta: introduce a new explanatory frame rather than restating the dispute.
-- Low conflict strength: require direct attack against another position and name the specific flaw.
-- Low persona consistency: rewrite using the expert's known models and style.
-- Low practical usefulness: add cost, boundary conditions, and action judgment.
-- Low structural coherence: split, reorder, or retitle the argument.
+示例重写规则：
 
-## Expert-Library Evolution
+- 事实稳健性低：补充来源事实，删除无依据扩展。
+- 洞见增量低：提出新解释框架，而不是复述争议。
+- 冲突强度低：要求直接攻击另一立场，并指出具体漏洞。
+- 专家人格弱：按该专家的思维模型和语言风格重写。
+- 现实可用性低：增加代价、边界条件和行动判断。
+- 结构合理性低：拆段、重排或重命名论证结构。
 
-Training logs are not committed. Expert-library improvements may be committed because they are durable system memory.
+## 专家库进化
 
-Update mode is standard, not aggressive.
+训练日志不提交。专家库更新可以提交，因为它是系统长期记忆。
 
-### Layer Rules
+更新模式采用 **标准更新**，不激进。
 
-Soul layer:
+### 分层规则
 
-- Do not update automatically.
-- Only change with explicit user confirmation.
+#### 灵魂层
 
-Strategy layer:
+- 不自动更新。
+- 只有用户明确确认时才修改。
 
-- Update only when the candidate pattern is high-scoring, reusable, and persona-consistent.
-- Merge or enhance existing patterns instead of rewriting wholesale.
+#### 策略层
 
-Material layer:
+- 只有候选模式同时满足高分、可复用、符合专家人格时才更新。
+- 优先合并或增强现有模式，不整段重写。
 
-- Append high-scoring quotes, successful attacks, useful cases, and failure cases.
-- Every entry must include source training run, topic, round, score basis, and update type.
+#### 素材层
 
-Failure cases:
+- 追加高分发言、成功攻击、有用案例和失败案例。
+- 每条新增内容必须带来源训练 run、话题、轮次、评分依据、变更类型。
 
-- Record when an expert is effectively attacked or exposed.
-- Do not immediately convert one failure into a permanent weakness.
+#### 失败案例
 
-## Publish Branch
+- 当专家被有效攻击或暴露盲区时，记录失败案例。
+- 单次失败不能立即变成永久弱点。
 
-Publishing is separate from training.
+## 发布分支
 
-Only when the user explicitly asks to publish should the system generate HTML and update site files.
+发布和训练分开。
 
-Publish validation must check:
+只有当用户明确要求发布时，系统才生成 HTML 并更新站点文件。
 
-- No internal page scrolling.
-- Keyboard, wheel, click, and navigation-dot paging.
-- Exactly one navigation script.
-- No duplicate progress/dot creation.
-- Template validation passes.
-- Browser check passes when practical.
-- `README.md` and `index.html` are updated.
-- Git commit and push happen only for approved publish changes.
+发布验证必须检查：
 
-## Implementation Phases
+- 单页没有内部滚动。
+- 键盘、滚轮、点击、导航点四种翻页方式齐全。
+- 只有一套导航脚本。
+- 没有重复创建进度条或导航点。
+- 模板验证通过。
+- 可行时进行浏览器检查。
+- `README.md` 和 `index.html` 更新。
+- 只有经过确认的发布内容才提交和推送。
 
-### Phase 1: Markdown Training Protocol
+## 实施阶段
 
-Create the local training directory convention, `.gitignore` rule, and Markdown schemas for `full.md` and `report.md`.
+### 阶段 1：Markdown 训练协议
 
-Success criteria:
+建立本地训练目录约定、`.gitignore` 规则，以及 `full.md` 和 `report.md` 的 Markdown 结构。
 
-- Training artifacts are generated in a predictable local-only directory.
-- The format is stable enough for later scoring and expert-library updates.
+成功标准：
 
-### Phase 2: Real-Time Hot-Topic Search
+- 训练产物生成在稳定的本地目录。
+- 训练格式足够稳定，后续评分和专家库更新能读取。
 
-Implement the multi-source hot-topic candidate workflow.
+### 阶段 2：实时热点搜索
 
-Success criteria:
+实现多源热点候选工作流。
 
-- A standard run produces 30 candidates, 10 scored high-controversy topics, and 3 selected topics.
-- Each selected topic has source support and a controversy map.
+成功标准：
 
-### Phase 3: Roundtable Training Core
+- 标准运行能产出 30 个候选、10 个高争议话题、3 个入选话题。
+- 每个入选话题都有来源支撑和争议地图。
 
-Implement the 6-expert, 3-round training loop with Agent scoring and automatic local rewrites.
+### 阶段 3：圆桌训练内核
 
-Success criteria:
+实现 6 专家、3 轮训练循环，以及 Agent 评分和自动局部重写。
 
-- Each selected topic has three training iterations.
-- Each iteration identifies the lowest-scoring dimension and records a targeted improvement.
+成功标准：
 
-### Phase 4: Expert-Library Standard Update
+- 每个入选话题都有 3 轮训练。
+- 每轮都明确最低分项，并记录针对性改进。
 
-Implement safe expert-library updates from final training reports and full logs.
+### 阶段 4：专家库标准更新
 
-Success criteria:
+从最终报告和完整训练日志中安全更新专家库。
 
-- Material-layer updates are traceable.
-- Strategy-layer updates require high score, reuse value, and persona consistency.
-- Soul-layer content is unchanged.
+成功标准：
 
-### Phase 5: Publish Chain Cleanup
+- 素材层更新可追溯。
+- 策略层更新必须满足高分、可复用、人格一致。
+- 灵魂层保持不变。
 
-Clean up the HTML publishing path after the training system is stable.
+### 阶段 5：发布链路清理
 
-Success criteria:
+等训练系统稳定后，再清理 HTML 发布路径。
 
-- Generated HTML has one navigation system.
-- Slides obey the no-internal-scroll rule.
-- Publish updates README and index only when explicitly requested.
+成功标准：
 
-## Open Decisions
+- 生成 HTML 只有一套导航系统。
+- 每页遵守禁止内部滚动规则。
+- 只有用户明确要求发布时，才更新 README 和 index。
 
-No product-level blockers remain.
+## 待实施阶段确定的细节
 
-Implementation still needs exact thresholds for scoring and file schema details. These should be set in the implementation plan with simple defaults, then adjusted after the first real run.
+产品级方向已经确认，不存在阻塞。
 
-## Non-Goals
+实施计划里还需要确定：
 
-- Do not submit training logs to GitHub.
-- Do not auto-modify expert soul layers.
-- Do not generate HTML during normal training.
-- Do not rebuild the whole site before the Markdown training loop works.
-- Do not introduce broad abstractions before one end-to-end standard hot-topic run works.
+- 各评分维度的默认阈值。
+- `full.md` 和 `report.md` 的具体模板。
+- 专家库每条更新的字段格式。
+
+这些细节应该在实施计划里用简单默认值启动，然后通过第一次真实训练调整。
+
+## 非目标
+
+- 不把训练日志提交到 GitHub。
+- 不自动修改专家灵魂层。
+- 正常训练时不生成 HTML。
+- Markdown 训练循环跑通前，不重建整个站点。
+- 在一个标准热点训练端到端跑通前，不引入过度抽象。

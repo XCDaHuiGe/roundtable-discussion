@@ -2,7 +2,7 @@
 
 > **一键触发，自动执行复杂任务**
 
-## 当前版本：V9.0
+## 当前版本：V12.0
 
 **核心设计**：Agent=LLM，Python=机械操作
 
@@ -183,13 +183,34 @@ WebSearch搜索 → 知乎MCP采集 → 档案生成 → L1/L2/L3评估
 
 ## 渲染器
 
+### HTML-PPT 主链路（V12.0）
+
+**默认入口**：`engine/render_html_ppt_v12.py`
+
+**用法**：
+```bash
+python engine/render_html_ppt_v12.py content/书名_V8.json --output output/书名_圆桌洞见.html
+```
+
+**V12 规则**：
+
+- Python 负责页面计划、容量拆页、布局、渲染、验收。
+- Agent 不再直接生成任意 HTML 片段作为默认主链路。
+- 最终 HTML 只允许一套导航系统。
+- 禁止内部滚动，内容过长必须拆页。
+- 旧 `generate_v4/v5/v6` 和 `page-fragment-normalizer*` 是 legacy 参考，不再作为默认入口扩展。
+
+### 传统 JSON 渲染（legacy）
+
 **路径**：`engine/render_roundtable.py`
 
 **用法**：
 ```bash
-python render_roundtable.py content/书名_v8.json --output output/书名_圆桌洞见.html
+python engine/render_roundtable.py content/书名_v8.json --output output/书名_圆桌洞见_legacy.html
 ```
+
+传统渲染器只作为旧产物兼容入口，不作为 HTML-PPT 稳定出片主链路。
 
 ---
 
-*版本：V9.0 · 更新时间：2026-05-31*
+*版本：V12.0 · 更新时间：2026-06-09*

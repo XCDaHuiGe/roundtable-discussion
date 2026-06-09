@@ -64,3 +64,27 @@ def test_clash_reading_page_has_attack_defense_essence_and_takeaway():
     kinds = {block.kind for block in page.blocks}
     assert {"attack", "defense", "essence"} <= kinds
     assert page.takeaway
+
+
+def test_clash_reading_pairs_split_attack_and_counter_rows():
+    data = sample_data()
+    data["rounds"][0]["clash_rounds"] = [
+        {
+            "attacker": "尼采",
+            "target": "老子",
+            "attack_type": "现实矛盾",
+            "attack_content": "你的无为在弱者手中就是顺从。",
+        },
+        {
+            "counter_attack": "你误解了我的道。我不是禁止追问，而是提醒语言有限。",
+        },
+    ]
+
+    pages = plan_reading_pages(data)
+    clash_pages = [page for page in pages if page.page_type == "clash_reading"]
+
+    assert len(clash_pages) == 1
+    blocks = {block.kind: block for block in clash_pages[0].blocks}
+    assert blocks["attack"].title == "尼采"
+    assert blocks["defense"].title == "老子"
+    assert "语言有限" in blocks["defense"].text

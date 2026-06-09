@@ -8,11 +8,16 @@
 
 *{box-sizing:border-box}
 html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#f2eadc;color:#171717;font-family:"Noto Sans SC","Microsoft YaHei",Arial,sans-serif}
+body.theme-editorial{--paper:#f2eadc;--paper-soft:#fffaf4;--ink:#171717;--muted:#3f3b35;--accent:#982b23;--accent-2:#bf8a2e;--accent-3:#244d66}
+body.theme-obsidian{--paper:#111318;--paper-soft:#181b22;--ink:#f4efe4;--muted:#c9c2b4;--accent:#e05a47;--accent-2:#d7a64a;--accent-3:#78a8c8}
+body.theme-blueprint{--paper:#e8eef2;--paper-soft:#f8fbfd;--ink:#102233;--muted:#334b5c;--accent:#1d5f8f;--accent-2:#b17624;--accent-3:#7a2d3b}
 .slide{height:100vh;width:100vw;overflow:hidden;display:none;align-items:center;justify-content:center;padding:42px 70px;background:
 radial-gradient(circle at 8% 12%,rgba(154,42,33,.10),transparent 24%),
 linear-gradient(90deg,rgba(20,20,20,.045) 1px,transparent 1px),
 linear-gradient(180deg,rgba(20,20,20,.035) 1px,transparent 1px),
 #f2eadc;background-size:auto,44px 44px,44px 44px,auto}
+body.theme-obsidian .slide{background:radial-gradient(circle at 8% 12%,rgba(224,90,71,.16),transparent 24%),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(180deg,rgba(255,255,255,.035) 1px,transparent 1px),var(--paper);color:var(--ink)}
+body.theme-blueprint .slide{background:radial-gradient(circle at 84% 12%,rgba(29,95,143,.14),transparent 22%),linear-gradient(90deg,rgba(16,34,51,.06) 1px,transparent 1px),linear-gradient(180deg,rgba(16,34,51,.045) 1px,transparent 1px),var(--paper);color:var(--ink)}
 .slide.visible{display:flex}
 .reading-page{width:100%;height:100%;max-width:1280px;max-height:800px;display:grid;grid-template-rows:auto 1fr auto;gap:18px;overflow:hidden}
 .reading-header{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:38px;align-items:end;border-bottom:3px solid #171717;padding-bottom:14px}
@@ -76,16 +81,31 @@ linear-gradient(180deg,rgba(20,20,20,.035) 1px,transparent 1px),
 .nav-dot.active{background:#982b23;border-color:#982b23;transform:scale(1.28)}
 .nav-ui{position:fixed;left:24px;bottom:22px;z-index:60;display:flex;align-items:center;gap:12px;color:#49443d;font-family:Consolas,"SFMono-Regular",monospace;font-size:12px}
 .nav-btn{width:34px;height:34px;border:1px solid rgba(23,23,23,.35);background:#fffaf4;color:#171717;cursor:pointer}
+body.theme-obsidian .reading-header,body.theme-blueprint .reading-header{border-bottom-color:var(--ink)}
+body.theme-obsidian .reading-kicker,body.theme-obsidian .reading-block-label,body.theme-obsidian .takeaway-strip strong,body.theme-obsidian .brief-zone h3,body.theme-blueprint .reading-kicker,body.theme-blueprint .reading-block-label,body.theme-blueprint .takeaway-strip strong,body.theme-blueprint .brief-zone h3{color:var(--accent)}
+body.theme-obsidian .reading-thesis,body.theme-blueprint .reading-thesis{color:var(--muted);border-left-color:var(--accent)}
+body.theme-obsidian .reading-block-text,body.theme-blueprint .reading-block-text{color:var(--muted)}
+body.theme-obsidian .brief-zone,body.theme-obsidian .spectrum-map,body.theme-obsidian .stance-card,body.theme-obsidian .clash-side,body.theme-blueprint .brief-zone,body.theme-blueprint .spectrum-map,body.theme-blueprint .stance-card,body.theme-blueprint .clash-side{background:var(--paper-soft);border-color:rgba(120,120,120,.28)}
+body.theme-obsidian .issue-tree,body.theme-obsidian .clash-center,body.theme-obsidian .cover-side{background:#050608;color:var(--ink)}
+body.theme-blueprint .issue-tree,body.theme-blueprint .clash-center,body.theme-blueprint .cover-side{background:#102233;color:#f8fbfd}
+body.theme-obsidian .takeaway-strip,body.theme-blueprint .takeaway-strip{background:var(--paper-soft);border-color:var(--ink);color:var(--ink)}
+body.theme-obsidian .takeaway-strip p,body.theme-blueprint .takeaway-strip p{color:var(--ink)}
+body.theme-obsidian .cover-main,body.theme-blueprint .cover-main{border-color:var(--ink)}
+body.theme-obsidian .cover-thesis,body.theme-blueprint .cover-thesis{color:var(--muted)}
+body.theme-obsidian .nav-btn{background:#181b22;color:#f4efe4;border-color:rgba(255,255,255,.35)}
+body.theme-blueprint .nav-btn{background:#f8fbfd;color:#102233;border-color:rgba(16,34,51,.35)}
+body.theme-obsidian #progress,body.theme-obsidian .nav-dot.active,body.theme-blueprint #progress,body.theme-blueprint .nav-dot.active{background:var(--accent);border-color:var(--accent)}
+body.theme-obsidian .clash-center .reading-block-text,body.theme-blueprint .clash-center .reading-block-text{color:rgba(255,250,244,.82)}
 @media(max-width:900px){.slide{padding:34px 28px}.reading-header,.stance-spectrum,.clash-courtroom,.cover-page{grid-template-columns:1fr}.brief-grid,.stance-grid{grid-template-columns:1fr}.reading-title{font-size:32px}.cover-title{font-size:48px}.reading-page{max-height:820px}.cover-side{display:none}}
 
 </style>
 </head>
-<body>
+<body class="theme-editorial">
 <div id="progress"></div>
 <div id="navDots" class="nav-dots"></div>
 <div class="nav-ui">
   <button id="prevBtn" class="nav-btn" type="button" aria-label="上一页">&lt;</button>
-  <span id="counter">1 / 28</span>
+  <span id="counter">1 / 17</span>
   <button id="nextBtn" class="nav-btn" type="button" aria-label="下一页">&gt;</button>
 </div>
 <section class="slide visible" data-page-type="cover" data-layout="cover">
@@ -201,35 +221,10 @@ linear-gradient(180deg,rgba(20,20,20,.035) 1px,transparent 1px),
   <section class="clash-side defense"><article class="reading-block" data-kind="defense">
   <span class="reading-block-label">回应</span>
   <h3 class="reading-block-title">老子</h3>
-  <p class="reading-block-text"></p>
-</article></section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：现实矛盾。</p></footer>
-</div>
-</section>
-<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">攻击方 对 回应方：观点冲突</h1>
-    </div>
-    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
-  </header>
-  <main class="reading-body"><div class="clash-courtroom">
-  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
-  <span class="reading-block-label">攻击</span>
-  <h3 class="reading-block-title">攻击方</h3>
-  <p class="reading-block-text"></p>
-</article></section>
-  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">观点冲突</p></section>
-  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
-  <span class="reading-block-label">回应</span>
-  <h3 class="reading-block-title">回应方</h3>
   <p class="reading-block-text">尼采，你误解了我的&#x27;道&#x27;。我不是禁止追问，而是提醒：语言是有限的，真理不能用二元对立的概念来框定。你说超人创造规律——但超人的创造也必须符合天道。狂风不终朝，骤雨不终日——即使是超人，也不能违背自然规律。你的&#x27;强力意志&#x27;本身就是天地之道的一部分，而不是超越于道之上。</p>
 </article></section>
 </div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：观点冲突。</p></footer>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：现实矛盾。</p></footer>
 </div>
 </section>
 <section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
@@ -251,35 +246,10 @@ linear-gradient(180deg,rgba(20,20,20,.035) 1px,transparent 1px),
   <section class="clash-side defense"><article class="reading-block" data-kind="defense">
   <span class="reading-block-label">回应</span>
   <h3 class="reading-block-title">丁元英</h3>
-  <p class="reading-block-text"></p>
-</article></section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：逻辑漏洞。</p></footer>
-</div>
-</section>
-<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">攻击方 对 回应方：观点冲突</h1>
-    </div>
-    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
-  </header>
-  <main class="reading-body"><div class="clash-courtroom">
-  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
-  <span class="reading-block-label">攻击</span>
-  <h3 class="reading-block-title">攻击方</h3>
-  <p class="reading-block-text"></p>
-</article></section>
-  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">观点冲突</p></section>
-  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
-  <span class="reading-block-label">回应</span>
-  <h3 class="reading-block-title">回应方</h3>
   <p class="reading-block-text">马克思，你说规律是资本的规律——但规律不是由谁定义的，它是客观存在的。你说农民遵循了被剥削的规律——对，这正是因为他们没有认识规律。如果他们认识到了自己在资本链条中的位置，就会做出改变。扶贫不是靠同情和道德，而是靠让他们认识到经济规律并利用它。这就是我在王庙村做的事——不是给鱼…</p>
 </article></section>
 </div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：观点冲突。</p></footer>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：逻辑漏洞。</p></footer>
 </div>
 </section>
 <section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
@@ -301,35 +271,10 @@ linear-gradient(180deg,rgba(20,20,20,.035) 1px,transparent 1px),
   <section class="clash-side defense"><article class="reading-block" data-kind="defense">
   <span class="reading-block-label">回应</span>
   <h3 class="reading-block-title">丁元英</h3>
-  <p class="reading-block-text"></p>
-</article></section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：人性弱点。</p></footer>
-</div>
-</section>
-<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">攻击方 对 回应方：观点冲突</h1>
-    </div>
-    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
-  </header>
-  <main class="reading-body"><div class="clash-courtroom">
-  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
-  <span class="reading-block-label">攻击</span>
-  <h3 class="reading-block-title">攻击方</h3>
-  <p class="reading-block-text"></p>
-</article></section>
-  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">观点冲突</p></section>
-  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
-  <span class="reading-block-label">回应</span>
-  <h3 class="reading-block-title">回应方</h3>
   <p class="reading-block-text">尼采，你说我是超人——但我恰恰是最不&#x27;超人&#x27;的人。我做的事很简单：王庙村有生产力，乐圣有市场网络，我只是让这两者对接。我没有创造规律，我只是发现了已经存在的可能性。你说的超人创造规律——那是英雄主义的幻觉。真正的力量是认识自己的渺小。你不知道的是，扶贫计划从一开始我就知道结果是…</p>
 </article></section>
 </div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：观点冲突。</p></footer>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：人性弱点。</p></footer>
 </div>
 </section>
 <section class="slide" data-page-type="roundtable_reading" data-layout="stance_spectrum">
@@ -398,35 +343,10 @@ linear-gradient(180deg,rgba(20,20,20,.035) 1px,transparent 1px),
   <section class="clash-side defense"><article class="reading-block" data-kind="defense">
   <span class="reading-block-label">回应</span>
   <h3 class="reading-block-title">丁元英</h3>
-  <p class="reading-block-text"></p>
-</article></section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：人性弱点。</p></footer>
-</div>
-</section>
-<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">攻击方 对 回应方：观点冲突</h1>
-    </div>
-    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
-  </header>
-  <main class="reading-body"><div class="clash-courtroom">
-  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
-  <span class="reading-block-label">攻击</span>
-  <h3 class="reading-block-title">攻击方</h3>
-  <p class="reading-block-text"></p>
-</article></section>
-  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">观点冲突</p></section>
-  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
-  <span class="reading-block-label">回应</span>
-  <h3 class="reading-block-title">回应方</h3>
   <p class="reading-block-text">尼采，你说我虚伪——但你所谓的&#x27;超人&#x27;不就是自己创造价值、自己承担责任吗？我承认：我策划了这一切，我预测了林雨峰可能的结局，我依然选择了做。因为我知道：我不做，王庙村依然是王庙村，乐圣依然是乐圣，什么都不会改变。你说规律是借口——我说规律是边界。我只能在边界内行动。我没有创造规…</p>
 </article></section>
 </div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：观点冲突。</p></footer>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：人性弱点。</p></footer>
 </div>
 </section>
 <section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
@@ -448,35 +368,10 @@ linear-gradient(180deg,rgba(20,20,20,.035) 1px,transparent 1px),
   <section class="clash-side defense"><article class="reading-block" data-kind="defense">
   <span class="reading-block-label">回应</span>
   <h3 class="reading-block-title">丁元英</h3>
-  <p class="reading-block-text"></p>
-</article></section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：现实矛盾。</p></footer>
-</div>
-</section>
-<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">攻击方 对 回应方：观点冲突</h1>
-    </div>
-    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
-  </header>
-  <main class="reading-body"><div class="clash-courtroom">
-  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
-  <span class="reading-block-label">攻击</span>
-  <h3 class="reading-block-title">攻击方</h3>
-  <p class="reading-block-text"></p>
-</article></section>
-  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">观点冲突</p></section>
-  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
-  <span class="reading-block-label">回应</span>
-  <h3 class="reading-block-title">回应方</h3>
   <p class="reading-block-text">马克思，你说边界是资本设定的——我同意。但打破边界的代价是什么？我说过：扶贫的本质不是改变生产关系，是让穷人先活下来。如果你连温饱都没有，谈什么生产关系？你说我让村民从依附土地变成依附市场——但市场至少给了他们可能性。我不否认这是一个渐进改良而不是革命——但在当下的条件下，这是…</p>
 </article></section>
 </div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：观点冲突。</p></footer>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：现实矛盾。</p></footer>
 </div>
 </section>
 <section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
@@ -498,35 +393,10 @@ linear-gradient(180deg,rgba(20,20,20,.035) 1px,transparent 1px),
   <section class="clash-side defense"><article class="reading-block" data-kind="defense">
   <span class="reading-block-label">回应</span>
   <h3 class="reading-block-title">尼采</h3>
-  <p class="reading-block-text"></p>
-</article></section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：逻辑漏洞。</p></footer>
-</div>
-</section>
-<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">攻击方 对 回应方：观点冲突</h1>
-    </div>
-    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
-  </header>
-  <main class="reading-body"><div class="clash-courtroom">
-  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
-  <span class="reading-block-label">攻击</span>
-  <h3 class="reading-block-title">攻击方</h3>
-  <p class="reading-block-text"></p>
-</article></section>
-  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">观点冲突</p></section>
-  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
-  <span class="reading-block-label">回应</span>
-  <h3 class="reading-block-title">回应方</h3>
   <p class="reading-block-text">老子，你说人和自然是一体的——但你说的&#x27;一体&#x27;和丁元英说的&#x27;遵循规律&#x27;有什么区别？你们都在消解个体的责任。水没有选择，但人有。如果你把丁元英的选择等同于水往低处流，那你就是在为一切行为提供哲学辩护。你说道才是根本——但&#x27;道&#x27;这个字，也可以成为暴行的遮羞布。多少统治者用&#x27;天道&#x27;来…</p>
 </article></section>
 </div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：观点冲突。</p></footer>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：逻辑漏洞。</p></footer>
 </div>
 </section>
 <section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
@@ -548,35 +418,10 @@ linear-gradient(180deg,rgba(20,20,20,.035) 1px,transparent 1px),
   <section class="clash-side defense"><article class="reading-block" data-kind="defense">
   <span class="reading-block-label">回应</span>
   <h3 class="reading-block-title">马克思</h3>
-  <p class="reading-block-text"></p>
-</article></section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：现实矛盾。</p></footer>
-</div>
-</section>
-<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">攻击方 对 回应方：观点冲突</h1>
-    </div>
-    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
-  </header>
-  <main class="reading-body"><div class="clash-courtroom">
-  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
-  <span class="reading-block-label">攻击</span>
-  <h3 class="reading-block-title">攻击方</h3>
-  <p class="reading-block-text"></p>
-</article></section>
-  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">观点冲突</p></section>
-  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
-  <span class="reading-block-label">回应</span>
-  <h3 class="reading-block-title">回应方</h3>
   <p class="reading-block-text">芒格，你说我的理论不落地？那你告诉我：丁元英的方案落地的结果是什么？林雨峰自杀，格律诗被收购，王庙村村民的收入有没有持续增长——你在书中看到后续了吗？一个不改变生产关系、只在分配层面做调整的方案，注定是短命的。你说我的理论造成灾难——那是因为那些实践歪曲了我的理论。真正的马克思…</p>
 </article></section>
 </div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：观点冲突。</p></footer>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：现实矛盾。</p></footer>
 </div>
 </section>
 <section class="slide" data-page-type="roundtable_reading" data-layout="stance_spectrum">
@@ -645,35 +490,10 @@ linear-gradient(180deg,rgba(20,20,20,.035) 1px,transparent 1px),
   <section class="clash-side defense"><article class="reading-block" data-kind="defense">
   <span class="reading-block-label">回应</span>
   <h3 class="reading-block-title">丁元英</h3>
-  <p class="reading-block-text"></p>
-</article></section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：逻辑漏洞。</p></footer>
-</div>
-</section>
-<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">攻击方 对 回应方：观点冲突</h1>
-    </div>
-    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
-  </header>
-  <main class="reading-body"><div class="clash-courtroom">
-  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
-  <span class="reading-block-label">攻击</span>
-  <h3 class="reading-block-title">攻击方</h3>
-  <p class="reading-block-text"></p>
-</article></section>
-  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">观点冲突</p></section>
-  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
-  <span class="reading-block-label">回应</span>
-  <h3 class="reading-block-title">回应方</h3>
   <p class="reading-block-text">尼采，你说我躲在规律后面——但你有没有想过？承认规律的存在不是逃避责任，而是减少幻觉。祈求救世主是逃避，但承认自己只是规律中的一个变量不是逃避——是清醒。我没有说&#x27;规律决定一切&#x27;——我说&#x27;规律是边界，我在边界内选择&#x27;。林雨峰的死，我负有责任——我选择了做这件事，我知道他可能自杀…</p>
 </article></section>
 </div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：观点冲突。</p></footer>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：逻辑漏洞。</p></footer>
 </div>
 </section>
 <section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
@@ -695,35 +515,10 @@ linear-gradient(180deg,rgba(20,20,20,.035) 1px,transparent 1px),
   <section class="clash-side defense"><article class="reading-block" data-kind="defense">
   <span class="reading-block-label">回应</span>
   <h3 class="reading-block-title">丁元英</h3>
-  <p class="reading-block-text"></p>
-</article></section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：现实矛盾。</p></footer>
-</div>
-</section>
-<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">攻击方 对 回应方：观点冲突</h1>
-    </div>
-    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
-  </header>
-  <main class="reading-body"><div class="clash-courtroom">
-  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
-  <span class="reading-block-label">攻击</span>
-  <h3 class="reading-block-title">攻击方</h3>
-  <p class="reading-block-text"></p>
-</article></section>
-  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">观点冲突</p></section>
-  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
-  <span class="reading-block-label">回应</span>
-  <h3 class="reading-block-title">回应方</h3>
   <p class="reading-block-text">马克思，你说我应该追问规律的来源——但你有没有想过，追问一个规律&#x27;为什么存在&#x27;和&#x27;如何利用这个规律&#x27;是两个不同的问题。一个溺水的人，你要先给他救生圈才能给他讲水的流体力学。王庙村的人需要先赚钱，才谈得上批判资本逻辑。我不是在当资本的代理人——我是在用资本的工具来完成我的目的。你…</p>
 </article></section>
 </div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：观点冲突。</p></footer>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：现实矛盾。</p></footer>
 </div>
 </section>
 <section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
@@ -745,35 +540,10 @@ linear-gradient(180deg,rgba(20,20,20,.035) 1px,transparent 1px),
   <section class="clash-side defense"><article class="reading-block" data-kind="defense">
   <span class="reading-block-label">回应</span>
   <h3 class="reading-block-title">尼采</h3>
-  <p class="reading-block-text"></p>
-</article></section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：现实矛盾。</p></footer>
-</div>
-</section>
-<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">攻击方 对 回应方：观点冲突</h1>
-    </div>
-    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
-  </header>
-  <main class="reading-body"><div class="clash-courtroom">
-  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
-  <span class="reading-block-label">攻击</span>
-  <h3 class="reading-block-title">攻击方</h3>
-  <p class="reading-block-text"></p>
-</article></section>
-  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">观点冲突</p></section>
-  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
-  <span class="reading-block-label">回应</span>
-  <h3 class="reading-block-title">回应方</h3>
   <p class="reading-block-text">老子，你说超人哲学是宗教——但你有没有注意到，你的指责本身就在维护一种&#x27;秩序&#x27;？你在维护一个&#x27;人不能超越自然&#x27;的秩序。你说人不能超越自然——但人的本质就是超越自然。你没有发明火吗？你没有建造城市吗？你没有写《道德经》吗？所有这些都在超越自然。你说&#x27;道法自然&#x27;——但写《道德经》本…</p>
 </article></section>
 </div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：观点冲突。</p></footer>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：现实矛盾。</p></footer>
 </div>
 </section>
 <section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
@@ -795,35 +565,10 @@ linear-gradient(180deg,rgba(20,20,20,.035) 1px,transparent 1px),
   <section class="clash-side defense"><article class="reading-block" data-kind="defense">
   <span class="reading-block-label">回应</span>
   <h3 class="reading-block-title">马克思</h3>
-  <p class="reading-block-text"></p>
-</article></section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：逻辑漏洞。</p></footer>
-</div>
-</section>
-<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">攻击方 对 回应方：观点冲突</h1>
-    </div>
-    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
-  </header>
-  <main class="reading-body"><div class="clash-courtroom">
-  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
-  <span class="reading-block-label">攻击</span>
-  <h3 class="reading-block-title">攻击方</h3>
-  <p class="reading-block-text"></p>
-</article></section>
-  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">观点冲突</p></section>
-  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
-  <span class="reading-block-label">回应</span>
-  <h3 class="reading-block-title">回应方</h3>
   <p class="reading-block-text">芒格，你说我的理论没有中间方案——你错了。我的理论恰恰提供了中间方案：合作社、工人自治、公有制的多种形式。你说丁元英&#x27;做了点什么&#x27;——但他做的只是加固了资本逻辑。你说我只有&#x27;终极真理&#x27;——但你看王庙村的后续：格律诗被乐圣收购了，农户回到了依附状态。丁元英的&#x27;中间方案&#x27;比什么都不…</p>
 </article></section>
 </div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：观点冲突。</p></footer>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：逻辑漏洞。</p></footer>
 </div>
 </section>
 <section class="slide" data-page-type="summary_reading" data-layout="reading_brief_4zone">

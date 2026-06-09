@@ -36,3 +36,15 @@ def test_render_reading_html_keeps_v12_navigation_contract():
     assert 'id="navDots"' in html
     assert "setTimeout(()=>wheelTimer=null,400)" in html
     assert ".slide{height:100vh" in html.replace(" ", "")
+
+
+def test_render_reading_html_supports_multiple_visual_themes():
+    page = ReadingPage(page_type="summary_reading", title="总结", takeaway="结论", blocks=[
+        ReadingBlock("takeaway", "结论一", "内容"),
+        ReadingBlock("takeaway", "结论二", "内容"),
+        ReadingBlock("takeaway", "结论三", "内容"),
+    ])
+
+    assert 'class="theme-editorial"' in render_reading_html([page], theme="editorial")
+    assert 'class="theme-obsidian"' in render_reading_html([page], theme="obsidian")
+    assert 'class="theme-blueprint"' in render_reading_html([page], theme="blueprint")

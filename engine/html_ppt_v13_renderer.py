@@ -10,11 +10,16 @@ from engine.html_ppt_v13 import ReadingBlock, ReadingPage
 READING_CSS = """
 *{box-sizing:border-box}
 html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#f2eadc;color:#171717;font-family:"Noto Sans SC","Microsoft YaHei",Arial,sans-serif}
+body.theme-editorial{--paper:#f2eadc;--paper-soft:#fffaf4;--ink:#171717;--muted:#3f3b35;--accent:#982b23;--accent-2:#bf8a2e;--accent-3:#244d66}
+body.theme-obsidian{--paper:#111318;--paper-soft:#181b22;--ink:#f4efe4;--muted:#c9c2b4;--accent:#e05a47;--accent-2:#d7a64a;--accent-3:#78a8c8}
+body.theme-blueprint{--paper:#e8eef2;--paper-soft:#f8fbfd;--ink:#102233;--muted:#334b5c;--accent:#1d5f8f;--accent-2:#b17624;--accent-3:#7a2d3b}
 .slide{height:100vh;width:100vw;overflow:hidden;display:none;align-items:center;justify-content:center;padding:42px 70px;background:
 radial-gradient(circle at 8% 12%,rgba(154,42,33,.10),transparent 24%),
 linear-gradient(90deg,rgba(20,20,20,.045) 1px,transparent 1px),
 linear-gradient(180deg,rgba(20,20,20,.035) 1px,transparent 1px),
 #f2eadc;background-size:auto,44px 44px,44px 44px,auto}
+body.theme-obsidian .slide{background:radial-gradient(circle at 8% 12%,rgba(224,90,71,.16),transparent 24%),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(180deg,rgba(255,255,255,.035) 1px,transparent 1px),var(--paper);color:var(--ink)}
+body.theme-blueprint .slide{background:radial-gradient(circle at 84% 12%,rgba(29,95,143,.14),transparent 22%),linear-gradient(90deg,rgba(16,34,51,.06) 1px,transparent 1px),linear-gradient(180deg,rgba(16,34,51,.045) 1px,transparent 1px),var(--paper);color:var(--ink)}
 .slide.visible{display:flex}
 .reading-page{width:100%;height:100%;max-width:1280px;max-height:800px;display:grid;grid-template-rows:auto 1fr auto;gap:18px;overflow:hidden}
 .reading-header{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:38px;align-items:end;border-bottom:3px solid #171717;padding-bottom:14px}
@@ -78,6 +83,21 @@ linear-gradient(180deg,rgba(20,20,20,.035) 1px,transparent 1px),
 .nav-dot.active{background:#982b23;border-color:#982b23;transform:scale(1.28)}
 .nav-ui{position:fixed;left:24px;bottom:22px;z-index:60;display:flex;align-items:center;gap:12px;color:#49443d;font-family:Consolas,"SFMono-Regular",monospace;font-size:12px}
 .nav-btn{width:34px;height:34px;border:1px solid rgba(23,23,23,.35);background:#fffaf4;color:#171717;cursor:pointer}
+body.theme-obsidian .reading-header,body.theme-blueprint .reading-header{border-bottom-color:var(--ink)}
+body.theme-obsidian .reading-kicker,body.theme-obsidian .reading-block-label,body.theme-obsidian .takeaway-strip strong,body.theme-obsidian .brief-zone h3,body.theme-blueprint .reading-kicker,body.theme-blueprint .reading-block-label,body.theme-blueprint .takeaway-strip strong,body.theme-blueprint .brief-zone h3{color:var(--accent)}
+body.theme-obsidian .reading-thesis,body.theme-blueprint .reading-thesis{color:var(--muted);border-left-color:var(--accent)}
+body.theme-obsidian .reading-block-text,body.theme-blueprint .reading-block-text{color:var(--muted)}
+body.theme-obsidian .brief-zone,body.theme-obsidian .spectrum-map,body.theme-obsidian .stance-card,body.theme-obsidian .clash-side,body.theme-blueprint .brief-zone,body.theme-blueprint .spectrum-map,body.theme-blueprint .stance-card,body.theme-blueprint .clash-side{background:var(--paper-soft);border-color:rgba(120,120,120,.28)}
+body.theme-obsidian .issue-tree,body.theme-obsidian .clash-center,body.theme-obsidian .cover-side{background:#050608;color:var(--ink)}
+body.theme-blueprint .issue-tree,body.theme-blueprint .clash-center,body.theme-blueprint .cover-side{background:#102233;color:#f8fbfd}
+body.theme-obsidian .takeaway-strip,body.theme-blueprint .takeaway-strip{background:var(--paper-soft);border-color:var(--ink);color:var(--ink)}
+body.theme-obsidian .takeaway-strip p,body.theme-blueprint .takeaway-strip p{color:var(--ink)}
+body.theme-obsidian .cover-main,body.theme-blueprint .cover-main{border-color:var(--ink)}
+body.theme-obsidian .cover-thesis,body.theme-blueprint .cover-thesis{color:var(--muted)}
+body.theme-obsidian .nav-btn{background:#181b22;color:#f4efe4;border-color:rgba(255,255,255,.35)}
+body.theme-blueprint .nav-btn{background:#f8fbfd;color:#102233;border-color:rgba(16,34,51,.35)}
+body.theme-obsidian #progress,body.theme-obsidian .nav-dot.active,body.theme-blueprint #progress,body.theme-blueprint .nav-dot.active{background:var(--accent);border-color:var(--accent)}
+body.theme-obsidian .clash-center .reading-block-text,body.theme-blueprint .clash-center .reading-block-text{color:rgba(255,250,244,.82)}
 @media(max-width:900px){.slide{padding:34px 28px}.reading-header,.stance-spectrum,.clash-courtroom,.cover-page{grid-template-columns:1fr}.brief-grid,.stance-grid{grid-template-columns:1fr}.reading-title{font-size:32px}.cover-title{font-size:48px}.reading-page{max-height:820px}.cover-side{display:none}}
 """
 
@@ -141,7 +161,8 @@ NAVIGATION_JS = """
 """
 
 
-def render_reading_html(pages: list[ReadingPage], title: str = "圆桌洞见") -> str:
+def render_reading_html(pages: list[ReadingPage], title: str = "圆桌洞见", theme: str = "editorial") -> str:
+    theme = theme if theme in {"editorial", "obsidian", "blueprint"} else "editorial"
     slides = "\n".join(_render_slide(page, index) for index, page in enumerate(pages))
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -153,7 +174,7 @@ def render_reading_html(pages: list[ReadingPage], title: str = "圆桌洞见") -
 {READING_CSS}
 </style>
 </head>
-<body>
+<body class="theme-{escape(theme)}">
 <div id="progress"></div>
 <div id="navDots" class="nav-dots"></div>
 <div class="nav-ui">

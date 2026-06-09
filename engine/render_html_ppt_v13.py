@@ -15,10 +15,10 @@ from engine.html_ppt_v13_renderer import render_reading_html
 from engine.validate_html_ppt_v13 import validate_reading_html
 
 
-def render_file(input_path: Path, output_path: Path) -> int:
+def render_file(input_path: Path, output_path: Path, theme: str = "editorial") -> int:
     data = _read_json(input_path)
     pages = plan_reading_pages(data)
-    html = render_reading_html(pages, title=data.get("title", "圆桌洞见"))
+    html = render_reading_html(pages, title=data.get("title", "圆桌洞见"), theme=theme)
     result = validate_reading_html(html)
     if not result.ok:
         print("HTML-PPT V13 validation failed")
@@ -45,6 +45,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Render a readable HTML-PPT V13 deck")
     parser.add_argument("json_path", help="Input roundtable JSON path")
     parser.add_argument("--output", "-o", help="Output HTML path")
+    parser.add_argument(
+        "--theme",
+        choices=["editorial", "obsidian", "blueprint"],
+        default="editorial",
+        help="Visual theme: editorial=杂志报告, obsidian=高端暗黑, blueprint=蓝图分析",
+    )
     args = parser.parse_args()
 
     input_path = Path(args.json_path)
@@ -53,7 +59,7 @@ def main() -> int:
         return 1
 
     output_path = Path(args.output) if args.output else Path("output") / f"{input_path.stem}_v13.html"
-    return render_file(input_path, output_path)
+    return render_file(input_path, output_path, theme=args.theme)
 
 
 if __name__ == "__main__":

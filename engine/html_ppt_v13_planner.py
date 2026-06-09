@@ -17,7 +17,7 @@ def plan_reading_pages(data: dict[str, Any]) -> list[ReadingPage]:
 
     for round_index, round_data in enumerate(data.get("rounds") or [], start=1):
         pages.append(_roundtable_page(round_data, round_index))
-        for clash_index, clash in enumerate(round_data.get("clash_rounds") or [], start=1):
+        for clash_index, clash in enumerate(_paired_clashes(round_data.get("clash_rounds") or []), start=1):
             pages.append(_clash_page(clash, round_index, clash_index))
 
     pages.append(_summary_page(data))
@@ -97,6 +97,27 @@ def _clash_page(clash: dict[str, Any], round_index: int, clash_index: int) -> Re
         ],
         meta={"round_index": round_index, "clash_index": clash_index},
     )
+
+
+def _paired_clashes(clashes: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    paired: list[dict[str, Any]] = []
+    index = 0
+    while index < len(clashes):
+        clash = clashes[index]
+        if "attack_content" not in clash and "counter_attack" in clash:
+            index += 1
+            continue
+
+        merged = dict(clash)
+        next_clash = clashes[index + 1] if index + 1 < len(clashes) else {}
+        if "counter_attack" in next_clash and not next_clash.get("attack_content"):
+            merged["counter_attack"] = next_clash.get("counter_attack", "")
+            index += 2
+        else:
+            index += 1
+
+        paired.append(merged)
+    return paired
 
 
 def _summary_page(data: dict[str, Any]) -> ReadingPage:

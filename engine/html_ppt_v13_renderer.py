@@ -9,52 +9,76 @@ from engine.html_ppt_v13 import ReadingBlock, ReadingPage
 
 READING_CSS = """
 *{box-sizing:border-box}
-html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#f4efe4;color:#1d1d1b;font-family:"Noto Sans SC","Microsoft YaHei",Arial,sans-serif}
-.slide{height:100vh;width:100vw;overflow:hidden;display:none;align-items:center;justify-content:center;padding:54px 72px;background:#f4efe4}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#f2eadc;color:#171717;font-family:"Noto Sans SC","Microsoft YaHei",Arial,sans-serif}
+.slide{height:100vh;width:100vw;overflow:hidden;display:none;align-items:center;justify-content:center;padding:42px 70px;background:
+radial-gradient(circle at 8% 12%,rgba(154,42,33,.10),transparent 24%),
+linear-gradient(90deg,rgba(20,20,20,.045) 1px,transparent 1px),
+linear-gradient(180deg,rgba(20,20,20,.035) 1px,transparent 1px),
+#f2eadc;background-size:auto,44px 44px,44px 44px,auto}
 .slide.visible{display:flex}
-.reading-page{width:100%;height:100%;max-width:1280px;max-height:760px;display:grid;grid-template-rows:auto 1fr auto;gap:20px;overflow:hidden}
-.reading-header{display:grid;grid-template-columns:1fr minmax(260px,420px);gap:32px;align-items:end;border-bottom:2px solid #1d1d1b;padding-bottom:16px}
-.reading-kicker{font-size:13px;letter-spacing:.16em;color:#9f2f25;font-weight:800}
-.reading-title{font-size:42px;line-height:1.12;margin:5px 0 0;font-weight:900;letter-spacing:0}
-.reading-thesis{font-size:18px;line-height:1.55;margin:0;color:#49443d}
+.reading-page{width:100%;height:100%;max-width:1280px;max-height:800px;display:grid;grid-template-rows:auto 1fr auto;gap:18px;overflow:hidden}
+.reading-header{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:38px;align-items:end;border-bottom:3px solid #171717;padding-bottom:14px}
+.reading-kicker{font-size:12px;letter-spacing:.18em;color:#982b23;font-weight:900}
+.reading-title{font-size:clamp(32px,3.6vw,52px);line-height:1.03;margin:6px 0 0;font-weight:950;letter-spacing:0}
+.reading-thesis{font-size:18px;line-height:1.6;margin:0;color:#3f3b35;border-left:5px solid #982b23;padding-left:18px}
 .reading-body{min-height:0;overflow:hidden}
-.reading-block{border-top:1px solid rgba(29,29,27,.2);padding:13px 0 0;min-height:0}
-.reading-block-title{font-size:18px;font-weight:850;margin-bottom:7px;line-height:1.25}
-.reading-block-label{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.08em;color:#9f2f25;margin-bottom:7px}
-.reading-block-text{font-size:15px;line-height:1.55;color:#35312c;margin:0}
-.takeaway-strip{border:2px solid #1d1d1b;background:#fffaf0;padding:14px 18px;display:grid;grid-template-columns:110px 1fr;gap:18px;align-items:center;overflow:hidden}
-.takeaway-strip strong{font-size:16px;color:#9f2f25}
-.takeaway-strip p{font-size:17px;line-height:1.45;margin:0;font-weight:700}
-.brief-grid{display:grid;grid-template-columns:1.05fr 1fr;grid-template-rows:1fr 1fr;gap:20px;height:100%}
-.brief-zone{background:#fffaf0;border:1px solid rgba(29,29,27,.24);padding:18px;overflow:hidden}
-.brief-zone h3{font-size:18px;margin:0 0 12px}
+.reading-block{border-top:1px solid rgba(23,23,23,.18);padding:11px 0 0;min-height:0}
+.reading-block-title{font-size:18px;font-weight:900;margin:0 0 7px;line-height:1.25}
+.reading-block-label{display:inline-block;font-size:11px;font-weight:900;letter-spacing:.10em;color:#982b23;margin-bottom:7px}
+.reading-block-text{font-size:14px;line-height:1.55;color:#2f2b27;margin:0}
+.takeaway-strip{border:3px solid #171717;background:#fffaf4;padding:12px 18px;display:grid;grid-template-columns:120px 1fr;gap:18px;align-items:center;overflow:hidden;box-shadow:8px 8px 0 rgba(23,23,23,.10)}
+.takeaway-strip strong{font-size:15px;color:#982b23;letter-spacing:.08em}
+.takeaway-strip p{font-size:17px;line-height:1.42;margin:0;font-weight:900}
+.brief-grid{display:grid;grid-template-columns:1.12fr .88fr;grid-template-rows:1fr 1fr;gap:16px;height:100%}
+.brief-zone{background:rgba(255,250,244,.86);border:1px solid rgba(23,23,23,.20);padding:18px 20px;overflow:hidden;box-shadow:0 18px 40px rgba(36,25,12,.07)}
+.brief-zone:nth-child(1){border-left:7px solid #982b23}
+.brief-zone:nth-child(2){border-left:7px solid #bf8a2e}
+.brief-zone:nth-child(3){border-left:7px solid #244d66}
+.brief-zone:nth-child(4){border-left:7px solid #171717}
+.brief-zone h3{font-size:15px;margin:0 0 12px;letter-spacing:.10em;color:#982b23}
 .brief-zone .reading-block{border-top:0;padding-top:0;margin-bottom:12px}
-.stance-spectrum{height:100%;display:grid;grid-template-columns:32% 1fr;gap:24px}
-.issue-tree{background:#fffaf0;border:1px solid rgba(29,29,27,.24);padding:20px;overflow:hidden}
-.issue-tree h3{font-size:22px;margin:0 0 12px}
+.stance-spectrum{height:100%;display:grid;grid-template-columns:30% 1fr;gap:22px}
+.issue-tree{background:#171717;color:#fffaf4;padding:24px;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between}
+.issue-tree h3{font-size:24px;margin:0 0 14px;color:#fffaf4}
 .issue-tree p{font-size:16px;line-height:1.6;margin:0;color:#35312c}
-.spectrum-map{position:relative;background:linear-gradient(90deg,rgba(159,47,37,.08),rgba(191,150,70,.08),rgba(58,91,124,.09));border:1px solid rgba(29,29,27,.24);padding:20px;overflow:hidden}
-.spectrum-axis{height:4px;background:#1d1d1b;margin:24px 10px 18px;position:relative}
-.spectrum-axis::before,.spectrum-axis::after{position:absolute;top:-26px;font-size:13px;font-weight:800;color:#1d1d1b}
+.issue-tree p,.issue-tree .reading-block-text{color:rgba(255,250,244,.82)}
+.issue-tree .reading-block{border-top-color:rgba(255,250,244,.26)}
+.spectrum-map{position:relative;background:rgba(255,250,244,.72);border:1px solid rgba(23,23,23,.18);padding:18px 22px;overflow:hidden;box-shadow:0 18px 46px rgba(36,25,12,.08)}
+.spectrum-axis{height:5px;background:#171717;margin:24px 8px 18px;position:relative}
+.spectrum-axis::before,.spectrum-axis::after{position:absolute;top:-28px;font-size:13px;font-weight:900;color:#171717}
 .spectrum-axis::before{content:"文化解释";left:0}
 .spectrum-axis::after{content:"结构解释";right:0}
-.stance-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.stance-card{background:rgba(255,250,240,.88);border-left:4px solid #b07d2b;padding:12px;overflow:hidden;min-height:104px}
-.stance-card .reading-block-title{font-size:17px}
-.stance-card .reading-block-text{font-size:14px;line-height:1.48}
-.clash-courtroom{height:100%;display:grid;grid-template-columns:1fr 260px 1fr;gap:18px;align-items:stretch}
-.clash-side,.clash-center{background:#fffaf0;border:1px solid rgba(29,29,27,.24);padding:20px;overflow:hidden}
-.clash-side.attack{border-top:6px solid #9f2f25}
-.clash-side.defense{border-top:6px solid #3a5b7c}
-.clash-center{display:flex;flex-direction:column;justify-content:center;text-align:center;border:2px solid #1d1d1b}
-.clash-center h3{font-size:22px;margin:0 0 10px}
-#progress{position:fixed;left:0;top:0;height:3px;width:0;background:#9f2f25;z-index:50;transition:width .35s ease}
+.stance-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:10px;height:calc(100% - 47px)}
+.stance-card{background:#fffaf4;border-left:5px solid #bf8a2e;padding:12px 14px;overflow:hidden;min-height:0}
+.stance-card .reading-block-title{font-size:16px;margin-bottom:5px}
+.stance-card .reading-block-label{font-size:10px;margin-bottom:5px}
+.stance-card .reading-block-text{font-size:13px;line-height:1.42}
+.clash-courtroom{height:100%;display:grid;grid-template-columns:1fr 220px 1fr;gap:18px;align-items:stretch}
+.clash-side,.clash-center{background:#fffaf4;border:1px solid rgba(23,23,23,.20);padding:24px;overflow:hidden;box-shadow:0 18px 46px rgba(36,25,12,.07)}
+.clash-side.attack{border-top:8px solid #982b23}
+.clash-side.defense{border-top:8px solid #244d66}
+.clash-center{display:flex;flex-direction:column;justify-content:center;text-align:center;border:3px solid #171717;background:#171717;color:#fffaf4;box-shadow:8px 8px 0 rgba(23,23,23,.12)}
+.clash-center h3{font-size:24px;margin:0 0 12px;color:#fffaf4}
+.clash-center .reading-block-text{color:rgba(255,250,244,.82)}
+.cover-page{width:100%;height:100%;max-width:1280px;max-height:800px;display:grid;grid-template-columns:1fr 360px;gap:44px;overflow:hidden}
+.cover-main{display:flex;flex-direction:column;justify-content:center;border-top:8px solid #171717;border-bottom:3px solid #171717}
+.cover-kicker{font-size:13px;letter-spacing:.22em;color:#982b23;font-weight:950;margin-bottom:22px}
+.cover-title{font-size:clamp(58px,7.6vw,106px);line-height:.98;margin:0 0 28px;font-weight:950;letter-spacing:-.02em}
+.cover-thesis{font-size:24px;line-height:1.5;color:#332f2a;max-width:760px;margin:0}
+.cover-side{background:#171717;color:#fffaf4;padding:34px;display:grid;grid-template-rows:auto 1fr auto;overflow:hidden;box-shadow:14px 14px 0 rgba(23,23,23,.12)}
+.cover-meta{font-size:15px;line-height:1.8;color:rgba(255,250,244,.82)}
+.cover-stats{display:grid;grid-template-columns:1fr;gap:14px;align-self:center}
+.cover-stat{border-top:1px solid rgba(255,250,244,.28);padding-top:12px}
+.cover-stat b{display:block;font-size:44px;line-height:1;font-weight:950;color:#f2eadc}
+.cover-stat span{font-size:13px;letter-spacing:.12em;color:#d49a3a}
+.cover-takeaway{font-size:17px;line-height:1.5;font-weight:850;color:#fffaf4}
+#progress{position:fixed;left:0;top:0;height:4px;width:0;background:#982b23;z-index:50;transition:width .35s ease}
 .nav-dots{position:fixed;right:24px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:60}
-.nav-dot{width:10px;height:10px;border-radius:50%;border:1px solid rgba(29,29,27,.45);background:rgba(29,29,27,.12);cursor:pointer;padding:0}
-.nav-dot.active{background:#9f2f25;border-color:#9f2f25;transform:scale(1.25)}
+.nav-dot{width:9px;height:9px;border-radius:50%;border:1px solid rgba(23,23,23,.45);background:rgba(23,23,23,.12);cursor:pointer;padding:0}
+.nav-dot.active{background:#982b23;border-color:#982b23;transform:scale(1.28)}
 .nav-ui{position:fixed;left:24px;bottom:22px;z-index:60;display:flex;align-items:center;gap:12px;color:#49443d;font-family:Consolas,"SFMono-Regular",monospace;font-size:12px}
-.nav-btn{width:34px;height:34px;border:1px solid rgba(29,29,27,.35);background:#fffaf0;color:#1d1d1b;cursor:pointer}
-@media(max-width:900px){.slide{padding:42px 34px}.reading-header,.stance-spectrum,.clash-courtroom{grid-template-columns:1fr}.brief-grid,.stance-grid{grid-template-columns:1fr}.reading-title{font-size:32px}.reading-page{max-height:820px}}
+.nav-btn{width:34px;height:34px;border:1px solid rgba(23,23,23,.35);background:#fffaf4;color:#171717;cursor:pointer}
+@media(max-width:900px){.slide{padding:34px 28px}.reading-header,.stance-spectrum,.clash-courtroom,.cover-page{grid-template-columns:1fr}.brief-grid,.stance-grid{grid-template-columns:1fr}.reading-title{font-size:32px}.cover-title{font-size:48px}.reading-page{max-height:820px}.cover-side{display:none}}
 """
 
 
@@ -146,6 +170,12 @@ def render_reading_html(pages: list[ReadingPage], title: str = "圆桌洞见") -
 
 def _render_slide(page: ReadingPage, index: int) -> str:
     visible = " visible" if index == 0 else ""
+    if page.page_type == "cover":
+        body = _render_cover(page)
+        return (
+            f'<section class="slide{visible}" data-page-type="{escape(page.page_type)}" '
+            f'data-layout="cover">\n{body}\n</section>'
+        )
     renderer = _LAYOUT_RENDERERS.get(page.layout, _render_reading_brief)
     body = renderer(page)
     return (
@@ -165,6 +195,25 @@ def _render_shell(page: ReadingPage, body: str) -> str:
   </header>
   <main class="reading-body">{body}</main>
   <footer class="takeaway-strip"><strong>最终洞见</strong><p>{escape(page.takeaway)}</p></footer>
+</div>"""
+
+
+def _render_cover(page: ReadingPage) -> str:
+    stats = "".join(
+        f'<div class="cover-stat"><b>{escape(block.text)}</b><span>{escape(block.title)}</span></div>'
+        for block in page.blocks[:3]
+    )
+    return f"""<div class="cover-page">
+  <main class="cover-main">
+    <div class="cover-kicker">READING DECK / 圆桌洞见</div>
+    <h1 class="cover-title reading-title">{escape(page.title)}</h1>
+    <p class="cover-thesis">{escape(page.thesis)}</p>
+  </main>
+  <aside class="cover-side">
+    <div class="cover-meta">文化属性 / 杀富济贫 / 天道与规律 / 专家轮辩</div>
+    <div class="cover-stats">{stats}</div>
+    <div class="cover-takeaway">{escape(page.takeaway)}</div>
+  </aside>
 </div>"""
 
 
@@ -211,7 +260,7 @@ def _render_block(block: ReadingBlock) -> str:
     return f"""<article class="reading-block" data-kind="{escape(block.kind)}">
   {label}
   <h3 class="reading-block-title">{escape(block.title)}</h3>
-  <p class="reading-block-text">{escape(block.text)}</p>
+  <p class="reading-block-text">{escape(_clip_text(block.text, 140))}</p>
 </article>"""
 
 
@@ -220,7 +269,7 @@ def _render_stance_card(block: ReadingBlock) -> str:
     return f"""<article class="reading-block stance-card" data-kind="{escape(block.kind)}">
   {label}
   <h3 class="reading-block-title">{escape(block.title)}</h3>
-  <p class="reading-block-text">{escape(block.text)}</p>
+  <p class="reading-block-text">{escape(_clip_text(block.text, 105))}</p>
 </article>"""
 
 
@@ -229,6 +278,13 @@ def _split_blocks(blocks: list[ReadingBlock], count: int) -> list[list[ReadingBl
     for index, block in enumerate(blocks):
         zones[index % count].append(block)
     return zones
+
+
+def _clip_text(text: str, limit: int) -> str:
+    clean = " ".join(str(text).split())
+    if len(clean) <= limit:
+        return clean
+    return clean[: limit - 1].rstrip("，。；、 ") + "…"
 
 
 _LAYOUT_RENDERERS: dict[str, Callable[[ReadingPage], str]] = {

@@ -2,7 +2,7 @@
 
 > **一键触发，自动执行复杂任务**
 
-## 当前版本：V12.0
+## 当前版本：V13.0
 
 **核心设计**：Agent=LLM，Python=机械操作
 
@@ -183,9 +183,25 @@ WebSearch搜索 → 知乎MCP采集 → 档案生成 → L1/L2/L3评估
 
 ## 渲染器
 
-### HTML-PPT 主链路（V12.0）
+### 阅读型 HTML-PPT 主链路（V13.0）
 
-**默认入口**：`engine/render_html_ppt_v12.py`
+**默认质量入口**：`engine/render_html_ppt_v13.py`
+
+**用法**：
+```bash
+python engine/render_html_ppt_v13.py content/书名_V8.json --output output/书名_圆桌洞见.html
+```
+
+**V13 目标**：
+
+- 给人看的 PPT，不是给人讲的 PPT。
+- 无 GPT 也能生成高信息密度阅读型页面。
+- 页面合同、布局白名单、设计 token、质量验收共同保证输出下限。
+- 生图/配图按规则降级：真实素材优先，信息图优先，宁可无图也不放错图。
+
+### HTML-PPT 稳定底座（V12.0）
+
+**入口**：`engine/render_html_ppt_v12.py`
 
 **用法**：
 ```bash
@@ -213,4 +229,4 @@ python engine/render_roundtable.py content/书名_v8.json --output output/书名
 
 ---
 
-*版本：V12.0 · 更新时间：2026-06-09*
+*版本：V13.0 · 更新时间：2026-06-09*

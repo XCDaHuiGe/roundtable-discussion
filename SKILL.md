@@ -229,4 +229,58 @@ python engine/render_roundtable.py content/书名_v8.json --output output/书名
 
 ---
 
+### Agent 直接生成 HTML 片段（V10.0 · legacy）
+
+**Skill**：`.trae/skills/roundtable-html-ppt/SKILL.md`
+
+**核心设计**：
+```
+Agent 生成 HTML 片段 → Python 规范化 → 输出完整 HTML
+```
+
+**流程**：
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         Agent (LLM)                              │
+│  1. 读取风格Skill (roundtable-html-ppt)                          │
+│  2. 生成HTML片段 (带 data-page-type)                             │
+│  3. 输出完整HTML (包含 <head> + CSS + 内容)                       │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                      Python 规范化器                              │
+│  1. lxml 解析HTML                                                │
+│  2. 根据 data-page-type 做不同规范化                             │
+│  3. 自动注入翻页JS (键盘/滚轮/点击/导航点)                         │
+│  4. 添加 data-block-id 属性                                      │
+│  5. 输出最终HTML                                                 │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                        输出 HTML                                  │
+│  output/书名_圆桌洞见.html                                        │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**页面类型**：
+| 类型 | 用途 |
+|:---|:---|
+| `cover` | 封面 |
+| `experts` | 专家阵容 |
+| `round` | 讨论轮次 |
+| `clash` | 碰撞页 |
+| `insight` | 洞见页 |
+| `summary` | 总结页 |
+
+**规范化器**：`engine/page-fragment-normalizer.py`
+
+**用法**：
+```bash
+python page-fragment-normalizer.py --input fragment.html --output output.html --title "圆桌洞见"
+```
+
+此链路只作为历史实验和局部参考，不再作为默认主链路。默认 HTML-PPT 产出走 V13。
+
+---
+
 *版本：V13.0 · 更新时间：2026-06-09*

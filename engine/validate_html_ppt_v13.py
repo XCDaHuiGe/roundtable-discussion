@@ -5,6 +5,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 import argparse
 import re
+import sys
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from engine.validate_html_ppt_v12 import validate_html
 

@@ -224,6 +224,7 @@ def _render_cover(page: ReadingPage) -> str:
         f'<div class="cover-stat"><b>{escape(block.text)}</b><span>{escape(block.title)}</span></div>'
         for block in page.blocks[:3]
     )
+    cover_meta = page.meta.get("cover_meta", "专家轮辩 / 核心争议")
     return f"""<div class="cover-page">
   <main class="cover-main">
     <div class="cover-kicker">READING DECK / 圆桌洞见</div>
@@ -231,7 +232,7 @@ def _render_cover(page: ReadingPage) -> str:
     <p class="cover-thesis">{escape(page.thesis)}</p>
   </main>
   <aside class="cover-side">
-    <div class="cover-meta">文化属性 / 杀富济贫 / 天道与规律 / 专家轮辩</div>
+    <div class="cover-meta">{escape(cover_meta)}</div>
     <div class="cover-stats">{stats}</div>
     <div class="cover-takeaway">{escape(page.takeaway)}</div>
   </aside>

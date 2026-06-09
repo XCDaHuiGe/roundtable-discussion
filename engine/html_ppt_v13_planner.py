@@ -25,6 +25,14 @@ def plan_reading_pages(data: dict[str, Any]) -> list[ReadingPage]:
 
 
 def _cover_page(data: dict[str, Any]) -> ReadingPage:
+    experts = data.get("experts") or []
+    rounds = data.get("rounds") or []
+    insights = data.get("insights") or []
+    # build dynamic meta from expert names and round topics
+    expert_names = [e.get("name", "") for e in experts[:6] if e.get("name")]
+    topics = [r.get("topic", "") for r in rounds[:3] if r.get("topic")]
+    meta_parts = expert_names + topics
+    meta_text = " / ".join(meta_parts) if meta_parts else "专家轮辩 / 核心争议"
     return ReadingPage(
         page_type="cover",
         title=data.get("title", "圆桌洞见"),
@@ -32,10 +40,11 @@ def _cover_page(data: dict[str, Any]) -> ReadingPage:
         takeaway="本 deck 以阅读型结构呈现核心争议、专家立场和最终洞见。",
         layout="reading_brief_4zone",
         blocks=[
-            ReadingBlock("metric", "专家", str(len(data.get("experts") or []))),
-            ReadingBlock("metric", "轮次", str(len(data.get("rounds") or []))),
-            ReadingBlock("metric", "洞见", str(len(data.get("insights") or []))),
+            ReadingBlock("metric", "专家", str(len(experts))),
+            ReadingBlock("metric", "轮次", str(len(rounds))),
+            ReadingBlock("metric", "洞见", str(len(insights))),
         ],
+        meta={"cover_meta": summarize_text(meta_text, 60)},
     )
 
 
@@ -122,15 +131,31 @@ def _paired_clashes(clashes: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 def _summary_page(data: dict[str, Any]) -> ReadingPage:
     questions = data.get("open_questions") or []
-    blocks = [
-        ReadingBlock("takeaway", "结论一", "文化、制度、资本和行动共同塑造命运。"),
-        ReadingBlock("takeaway", "结论二", "强势文化不是口号，而是识别规律并承担代价。"),
-        ReadingBlock("question", "开放问题", questions[0] if questions else "读者如何把洞见放回自己的处境？"),
-    ]
+    insights = data.get("insights") or []
+    blocks: list[ReadingBlock] = []
+
+    # use actual insights as takeaway blocks
+    for insight in insights[:2]:
+        title = insight.get("insight_title", "结论")
+        text = insight.get("insight_content", insight.get("attack_content", ""))
+        blocks.append(ReadingBlock("takeaway", title, text))
+
+    # add open question
+    blocks.append(ReadingBlock(
+        "question", "开放问题",
+        questions[0] if questions else "读者如何把洞见放回自己的处境？",
+    ))
+
+    # use first insight content as thesis if available
+    first_insight_text = ""
+    if insights:
+        first_insight_text = insights[0].get("insight_content", "")
+    thesis = summarize_text(first_insight_text, 90) if first_insight_text else "不要寻找救世主，要识别自己的解释框架。"
+
     return ReadingPage(
         page_type="summary_reading",
         title="读者最终带走什么",
-        thesis="不要寻找救世主，要识别自己的解释框架。",
+        thesis=thesis,
         takeaway="阅读完成后，至少应带走一个可复用的判断框架。",
         layout="reading_brief_4zone",
         blocks=blocks,

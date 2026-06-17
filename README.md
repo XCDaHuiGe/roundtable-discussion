@@ -135,4 +135,17 @@ python main.py --port 18061
 
 ---
 
+## Research OS 升级路径
+
+项目正在从圆桌 HTML 生成器升级为认知蒸馏型圆桌研究引擎。第一阶段新增 `CognitiveModel.v1`、V8 适配器、认知质量门、圆桌质量门和 Research OS HTML 输出入口：
+
+```bash
+python engine/render_cognitive_html.py content/书名_V8.json --output output/书名_ResearchOS.html
+```
+
+设计规格见：`docs/superpowers/specs/2026-06-17-roundtable-research-os-upgrade-design.md`。
+实施计划见：`docs/superpowers/plans/2026-06-17-roundtable-research-os-upgrade.md`。
+
+---
+
 *更新时间：2026-05-28 · 版本：V7.0*

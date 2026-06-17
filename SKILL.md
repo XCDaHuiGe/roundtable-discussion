@@ -283,4 +283,23 @@ python page-fragment-normalizer.py --input fragment.html --output output.html --
 
 ---
 
+## Research OS 认知蒸馏主链路（V14 第一阶段）
+
+**入口**：`engine/render_cognitive_html.py`
+
+**用途**：把现有 V8 JSON 先适配为 `CognitiveModel.v1`，再生成认知页面族，最后复用 V13 阅读型渲染器输出 HTML。
+
+```bash
+python engine/render_cognitive_html.py content/书名_V8.json --output output/书名_ResearchOS.html
+```
+
+**边界**：
+
+- Agent 负责补齐问题轴、作者位移、根秩、问答链等认知字段。
+- Python 负责适配、验证、页面计划、HTML 渲染。
+- V8 输入缺少深度字段时给出 warning，不静默伪造。
+- 最终 HTML 仍必须满足无内部滚动和四种翻页规则。
+
+---
+
 *版本：V13.0 · 更新时间：2026-06-09*

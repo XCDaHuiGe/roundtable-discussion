@@ -15,10 +15,17 @@ READING_LAYOUTS = {
 
 READING_PAGE_TYPES = {
     "cover",
+    "core_question",
+    "baseline_delta",
+    "rank_map",
+    "response_graph",
+    "qa",
+    "insight",
     "insight_reading",
     "roundtable_reading",
     "clash_reading",
     "summary_reading",
+    "ending",
 }
 
 

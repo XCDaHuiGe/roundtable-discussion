@@ -1,3 +1,4 @@
+from engine.cognitive_model.adapters import from_v8
 from engine.cognitive_model.schema import (
     BookSpine,
     CognitiveModel,
@@ -16,4 +17,5 @@ __all__ = [
     "RootRank",
     "Roundtable",
     "SourceUnderstanding",
+    "from_v8",
 ]

@@ -35,8 +35,8 @@ python engine/generate_roundtable.py --batch content/topics.json
 |:---|:---|:---|
 | **快速训练** | `python train.py 100` | 使用本地JSON文件训练专家 |
 | **深度训练** | 说"深度训练10轮" | WebSearch + 知乎MCP + LLM辩论 |
-| **V4引擎** | `python engine/training/orchestrator.py --engine v4` | 融合增强式升级 |
-| **V3引擎** | `python engine/training/orchestrator.py --engine v3` | 进化式升级（默认） |
+| **融合增强训练** | `python engine/training/orchestrator.py --engine v4` | 内部策略：融合增强式升级 |
+| **进化训练** | `python engine/training/orchestrator.py --engine v3` | 内部策略：进化式升级（默认） |
 
 ### 2. 专家库管理
 
@@ -50,9 +50,8 @@ python engine/generate_roundtable.py --batch content/topics.json
 
 | 功能 | 命令 | 说明 |
 |:---|:---|:---|
-| **生成讨论JSON** | `python engine/generate_roundtable.py` | 生成V8格式讨论 |
-| **渲染HTML** | `python engine/render_v8.py content/某书_v8.json` | 生成圆桌洞见HTML |
-| **选择模板** | `python engine/template_selector.py --list` | 16个PPT模板 |
+| **生成讨论JSON** | `python engine/generate_roundtable.py` | 生成圆桌内容数据 |
+| **生成HTML-PPT** | `python engine/render_roundtable_os.py content/某书.json --output output/某书_圆桌洞见.html` | 统一默认出片入口 |
 
 ### 4. 知乎MCP服务
 
@@ -118,7 +117,17 @@ http://127.0.0.1:18061/mcp
 
 ---
 
-## PPT模板选择
+## HTML-PPT 统一主链路
+
+```bash
+python engine/render_roundtable_os.py content/某书.json --output output/某书_圆桌洞见.html
+```
+
+圆桌 OS 是一个整体，不需要在使用时选择内部版本。历史入口只用于兼容旧产物和迁移参考；默认发布一律走统一主链路。
+
+## Legacy PPT模板选择
+
+以下模板选择器只用于历史模板参考，不作为默认 HTML-PPT 出片链路。
 
 ### 话题匹配规则
 
@@ -164,14 +173,14 @@ A: 说"训练专家 新专家名"，系统会自动采集内容生成档案
 
 ---
 
-## 版本说明
+## 系统演进说明
 
-| 版本 | 说明 |
+| 阶段 | 说明 |
 |:---|:---|
-| V1.0 | 基础训练系统 |
-| V3.0 | 进化式升级 + 对抗自训练 |
-| V4.0 | 融合增强式 + AI策略提取 + 严格评分 |
-| V5.0 | 深度训练引擎 + WebSearch + 知乎MCP |
+| 基础训练 | 本地训练系统 |
+| 进化训练 | 进化式升级 + 对抗自训练 |
+| 融合增强 | AI策略提取 + 严格评分 |
+| 深度训练 | WebSearch + 知乎MCP |
 
 ---
 

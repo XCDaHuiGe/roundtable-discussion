@@ -2,9 +2,9 @@
 
 > **一键触发，自动执行复杂任务**
 
-## 当前版本：V13.0
+## 当前系统：圆桌 OS
 
-**核心设计**：Agent=LLM，Python=机械操作
+**核心设计**：Agent 负责理解与生成，Python 负责结构化、质量门、页面规划和 HTML-PPT 渲染。
 
 | 角色 | 职责 |
 |:---|:---|
@@ -183,21 +183,33 @@ WebSearch搜索 → 知乎MCP采集 → 档案生成 → L1/L2/L3评估
 
 ## 渲染器
 
-### 阅读型 HTML-PPT 主链路（V13.0）
+### 圆桌 OS 统一主链路
 
-**默认质量入口**：`engine/render_html_ppt_v13.py`
+**默认入口**：`engine/render_roundtable_os.py`
 
 **用法**：
 ```bash
-python engine/render_html_ppt_v13.py content/书名_V8.json --output output/书名_圆桌洞见.html
+python engine/render_roundtable_os.py content/书名.json --output output/书名_圆桌洞见.html
 ```
 
-**V13 目标**：
+**目标**：
 
-- 给人看的 PPT，不是给人讲的 PPT。
-- 无 GPT 也能生成高信息密度阅读型页面。
-- 页面合同、布局白名单、设计 token、质量验收共同保证输出下限。
-- 生图/配图按规则降级：真实素材优先，信息图优先，宁可无图也不放错图。
+- 对用户只呈现一条生成链路：书籍内容 → 认知蒸馏 → 圆桌交锋 → 页面规划 → HTML-PPT。
+- 页面是给人看的阅读型 PPT，不是给人讲的提词器。
+- 每页必须无内部滚动，翻页器统一接管键盘、滚轮、点击和导航点。
+- 内容必须有问题轴、旧共识、作者位移、回应关系和最终洞见；缺失时宁可给质量提示，不静默伪造。
+- 视觉系统要可扩展，但默认出片不让用户选择内部历史版本。
+
+### 内部兼容层
+
+以下入口只用于历史产物兼容、调试和迁移，不作为默认用户路径：
+
+| 内部入口 | 用途 |
+|:---|:---|
+| `engine/schema_v8.py` | 旧内容 JSON 结构兼容 |
+| `engine/render_html_ppt_v13.py` | 稳定 HTML 渲染底座 |
+| `engine/render_cognitive_html.py` | 认知蒸馏渲染的旧实验入口 |
+| `engine/template_selector.py` / `engine/render_v8.py` | 旧模板参考和历史兼容 |
 
 ### HTML-PPT 稳定底座（V12.0）
 
@@ -279,8 +291,8 @@ Agent 生成 HTML 片段 → Python 规范化 → 输出完整 HTML
 python page-fragment-normalizer.py --input fragment.html --output output.html --title "圆桌洞见"
 ```
 
-此链路只作为历史实验和局部参考，不再作为默认主链路。默认 HTML-PPT 产出走 V13。
+此链路只作为历史实验和局部参考，不再作为默认主链路。默认 HTML-PPT 产出走圆桌 OS 统一入口。
 
 ---
 
-*版本：V13.0 · 更新时间：2026-06-09*
+*系统：圆桌 OS · 更新时间：2026-06-17*

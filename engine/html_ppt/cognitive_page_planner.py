@@ -124,13 +124,21 @@ def _qa(model: CognitiveModel) -> ReadingPage:
 
 
 def _insight(model: CognitiveModel) -> ReadingPage:
+    blocks = [
+        ReadingBlock("insight", str(item.get("title") or "洞见"), str(item.get("content") or ""))
+        for item in model.distillation.insights[:5]
+    ]
+    if model.distillation.open_questions:
+        blocks.append(ReadingBlock("question", "开放问题", " / ".join(model.distillation.open_questions[:3])))
+    if len(blocks) < 2:
+        blocks.append(ReadingBlock("model", "模型提示", "当前输入来自旧 V8 数据，深度字段缺失时保留为质量提示。"))
     return ReadingPage(
         page_type="insight",
         title="核心洞见",
         thesis="从模型中提取可带走的判断。",
         takeaway="洞见必须能脱离原材料继续使用。",
         layout="reading_brief_4zone",
-        blocks=[ReadingBlock("insight", str(item.get("title") or "洞见"), str(item.get("content") or "")) for item in model.distillation.insights[:5]],
+        blocks=blocks,
     )
 
 

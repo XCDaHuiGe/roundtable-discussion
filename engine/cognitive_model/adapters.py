@@ -18,7 +18,7 @@ def from_v8(data: dict[str, Any]) -> CognitiveModel:
         str(round_data.get("topic") or round_data.get("core_question") or f"第{index}轮张力")
         for index, round_data in enumerate(data.get("rounds") or [], start=1)
     ]
-    model.distillation.insights = _insights(data.get("insights") or [])
+    model.distillation.insights = _insights(data.get("insights") or [], data.get("final_insight"))
     model.distillation.open_questions = [str(item) for item in (data.get("open_questions") or [])]
 
     if model.roundtable.rounds:
@@ -49,7 +49,8 @@ def _participants(experts: list[dict[str, Any]]) -> list[dict[str, str]]:
 def _round(round_data: dict[str, Any], index: int) -> dict[str, Any]:
     speeches = []
     previous_id: str | None = None
-    for speech_index, stance in enumerate(round_data.get("stances") or [], start=1):
+    source_speeches = _speech_source(round_data)
+    for speech_index, stance in enumerate(source_speeches, start=1):
         speech_id = f"r{index}s{speech_index}"
         content = str(stance.get("stance") or stance.get("content") or stance.get("speech") or "")
         speeches.append({
@@ -77,13 +78,64 @@ def _round(round_data: dict[str, Any], index: int) -> dict[str, Any]:
     }
 
 
-def _insights(insights: list[dict[str, Any]]) -> list[dict[str, str]]:
+def _speech_source(round_data: dict[str, Any]) -> list[dict[str, Any]]:
+    stances = list(round_data.get("stances") or [])
+    if stances:
+        return stances
+
+    speeches = list(round_data.get("speeches") or [])
+    if speeches:
+        return speeches
+
+    clash_speeches: list[dict[str, Any]] = []
+    for clash in list(round_data.get("clash_rounds") or []):
+        attacker = str(clash.get("attacker") or "")
+        attack = str(clash.get("attack_content") or clash.get("counter_attack") or "")
+        if attacker and attack:
+            clash_speeches.append({"expert": attacker, "stance": attack})
+        target = str(clash.get("target") or "")
+        defense = str(clash.get("defense") or clash.get("defense_content") or "")
+        if target and defense:
+            clash_speeches.append({"expert": target, "stance": defense})
+    if clash_speeches:
+        return clash_speeches
+
+    case_speeches: list[dict[str, Any]] = []
+    for case in list(round_data.get("reality_cases") or []):
+        case_name = str(case.get("case_name") or "现实案例")
+        case_text = str(case.get("case_content") or case.get("case_lesson") or case.get("case_outcome") or "")
+        if case_text:
+            case_speeches.append({"expert": case_name, "stance": case_text})
+
+    cognitive_upgrade = round_data.get("cognitive_upgrade") or {}
+    if isinstance(cognitive_upgrade, dict):
+        for title, value in (
+            ("旧思维", cognitive_upgrade.get("old_thinking")),
+            ("新思维", cognitive_upgrade.get("new_thinking")),
+            ("复杂性", cognitive_upgrade.get("complexity")),
+            ("行动洞见", cognitive_upgrade.get("actionable_insight")),
+        ):
+            if value:
+                case_speeches.append({"expert": title, "stance": str(value)})
+    if case_speeches:
+        return case_speeches
+
+    return clash_speeches
+
+
+def _insights(insights: list[dict[str, Any]], final_insight: Any = None) -> list[dict[str, str]]:
     result: list[dict[str, str]] = []
     for insight in insights:
         result.append({
             "title": str(insight.get("insight_title") or insight.get("title") or "洞见"),
             "content": str(insight.get("insight_content") or insight.get("content") or insight.get("attack_content") or ""),
             "evidence": str(insight.get("evidence") or ""),
+        })
+    if final_insight and not result:
+        result.append({
+            "title": "最终洞见",
+            "content": str(final_insight),
+            "evidence": "",
         })
     return result
 

@@ -1,0 +1,17 @@
+/* Theme: obsidian — Dark immersive */
+body.theme-obsidian {
+  --bg: #111318;
+  --bg-rgb: 17, 19, 24;
+  --bg-soft: #1a1d24;
+  --bg-soft-rgb: 26, 29, 36;
+  --fg: #f4efe4;
+  --fg-rgb: 244, 239, 228;
+  --muted: #8a8580;
+  --muted-rgb: 138, 133, 128;
+  --accent: #e05a47;
+  --accent-rgb: 224, 90, 71;
+  --accent-2: #d7a64a;
+  --accent-2-rgb: 215, 166, 74;
+  --accent-3: #78a8c8;
+  --accent-3-rgb: 120, 168, 200;
+}

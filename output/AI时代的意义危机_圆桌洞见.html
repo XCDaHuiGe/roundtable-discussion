@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI时代的意义危机</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Noto+Serif+SC:wght@600;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0d0d0d;
+  --bg-terminal: #0a0a0a;
+  --bg-card: rgba(20, 20, 20, 0.95);
+  --bg-elevated: rgba(30, 30, 30, 0.98);
+  --text-primary: #e2deda;
+  --text-secondary: rgba(226, 222, 218, 0.78);
+  --text-tertiary: rgba(226, 222, 218, 0.55);
+  --text-muted: rgba(226, 222, 218, 0.38);
+  --acid: #c9f044;
+  --acid-glow: rgba(201, 240, 68, 0.4);
+  --accent-red: #ff4757;
+  --accent-green: #00d4aa;
+  --accent-blue: #0a84ff;
+  --border-subtle: rgba(226, 222, 218, 0.1);
+  --border-light: rgba(226, 222, 218, 0.18);
+  --mono: 'JetBrains Mono', 'SF Mono', Consolas, 'SFMono-Regular', Menlo, Monaco, monospace;
+  --display: 'Noto Serif SC', Georgia, 'Times New Roman', serif;
+  --body: 'Outfit', 'Noto Sans SC', 'Hiragino Sans GB', 'STHeiti', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg-primary); color: var(--text-primary); font-family: var(--body); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+.frame { position: fixed; inset: 0; padding: 5vh 4vw; background: 
+  radial-gradient(ellipse 100% 80% at 50% 0%, rgba(201, 240, 68, 0.04) 0%, transparent 40%),
+  radial-gradient(circle at 80% 80%, rgba(201, 240, 68, 0.02) 0%, transparent 30%),
+  repeating-linear-gradient(0deg, rgba(226, 222, 218, 0.04) 0 1px, transparent 1px 40px),
+  repeating-linear-gradient(90deg, rgba(226, 222, 218, 0.04) 0 1px, transparent 1px 40px),
+  var(--bg-primary); overflow: hidden; }
+.frame::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 1; }
+.frame::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, transparent 50%, rgba(0, 0, 0, 0.5) 100%); pointer-events: none; z-index: 2; }
+
+.inner { position: relative; width: 100%; height: 100%; overflow: hidden; border: 1px solid var(--border-light); border-radius: 16px; background: 
+  linear-gradient(90deg, rgba(201, 240, 68, 0.03) 1px, transparent 1px),
+  linear-gradient(180deg, rgba(201, 240, 68, 0.02) 1px, transparent 1px),
+  radial-gradient(circle at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.4) 100%),
+  var(--bg-terminal); background-size: 80px 100%, 100% 80px, auto; 
+  box-shadow: 
+    0 0 100px rgba(201, 240, 68, 0.06),
+    0 40px 80px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(226, 222, 218, 0.12),
+    inset 0 0 150px rgba(0, 0, 0, 0.4); }
+
+.slides { position: absolute; inset: 0; }
+.slide { position: absolute; inset: 0; display: none; flex-direction: column; padding: 28px; opacity: 0; transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; }
+.slide.active { display: flex; opacity: 1; }
+
+#progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--acid), var(--accent-green)); z-index: 100; transition: width 0.35s ease; box-shadow: 0 0 16px var(--acid-glow), 0 0 32px rgba(201, 240, 68, 0.2); }
+
+.meta-line { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.15em; }
+.meta-line.top { padding-bottom: 20px; border-bottom: 1px solid var(--border-subtle); }
+.meta-line.bottom { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border-subtle); }
+
+.hero-zone { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
+.hero-label { font-family: var(--mono); font-size: 13px; color: var(--acid); letter-spacing: 0.3em; margin-bottom: 24px; text-transform: uppercase; }
+.hero-title { font-family: var(--mono); font-weight: 800; font-size: clamp(36px, 7vw, 80px); color: var(--text-primary); line-height: 1.15; letter-spacing: -0.02em; text-shadow: 0 0 40px rgba(201, 240, 68, 0.15); }
+.hero-title .glow { color: var(--acid); text-shadow: 0 0 30px var(--acid-glow), 0 0 60px rgba(201, 240, 68, 0.2); }
+.hero-sub { font-family: var(--body); font-size: clamp(18px, 2.8vw, 32px); color: var(--text-tertiary); margin-top: 20px; line-height: 1.6; letter-spacing: 0.01em; }
+.hero-accent { color: var(--acid); font-weight: 700; }
+
+.version-badge { display: inline-flex; align-items: center; gap: 10px; background: rgba(201, 240, 68, 0.08); padding: 10px 20px; border-radius: 24px; border: 1px solid rgba(201, 240, 68, 0.2); margin-bottom: 28px; }
+.version-badge span { font-family: var(--mono); font-size: 11px; color: var(--acid); letter-spacing: 0.18em; text-transform: uppercase; }
+
+/* 数据统计 */
+.stats-grid { display: flex; justify-content: center; gap: clamp(36px, 7vw, 100px); margin: 6% 0; flex-wrap: wrap; }
+.stat-item { text-align: center; position: relative; padding: 0 28px; }
+.stat-item::after { content: ''; position: absolute; right: 0; top: 10%; bottom: 10%; width: 1px; background: linear-gradient(180deg, transparent, var(--acid), transparent); opacity: 0.2; }
+.stat-item:last-child::after { display: none; }
+.stat-num { font-family: var(--mono); font-weight: 800; font-size: clamp(64px, 12vw, 110px); color: var(--acid); line-height: 1; letter-spacing: -0.03em; text-shadow: 0 0 40px var(--acid-glow), 0 0 80px rgba(201, 240, 68, 0.2); }
+.stat-label { font-family: var(--mono); font-size: 12px; color: var(--text-muted); letter-spacing: 0.2em; margin-top: 16px; text-transform: uppercase; }
+
+/* 专家阵容 */
+.experts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 5% 0; }
+.expert-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 28px 24px; text-align: center; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+.expert-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--acid), transparent); opacity: 0; transition: opacity 0.4s ease; }
+.expert-card::after { content: ''; position: absolute; inset: 0; border-radius: 12px; box-shadow: inset 0 0 30px rgba(201, 240, 68, 0); transition: box-shadow 0.4s ease; pointer-events: none; }
+.expert-card:hover { transform: translateY(-6px); border-color: rgba(201, 240, 68, 0.3); background: var(--bg-elevated); }
+.expert-card:hover::before { opacity: 1; }
+.expert-card:hover::after { box-shadow: inset 0 0 30px rgba(201, 240, 68, 0.05); }
+.expert-avatar { width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 16px; background: linear-gradient(135deg, var(--acid), var(--accent-green)); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-weight: 700; font-size: 24px; color: var(--bg-primary); box-shadow: 0 0 24px var(--acid-glow); position: relative; }
+.expert-card:hover .expert-avatar { box-shadow: 0 0 0 4px rgba(201, 240, 68, 0.15), 0 0 40px var(--acid-glow); }
+.expert-name { font-family: var(--mono); font-weight: 700; font-size: 16px; color: var(--text-primary); margin-bottom: 8px; letter-spacing: 0.02em; }
+.expert-role { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* Round区块 */
+.round-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 32px; margin: 20px 0; position: relative; overflow: hidden; }
+.round-block::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--acid), transparent); }
+.round-title { font-family: var(--mono); font-weight: 800; font-size: clamp(20px, 3.5vw, 32px); color: var(--acid); margin-bottom: 20px; text-align: center; letter-spacing: 0.08em; text-shadow: 0 0 20px rgba(201, 240, 68, 0.2); }
+
+/* 碰撞区 */
+.clash-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 24px 28px; margin: 16px 0; border-left: 4px solid var(--accent-red); position: relative; box-shadow: -10px 0 30px rgba(255, 71, 87, 0.12); }
+.clash-block::after { content: ''; position: absolute; left: 4px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--accent-red), transparent); opacity: 0.4; }
+.clash-title { font-family: var(--mono); font-weight: 700; font-size: 16px; color: var(--accent-red); margin-bottom: 14px; letter-spacing: 0.06em; }
+.clash-content { font-family: var(--body); font-size: clamp(13px, 1.5vw, 17px); color: var(--text-secondary); line-height: 1.9; letter-spacing: 0.01em; }
+
+/* 洞见区 */
+.insight-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 24px 28px; margin: 16px 0; border-left: 4px solid var(--accent-green); position: relative; box-shadow: -10px 0 30px rgba(0, 212, 170, 0.12); }
+.insight-block::after { content: ''; position: absolute; left: 4px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--accent-green), transparent); opacity: 0.4; }
+.insight-title { font-family: var(--mono); font-weight: 700; font-size: 16px; color: var(--accent-green); margin-bottom: 14px; letter-spacing: 0.06em; }
+.insight-content { font-family: var(--body); font-size: clamp(13px, 1.5vw, 17px); color: var(--text-secondary); line-height: 1.9; letter-spacing: 0.01em; }
+.insight-core { font-weight: 700; font-size: clamp(16px, 1.8vw, 20px); color: var(--text-primary); display: block; margin: 14px 0; letter-spacing: -0.01em; }
+
+/* 开放问题 */
+.question-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; margin: 16px 0; overflow: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.question-card:hover { border-color: rgba(201, 240, 68, 0.25); box-shadow: 0 0 20px rgba(201, 240, 68, 0.08); }
+.question-header { padding: 20px 28px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid transparent; transition: all 0.3s ease; }
+.question-header:hover { background: rgba(201, 240, 68, 0.03); }
+.question-card.open .question-header { border-bottom-color: var(--border-subtle); }
+.question-text { font-family: var(--mono); font-weight: 700; font-size: clamp(14px, 1.8vw, 18px); color: var(--text-primary); letter-spacing: 0.02em; }
+.question-toggle { font-family: var(--mono); font-size: 18px; color: var(--acid); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.question-card.open .question-toggle { transform: rotate(45deg); }
+.question-answer { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+.question-card.open .question-answer { max-height: 500px; }
+.question-answer-inner { padding: 20px 28px; font-family: var(--body); font-size: clamp(12px, 1.3vw, 15px); color: var(--text-secondary); line-height: 1.9; letter-spacing: 0.01em; }
+
+/* 结论卡片 */
+.conclusion-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 48px; margin: 0 auto; max-width: 800px; text-align: center; position: relative; overflow: hidden; }
+.conclusion-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, transparent, var(--acid), transparent); }
+.conclusion-card::after { content: ''; position: absolute; inset: 0; box-shadow: inset 0 0 50px rgba(201, 240, 68, 0.03); pointer-events: none; }
+.conclusion-text { font-family: var(--mono); font-weight: 800; font-size: clamp(26px, 4vw, 44px); color: var(--text-primary); line-height: 1.4; letter-spacing: 0.02em; }
+
+.question-block { flex: 1; display: flex; align-items: center; justify-content: center; }
+.question-text-large { font-family: var(--mono); font-weight: 800; font-size: clamp(28px, 5vw, 52px); color: var(--text-primary); line-height: 1.4; text-align: center; max-width: 90%; letter-spacing: 0.02em; }
+
+.statements-grid { flex: 1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; overflow: hidden; }
+.statement-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 20px; transition: all 0.3s ease; }
+.statement-block:hover { border-color: var(--border-light); box-shadow: 0 0 16px rgba(201, 240, 68, 0.05); }
+.statement-meta { display: flex; justify-content: space-between; margin-bottom: 12px; }
+.statement-speaker { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--acid); }
+.statement-role { font-family: var(--mono); font-size: 10px; color: var(--text-muted); }
+.statement-text { font-family: var(--body); font-size: clamp(12px, 1.3vw, 15px); line-height: 1.85; color: var(--text-secondary); letter-spacing: 0.01em; }
+
+#nav { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 18px; z-index: 100; background: rgba(13, 13, 13, 0.92); padding: 14px 24px; border-radius: 28px; border: 1px solid var(--border-subtle); backdrop-filter: blur(16px); box-shadow: 0 0 30px rgba(201, 240, 68, 0.05); }
+.nav-btn { width: 40px; height: 40px; border: 1px solid var(--border-light); background: transparent; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--text-secondary); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.nav-btn:hover { background: rgba(201, 240, 68, 0.12); border-color: var(--acid); color: var(--acid); box-shadow: 0 0 16px rgba(201, 240, 68, 0.2); }
+.dots { display: flex; gap: 8px; }
+.dot { width: 9px; height: 9px; border-radius: 3px; background: var(--text-muted); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.dot:hover { background: var(--text-tertiary); }
+.dot.active { background: var(--acid); box-shadow: 0 0 12px var(--acid-glow); }
+#counter { position: fixed; top: 24px; right: 28px; font-family: var(--mono); font-size: 12px; color: var(--text-muted); z-index: 100; background: rgba(13, 13, 13, 0.85); padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border-subtle); letter-spacing: 0.1em; }
+
+/* 动效 */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes glowPulse { 0%, 100% { box-shadow: 0 0 24px var(--acid-glow); } 50% { box-shadow: 0 0 48px rgba(201, 240, 68, 0.6); } }
+@keyframes scanline { 0% { transform: translateY(-100%); } 100% { transform: translateY(100vh); } }
+@keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.98; } }
+
+.slide .a { opacity: 0; }
+.slide.active .a { animation-fill-mode: both; }
+
+/* 响应式 */
+@media (max-width: 1024px) {
+  .experts-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .frame { padding: 3vh 2vw; }
+  .inner { border-radius: 12px; }
+  .slide { padding: 20px; }
+  .stats-grid { gap: 28px; }
+  .stat-item { padding: 0 20px; }
+  .stat-num { font-size: 52px; }
+  .experts-grid { grid-template-columns: 1fr; gap: 16px; }
+  .expert-card { padding: 24px 20px; }
+  .statements-grid { grid-template-columns: 1fr; gap: 12px; }
+  #nav { padding: 10px 18px; gap: 12px; bottom: 24px; }
+  .nav-btn { width: 36px; height: 36px; }
+  .round-block, .conclusion-card { padding: 28px 24px; }
+  .clash-block, .insight-block, .question-header { padding: 20px 24px; }
+}
+</style>
+</head>
+<body>
+<div id="progress" style="width: 0%;"></div>
+<div class="frame">
+  <div class="inner">
+    <div class="slides">
+
+<div class="slide">
+  <div class="meta-line top">
+    <span>SYSTEM://ROUNDTABLE_INSIGHT</span>
+    <span>EXPERTS: 6</span>
+    <span>ROUNDS: 3</span>
+  </div>
+  <div class="hero-zone">
+    <div class="hero-label">ROUNDTABLE_INSIGHT</div>
+    <div class="hero-title">AI时代的意义危机</div>
+  </div>
+  <div class="meta-line bottom">
+    <span>韩炳哲 | 弗洛姆 | 傅盛 | 李诞 | 维克多· | 丹尼尔·</span>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="meta-line top">
+    <span>ROUND 1/3</span>
+    <span>QUESTION</span>
+  </div>
+  <div class="question-block">
+    <div class="question-text-large">AI与人类存在的意义</div>
+  </div>
+  <div class="meta-line bottom">
+    <span>ANALYSIS_MODE</span>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="meta-line top">
+    <span>ROUND 1</span>
+    <span>EXPERT_STANCES</span>
+  </div>
+  <div class="statements-grid">
+    <div class="statement-block">
+      <div class="statement-meta">
+        <span class="statement-speaker">韩炳哲</span>
+        <span class="statement-role">发言</span>
+      </div>
+      <div class="statement-text">AI正在制造一种'意义真空'。过去，工作是人类获得意义的主要来源——你通过劳动创造价值，通过价值获得认同。当AI取代了工作，人类面临一个存在主义的问题：如果我不再需要工作，我是谁？这种'意义真空'不是解放，而是一种新的压迫——你必须不断地'</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta">
+        <span class="statement-speaker">弗洛姆</span>
+        <span class="statement-role">发言</span>
+      </div>
+      <div class="statement-text">AI时代的意义危机，本质上是'逃避自由'的又一种形式。弗洛伊德说，文明的代价是压抑；我说，自由的代价是焦虑。当AI解放了人类的劳动，人类获得了前所未有的'自由'——但这种自由是空洞的，因为它没有方向。人类需要的不是'自由'，而是'有意义的自</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta">
+        <span class="statement-speaker">傅盛</span>
+        <span class="statement-role">发言</span>
+      </div>
+      <div class="statement-text">你们把AI时代的意义危机想得太悲观了。AI不是在'取代'人类，而是在'解放'人类。过去，人类被迫做重复性的、低价值的工作；现在，AI可以做这些，人类可以专注于更有意义的事情——创造、思考、连接。意义危机不是AI造成的，而是我们的社会结构没有</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta">
+        <span class="statement-speaker">李诞</span>
+        <span class="statement-role">发言</span>
+      </div>
+      <div class="statement-text">你们说的意义危机太抽象了。普通人不关心'存在的意义'，我们关心的是'明天怎么过'。AI取代了工作，谁来付房租？谁来养家？你说AI解放了人类——但解放的前提是有钱有闲。对于大多数人来说，AI不是解放，是威胁。意义危机是富人的奢侈品，穷人只有生</div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>CONTENT_LOADED</span>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="meta-line top">
+    <span>ROUND 2/3</span>
+    <span>QUESTION</span>
+  </div>
+  <div class="question-block">
+    <div class="question-text-large">AI与创造力的本质</div>
+  </div>
+  <div class="meta-line bottom">
+    <span>ANALYSIS_MODE</span>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="meta-line top">
+    <span>ROUND 2</span>
+    <span>EXPERT_STANCES</span>
+  </div>
+  <div class="statements-grid">
+    <div class="statement-block">
+      <div class="statement-meta">
+        <span class="statement-speaker">韩炳哲</span>
+        <span class="statement-role">发言</span>
+      </div>
+      <div class="statement-text">AI创造的'艺术'不是真正的艺术——因为真正的艺术需要'痛苦'、需要'挣扎'、需要'突破'。AI没有痛苦，没有挣扎，没有突破——它只是在'组合'已有的元素。AI创造的'艺术'是'平滑的'、'完美的'、'无摩擦的'——但真正的艺术恰恰是'粗糙</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta">
+        <span class="statement-speaker">弗洛姆</span>
+        <span class="statement-role">发言</span>
+      </div>
+      <div class="statement-text">创造力的本质不是'产出'，而是'过程'。当你画画时，你不是在'生产一幅画'，而是在'表达你自己'。AI可以'生产一幅画'，但不能'表达自己'——因为它没有'自己'。人类的创造力来自于'存在'——你是谁，你经历了什么，你感受到了什么。AI没有</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta">
+        <span class="statement-speaker">傅盛</span>
+        <span class="statement-role">发言</span>
+      </div>
+      <div class="statement-text">你们把创造力神化了。大多数'创造'其实是'组合'——把已有的元素重新排列组合。AI在这方面比人类更高效。但这不意味着AI会'取代'人类创造力——相反，AI会'放大'人类创造力。一个不会画画的人，可以用AI把脑海中的画面变成现实；一个不会作曲</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta">
+        <span class="statement-speaker">李诞</span>
+        <span class="statement-role">发言</span>
+      </div>
+      <div class="statement-text">你们讨论的'创造力'太精英化了。普通人不关心'艺术的本质'，我们关心的是'能不能用'。AI生成的图片、音乐、文案，只要能满足需求，就是好的。你说AI的创造是'空洞的'——但用户不觉得空洞，他们觉得'有用'。创造力不是'表达自我'，而是'解决</div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>CONTENT_LOADED</span>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="meta-line top">
+    <span>ROUND 3/3</span>
+    <span>QUESTION</span>
+  </div>
+  <div class="question-block">
+    <div class="question-text-large">意义重建的可能性</div>
+  </div>
+  <div class="meta-line bottom">
+    <span>ANALYSIS_MODE</span>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="meta-line top">
+    <span>ROUND 3</span>
+    <span>EXPERT_STANCES</span>
+  </div>
+  <div class="statements-grid">
+    <div class="statement-block">
+      <div class="statement-meta">
+        <span class="statement-speaker">韩炳哲</span>
+        <span class="statement-role">发言</span>
+      </div>
+      <div class="statement-text">我不相信'意义重建'的可能性。意义不是'被建造'的，而是'被发现'的。当AI取代了工作、取代了创造、取代了连接，'发现意义'的途径就被堵死了。人类可能会陷入一种'永恒的无聊'——不是没有事情做，而是做任何事情都觉得'没有意义'。这不是'危机</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta">
+        <span class="statement-speaker">弗洛姆</span>
+        <span class="statement-role">发言</span>
+      </div>
+      <div class="statement-text">意义重建的关键在于'爱'。爱不是一种'情感'，而是一种'能力'——关心、了解、尊重、负责。AI可以模拟'关心'，但不能真正'关心'——因为它没有'存在'。当工作和创造都被AI取代，'爱'可能是人类唯一不可替代的意义来源。问题在于：我们是否愿</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta">
+        <span class="statement-speaker">傅盛</span>
+        <span class="statement-role">发言</span>
+      </div>
+      <div class="statement-text">意义重建的关键在于'新工作'。AI不是在'消灭工作'，而是在'改变工作的性质'。未来的工作不再是'重复性的劳动'，而是'创造性的活动'——设计、策划、连接、服务。这些工作需要'人性'——同理心、创造力、判断力——AI无法替代。意义重建不是'</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta">
+        <span class="statement-speaker">李诞</span>
+        <span class="statement-role">发言</span>
+      </div>
+      <div class="statement-text">你们说的意义重建太复杂了。普通人不需要'意义'，我们只需要'快乐'。AI可以给我们更多的娱乐、更多的便利、更多的舒适——这就是'快乐'。你说'快乐不等于意义'——但对大多数人来说，快乐就够了。意义危机是精英的烦恼，普通人的烦恼是'怎么更快乐</div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>CONTENT_LOADED</span>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="meta-line top">
+    <span>FINAL</span>
+    <span>INSIGHTS</span>
+  </div>
+  <div class="conclusion-card">
+    <div class="conclusion-text">
+    <div class="insight-block">
+      <div class="insight-content">AI时代的意义危机，不是'没有意义'，而是'不知道如何找到意义'。传统的意义来源——工作、创造、社区——正在被AI削弱，但人类对意义的需求并没有消失。意义重建的</div>
+    </div>
+    <div class="insight-block">
+      <div class="insight-content">如果AI可以完成所有'有用的工作'，人类还有什么'不可替代的价值'？</div>
+    </div>
+    <div class="insight-block">
+      <div class="insight-content">意义是'客观存在的'还是'主观建构的'？AI时代需要哪种意义观？</div>
+    </div></div>
+  </div>
+  <div class="meta-line bottom">
+    <span>END_OF_REPORT</span>
+  </div>
+</div>
+    </div>
+  </div>
+</div>
+<div id="nav">
+  <button class="nav-btn" id="prevBtn">◀</button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn">▶</button>
+</div>
+<div id="counter">1 / 1</div>
+<script>
+(function(){
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let cur = 0;
+  const dotsContainer = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progress');
+  let wheelTimer = null;
+  
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => go(i);
+    dotsContainer.appendChild(dot);
+  });
+  
+  function go(n) {
+    if (n < 0 || n >= total) return;
+    slides[cur].classList.remove('active');
+    dotsContainer.children[cur].classList.remove('active');
+    cur = n;
+    slides[cur].classList.add('active');
+    dotsContainer.children[cur].classList.add('active');
+    counter.textContent = (cur + 1) + ' / ' + total;
+    const pct = Math.min(100, ((cur + 1) / total) * 100);
+    progress.style.width = pct + '%';
+  }
+  
+  document.getElementById('prevBtn').onclick = () => go(cur - 1);
+  document.getElementById('nextBtn').onclick = () => go(cur + 1);
+  
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      go(cur + 1);
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      go(cur - 1);
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      go(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      go(total - 1);
+    }
+  });
+  
+  document.addEventListener('wheel', e => {
+    e.preventDefault();
+    if (wheelTimer) return;
+    wheelTimer = setTimeout(() => wheelTimer = null, 400);
+    if (e.deltaY > 0) go(cur + 1);
+    else if (e.deltaY < 0) go(cur - 1);
+  }, { passive: false });
+  
+  document.body.addEventListener('click', e => {
+    if (e.target.closest('.nav-btn, .dot, .expert-card, .question-card, .clash-block, .insight-block, .round-block, .statement-block, .conclusion-card')) return;
+    go(cur + 1);
+  });
+  
+  document.querySelectorAll('.question-header').forEach(header => {
+    header.onclick = e => {
+      e.stopPropagation();
+      header.parentElement.classList.toggle('open');
+    };
+  });
+  
+  go(0);
+})();
+</script>
+
+<script>
+(function(){
+  const slides=document.querySelectorAll('.slide');
+  const total=slides.length;
+  let cur=0;
+  const dotsContainer=document.getElementById('dots');
+  const counter=document.getElementById('counter');
+  const progress=document.getElementById('progressBar');
+  const isHorizontal=document.body.style.flexDirection==='row'||document.documentElement.style.scrollSnapType?.includes('x');
+
+  slides.forEach((s,i)=>{
+    const dot=document.createElement('div');
+    dot.className='dot'+(i===0?' active':'');
+    dot.onclick=()=>go(i);
+    dotsContainer.appendChild(dot);
+  });
+
+  function go(n){
+    if(n<0||n>=total)return;
+    slides[cur].classList.remove('visible');
+    dotsContainer.children[cur]?.classList.remove('active');
+    cur=n;
+    slides[cur].scrollIntoView({behavior:'smooth',block:'start',inline:'start'});
+    slides[cur].classList.add('visible');
+    dotsContainer.children[cur]?.classList.add('active');
+    if(counter)counter.textContent=(cur+1)+' / '+total;
+    if(progress){const pct=Math.min(100,((cur+1)/total)*100);progress.style.width=pct+'%';}
+  }
+
+  document.getElementById('prevBtn')?.addEventListener('click',()=>go(cur-1));
+  document.getElementById('nextBtn')?.addEventListener('click',()=>go(cur+1));
+
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowDown'||e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){
+      e.preventDefault();go(cur+1);
+    }else if(e.key==='ArrowUp'||e.key==='ArrowLeft'||e.key==='PageUp'){
+      e.preventDefault();go(cur-1);
+    }else if(e.key==='Home'){
+      e.preventDefault();go(0);
+    }else if(e.key==='End'){
+      e.preventDefault();go(total-1);
+    }
+  });
+
+  let wheelTimer=null;
+  document.addEventListener('wheel',e=>{
+    e.preventDefault();
+    if(wheelTimer)return;
+    wheelTimer=setTimeout(()=>wheelTimer=null,400);
+    if(e.deltaY>0)go(cur+1);
+    else if(e.deltaY<0)go(cur-1);
+  },{passive:false});
+
+  document.body.addEventListener('click',e=>{
+    if(e.target.closest('.nav-dot,.dots,.nav-btn,.expert-card,.speech-card,.clash-block,.insight-block,.question-card,.conclusion-item,.stat-item,.card'))return;
+    go(cur+1);
+  });
+
+  go(0);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+/* Theme: nord — Nordic blue-white */
+body.theme-nord {
+  --bg: #2e3440;
+  --bg-rgb: 46, 52, 64;
+  --bg-soft: #3b4252;
+  --bg-soft-rgb: 59, 66, 82;
+  --fg: #eceff4;
+  --fg-rgb: 236, 239, 244;
+  --muted: #7b88a0;
+  --muted-rgb: 123, 136, 160;
+  --accent: #88c0d0;
+  --accent-rgb: 136, 192, 208;
+  --accent-2: #81a1c1;
+  --accent-2-rgb: 129, 161, 193;
+  --accent-3: #b48ead;
+  --accent-3-rgb: 180, 142, 173;
+}

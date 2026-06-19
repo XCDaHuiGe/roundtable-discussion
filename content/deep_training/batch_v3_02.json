@@ -1,0 +1,55 @@
+{
+  "batch": 2,
+  "rounds": [
+    {
+      "round": 236,
+      "expert1": "弗洛伊德",
+      "expert2": "韩非子",
+      "belief1": "人的历史就是一部压抑史",
+      "belief2": "刑过不避大臣,赏善不遗匹夫",
+      "topic": "哪种方法更有效?人的历史就是一部压抑史还是刑过不避大臣,赏善不遗匹夫?",
+      "conflict_type": "method",
+      "strength": "strong"
+    },
+    {
+      "round": 237,
+      "expert1": "阿伦特",
+      "expert2": "万维钢",
+      "belief1": "恶是表面的深渊",
+      "belief2": "用理工科思维破除迷思",
+      "topic": "哪种方法更有效?恶是表面的深渊还是用理工科思维破除迷思?",
+      "conflict_type": "method",
+      "strength": "strong"
+    },
+    {
+      "round": 238,
+      "expert1": "西蒙娜·德·波伏娃",
+      "expert2": "塔勒布",
+      "belief1": "女人不是天生的而是变成的",
+      "belief2": "反脆弱是在不确定性中获益",
+      "topic": "水火不容:女人不是天生的而是变成的。但反脆弱是在不确定性中获益。谁的证据更硬?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 239,
+      "expert1": "弗洛姆",
+      "expert2": "许知远",
+      "belief1": "占有还是存在这是根本问题",
+      "belief2": "批判是知识分子的天职",
+      "topic": "价值排序之争:占有还是存在这是根本问题更重要,还是批判是知识分子的天职更重要?",
+      "conflict_type": "value_priority",
+      "strength": "moderate"
+    },
+    {
+      "round": 240,
+      "expert1": "罗翔",
+      "expert2": "冯唐",
+      "belief1": "法律的目的是维护秩序而不是彰显权力",
+      "belief2": "不着急不害怕不要脸",
+      "topic": "终极对立:法律的目的是维护秩序而不是彰显权力 vs 不着急不害怕不要脸。两者只能信一个,选哪个?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    }
+  ]
+}

@@ -1,0 +1,229 @@
+{
+  "total": 46.7,
+  "grade": "F",
+  "dimensions": {
+    "attack_efficiency": {
+      "score": 50.0,
+      "weight": 0.25,
+      "weighted": 12.5,
+      "details": {
+        "total": 6,
+        "effective": 3,
+        "details": [
+          {
+            "attacker": "塔勒布",
+            "target": "巴菲特",
+            "effective": true,
+            "has_evidence": false,
+            "has_logic": true,
+            "has_specific": false
+          },
+          {
+            "attacker": "巴菲特",
+            "target": "塔勒布",
+            "effective": false,
+            "has_evidence": false,
+            "has_logic": false,
+            "has_specific": false
+          },
+          {
+            "attacker": "卡尼曼",
+            "target": "戈尔曼",
+            "effective": true,
+            "has_evidence": false,
+            "has_logic": true,
+            "has_specific": false
+          },
+          {
+            "attacker": "戈尔曼",
+            "target": "卡尼曼",
+            "effective": false,
+            "has_evidence": false,
+            "has_logic": false,
+            "has_specific": false
+          },
+          {
+            "attacker": "柯林斯",
+            "target": "塔勒布",
+            "effective": true,
+            "has_evidence": true,
+            "has_logic": false,
+            "has_specific": false
+          },
+          {
+            "attacker": "吴军",
+            "target": "柯林斯",
+            "effective": false,
+            "has_evidence": false,
+            "has_logic": false,
+            "has_specific": false
+          }
+        ]
+      }
+    },
+    "defense_rate": {
+      "score": 50.0,
+      "weight": 0.2,
+      "weighted": 10.0,
+      "details": {
+        "total_defended": 6,
+        "successful": 3
+      }
+    },
+    "evidence_hit": {
+      "score": 16.7,
+      "weight": 0.15,
+      "weighted": 2.5,
+      "details": {
+        "discussion_type": "hybrid",
+        "standard_name": "混合讨论",
+        "total_speeches": 12,
+        "with_evidence": 2,
+        "rate": 16.7,
+        "details": [
+          {
+            "type": "stance",
+            "expert": "巴菲特",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "芒格是我见过的最聪明的人，他彻底改变了伯克希尔的投资哲学。在我遇到芒格之前，我是格雷厄姆'捡烟蒂'理论的信徒——用清算价..."
+          },
+          {
+            "type": "stance",
+            "expert": "塔勒布",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "我必须对芒格的多元思维模型提出根本性质疑。这个体系的核心假设是：掌握足够多的思维模型，就能做出更好的决策。但现实恰恰相反..."
+          },
+          {
+            "type": "stance",
+            "expert": "卡尼曼",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "芒格的人类误判心理学是《思考，快与慢》的先驱。他在1995年哈佛法学院的演讲，比我的诺贝尔获奖研究还要早。他在演讲中总结..."
+          },
+          {
+            "type": "stance",
+            "expert": "戈尔曼",
+            "has_evidence": true,
+            "evidence_count": 1,
+            "evidences": [
+              "与情商研究的核心发现"
+            ],
+            "content_preview": "芒格的多元思维模型与情商理论有深刻的共鸣。他强调的很多心理倾向——如社会认同、奖励超级反应——都与情商研究的核心发现一致..."
+          },
+          {
+            "type": "stance",
+            "expert": "吴军",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "芒格对中国读者的价值，远超投资本身。他的多元思维模型，本质上是一种'降噪'机制——在信息爆炸的时代，帮助你过滤噪音，抓住..."
+          },
+          {
+            "type": "stance",
+            "expert": "柯林斯",
+            "has_evidence": true,
+            "evidence_count": 2,
+            "evidences": [
+              "据'。芒格在书中",
+              "我研究卓越企业时发现"
+            ],
+            "content_preview": "芒格的理念与我的实证研究高度一致。我研究卓越企业时发现：它们往往具备'兼容并蓄'的文化——愿意从不同领域汲取智慧，而不是..."
+          },
+          {
+            "type": "clash",
+            "attacker": "塔勒布",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "巴菲特你说芒格'改变了你'，但你有没有想过：如果芒格的框架如此有效，为什么你们没有预见到2008年金融危机？你们的保险公..."
+          },
+          {
+            "type": "clash",
+            "attacker": "巴菲特",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "塔勒布你说2008年金融危机，但你忽略了一个事实：我们活下来了。你说预见到危机才算成功，但'反脆弱'的定义是：不是预测风..."
+          },
+          {
+            "type": "clash",
+            "attacker": "卡尼曼",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "戈尔曼你说芒格忽略了情绪，但我要指出：你对情绪的理解可能过于简化。芒格在人类误判心理学中提到的'喜欢/热爱倾向'和'讨厌..."
+          },
+          {
+            "type": "clash",
+            "attacker": "戈尔曼",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "卡尼曼你说芒格'没有充分讨论知道什么是对的'，但这正是我批评他的地方。他的检查清单是'避免错误'的工具，但缺乏'识别正确..."
+          },
+          {
+            "type": "clash",
+            "attacker": "柯林斯",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "塔勒布你说芒格的方法'只有成功案例'，但你有没有统计过失败率？我的研究显示，使用系统化投资方法的人，长期表现优于随机决策..."
+          },
+          {
+            "type": "clash",
+            "attacker": "吴军",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "柯林斯你说芒格的方法'不可复制'，但这恰恰是他的价值所在。他不是教你'抄作业'，而是教你'建立框架'。框架的意义不在于复..."
+          }
+        ]
+      }
+    },
+    "style_recognition": {
+      "score": 50.0,
+      "weight": 0.15,
+      "weighted": 7.5,
+      "details": {
+        "total": 6,
+        "distinctive": 3
+      }
+    },
+    "cognitive_contribution": {
+      "score": 66.7,
+      "weight": 0.1,
+      "weighted": 6.7,
+      "details": {
+        "total_rounds": 3,
+        "with_reversal": 2
+      }
+    },
+    "case_quality": {
+      "score": 33.3,
+      "weight": 0.1,
+      "weighted": 3.3,
+      "details": {
+        "total_rounds": 3,
+        "with_cases": 1
+      }
+    },
+    "structure": {
+      "score": 83.3,
+      "weight": 0.05,
+      "weighted": 4.2,
+      "details": {
+        "title": true,
+        "experts": true,
+        "rounds": true,
+        "final_insight": true,
+        "open_questions": true,
+        "books": false
+      }
+    }
+  }
+}

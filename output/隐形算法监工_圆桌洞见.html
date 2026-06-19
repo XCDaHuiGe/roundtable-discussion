@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>隐形算法监工</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0A0A0A;
+  --bg: #111111;
+  --bg-card: rgba(255,255,255,0.04);
+  --bg-card-hover: rgba(255,255,255,0.08);
+  --fg: #F5F5F5;
+  --fg-muted: #A0A0A0;
+  --fg-dim: #606060;
+  --accent: #D4A04A;
+  --accent-soft: rgba(212,160,74,0.12);
+  --accent-glow: rgba(212,160,74,0.25);
+  --copper: #C07A3E;
+  --clash: #ff4757;
+  --clash-soft: rgba(255,71,87,0.12);
+  --clash-glow: rgba(255,71,87,0.35);
+  --insight: #00d4aa;
+  --insight-soft: rgba(0,212,170,0.12);
+  --insight-glow: rgba(0,212,170,0.40);
+  --border: rgba(255,255,255,0.08);
+  --border-accent: rgba(212,160,74,0.30);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --font-display: 'Noto Serif SC', serif;
+  --font-body: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  display: flex;
+  flex-direction: row;
+  width: max-content;
+  height: 100vh;
+  background: var(--bg-deep);
+  color: var(--fg);
+  font-family: var(--font-body);
+  line-height: 1.85;
+  opacity: 0;
+  animation: fadeIn 0.8s ease forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg-deep);
+}
+
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}
+
+.mesh-gradient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: 
+    radial-gradient(ellipse 70% 50% at 10% 20%, rgba(212,160,74,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 40% at 90% 80%, rgba(0,212,170,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse 30% 25% at 50% 50%, rgba(255,71,87,0.03) 0%, transparent 50%);
+}
+
+.slide {
+  width: 100vw;
+  height: 100vh;
+  min-width: 100vw;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  scroll-snap-align: start;
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  overflow: hidden;
+}
+
+.slide.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.stagger-item {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.slide.visible .stagger-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.slide.visible .stagger-item:nth-child(1) { transition-delay: 0.1s; }
+.slide.visible .stagger-item:nth-child(2) { transition-delay: 0.2s; }
+.slide.visible .stagger-item:nth-child(3) { transition-delay: 0.3s; }
+.slide.visible .stagger-item:nth-child(4) { transition-delay: 0.4s; }
+.slide.visible .stagger-item:nth-child(5) { transition-delay: 0.5s; }
+.slide.visible .stagger-item:nth-child(6) { transition-delay: 0.6s; }
+.slide.visible .stagger-item:nth-child(7) { transition-delay: 0.7s; }
+.slide.visible .stagger-item:nth-child(8) { transition-delay: 0.8s; }
+
+.slide-cover {
+  background: linear-gradient(135deg, #1A1A2E 0%, #16213E 50%, #0F0F23 100%);
+  color: var(--fg);
+  padding: clamp(40px, 5vh, 80px) clamp(48px, 5vw, 100px);
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.slide-cover::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+  opacity: 0.5;
+  animation: cover-glow 6s ease-in-out infinite;
+}
+
+@keyframes cover-glow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+.slide-cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(255,255,255,0.02) 59px, rgba(255,255,255,0.02) 60px),
+    repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(255,255,255,0.02) 59px, rgba(255,255,255,0.02) 60px);
+  pointer-events: none;
+}
+
+.cover-decor-line {
+  position: absolute;
+  top: 20%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212,160,74,0.2), transparent);
+}
+
+.cover-decor-line-2 {
+  position: absolute;
+  bottom: 30%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,170,0.15), transparent);
+}
+
+.cover-logo {
+  font-family: var(--font-mono);
+  font-size: clamp(18px, 2vw, 28px);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  position: relative;
+  z-index: 2;
+}
+
+.cover-logo span {
+  display: block;
+  padding-left: 1em;
+  font-weight: 400;
+  color: var(--fg-muted);
+  font-size: 0.85em;
+}
+
+.cover-body {
+  max-width: 70%;
+  position: relative;
+  z-index: 2;
+}
+
+.cover-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  background: linear-gradient(135deg, var(--accent-soft), rgba(212,160,74,0.06));
+  border: 1px solid var(--border-accent);
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1vw, 13px);
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: clamp(20px, 3vh, 36px);
+  position: relative;
+  overflow: hidden;
+}
+
+.cover-badge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(212,160,74,0.2), transparent);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.cover-body h1 {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: clamp(16px, 2vh, 28px);
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--fg), var(--fg-muted));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cover-body .cover-sub {
+  font-family: var(--font-display);
+  font-size: clamp(16px, 1.8vw, 26px);
+  font-weight: 400;
+  margin-bottom: clamp(8px, 1vh, 16px);
+  color: var(--fg-muted);
+  line-height: 1.6;
+}
+
+.cover-body .cover-date {
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1.2vw, 16px);
+  color: var(--fg-dim);
+  letter-spacing: 0.02em;
+}
+
+.cover-footer {
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 0.9vw, 12px);
+  color: var(--fg-dim);
+  letter-spacing: 0.08em;
+  position: relative;
+  z-index: 2;
+}
+
+.slide-content {
+  background: var(--bg);
+  padding: clamp(24px, 3vh, 48px) clamp(40px, 4vw, 80px);
+  overflow: hidden;
+  position: relative;
+}
+
+.slide-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.3;
+}
+
+.breadcrumb {
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 1vw, 13px);
+  color: var(--fg-dim);
+  text-align: right;
+  margin-bottom: clamp(12px, 1.5vh, 20px);
+  letter-spacing: 0.02em;
+}
+
+.slide-title {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 2.5vw, 36px);
+  font-weight: 800;
+  color: var(--fg);
+  line-height: 1.35;
+  margin-bottom: clamp(16px, 2vh, 28px);
+  letter-spacing: -0.01em;
+  position: relative;
+  padding-left: 28px;
+}
+
+.slide-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 5px;
+  background: linear-gradient(180deg, var(--accent), var(--copper));
+  border-radius: 3px;
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+
+.stats-flex {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  margin: clamp(32px, 4vh, 56px) 0;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 80px;
+  background: linear-gradient(180deg, transparent, var(--border-accent), transparent);
+  margin: 0 20px;
+  flex-shrink: 0;
+}
+
+.stat-item {
+  text-align: center;
+  padding: clamp(20px, 2.5vh, 32px) clamp(28px, 3vw, 48px);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stat-item:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+.stat-item:hover::before {
+  opacity: 1;
+}
+
+.stat-number {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4vw, 52px);
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 10px;
+  letter-spacing: -0.02em;
+}
+
+.stat-label {
+  font-family: var(--font-body);
+  font-size: clamp(12px, 1.2vw, 16px);
+  color: var(--fg-muted);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.experts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(18px, 2vw, 26px);
+  margin-top: clamp(24px, 3vh, 36px);
+}
+
+.expert-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: clamp(24px, 3vh, 36px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.expert-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.expert-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-accent);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+}
+
+.expert-card:hover::before {
+  opacity: 1;
+}
+
+.expert-avatar {
+  width: clamp(52px, 5vw, 68px);
+  height: clamp(52px, 5vw, 68px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(18px, 2vw, 26px);
+  margin-bottom: clamp(14px, 1.8vh, 22px);
+  transition: all 0.3s ease;
+}
+
+.expert-card:hover .expert-avatar {
+  transform: translateY(-4px);
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.expert-avatar.role-leader {
+  background: linear-gradient(135deg, var(--accent), var(--copper));
+  color: var(--bg-deep);
+}
+
+.expert-avatar.role-challenger {
+  background: linear-gradient(135deg, var(--clash), #c44a2e);
+  color: #fff;
+}
+
+.expert-avatar.role-observer {
+  background: linear-gradient(135deg, var(--insight), #358568);
+  color: #fff;
+}
+
+.expert-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(14px, 1.4vw, 18px);
+  margin-bottom: 6px;
+  color: var(--fg);
+  letter-spacing: 0.01em;
+}
+
+.expert-role {
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1vw, 13px);
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: clamp(10px, 1.2vh, 14px);
+}
+
+.expert-desc {
+  font-family: var(--font-body);
+  font-size: clamp(12px, 1.2vw, 15px);
+  color: var(--fg-muted);
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+.speech-cards {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2vh, 22px);
+  margin-top: clamp(20px, 2.5vh, 28px);
+}
+
+.speech-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: clamp(24px, 3vh, 36px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.speech-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--copper), transparent);
+  opacity: 0.6;
+}
+
+.speech-card:hover {
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+}
+
+.speech-meta {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 1.8vw, 18px);
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+}
+
+.speaker-avatar {
+  width: clamp(44px, 4vw, 56px);
+  height: clamp(44px, 4vw, 56px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(15px, 1.5vw, 20px);
+  transition: all 0.3s ease;
+}
+
+.speech-card:hover .speaker-avatar {
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+
+.speaker-avatar.role-leader {
+  background: linear-gradient(135deg, var(--accent), var(--copper));
+  color: var(--bg-deep);
+}
+
+.speaker-avatar.role-challenger {
+  background: linear-gradient(135deg, var(--clash), #c44a2e);
+  color: #fff;
+}
+
+.speaker-avatar.role-observer {
+  background: linear-gradient(135deg, var(--insight), #358568);
+  color: #fff;
+}
+
+.speaker-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(14px, 1.4vw, 18px);
+  color: var(--fg);
+  letter-spacing: 0.01em;
+}
+
+.speaker-role {
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1vw, 13px);
+  color: var(--fg-muted);
+  letter-spacing: 0.04em;
+}
+
+.speech-content {
+  font-family: var(--font-body);
+  font-size: clamp(13px, 1.3vw, 16px);
+  line-height: 1.9;
+  color: var(--fg-muted);
+  letter-spacing: 0.01em;
+}
+
+.clash-block {
+  background: linear-gradient(135deg, var(--clash-soft), rgba(212,160,74,0.06));
+  border: 1px solid rgba(255,71,87,0.25);
+  border-radius: var(--radius);
+  padding: clamp(24px, 3vh, 36px);
+  margin-top: clamp(20px, 2.5vh, 28px);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 40px var(--clash-glow), inset 0 0 60px rgba(255,71,87,0.05);
+}
+
+.clash-block::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(180deg, var(--clash), #c44a2e);
+  border-radius: 0 5px 5px 0;
+  box-shadow: 0 0 20px var(--clash-glow);
+}
+
+.clash-block::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 5px;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--clash), transparent);
+  opacity: 0.4;
+}
+
+.clash-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1.2vw, 14px);
+  font-weight: 700;
+  color: var(--clash);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+}
+
+.clash-item {
+  margin-bottom: clamp(12px, 1.5vh, 16px);
+  padding-bottom: clamp(12px, 1.5vh, 16px);
+  border-bottom: 1px solid rgba(255,71,87,0.15);
+}
+
+.clash-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.clash-speaker {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(13px, 1.3vw, 16px);
+  color: var(--accent);
+  margin-bottom: 8px;
+  letter-spacing: 0.01em;
+}
+
+.clash-text {
+  font-family: var(--font-body);
+  font-size: clamp(12px, 1.2vw, 15px);
+  line-height: 1.8;
+  color: var(--fg-muted);
+  letter-spacing: 0.01em;
+}
+
+.insight-block {
+  background: linear-gradient(135deg, var(--insight-soft), rgba(0,212,170,0.04));
+  border: 1px solid rgba(0,212,170,0.30);
+  border-radius: var(--radius);
+  padding: clamp(28px, 3.5vh, 40px);
+  margin-top: clamp(20px, 2.5vh, 28px);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 50px var(--insight-glow), inset 0 0 80px rgba(0,212,170,0.05);
+}
+
+.insight-block::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(180deg, var(--insight), #358568);
+  border-radius: 0 5px 5px 0;
+  box-shadow: 0 0 25px var(--insight-glow);
+}
+
+.insight-block::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 5px;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--insight), transparent);
+  opacity: 0.5;
+}
+
+.insight-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1.2vw, 14px);
+  font-weight: 700;
+  color: var(--insight);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+}
+
+.insight-core {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2vw, 26px);
+  font-weight: 800;
+  color: var(--fg);
+  line-height: 1.45;
+  margin-bottom: clamp(12px, 1.5vh, 16px);
+  letter-spacing: -0.01em;
+}
+
+.insight-explain {
+  font-family: var(--font-body);
+  font-size: clamp(13px, 1.3vw, 16px);
+  line-height: 1.85;
+  color: var(--fg-muted);
+  letter-spacing: 0.01em;
+}
+
+.conclusions-grid {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2vh, 22px);
+  margin-top: clamp(20px, 2.5vh, 28px);
+}
+
+.conclusion-item {
+  display: flex;
+  gap: clamp(16px, 2vw, 22px);
+  align-items: flex-start;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: clamp(20px, 2.5vh, 28px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.conclusion-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.conclusion-item:hover {
+  background: var(--bg-card-hover);
+  transform: translateX(8px);
+  box-shadow: 0 8px 30px rgba(212,160,74,0.15);
+}
+
+.conclusion-item:hover::before {
+  opacity: 1;
+}
+
+.conclusion-num {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 3.5vw, 44px);
+  font-weight: 800;
+  color: var(--accent);
+  opacity: 0.4;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.conclusion-text {
+  font-family: var(--font-body);
+  font-size: clamp(14px, 1.4vw, 18px);
+  line-height: 1.7;
+  color: var(--fg);
+  flex: 1;
+  letter-spacing: 0.01em;
+}
+
+.question-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: clamp(22px, 2.8vh, 32px);
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(14px, 1.8vw, 18px);
+  overflow: hidden;
+  position: relative;
+}
+
+.question-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.question-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent);
+  transform: translateX(8px);
+  box-shadow: 0 8px 30px rgba(212,160,74,0.15);
+}
+
+.question-card:hover::before {
+  opacity: 1;
+}
+
+.question-card .question-expand {
+  display: none;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-body);
+  font-size: clamp(12px, 1.2vw, 15px);
+  color: var(--fg-dim);
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+.question-card:hover .question-expand {
+  display: block;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.question-number {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(16px, 1.6vw, 22px);
+  color: var(--accent);
+  opacity: 0.5;
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+
+.question-text {
+  font-family: var(--font-body);
+  font-size: clamp(13px, 1.3vw, 16px);
+  color: var(--fg);
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+}
+
+#nav {
+  position: fixed;
+  bottom: clamp(16px, 2vh, 24px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.2vw, 16px);
+  z-index: 100;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(20px);
+  padding: clamp(10px, 1.2vh, 14px) clamp(18px, 2vw, 28px);
+  border-radius: 100px;
+  border: 1px solid var(--border);
+}
+
+.nav-btn {
+  width: clamp(36px, 3.5vw, 44px);
+  height: clamp(36px, 3.5vw, 44px);
+  border: none;
+  background: var(--bg-card);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(12px, 1.2vw, 14px);
+  color: var(--fg);
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  background: var(--accent);
+  color: var(--bg-deep);
+  transform: scale(1.1);
+}
+
+.dots {
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dot:hover {
+  background: rgba(255,255,255,0.5);
+  transform: scale(1.2);
+}
+
+.dot.active {
+  background: var(--accent);
+  transform: scale(1.4);
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+#counter {
+  position: fixed;
+  top: clamp(12px, 1.5vh, 20px);
+  right: clamp(16px, 2vw, 24px);
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 1.1vw, 14px);
+  color: var(--fg-muted);
+  z-index: 100;
+  background: rgba(0,0,0,0.6);
+  padding: 8px 16px;
+  border-radius: 100px;
+  backdrop-filter: blur(10px);
+  letter-spacing: 0.02em;
+}
+
+#progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 101;
+  background: var(--border);
+}
+
+#progressBar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--copper));
+  transition: width 0.2s ease-out;
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+@media (max-width: 768px) {
+  .experts-grid { grid-template-columns: repeat(2, 1fr); }
+  .cover-body { max-width: 85%; }
+  .stat-divider { display: none; }
+}
+
+@media (max-width: 480px) {
+  .experts-grid { grid-template-columns: 1fr; }
+  .stats-flex { flex-direction: column; gap: 14px; }
+  .stat-item { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+<div class="mesh-gradient"></div>
+<div class="noise-overlay"></div>
+<div id="progress">
+  <div id="progressBar"></div>
+</div>
+<div class="frame">
+  <div class="inner">
+    <div class="slides">
+
+<div class="slide slide-cover">
+  <div class="cover-logo">圆桌洞见<span>Roundtable Insight</span></div>
+  <div class="cover-body">
+    <h1>隐形算法监工</h1>
+    <p class="cover-sub">当AI成为职场资源的分配者，人如何退化为金融效率模型中的边际变量？</p>
+    <p class="cover-date">6 位专家 · 4 轮讨论</p>
+  </div>
+  <div class="cover-footer">本报告由 AI 专家圆桌生成</div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">专家阵容</div>
+  <h2 class="slide-title">隐形算法监工</h2>
+  <div class="experts-grid">
+    <div class="expert-card">
+      <div class="expert-avatar">马</div>
+      <div class="expert-name">马克思</div>
+      <div class="expert-role">政治经济学家</div>
+      <div class="expert-desc">劳动异化理论：资本主义将劳动者工具化...</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">项</div>
+      <div class="expert-name">项飙</div>
+      <div class="expert-role">人类学家</div>
+      <div class="expert-desc">附近消失理论：真实社会连接的瓦解...</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">刘</div>
+      <div class="expert-name">刘润</div>
+      <div class="expert-role">商业顾问</div>
+      <div class="expert-desc">交易成本理论：商业本质是降低交易成本...</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">罗</div>
+      <div class="expert-name">罗翔</div>
+      <div class="expert-role">法学教授</div>
+      <div class="expert-desc">法律的正义高于效率...</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">赫</div>
+      <div class="expert-name">赫拉利</div>
+      <div class="expert-role">历史学家</div>
+      <div class="expert-desc">AI是代理人而非工具...</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">李</div>
+      <div class="expert-name">李诞</div>
+      <div class="expert-role">脱口秀演员</div>
+      <div class="expert-desc">真诚的表达比精密的计算更重要...</div>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 1 / 4</div>
+  <h2 class="slide-title">算法监工的真相</h2>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 1 发言</div>
+  <div class="speech-cards">
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#c23b22">马</div>
+            <div>
+              <div class="speaker-name">马克思</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">算法是资本主义剥削的最新形式。 过去，工厂主用监工来监督工人。现在，平台用算法来"监督"劳动者。区别在于：监工是可见的，你可以反抗他；算法是不可见的，你甚至不知道你在被监督。 美团的骑手被算法控制——算法决定他们接什么单、走什么路线、用多少时间。如果超时，算法会扣钱。如果差评，算法会降低他们的接单优先级。骑手以为自己是"自由职业者"，实际上是"算法的奴隶"。 这就是我说的"劳动异化"——劳动者失去了对劳动过程的控制，变成了生产系统中的一个"变量"。算法不需要监工，它自己就是监工。而且它比任何人类监工都更高效、更无情。</div>
+        </div>
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#c23b22">项</div>
+            <div>
+              <div class="speaker-name">项飙</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">算法监工的可怕之处不在于它的"监督"，而在于它的"隐形"。 过去，你知道老板在监督你。你可以和他沟通、谈判、反抗。现在，算法在监督你，但你不知道它的规则是什么。你不知道为什么你的接单优先级降低了，你不知道为什么你的评分下降了。你只知道"系统"在决定你的命运。 这就是"附近消失"的最新表现——人与人之间的直接连接被算法取代了。过去，骑手和顾客之间有直接的交流；现在，他们之间的所有互动都被算法"中介"了。你看到的不是顾客，是"算法给你分配的任务"。 更深层的问题是：当人与工作的关系被算法"中介"，人还能对工作产生"意义感"吗？</div>
+        </div>
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#c23b22">刘</div>
+            <div>
+              <div class="speaker-name">刘润</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">从商业逻辑看，算法监工是效率提升的必然结果。 传统物流的问题是：信息不对称。骑手不知道哪里有订单，顾客不知道骑手在哪里，平台不知道骑手的效率。算法解决了这个问题——它实时匹配供需，优化路线，提高效率。 结果是什么？美团的配送时间从平均45分钟降到了28分钟。顾客更满意，骑手收入更高，平台利润更好。这是三赢。 当然，算法不是完美的。有时候它会给出不合理的路线，有时候它会低估交通状况。但这些问题可以通过"优化算法"来解决，而不是"取消算法"。 我们不能因为算法有问题就否定算法的价值。就像我们不能因为汽车会出车祸就禁止汽车。</div>
+        </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 1 碰撞</div>
+  <div class="clash-block">
+        <div class="clash-item">
+          <div class="clash-speaker">马克思</div>
+          <div class="clash-text">刘润，你说算法监工是"三赢"。但你有没有想过，这个"三赢"是谁定义的？平台定义了"效率"，顾客定义了"速度"，但谁来定义骑手的"幸福"？当骑手被算法控制每一分钟，他的"自由"在哪里？你说这是"效率提升"，我说这是"剥削升级"——从可见的监工变成了不可见的算法。</div>
+        </div>
+        <div class="clash-item">
+          <div class="clash-speaker">赫拉利</div>
+          <div class="clash-text">刘润，你说"配送时间从45分钟降到了28分钟"是进步。但你有没有问过骑手：他们为此付出了什么代价？他们闯红灯、逆行、超速，只是为了不被算法"惩罚"。效率提升的背后是骑手的安全风险。这不是"三赢"，是"一赢两输"——平台赢了，顾客赢了，骑手输了。</div>
+        </div>
+        <div class="clash-item">
+          <div class="clash-speaker">罗翔</div>
+          <div class="clash-text">赫拉利，你说算法是"代理人"不是"工具"。但法律上，"代理人"必须有"委托人"。算法的委托人是谁？是平台。所以，算法的决策责任应该由平台承担，而不是算法本身。问题不是算法太强大，是平台没有承担应有的责任。</div>
+        </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 1 洞见</div>
+  <div class="insight-block">
+    <div class="insight-q">算法监工确实提升了效率，但代价是劳动者的主体性和社会连接。问题不是要不要算法，而是算法应该在什么范围内运行——哪些决策应该由算法做，哪些应该由人做。</div>
+    <div class="insight-a">算法监工是一个效率与人性的权衡。完全取消算法会降低效率，完全依赖算法会消解人性。关键在于找到平衡点——让算法做"计算"，让人做"决策"。</div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 2 / 4</div>
+  <h2 class="slide-title">效率vs人性的边界</h2>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 2 发言</div>
+  <div class="speech-cards">
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#c23b22">刘</div>
+            <div>
+              <div class="speaker-name">刘润</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">算法应该做"计算"，人应该做"判断"。 算法擅长处理大量数据、优化路线、匹配供需。这些是"计算"问题——有明确的输入、输出和优化目标。人擅长处理模糊信息、权衡利弊、做出价值判断。这些是"判断"问题——没有标准答案，需要考虑多方利益。 所以，算法应该负责"计算"——告诉你有哪些选项、每个选项的预期结果。人应该负责"判断"——选择哪个选项、为什么选择这个选项。 比如，算法可以告诉骑手："如果你走这条路，预计15分钟到达；如果你走那条路，预计18分钟到达。"但选择哪条路应该是骑手的决定——也许他更熟悉那条路，也许那条路更安全。</div>
+        </div>
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#c23b22">马</div>
+            <div>
+              <div class="speaker-name">马克思</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">刘润，你的"计算vs判断"的区分是虚伪的。 当算法告诉你"如果你走这条路，预计15分钟到达"，这已经是在"替你做决策"了。因为如果你不走这条路，你会被"惩罚"——超时扣钱、差评降低优先级。你有"选择权"吗？你有"不选择"的权利吗？ 真正的"选择权"是：你可以选择走那条路，即使它更慢，即使它会让你超时。但算法不允许你这样做——它用"激励机制"来"引导"你的选择，实际上是"强迫"你的选择。 这就是我说的"劳动异化"——劳动者失去了对劳动过程的控制，变成了生产系统中的一个"变量"。</div>
+        </div>
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#4a6a9a">罗</div>
+            <div>
+              <div class="speaker-name">罗翔</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">从法律角度看，算法决策的边界应该由"可解释性"来划定。 如果一个算法的决策是"可解释的"——你能理解它为什么做出这个决策——那么这个决策可以由算法来做。如果一个算法的决策是"不可解释的"——你不知道它为什么做出这个决策——那么这个决策必须由人来做。 比如，"算法根据历史数据预测某个骑手的效率较低"——这个决策是"可解释的"，可以由算法来做。但"算法决定降低这个骑手的接单优先级"——这个决策是"不可解释的"，因为骑手不知道为什么他的优先级被降低了。 法律应该要求：所有影响劳动者权益的算法决策，都必须是可解释的、可申诉的。</div>
+        </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 2 碰撞</div>
+  <div class="clash-block">
+        <div class="clash-item">
+          <div class="clash-speaker">马克思</div>
+          <div class="clash-text">刘润，你说"算法做计算，人做判断"。但你有没有想过，在算法的"激励机制"下，人的"判断"已经被算法"驯化"了？当骑手知道"走这条路会被惩罚"时，他的"判断"还能是"自由的"吗？你的"计算vs判断"的区分，实际上是"控制vs被控制"的区分。</div>
+        </div>
+        <div class="clash-item">
+          <div class="clash-speaker">赫拉利</div>
+          <div class="clash-text">罗翔，你说"可解释性"是算法决策的边界。但你有没有想过，现代AI算法本质上是"不可解释的"？深度学习模型的决策过程是一个"黑箱"——你不知道它为什么做出这个决策。如果你要求所有算法决策都必须是可解释的，那实际上就是禁止了大部分AI算法。</div>
+        </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 2 洞见</div>
+  <div class="insight-block">
+    <div class="insight-q">在算法的"激励机制"下，人的"判断"已经被算法"驯化"了。真正的"选择权"不仅仅是"可以选择"，还包括"可以不选择"。如果算法不允许你"不选择"，那你的"选择权"就是假的。</div>
+    <div class="insight-a">算法决策的边界不是一个简单的"可解释性"问题，而是一个"权力"问题——谁有权做决策，谁来承担后果。算法的不可解释性不仅仅是技术问题，更是权力不对等的表现。</div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 3 / 4</div>
+  <h2 class="slide-title">法律与伦理的算法边界</h2>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 3 发言</div>
+  <div class="speech-cards">
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#4a6a9a">罗</div>
+            <div>
+              <div class="speaker-name">罗翔</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">法律必须明确：算法不是"中立"的，它是有"价值观"的。 算法的价值观来自于它的设计者和训练数据。如果设计者有意或无意地引入了偏见，算法就会继承这些偏见。如果训练数据包含历史歧视，算法就会学习这些歧视。 所以，法律必须要求：算法的设计和训练过程必须透明、可审计。算法的决策必须可解释、可申诉。算法的偏见必须被检测和纠正。 更重要的是，法律必须明确：算法的决策责任由平台承担。当算法做出错误决策时，平台必须承担赔偿责任。这会激励平台设计更公正、更可靠的算法。</div>
+        </div>
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#4a6a9a">赫</div>
+            <div>
+              <div class="speaker-name">赫拉利</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">法律监管是必要的，但不够。 因为法律只能约束"已知的风险"——你知道算法可能有偏见，所以你要求算法可解释。但法律无法约束"未知的风险"——你不知道算法会学习出什么"新偏见"。 真正的解决方案是：让算法的权力受到"制衡"。就像政府权力受到三权分立的制衡一样，算法的权力也应该受到多方制衡——劳动者、消费者、监管机构、独立审计机构。 只有当算法的权力受到多方制衡时，它才不会变成"独裁者"。</div>
+        </div>
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#3a8a5c">李</div>
+            <div>
+              <div class="speaker-name">李诞</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">我是一个普通人，我想从普通人的角度看法律监管。 我不懂法律，但我知道一件事：当我的权利被侵犯时，我需要一个"说理的地方"。算法侵犯了我的权利，但我找不到"说理的地方"。 我去找平台投诉，平台说"这是系统的决定"。我去找劳动仲裁，仲裁说"算法的决策不在我们的管辖范围内"。我去找法院，法院说"你没有证据证明算法歧视你"。 所以，法律监管的第一步是：给普通人一个"说理的地方"。当算法侵犯了你的权利，你应该有一个简单、快捷、有效的申诉渠道。</div>
+        </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 3 碰撞</div>
+  <div class="clash-block">
+        <div class="clash-item">
+          <div class="clash-speaker">赫拉利</div>
+          <div class="clash-text">罗翔，你说"算法的设计和训练过程必须透明、可审计"。但你有没有想过，算法的设计是商业机密？如果你要求平台公开算法的设计，平台会怎么做？它们会用"最低限度的公开"来应付监管，而不是真正公开核心算法。法律监管可能变成"形式主义"。</div>
+        </div>
+        <div class="clash-item">
+          <div class="clash-speaker">李诞</div>
+          <div class="clash-text">赫拉利，你说"算法的权力应该受到多方制衡"。但你有没有想过，谁来"制衡"？劳动者没有技术能力来审查算法，消费者没有时间来了解算法，监管机构没有资源来监管所有算法。你的"多方制衡"听起来很美，但实际上不可行。</div>
+        </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 3 洞见</div>
+  <div class="insight-block">
+    <div class="insight-q">法律不仅要要求算法可解释，还要解决"举证难"问题——当算法决策不可见时，举证责任应该倒置。同时，法律监管不能只依赖"自律"，必须有"他律"。</div>
+    <div class="insight-a">算法监管面临一个悖论：过度监管会扼杀创新，监管不足会纵容歧视。关键在于找到"创新"和"保护"之间的平衡点。</div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 4 / 4</div>
+  <h2 class="slide-title">人的价值如何重建</h2>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 4 发言</div>
+  <div class="speech-cards">
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#c23b22">项</div>
+            <div>
+              <div class="speaker-name">项飙</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">在算法时代，人的价值不在于"效率"，而在于"连接"。 算法擅长优化效率，但它不擅长建立连接。人与人之间的连接——信任、理解、共情——是算法无法替代的。 所以，人的价值重建应该从"连接"开始。不要和算法比效率，要比"人际连接"。你的价值不在于你能跑多少单，而在于你能和多少顾客建立信任关系。 这才是算法时代人的"不可替代性"——不是你的"能力"，而是你的"连接"。</div>
+        </div>
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#3a8a5c">李</div>
+            <div>
+              <div class="speaker-name">李诞</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">我觉得人的价值重建应该从"意义"开始。 算法可以让你"更高效"，但它不能让你"更有意义"。当你被算法控制每一分钟，你的工作还有"意义"吗？你只是为了"完成任务"而工作，不是为了"创造价值"而工作。 所以，人的价值重建应该从"找回工作的意义"开始。不要问"我怎么才能更高效"，要问"我为什么要工作"。当你找到了工作的意义，算法就只是一个"工具"，而不是"主人"。</div>
+        </div>
+        <div class="speech-card">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:#4a6a9a">赫</div>
+            <div>
+              <div class="speaker-name">赫拉利</div>
+              <div class="speaker-role">发言</div>
+            </div>
+          </div>
+          <div class="speech-content">我认为人的价值重建需要"制度保障"。 光靠个人的努力是不够的——你不能要求每个劳动者都"找到工作的意义"。你需要制度来保障劳动者的权利——算法决策的透明性、劳动者的申诉权、算法偏见的纠正机制。 只有当劳动者的权利得到制度保障时，他们才能真正"重建主体性"。否则，他们的"主体性"只是"假主体性"——他们在"选择"，但他们的选择已经被算法"驯化"了。</div>
+        </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 4 碰撞</div>
+  <div class="clash-block">
+        <div class="clash-item">
+          <div class="clash-speaker">李诞</div>
+          <div class="clash-text">项飙，你说人的价值在于"连接"。但你有没有想过，算法正在消解"连接"？当骑手和顾客之间只有"任务"，没有"交流"时，"连接"从何而来？你的"连接"理论听起来很美，但在算法时代不可行。</div>
+        </div>
+        <div class="clash-item">
+          <div class="clash-speaker">马克思</div>
+          <div class="clash-text">赫拉利，你说"制度保障"是关键。但你有没有想过，制度是谁制定的？是资本家制定的。他们会制定一个"限制自己权力"的制度吗？你的"制度保障"只是"改良主义"——它不能解决根本问题，只能缓解症状。</div>
+        </div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">Round 4 洞见</div>
+  <div class="insight-block">
+    <div class="insight-q">人的价值不在于效率（AI可以更高效），而在于意义——你与他人的连接、你与工作的连接、你与自己的连接。在算法时代，重建人的价值就是重建人的"意义感"。</div>
+    <div class="insight-a">重建人的价值需要个人努力和制度保障的结合。光靠个人的努力是不够的——你不能要求每个劳动者都"找到工作的意义"。你需要制度来保障劳动者的权利。</div>
+  </div>
+</div>
+
+
+<div class="slide slide-white">
+  <div class="breadcrumb">核心结论</div>
+  <h2 class="slide-title">圆桌洞见总结</h2>
+  <div class="conclusions-grid">
+        <div class="conclusion-item">
+          <div class="conclusion-num">1</div>
+          <div class="conclusion-text">算法监工的本质不是技术问题，而是权力问题——谁有权做决策，谁来承担后果。在算法时代，重建人的价值就是重建人的"主体性"——不仅仅是"可以做什么"，还包括"可以不做什么"。真正的自由不是"选择A或B"，而是"可以不选择"。</div>
+        </div>
+        <div class="conclusion-item">
+          <div class="conclusion-num">2</div>
+          <div class="conclusion-text">当算法比你更了解你自己的时候，你还是"你"吗？</div>
+        </div>
+        <div class="conclusion-item">
+          <div class="conclusion-num">3</div>
+          <div class="conclusion-text">如果算法可以让你更高效，你愿意放弃多少自由？</div>
+        </div>
+        <div class="conclusion-item">
+          <div class="conclusion-num">4</div>
+          <div class="conclusion-text">在算法时代，什么是真正的"不可替代性"？</div>
+        </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<div id="nav">
+  <button class="nav-btn" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+</div>
+<div id="counter">1 / 1</div>
+<script>
+(function(){
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let cur = 0;
+  const dotsContainer = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progressBar');
+
+  slides.forEach((s, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => go(i);
+    dotsContainer.appendChild(dot);
+  });
+
+  function go(n) {
+    if (n < 0 || n >= total) return;
+    slides[cur].classList.remove('visible');
+    dotsContainer.children[cur]?.classList.remove('active');
+    cur = n;
+    slides[cur].scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' });
+    slides[cur].classList.add('visible');
+    dotsContainer.children[cur]?.classList.add('active');
+    counter.textContent = (cur + 1) + ' / ' + total;
+    const pct = Math.min(100, ((cur + 1) / total) * 100);
+    progress.style.width = pct + '%';
+  }
+
+  document.getElementById('prevBtn').onclick = () => go(cur - 1);
+  document.getElementById('nextBtn').onclick = () => go(cur + 1);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      go(cur + 1);
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      go(cur - 1);
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      go(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      go(total - 1);
+    }
+  });
+
+  let wheelTimer = null;
+  document.addEventListener('wheel', e => {
+    e.preventDefault();
+    if (wheelTimer) return;
+    wheelTimer = setTimeout(() => wheelTimer = null, 400);
+    if (e.deltaY > 0 || e.deltaX > 0) go(cur + 1);
+    else if (e.deltaY < 0 || e.deltaX < 0) go(cur - 1);
+  }, { passive: false });
+
+  document.body.addEventListener('click', e => {
+    if (e.target.closest('.nav-dot, .dots, .nav-btn, .expert-card, .speech-card, .clash-block, .insight-block, .question-card, .conclusion-item, .stat-item')) return;
+    go(cur + 1);
+  });
+
+  go(0);
+})();
+</script>
+
+<script>
+(function(){
+  const slides=document.querySelectorAll('.slide');
+  const total=slides.length;
+  let cur=0;
+  const dotsContainer=document.getElementById('dots');
+  const counter=document.getElementById('counter');
+  const progress=document.getElementById('progressBar');
+  const isHorizontal=document.body.style.flexDirection==='row'||document.documentElement.style.scrollSnapType?.includes('x');
+
+  slides.forEach((s,i)=>{
+    const dot=document.createElement('div');
+    dot.className='dot'+(i===0?' active':'');
+    dot.onclick=()=>go(i);
+    dotsContainer.appendChild(dot);
+  });
+
+  function go(n){
+    if(n<0||n>=total)return;
+    slides[cur].classList.remove('visible');
+    dotsContainer.children[cur]?.classList.remove('active');
+    cur=n;
+    slides[cur].scrollIntoView({behavior:'smooth',block:'start',inline:'start'});
+    slides[cur].classList.add('visible');
+    dotsContainer.children[cur]?.classList.add('active');
+    if(counter)counter.textContent=(cur+1)+' / '+total;
+    if(progress){const pct=Math.min(100,((cur+1)/total)*100);progress.style.width=pct+'%';}
+  }
+
+  document.getElementById('prevBtn')?.addEventListener('click',()=>go(cur-1));
+  document.getElementById('nextBtn')?.addEventListener('click',()=>go(cur+1));
+
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowDown'||e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){
+      e.preventDefault();go(cur+1);
+    }else if(e.key==='ArrowUp'||e.key==='ArrowLeft'||e.key==='PageUp'){
+      e.preventDefault();go(cur-1);
+    }else if(e.key==='Home'){
+      e.preventDefault();go(0);
+    }else if(e.key==='End'){
+      e.preventDefault();go(total-1);
+    }
+  });
+
+  let wheelTimer=null;
+  document.addEventListener('wheel',e=>{
+    e.preventDefault();
+    if(wheelTimer)return;
+    wheelTimer=setTimeout(()=>wheelTimer=null,400);
+    if(e.deltaY>0)go(cur+1);
+    else if(e.deltaY<0)go(cur-1);
+  },{passive:false});
+
+  document.body.addEventListener('click',e=>{
+    if(e.target.closest('.nav-dot,.dots,.nav-btn,.expert-card,.speech-card,.clash-block,.insight-block,.question-card,.conclusion-item,.stat-item,.card'))return;
+    go(cur+1);
+  });
+
+  go(0);
+})();
+</script>
+</body>
+</html>

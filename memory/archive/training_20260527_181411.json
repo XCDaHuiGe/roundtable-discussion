@@ -1,0 +1,192 @@
+{
+  "start_time": "2026-05-27T18:14:11.571561",
+  "rounds": [
+    {
+      "round": 1,
+      "mode": "human",
+      "topic": "数字游民的身份危机",
+      "json_path": "content/数字游民_身份危机_v8.json",
+      "score": 75.0,
+      "grade": "C",
+      "expert_upgrades": {
+        "项飙": {
+          "file": "D:\\vibe_coding\\zhengliu\\expert-library\\experts\\chinese-intellectuals\\项飙.md",
+          "new_version": 1,
+          "speech_count": 6
+        },
+        "李诞": {
+          "file": "D:\\vibe_coding\\zhengliu\\expert-library\\experts\\chinese-intellectuals\\李诞.md",
+          "new_version": 1,
+          "speech_count": 6
+        }
+      },
+      "score_result": {
+        "total": 75.0,
+        "grade": "C",
+        "dimensions": {
+          "attack_efficiency": {
+            "score": 100.0,
+            "weight": 0.25,
+            "weighted": 25.0,
+            "details": {
+              "total": 9,
+              "effective": 9,
+              "details": [
+                {
+                  "attacker": "韩炳哲",
+                  "target": "傅盛",
+                  "type": "利益冲突",
+                  "effective": true,
+                  "has_counter": true,
+                  "has_evidence": false,
+                  "has_logic": true,
+                  "has_specific": false
+                },
+                {
+                  "attacker": "项飙",
+                  "target": "理查德·佛罗里达",
+                  "type": "逻辑漏洞",
+                  "effective": true,
+                  "has_counter": true,
+                  "has_evidence": false,
+                  "has_logic": true,
+                  "has_specific": false
+                },
+                {
+                  "attacker": "弗洛姆",
+                  "target": "李诞",
+                  "type": "人性弱点",
+                  "effective": true,
+                  "has_counter": true,
+                  "has_evidence": false,
+                  "has_logic": true,
+                  "has_specific": true
+                },
+                {
+                  "attacker": "韩炳哲",
+                  "target": "傅盛",
+                  "type": "现实矛盾",
+                  "effective": true,
+                  "has_counter": true,
+                  "has_evidence": false,
+                  "has_logic": false,
+                  "has_specific": false
+                },
+                {
+                  "attacker": "弗洛姆",
+                  "target": "李诞",
+                  "type": "逻辑漏洞",
+                  "effective": true,
+                  "has_counter": true,
+                  "has_evidence": false,
+                  "has_logic": true,
+                  "has_specific": false
+                },
+                {
+                  "attacker": "项飙",
+                  "target": "理查德·佛罗里达",
+                  "type": "人性弱点",
+                  "effective": true,
+                  "has_counter": true,
+                  "has_evidence": false,
+                  "has_logic": false,
+                  "has_specific": false
+                },
+                {
+                  "attacker": "项飙",
+                  "target": "傅盛",
+                  "type": "现实矛盾",
+                  "effective": true,
+                  "has_counter": true,
+                  "has_evidence": false,
+                  "has_logic": true,
+                  "has_specific": false
+                },
+                {
+                  "attacker": "韩炳哲",
+                  "target": "理查德·佛罗里达",
+                  "type": "逻辑漏洞",
+                  "effective": true,
+                  "has_counter": true,
+                  "has_evidence": false,
+                  "has_logic": false,
+                  "has_specific": false
+                },
+                {
+                  "attacker": "弗洛姆",
+                  "target": "李诞",
+                  "type": "人性弱点",
+                  "effective": true,
+                  "has_counter": true,
+                  "has_evidence": false,
+                  "has_logic": true,
+                  "has_specific": false
+                }
+              ]
+            }
+          },
+          "defense_rate": {
+            "score": 100.0,
+            "weight": 0.2,
+            "weighted": 20.0,
+            "details": {
+              "total_defended": 9,
+              "successful": 9
+            }
+          },
+          "evidence_hit": {
+            "score": 0.0,
+            "weight": 0.15,
+            "weighted": 0.0,
+            "details": {
+              "total_speeches": 27,
+              "with_evidence": 0
+            }
+          },
+          "style_recognition": {
+            "score": 33.3,
+            "weight": 0.15,
+            "weighted": 5.0,
+            "details": {
+              "total": 18,
+              "distinctive": 6
+            }
+          },
+          "cognitive_contribution": {
+            "score": 100.0,
+            "weight": 0.1,
+            "weighted": 10.0,
+            "details": {
+              "total_rounds": 3,
+              "with_reversal": 3
+            }
+          },
+          "case_quality": {
+            "score": 100.0,
+            "weight": 0.1,
+            "weighted": 10.0,
+            "details": {
+              "total_rounds": 3,
+              "with_cases": 3,
+              "total_cases": 4
+            }
+          },
+          "structure": {
+            "score": 100.0,
+            "weight": 0.05,
+            "weighted": 5.0,
+            "details": {
+              "title": true,
+              "experts": true,
+              "rounds": true,
+              "final_insight": true,
+              "open_questions": true
+            }
+          }
+        }
+      }
+    }
+  ],
+  "expert_upgrades": {},
+  "end_time": "2026-05-27T18:14:11.992991"
+}

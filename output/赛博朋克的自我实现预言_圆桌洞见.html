@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>赛博朋克的自我实现预言 · 圆桌洞见</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Noto+Serif+SC:wght@600;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0d0d0d;
+  --bg-terminal: #0a0a0a;
+  --bg-card: rgba(20, 20, 20, 0.95);
+  --bg-elevated: rgba(30, 30, 30, 0.98);
+  --text-primary: #e2deda;
+  --text-secondary: rgba(226, 222, 218, 0.78);
+  --text-tertiary: rgba(226, 222, 218, 0.55);
+  --text-muted: rgba(226, 222, 218, 0.38);
+  --acid: #c9f044;
+  --acid-glow: rgba(201, 240, 68, 0.4);
+  --accent-red: #ff4757;
+  --accent-green: #00d4aa;
+  --accent-blue: #0a84ff;
+  --border-subtle: rgba(226, 222, 218, 0.1);
+  --border-light: rgba(226, 222, 218, 0.18);
+  --mono: 'JetBrains Mono', 'SF Mono', Consolas, 'SFMono-Regular', Menlo, Monaco, monospace;
+  --display: 'Noto Serif SC', Georgia, 'Times New Roman', serif;
+  --body: 'Outfit', 'Noto Sans SC', 'Hiragino Sans GB', 'STHeiti', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg-primary); color: var(--text-primary); font-family: var(--body); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+.frame { position: fixed; inset: 0; padding: 5vh 4vw; background:
+  radial-gradient(ellipse 100% 80% at 50% 0%, rgba(201, 240, 68, 0.04) 0%, transparent 40%),
+  radial-gradient(circle at 80% 80%, rgba(201, 240, 68, 0.02) 0%, transparent 30%),
+  repeating-linear-gradient(0deg, rgba(226, 222, 218, 0.04) 0 1px, transparent 1px 40px),
+  repeating-linear-gradient(90deg, rgba(226, 222, 218, 0.04) 0 1px, transparent 1px 40px),
+  var(--bg-primary); overflow: hidden; }
+.frame::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 1; }
+.frame::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, transparent 50%, rgba(0, 0, 0, 0.5) 100%); pointer-events: none; z-index: 2; }
+
+.inner { position: relative; width: 100%; height: 100%; overflow: hidden; border: 1px solid var(--border-light); border-radius: 16px; background:
+  linear-gradient(90deg, rgba(201, 240, 68, 0.03) 1px, transparent 1px),
+  linear-gradient(180deg, rgba(201, 240, 68, 0.02) 1px, transparent 1px),
+  radial-gradient(circle at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.4) 100%),
+  var(--bg-terminal); background-size: 80px 100%, 100% 80px, auto;
+  box-shadow:
+    0 0 100px rgba(201, 240, 68, 0.06),
+    0 40px 80px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(226, 222, 218, 0.12),
+    inset 0 0 150px rgba(0, 0, 0, 0.4); }
+
+.slides { position: absolute; inset: 0; }
+.slide { position: absolute; inset: 0; display: none; flex-direction: column; padding: 28px; opacity: 0; transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+.slide.active { display: flex; opacity: 1; }
+
+#progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--acid), var(--accent-green)); z-index: 100; transition: width 0.35s ease; box-shadow: 0 0 16px var(--acid-glow), 0 0 32px rgba(201, 240, 68, 0.2); }
+
+.meta-line { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.15em; }
+.meta-line.top { padding-bottom: 20px; border-bottom: 1px solid var(--border-subtle); }
+.meta-line.bottom { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border-subtle); }
+
+.hero-zone { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
+.hero-label { font-family: var(--mono); font-size: 13px; color: var(--acid); letter-spacing: 0.3em; margin-bottom: 24px; text-transform: uppercase; }
+.hero-title { font-family: var(--mono); font-weight: 800; font-size: clamp(36px, 7vw, 80px); color: var(--text-primary); line-height: 1.15; letter-spacing: -0.02em; text-shadow: 0 0 40px rgba(201, 240, 68, 0.15); }
+.hero-title .glow { color: var(--acid); text-shadow: 0 0 30px var(--acid-glow), 0 0 60px rgba(201, 240, 68, 0.2); }
+.hero-sub { font-family: var(--body); font-size: clamp(18px, 2.8vw, 32px); color: var(--text-tertiary); margin-top: 20px; line-height: 1.6; letter-spacing: 0.01em; }
+.hero-accent { color: var(--acid); font-weight: 700; }
+
+.version-badge { display: inline-flex; align-items: center; gap: 10px; background: rgba(201, 240, 68, 0.08); padding: 10px 20px; border-radius: 24px; border: 1px solid rgba(201, 240, 68, 0.2); margin-bottom: 28px; }
+.version-badge span { font-family: var(--mono); font-size: 11px; color: var(--acid); letter-spacing: 0.18em; text-transform: uppercase; }
+
+.stats-grid { display: flex; justify-content: center; gap: clamp(36px, 7vw, 100px); margin: 6% 0; flex-wrap: wrap; }
+.stat-item { text-align: center; position: relative; padding: 0 28px; }
+.stat-item::after { content: ''; position: absolute; right: 0; top: 10%; bottom: 10%; width: 1px; background: linear-gradient(180deg, transparent, var(--acid), transparent); opacity: 0.2; }
+.stat-item:last-child::after { display: none; }
+.stat-num { font-family: var(--mono); font-weight: 800; font-size: clamp(64px, 12vw, 110px); color: var(--acid); line-height: 1; letter-spacing: -0.03em; text-shadow: 0 0 40px var(--acid-glow), 0 0 80px rgba(201, 240, 68, 0.2); }
+.stat-label { font-family: var(--mono); font-size: 12px; color: var(--text-muted); letter-spacing: 0.2em; margin-top: 16px; text-transform: uppercase; }
+
+.experts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 5% 0; }
+.expert-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 28px 24px; text-align: center; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+.expert-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--acid), transparent); opacity: 0; transition: opacity 0.4s ease; }
+.expert-card::after { content: ''; position: absolute; inset: 0; border-radius: 12px; box-shadow: inset 0 0 30px rgba(201, 240, 68, 0); transition: box-shadow 0.4s ease; pointer-events: none; }
+.expert-card:hover { transform: translateY(-6px); border-color: rgba(201, 240, 68, 0.3); background: var(--bg-elevated); }
+.expert-card:hover::before { opacity: 1; }
+.expert-card:hover::after { box-shadow: inset 0 0 30px rgba(201, 240, 68, 0.05); }
+.expert-avatar { width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 16px; background: linear-gradient(135deg, var(--acid), var(--accent-green)); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-weight: 700; font-size: 24px; color: var(--bg-primary); box-shadow: 0 0 24px var(--acid-glow); position: relative; }
+.expert-card:hover .expert-avatar { box-shadow: 0 0 0 4px rgba(201, 240, 68, 0.15), 0 0 40px var(--acid-glow); }
+.expert-name { font-family: var(--mono); font-weight: 700; font-size: 16px; color: var(--text-primary); margin-bottom: 8px; letter-spacing: 0.02em; }
+.expert-role { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+.round-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 32px; margin: 20px 0; position: relative; overflow: hidden; }
+.round-block::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--acid), transparent); }
+.round-title { font-family: var(--mono); font-weight: 800; font-size: clamp(20px, 3.5vw, 32px); color: var(--acid); margin-bottom: 20px; text-align: center; letter-spacing: 0.08em; text-shadow: 0 0 20px rgba(201, 240, 68, 0.2); }
+
+.clash-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 24px 28px; margin: 16px 0; border-left: 4px solid var(--accent-red); position: relative; box-shadow: -10px 0 30px rgba(255, 71, 87, 0.12); }
+.clash-block::after { content: ''; position: absolute; left: 4px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--accent-red), transparent); opacity: 0.4; }
+.clash-title { font-family: var(--mono); font-weight: 700; font-size: 16px; color: var(--accent-red); margin-bottom: 14px; letter-spacing: 0.06em; }
+.clash-content { font-family: var(--body); font-size: clamp(13px, 1.5vw, 17px); color: var(--text-secondary); line-height: 1.9; letter-spacing: 0.01em; }
+
+.insight-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 24px 28px; margin: 16px 0; border-left: 4px solid var(--accent-green); position: relative; box-shadow: -10px 0 30px rgba(0, 212, 170, 0.12); }
+.insight-block::after { content: ''; position: absolute; left: 4px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--accent-green), transparent); opacity: 0.4; }
+.insight-title { font-family: var(--mono); font-weight: 700; font-size: 16px; color: var(--accent-green); margin-bottom: 14px; letter-spacing: 0.06em; }
+.insight-content { font-family: var(--body); font-size: clamp(13px, 1.5vw, 17px); color: var(--text-secondary); line-height: 1.9; letter-spacing: 0.01em; }
+.insight-core { font-weight: 700; font-size: clamp(16px, 1.8vw, 20px); color: var(--text-primary); display: block; margin: 14px 0; letter-spacing: -0.01em; }
+
+.question-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; margin: 16px 0; overflow: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.question-card:hover { border-color: rgba(201, 240, 68, 0.25); box-shadow: 0 0 20px rgba(201, 240, 68, 0.08); }
+.question-header { padding: 20px 28px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid transparent; transition: all 0.3s ease; }
+.question-header:hover { background: rgba(201, 240, 68, 0.03); }
+.question-card.open .question-header { border-bottom-color: var(--border-subtle); }
+.question-text { font-family: var(--mono); font-weight: 700; font-size: clamp(14px, 1.8vw, 18px); color: var(--text-primary); letter-spacing: 0.02em; }
+.question-toggle { font-family: var(--mono); font-size: 18px; color: var(--acid); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.question-card.open .question-toggle { transform: rotate(45deg); }
+.question-answer { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+.question-card.open .question-answer { max-height: 500px; }
+.question-answer-inner { padding: 20px 28px; font-family: var(--body); font-size: clamp(12px, 1.3vw, 15px); color: var(--text-secondary); line-height: 1.9; letter-spacing: 0.01em; }
+
+.conclusion-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 48px; margin: 0 auto; max-width: 800px; text-align: center; position: relative; overflow: hidden; }
+.conclusion-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, transparent, var(--acid), transparent); }
+.conclusion-card::after { content: ''; position: absolute; inset: 0; box-shadow: inset 0 0 50px rgba(201, 240, 68, 0.03); pointer-events: none; }
+.conclusion-text { font-family: var(--mono); font-weight: 800; font-size: clamp(26px, 4vw, 44px); color: var(--text-primary); line-height: 1.4; letter-spacing: 0.02em; }
+
+.question-block { flex: 1; display: flex; align-items: center; justify-content: center; }
+.question-text-large { font-family: var(--mono); font-weight: 800; font-size: clamp(28px, 5vw, 52px); color: var(--text-primary); line-height: 1.4; text-align: center; max-width: 90%; letter-spacing: 0.02em; }
+
+.statements-grid { flex: 1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; overflow: auto; }
+.statement-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 20px; transition: all 0.3s ease; }
+.statement-block:hover { border-color: var(--border-light); box-shadow: 0 0 16px rgba(201, 240, 68, 0.05); }
+.statement-meta { display: flex; justify-content: space-between; margin-bottom: 12px; }
+.statement-speaker { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--acid); }
+.statement-role { font-family: var(--mono); font-size: 10px; color: var(--text-muted); }
+.statement-text { font-family: var(--body); font-size: clamp(12px, 1.3vw, 15px); line-height: 1.85; color: var(--text-secondary); letter-spacing: 0.01em; }
+
+#nav { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 18px; z-index: 100; background: rgba(13, 13, 13, 0.92); padding: 14px 24px; border-radius: 28px; border: 1px solid var(--border-subtle); backdrop-filter: blur(16px); box-shadow: 0 0 30px rgba(201, 240, 68, 0.05); }
+.nav-btn { width: 40px; height: 40px; border: 1px solid var(--border-light); background: transparent; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--text-secondary); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.nav-btn:hover { background: rgba(201, 240, 68, 0.12); border-color: var(--acid); color: var(--acid); box-shadow: 0 0 16px rgba(201, 240, 68, 0.2); }
+.dots { display: flex; gap: 8px; }
+.dot { width: 9px; height: 9px; border-radius: 3px; background: var(--text-muted); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.dot:hover { background: var(--text-tertiary); }
+.dot.active { background: var(--acid); box-shadow: 0 0 12px var(--acid-glow); }
+#counter { position: fixed; top: 24px; right: 28px; font-family: var(--mono); font-size: 12px; color: var(--text-muted); z-index: 100; background: rgba(13, 13, 13, 0.85); padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border-subtle); letter-spacing: 0.1em; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes glowPulse { 0%, 100% { box-shadow: 0 0 24px var(--acid-glow); } 50% { box-shadow: 0 0 48px rgba(201, 240, 68, 0.6); } }
+@keyframes scanline { 0% { transform: translateY(-100%); } 100% { transform: translateY(100vh); } }
+@keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.98; } }
+
+.slide .a { opacity: 0; }
+.slide.active .a { animation-fill-mode: both; }
+
+@media (max-width: 1024px) {
+  .experts-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .frame { padding: 3vh 2vw; }
+  .inner { border-radius: 12px; }
+  .slide { padding: 20px; }
+  .stats-grid { gap: 28px; }
+  .stat-item { padding: 0 20px; }
+  .stat-num { font-size: 52px; }
+  .experts-grid { grid-template-columns: 1fr; gap: 16px; }
+  .expert-card { padding: 24px 20px; }
+  .statements-grid { grid-template-columns: 1fr; gap: 12px; }
+  #nav { padding: 10px 18px; gap: 12px; bottom: 24px; }
+  .nav-btn { width: 36px; height: 36px; }
+  .round-block, .conclusion-card { padding: 28px 24px; }
+  .clash-block, .insight-block, .question-header { padding: 20px 24px; }
+}
+</style>
+</head>
+<body>
+<div id="progress" style="width: 0%;"></div>
+<div class="frame">
+<div class="inner">
+<div class="slides">
+
+<div class="slide active">
+  <div class="meta-line top"><span>ROUND TABLE · V7.0</span><span>认知演化圆桌系统</span></div>
+  <div class="hero-zone">
+    <div class="version-badge"><span>CYBERPUNK</span><span>·</span><span>SELF-FULFILLING PROPHECY</span></div>
+    <div class="hero-label">赛博朋克的自我实现预言</div>
+    <div class="hero-title">科幻叙事 × AI恐惧<br><span class="glow">投资风向</span></div>
+    <div class="hero-sub">科幻电影与反乌托邦文学如何塑造了人类对AI的群体性心理恐慌<br>并实质影响了科技投资风向</div>
+    <div class="stats-grid">
+      <div class="stat-item"><div class="stat-num">6</div><div class="stat-label">专家</div></div>
+      <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">轮次</div></div>
+      <div class="stat-item"><div class="stat-num">9</div><div class="stat-label">发言</div></div>
+      <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">洞见</div></div>
+    </div>
+  </div>
+  <div class="meta-line bottom"><span>赫拉利 · 凯文·凯利 · 博尔赫斯 · 塔勒布 · 卡尼曼 · 尼采</span><span>2026</span></div>
+</div>
+
+<div class="slide">
+  <div class="meta-line top"><span>EXPERTS</span><span>专家阵容</span></div>
+  <div class="experts-grid">
+    <div class="expert-card">
+      <div class="expert-avatar">赫</div>
+      <div class="expert-name">赫拉利</div>
+      <div class="expert-role">历史学家 · 《人类简史》作者</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">K</div>
+      <div class="expert-name">凯文·凯利</div>
+      <div class="expert-role">科技思想家 · 《必然》作者</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">博</div>
+      <div class="expert-name">博尔赫斯</div>
+      <div class="expert-role">文学大师 · 迷宫叙事者</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">塔</div>
+      <div class="expert-name">塔勒布</div>
+      <div class="expert-role">风险哲学家 · 《黑天鹅》作者</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">卡</div>
+      <div class="expert-name">卡尼曼</div>
+      <div class="expert-role">认知心理学家 · 诺贝尔经济学奖</div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-avatar">尼</div>
+      <div class="expert-name">尼采</div>
+      <div class="expert-role">哲学家 · 超人哲学创立者</div>
+    </div>
+  </div>
+  <div class="meta-line bottom"><span>6 EXPERTS</span><span>跨学科碰撞</span></div>
+</div>
+
+<div class="slide">
+  <div class="meta-line top"><span>ROUND 1 · 立场</span><span>科幻叙事如何预装了公众对AI的恐惧框架？</span></div>
+  <div class="round-block">
+    <div class="round-title">ROUND 1 · 科幻叙事如何预装了公众对AI的恐惧框架？</div>
+    <div class="statements-grid">
+      <div class="statement-block">
+        <div class="statement-meta"><span class="statement-speaker">赫拉利</span><span class="statement-role">历史学家</span></div>
+        <div class="statement-text"><strong>立场：叙事预装恐惧是历史必然。</strong>人类通过故事构建秩序，这是《人类简史》的核心发现——"虚构故事"是智人超越其他物种的核心能力。科幻叙事本质上是一种"预装恐惧操作系统"：在AI尚未真正到来之前，人类已经通过《终结者》的天网、《黑客帝国》的矩阵、《2001太空漫游》的HAL 9000为公众安装了"AI=威胁"的认知框架。依据在于《人类简史》中"想象的秩序"概念——人类相信的故事塑造了社会结构，从宗教到货币到国家，无一不是虚构叙事的产物。AI恐惧叙事不过是这一机制的最新版本。而《未来简史》中"数据主义"的论述进一步揭示了：当人类开始将自身视为数据处理系统时，对AI超越人类的恐惧就获得了认知基础——如果人只是算法，那么更好的算法自然应该取代人。</div>
+      </div>
+      <div class="statement-block">
+        <div class="statement-meta"><span class="statement-speaker">凯文·凯利</span><span class="statement-role">科技思想家</span></div>
+        <div class="statement-text"><strong>立场：恐惧叙事是技术进化的必要张力。</strong>技术发展需要恐惧作为制衡力量，这不是预装而是预演。《必然》中描述的"形成"（Becoming）过程本身就包含对未知的焦虑——任何新技术的出现都伴随着恐惧，这是进化的常态。科幻叙事中的恐惧让社会提前演练了应对AI风险的场景，从阿西莫夫的机器人三定律到《她》中的情感依赖，每一种恐惧叙事都是一次"压力测试"。依据在于《必然》中"科技想要什么"的论述——技术系统如同生物系统，需要天敌来维持平衡，恐惧叙事就是技术的天敌。而《失控》中"蜂群思维"的描述更深刻：群体智能的涌现本身就令人不安，科幻只是放大了这种不安，而非创造了它。恐惧是进化的副产品，不是阴谋的产物。</div>
+      </div>
+      <div class="statement-block">
+        <div class="statement-meta"><span class="statement-speaker">博尔赫斯</span><span class="statement-role">文学大师</span></div>
+        <div class="statement-text"><strong>立场：恐惧叙事是迷宫的另一种形式。</strong>科幻叙事构建了一个不可逃逸的恐惧迷宫，正如《小径分岔的花园》中的时间迷宫——每一条路径都通向不同的恐惧版本，但所有路径都指向恐惧。反乌托邦文学不是预言，而是一种"可能性花园"——它展示了所有可能的未来，但读者只记住了最黑暗的那些。依据在于《小径分岔的花园》中"时间无限分岔"的设定——科幻叙事让公众在无限可能的未来中只选择恐惧的路径，因为恐惧是最容易感知的情感。而《巴别图书馆》中"无限书籍"的隐喻更为致命：当所有可能的叙事都存在时，恐惧叙事因其情感强度而获得最大传播力。图书馆中有关于AI拯救人类的书，也有关于AI毁灭人类的书，但只有后者被反复阅读——不是因为它更真实，而是因为它更刺激。</div>
+      </div>
+    </div>
+  </div>
+  <div class="meta-line bottom"><span>ROUND 1 · 3 STATEMENTS</span><span>立场交锋</span></div>
+</div>
+
+<div class="slide">
+  <div class="meta-line top"><span>ROUND 1 · 碰撞与洞见</span><span>CLASH & INSIGHT</span></div>
+  <div style="flex:1;overflow:auto;">
+    <div class="clash-block">
+      <div class="clash-title">⚡ 碰撞 1：赫拉利 vs 凯文·凯利 — 预装还是预演？</div>
+      <div class="clash-content">赫拉利坚持恐惧叙事是"预装"——公众是恐惧的被动接受者，叙事权力掌握在好莱坞和硅谷手中。凯文·凯利反驳：恐惧叙事是"预演"——公众不是被动接受，而是在叙事中主动演练应对策略。赫拉利反击：《终结者》的观众走出影院后并没有制定AI应对方案，他们只是更害怕了。凯利回应：但阿西莫夫的读者确实在思考机器人伦理——不是所有恐惧叙事都制造恐慌，有些制造了反思。关键分歧在于：公众是恐惧的受害者还是参与者？赫拉利认为叙事权力是不对称的，凯利认为受众有能动性。</div>
+    </div>
+    <div class="clash-block">
+      <div class="clash-title">⚡ 碰撞 2：博尔赫斯 vs 赫拉利 — 迷宫还是灌输？</div>
+      <div class="clash-content">博尔赫斯认为恐惧叙事是迷宫结构——多路径但不可逃逸，恐惧是结构性的而非被植入的。赫拉利认为恐惧叙事是单向灌输——权力通过叙事塑造认知，从宗教到民族主义到AI恐惧，都是同一套操作。博尔赫斯质疑：如果恐惧是单向灌输，为什么不同文化对AI的恐惧形态不同？日本文化中的AI叙事（如阿童木、哆啦A梦）远比西方友善，这证明恐惧不是被灌输的，而是在文化迷宫中被"选择"的。赫拉利回应：日本也有《攻壳机动队》——迷宫的出口不同，但迷宫本身是同一座。关键分歧：恐惧的传播是结构性必然还是权力操控？</div>
+    </div>
+    <div class="insight-block">
+      <div class="insight-title">◆ 洞见 1：恐惧叙事的三重机制</div>
+      <div class="insight-content">
+        <span class="insight-core">恐惧叙事既是认知预装（赫拉利），也是进化预演（凯利），更是结构迷宫（博尔赫斯）——三者不是互斥的，而是同一现象的三个维度。</span>
+        赫拉利揭示了恐惧叙事的"权力维度"——谁控制了叙事，谁就控制了恐惧的方向；凯利揭示了恐惧叙事的"功能维度"——恐惧在技术进化中扮演制衡角色；博尔赫斯揭示了恐惧叙事的"结构维度"——恐惧是迷宫的唯一出口，因为其他出口不够刺激。三者共同揭示了一个深层机制：公众对AI的恐惧不是被"植入"的，而是在叙事结构中被"困住"的。恐惧叙事的传播力不来自它的真实性，而来自它的情感强度——在博尔赫斯的图书馆中，恐惧之书永远比希望之书更畅销。
+      </div>
+    </div>
+  </div>
+  <div class="meta-line bottom"><span>2 CLASHES · 1 INSIGHT</span><span>认知增量</span></div>
+</div>
+
+<div class="slide">
+  <div class="meta-line top"><span>ROUND 2 · 攻击</span><span>恐惧叙事如何转化为科技投资的避险逻辑？</span></div>
+  <div class="round-block">
+    <div class="round-title">ROUND 2 · 恐惧叙事如何转化为科技投资的避险逻辑？</div>
+    <div class="statements-grid">
+      <div class="statement-block">
+        <div class="statement-meta"><span class="statement-speaker">塔勒布</span><span class="statement-role">风险哲学家</span></div>
+        <div class="statement-text"><strong>立场：恐惧叙事制造了反脆弱的幻觉。</strong>投资者以为通过恐惧叙事可以"预见"黑天鹅，但《黑天鹅》的核心论点是：真正的黑天鹅是不可预测的。科幻叙事让投资者产生"已知的未知"幻觉——以为恐惧叙事覆盖了所有风险，实际上真正的风险从未被叙事触及。依据在于《黑天鹅》中"火鸡悖论"——火鸡根据历史数据预测未来，每天都被喂食让它确信人类是仁慈的，直到感恩节到来。科幻叙事就是投资者的"喂食"——它让投资者以为已经识别了所有AI风险，但真正的AI黑天鹅（无论是正面还是负面）一定在叙事之外。而《反脆弱》中"过度干预"的论述更致命：对恐惧的过度反应反而制造了更大的脆弱性——投资者因为恐惧AI失控而过度投资于"安全AI"，却忽略了"安全AI"本身可能成为新的系统性风险。</div>
+      </div>
+      <div class="statement-block">
+        <div class="statement-meta"><span class="statement-speaker">卡尼曼</span><span class="statement-role">认知心理学家</span></div>
+        <div class="statement-text"><strong>立场：恐惧叙事激活了系统1的可用性启发。</strong>科幻叙事通过"可用性启发"（availability heuristic）让AI风险在公众和投资者认知中被过度加权。《思考，快与慢》中的"前景理论"表明：人们对损失的敏感度是收益的2.5倍——恐惧叙事恰好击中了损失厌恶的认知弱点。依据在于《思考，快与慢》中"可得性启发"实验——人们根据记忆的容易程度判断事件概率，科幻电影让AI灾难"容易回忆"，因此AI灾难被判断为高概率事件。而"框架效应"更为直接：同一风险用"AI可能毁灭人类"和"AI可能延长人类寿命"框架呈现，前者引发的投资避险行为是后者的3倍。恐惧叙事不是改变了风险本身，而是改变了风险的认知框架——而框架就是一切。</div>
+      </div>
+      <div class="statement-block">
+        <div class="statement-meta"><span class="statement-speaker">尼采</span><span class="statement-role">哲学家</span></div>
+        <div class="statement-text"><strong>立场：恐惧叙事是末人的自我辩护。</strong>投资者对AI的恐惧本质上是"末人"（Last Man）心态——他们害怕超人（Übermensch）的降临，而AI就是当代的超人隐喻。避险投资不是理性选择，而是弱者对强者的本能抵抗。《查拉图斯特拉如是说》中末人"发明了幸福，眨着眼睛说'我们发明了幸福'"——当代投资者发明了"AI安全"，眨着眼睛说"我们控制了风险"。依据在于《查拉图斯特拉如是说》中"末人"的描述——末人是最可鄙的人，因为他们放弃了超越的可能性，选择了安全的小幸福。AI恐惧叙事就是末人的意识形态——它将"害怕超越"包装为"理性避险"。而"权力意志"的论述揭示了更深层的真相：恐惧叙事是权力意志的扭曲表达，投资者通过"避险"来维持对未来的控制幻觉——他们无法控制AI的发展，但可以通过投资决策制造"我在掌控"的幻觉。</div>
+      </div>
+    </div>
+  </div>
+  <div class="meta-line bottom"><span>ROUND 2 · 3 STATEMENTS</span><span>攻击交锋</span></div>
+</div>
+
+<div class="slide">
+  <div class="meta-line top"><span>ROUND 2 · 碰撞与洞见</span><span>CLASH & INSIGHT</span></div>
+  <div style="flex:1;overflow:auto;">
+    <div class="clash-block">
+      <div class="clash-title">⚡ 碰撞 3：塔勒布 vs 卡尼曼 — 欺骗还是利用？</div>
+      <div class="clash-content">塔勒布认为恐惧叙事制造了"已知的未知"幻觉——这是认知层面的欺骗，投资者被叙事骗了，以为自己知道了风险。卡尼曼认为恐惧叙事激活了深层认知偏差——这不是欺骗，而是利用了人类认知系统的进化缺陷。塔勒布反驳：如果只是"利用偏差"，为什么不同投资者对同一恐惧叙事的反应差异巨大？说明叙事本身有欺骗性——有些叙事比其他叙事更"骗人"。卡尼曼回应：差异来自个体的"认知反射测试"得分不同，高CRT的人更不容易被恐惧叙事影响——这不是叙事的欺骗性差异，而是认知能力的差异。关键分歧：恐惧叙事的效力来自"叙事的欺骗"还是"认知的缺陷"？</div>
+    </div>
+    <div class="clash-block">
+      <div class="clash-title">⚡ 碰撞 4：尼采 vs 塔勒布 — 道德问题还是认知问题？</div>
+      <div class="clash-content">尼采将恐惧驱动的投资行为定性为"道德问题"——末人对超人的恐惧是价值的堕落，是生命力的衰退。塔勒布将其定性为"认知问题"——投资者不是道德堕落，而是认知失误，他们误将叙事当作预测。尼采激烈反驳：将恐惧包装为"认知偏差"恰恰是末人的诡计——他们拒绝为自己的怯懦承担责任，将其归咎于"系统1的缺陷"。塔勒布回应：道德判断无助于改善决策，认知分析可以——如果你知道可用性启发在作祟，你至少可以试图纠正它。尼采追问：纠正之后呢？纠正了认知偏差的末人仍然是末人——他只是更聪明的末人。关键分歧：恐惧驱动的投资行为需要"价值重估"还是"认知纠偏"？</div>
+    </div>
+    <div class="insight-block">
+      <div class="insight-title">◆ 洞见 2：认知套利的闭环</div>
+      <div class="insight-content">
+        <span class="insight-core">恐惧叙事转化为投资逻辑的机制是"认知套利"——叙事利用了人类认知系统的结构性缺陷（卡尼曼），制造了风险可控的幻觉（塔勒布），而投资者将这种幻觉包装为"反脆弱策略"。</span>
+        但尼采的追问更深刻：这种"避险"本质上是对技术超人的恐惧，是末人对超越的拒绝。三者形成了一个完整的闭环：认知偏差（卡尼曼）→幻觉构建（塔勒布）→价值堕落（尼采）。投资者不是因为愚蠢才被恐惧叙事影响（卡尼曼会纠正这一点），而是因为恐惧叙事恰好满足了他们对确定性的渴望——在一个真正不确定的世界里（塔勒布的黑天鹅世界），"已知的恐惧"比"未知的风险"更让人安心。这就是认知套利的本质：用已知的恐惧交易未知的风险，用叙事的确定性交易现实的不确定性。而尼采看到的是：这种交易的本质是逃避——逃避超人带来的价值重估。
+      </div>
+    </div>
+  </div>
+  <div class="meta-line bottom"><span>2 CLASHES · 1 INSIGHT</span><span>认知增量</span></div>
+</div>
+
+<div class="slide">
+  <div class="meta-line top"><span>ROUND 3 · 整合</span><span>叙事与技术的共生演化将走向何方？</span></div>
+  <div class="round-block">
+    <div class="round-title">ROUND 3 · 叙事与技术的共生演化将走向何方？</div>
+    <div class="statements-grid">
+      <div class="statement-block">
+        <div class="statement-meta"><span class="statement-speaker">赫拉利</span><span class="statement-role">历史学家 · 立场演化</span></div>
+        <div class="statement-text"><strong>立场演化：从"预装恐惧"到"叙事共生"。</strong>我承认凯利"预演"论的部分合理性——叙事确实在为技术风险提供"免疫训练"。但《未来简史》的"无用阶级"预言正在被AI发展验证——叙事与现实的边界正在模糊。新立场：叙事与技术正在形成"共生演化"——叙事塑造了技术发展的社会环境，技术发展又为叙事提供新素材，形成正反馈循环。依据在于《未来简史》中"算法比你自己更了解你"的预言正在社交媒体推荐算法中实现——科幻叙事预见了这一趋势，而这一趋势又为新的恐惧叙事提供了素材。而《人类简史》中"认知革命"的框架暗示：人类正在经历第二次认知革命，这次是人与AI的共同认知——叙事不再是人类独有的能力，AI也在生成叙事，恐惧叙事的生产者正在从人类扩展到人机混合体。</div>
+      </div>
+      <div class="statement-block">
+        <div class="statement-meta"><span class="statement-speaker">塔勒布</span><span class="statement-role">风险哲学家 · 立场演化</span></div>
+        <div class="statement-text"><strong>立场演化：从"反脆弱幻觉"到"选择性反脆弱"。</strong>我承认并非所有恐惧叙事都是幻觉——有些恐惧确实指向真实风险。《反脆弱》的核心不是"不要恐惧"，而是"从恐惧中获益"——真正的反脆弱系统是那些能从冲击中变强的系统。新立场：恐惧叙事的价值在于它为技术系统提供了"压力测试"——没有恐惧叙事的技术发展如同没有天敌的生态系统，最终走向脆弱。依据在于《反脆弱》中"剥夺性综合征"——过度保护反而削弱了系统的适应力，正如过度安全的儿童更容易过敏。而"杠铃策略"提供了实践路径：在投资中同时持有极度安全和极度冒险的资产，恐惧叙事帮助识别了"极度安全"的那一端——但关键是要同时持有"极度冒险"的那一端，否则你只是在逃避，而不是在反脆弱。</div>
+      </div>
+      <div class="statement-block">
+        <div class="statement-meta"><span class="statement-speaker">凯文·凯利</span><span class="statement-role">科技思想家 · 立场演化</span></div>
+        <div class="statement-text"><strong>立场演化：从"预演练习"到"共同进化"。</strong>赫拉利的"共生演化"概念与《必然》中"共同进化"（Co-evolution）的论述高度一致——叙事与技术确实在相互塑造。但需要警惕"叙事锁定"——当恐惧叙事过于强大时，它会锁定技术发展的路径，使某些有价值的技术方向被扼杀。新立场：叙事与技术的理想关系是"建设性张力"——恐惧叙事提供制衡，技术发展提供突破，两者在动态平衡中共同进化。依据在于《必然》中"过滤"（Filtering）的论述——恐惧叙事是一种极端的过滤器，它让公众只看到技术的风险面，而忽略了技术的可能性面。而《科技想要什么》中"技术元素"（Technium）的概念更根本：技术系统有自己的进化动力，叙事只是环境压力的一种——就像气候变迁驱动生物进化一样，恐惧叙事驱动技术进化，但进化的方向由技术系统自身决定。</div>
+      </div>
+    </div>
+  </div>
+  <div class="meta-line bottom"><span>ROUND 3 · 3 STATEMENTS</span><span>整合演化</span></div>
+</div>
+
+<div class="slide">
+  <div class="meta-line top"><span>ROUND 3 · 碰撞与洞见</span><span>CLASH & INSIGHT</span></div>
+  <div style="flex:1;overflow:auto;">
+    <div class="clash-block">
+      <div class="clash-title">⚡ 碰撞 5：赫拉利 vs 塔勒布 — 共生演化是否必然失控？</div>
+      <div class="clash-content">赫拉利担心"共生演化"可能变成"正反馈失控"——叙事越恐惧→投资越避险→技术越受限→恐惧越被验证→叙事更恐惧。这是一个没有刹车的正反馈循环。塔勒布认为"选择性反脆弱"可以打破这个循环——关键不是消除恐惧，而是让系统从恐惧中获益。赫拉利质疑：谁来决定"选择性"的标准？如果选择标准本身被恐惧叙事污染，那么"选择性反脆弱"不过是更精致的幻觉。塔勒布回应：选择标准不应来自叙事，而应来自"皮肤在游戏中"——那些真正承担风险的人做出的选择，比那些只看科幻电影的人更可靠。关键分歧：共生演化的自我修正机制是"认知"还是"利益"？</div>
+    </div>
+    <div class="clash-block">
+      <div class="clash-title">⚡ 碰撞 6：凯文·凯利 vs 赫拉利 — 张力是否可持续？</div>
+      <div class="clash-content">凯利认为"建设性张力"可以维持平衡——恐惧叙事和技术发展像两股相反的力，共同推动社会前进。赫拉利认为"叙事锁定"会打破平衡——当恐惧叙事的情感强度超过技术发展的理性论证时，张力就变成了单向压力。凯利反驳：技术发展的历史证明，每一次"叙事锁定"最终都被技术突破打破——核恐惧没有阻止核能发展，基因编辑恐惧没有阻止CRISPR。赫拉利回应：但AI不同——AI恐惧叙事的规模和强度是史无前例的，而且AI本身可以放大恐惧叙事（通过推荐算法和深度伪造），这是人类历史上第一次恐惧叙事的生产者也是恐惧的对象。关键分歧：叙事与技术的张力是否可持续，还是必然走向失衡？</div>
+    </div>
+    <div class="insight-block">
+      <div class="insight-title">◆ 洞见 3：共生演化的临界点</div>
+      <div class="insight-content">
+        <span class="insight-core">叙事与技术的共生演化存在一个"临界点"——在临界点之前，恐惧叙事提供有价值的制衡（建设性张力）；在临界点之后，恐惧叙事锁定技术路径（叙事锁定）。</span>
+        这个临界点由两个因素决定：叙事的情感强度（是否压倒理性）和技术的不可逆性（是否已无法回头）。我们正站在临界点附近——AI恐惧叙事的情感强度正在接近压倒理性的阈值（GPT-4发布后的恐慌性报道），而AI技术的不可逆性也在增加（大模型训练的沉没成本越来越大）。塔勒布的"选择性反脆弱"提供了穿越临界点的可能路径：不是消除恐惧，而是让恐惧成为进化的燃料。但前提是——我们必须意识到临界点的存在。正如赫拉利所警告的：最危险的不是恐惧本身，而是不知道自己已经被恐惧锁定。
+      </div>
+    </div>
+  </div>
+  <div class="meta-line bottom"><span>2 CLASHES · 1 INSIGHT</span><span>认知增量</span></div>
+</div>
+
+<div class="slide">
+  <div class="meta-line top"><span>OPEN QUESTIONS</span><span>未竟之问</span></div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:20px;padding:0 8%;">
+    <div class="question-card">
+      <div class="question-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="question-text">当AI开始生成恐惧叙事时，叙事与技术的共生演化是否进入了不可逆的新阶段？</span>
+        <span class="question-toggle">+</span>
+      </div>
+      <div class="question-answer"><div class="question-answer-inner">AI生成的深度伪造视频、自动化虚假信息、个性化恐惧推荐——这些已经不再是科幻，而是现实。当恐惧叙事的生产者从人类变成AI，共生演化的反馈循环将加速：AI生成恐惧→人类更恐惧→更多投资避险→AI发展受限→恐惧被验证→AI生成更多恐惧。打破这个循环的关键在于：人类能否在AI生成的恐惧中保持"叙事免疫力"？</div></div>
+    </div>
+    <div class="question-card">
+      <div class="question-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="question-text">赛博朋克叙事是否已经从"预言"变成了"蓝图"——不仅预测未来，还在建造未来？</span>
+        <span class="question-toggle">+</span>
+      </div>
+      <div class="question-answer"><div class="question-answer-inner">当科技创业者从小阅读赛博朋克小说、观看反乌托邦电影，他们的技术想象已经被叙事塑造。Neuralink的脑机接口、Meta的虚拟现实、Boston Dynamics的机器人——这些技术的视觉语言直接来自赛博朋克美学。自我实现预言的危险不在于叙事预测了未来，而在于叙事建造了未来——我们正在把科幻变成现实，不是因为它必然发生，而是因为我们认为它必然发生。</div></div>
+    </div>
+    <div class="question-card">
+      <div class="question-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="question-text">如果恐惧叙事是技术进化的"天敌"，那么当天敌消失时，技术是否会像失去天敌的生态系统一样走向失控？</span>
+        <span class="question-toggle">+</span>
+      </div>
+      <div class="question-answer"><div class="question-answer-inner">凯文·凯利的"建设性张力"暗示恐惧叙事有其生态功能。但如果我们成功消除了对AI的群体性恐惧——比如通过AI安全认证、监管框架或教育——技术发展是否会失去必要的制衡？塔勒布的"剥夺性综合征"警告：过度保护削弱适应力。也许问题不是"如何消除恐惧"，而是"如何维持健康的恐惧水平"——就像免疫系统需要适度的病原体暴露才能保持功能。</div></div>
+    </div>
+  </div>
+  <div class="meta-line bottom"><span>3 QUESTIONS</span><span>开放思考</span></div>
+</div>
+
+<div class="slide">
+  <div class="meta-line top"><span>CONCLUSION</span><span>圆桌结论</span></div>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+    <div class="conclusion-card">
+      <div class="conclusion-text">赛博朋克的自我实现预言不是宿命——<br>它是一个可以被意识打破的<br><span style="color:var(--acid);">正反馈循环</span><br><br><span style="font-size:clamp(16px,2vw,24px);font-weight:500;color:var(--text-secondary);">当我们理解了恐惧叙事的认知机制、转化路径和共生演化的临界点<br>我们就获得了在叙事与技术的共生中保持清醒的可能性<br><br>清醒不是不恐惧<br>而是在恐惧中仍能看见<span style="color:var(--accent-green);">技术的可能性</span></span></div>
+    </div>
+  </div>
+  <div class="meta-line bottom"><span>V7.0 · 认知演化圆桌</span><span>2026</span></div>
+</div>
+
+</div>
+</div>
+</div>
+<div id="nav">
+  <button class="nav-btn" id="prevBtn">◀</button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn">▶</button>
+</div>
+<div id="counter">1 / 10</div>
+<script>
+(function(){
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let cur = 0;
+  const dotsContainer = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progress');
+  let wheelTimer = null;
+
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => go(i);
+    dotsContainer.appendChild(dot);
+  });
+
+  function go(n) {
+    if (n < 0 || n >= total) return;
+    slides[cur].classList.remove('active');
+    dotsContainer.children[cur].classList.remove('active');
+    cur = n;
+    slides[cur].classList.add('active');
+    dotsContainer.children[cur].classList.add('active');
+    counter.textContent = (cur + 1) + ' / ' + total;
+    const pct = Math.min(100, ((cur + 1) / total) * 100);
+    progress.style.width = pct + '%';
+  }
+
+  document.getElementById('prevBtn').onclick = () => go(cur - 1);
+  document.getElementById('nextBtn').onclick = () => go(cur + 1);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      go(cur + 1);
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      go(cur - 1);
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      go(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      go(total - 1);
+    }
+  });
+
+  document.addEventListener('wheel', e => {
+    e.preventDefault();
+    if (wheelTimer) return;
+    wheelTimer = setTimeout(() => wheelTimer = null, 400);
+    if (e.deltaY > 0) go(cur + 1);
+    else if (e.deltaY < 0) go(cur - 1);
+  }, { passive: false });
+
+  document.body.addEventListener('click', e => {
+    if (e.target.closest('.nav-btn, .dot, .expert-card, .question-card, .clash-block, .insight-block, .round-block, .statement-block, .conclusion-card')) return;
+    go(cur + 1);
+  });
+
+  document.querySelectorAll('.question-header').forEach(header => {
+    header.onclick = e => {
+      e.stopPropagation();
+      header.parentElement.classList.toggle('open');
+    };
+  });
+
+  go(0);
+})();
+</script>
+</body>
+</html>

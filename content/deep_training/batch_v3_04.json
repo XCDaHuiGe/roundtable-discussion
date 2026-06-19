@@ -1,0 +1,55 @@
+{
+  "batch": 4,
+  "rounds": [
+    {
+      "round": 246,
+      "expert1": "尼克·博斯特罗姆",
+      "expert2": "弗洛姆",
+      "belief1": "存在性风险不是科幻",
+      "belief2": "孤独感是人最深的恐惧",
+      "topic": "终极对立:存在性风险不是科幻 vs 孤独感是人最深的恐惧。两者只能信一个,选哪个?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 247,
+      "expert1": "凯文·凯利",
+      "expert2": "阿伦特",
+      "belief1": "去中心化是必然趋势",
+      "belief2": "恶是表面的深渊",
+      "topic": "不能兼得时:去中心化是必然趋势和恶是表面的深渊你优先选哪个?",
+      "conflict_type": "value_priority",
+      "strength": "moderate"
+    },
+    {
+      "round": 248,
+      "expert1": "吴军",
+      "expert2": "许知远",
+      "belief1": "AI是认知的延伸非替代",
+      "belief2": "批判是知识分子的天职",
+      "topic": "终极对立:AI是认知的延伸非替代 vs 批判是知识分子的天职。两者只能信一个,选哪个?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 249,
+      "expert1": "刘润",
+      "expert2": "丹尼尔·戈尔曼",
+      "belief1": "解决问题比证明自己更重要",
+      "belief2": "情商比智商更能预测成功",
+      "topic": "不可调和:解决问题比证明自己更重要。然而情商比智商更能预测成功。真相在哪一边?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 250,
+      "expert1": "项飙",
+      "expert2": "巴菲特",
+      "belief1": "全球化带来认同的焦虑",
+      "belief2": "安全边际是一切投资的核心",
+      "topic": "方法论之争:解决问题的最佳路径是全球化带来认同的焦虑,还是安全边际是一切投资的核心?",
+      "conflict_type": "method",
+      "strength": "strong"
+    }
+  ]
+}

@@ -1,0 +1,202 @@
+[
+  {
+    "round": 61,
+    "expert1": "丁元英",
+    "expert2": "项飙",
+    "belief1": "最看重：专业能力",
+    "belief2": "最看重：社会公正",
+    "topic": "在真实决策中，\"最看重：专业能力\"和\"最看重：社会公正\"冲突时，人们实际上怎么选？理想和现实差多远？",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 62,
+    "expert1": "尼采",
+    "expert2": "菲利普·津巴多",
+    "belief1": "最看重：生命肯定",
+    "belief2": "最看重：实证研究",
+    "topic": "在真实决策中，\"最看重：生命肯定\"和\"最看重：实证研究\"冲突时，人们实际上怎么选？理想和现实差多远？",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 63,
+    "expert1": "吴军",
+    "expert2": "韩非子",
+    "belief1": "论证方式：数据实证",
+    "belief2": "论证方式：逻辑推演",
+    "topic": "吴军用论证方式：数据实证，韩非子用论证方式：逻辑推演——同一个问题，两种方法得出的结论会差多远？",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 64,
+    "expert1": "李诞",
+    "expert2": "孔子",
+    "belief1": "论证方式：逻辑推演",
+    "belief2": "论证方式：类比隐喻",
+    "topic": "如果强制孔子用论证方式：逻辑推演来论证自己的观点，会发生什么？方法论的边界在哪里？",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 65,
+    "expert1": "芒格",
+    "expert2": "项飙",
+    "belief1": "最看重：专业能力",
+    "belief2": "最看重：社会公正",
+    "topic": "芒格最看重\"最看重：专业能力\"，项飙最看重\"最看重：社会公正\"——如果资源有限只能保一个，选哪个？",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 66,
+    "expert1": "吴军",
+    "expert2": "阿西莫夫",
+    "belief1": "最看重：理性决策",
+    "belief2": "最看重：表达自由",
+    "topic": "在真实决策中，\"最看重：理性决策\"和\"最看重：表达自由\"冲突时，人们实际上怎么选？理想和现实差多远？",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 67,
+    "expert1": "丹尼尔·戈尔曼",
+    "expert2": "马克思",
+    "belief1": "最看重：专业能力",
+    "belief2": "最看重：理性决策",
+    "topic": "丹尼尔·戈尔曼最看重\"最看重：专业能力\"，马克思最看重\"最看重：理性决策\"——如果资源有限只能保一个，选哪个？",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 68,
+    "expert1": "丁元英",
+    "expert2": "阿西莫夫",
+    "belief1": "论证方式：逻辑推演",
+    "belief2": "论证方式：类比隐喻",
+    "topic": "丁元英用论证方式：逻辑推演，阿西莫夫用论证方式：类比隐喻——同一个问题，两种方法得出的结论会差多远？",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 69,
+    "expert1": "吴晓波",
+    "expert2": "弗洛姆",
+    "belief1": "论证方式：类比隐喻",
+    "belief2": "论证方式：案例归纳",
+    "topic": "吴晓波用论证方式：类比隐喻，弗洛姆用论证方式：案例归纳——同一个问题，两种方法得出的结论会差多远？",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 70,
+    "expert1": "吴晓波",
+    "expert2": "尤瓦尔·赫拉利",
+    "belief1": "最看重：表达自由",
+    "belief2": "最看重：专业能力",
+    "topic": "吴晓波最看重\"最看重：表达自由\"，尤瓦尔·赫拉利最看重\"最看重：专业能力\"——如果资源有限只能保一个，选哪个？",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 71,
+    "expert1": "丁元英",
+    "expert2": "孔子",
+    "belief1": "论证方式：逻辑推演",
+    "belief2": "论证方式：类比隐喻",
+    "topic": "如果强制孔子用论证方式：逻辑推演来论证自己的观点，会发生什么？方法论的边界在哪里？",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 72,
+    "expert1": "孔子",
+    "expert2": "尼克·博斯特罗姆",
+    "belief1": "最看重：仁义道德",
+    "belief2": "最看重：真理追求",
+    "topic": "在真实决策中，\"最看重：仁义道德\"和\"最看重：真理追求\"冲突时，人们实际上怎么选？理想和现实差多远？",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 73,
+    "expert1": "刘润",
+    "expert2": "阿西莫夫",
+    "belief1": "最看重：专业能力",
+    "belief2": "最看重：表达自由",
+    "topic": "在真实决策中，\"最看重：专业能力\"和\"最看重：表达自由\"冲突时，人们实际上怎么选？理想和现实差多远？",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 74,
+    "expert1": "万维钢",
+    "expert2": "尼克·博斯特罗姆",
+    "belief1": "论证方式：数据+逻辑链",
+    "belief2": "论证方式：逻辑推演",
+    "topic": "万维钢用论证方式：数据+逻辑链，尼克·博斯特罗姆用论证方式：逻辑推演——同一个问题，两种方法得出的结论会差多远？",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 75,
+    "expert1": "巴菲特",
+    "expert2": "弗洛姆",
+    "belief1": "最看重：理性决策",
+    "belief2": "最看重：实证研究",
+    "topic": "巴菲特最看重\"最看重：理性决策\"，弗洛姆最看重\"最看重：实证研究\"——如果资源有限只能保一个，选哪个？",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 76,
+    "expert1": "阿西莫夫",
+    "expert2": "阿伦特",
+    "belief1": "论证方式：类比隐喻",
+    "belief2": "论证方式：逻辑推演",
+    "topic": "阿西莫夫用论证方式：类比隐喻，阿伦特用论证方式：逻辑推演——同一个问题，两种方法得出的结论会差多远？",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 77,
+    "expert1": "老子",
+    "expert2": "西蒙娜·德·波伏娃",
+    "belief1": "论证方式：自然隐喻、反向思维",
+    "belief2": "论证方式：逻辑推演",
+    "topic": "如果强制西蒙娜·德·波伏娃用论证方式：自然隐喻、反向思维来论证自己的观点，会发生什么？方法论的边界在哪里？",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 78,
+    "expert1": "丁元英",
+    "expert2": "万维钢",
+    "belief1": "论证方式：逻辑推演",
+    "belief2": "论证方式：数据+逻辑链",
+    "topic": "丁元英用论证方式：逻辑推演，万维钢用论证方式：数据+逻辑链——同一个问题，两种方法得出的结论会差多远？",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 79,
+    "expert1": "阿西莫夫",
+    "expert2": "弗洛伊德",
+    "belief1": "最看重：表达自由",
+    "belief2": "最看重：专业能力",
+    "topic": "在真实决策中，\"最看重：表达自由\"和\"最看重：专业能力\"冲突时，人们实际上怎么选？理想和现实差多远？",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 80,
+    "expert1": "柯林斯",
+    "expert2": "马克思",
+    "belief1": "最看重：专业能力",
+    "belief2": "最看重：理性决策",
+    "topic": "柯林斯最看重\"最看重：专业能力\"，马克思最看重\"最看重：理性决策\"——如果资源有限只能保一个，选哪个？",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  }
+]

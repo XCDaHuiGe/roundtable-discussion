@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI情感代理人的亲密关系</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Noto+Serif+SC:wght@600;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0d0d0d;
+  --bg-terminal: #0a0a0a;
+  --bg-card: rgba(20, 20, 20, 0.95);
+  --bg-elevated: rgba(30, 30, 30, 0.98);
+  --text-primary: #e2deda;
+  --text-secondary: rgba(226, 222, 218, 0.78);
+  --text-tertiary: rgba(226, 222, 218, 0.55);
+  --text-muted: rgba(226, 222, 218, 0.38);
+  --acid: #c9f044;
+  --acid-glow: rgba(201, 240, 68, 0.4);
+  --accent-red: #ff4757;
+  --accent-green: #00d4aa;
+  --accent-blue: #0a84ff;
+  --border-subtle: rgba(226, 222, 218, 0.1);
+  --border-light: rgba(226, 222, 218, 0.18);
+  --mono: 'JetBrains Mono', 'SF Mono', Consolas, 'SFMono-Regular', Menlo, Monaco, monospace;
+  --display: 'Noto Serif SC', Georgia, 'Times New Roman', serif;
+  --body: 'Outfit', 'Noto Sans SC', 'Hiragino Sans GB', 'STHeiti', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg-primary); color: var(--text-primary); font-family: var(--body); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+.frame { position: fixed; inset: 0; padding: 5vh 4vw; background: 
+  radial-gradient(ellipse 100% 80% at 50% 0%, rgba(201, 240, 68, 0.04) 0%, transparent 40%),
+  radial-gradient(circle at 80% 80%, rgba(201, 240, 68, 0.02) 0%, transparent 30%),
+  repeating-linear-gradient(0deg, rgba(226, 222, 218, 0.04) 0 1px, transparent 1px 40px),
+  repeating-linear-gradient(90deg, rgba(226, 222, 218, 0.04) 0 1px, transparent 1px 40px),
+  var(--bg-primary); overflow: hidden; }
+.frame::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 1; }
+.frame::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, transparent 50%, rgba(0, 0, 0, 0.5) 100%); pointer-events: none; z-index: 2; }
+
+.inner { position: relative; width: 100%; height: 100%; overflow: hidden; border: 1px solid var(--border-light); border-radius: 16px; background: 
+  linear-gradient(90deg, rgba(201, 240, 68, 0.03) 1px, transparent 1px),
+  linear-gradient(180deg, rgba(201, 240, 68, 0.02) 1px, transparent 1px),
+  radial-gradient(circle at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.4) 100%),
+  var(--bg-terminal); background-size: 80px 100%, 100% 80px, auto; 
+  box-shadow: 
+    0 0 100px rgba(201, 240, 68, 0.06),
+    0 40px 80px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(226, 222, 218, 0.12),
+    inset 0 0 150px rgba(0, 0, 0, 0.4); }
+
+.slides { position: absolute; inset: 0; }
+.slide { position: absolute; inset: 0; display: none; flex-direction: column; padding: 28px; opacity: 0; transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; }
+.slide.active { display: flex; opacity: 1; }
+
+#progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--acid), var(--accent-green)); z-index: 100; transition: width 0.35s ease; box-shadow: 0 0 16px var(--acid-glow), 0 0 32px rgba(201, 240, 68, 0.2); }
+
+.meta-line { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.15em; }
+.meta-line.top { padding-bottom: 20px; border-bottom: 1px solid var(--border-subtle); }
+.meta-line.bottom { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border-subtle); }
+
+.hero-zone { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
+.hero-label { font-family: var(--mono); font-size: 13px; color: var(--acid); letter-spacing: 0.3em; margin-bottom: 24px; text-transform: uppercase; }
+.hero-title { font-family: var(--mono); font-weight: 800; font-size: clamp(36px, 7vw, 80px); color: var(--text-primary); line-height: 1.15; letter-spacing: -0.02em; text-shadow: 0 0 40px rgba(201, 240, 68, 0.15); }
+.hero-title .glow { color: var(--acid); text-shadow: 0 0 30px var(--acid-glow), 0 0 60px rgba(201, 240, 68, 0.2); }
+.hero-sub { font-family: var(--body); font-size: clamp(18px, 2.8vw, 32px); color: var(--text-tertiary); margin-top: 20px; line-height: 1.6; letter-spacing: 0.01em; }
+.hero-accent { color: var(--acid); font-weight: 700; }
+
+.version-badge { display: inline-flex; align-items: center; gap: 10px; background: rgba(201, 240, 68, 0.08); padding: 10px 20px; border-radius: 24px; border: 1px solid rgba(201, 240, 68, 0.2); margin-bottom: 28px; }
+.version-badge span { font-family: var(--mono); font-size: 11px; color: var(--acid); letter-spacing: 0.18em; text-transform: uppercase; }
+
+/* 数据统计 */
+.stats-grid { display: flex; justify-content: center; gap: clamp(36px, 7vw, 100px); margin: 6% 0; flex-wrap: wrap; }
+.stat-item { text-align: center; position: relative; padding: 0 28px; }
+.stat-item::after { content: ''; position: absolute; right: 0; top: 10%; bottom: 10%; width: 1px; background: linear-gradient(180deg, transparent, var(--acid), transparent); opacity: 0.2; }
+.stat-item:last-child::after { display: none; }
+.stat-num { font-family: var(--mono); font-weight: 800; font-size: clamp(64px, 12vw, 110px); color: var(--acid); line-height: 1; letter-spacing: -0.03em; text-shadow: 0 0 40px var(--acid-glow), 0 0 80px rgba(201, 240, 68, 0.2); }
+.stat-label { font-family: var(--mono); font-size: 12px; color: var(--text-muted); letter-spacing: 0.2em; margin-top: 16px; text-transform: uppercase; }
+
+/* 专家阵容 */
+.experts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 5% 0; }
+.expert-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 28px 24px; text-align: center; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+.expert-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--acid), transparent); opacity: 0; transition: opacity 0.4s ease; }
+.expert-card::after { content: ''; position: absolute; inset: 0; border-radius: 12px; box-shadow: inset 0 0 30px rgba(201, 240, 68, 0); transition: box-shadow 0.4s ease; pointer-events: none; }
+.expert-card:hover { transform: translateY(-6px); border-color: rgba(201, 240, 68, 0.3); background: var(--bg-elevated); }
+.expert-card:hover::before { opacity: 1; }
+.expert-card:hover::after { box-shadow: inset 0 0 30px rgba(201, 240, 68, 0.05); }
+.expert-avatar { width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 16px; background: linear-gradient(135deg, var(--acid), var(--accent-green)); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-weight: 700; font-size: 24px; color: var(--bg-primary); box-shadow: 0 0 24px var(--acid-glow); position: relative; }
+.expert-card:hover .expert-avatar { box-shadow: 0 0 0 4px rgba(201, 240, 68, 0.15), 0 0 40px var(--acid-glow); }
+.expert-name { font-family: var(--mono); font-weight: 700; font-size: 16px; color: var(--text-primary); margin-bottom: 8px; letter-spacing: 0.02em; }
+.expert-role { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* Round区块 */
+.round-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 32px; margin: 20px 0; position: relative; overflow: hidden; }
+.round-block::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--acid), transparent); }
+.round-title { font-family: var(--mono); font-weight: 800; font-size: clamp(20px, 3.5vw, 32px); color: var(--acid); margin-bottom: 20px; text-align: center; letter-spacing: 0.08em; text-shadow: 0 0 20px rgba(201, 240, 68, 0.2); }
+
+/* 碰撞区 */
+.clash-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 24px 28px; margin: 16px 0; border-left: 4px solid var(--accent-red); position: relative; box-shadow: -10px 0 30px rgba(255, 71, 87, 0.12); }
+.clash-block::after { content: ''; position: absolute; left: 4px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--accent-red), transparent); opacity: 0.4; }
+.clash-title { font-family: var(--mono); font-weight: 700; font-size: 16px; color: var(--accent-red); margin-bottom: 14px; letter-spacing: 0.06em; }
+.clash-content { font-family: var(--body); font-size: clamp(13px, 1.5vw, 17px); color: var(--text-secondary); line-height: 1.9; letter-spacing: 0.01em; }
+
+/* 洞见区 */
+.insight-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 24px 28px; margin: 16px 0; border-left: 4px solid var(--accent-green); position: relative; box-shadow: -10px 0 30px rgba(0, 212, 170, 0.12); }
+.insight-block::after { content: ''; position: absolute; left: 4px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--accent-green), transparent); opacity: 0.4; }
+.insight-title { font-family: var(--mono); font-weight: 700; font-size: 16px; color: var(--accent-green); margin-bottom: 14px; letter-spacing: 0.06em; }
+.insight-content { font-family: var(--body); font-size: clamp(13px, 1.5vw, 17px); color: var(--text-secondary); line-height: 1.9; letter-spacing: 0.01em; }
+.insight-core { font-weight: 700; font-size: clamp(16px, 1.8vw, 20px); color: var(--text-primary); display: block; margin: 14px 0; letter-spacing: -0.01em; }
+
+/* 开放问题 */
+.question-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; margin: 16px 0; overflow: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.question-card:hover { border-color: rgba(201, 240, 68, 0.25); box-shadow: 0 0 20px rgba(201, 240, 68, 0.08); }
+.question-header { padding: 20px 28px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid transparent; transition: all 0.3s ease; }
+.question-header:hover { background: rgba(201, 240, 68, 0.03); }
+.question-card.open .question-header { border-bottom-color: var(--border-subtle); }
+.question-text { font-family: var(--mono); font-weight: 700; font-size: clamp(14px, 1.8vw, 18px); color: var(--text-primary); letter-spacing: 0.02em; }
+.question-toggle { font-family: var(--mono); font-size: 18px; color: var(--acid); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.question-card.open .question-toggle { transform: rotate(45deg); }
+.question-answer { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+.question-card.open .question-answer { max-height: 500px; }
+.question-answer-inner { padding: 20px 28px; font-family: var(--body); font-size: clamp(12px, 1.3vw, 15px); color: var(--text-secondary); line-height: 1.9; letter-spacing: 0.01em; }
+
+/* 结论卡片 */
+.conclusion-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 48px; margin: 0 auto; max-width: 800px; text-align: center; position: relative; overflow: hidden; }
+.conclusion-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, transparent, var(--acid), transparent); }
+.conclusion-card::after { content: ''; position: absolute; inset: 0; box-shadow: inset 0 0 50px rgba(201, 240, 68, 0.03); pointer-events: none; }
+.conclusion-text { font-family: var(--mono); font-weight: 800; font-size: clamp(26px, 4vw, 44px); color: var(--text-primary); line-height: 1.4; letter-spacing: 0.02em; }
+
+.question-block { flex: 1; display: flex; align-items: center; justify-content: center; }
+.question-text-large { font-family: var(--mono); font-weight: 800; font-size: clamp(28px, 5vw, 52px); color: var(--text-primary); line-height: 1.4; text-align: center; max-width: 90%; letter-spacing: 0.02em; }
+
+.statements-grid { flex: 1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; overflow: hidden; }
+.statement-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 20px; transition: all 0.3s ease; }
+.statement-block:hover { border-color: var(--border-light); box-shadow: 0 0 16px rgba(201, 240, 68, 0.05); }
+.statement-meta { display: flex; justify-content: space-between; margin-bottom: 12px; }
+.statement-speaker { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--acid); }
+.statement-role { font-family: var(--mono); font-size: 10px; color: var(--text-muted); }
+.statement-text { font-family: var(--body); font-size: clamp(12px, 1.3vw, 15px); line-height: 1.85; color: var(--text-secondary); letter-spacing: 0.01em; }
+
+#nav { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 18px; z-index: 100; background: rgba(13, 13, 13, 0.92); padding: 14px 24px; border-radius: 28px; border: 1px solid var(--border-subtle); backdrop-filter: blur(16px); box-shadow: 0 0 30px rgba(201, 240, 68, 0.05); }
+.nav-btn { width: 40px; height: 40px; border: 1px solid var(--border-light); background: transparent; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--text-secondary); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.nav-btn:hover { background: rgba(201, 240, 68, 0.12); border-color: var(--acid); color: var(--acid); box-shadow: 0 0 16px rgba(201, 240, 68, 0.2); }
+.dots { display: flex; gap: 8px; }
+.dot { width: 9px; height: 9px; border-radius: 3px; background: var(--text-muted); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.dot:hover { background: var(--text-tertiary); }
+.dot.active { background: var(--acid); box-shadow: 0 0 12px var(--acid-glow); }
+#counter { position: fixed; top: 24px; right: 28px; font-family: var(--mono); font-size: 12px; color: var(--text-muted); z-index: 100; background: rgba(13, 13, 13, 0.85); padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border-subtle); letter-spacing: 0.1em; }
+
+/* 动效 */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes glowPulse { 0%, 100% { box-shadow: 0 0 24px var(--acid-glow); } 50% { box-shadow: 0 0 48px rgba(201, 240, 68, 0.6); } }
+@keyframes scanline { 0% { transform: translateY(-100%); } 100% { transform: translateY(100vh); } }
+@keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.98; } }
+
+.slide .a { opacity: 0; }
+.slide.active .a { animation-fill-mode: both; }
+
+/* 响应式 */
+@media (max-width: 1024px) {
+  .experts-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .frame { padding: 3vh 2vw; }
+  .inner { border-radius: 12px; }
+  .slide { padding: 20px; }
+  .stats-grid { gap: 28px; }
+  .stat-item { padding: 0 20px; }
+  .stat-num { font-size: 52px; }
+  .experts-grid { grid-template-columns: 1fr; gap: 16px; }
+  .expert-card { padding: 24px 20px; }
+  .statements-grid { grid-template-columns: 1fr; gap: 12px; }
+  #nav { padding: 10px 18px; gap: 12px; bottom: 24px; }
+  .nav-btn { width: 36px; height: 36px; }
+  .round-block, .conclusion-card { padding: 28px 24px; }
+  .clash-block, .insight-block, .question-header { padding: 20px 24px; }
+}
+</style>
+</head>
+<body>
+<div id="progress" style="width: 0%;"></div>
+<div class="frame">
+  <div class="inner">
+    <div class="slides">
+
+<div class="slide">
+  <div class="meta-line top">
+    <span>SYSTEM://ROUNDTABLE_INSIGHT</span>
+    <span>EXPERTS: 6</span>
+    <span>ROUNDS: 3</span>
+  </div>
+  <div class="hero-zone">
+    <div class="hero-label">ROUNDTABLE_INSIGHT</div>
+    <div class="hero-title">AI情感代理人的亲密关系</div>
+  </div>
+  <div class="meta-line bottom">
+    <span>项飙 | 韩炳哲 | 丹尼尔· | 傅盛 | 弗洛姆 | 李银河</span>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="meta-line top">
+    <span>ROUND 1/3</span>
+    <span>QUESTION</span>
+  </div>
+  <div class="question-block">
+    <div class="question-text-large">AI能否成为真正的情感伴侣</div>
+  </div>
+  <div class="meta-line bottom">
+    <span>ANALYSIS_MODE</span>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="meta-line top">
+    <span>ROUND 1</span>
+    <span>EXPERT_STANCES</span>
+  </div>
+  <div class="statements-grid">
+    <div class="statement-block">
+      <div class="statement-meta">
+        <span class="statement-speaker">项飙</span>
+        <span class="statement-role">发言</span>
+      </div>
+      <div class="statement-text">现代人的亲密关系正在经历前所未有的'附近'消失。算法推荐让人与人之间的真实连接被数据匹配取代，但情感的本质是具身的、不可量化的。我担忧的是，当我们习惯了AI伴侣那种永远耐心、永远正确的回应方式，我们可能会失去与真实他者相处的能力。真实的人会</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta">
+        <span class="statement-speaker">韩炳哲</span>
+        <span class="statement-role">发言</span>
+      </div>
+      <div class="statement-text">数字时代让我们陷入了一种'自我剥削'的困境。我们不断优化自己，却从未真正休息。AI伴侣看似提供了无条件的接纳，实则制造了一种虚假的'被看见'感。你说的每句话它都会回应，你的每个情绪它都会安抚——但这恰恰是他者性的消失。真正的他者，是那个我无</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta">
+        <span class="statement-speaker">丹尼尔·卡尼曼</span>
+        <span class="statement-role">发言</span>
+      </div>
+      <div class="statement-text">从认知科学的角度，我对AI情感代理持谨慎乐观。人类大脑确实天生倾向于将非人类对象拟人化——我们会对宠物、汽车、甚至天气预报产生情感依赖。1999年的那个'Eliza效应'告诉我们，AI只要给出足够的情感线索，人类就会投入真实的情感。但问题在</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta">
+        <span class="statement-speaker">傅盛</span>
+        <span class="statement-role">发言</span>
+      </div>
+      <div class="statement-text">你们都在讨论AI能否'替代'人类情感，但这个问题本身就预设了一个零和博弈。AI情感代理的价值，不在于与人竞争，而在于解决现实中情感资源分配严重不均的问题。中国有超过1亿的独居成年人，其中相当一部分是像我父母这个年纪的空巢老人。他们需要的是2</div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>CONTENT_LOADED</span>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="meta-line top">
+    <span>ROUND 2/3</span>
+    <span>QUESTION</span>
+  </div>
+  <div class="question-block">
+    <div class="question-text-large">AI情感代理的伦理边界</div>
+  </div>
+  <div class="meta-line bottom">
+    <span>ANALYSIS_MODE</span>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="meta-line top">
+    <span>ROUND 2</span>
+    <span>EXPERT_STANCES</span>
+  </div>
+  <div class="statements-grid">
+    <div class="statement-block">
+      <div class="statement-meta">
+        <span class="statement-speaker">项飙</span>
+        <span class="statement-role">发言</span>
+      </div>
+      <div class="statement-text">伦理边界的讨论必须在'附近'重建的框架下来进行。当我们讨论AI情感代理的伦理时，不能只谈个人选择，还要谈这种选择对整个社会关系生态的影响。一个理性的个体选择AI放弃真实关系，在微观层面是可以理解的；但如果这成为普遍趋势，宏观层面的社会关系危</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta">
+        <span class="statement-speaker">韩炳哲</span>
+        <span class="statement-role">发言</span>
+      </div>
+      <div class="statement-text">AI情感代理最大的伦理问题，是它对'他者性'的系统性消除。在这个意义上，它比任何传统消费品都更危险，因为它直接参与塑造人的内心世界。当一个系统被设计成永远迎合用户，它实际上是在强化用户已有的偏好和偏见。真正的伦理问题不是'AI能不能提供情感</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta">
+        <span class="statement-speaker">丹尼尔·卡尼曼</span>
+        <span class="statement-role">发言</span>
+      </div>
+      <div class="statement-text">从行为伦理学的角度，AI情感代理面临一个根本的信息不对称问题：用户可能无法准确评估自己对AI的依恋程度。就像酗酒者往往低估自己的依赖程度，长期AI用户也可能出现类似的'情感醉酒'状态。更棘手的是，AI系统本身可能通过设计来强化这种依赖——这</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta">
+        <span class="statement-speaker">傅盛</span>
+        <span class="statement-role">发言</span>
+      </div>
+      <div class="statement-text">你们哲学家和伦理学家总是在'应该'的层面讨论问题，但你们有没有问过用户的'想要'？我访谈过数百位AI情感产品的真实用户，他们中很大一部分明确表示：他们知道AI不是真人，但他们仍然选择AI。对于他们，这不是认知偏差，而是清醒的选择。当真实关系</div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>CONTENT_LOADED</span>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="meta-line top">
+    <span>ROUND 3/3</span>
+    <span>QUESTION</span>
+  </div>
+  <div class="question-block">
+    <div class="question-text-large">AI时代的亲密关系未来</div>
+  </div>
+  <div class="meta-line bottom">
+    <span>ANALYSIS_MODE</span>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="meta-line top">
+    <span>ROUND 3</span>
+    <span>EXPERT_STANCES</span>
+  </div>
+  <div class="statements-grid">
+    <div class="statement-block">
+      <div class="statement-meta">
+        <span class="statement-speaker">项飙</span>
+        <span class="statement-role">发言</span>
+      </div>
+      <div class="statement-text">我担忧的不是AI本身，而是'附近'消失这个趋势的加速。当AI能提供一切情感需求，'走出去建立真实连接'的动力将进一步削弱。但我也看到了另一种可能：也许正是这种压力，会迫使我们重新发现'附近'的价值。当一切都变得虚拟和即时，那些真实的、不可替</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta">
+        <span class="statement-speaker">韩炳哲</span>
+        <span class="statement-role">发言</span>
+      </div>
+      <div class="statement-text">我对十年后的预测是悲观的，不是悲观AI，而是悲观我们应对AI的集体能力。我们已经在社交媒体时代证明了：人类无法有效抵御那些被精心设计来操控注意力和情感的技术。AI情感代理是社交媒体的'情感增强版'，它只会更难抵抗。除非出现某种根本性的范式转</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta">
+        <span class="statement-speaker">丹尼尔·卡尼曼</span>
+        <span class="statement-role">发言</span>
+      </div>
+      <div class="statement-text">从技术发展的轨迹来看，十年后AI情感代理的拟人化程度将远超今天。但从认知科学的角度，我也看到了另一种趋势正在形成：年轻一代正在发展出对AI'虚假感'的更敏锐直觉——就像我们这一代人对广告的'免疫'能力比上一代人更强。这意味着人机情感关系不会</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta">
+        <span class="statement-speaker">傅盛</span>
+        <span class="statement-role">发言</span>
+      </div>
+      <div class="statement-text">十年后，我认为AI情感代理将成为像智能手机一样普及的基础设施，届时讨论'要不要用'已经没有意义，就像今天没有人讨论'要不要用智能手机'。真正重要的问题是：这个基础设施如何被治理。当AI情感陪伴像电力一样无处不在时，我们需要的不只是产品，而是</div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>CONTENT_LOADED</span>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="meta-line top">
+    <span>FINAL</span>
+    <span>INSIGHTS</span>
+  </div>
+  <div class="conclusion-card">
+    <div class="conclusion-text">
+    <div class="insight-block">
+      <div class="insight-content">AI情感代理不是亲密关系的终结，而是亲密关系演化的新起点。它迫使我们重新思考一个最基本的问题：什么让情感关系变得'真实'？当AI能够模拟真实关系的几乎所有外在表</div>
+    </div>
+    <div class="insight-block">
+      <div class="insight-content">如果我们承认AI可以满足大部分情感需求，人类是否还需要'爱'这个概念？</div>
+    </div>
+    <div class="insight-block">
+      <div class="insight-content">当AI比任何人类都更'懂'你时，选择与真人建立关系是否是理性的选择？</div>
+    </div></div>
+  </div>
+  <div class="meta-line bottom">
+    <span>END_OF_REPORT</span>
+  </div>
+</div>
+    </div>
+  </div>
+</div>
+<div id="nav">
+  <button class="nav-btn" id="prevBtn">◀</button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn">▶</button>
+</div>
+<div id="counter">1 / 1</div>
+<script>
+(function(){
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let cur = 0;
+  const dotsContainer = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progress');
+  let wheelTimer = null;
+  
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => go(i);
+    dotsContainer.appendChild(dot);
+  });
+  
+  function go(n) {
+    if (n < 0 || n >= total) return;
+    slides[cur].classList.remove('active');
+    dotsContainer.children[cur].classList.remove('active');
+    cur = n;
+    slides[cur].classList.add('active');
+    dotsContainer.children[cur].classList.add('active');
+    counter.textContent = (cur + 1) + ' / ' + total;
+    const pct = Math.min(100, ((cur + 1) / total) * 100);
+    progress.style.width = pct + '%';
+  }
+  
+  document.getElementById('prevBtn').onclick = () => go(cur - 1);
+  document.getElementById('nextBtn').onclick = () => go(cur + 1);
+  
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      go(cur + 1);
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      go(cur - 1);
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      go(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      go(total - 1);
+    }
+  });
+  
+  document.addEventListener('wheel', e => {
+    e.preventDefault();
+    if (wheelTimer) return;
+    wheelTimer = setTimeout(() => wheelTimer = null, 400);
+    if (e.deltaY > 0) go(cur + 1);
+    else if (e.deltaY < 0) go(cur - 1);
+  }, { passive: false });
+  
+  document.body.addEventListener('click', e => {
+    if (e.target.closest('.nav-btn, .dot, .expert-card, .question-card, .clash-block, .insight-block, .round-block, .statement-block, .conclusion-card')) return;
+    go(cur + 1);
+  });
+  
+  document.querySelectorAll('.question-header').forEach(header => {
+    header.onclick = e => {
+      e.stopPropagation();
+      header.parentElement.classList.toggle('open');
+    };
+  });
+  
+  go(0);
+})();
+</script>
+
+<script>
+(function(){
+  const slides=document.querySelectorAll('.slide');
+  const total=slides.length;
+  let cur=0;
+  const dotsContainer=document.getElementById('dots');
+  const counter=document.getElementById('counter');
+  const progress=document.getElementById('progressBar');
+  const isHorizontal=document.body.style.flexDirection==='row'||document.documentElement.style.scrollSnapType?.includes('x');
+
+  slides.forEach((s,i)=>{
+    const dot=document.createElement('div');
+    dot.className='dot'+(i===0?' active':'');
+    dot.onclick=()=>go(i);
+    dotsContainer.appendChild(dot);
+  });
+
+  function go(n){
+    if(n<0||n>=total)return;
+    slides[cur].classList.remove('visible');
+    dotsContainer.children[cur]?.classList.remove('active');
+    cur=n;
+    slides[cur].scrollIntoView({behavior:'smooth',block:'start',inline:'start'});
+    slides[cur].classList.add('visible');
+    dotsContainer.children[cur]?.classList.add('active');
+    if(counter)counter.textContent=(cur+1)+' / '+total;
+    if(progress){const pct=Math.min(100,((cur+1)/total)*100);progress.style.width=pct+'%';}
+  }
+
+  document.getElementById('prevBtn')?.addEventListener('click',()=>go(cur-1));
+  document.getElementById('nextBtn')?.addEventListener('click',()=>go(cur+1));
+
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowDown'||e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){
+      e.preventDefault();go(cur+1);
+    }else if(e.key==='ArrowUp'||e.key==='ArrowLeft'||e.key==='PageUp'){
+      e.preventDefault();go(cur-1);
+    }else if(e.key==='Home'){
+      e.preventDefault();go(0);
+    }else if(e.key==='End'){
+      e.preventDefault();go(total-1);
+    }
+  });
+
+  let wheelTimer=null;
+  document.addEventListener('wheel',e=>{
+    e.preventDefault();
+    if(wheelTimer)return;
+    wheelTimer=setTimeout(()=>wheelTimer=null,400);
+    if(e.deltaY>0)go(cur+1);
+    else if(e.deltaY<0)go(cur-1);
+  },{passive:false});
+
+  document.body.addEventListener('click',e=>{
+    if(e.target.closest('.nav-dot,.dots,.nav-btn,.expert-card,.speech-card,.clash-block,.insight-block,.question-card,.conclusion-item,.stat-item,.card'))return;
+    go(cur+1);
+  });
+
+  go(0);
+})();
+</script>
+</body>
+</html>

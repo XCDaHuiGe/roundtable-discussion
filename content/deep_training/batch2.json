@@ -1,0 +1,202 @@
+[
+  {
+    "round": 21,
+    "expert1": "丹尼尔·戈尔曼",
+    "expert2": "弗洛姆",
+    "belief1": "最看重：专业能力",
+    "belief2": "最看重：实证研究",
+    "topic": "丹尼尔·戈尔曼最看重\"最看重：专业能力\"，弗洛姆最看重\"最看重：实证研究\"——如果资源有限只能保一个，选哪个？",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 22,
+    "expert1": "刘润",
+    "expert2": "尼采",
+    "belief1": "论证方式：逻辑推演",
+    "belief2": "论证方式：历史重估、价值颠覆",
+    "topic": "如果强制尼采用论证方式：逻辑推演来论证自己的观点，会发生什么？方法论的边界在哪里？",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 23,
+    "expert1": "芮小丹",
+    "expert2": "许知远",
+    "belief1": "论证方式：逻辑推演",
+    "belief2": "论证方式：历史+哲学视角",
+    "topic": "芮小丹用论证方式：逻辑推演，许知远用论证方式：历史+哲学视角——同一个问题，两种方法得出的结论会差多远？",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 24,
+    "expert1": "吴军",
+    "expert2": "塔勒布",
+    "belief1": "最看重：理性决策",
+    "belief2": "最看重：真理追求",
+    "topic": "吴军最看重\"最看重：理性决策\"，塔勒布最看重\"最看重：真理追求\"——如果资源有限只能保一个，选哪个？",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 25,
+    "expert1": "芒格",
+    "expert2": "孔子",
+    "belief1": "最看重：专业能力",
+    "belief2": "最看重：仁义道德",
+    "topic": "在真实决策中，\"最看重：专业能力\"和\"最看重：仁义道德\"冲突时，人们实际上怎么选？理想和现实差多远？",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 26,
+    "expert1": "塔勒布",
+    "expert2": "罗翔",
+    "belief1": "最看重：真理追求",
+    "belief2": "最看重：专业能力",
+    "topic": "在真实决策中，\"最看重：真理追求\"和\"最看重：专业能力\"冲突时，人们实际上怎么选？理想和现实差多远？",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 27,
+    "expert1": "吴晓波",
+    "expert2": "菲利普·津巴多",
+    "belief1": "最看重：表达自由",
+    "belief2": "最看重：实证研究",
+    "topic": "吴晓波最看重\"最看重：表达自由\"，菲利普·津巴多最看重\"最看重：实证研究\"——如果资源有限只能保一个，选哪个？",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 28,
+    "expert1": "冯唐",
+    "expert2": "尼采",
+    "belief1": "论证方式：逻辑推演",
+    "belief2": "论证方式：历史重估、价值颠覆",
+    "topic": "冯唐用论证方式：逻辑推演，尼采用论证方式：历史重估、价值颠覆——同一个问题，两种方法得出的结论会差多远？",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 29,
+    "expert1": "尼克·博斯特罗姆",
+    "expert2": "老子",
+    "belief1": "最看重：真理追求",
+    "belief2": "最看重：自然之道",
+    "topic": "尼克·博斯特罗姆最看重\"最看重：真理追求\"，老子最看重\"最看重：自然之道\"——如果资源有限只能保一个，选哪个？",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 30,
+    "expert1": "丁元英",
+    "expert2": "西蒙娜·德·波伏娃",
+    "belief1": "最看重：专业能力",
+    "belief2": "最看重：真理追求",
+    "topic": "在真实决策中，\"最看重：专业能力\"和\"最看重：真理追求\"冲突时，人们实际上怎么选？理想和现实差多远？",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 31,
+    "expert1": "吴晓波",
+    "expert2": "李诞",
+    "belief1": "最看重：表达自由",
+    "belief2": "最看重：专业能力",
+    "topic": "吴晓波最看重\"最看重：表达自由\"，李诞最看重\"最看重：专业能力\"——如果资源有限只能保一个，选哪个？",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 32,
+    "expert1": "丹尼尔·卡尼曼",
+    "expert2": "丹尼尔·戈尔曼",
+    "belief1": "最看重：理性决策",
+    "belief2": "最看重：专业能力",
+    "topic": "在真实决策中，\"最看重：理性决策\"和\"最看重：专业能力\"冲突时，人们实际上怎么选？理想和现实差多远？",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 33,
+    "expert1": "老子",
+    "expert2": "弗洛伊德",
+    "belief1": "论证方式：自然隐喻、反向思维",
+    "belief2": "论证方式：逻辑推演",
+    "topic": "老子用论证方式：自然隐喻、反向思维，弗洛伊德用论证方式：逻辑推演——同一个问题，两种方法得出的结论会差多远？",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 34,
+    "expert1": "尼采",
+    "expert2": "丹尼尔·卡尼曼",
+    "belief1": "论证方式：历史重估、价值颠覆",
+    "belief2": "论证方式：数据实证",
+    "topic": "如果强制丹尼尔·卡尼曼用论证方式：历史重估、价值颠覆来论证自己的观点，会发生什么？方法论的边界在哪里？",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 35,
+    "expert1": "尼采",
+    "expert2": "尤瓦尔·赫拉利",
+    "belief1": "论证方式：历史重估、价值颠覆",
+    "belief2": "论证方式：逻辑推演",
+    "topic": "如果强制尤瓦尔·赫拉利用论证方式：历史重估、价值颠覆来论证自己的观点，会发生什么？方法论的边界在哪里？",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 36,
+    "expert1": "弗洛伊德",
+    "expert2": "弗洛姆",
+    "belief1": "最看重：专业能力",
+    "belief2": "最看重：实证研究",
+    "topic": "弗洛伊德最看重\"最看重：专业能力\"，弗洛姆最看重\"最看重：实证研究\"——如果资源有限只能保一个，选哪个？",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 37,
+    "expert1": "丹尼尔·卡尼曼",
+    "expert2": "尤瓦尔·赫拉利",
+    "belief1": "最看重：理性决策",
+    "belief2": "最看重：专业能力",
+    "topic": "丹尼尔·卡尼曼最看重\"最看重：理性决策\"，尤瓦尔·赫拉利最看重\"最看重：专业能力\"——如果资源有限只能保一个，选哪个？",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 38,
+    "expert1": "吴军",
+    "expert2": "芒格",
+    "belief1": "最看重：理性决策",
+    "belief2": "最看重：专业能力",
+    "topic": "在真实决策中，\"最看重：理性决策\"和\"最看重：专业能力\"冲突时，人们实际上怎么选？理想和现实差多远？",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 39,
+    "expert1": "罗翔",
+    "expert2": "许知远",
+    "belief1": "最看重：专业能力",
+    "belief2": "最看重：批判精神",
+    "topic": "在真实决策中，\"最看重：专业能力\"和\"最看重：批判精神\"冲突时，人们实际上怎么选？理想和现实差多远？",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 40,
+    "expert1": "阿西莫夫",
+    "expert2": "项飙",
+    "belief1": "论证方式：类比隐喻",
+    "belief2": "论证方式：逻辑推演",
+    "topic": "阿西莫夫用论证方式：类比隐喻，项飙用论证方式：逻辑推演——同一个问题，两种方法得出的结论会差多远？",
+    "conflict_type": "method",
+    "strength": "moderate"
+  }
+]

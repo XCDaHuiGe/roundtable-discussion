@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>科幻叙事如何制造科技投资泡沫 圆桌洞见</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Noto+Serif+SC:wght@600;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--bg2:#0a0a0a;--bg-card:rgba(20,20,20,0.95);--fg:#e2deda;--fg2:rgba(226,222,218,0.78);--fg3:rgba(226,222,218,0.55);--fg4:rgba(226,222,218,0.38);--acid:#c9f044;--glow:rgba(201,240,68,0.4);--red:#ff4757;--green:#00d4aa;--border:rgba(226,222,218,0.1);--mono:'JetBrains Mono',monospace;--serif:'Noto Serif SC',serif;--sans:'Outfit',sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--fg);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.frame{position:fixed;inset:0;padding:5vh 4vw;background:radial-gradient(ellipse 100% 80% at 50% 0%,rgba(201,240,68,0.04) 0%,transparent 40%),repeating-linear-gradient(0deg,rgba(226,222,218,0.04) 0 1px,transparent 1px 40px),repeating-linear-gradient(90deg,rgba(226,222,218,0.04) 0 1px,transparent 1px 40px),var(--bg);overflow:hidden}
+.inner{position:relative;width:100%;height:100%;overflow:hidden;border:1px solid rgba(226,222,218,0.18);border-radius:16px;background:linear-gradient(90deg,rgba(201,240,68,0.03) 1px,transparent 1px),linear-gradient(180deg,rgba(201,240,68,0.02) 1px,transparent 1px),radial-gradient(circle at 50% 50%,transparent 55%,rgba(0,0,0,0.4) 100%),var(--bg2);background-size:80px 100%,100% 80px,auto;box-shadow:0 0 100px rgba(201,240,68,0.06),0 40px 80px rgba(0,0,0,0.6),inset 0 1px 0 rgba(226,222,218,0.12)}
+.slides{position:absolute;inset:0}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;padding:28px;opacity:0;transition:opacity 0.6s cubic-bezier(0.4,0,0.2,1)}
+.slide.active{display:flex;opacity:1}
+#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--acid),var(--green));z-index:100;transition:width 0.35s ease;box-shadow:0 0 16px var(--glow)}
+.meta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--fg4);text-transform:uppercase;letter-spacing:0.15em}
+.meta.top{padding-bottom:20px;border-bottom:1px solid var(--border)}
+.meta.bottom{margin-top:auto;padding-top:20px;border-top:1px solid var(--border)}
+.hero{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.badge{display:inline-flex;align-items:center;gap:10px;background:rgba(201,240,68,0.08);padding:10px 20px;border-radius:24px;border:1px solid rgba(201,240,68,0.2);margin-bottom:28px}
+.badge span{font-family:var(--mono);font-size:11px;color:var(--acid);letter-spacing:0.18em}
+.hero-title{font-family:var(--mono);font-weight:800;font-size:clamp(36px,7vw,80px);color:var(--fg);line-height:1.15;letter-spacing:-0.02em;text-shadow:0 0 40px rgba(201,240,68,0.15)}
+.hero-title .glow{color:var(--acid);text-shadow:0 0 30px var(--glow)}
+.hero-sub{font-size:clamp(18px,2.8vw,32px);color:var(--fg3);margin-top:20px;line-height:1.6}
+.experts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin:5% 0}
+.expert-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:28px 24px;text-align:center;transition:all 0.4s}
+.expert-card:hover{transform:translateY(-6px);border-color:rgba(201,240,68,0.3);box-shadow:0 12px 40px rgba(0,0,0,0.3)}
+.expert-avatar{width:72px;height:72px;border-radius:50%;margin:0 auto 16px;background:linear-gradient(135deg,var(--acid),var(--green));display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:24px;color:var(--bg);box-shadow:0 0 24px var(--glow)}
+.expert-avatar.pink{background:linear-gradient(135deg,#FF6B9D,#FF8FAE);box-shadow:0 0 24px rgba(255,107,157,0.4)}
+.expert-avatar.orange{background:linear-gradient(135deg,#FFB347,#FFD700);box-shadow:0 0 24px rgba(255,179,71,0.4)}
+.expert-name{font-family:var(--mono);font-weight:700;font-size:16px;color:var(--fg);margin-bottom:8px}
+.expert-role{font-family:var(--mono);font-size:10px;color:var(--fg4);letter-spacing:0.1em}
+.round-block{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:32px;margin:20px 0}
+.round-title{font-family:var(--mono);font-weight:800;font-size:clamp(20px,3.5vw,32px);color:var(--acid);margin-bottom:20px;text-align:center;letter-spacing:0.08em}
+.clash{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:24px 28px;margin:16px 0;border-left:4px solid var(--red);box-shadow:-10px 0 30px rgba(255,71,87,0.12)}
+.clash-title{font-family:var(--mono);font-weight:700;font-size:16px;color:var(--red);margin-bottom:14px}
+.clash-text{font-size:clamp(13px,1.5vw,17px);color:var(--fg2);line-height:1.9}
+.insight{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:24px 28px;margin:16px 0;border-left:4px solid var(--green);box-shadow:-10px 0 30px rgba(0,212,170,0.12)}
+.insight-title{font-family:var(--mono);font-weight:700;font-size:16px;color:var(--green);margin-bottom:14px}
+.insight-core{font-weight:700;font-size:clamp(16px,1.8vw,20px);color:var(--fg);display:block;margin:14px 0}
+.insight-text{font-size:clamp(13px,1.5vw,17px);color:var(--fg2);line-height:1.9}
+.statement{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:20px;margin:12px 0;transition:all 0.3s}
+.statement:hover{border-color:rgba(226,222,218,0.18);box-shadow:0 0 16px rgba(201,240,68,0.05)}
+.statement-meta{display:flex;justify-content:space-between;margin-bottom:12px}
+.statement-speaker{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--acid)}
+.statement-role{font-family:var(--mono);font-size:10px;color:var(--fg4)}
+.statement-text{font-size:clamp(12px,1.3vw,15px);line-height:1.85;color:var(--fg2)}
+.conclusion-block{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:48px;max-width:800px;margin:0 auto;text-align:center}
+.conclusion-text{font-family:var(--mono);font-weight:800;font-size:clamp(26px,4vw,44px);color:var(--fg);line-height:1.4}
+#nav{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:18px;z-index:100;background:rgba(13,13,13,0.92);padding:14px 24px;border-radius:28px;border:1px solid var(--border);backdrop-filter:blur(16px)}
+.nav-btn{width:40px;height:40px;border:1px solid rgba(226,222,218,0.18);background:transparent;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--fg2);transition:all 0.3s}
+.nav-btn:hover{background:rgba(201,240,68,0.12);border-color:var(--acid);color:var(--acid)}
+.dots{display:flex;gap:8px}
+.dot{width:9px;height:9px;border-radius:3px;background:var(--fg4);cursor:pointer;transition:all 0.3s}
+.dot.active{background:var(--acid);box-shadow:0 0 12px var(--glow)}
+#counter{position:fixed;top:24px;right:28px;font-family:var(--mono);font-size:12px;color:var(--fg4);z-index:100;background:rgba(13,13,13,0.85);padding:10px 16px;border-radius:8px;border:1px solid var(--border)}
+@media(max-width:768px){.experts-grid{grid-template-columns:repeat(2,1fr)}.statement-text,.clash-text,.insight-text{font-size:13px}}
+</style>
+</head>
+<body>
+<div id="progress" style="width:0%"></div>
+<div class="frame"><div class="inner">
+<div class="slides">
+
+<div class="slide active">
+<div class="meta top"><span>ROUNDTABLE INSIGHTS</span><span>V1.0 · GEEK REPORT</span></div>
+<div class="hero">
+<div class="badge"><span>SCI-FI × INVESTMENT</span></div>
+<div class="hero-title">科幻叙事如何制造<span class="glow">科技投资泡沫</span></div>
+<div class="hero-sub">当科幻故事成为投资叙事，泡沫就有了文化根基</div>
+</div>
+<div class="meta bottom"><span>6 EXPERTS · 3 ROUNDS</span><span>2026.05.27</span></div>
+</div>
+
+<div class="slide">
+<div class="meta top"><span>EXPERT PANEL</span><span>6位思想者</span></div>
+<div class="experts-grid">
+<div class="expert-card"><div class="expert-avatar">赫</div><div class="expert-name">尤瓦尔·赫拉利</div><div class="expert-role">历史学家</div></div>
+<div class="expert-card"><div class="expert-avatar pink">凯</div><div class="expert-name">凯文·凯利</div><div class="expert-role">科技观察者</div></div>
+<div class="expert-card"><div class="expert-avatar orange">博</div><div class="expert-name">豪尔赫·博尔赫斯</div><div class="expert-role">文学大师</div></div>
+<div class="expert-card"><div class="expert-avatar">塔</div><div class="expert-name">纳西姆·塔勒布</div><div class="expert-role">风险哲学家</div></div>
+<div class="expert-card"><div class="expert-avatar pink">卡</div><div class="expert-name">丹尼尔·卡尼曼</div><div class="expert-role">行为经济学家</div></div>
+<div class="expert-card"><div class="expert-avatar orange">芒</div><div class="expert-name">查理·芒格</div><div class="expert-role">投资思想家</div></div>
+</div>
+<div class="meta bottom"><span>SPEAKERS</span><span>2026.05.27</span></div>
+</div>
+
+<div class="slide">
+<div class="meta top"><span>ROUND 1</span><span>立场表达</span></div>
+<div class="round-block">
+<div class="round-title">科幻叙事如何塑造投资预期？</div>
+<div class="statement">
+<div class="statement-meta"><span class="statement-speaker">尤瓦尔·赫拉利</span><span class="statement-role">历史学家</span></div>
+<div class="statement-text">科幻叙事对科技投资的影响是一个典型的"想象的秩序"案例。人类是讲故事的动物——我们用故事来组织社会、协调行动、创造意义。科幻故事之所以能驱动投资，是因为它们提供了比财务报表更有说服力的东西：愿景。当投资者买入特斯拉时，他们不是在买入一家汽车公司，而是在买入一个关于未来的科幻故事——自动驾驶、火星殖民、清洁能源。这个故事比任何财务数据都更有力量。</div>
+</div>
+<div class="statement">
+<div class="statement-meta"><span class="statement-speaker">凯文·凯利</span><span class="statement-role">科技观察者</span></div>
+<div class="statement-text">赫拉利的观点需要一个重要的补充：科幻叙事不是"误导"投资者，而是"启发"投资者。很多伟大的科技公司——从IBM到SpaceX——都是被科幻故事启发的。科幻作家不是在预测未来，而是在"发明"未来——他们创造了一个愿景，然后工程师去实现它。投资者的作用是为这个实现过程提供资金。科幻叙事不是泡沫的来源，而是创新的燃料。</div>
+</div>
+<div class="statement">
+<div class="statement-meta"><span class="statement-speaker">豪尔赫·博尔赫斯</span><span class="statement-role">文学大师</span></div>
+<div class="statement-text">凯文·凯利的"发明未来"论需要一个关键修正：科幻叙事不是"发明"未来，而是"选择"未来。在无数可能的未来中，科幻故事选择了一种来讲述——这种选择本身就是一种权力行为。当投资者相信某一种科幻叙事时，他们实际上是在投票选择一种特定的未来。但问题是：被选择的未来不一定是"最好"的未来，而只是"最会讲故事"的未来。</div>
+</div>
+</div>
+<div class="meta bottom"><span>ROUND 1</span><span>1/3</span></div>
+</div>
+
+<div class="slide">
+<div class="meta top"><span>ROUND 1</span><span>立场表达（续）</span></div>
+<div class="round-block">
+<div class="round-title">泡沫的心理学与文学性</div>
+<div class="statement">
+<div class="statement-meta"><span class="statement-speaker">纳西姆·塔勒布</span><span class="statement-role">风险哲学家</span></div>
+<div class="statement-text">博尔赫斯的"选择未来"论揭示了一个更危险的真相：科幻叙事创造了一种"认知锁定"。当投资者相信某一种科幻叙事时，他们会过滤掉所有与之矛盾的信息——这是一种典型的确认偏差。更可怕的是，科幻叙事往往具有"不可证伪性"——它描述的是尚未发生的事情，所以你无法用现实来反驳它。这使得科幻叙事成为完美的泡沫载体：它永远不会"错"，因为它还没有被检验。</div>
+</div>
+<div class="statement">
+<div class="statement-meta"><span class="statement-speaker">丹尼尔·卡尼曼</span><span class="statement-role">行为经济学家</span></div>
+<div class="statement-text">塔勒布的"不可证伪性"论需要补充一个心理学视角：人们对未来故事的信任程度远高于对当前数据的信任程度。我在研究中发现，人们对"可能性"的反应比对"概率性"的反应更强烈。科幻叙事正是利用了这种心理——它们提供的不是概率，而是可能性。当投资者听到"人类可能在2050年殖民火星"时，他们的大脑不是在计算概率，而是在想象场景。这种想象力会压倒理性分析。</div>
+</div>
+<div class="statement">
+<div class="statement-meta"><span class="statement-speaker">查理·芒格</span><span class="statement-role">投资思想家</span></div>
+<div class="statement-text">卡尼曼教授的分析需要一个重要的补充：科幻叙事之所以有效，还因为它利用了人类的"叙事谬误"。人们倾向于把随机事件编织成连贯的故事——这是一种进化遗留的认知偏差。当科技公司发布一个产品时，投资者会自动把它编织进一个更大的科幻叙事中。特斯拉不仅仅是一家汽车公司——它是"人类清洁能源未来"的一部分。这种叙事编织会创造一种"光环效应"，让投资者忽视公司的实际缺陷。</div>
+</div>
+</div>
+<div class="meta bottom"><span>ROUND 1</span><span>2/3</span></div>
+</div>
+
+<div class="slide">
+<div class="meta top"><span>ROUND 2</span><span>认知碰撞</span></div>
+<div class="round-block">
+<div class="round-title">乐观主义的代价</div>
+<div class="clash">
+<div class="clash-title">塔勒布 → 凯文·凯利</div>
+<div class="clash-text">凯文·凯利，你的"科幻叙事是创新燃料"论是一种危险的浪漫化。在现实中，大多数被科幻叙事驱动的投资都失败了——我们只是忘记了那些失败的案例，记住了成功的案例。这是一种典型的幸存者偏差。更可怕的是，科幻叙事创造了一种"道德绑架"：如果你不相信这个科幻未来，你就是"保守"的、"短视"的、"不创新"的。这种道德压力迫使投资者放弃理性分析，跟随叙事。</div>
+</div>
+<div class="clash">
+<div class="clash-title">凯文·凯利 → 塔勒布</div>
+<div class="clash-text">塔勒布，你的"幸存者偏差"论忽略了创新的本质。创新从来都是高失败率的——但这不意味着创新是错误的。是的，大多数被科幻叙事驱动的投资都失败了，但那些成功的投资改变了人类文明。SpaceX、特斯拉、互联网——这些都是科幻叙事变成现实的案例。你的风险模型只看到了失败的成本，没有看到成功的收益。真正的风险不是投资失败，而是错过改变世界的机会。</div>
+</div>
+</div>
+<div class="meta bottom"><span>ROUND 2</span><span>1/2</span></div>
+</div>
+
+<div class="slide">
+<div class="meta top"><span>ROUND 2</span><span>认知碰撞（续）</span></div>
+<div class="round-block">
+<div class="round-title">叙事的权力与责任</div>
+<div class="clash">
+<div class="clash-title">博尔赫斯 → 赫拉利</div>
+<div class="clash-text">赫拉利，你的"想象的秩序"概念需要一个关键修正：科幻叙事不是"中性"的想象，而是"有方向"的想象。科幻作家选择讲述什么故事、不讲述什么故事——这种选择本身就是一种权力行为。当主流科幻叙事都聚焦于硅谷式的创新时，它实际上是在强化一种特定的价值观：技术乐观主义、个人英雄主义、增长至上。那些不被讲述的未来——比如去增长、简单生活、技术谦逊——就被边缘化了。</div>
+</div>
+<div class="clash">
+<div class="clash-title">芒格 → 卡尼曼</div>
+<div class="clash-text">卡尼曼教授，你的"可能性vs概率性"论需要一个重要的修正：投资者不是"被欺骗"的，而是"主动选择"被骗。他们知道科幻叙事可能是泡沫，但他们选择相信——因为这种相信本身就是一种投资策略。在泡沫膨胀的过程中，跟随叙事的人会获利；只有在泡沫破裂时，他们才会亏损。投资者不是"非理性"的，而是"选择性理性"——他们在计算什么时候泡沫会破裂，然后在破裂之前退出。</div>
+</div>
+</div>
+<div class="meta bottom"><span>ROUND 2</span><span>2/2</span></div>
+</div>
+
+<div class="slide">
+<div class="meta top"><span>ROUND 3</span><span>认知整合</span></div>
+<div class="round-block">
+<div class="round-title">超越二元对立</div>
+<div class="statement">
+<div class="statement-meta"><span class="statement-speaker">丹尼尔·卡尼曼</span><span class="statement-role">认知整合者</span></div>
+<div class="statement-text">经过两轮碰撞，我看到了一个被忽视的元问题：我们一直在用"理性/非理性"的框架讨论科幻叙事，但这个框架本身就是过时的。科幻叙事驱动的投资行为既不是"理性"也不是"非理性"——它是"叙事理性"的，即按照故事的逻辑做决策，而不是按照数据的逻辑。这种"叙事理性"是人类最古老的决策方式——它在数据出现之前就存在了。</div>
+</div>
+<div class="statement">
+<div class="statement-meta"><span class="statement-speaker">尤瓦尔·赫拉利</span><span class="statement-role">认知整合者</span></div>
+<div class="statement-text">卡尼曼的"叙事理性"概念抓住了问题的核心，但需要补充一个历史视角：人类历史上每次重大投资泡沫都伴随着一个强大的叙事——郁金香泡沫、铁路泡沫、互联网泡沫。这些泡沫不是"异常"，而是"常态"——它们是人类社会进行大规模创新的方式。泡沫破裂后，留下的基础设施——铁路、光纤、人才——会被下一轮创新利用。科幻叙事是创新泡沫的文化引擎。</div>
+</div>
+<div class="statement">
+<div class="statement-meta"><span class="statement-speaker">查理·芒格</span><span class="statement-role">认知整合者</span></div>
+<div class="statement-text">两位的整合都指向一个关键洞察：科幻叙事驱动的投资泡沫不是"市场失灵"，而是"市场进化"。传统的市场价格发现机制假设投资者是理性的；科幻叙事的存在打破了这个假设，创造了一种新的价格发现机制——基于愿景的共识。投资者不是被误导的羊群，而是新时代的"愿景投资者"——他们投资的不是公司的当前价值，而是公司可能创造的未来价值。</div>
+</div>
+</div>
+<div class="meta bottom"><span>ROUND 3</span><span>FINAL</span></div>
+</div>
+
+<div class="slide">
+<div class="meta top"><span>INSIGHT</span><span>核心洞见</span></div>
+<div class="insight">
+<div class="insight-title">核心洞见</div>
+<div class="insight-core">科幻叙事驱动的投资泡沫不是"市场失灵"，而是"愿景经济"的诞生</div>
+<div class="insight-text">经过三轮碰撞，六位专家达成一个深刻共识：科幻叙事对科技投资的影响不是"误导"，而是"启发"。泡沫不是市场的"bug"，而是市场的"feature"——它是人类进行大规模创新的文化机制。那些能理解科幻叙事逻辑的投资者将获利，那些不能的将被淘汰。</div>
+</div>
+<div class="insight">
+<div class="insight-title">关键转折</div>
+<div class="insight-core">从"理性定价"到"愿景定价"的范式转换</div>
+<div class="insight-text">赫拉利的"想象的秩序"和芒格的"愿景投资者"指向同一个结论：市场价格不仅反映当前价值，还反映未来愿景。科幻叙事之所以能驱动股价，是因为它们创造了比财务数据更有说服力的东西：关于未来的想象。未来的投资者需要学会分析愿景，而不仅仅是分析数据。</div>
+</div>
+<div class="meta bottom"><span>INSIGHT</span><span>2026.05.27</span></div>
+</div>
+
+<div class="slide">
+<div class="meta top"><span>CONCLUSION</span><span>终章</span></div>
+<div class="hero">
+<div class="conclusion-block">
+<div class="conclusion-text">科幻叙事不是泡沫的<span style="color:var(--red)">来源</span>，<br>而是创新的<span style="color:var(--acid)">燃料</span>。</div>
+</div>
+</div>
+<div class="meta bottom"><span>PRESSEDBY ROUNDTABLE ENGINE</span><span>2026.05.27</span></div>
+</div>
+
+</div>
+</div></div>
+
+<div id="nav">
+<button class="nav-btn" id="prevBtn">◀</button>
+<div class="dots" id="dots"></div>
+<button class="nav-btn" id="nextBtn">▶</button>
+</div>
+<div id="counter">1 / 1</div>
+<script>
+(function(){const slides=document.querySelectorAll('.slide'),total=slides.length;let cur=0;const dots=document.getElementById('dots'),counter=document.getElementById('counter'),progress=document.getElementById('progress');let wt=null;slides.forEach((_,i)=>{const d=document.createElement('div');d.className='dot'+(i===0?' active':'');d.onclick=()=>go(i);dots.appendChild(d)});function go(n){if(n<0||n>=total)return;slides[cur].classList.remove('active');dots.children[cur].classList.remove('active');cur=n;slides[cur].classList.add('active');dots.children[cur].classList.add('active');counter.textContent=(cur+1)+' / '+total;progress.style.width=Math.min(100,((cur+1)/total)*100)+'%'}document.getElementById('prevBtn').onclick=()=>go(cur-1);document.getElementById('nextBtn').onclick=()=>go(cur+1);document.addEventListener('keydown',e=>{if(e.key==='ArrowDown'||e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(cur+1)}else if(e.key==='ArrowUp'||e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1)}else if(e.key==='Home'){e.preventDefault();go(0)}else if(e.key==='End'){e.preventDefault();go(total-1)}});document.addEventListener('wheel',e=>{e.preventDefault();if(wt)return;wt=setTimeout(()=>wt=null,400);if(e.deltaY>0)go(cur+1);else if(e.deltaY<0)go(cur-1)},{passive:false});document.body.addEventListener('click',e=>{if(e.target.closest('.nav-btn,.dot,.expert-card,.statement,.clash,.insight,.conclusion-block'))return;go(cur+1)});go(0)})();
+</script>
+</body>
+</html>

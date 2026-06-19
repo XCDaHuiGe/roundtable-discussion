@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>影视模因驱动的散户狂潮 圆桌洞见</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F8F4EF;--bg-warm:#F2EDE6;--bg-card:#FFFFFF;--fg:#1a1a1a;--fg-2:#3a3a3a;--fg-3:#6a6a6a;--fg-muted:#9a9a9a;--sep:#e0d8ce;--sep-2:#c8bfb3;--accent:#8B4513;--accent-2:#A0522D;--red:#C41E3A;--green:#2E8B57;--serif:'Crimson Pro',Georgia,serif;--sans:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.6;overflow-x:hidden;position:relative}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");opacity:0.02;pointer-events:none;z-index:0}
+::selection{background:var(--accent);color:#fff}
+.container{max-width:900px;margin:0 auto;padding:0 40px;position:relative;z-index:1}
+.section{height:100vh;overflow:hidden;padding:80px 0;opacity:0;transform:translateY(30px);transition:opacity 0.8s ease,transform 0.8s ease;position:relative;z-index:1}
+.section.visible{opacity:1;transform:translateY(0)}
+.progress{position:fixed;top:0;left:0;height:2px;background:var(--accent);z-index:100;transition:width 0.3s ease;box-shadow:0 0 8px rgba(139,69,19,0.3)}
+.editorial-header{text-align:center;padding:100px 0 80px;position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center}
+.editorial-header::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:80px;height:1px;background:var(--sep-2)}
+.editorial-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;background:var(--bg-warm);border:1px solid var(--sep);border-radius:4px;font-family:var(--mono);font-size:10px;font-weight:500;color:var(--fg-3);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:48px}
+.editorial-title{font-family:var(--serif);font-size:clamp(2.8rem,8vw,5.5rem);font-weight:800;line-height:1.1;margin-bottom:32px;letter-spacing:-0.03em;color:var(--fg)}
+.editorial-sub{font-size:clamp(1rem,2.2vw,1.3rem);color:var(--fg-3);max-width:600px;margin:0 auto 48px;line-height:1.9;font-weight:400}
+.editorial-meta{display:flex;justify-content:center;gap:32px;font-family:var(--mono);font-size:11px;color:var(--fg-muted);letter-spacing:0.1em}
+.experts-list{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:48px}
+.expert-item{display:flex;align-items:center;gap:16px;padding:20px 24px;background:var(--bg-card);border:1px solid var(--sep);border-radius:6px;transition:all 0.3s ease}
+.expert-item:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.08);border-color:var(--sep-2)}
+.expert-dot{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:20px;font-weight:700;background:var(--fg);color:var(--bg);flex-shrink:0}
+.expert-dot.accent{background:var(--accent)}
+.expert-dot.red{background:var(--red)}
+.expert-dot.green{background:var(--green)}
+.expert-dot.fg2{background:var(--fg-2)}
+.expert-info .name{font-weight:600;font-size:15px;color:var(--fg)}
+.expert-info .role{font-family:var(--mono);font-size:10px;color:var(--fg-muted);letter-spacing:0.08em;margin-top:4px}
+.round-header{display:flex;align-items:center;gap:16px;margin-bottom:32px;padding-bottom:20px;border-bottom:2px solid var(--fg)}
+.round-tag{font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;color:var(--fg);letter-spacing:-0.02em}
+.round-sub{font-family:var(--mono);font-size:11px;color:var(--fg-muted);letter-spacing:0.1em}
+.speech{background:var(--bg-card);border:1px solid var(--sep);border-radius:6px;padding:28px 32px;margin-bottom:20px;position:relative;transition:all 0.3s ease}
+.speech::before{content:'';position:absolute;left:0;top:16px;bottom:16px;width:3px;background:var(--accent);border-radius:3px;transition:all 0.3s}
+.speech:hover{transform:translateX(4px);box-shadow:0 4px 16px rgba(0,0,0,0.06);border-color:var(--sep-2)}
+.speech:hover::before{top:8px;bottom:8px;width:4px}
+.speech-head{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.speech-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:16px;font-weight:700;background:var(--fg);color:var(--bg);flex-shrink:0}
+.speech-avatar.accent{background:var(--accent)}
+.speech-name{font-weight:600;font-size:14px;color:var(--fg)}
+.speech-role{font-family:var(--mono);font-size:10px;color:var(--fg-muted);letter-spacing:0.06em}
+.speech-body{font-size:15px;line-height:1.9;color:var(--fg-2);letter-spacing:0.01em}
+.clash{background:var(--bg-warm);border:1px solid var(--sep);border-left:4px solid var(--red);border-radius:6px;padding:28px 32px;margin-bottom:20px;transition:all 0.3s ease}
+.clash:hover{transform:translateX(4px);box-shadow:0 4px 16px rgba(0,0,0,0.06)}
+.clash-label{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--red);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:20px}
+.clash-item{margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--sep)}
+.clash-item:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.clash-speaker{font-weight:600;font-size:14px;color:var(--accent);margin-bottom:8px}
+.clash-text{font-size:15px;line-height:1.9;color:var(--fg-2)}
+.insight{background:var(--bg-card);border:1px solid var(--sep);border-left:4px solid var(--green);border-radius:6px;padding:32px;margin-bottom:20px;transition:all 0.3s ease}
+.insight:hover{transform:translateX(4px);box-shadow:0 4px 16px rgba(0,0,0,0.06)}
+.insight-label{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--green);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:20px}
+.insight-core{font-family:var(--serif);font-size:clamp(1.1rem,2.2vw,1.5rem);font-weight:700;line-height:1.5;margin-bottom:16px;color:var(--fg)}
+.insight-text{font-size:15px;line-height:1.9;color:var(--fg-2)}
+.conclusions{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:32px}
+.conclusion{background:var(--bg-card);border:1px solid var(--sep);border-radius:6px;padding:28px;transition:all 0.3s ease}
+.conclusion:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.08)}
+.conclusion-num{font-family:var(--serif);font-size:2rem;font-weight:800;color:var(--accent);opacity:0.3;margin-bottom:12px}
+.conclusion-text{font-size:15px;line-height:1.85;color:var(--fg-2)}
+.closing{text-align:center;padding:100px 0}
+.closing-title{font-family:var(--serif);font-size:clamp(1.6rem,3.5vw,2.5rem);font-weight:800;line-height:1.4;margin-bottom:24px}
+.closing-note{font-size:15px;color:var(--fg-3);max-width:500px;margin:0 auto;line-height:1.9}
+.questions{margin-top:32px}
+.question{background:var(--bg-card);border:1px solid var(--sep);border-radius:6px;padding:24px 28px;margin-bottom:12px;cursor:pointer;transition:all 0.3s ease}
+.question:hover{transform:translateX(4px);border-color:var(--accent);box-shadow:0 4px 12px rgba(0,0,0,0.06)}
+.question-head{display:flex;justify-content:space-between;align-items:center}
+.question-text{font-weight:600;font-size:15px;color:var(--fg)}
+.question-toggle{font-size:20px;color:var(--fg-muted);transition:transform 0.3s}
+.question-body{max-height:0;overflow:hidden;transition:max-height 0.4s ease}
+.question.open .question-body{max-height:300px}
+.question.open .question-toggle{transform:rotate(45deg)}
+.question-answer{padding-top:16px;font-size:14px;color:var(--fg-3);line-height:1.8}
+.nav-dots{position:fixed;right:20px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:100}
+.nav-dot{width:8px;height:8px;border-radius:50%;background:var(--sep-2);cursor:pointer;transition:all 0.3s ease;border:none;padding:0}
+.nav-dot.active{background:var(--accent);height:24px;border-radius:4px;box-shadow:0 0 8px rgba(139,69,19,0.4)}
+.nav-dot:hover{background:var(--fg-muted)}
+@media(max-width:768px){.experts-list{grid-template-columns:1fr}.conclusions{grid-template-columns:1fr}.container{padding:0 20px}.section{padding:60px 0}.nav-dots{display:none}}
+@media(max-width:480px){.editorial-title{font-size:2.2rem}.editorial-meta{flex-direction:column;gap:8px}}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="nav-dots" id="navDots"></div>
+
+<!-- 封面 -->
+<div class="section visible">
+<div class="container">
+<div class="editorial-header">
+<div class="editorial-badge">EDITORIAL · V1.0</div>
+<h1 class="editorial-title">影视模因驱动的散户狂潮</h1>
+<p class="editorial-sub">当电影叙事成为投资信号，散户的决策不再基于基本面，而是基于故事的感染力。这是一场文化与资本的碰撞。</p>
+<div class="editorial-meta"><span>6 EXPERTS</span><span>3 ROUNDS</span><span>2026.05.27</span></div>
+</div>
+</div>
+</div>
+
+<!-- 专家阵容 -->
+<div class="section">
+<div class="container">
+<h2 style="font-family:var(--serif);font-size:clamp(1.5rem,3vw,2rem);font-weight:800;text-align:center;margin-bottom:32px">六位思想者</h2>
+<div class="experts-list">
+<div class="expert-item"><div class="expert-dot">卡</div><div class="expert-info"><div class="name">丹尼尔·卡尼曼</div><div class="role">行为经济学之父</div></div></div>
+<div class="expert-item"><div class="expert-dot accent">芒</div><div class="expert-info"><div class="name">查理·芒格</div><div class="role">投资思想家</div></div></div>
+<div class="expert-item"><div class="expert-dot green">凯</div><div class="expert-info"><div class="name">凯文·凯利</div><div class="role">《失控》作者</div></div></div>
+<div class="expert-item"><div class="expert-dot fg2">项</div><div class="expert-info"><div class="name">项飙</div><div class="role">人类学家</div></div></div>
+<div class="expert-item"><div class="expert-dot red">塔</div><div class="expert-info"><div class="name">纳西姆·塔勒布</div><div class="role">《黑天鹅》作者</div></div></div>
+<div class="expert-item"><div class="expert-dot">赫</div><div class="expert-info"><div class="name">尤瓦尔·赫拉利</div><div class="role">《人类简史》作者</div></div></div>
+</div>
+</div>
+</div>
+
+<!-- Round 1 -->
+<div class="section">
+<div class="container">
+<div class="round-header"><div class="round-tag">Round 1</div><div class="round-sub">立场表达</div></div>
+<div class="speech">
+<div class="speech-head"><div class="speech-avatar">卡</div><div><div class="speech-name">丹尼尔·卡尼曼</div><div class="speech-role">行为经济学家</div></div></div>
+<div class="speech-body">影视模因对散户投资行为的影响是一个典型的"叙事经济学"案例。当一部电影或电视剧创造了强烈的情感体验时，观众会将这种情感迁移到相关股票上——这不是理性分析，而是"情感启发式"。我在研究中发现，人们会高估生动事件的概率，低估统计概率。当散户看到《大空头》时，他们会过度恐惧房地产；当他们看到科技题材剧集时，他们会过度乐观科技股。模因的力量在于它绕过了理性分析，直接作用于情感系统。</div>
+</div>
+<div class="speech">
+<div class="speech-head"><div class="speech-avatar accent">芒</div><div><div class="speech-name">查理·芒格</div><div class="speech-role">投资思想家</div></div></div>
+<div class="speech-body">卡尼曼教授的分析需要一个重要的补充：影视模因的影响不是"非理性"，而是"另一种理性"。散户不是傻子——他们知道电影是虚构的。但他们也知道，电影反映的是社会情绪的共识。当一部电影引发广泛讨论时，它实际上是在释放一个信号：这个主题即将成为社会热点。散户买入相关股票，不是因为他们相信电影的情节，而是因为他们相信其他人会因为电影而买入。这是一种"二阶理性"——预测他人的预测。</div>
+</div>
+<div class="speech">
+<div class="speech-head"><div class="speech-avatar green">凯</div><div><div class="speech-name">凯文·凯利</div><div class="speech-role">科技观察者</div></div></div>
+<div class="speech-body">两位都低估了模因的进化力量。模因不是"影响"散户——模因就是散户。在社交媒体时代，投资决策已经从"分析→决策"变成了"模因→传播→行动"。影视作品只是模因的一个载体；真正起作用的是模因在社交网络中的复制和变异。散户不是被电影"误导"，而是在参与一场大规模的模因进化实验。那些能抓住模因趋势的投资者会获利，那些不能的会亏损——这不是非理性，而是进化选择。</div>
+</div>
+</div>
+</div>
+
+<!-- Round 1 续 -->
+<div class="section">
+<div class="container">
+<div class="round-header"><div class="round-tag">Round 1</div><div class="round-sub">立场表达（续）</div></div>
+<div class="speech">
+<div class="speech-head"><div class="speech-avatar fg2">项</div><div><div class="speech-name">项飙</div><div class="speech-role">人类学家</div></div></div>
+<div class="speech-body">从人类学角度看，影视模因驱动的散户狂潮是一种新型的"集体仪式"。传统社会有祭祀、节庆；现代社会有股票市场。当散户集体买入某只股票时，他们不是在投资，而是在参与一场"数字祭祀"——通过共同的行动来确认彼此的归属感。我在研究中国股民时发现，很多人买股票不是为了赚钱，而是为了"参与感"——他们想成为故事的一部分。影视作品提供了这种故事，而股票市场提供了参与的仪式。</div>
+</div>
+<div class="speech">
+<div class="speech-head"><div class="speech-avatar red">塔</div><div><div class="speech-name">纳西姆·塔勒布</div><div class="speech-role">风险哲学家</div></div></div>
+<div class="speech-body">项飙的"仪式"概念很精彩，但掩盖了一个更危险的真相：影视模因驱动的散户狂潮是典型的"肥尾事件"制造机。当大量散户同时因为同一个模因而行动时，他们的行为是高度相关的——这意味着极端事件的概率被大大提高了。传统的金融模型假设投资者是独立的；模因的存在打破了这个假设。散户不是独立的决策者，而是模因网络中的节点——他们的行为是同步的、可预测的、脆弱的。</div>
+</div>
+<div class="speech">
+<div class="speech-head"><div class="speech-avatar">赫</div><div><div class="speech-name">尤瓦尔·赫拉利</div><div class="speech-role">历史学家</div></div></div>
+<div class="speech-body">四位的分析都指向一个更大的历史趋势：人类正在从"理性经济人"变成"叙事经济人"。传统经济学假设人是理性的——他们根据数据和逻辑做决策。但人类从来不是理性的——我们是讲故事的动物。影视模因之所以有力量，是因为它们提供了比数据更有说服力的东西：故事。散户不是被数据说服的，而是被故事说服的。这不是退化，而是回归——回归到人类最古老的决策方式。</div>
+</div>
+</div>
+</div>
+
+<!-- Round 2 -->
+<div class="section">
+<div class="container">
+<div class="round-header"><div class="round-tag">Round 2</div><div class="round-sub">认知碰撞</div></div>
+<div class="clash">
+<div class="clash-label">碰撞交锋 #1</div>
+<div class="clash-item">
+<div class="clash-speaker">塔勒布 → 凯文·凯利</div>
+<div class="clash-text">凯文·凯利，你的"模因进化"叙事是一种危险的浪漫化。模因不是中性的进化力量——它是病毒式的、不可控的、具有破坏性的。当散户被模因驱动时，他们不是在"进化"，而是在"被感染"。更可怕的是，模因的传播速度远快于信息的验证速度——当散户因为一部电影买入股票时，他们甚至没有时间验证电影中的信息是否准确。你在用"进化"来美化"传染"。</div>
+</div>
+<div class="clash-item">
+<div class="clash-speaker">凯文·凯利 → 塔勒布</div>
+<div class="clash-text">塔勒布，你的"传染"隐喻暴露了你的精英主义偏见。你假设散户是被动的、愚蠢的、需要被保护的。但实际上，散户是主动的参与者——他们选择相信什么、传播什么、投资什么。模因不是"感染"散户，而是散户在"选择"模因。你的风险模型假设投资者应该是独立的、理性的、冷静的——但这种投资者从来不存在。人类一直是社会性的、情感性的、叙事性的。模因只是让这种本质变得更可见。</div>
+</div>
+</div>
+<div class="clash">
+<div class="clash-label">碰撞交锋 #2</div>
+<div class="clash-item">
+<div class="clash-speaker">卡尼曼 → 芒格</div>
+<div class="clash-text">芒格先生，你的"二阶理性"需要一个重要的修正：散户的"预测他人的预测"往往是错误的。我在研究群体智慧时发现，当人们试图预测他人行为时，他们倾向于高估自己的独特性，低估他人的相似性。这意味着散户会高估自己对模因的"理解"，低估模因的"传染性"。你的"二阶理性"在理论上是成立的，但在实践中往往是"二阶非理性"。</div>
+</div>
+<div class="clash-item">
+<div class="clash-speaker">芒格 → 卡尼曼</div>
+<div class="clash-text">卡尼曼教授，你的"二阶非理性"论需要区分两种情况：短期和长期。短期内，散户确实会犯错——他们会追高杀跌、会从众、会被模因误导。但长期来看，市场会惩罚那些犯错的人，奖励那些正确的人。模因驱动的狂潮不是"非理性"，而是"快速学习"——散户通过亏损来学习什么是真正的价值。你的行为经济学太关注"错误"，而忽视了"学习"。</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Round 3 -->
+<div class="section">
+<div class="container">
+<div class="round-header"><div class="round-tag">Round 3</div><div class="round-sub">认知整合</div></div>
+<div class="speech">
+<div class="speech-head"><div class="speech-avatar">卡</div><div><div class="speech-name">丹尼尔·卡尼曼</div><div class="speech-role">认知整合者</div></div></div>
+<div class="speech-body">经过两轮碰撞，我看到了一个被忽视的元问题：我们一直在用"理性/非理性"的框架讨论影视模因，但这个框架本身就是过时的。模因驱动的投资行为既不是"理性"也不是"非理性"——它是"超理性"的，因为它超越了个体理性，进入了一个集体认知的层面。散户不是独立的决策者，而是模因网络中的节点——他们的决策是分布式的、涌现性的、不可还原为个体理性的。</div>
+</div>
+<div class="speech">
+<div class="speech-head"><div class="speech-avatar">赫</div><div><div class="speech-name">尤瓦尔·赫拉利</div><div class="speech-role">认知整合者</div></div></div>
+<div class="speech-body">卡尼曼的"超理性"概念抓住了问题的核心，但需要补充一个历史视角：人类历史上每次信息革命都创造了新的"集体认知"形态。文字创造了"集体记忆"；印刷机创造了"集体知识"；互联网创造了"集体社交"；模因创造了"集体决策"。影视模因驱动的散户狂潮不是异常，而是新时代的常态——一种新的集体决策机制，通过故事来协调数百万人的行动。</div>
+</div>
+<div class="speech">
+<div class="speech-head"><div class="speech-avatar fg2">项</div><div><div class="speech-name">项飙</div><div class="speech-role">认知整合者</div></div></div>
+<div class="speech-body">两位的整合都指向一个关键洞察：影视模因驱动的散户狂潮不是"市场失灵"，而是"市场进化"。传统的市场价格发现机制假设投资者是独立的；模因的存在打破了这个假设，创造了一种新的价格发现机制——基于叙事的共识。散户不是被误导的羊群，而是新时代的"叙事投资者"——他们投资的不是公司的基本面，而是公司背后的故事的传播力。</div>
+</div>
+</div>
+</div>
+
+<!-- 核心洞见 -->
+<div class="section">
+<div class="container">
+<div class="insight">
+<div class="insight-label">核心洞见</div>
+<div class="insight-core">影视模因驱动的散户狂潮不是"市场失灵"，而是"叙事经济"的诞生</div>
+<div class="insight-text">经过三轮碰撞，六位专家达成一个深刻共识：散户被影视模因驱动不是因为他们"愚蠢"，而是因为他们是人类——讲故事的动物。模因不是市场的"噪音"，而是市场的"信号"——它反映了社会情绪的共识。那些能理解模因逻辑的投资者将获利，那些不能的将被淘汰。</div>
+</div>
+<div class="insight">
+<div class="insight-label">关键转折</div>
+<div class="insight-core">从"理性定价"到"叙事定价"的范式转换</div>
+<div class="insight-text">芒格的"二阶理性"和赫拉利的"叙事经济人"指向同一个结论：市场价格不仅反映基本面，还反映叙事的传播力。影视模因之所以能驱动股价，是因为它们创造了比数据更有说服力的东西：故事。未来的投资者需要学会分析叙事，而不仅仅是分析数据。</div>
+</div>
+</div>
+</div>
+
+<!-- 结论 -->
+<div class="section">
+<div class="container">
+<div class="closing">
+<h2 class="closing-title">模因不是噪音，<br>而是市场的语言</h2>
+<p class="closing-note">散户不是被误导的羊群，而是新时代的叙事投资者。理解模因，就是理解市场。</p>
+</div>
+<div class="conclusions">
+<div class="conclusion"><div class="conclusion-num">01</div><div class="conclusion-text">影视模因不是"影响"散户，而是"定义"散户。模因是散户决策的核心机制，不是外部干扰。</div></div>
+<div class="conclusion"><div class="conclusion-num">02</div><div class="conclusion-text">模因驱动的狂潮不是"非理性"，而是"超理性"——一种集体认知的涌现形式。</div></div>
+<div class="conclusion"><div class="conclusion-num">03</div><div class="conclusion-text">市场价格不仅反映基本面，还反映叙事的传播力。未来的投资者需要学会分析叙事。</div></div>
+<div class="conclusion"><div class="conclusion-num">04</div><div class="conclusion-text">模因的风险不在于它"误导"散户，而在于它创造了高度相关的市场行为——这是系统性风险的来源。</div></div>
+</div>
+</div>
+</div>
+
+<script>
+(function(){
+const sections=document.querySelectorAll('.section');
+const total=sections.length;
+let cur=0;
+const dots=document.getElementById('navDots');
+const progress=document.getElementById('progress');
+sections.forEach((_,i)=>{const d=document.createElement('button');d.className='nav-dot'+(i===0?' active':'');d.onclick=()=>go(i);dots.appendChild(d)});
+function go(n){if(n<0||n>=total)return;sections[cur].classList.remove('visible');dots.children[cur]?.classList.remove('active');cur=n;sections[cur].scrollIntoView({behavior:'smooth',block:'start'});sections[cur].classList.add('visible');dots.children[cur]?.classList.add('active');progress.style.width=Math.min(100,((cur+1)/total)*100)+'%'}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowDown'||e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(cur+1)}else if(e.key==='ArrowUp'||e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1)}else if(e.key==='Home'){e.preventDefault();go(0)}else if(e.key==='End'){e.preventDefault();go(total-1)}});
+let wt=null;document.addEventListener('wheel',e=>{e.preventDefault();if(wt)return;wt=setTimeout(()=>wt=null,400);if(e.deltaY>0)go(cur+1);else if(e.deltaY<0)go(cur-1)},{passive:false});
+document.body.addEventListener('click',e=>{if(e.target.closest('.nav-dot,.nav-dots,.expert-item,.speech,.clash,.insight,.question,.conclusion'))return;go(cur+1)});
+document.querySelectorAll('.question').forEach(q=>{q.querySelector('.question-head').onclick=e=>{e.stopPropagation();q.classList.toggle('open')}});
+go(0);
+})();
+</script>
+</body>
+</html>

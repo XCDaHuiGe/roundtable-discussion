@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>天崩公司环境：改变自己、适应还是逃离 圆桌洞见</title>
+<style>
+  :root{
+    /* ============ 主题色(默认:🖋 墨水经典) ============ */
+    --ink:#0a0a0b;
+    --ink-rgb:10,10,11;
+    --paper:#f1efea;
+    --paper-rgb:241,239,234;
+    --paper-tint:#e8e5de;
+    --ink-tint:#18181a;
+    --text-dim:rgba(241,239,234,0.5);
+
+    /* ============ 强调色 ============ */
+    --accent:#c23b22;
+    --accent-rgb:194,59,34;
+    --gold:#d4a843;
+    --gold-rgb:212,168,67;
+    --blue:#4a6a9a;
+    --purple:#8a4aaa;
+    --green:#3a8a5c;
+    --cyan:#4a9a9a;
+    --orange:#d4843a;
+
+    /* ============ 字体(跨主题固定) ============ */
+    --mono:"IBM Plex Mono","SF Mono",monospace;
+    --serif-zh:"Noto Serif SC","Source Han Serif SC","STSong",serif;
+    --sans-zh:"Noto Sans SC","Source Han Sans SC","PingFang SC",sans-serif;
+
+    /* ============ 间距 ============ */
+    --radius:10px;
+    --ease:cubic-bezier(.4,0,.2,1);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans-zh);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+  /* ============ Deck 容器 ============ */
+  #deck{position:relative;width:100vw;height:100vh;overflow:hidden}
+
+  /* ============ 进度条 ============ */
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:1000;transition:width .5s var(--ease);box-shadow:0 0 12px rgba(var(--accent-rgb),.3)}
+
+  /* ============ 幻灯片 ============ */
+  .deck{position:relative;width:100%;height:100%}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;overflow:hidden}
+  .slide-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
+  .slide.active{display:flex}
+  .slide.hero{justify-content:center;align-items:center;text-align:center}
+  .slide.title-slide{justify-content:center;align-items:center;text-align:center}
+
+  /* ============ 入场动画(Guizang风格) ============ */
+  [data-anim]{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .slide.active [data-anim]{opacity:1;transform:translateY(0)}
+  .slide.active [data-anim]:nth-child(1){transition-delay:.1s}
+  .slide.active [data-anim]:nth-child(2){transition-delay:.18s}
+  .slide.active [data-anim]:nth-child(3){transition-delay:.26s}
+  .slide.active [data-anim]:nth-child(4){transition-delay:.34s}
+  .slide.active [data-anim]:nth-child(5){transition-delay:.42s}
+  .slide.active [data-anim]:nth-child(6){transition-delay:.5s}
+
+  /* ============ 内容区(book-distillation范式) ============ */
+  .frame{width:100%;max-width:1100px;margin:0 auto;flex:1;display:flex;flex-direction:column}
+  .slide-content{flex:1;display:flex;flex-direction:column}
+
+  /* ============ Magazine Chrome(Guizang风格) ============ */
+  .chrome{display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.5;margin-bottom:3vh}
+  .chrome .left,.chrome .right{display:flex;gap:2em;align-items:center}
+  .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
+
+  /* ============ 底部元数据(render_v8兼容) ============ */
+  .deck-footer{margin-top:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
+  .slide-number{position:absolute;bottom:2vh;right:3vw;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.35)}
+
+  /* ============ Section Label ============ */
+  .section-label{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
+
+  /* ============ 封面 ============ */
+  .cover-badge{display:inline-block;padding:6px 20px;border:1px solid var(--accent);border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4vh}
+  .cover-title{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:4vh;line-height:1.8;max-width:600px}
+  .cover-stats{display:flex;gap:4vh;flex-wrap:wrap;justify-content:center}
+  .cover-stat{text-align:center}
+  .cover-stat-num{font-family:var(--mono);font-size:2.5rem;font-weight:900;color:var(--accent)}
+  .cover-stat-label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.5);margin-top:.5vh}
+
+  /* ============ 封面标题(render_v8) ============ */
+  .hero-dark{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;flex:1}
+  .title-main{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .title-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:2vh;line-height:1.8}
+  .gold-line{width:80px;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));margin:3vh auto;border-radius:2px}
+
+  /* ============ 标题系统 ============ */
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
+  .h-hero{font-family:var(--serif-zh);font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.2;margin-bottom:3vh}
+  .h-xl{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.4rem,3vw,2.2rem);line-height:1.3;margin-bottom:2vh}
+  .h-lg{font-family:var(--serif-zh);font-weight:600;font-size:clamp(1.1rem,2vw,1.5rem);line-height:1.4;margin-bottom:1.5vh}
+  .h-md{font-weight:600;font-size:1.1rem;margin-bottom:1vh}
+  .lead{font-size:1rem;line-height:1.85;color:rgba(var(--paper-rgb),.8);max-width:700px}
+  .meta-row{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.4);display:flex;gap:2em;flex-wrap:wrap;margin-top:3vh}
+
+  /* ============ 大号引用(render_v8) ============ */
+  .quote-large{font-family:var(--serif-zh);font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:600;line-height:1.6;color:rgba(var(--paper-rgb),.9);max-width:800px;margin:0 auto}
+
+  /* ============ 分割线 ============ */
+  .rule{width:100%;height:1px;background:rgba(var(--paper-rgb),.15);margin:3vh 0}
+
+  /* ============ 标签 ============ */
+  .tag{display:inline-block;padding:4px 12px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;margin:3px}
+  .tag-gold{background:rgba(var(--gold-rgb),.15);color:var(--gold);border:1px solid rgba(var(--gold-rgb),.2)}
+  .tag-red{background:rgba(var(--accent-rgb),.15);color:var(--accent);border:1px solid rgba(var(--accent-rgb),.2)}
+  .tag-blue{background:rgba(74,106,154,.15);color:var(--blue);border:1px solid rgba(74,106,154,.2)}
+  .tag-purple{background:rgba(138,74,170,.15);color:var(--purple);border:1px solid rgba(138,74,170,.2)}
+  .tag-green{background:rgba(58,138,92,.15);color:var(--green);border:1px solid rgba(58,138,92,.2)}
+
+  /* ============ 霓虹强调色(render_v8) ============ */
+  .neon-gold{color:var(--gold)}.neon-red{color:var(--accent)}.neon-cyan{color:var(--cyan)}.neon-purple{color:var(--purple)}.neon-orange{color:var(--orange)}.neon-green{color:var(--green)}
+
+  /* ============ 网格系统 ============ */
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:2vh 2vw}
+  @media(max-width:768px){.grid-2{grid-template-columns:1fr}}
+
+  /* ============ 发言块(原生) ============ */
+  .sp{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2.5vw;margin-bottom:2vh;position:relative}
+  .sp::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .sh{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh}
+  .speaker-avatar{width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:var(--ink);background:var(--accent);flex-shrink:0}
+  .sn{font-weight:700;font-size:1rem}
+  .sr{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4);padding:3px 8px;background:rgba(var(--paper-rgb),.06);border-radius:3px}
+  .st{font-size:.95rem;line-height:2;color:rgba(var(--paper-rgb),.85)}
+  .st strong{color:var(--paper);font-weight:700}
+  .st em{color:var(--gold);font-style:normal;font-weight:600}
+
+  /* ============ 碰撞块(原生) ============ */
+  .cb{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;position:relative}
+  .cb::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .cb.blue{border-color:rgba(74,106,154,.3)}.cb.blue::before{background:var(--blue)}
+  .cb.purple{border-color:rgba(138,74,170,.3)}.cb.purple::before{background:var(--purple)}
+  .cb.green{border-color:rgba(58,138,92,.3)}.cb.green::before{background:var(--green)}
+  .cb.orange{border-color:rgba(var(--gold-rgb),.3)}.cb.orange::before{background:var(--gold)}
+  .cl{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;color:var(--accent);font-weight:600}
+  .cl.blue{color:var(--blue)}.cl.purple{color:var(--purple)}.cl.green{color:var(--green)}.cl.orange{color:var(--gold)}
+
+  /* ============ 洞见卡 ============ */
+  .insight-c{background:linear-gradient(135deg,rgba(var(--paper-rgb),.04) 0%,rgba(var(--paper-rgb),.08) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh;position:relative;overflow:hidden}
+  .insight-c::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold))}
+  .insight-q{font-family:var(--serif-zh);font-size:1.1rem;font-weight:700;color:var(--gold);line-height:1.6;margin-bottom:1vh}
+  .insight-a{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.75)}
+
+  /* ============ 卡片 ============ */
+  .card{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
+  .card-num{font-family:var(--mono);font-weight:900;font-size:1.8rem;color:var(--accent);opacity:.4;margin-bottom:1vh}
+  .card-title{font-weight:700;font-size:1rem;margin-bottom:1vh}
+  .card-body{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
+  .card-source{font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);margin-top:1vh}
+
+  /* ============ 专家卡片(render_v8) ============ */
+  .card-rise{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--green)}
+  .card-fall{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--accent)}
+  .speaker-header{display:flex;align-items:center;gap:16px;margin-bottom:2vh}
+  .speaker-name{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem}
+  .speaker-role{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:2px}
+  .expert-profile{display:flex;flex-direction:column;gap:1vh}
+  .profile-item{font-size:.9rem;line-height:1.7;color:rgba(var(--paper-rgb),.8)}
+  .profile-label{color:var(--gold);font-weight:600}
+
+  /* ============ 立场表达(render_v8) ============ */
+  .stance-item{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;border-left:3px solid var(--gold)}
+  .stance-expert{font-family:var(--serif-zh);font-weight:700;font-size:1rem;margin-bottom:1vh}
+  .stance-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
+  .stances-grid{display:flex;flex-direction:column;gap:1.5vh}
+
+  /* ============ 碰撞轮次(render_v8) ============ */
+  .clash-round{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;position:relative}
+  .clash-round::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .clash-header{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh;flex-wrap:wrap}
+  .clash-attacker{font-weight:700;font-size:1rem}
+  .clash-target{font-weight:700;font-size:1rem}
+  .clash-arrow{color:rgba(var(--paper-rgb),.3);font-size:1.2rem}
+  .clash-type{display:inline-block;padding:3px 10px;border-radius:3px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.5vh;font-weight:600}
+  .clash-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
+  .counter-attack{margin-top:2vh;padding-top:2vh;border-top:1px dashed rgba(var(--paper-rgb),.1)}
+  .counter-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .counter-content{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
+  .clash-container{display:flex;flex-direction:column;gap:2vh}
+
+  /* ============ 攻击类型色 ============ */
+  .attack-logic{background:rgba(74,106,154,.15);color:var(--blue)}
+  .attack-interest{background:rgba(var(--accent-rgb),.15);color:var(--accent)}
+  .attack-reality{background:rgba(var(--gold-rgb),.15);color:var(--gold)}
+  .attack-human{background:rgba(138,74,170,.15);color:var(--purple)}
+  .attack-failure{background:rgba(58,138,92,.15);color:var(--green)}
+
+  /* ============ 现实案例(render_v8) ============ */
+  .reality-case{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--orange)}
+  .case-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5vh;flex-wrap:wrap;gap:8px}
+  .case-name{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem}
+  .case-source{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4)}
+  .case-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:1.5vh}
+  .case-outcome{font-size:.9rem;font-weight:600;margin-bottom:1vh}
+  .case-lesson{font-size:.9rem;font-weight:600}
+  .cases-container{display:flex;flex-direction:column;gap:2vh}
+
+  /* ============ 代价讨论(render_v8) ============ */
+  .cost-discussion{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh}
+  .cost-scenario{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem;margin-bottom:2vh}
+  .cost-list{display:flex;flex-direction:column;gap:1.5vh;margin-bottom:2vh}
+  .cost-item{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:1.5vh 2vw;border-left:3px solid var(--accent)}
+  .cost-name{font-weight:700;font-size:.95rem;margin-bottom:.5vh}
+  .cost-analysis{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .worst-case{background:rgba(var(--accent-rgb),.08);border:1px solid rgba(var(--accent-rgb),.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
+  .worst-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .worst-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+  .survivor-bias{background:rgba(138,74,170,.08);border:1px solid rgba(138,74,170,.15);border-radius:6px;padding:2vh 2vw}
+  .survivor-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .survivor-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+
+  /* ============ 人性层(render_v8) ============ */
+  .human-nature{background:linear-gradient(135deg,rgba(var(--paper-rgb),.03) 0%,rgba(var(--paper-rgb),.06) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
+  .human-question{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem;margin-bottom:2vh;line-height:1.5}
+  .human-analysis{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:2vh}
+  .human-examples{margin-bottom:2vh}
+  .examples-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1vh;font-weight:600}
+  .example-item{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8);padding:.5vh 0}
+  .human-conclusion{font-size:.95rem;font-weight:600;line-height:1.7}
+
+  /* ============ 认知升级(render_v8) ============ */
+  .cognitive-upgrade{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
+  .upgrade-comparison{display:grid;grid-template-columns:1fr auto 1fr;gap:2vw;align-items:start;margin-bottom:2vh}
+  @media(max-width:768px){.upgrade-comparison{grid-template-columns:1fr}.upgrade-arrow{transform:rotate(90deg)}}
+  .old-thinking,.new-thinking{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:2vh 1.5vw}
+  .old-thinking{border-left:3px solid var(--accent)}
+  .new-thinking{border-left:3px solid var(--green)}
+  .thinking-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .thinking-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+  .upgrade-arrow{font-size:1.5rem;color:rgba(var(--paper-rgb),.3);display:flex;align-items:center;justify-content:center;padding-top:3vh}
+  .complexity{background:rgba(74,106,154,.08);border:1px solid rgba(74,106,154,.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
+  .complexity-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .complexity-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .actionable{background:rgba(var(--gold-rgb),.08);border:1px solid rgba(var(--gold-rgb),.15);border-radius:6px;padding:2vh 2vw}
+  .actionable-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .actionable-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 情绪样式 ============ */
+  .emotion-sarcasm{border-left:3px solid var(--purple);padding-left:12px;font-style:italic}
+  .emotion-helplessness{opacity:.75;font-style:italic}
+  .emotion-anger{color:var(--accent);font-weight:600}
+  .emotion-hesitation{opacity:.8;font-style:italic}
+  .emotion-self-deprecation{opacity:.7;font-style:italic}
+  .emotion-cold-laugh{color:var(--purple)}
+  .emotion-silence{opacity:.5;font-style:italic}
+  .emotion-serious{color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 指标 ============ */
+  .metrics{display:flex;gap:2vw;flex-wrap:wrap;margin-bottom:3vh}
+  .metric{flex:1;min-width:100px;text-align:center;background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 1.5vw}
+  .metric-val{font-family:var(--mono);font-weight:900;font-size:clamp(1.5rem,3vw,2.5rem);color:var(--accent)}
+  .metric-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:.5vh}
+
+  /* ============ 开放问题 ============ */
+  .oq{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
+  .oq-num{font-family:var(--mono);font-weight:900;font-size:1.2rem;color:var(--accent);opacity:.3;margin-bottom:1vh}
+  .oq-text{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .headline-item{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.85);padding:1.5vh 0;border-bottom:1px solid rgba(var(--paper-rgb),.06)}
+  .headline-item:last-child{border-bottom:none}
+  .headline-item strong{color:var(--gold);margin-right:8px}
+
+  /* ============ 引用 ============ */
+  .quote{font-family:var(--serif-zh);font-size:1rem;font-style:italic;line-height:1.8;padding:2vh 2.5vw;border-left:3px solid var(--gold);background:rgba(var(--gold-rgb),.05);margin:2vh 0;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ TOC ============ */
+  .toc-panel{position:fixed;top:0;left:0;width:min(340px,80vw);height:100vh;background:rgba(var(--ink-rgb),.97);backdrop-filter:blur(20px);z-index:100;transform:translateX(-100%);transition:transform .35s var(--ease);padding:3vh 2.5vw;overflow-y:auto;border-right:1px solid rgba(var(--paper-rgb),.08)}
+  .toc-panel.open{transform:translateX(0)}
+  .toc-title{font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:3vh;padding-bottom:2vh;border-bottom:1px solid rgba(var(--paper-rgb),.1)}
+  .toc-item{display:flex;justify-content:space-between;padding:1.2vh 1.5vw;margin-bottom:.5vh;cursor:pointer;border-radius:6px;border-left:2px solid transparent;font-size:.9rem;color:rgba(var(--paper-rgb),.7);transition:all .2s}
+  .toc-item:hover{background:rgba(var(--paper-rgb),.06);color:var(--paper)}
+  .toc-item.active{background:rgba(var(--paper-rgb),.08);color:var(--accent);border-left-color:var(--accent);font-weight:600}
+  .toc-label{flex:1}
+  .toc-page{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.35)}
+  .toc-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;opacity:0;pointer-events:none;transition:opacity .3s}
+  .toc-backdrop.open{opacity:1;pointer-events:auto}
+
+  /* ============ 导航栏 ============ */
+  .nav-bar{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 3vw;background:rgba(var(--ink-rgb),.9);backdrop-filter:blur(10px);z-index:50;border-top:1px solid rgba(var(--paper-rgb),.06)}
+  .nav-left,.nav-right{display:flex;align-items:center;gap:12px}
+  .nav-btn{background:none;border:1px solid rgba(var(--paper-rgb),.12);color:rgba(var(--paper-rgb),.7);padding:8px 16px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;cursor:pointer;transition:all .2s}
+  .nav-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(var(--accent-rgb),.1)}
+  .nav-title{font-size:12px;color:rgba(var(--paper-rgb),.5);max-width:40vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-counter{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.4)}
+
+  /* ============ 导航点 ============ */
+  .nav-dots{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:6px}
+  .nd{width:6px;height:6px;border-radius:50%;background:rgba(var(--paper-rgb),.15);cursor:pointer;transition:all .3s var(--ease);border:none;padding:0}
+  .nd.active{background:var(--accent);height:20px;border-radius:3px;box-shadow:0 0 8px rgba(var(--accent-rgb),.4)}
+  .nd:hover{background:rgba(var(--paper-rgb),.4)}
+
+  /* ============ 入场动画延迟(render_v8兼容) ============ */
+  .anim-in{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .slide.active .anim-in{opacity:1;transform:translateY(0)}
+  .slide.active .anim-in:nth-child(1){transition-delay:.1s}
+  .slide.active .anim-in:nth-child(2){transition-delay:.18s}
+  .slide.active .anim-in:nth-child(3){transition-delay:.26s}
+  .slide.active .anim-in:nth-child(4){transition-delay:.34s}
+  .slide.active .anim-in:nth-child(5){transition-delay:.42s}
+  .slide.active .anim-in:nth-child(6){transition-delay:.5s}
+  .anim-delay-1{transition-delay:.18s !important}
+  .anim-delay-2{transition-delay:.26s !important}
+  .anim-delay-3{transition-delay:.34s !important}
+  .anim-delay-4{transition-delay:.42s !important}
+  .anim-delay-5{transition-delay:.5s !important}
+  .anim-delay-6{transition-delay:.58s !important}
+
+  /* ============ 响应式 ============ */
+  @media(max-width:1024px){.slide{padding:4vh 5vw 8vh}}
+  @media(max-width:768px){
+    .slide{padding:3vh 4vw 7vh}
+    .cover-stats{gap:2vh}
+    .metrics{flex-direction:column}
+    .nav-dots,.nav-title{display:none}
+    .nav-bar{padding:0 2vw}
+  }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+<div class="progress-bar" id="progressBar"></div>
+
+
+  <section class="slide hero active" data-title="封面">
+    <div class="slide-content hero-dark">
+      <div class="section-label anim-in">ROUNDTABLE DISCUSSION V8.0</div>
+      <h1 class="title-main anim-in anim-delay-1">天崩公司环境：改变自己、适应还是逃离</h1>
+      <div class="title-sub anim-in anim-delay-2">INTJ职场倦怠的决策困境 · 6位顶级专家深度会诊</div>
+      <div class="gold-line anim-in anim-delay-3"></div>
+      <p style="font-size:14px;color:var(--text-dim);letter-spacing:0.1em;" class="anim-in anim-delay-4">从知识讨论到生存博弈</p>
+    </div>
+    <div class="deck-footer">天崩公司环境：改变自己、适应还是逃离 | V8级圆桌洞见</div>
+    <div class="slide-number">01 / 21</div>
+  </section>
+
+  <section class="slide" data-title="专家档案(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">EXPERT PROFILES (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
+      <div class="grid-2">
+        
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#2d5a8a">达</div>
+          <div>
+            <div class="speaker-name neon-gold">达利欧</div>
+            <div class="speaker-role">周期理论创始人</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          
+        </div>
+      </div>
+
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#8b4513">芒</div>
+          <div>
+            <div class="speaker-name neon-gold">芒格</div>
+            <div class="speaker-role">多元思维模型大师</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          
+        </div>
+      </div>
+
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#4a6a9a">卡</div>
+          <div>
+            <div class="speaker-name neon-gold">卡尼曼</div>
+            <div class="speaker-role">决策心理学之父</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">专家档案</div>
+    <div class="slide-number">02 / 21</div>
+  </section>
+
+  <section class="slide" data-title="专家档案(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">EXPERT PROFILES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">专家档案</h3>
+      <div class="grid-2">
+        
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#6b8e6b">弗</div>
+          <div>
+            <div class="speaker-name neon-gold">弗洛姆</div>
+            <div class="speaker-role">人本主义心理学家</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          
+        </div>
+      </div>
+
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#c23b22">塔</div>
+          <div>
+            <div class="speaker-name neon-gold">塔勒布</div>
+            <div class="speaker-role">反脆弱理论创始人</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          
+        </div>
+      </div>
+
+      <div class="card card-rise anim-in">
+        <div class="speaker-header">
+          <div class="speaker-avatar" style="background:#5a5a5a">项</div>
+          <div>
+            <div class="speaker-name neon-gold">项飙</div>
+            <div class="speaker-role">悬浮状态研究者</div>
+          </div>
+        </div>
+        <div class="expert-profile">
+          
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">专家档案</div>
+    <div class="slide-number">03 / 21</div>
+  </section>
+
+  <section class="slide" data-title="Round 1: 问题诊断：为什么你这么痛苦">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1</div>
+      <h2 class="quote-large anim-in anim-delay-1">问题诊断：为什么你这么痛苦</h2>
+      <div class="gold-line anim-in anim-delay-2"></div>
+      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">INTJ在天崩公司里为什么会反复受挫？本质原因是什么？</p>
+    </div>
+    <div class="deck-footer">Round 1 | 问题诊断：为什么你这么痛苦</div>
+    <div class="slide-number">04 / 21</div>
+  </section>
+
+  <section class="slide" data-title="R1 立场(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">卡尼曼</div>
+        <div class="stance-content emotion-serious">系统冲突：你的快系统被持续压制</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">项飙</div>
+        <div class="stance-content emotion-serious">悬浮状态：你被困在中间层</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">弗洛姆</div>
+        <div class="stance-content emotion-serious">逃避自由：你在逃避'不服从'的代价</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 立场</div>
+    <div class="slide-number">05 / 21</div>
+  </section>
+
+  <section class="slide" data-title="R1 立场(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">达利欧</div>
+        <div class="stance-content emotion-serious">周期错配：你在冬天播种</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">芒格</div>
+        <div class="stance-content emotion-serious">逆向思考：先想怎么死</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">塔勒布</div>
+        <div class="stance-content emotion-serious">脆弱性测试：你在被反复打击</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 立场</div>
+    <div class="slide-number">06 / 21</div>
+  </section>
+
+  <section class="slide" data-title="R1 碰撞">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">卡尼曼</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">弗洛姆</span>
+        </div>
+        <div class="clash-type attack-logic">损失厌恶反驳</div>
+        <div class="clash-content emotion-serious">@弗洛姆: 你说用户逃避自由，但我要用损失厌恶来反驳。INTJ不是逃避自由，是损失厌恶。离开的损失是确定的——失去收入、失去稳定、失去'我在工作'的身份。留下的损失是不确定的——也许公司会好转、也许我能改变它。心理学研究证明，人对确定损失的厌恶是不确定收益的2倍。用户不是逃避自由，是理性地厌恶确定损失。问题是：他的损失厌恶计算错了——留下的损失其实更确定，那就是他的健康和精神。</div>
+        
+          <div class="counter-attack">
+            <div class="counter-label neon-cyan">反击</div>
+            <div class="counter-content emotion-serious">@卡尼曼: 你的损失厌恶分析成立，但我要追问：为什么他的计算会错？因为他用系统1（快思考）做决策——'离开=危险'是刻在基因里的反应。但INTJ的优势是系统2（慢思考），他应该能算清楚。问题是：他的系统2已经被消耗殆尽了。每天加班、每次无效沟通都在消耗他的认知资源。他现在用的是耗尽的系统2做决策，当然会算错。这不是损失厌恶，这是认知耗竭。</div>
+          </div>
+      </div>
+
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">项飙</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">达利欧</span>
+        </div>
+        <div class="clash-type attack-logic">结构vs周期</div>
+        <div class="clash-content emotion-serious">@达利欧: 你用周期分析，但周期分析有个盲区——它假设公司是正常企业。但这家公司可能不是正常企业，它可能就是'烂公司'——没有体系、领导无能、加班常态化。这不是周期问题，是结构问题。烂公司没有周期，它就是一直烂。你用周期分析，可能会让用户产生幻觉'也许公司会好转'。但烂公司不会好转，它只会烂到倒闭。周期分析的前提是公司有周期，烂公司没有周期。</div>
+        
+          <div class="counter-attack">
+            <div class="counter-label neon-cyan">反击</div>
+            <div class="counter-content emotion-serious">@项飙: 你说烂公司没有周期，但我要反驳：烂公司也有周期——它的周期是'烂→更烂→倒闭'。用户需要判断的是：这家公司处于'烂'还是'更烂'还是'倒闭前'。如果它在'烂'阶段，用户还有时间准备离开；如果它在'倒闭前'，用户必须立刻离开。周期分析不是让用户等待好转，是让用户判断剩余时间。你批判周期分析，但你没有给出替代方案——用户怎么判断'该不该立刻走'？</div>
+          </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 1 | 碰撞</div>
+    <div class="slide-number">07 / 21</div>
+  </section>
+
+  <section class="slide" data-title="Round 2: 决策框架：三选一的本质">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2</div>
+      <h2 class="quote-large anim-in anim-delay-1">决策框架：三选一的本质</h2>
+      <div class="gold-line anim-in anim-delay-2"></div>
+      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">改变自己、适应环境、逃离——这三个选项的本质区别是什么？</p>
+    </div>
+    <div class="deck-footer">Round 2 | 决策框架：三选一的本质</div>
+    <div class="slide-number">08 / 21</div>
+  </section>
+
+  <section class="slide" data-title="R2 立场(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">芒格</div>
+        <div class="stance-content emotion-serious">逆向思考三个选项的死法</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">达利欧</div>
+        <div class="stance-content emotion-serious">用原则决策，不是用情绪</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">塔勒布</div>
+        <div class="stance-content emotion-serious">反脆弱测试：哪个选项让你变强</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 立场</div>
+    <div class="slide-number">09 / 21</div>
+  </section>
+
+  <section class="slide" data-title="R2 立场(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">卡尼曼</div>
+        <div class="stance-content emotion-serious">前景理论：用概率加权</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">项飙</div>
+        <div class="stance-content emotion-serious">生态位分析：找到你的位置</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">弗洛姆</div>
+        <div class="stance-content emotion-serious">存在主义决策：选择你的选择</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 立场</div>
+    <div class="slide-number">10 / 21</div>
+  </section>
+
+  <section class="slide" data-title="R2 碰撞">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">芒格</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">达利欧</span>
+        </div>
+        <div class="clash-type attack-logic">原则vs现实</div>
+        <div class="clash-content emotion-serious">@达利欧: 你说'找到匹配的环境'是上策，但我要问：匹配的环境存在吗？INTJ适应的环境是有体系、有长期规划、尊重独立判断——这种环境在当今职场有多少？科技公司？大部分科技公司也在加班、也在焦虑执行。咨询公司？大部分咨询公司也在卖PPT、也在应付客户。研究机构？大部分研究机构也在申请经费、也在应付考核。'匹配的环境'可能是理想，不是现实。上策可能不存在，用户只能选中策或下策。</div>
+        
+          <div class="counter-attack">
+            <div class="counter-label neon-cyan">反击</div>
+            <div class="counter-content emotion-serious">@芒格: 你说匹配的环境不存在，但我要反驳：匹配的环境存在，只是稀缺。稀缺≠不存在。INTJ适应的环境确实少，但少≠没有。桥水基金就是有体系、有原则、尊重独立判断的公司——我创立的就是这种公司。你的逆向思考让你只看到'死法'，没看到'活法'。上策存在，只是需要寻找。寻找本身就是INTJ的优势——你的系统思维、你的分析能力，正好用于寻找匹配的环境。</div>
+          </div>
+      </div>
+
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">塔勒布</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">项飙</span>
+        </div>
+        <div class="clash-type attack-logic">迁徙vs反脆弱</div>
+        <div class="clash-content emotion-serious">@项飙: 你说迁徙到正确生态位，但我要问：你怎么知道哪个生态位正确？你迁徙到科技公司，发现科技公司也在加班；你迁徙到咨询公司，发现咨询公司也在卖PPT。迁徙可能只是从一个烂环境到另一个烂环境。反脆弱的测试是：你能从打击中变强吗？如果新环境也有打击，但你能从打击中学习、积累、变强，那才是正确生态位。迁徙不是目的，找到反脆弱环境才是目的。</div>
+        
+          <div class="counter-attack">
+            <div class="counter-label neon-cyan">反击</div>
+            <div class="counter-content emotion-serious">@塔勒布: 你的反脆弱测试成立，但我要补充：反脆弱环境需要两个条件——第一，环境允许你从错误中学习；第二，你有能力从错误中学习。INTJ有第二个条件（系统思维），但烂公司没有第一个条件（领导不承认错误）。迁徙的目的是找到有第一个条件的环境。科技公司可能加班，但如果科技公司承认错误、允许迭代，那就是反脆弱环境。迁徙不是盲目换环境，是寻找'允许学习'的环境。</div>
+          </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 2 | 碰撞</div>
+    <div class="slide-number">11 / 21</div>
+  </section>
+
+  <section class="slide" data-title="Round 3: 行动方案：如何逃离">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 3</div>
+      <h2 class="quote-large anim-in anim-delay-1">行动方案：如何逃离</h2>
+      <div class="gold-line anim-in anim-delay-2"></div>
+      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">如果决定逃离，具体应该怎么做？</p>
+    </div>
+    <div class="deck-footer">Round 3 | 行动方案：如何逃离</div>
+    <div class="slide-number">12 / 21</div>
+  </section>
+
+  <section class="slide" data-title="R3 立场(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">达利欧</div>
+        <div class="stance-content emotion-serious">五步流程：系统化逃离</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">芒格</div>
+        <div class="stance-content emotion-serious">检查清单：逃离前必做</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">塔勒布</div>
+        <div class="stance-content emotion-serious">杠铃策略：两头押注</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 立场</div>
+    <div class="slide-number">13 / 21</div>
+  </section>
+
+  <section class="slide" data-title="R3 立场(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">卡尼曼</div>
+        <div class="stance-content emotion-serious">启动效应：小步开始</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">项飙</div>
+        <div class="stance-content emotion-serious">附近重建：先重建连接</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">弗洛姆</div>
+        <div class="stance-content emotion-serious">爱的能力：逃离后要爱</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 立场</div>
+    <div class="slide-number">14 / 21</div>
+  </section>
+
+  <section class="slide" data-title="R3 碰撞">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 2: CLASH </div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">互相反驳</h3>
+      <div class="clash-container">
+        
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">芒格</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">塔勒布</span>
+        </div>
+        <div class="clash-type attack-logic">杠铃vs现实</div>
+        <div class="clash-content emotion-serious">@塔勒布: 你说杠铃策略——保留现有工作但降低投入。但我要问：烂公司允许你降低投入吗？领导督促进度、加班常态化、你降低投入会被惩罚——扣绩效、降职、甚至辞退。杠铃策略的前提是：你能控制投入程度。但烂公司不允许你控制——它要的是你的全部精力。杠铃策略在烂公司可能无法执行。</div>
+        
+          <div class="counter-attack">
+            <div class="counter-label neon-cyan">反击</div>
+            <div class="counter-content emotion-serious">@芒格: 你说烂公司不允许降低投入，但我要反驳：降低投入不等于降低产出。INTJ的系统思维可以让你'用更少时间完成相同产出'。你分析工作流程、找出效率瓶颈、优化执行方法——你用系统思维提高效率，然后用省下的时间准备逃离。降低投入是'减少无效时间'，不是'减少有效产出'。烂公司督促进度，但它不会检查你的时间分配，它只检查你的产出。</div>
+          </div>
+      </div>
+
+      <div class="clash-round anim-in">
+        <div class="clash-header">
+          <span class="clash-attacker neon-red">项飙</span>
+          <span class="clash-arrow">→</span>
+          <span class="clash-target neon-cyan">弗洛姆</span>
+        </div>
+        <div class="clash-type attack-logic">爱vs现实</div>
+        <div class="clash-content emotion-serious">@弗洛姆: 你说发展爱的能力，但我要问：INTJ能发展爱的能力吗？INTJ的核心特质是理性分析、独立判断——这些特质与'爱'（关心、理解、享受）是冲突的。INTJ习惯把工作当问题解决、把同事当信息来源、把生活当背景。你要求INTJ发展爱的能力，可能是在要求INTJ改变核心特质——这又回到'改变自己'的死法。</div>
+        
+          <div class="counter-attack">
+            <div class="counter-label neon-cyan">反击</div>
+            <div class="counter-content emotion-serious">@项飙: 你说INTJ不能发展爱的能力，但我要反驳：爱不是改变特质，是扩展特质。INTJ的系统思维可以用于'理解同事处境'——你分析他们的压力、他们的需求、他们的困境。INTJ的独立判断可以用于'关心工作意义'——你判断什么工作值得做、什么工作对社会有益。爱不是感性泛滥，是理性关心。INTJ的理性可以用于爱——只是需要扩展应用范围。</div>
+          </div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 3 | 碰撞</div>
+    <div class="slide-number">15 / 21</div>
+  </section>
+
+  <section class="slide" data-title="Round 4: 最终共识：六专家一致结论">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 4</div>
+      <h2 class="quote-large anim-in anim-delay-1">最终共识：六专家一致结论</h2>
+      <div class="gold-line anim-in anim-delay-2"></div>
+      <p class="anim-in anim-delay-3" style="color:var(--text-dim);font-size:16px;">六位专家能否达成共识？给用户一个明确的决策建议。</p>
+    </div>
+    <div class="deck-footer">Round 4 | 最终共识：六专家一致结论</div>
+    <div class="slide-number">16 / 21</div>
+  </section>
+
+  <section class="slide" data-title="R4 立场(1/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (1/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">达利欧</div>
+        <div class="stance-content emotion-serious">共识：逃离是上策，但要系统化</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">芒格</div>
+        <div class="stance-content emotion-serious">共识补充：逃离前做好四项储备</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">塔勒布</div>
+        <div class="stance-content emotion-serious">共识补充：杠铃策略降低风险</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 4 | 立场</div>
+    <div class="slide-number">17 / 21</div>
+  </section>
+
+  <section class="slide" data-title="R4 立场(2/2)">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 1: STANCES (2/2)</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">立场表达</h3>
+      <div class="stances-grid">
+        
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">卡尼曼</div>
+        <div class="stance-content emotion-serious">共识补充：小步启动避免瘫痪</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">项飙</div>
+        <div class="stance-content emotion-serious">共识补充：重建附近避免孤立</div>
+      </div>
+
+      <div class="stance-item anim-in">
+        <div class="stance-expert neon-gold">弗洛姆</div>
+        <div class="stance-content emotion-serious">共识补充：发展爱的能力避免重复</div>
+      </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 4 | 立场</div>
+    <div class="slide-number">18 / 21</div>
+  </section>
+
+  <section class="slide" data-title="R4 升级">
+    <div class="slide-content">
+      <div class="section-label anim-in">ROUND 6: COGNITIVE UPGRADE</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">认知升级</h3>
+      
+      <div class="cognitive-upgrade anim-in">
+        <div class="upgrade-comparison">
+          <div class="old-thinking">
+            <div class="thinking-label neon-red">旧思维</div>
+            <div class="thinking-content">逃离是上策，但逃离不是终点。逃离后你要找到匹配的环境、发展爱的能力、重建附近连接。否则，你只是从烂公司逃到另一个烂公司。真正的决策是：逃离烂公司，选择新环境，主动定义你的工作方式。</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="new-thinking">
+            <div class="thinking-label neon-green">新思维</div>
+            <div class="thinking-content">逃离不是逃避，是理性选择。烂公司是脆弱环境，没有积累；烂公司与INTJ价值观不匹配；烂公司处于衰退周期，没有好转可能。留下的损失是确定的——健康消耗、能力退化、精神崩溃。逃离的收益是可能的——找到匹配环境、恢复认知资源、重建职业发展。</div>
+          </div>
+        </div>
+        
+        <div class="complexity">
+          <div class="complexity-label neon-cyan">复杂性</div>
+          <div class="complexity-content">逃离是上策，但逃离不是终点。逃离后你要找到匹配的环境、发展爱的能力、重建附近连接。否则，你只是从烂公司逃到另一个烂公司。真正的决策是：逃离烂公司，选择新环境，主动定义你的工作方式。</div>
+        </div>
+        <div class="actionable">
+          <div class="actionable-label neon-gold">可执行洞见</div>
+          <div class="actionable-content">1.财务储备：6个月生活费
+2.技能储备：作品、项目、证书
+3.心理储备：承受3个月不确定性
+4.信息储备：行业、公司、人脉
+5.杠铃策略：保留工作但用效率降低投入
+6.小步启动：每天抽1小时准备逃离
+7.附近重建：每周行业活动、每月老朋友
+8.爱的能力：理性关心新环境</div>
+        </div>
+      </div>
+    </div>
+    <div class="deck-footer">Round 4 | 升级</div>
+    <div class="slide-number">19 / 21</div>
+  </section>
+
+  <section class="slide" data-title="最终洞见">
+    <div class="slide-content">
+      <div class="section-label anim-in">FINAL INSIGHT</div>
+      <div class="quote-large anim-in anim-delay-1">逃离烂公司是理性选择，不是逃避。INTJ在烂公司的痛苦是系统匹配问题——你的系统思维被压制、你的认知资源被消耗、你的核心竞争力被摧毁。留下的损失是确定的，逃离的收益是可能的。但逃离不是终点，是起点。逃离后你要：找到匹配的环境（有体系、有长期规划、尊重独立判断）、发展爱的能力（理性关心工作意义）、重建附近连接（同行、朋友、城市）。否则，你只是从烂公司逃到另一个烂公司。</div>
+    </div>
+    <div class="deck-footer">最终洞见</div>
+    <div class="slide-number">20 / 21</div>
+  </section>
+
+  <section class="slide" data-title="开放问题">
+    <div class="slide-content">
+      <div class="section-label anim-in">OPEN QUESTIONS</div>
+      <h3 class="anim-in anim-delay-1" style="margin-bottom:24px;">留给读者的问题</h3>
+      <div class="headline-item anim-in"><strong>Q1:</strong> 如果找不到匹配的环境，INTJ是否应该创业？</div>
+<div class="headline-item anim-in"><strong>Q2:</strong> 杠铃策略在严重加班的公司是否可行？</div>
+<div class="headline-item anim-in"><strong>Q3:</strong> INTJ如何在逃离过程中保持心理健康？</div>
+    </div>
+    <div class="deck-footer">开放问题</div>
+    <div class="slide-number">21 / 21</div>
+  </section>
+
+<div class="toc-backdrop" id="tocBackdrop"></div>
+<div class="toc-panel" id="tocPanel">
+<div class="toc-title">目录</div>
+<div id="tocList"></div>
+</div>
+<div class="nav-bar">
+<div class="nav-left">
+<button class="nav-btn" id="btnToc">☰ 目录</button>
+<button class="nav-btn" id="btnPrev">◀ 上一页</button>
+<button class="nav-btn" id="btnNext">下一页 ▶</button>
+</div>
+<div class="nav-right">
+<span class="nav-title" id="slideTitle"></span>
+<span class="nav-counter" id="slideCounter"></span>
+</div>
+</div>
+<div class="nav-dots" id="navDots"></div>
+</div>
+
+<script>
+(function(){
+var deck=document.getElementById("deck");
+var slides=deck.querySelectorAll(".slide");
+var total=slides.length;
+var cur=0;
+var dots=document.getElementById("navDots");
+var tocList=document.getElementById("tocList");
+var titleEl=document.getElementById("slideTitle");
+var counterEl=document.getElementById("slideCounter");
+var tocPanel=document.getElementById("tocPanel");
+var tocBackdrop=document.getElementById("tocBackdrop");
+var progressBar=document.getElementById("progressBar");
+
+for(var i=0;i<total;i++){
+  var d=document.createElement("button");
+  d.className="nd";
+  d.setAttribute("data-i",i);
+  d.onclick=(function(idx){return function(){go(idx)}})(i);
+  dots.appendChild(d);
+  var t=document.createElement("div");
+  t.className="toc-item";
+  t.setAttribute("data-i",i);
+  t.innerHTML='<span class="toc-label">'+(slides[i].getAttribute("data-title")||"Slide "+(i+1))+'</span><span class="toc-page">'+String(i+1).padStart(2,"0")+'</span>';
+  t.onclick=(function(idx){return function(){go(idx);closeTOC()}})(i);
+  tocList.appendChild(t);
+}
+
+function go(n){
+  if(n<0||n>=total)return;
+  slides[cur].classList.remove("active");
+  dots.children[cur].classList.remove("active");
+  tocList.children[cur].classList.remove("active");
+  cur=n;
+  slides[cur].classList.add("active");
+  dots.children[cur].classList.add("active");
+  tocList.children[cur].classList.add("active");
+  titleEl.textContent=slides[cur].getAttribute("data-title")||"";
+  counterEl.textContent=(cur+1)+" / "+total;
+  progressBar.style.width=((cur+1)/total*100)+"%";
+  slides[cur].scrollTop=0;
+}
+function toggleTOC(){tocPanel.classList.toggle("open");tocBackdrop.classList.toggle("open")}
+function closeTOC(){tocPanel.classList.remove("open");tocBackdrop.classList.remove("open")}
+
+document.addEventListener("keydown",function(e){
+  if(e.key==="ArrowRight"||e.key==="ArrowDown"||e.key===" "||e.key==="PageDown"){e.preventDefault();go(cur+1)}
+  else if(e.key==="ArrowLeft"||e.key==="ArrowUp"||e.key==="PageUp"){e.preventDefault();go(cur-1)}
+  else if(e.key==="Home"){e.preventDefault();go(0)}
+  else if(e.key==="End"){e.preventDefault();go(total-1)}
+  else if(e.key==="Escape"){closeTOC();go(0)}
+  else if(e.key==="t"||e.key==="T"){toggleTOC()}
+});
+var wheelTimer=null;
+deck.addEventListener("wheel",function(e){
+  e.preventDefault();
+  if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},400)}
+  if(e.deltaY>0)go(cur+1);
+  else if(e.deltaY<0)go(cur-1);
+},{passive:false});
+var touchX=0,touchY=0;
+deck.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX;touchY=e.touches[0].clientY});
+deck.addEventListener("touchend",function(e){
+  var dx=touchX-e.changedTouches[0].clientX,dy=touchY-e.changedTouches[0].clientY;
+  if(Math.abs(dy)>Math.abs(dx)){if(dy>50)go(cur+1);else if(dy<-50)go(cur-1)}
+  else{if(dx>50)go(cur+1);else if(dx<-50)go(cur-1)}
+});
+deck.addEventListener("click",function(e){
+  if(e.target.closest(".nav-btn,.nd,.toc-item,.toc-panel,.toc-backdrop"))return;
+  var x=e.clientX/window.innerWidth;
+  if(x<0.3)go(cur-1);else if(x>0.7)go(cur+1);
+});
+document.getElementById("btnToc").addEventListener("click",function(e){e.stopPropagation();toggleTOC()});
+document.getElementById("btnPrev").addEventListener("click",function(e){e.stopPropagation();go(cur-1)});
+document.getElementById("btnNext").addEventListener("click",function(e){e.stopPropagation();go(cur+1)});
+tocBackdrop.addEventListener("click",closeTOC);
+go(0);
+})();
+</script>
+</body>
+</html>

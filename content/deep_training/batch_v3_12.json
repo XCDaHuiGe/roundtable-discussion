@@ -1,0 +1,55 @@
+{
+  "batch": 12,
+  "rounds": [
+    {
+      "round": 286,
+      "expert1": "芮小丹",
+      "expert2": "李诞",
+      "belief1": "爱是本能不需要理论",
+      "belief2": "荒诞是生活的底色",
+      "topic": "哪种方法更有效?爱是本能不需要理论还是荒诞是生活的底色?",
+      "conflict_type": "method",
+      "strength": "strong"
+    },
+    {
+      "round": 287,
+      "expert1": "老子",
+      "expert2": "塔勒布",
+      "belief1": "天下皆知美之为美斯恶矣",
+      "belief2": "反脆弱是在不确定性中获益",
+      "topic": "什么更重要?天下皆知美之为美斯恶矣还是反脆弱是在不确定性中获益?",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 288,
+      "expert1": "韩非子",
+      "expert2": "芮小丹",
+      "belief1": "法不阿贵,绳不挠曲",
+      "belief2": "活得真实比活得正确更重要",
+      "topic": "水火不容:法不阿贵,绳不挠曲。但活得真实比活得正确更重要。谁的证据更硬?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 289,
+      "expert1": "尼采",
+      "expert2": "弗洛姆",
+      "belief1": "人是一根绳索悬于深渊之上",
+      "belief2": "爱是唯一理性的答案",
+      "topic": "方法论之争:解决问题的最佳路径是人是一根绳索悬于深渊之上,还是爱是唯一理性的答案?",
+      "conflict_type": "method",
+      "strength": "moderate"
+    },
+    {
+      "round": 290,
+      "expert1": "西蒙娜·德·波伏娃",
+      "expert2": "李诞",
+      "belief1": "爱不是拯救而是共同成长",
+      "belief2": "活着比正确更重要",
+      "topic": "不能兼得时:爱不是拯救而是共同成长和活着比正确更重要你优先选哪个?",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    }
+  ]
+}

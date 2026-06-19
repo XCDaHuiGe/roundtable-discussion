@@ -1,0 +1,55 @@
+{
+  "batch": 14,
+  "rounds": [
+    {
+      "round": 296,
+      "expert1": "项飙",
+      "expert2": "丹尼尔·戈尔曼",
+      "belief1": "全球化带来认同的焦虑",
+      "belief2": "同理心是领导力的核心",
+      "topic": "终极对立:全球化带来认同的焦虑 vs 同理心是领导力的核心。两者只能信一个,选哪个?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 297,
+      "expert1": "许知远",
+      "expert2": "凯文·凯利",
+      "belief1": "娱乐至死是时代的精神危机",
+      "belief2": "拥抱科技就是拥抱人性",
+      "topic": "哪种方法更有效?娱乐至死是时代的精神危机还是拥抱科技就是拥抱人性?",
+      "conflict_type": "method",
+      "strength": "strong"
+    },
+    {
+      "round": 298,
+      "expert1": "吴晓波",
+      "expert2": "项飙",
+      "belief1": "中国企业家的创造力被低估了",
+      "belief2": "做具体的事爱具体的人",
+      "topic": "什么更重要?中国企业家的创造力被低估了还是做具体的事爱具体的人?",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 299,
+      "expert1": "万维钢",
+      "expert2": "菲利普·津巴多",
+      "belief1": "世界是复杂的不存在简单答案",
+      "belief2": "斯坦福监狱实验是人性的镜子",
+      "topic": "不可调和:世界是复杂的不存在简单答案。然而斯坦福监狱实验是人性的镜子。真相在哪一边?",
+      "conflict_type": "direct",
+      "strength": "moderate"
+    },
+    {
+      "round": 300,
+      "expert1": "冯唐",
+      "expert2": "刘润",
+      "belief1": "管理是一生的日常",
+      "belief2": "底层逻辑是万变不离其宗",
+      "topic": "方法论之争:解决问题的最佳路径是管理是一生的日常,还是底层逻辑是万变不离其宗?",
+      "conflict_type": "method",
+      "strength": "moderate"
+    }
+  ]
+}

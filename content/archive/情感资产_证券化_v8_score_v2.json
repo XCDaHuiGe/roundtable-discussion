@@ -1,0 +1,346 @@
+{
+  "total": 41.4,
+  "grade": "F",
+  "version": "2.0",
+  "dimensions": {
+    "attack_efficiency": {
+      "score": 33.3,
+      "weight": 0.25,
+      "weighted": 8.3,
+      "details": {
+        "total": 3,
+        "effective": 1,
+        "details": [
+          {
+            "attacker": "纳西姆·塔勒布",
+            "target": "刘润",
+            "type": "逻辑漏洞",
+            "effective": true,
+            "base_pass": true,
+            "logic_pass": true,
+            "counter_pass": false,
+            "evidence_pass": true,
+            "target_pass": false,
+            "evidence_types": [
+              "direct_quote"
+            ],
+            "content_length": 95
+          },
+          {
+            "attacker": "项飙",
+            "target": "冯唐",
+            "type": "逻辑漏洞",
+            "effective": false,
+            "base_pass": true,
+            "logic_pass": false,
+            "counter_pass": false,
+            "evidence_pass": true,
+            "target_pass": false,
+            "evidence_types": [
+              "direct_quote"
+            ],
+            "content_length": 98
+          },
+          {
+            "attacker": "吴晓波",
+            "target": "李诞",
+            "type": "现实矛盾",
+            "effective": false,
+            "base_pass": true,
+            "logic_pass": false,
+            "counter_pass": false,
+            "evidence_pass": true,
+            "target_pass": false,
+            "evidence_types": [
+              "direct_quote"
+            ],
+            "content_length": 61
+          }
+        ]
+      }
+    },
+    "defense_rate": {
+      "score": 0.0,
+      "weight": 0.2,
+      "weighted": 0.0,
+      "details": {
+        "total_defended": 3,
+        "successful": 0,
+        "details": [
+          {
+            "target": "刘润",
+            "attacker": "纳西姆·塔勒布",
+            "explicit_counter": false,
+            "implicit_response": false,
+            "successful": false,
+            "atk_keywords": [
+              "刘润",
+              "你说金融",
+              "基础设施",
+              "的完善是",
+              "必然",
+              "但谁来承"
+            ]
+          },
+          {
+            "target": "冯唐",
+            "attacker": "项飙",
+            "explicit_counter": false,
+            "implicit_response": false,
+            "successful": false,
+            "atk_keywords": [
+              "冯唐",
+              "你说创作",
+              "者应该拿",
+              "大头",
+              "但你有没",
+              "有想过"
+            ]
+          },
+          {
+            "target": "李诞",
+            "attacker": "吴晓波",
+            "explicit_counter": false,
+            "implicit_response": false,
+            "successful": false,
+            "atk_keywords": [
+              "李诞",
+              "你说",
+              "真诚",
+              "很重要",
+              "但什么是",
+              "一个作者"
+            ]
+          }
+        ]
+      }
+    },
+    "evidence_hit": {
+      "score": 44.4,
+      "weight": 0.15,
+      "weighted": 6.7,
+      "details": {
+        "total_speeches": 9,
+        "with_evidence": 4,
+        "pattern_distribution": {
+          "direct_quote": 6,
+          "chapter_ref": 0,
+          "data_figure": 3,
+          "source_cite": 2,
+          "scene_desc": 0,
+          "concrete_case": 0,
+          "time_anchor": 2,
+          "expert_cite": 3
+        }
+      }
+    },
+    "style_recognition": {
+      "score": 83.3,
+      "weight": 0.15,
+      "weighted": 12.5,
+      "details": {
+        "total": 6,
+        "distinctive": 5,
+        "details": [
+          {
+            "expert": "吴晓波",
+            "match_ratio": 0.3,
+            "matched_words": [
+              "市场",
+              "变现",
+              "GMV"
+            ],
+            "template_count": 0,
+            "length": 300,
+            "distinctive": true
+          },
+          {
+            "expert": "纳西姆·塔勒布",
+            "match_ratio": 0.38,
+            "matched_words": [
+              "反脆弱",
+              "黑天鹅",
+              "脆弱"
+            ],
+            "template_count": 0,
+            "length": 342,
+            "distinctive": true
+          },
+          {
+            "expert": "项飙",
+            "match_ratio": 0.62,
+            "matched_words": [
+              "连接",
+              "社群",
+              "关系",
+              "异化",
+              "商品化"
+            ],
+            "template_count": 0,
+            "length": 282,
+            "distinctive": true
+          },
+          {
+            "expert": "冯唐",
+            "match_ratio": 0.56,
+            "matched_words": [
+              "商业",
+              "利益",
+              "分配",
+              "机制",
+              "收益"
+            ],
+            "template_count": 0,
+            "length": 265,
+            "distinctive": true
+          },
+          {
+            "expert": "李诞",
+            "match_ratio": 0.12,
+            "matched_words": [
+              "真诚"
+            ],
+            "template_count": 0,
+            "length": 245,
+            "distinctive": false
+          },
+          {
+            "expert": "刘润",
+            "match_ratio": 0.71,
+            "matched_words": [
+              "流动性",
+              "基础设施",
+              "金融",
+              "代币",
+              "证券化"
+            ],
+            "template_count": 0,
+            "length": 237,
+            "distinctive": true
+          }
+        ]
+      }
+    },
+    "cognitive_contribution": {
+      "score": 33.3,
+      "weight": 0.1,
+      "weighted": 3.3,
+      "details": {
+        "total_rounds": 3,
+        "with_upgrade": 1,
+        "details": [
+          {
+            "round": 1,
+            "upgrade_quality": false,
+            "has_human_depth": false,
+            "has_cost_depth": false,
+            "new_thinking_length": 0,
+            "has_actionable": false,
+            "has_complexity": false
+          },
+          {
+            "round": 2,
+            "upgrade_quality": false,
+            "has_human_depth": false,
+            "has_cost_depth": false,
+            "new_thinking_length": 0,
+            "has_actionable": false,
+            "has_complexity": false
+          },
+          {
+            "round": 3,
+            "upgrade_quality": false,
+            "has_human_depth": false,
+            "has_cost_depth": true,
+            "new_thinking_length": 61,
+            "has_actionable": true,
+            "has_complexity": true
+          }
+        ]
+      }
+    },
+    "case_quality": {
+      "score": 66.7,
+      "weight": 0.1,
+      "weighted": 6.7,
+      "details": {
+        "total_rounds": 3,
+        "with_cases": 2,
+        "round_details": [
+          {
+            "round": 1,
+            "has_case": true,
+            "cases": [
+              {
+                "type": "implicit_in_stance",
+                "expert": "冯唐",
+                "complete": true
+              }
+            ]
+          },
+          {
+            "round": 2,
+            "has_case": false,
+            "cases": []
+          },
+          {
+            "round": 3,
+            "has_case": true,
+            "cases": [
+              {
+                "name": "《庆余年》IP代币化案例",
+                "complete": true,
+                "checks": {
+                  "has_name": true,
+                  "has_source": true,
+                  "has_content": true,
+                  "has_outcome": true
+                }
+              },
+              {
+                "name": "《诡秘之主》盲盒二级市场",
+                "complete": true,
+                "checks": {
+                  "has_name": true,
+                  "has_source": true,
+                  "has_content": true,
+                  "has_outcome": true
+                }
+              },
+              {
+                "name": "阅文IP衍生品GMV爆发",
+                "complete": true,
+                "checks": {
+                  "has_name": true,
+                  "has_source": true,
+                  "has_content": true,
+                  "has_outcome": true
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "structure": {
+      "score": 77.8,
+      "weight": 0.05,
+      "weighted": 3.9,
+      "details": {
+        "checks": {
+          "title": true,
+          "experts": true,
+          "rounds": true,
+          "final_insight": true,
+          "open_questions": true,
+          "round_1_full_participation": true,
+          "round_2_full_participation": false,
+          "round_3_full_participation": false,
+          "avg_stance_length": true
+        },
+        "avg_stance_length": 278.5,
+        "total_stances": 6
+      }
+    }
+  }
+}

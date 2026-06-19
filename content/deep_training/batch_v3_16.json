@@ -1,0 +1,55 @@
+{
+  "batch": 16,
+  "rounds": [
+    {
+      "round": 306,
+      "expert1": "塔勒布",
+      "expert2": "万维钢",
+      "belief1": "经验优于理论",
+      "belief2": "承认无知是智慧的开始",
+      "topic": "哪种方法更有效?经验优于理论还是承认无知是智慧的开始?",
+      "conflict_type": "method",
+      "strength": "strong"
+    },
+    {
+      "round": 307,
+      "expert1": "丹尼尔·卡尼曼",
+      "expert2": "吴军",
+      "belief1": "思维懒惰是人类的天性",
+      "belief2": "信息密度决定认知深度",
+      "topic": "价值排序之争:思维懒惰是人类的天性更重要,还是信息密度决定认知深度更重要?",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 308,
+      "expert1": "巴菲特",
+      "expert2": "冯唐",
+      "belief1": "别人恐惧时我贪婪",
+      "belief2": "战略的本质是取舍",
+      "topic": "价值排序之争:别人恐惧时我贪婪更重要,还是战略的本质是取舍更重要?",
+      "conflict_type": "value_priority",
+      "strength": "moderate"
+    },
+    {
+      "round": 309,
+      "expert1": "达利欧",
+      "expert2": "吴晓波",
+      "belief1": "极度求真极度透明",
+      "belief2": "制造业是中国经济的底盘",
+      "topic": "哪种方法更有效?极度求真极度透明还是制造业是中国经济的底盘?",
+      "conflict_type": "method",
+      "strength": "moderate"
+    },
+    {
+      "round": 310,
+      "expert1": "阿西莫夫",
+      "expert2": "万维钢",
+      "belief1": "科技需要伦理导航",
+      "belief2": "科学方法是最可靠的认知工具",
+      "topic": "哪种方法更有效?科技需要伦理导航还是科学方法是最可靠的认知工具?",
+      "conflict_type": "method",
+      "strength": "moderate"
+    }
+  ]
+}

@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>儒释道批判性分析 圆桌洞见</title>
+<style>
+  :root{
+    /* ============ 主题色(默认:🖋 墨水经典) ============ */
+    --ink:#0a0a0b;
+    --ink-rgb:10,10,11;
+    --paper:#f1efea;
+    --paper-rgb:241,239,234;
+    --paper-tint:#e8e5de;
+    --ink-tint:#18181a;
+    
+    /* ============ 强调色 ============ */
+    --accent:#c23b22;
+    --accent-rgb:194,59,34;
+    --gold:#d4a843;
+    --gold-rgb:212,168,67;
+    --blue:#4a6a9a;
+    --purple:#8a4aaa;
+    --green:#3a8a5c;
+    
+    /* ============ 字体(跨主题固定) ============ */
+    --mono:"IBM Plex Mono","SF Mono",monospace;
+    --serif-zh:"Noto Serif SC","Source Han Serif SC","STSong",serif;
+    --sans-zh:"Noto Sans SC","Source Han Sans SC","PingFang SC",sans-serif;
+    
+    /* ============ 间距 ============ */
+    --radius:10px;
+    --ease:cubic-bezier(.4,0,.2,1);
+
+    /* ============ 语义色 ============ */
+    --text-dim:rgba(241,239,234,0.5);
+    --muted:rgba(241,239,234,0.5);
+    --confucius:#c23b22;
+    --laozi:#3a8a5c;
+    --buddha:#d4a843;
+    --luxun:#4a6a9a;
+    --plato:#8a4aaa;
+    --nietzsche:#d4843a;
+    --border:rgba(241,239,234,0.1);
+  }
+  
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans-zh);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  
+  /* ============ Deck 容器 ============ */
+  #deck{position:relative;width:100vw;height:100vh;overflow:hidden}
+  
+  /* ============ 进度条 ============ */
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:1000;transition:width .5s var(--ease);box-shadow:0 0 12px rgba(var(--accent-rgb),.3)}
+  
+  /* ============ 幻灯片 ============ */
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw;height:100vh;overflow:hidden}
+  .slide::-webkit-scrollbar{width:4px}.slide::-webkit-scrollbar-track{background:transparent}.slide::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
+  .slide.active{display:flex}
+  .slide.hero{justify-content:center;align-items:center;text-align:center}
+  .slide.title-slide{justify-content:center;align-items:center;text-align:center}
+  
+  /* ============ 入场动画(Guizang风格) ============ */
+  [data-anim]{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .slide.active [data-anim]{opacity:1;transform:translateY(0)}
+  .slide.active [data-anim]:nth-child(1){transition-delay:.1s}
+  .slide.active [data-anim]:nth-child(2){transition-delay:.18s}
+  .slide.active [data-anim]:nth-child(3){transition-delay:.26s}
+  .slide.active [data-anim]:nth-child(4){transition-delay:.34s}
+  .slide.active [data-anim]:nth-child(5){transition-delay:.42s}
+  .slide.active [data-anim]:nth-child(6){transition-delay:.5s}
+  
+  /* ============ 内容区 ============ */
+  .frame{width:100%;max-width:1100px;margin:0 auto}
+  
+  /* ============ Magazine Chrome(Guizang风格) ============ */
+  .chrome{display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.5;margin-bottom:3vh}
+  .chrome .left,.chrome .right{display:flex;gap:2em;align-items:center}
+  .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
+  
+  /* ============ 封面 ============ */
+  .cover-badge{display:inline-block;padding:6px 20px;border:1px solid var(--accent);border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4vh}
+  .cover-title{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:4vh;line-height:1.8;max-width:600px}
+  .cover-stats{display:flex;gap:4vh;flex-wrap:wrap;justify-content:center}
+  .cover-stat{text-align:center}
+  .cover-stat-num{font-family:var(--mono);font-size:2.5rem;font-weight:900;color:var(--accent)}
+  .cover-stat-label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.5);margin-top:.5vh}
+  
+  /* ============ 标题系统 ============ */
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
+  .h-hero{font-family:var(--serif-zh);font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.2;margin-bottom:3vh}
+  .h-xl{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.4rem,3vw,2.2rem);line-height:1.3;margin-bottom:2vh}
+  .h-lg{font-family:var(--serif-zh);font-weight:600;font-size:clamp(1.1rem,2vw,1.5rem);line-height:1.4;margin-bottom:1.5vh}
+  .h-md{font-weight:600;font-size:1.1rem;margin-bottom:1vh}
+  .lead{font-size:1rem;line-height:1.85;color:rgba(var(--paper-rgb),.8);max-width:700px}
+  .meta-row{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.4);display:flex;gap:2em;flex-wrap:wrap;margin-top:3vh}
+  
+  /* ============ 分割线 ============ */
+  .rule{width:100%;height:1px;background:rgba(var(--paper-rgb),.15);margin:3vh 0}
+  
+  /* ============ 标签 ============ */
+  .tag{display:inline-block;padding:4px 12px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;margin:3px}
+  .tag-gold{background:rgba(var(--gold-rgb),.15);color:var(--gold);border:1px solid rgba(var(--gold-rgb),.2)}
+  .tag-red{background:rgba(var(--accent-rgb),.15);color:var(--accent);border:1px solid rgba(var(--accent-rgb),.2)}
+  .tag-blue{background:rgba(74,106,154,.15);color:var(--blue);border:1px solid rgba(74,106,154,.2)}
+  .tag-purple{background:rgba(138,74,170,.15);color:var(--purple);border:1px solid rgba(138,74,170,.2)}
+  .tag-green{background:rgba(58,138,92,.15);color:var(--green);border:1px solid rgba(58,138,92,.2)}
+  .tag.red{background:rgba(var(--accent-rgb),.15);color:var(--accent);border:1px solid rgba(var(--accent-rgb),.2)}
+  .tag.gold{background:rgba(var(--gold-rgb),.15);color:var(--gold);border:1px solid rgba(var(--gold-rgb),.2)}
+  .tag.muted{background:rgba(var(--paper-rgb),.08);color:var(--text-dim);border:1px solid rgba(var(--paper-rgb),.1)}
+  
+  /* ============ 发言块 ============ */
+  .sp{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2.5vw;margin-bottom:2vh;position:relative}
+  .sp::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .sh{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh}
+  .speaker-avatar{width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:var(--ink);background:var(--accent);flex-shrink:0}
+  .sn{font-weight:700;font-size:1rem}
+  .sr{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4);padding:3px 8px;background:rgba(var(--paper-rgb),.06);border-radius:3px}
+  .st{font-size:.95rem;line-height:2;color:rgba(var(--paper-rgb),.85)}
+  .st strong{color:var(--paper);font-weight:700}
+  .st em{color:var(--gold);font-style:normal;font-weight:600}
+  
+  /* ============ 碰撞块 ============ */
+  .cb{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;position:relative}
+  .cb::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .cb.blue{border-color:rgba(74,106,154,.3)}.cb.blue::before{background:var(--blue)}
+  .cb.purple{border-color:rgba(138,74,170,.3)}.cb.purple::before{background:var(--purple)}
+  .cb.green{border-color:rgba(58,138,92,.3)}.cb.green::before{background:var(--green)}
+  .cb.orange{border-color:rgba(var(--gold-rgb),.3)}.cb.orange::before{background:var(--gold)}
+  .cl{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;color:var(--accent);font-weight:600}
+  .cl.blue{color:var(--blue)}.cl.purple{color:var(--purple)}.cl.green{color:var(--green)}.cl.orange{color:var(--gold)}
+  
+  /* ============ 洞见卡 ============ */
+  .insight-c{background:linear-gradient(135deg,rgba(var(--paper-rgb),.04) 0%,rgba(var(--paper-rgb),.08) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh;position:relative;overflow:hidden}
+  .insight-c::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold))}
+  .insight-q{font-family:var(--serif-zh);font-size:1.1rem;font-weight:700;color:var(--gold);line-height:1.6;margin-bottom:1vh}
+  .insight-a{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.75)}
+  
+  /* ============ 卡片 ============ */
+  .card{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
+  .card-num{font-family:var(--mono);font-weight:900;font-size:1.8rem;color:var(--accent);opacity:.4;margin-bottom:1vh}
+  .card-title{font-weight:700;font-size:1rem;margin-bottom:1vh}
+  .card-body{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
+  .card-source{font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);margin-top:1vh}
+  
+  /* ============ 指标 ============ */
+  .metrics{display:flex;gap:2vw;flex-wrap:wrap;margin-bottom:3vh}
+  .metric{flex:1;min-width:100px;text-align:center;background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 1.5vw}
+  .metric-val{font-family:var(--mono);font-weight:900;font-size:clamp(1.5rem,3vw,2.5rem);color:var(--accent)}
+  .metric-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:.5vh}
+  
+  /* ============ 开放问题 ============ */
+  .oq{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
+  .oq-num{font-family:var(--mono);font-weight:900;font-size:1.2rem;color:var(--accent);opacity:.3;margin-bottom:1vh}
+  .oq-text{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  
+  /* ============ 引用 ============ */
+  .quote{font-family:var(--serif-zh);font-size:1rem;font-style:italic;line-height:1.8;padding:2vh 2.5vw;border-left:3px solid var(--gold);background:rgba(var(--gold-rgb),.05);margin:2vh 0;color:rgba(var(--paper-rgb),.85)}
+  
+  /* ============ TOC ============ */
+  .toc-panel{position:fixed;top:0;left:0;width:min(340px,80vw);height:100vh;background:rgba(var(--ink-rgb),.97);backdrop-filter:blur(20px);z-index:100;transform:translateX(-100%);transition:transform .35s var(--ease);padding:3vh 2.5vw;overflow-y:auto;border-right:1px solid rgba(var(--paper-rgb),.08)}
+  .toc-panel.open{transform:translateX(0)}
+  .toc-title{font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:3vh;padding-bottom:2vh;border-bottom:1px solid rgba(var(--paper-rgb),.1)}
+  .toc-item{display:flex;justify-content:space-between;padding:1.2vh 1.5vw;margin-bottom:.5vh;cursor:pointer;border-radius:6px;border-left:2px solid transparent;font-size:.9rem;color:rgba(var(--paper-rgb),.7);transition:all .2s}
+  .toc-item:hover{background:rgba(var(--paper-rgb),.06);color:var(--paper)}
+  .toc-item.active{background:rgba(var(--paper-rgb),.08);color:var(--accent);border-left-color:var(--accent);font-weight:600}
+  .toc-label{flex:1}
+  .toc-page{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.35)}
+  .toc-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;opacity:0;pointer-events:none;transition:opacity .3s}
+  .toc-backdrop.open{opacity:1;pointer-events:auto}
+  
+  /* ============ 导航栏 ============ */
+  .nav-bar{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 3vw;background:rgba(var(--ink-rgb),.9);backdrop-filter:blur(10px);z-index:50;border-top:1px solid rgba(var(--paper-rgb),.06)}
+  .nav-left,.nav-right{display:flex;align-items:center;gap:12px}
+  .nav-btn{background:none;border:1px solid rgba(var(--paper-rgb),.12);color:rgba(var(--paper-rgb),.7);padding:8px 16px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;cursor:pointer;transition:all .2s}
+  .nav-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(var(--accent-rgb),.1)}
+  .nav-title{font-size:12px;color:rgba(var(--paper-rgb),.5);max-width:40vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-counter{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.4)}
+  
+  /* ============ 导航点 ============ */
+  .nav-dots{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:6px}
+  .nd{width:6px;height:6px;border-radius:50%;background:rgba(var(--paper-rgb),.15);cursor:pointer;transition:all .3s var(--ease);border:none;padding:0}
+  .nd.active{background:var(--accent);height:20px;border-radius:3px;box-shadow:0 0 8px rgba(var(--accent-rgb),.4)}
+  .nd:hover{background:rgba(var(--paper-rgb),.4)}
+  
+  /* ============ 响应式 ============ */
+  @media(max-width:1024px){.slide{padding:4vh 5vw 8vh}}
+  @media(max-width:768px){
+    .slide{padding:3vh 4vw 7vh}
+    .cover-stats{gap:2vh}
+    .metrics{flex-direction:column}
+    .nav-dots,.nav-title{display:none}
+    .nav-bar{padding:0 2vw}
+  }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="slide hero active" data-title="Slide 1">
+<div class="frame">
+<div class="kicker" style="background:rgba(106,99,114,.15);color:var(--muted)">原视频论点</div>
+<h2 class="h-xl">原视频六大核心论点</h2>
+<p class="lead">以下为原视频核心论点原文及出处，我们将对其进行深度批判性分析</p>
+<div class="card" data-anim><div class="card-num">论点 1</div><div class="card-body">"想挣钱怎么办？非常简单。回家买本论语每天读两张就够了。问题是你肯定不信，能执行吗？"</div><div class="card-source">— 原视频 0:02:30</div></div>
+<div class="card" data-anim><div class="card-num">论点 2</div><div class="card-body">"大多数讨厌孔子的人，并不是因为觉得孔子说的那些话有哪儿不对，都只是因为咱们自己做不到而已。"</div><div class="card-source">— 原视频 0:15:40</div></div>
+<div class="card" data-anim><div class="card-num">论点 3</div><div class="card-body">"身体是革命的本钱。如果连自己的身心情绪这些体内的东西都调整不到一个健康的状态，那你做事用得好到哪去？"</div><div class="card-source">— 原视频 1:02:15</div></div>
+<div class="card" data-anim><div class="card-num">论点 4</div><div class="card-body">"真正能做成事能走得远的人，他们靠的绝对不是什么的权谋手段，而是那种让人安心、让人舒服、让人愿意跟他们在一起的氛围。"</div><div class="card-source">— 原视频 2:45:20</div></div>
+<div class="card" data-anim><div class="card-num">论点 5</div><div class="card-body">"佛学给知识分子看的和老百姓嘴里传播的完全就不是一套东西。武则天、苏东坡、鲁迅、乔布斯、比尔盖茨都有佛教/冥想经历。"</div><div class="card-source">— 原视频 1:35:10</div></div>
+<div class="card" data-anim><div class="card-num">论点 6</div><div class="card-body">整期视频的叙事结构：承认现实不完美 → 用儒释道"理解"现实 → 调整心态、接受现状、让自己舒服</div><div class="card-source">— 原视频整体叙事基调</div></div>
+</div>
+
+<!-- Page 2: 仪表盘+专家+张力图谱 -->
+
+</div>
+
+<div class="slide" data-title="Slide 2">
+<div class="frame">
+<div class="kicker" style="background:rgba(106,99,114,.15);color:var(--muted)">讨论仪表盘</div>
+<h2 class="h-xl">参与专家与批判框架</h2>
+<div class="metrics" data-anim>
+<div class="metric"><div class="metric-val">6</div><div class="metric-label">参与专家</div></div>
+<div class="metric"><div class="metric-val">6</div><div class="metric-label">讨论轮次</div></div>
+<div class="metric"><div class="metric-val">24+</div><div class="metric-label">碰撞交锋</div></div>
+<div class="metric"><div class="metric-val">3</div><div class="metric-label">颠覆性观点</div></div>
+</div>
+<hr class="divider">
+<h3 class="anim-up" style="font-size:16px;margin-bottom:12px;color:var(--gold)">参与专家</h3>
+<div class="anim-up" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px">
+<span style="padding:6px 14px;background:rgba(194,59,34,.15);border-radius:6px;font-size:13px;color:var(--confucius)">孔子 · 儒家</span>
+<span style="padding:6px 14px;background:rgba(58,138,92,.15);border-radius:6px;font-size:13px;color:var(--laozi)">老子 · 道家</span>
+<span style="padding:6px 14px;background:rgba(201,149,42,.15);border-radius:6px;font-size:13px;color:var(--buddha)">佛陀 · 佛教</span>
+<span style="padding:6px 14px;background:rgba(138,58,58,.15);border-radius:6px;font-size:13px;color:var(--luxun)">鲁迅 · 批判者</span>
+<span style="padding:6px 14px;background:rgba(74,106,154,.15);border-radius:6px;font-size:13px;color:var(--plato)">柏拉图 · 西方哲学</span>
+<span style="padding:6px 14px;background:rgba(138,74,170,.15);border-radius:6px;font-size:13px;color:var(--nietzsche)">尼采 · 现代批判</span>
+</div>
+<hr class="divider">
+<h3 class="anim-up" style="font-size:16px;margin-bottom:12px;color:var(--gold)">批判框架</h3>
+<div class="anim-up keywords">
+<span class="tag red">论证谬误</span><span class="tag red">价值观预设</span><span class="tag gold">精英偏见</span><span class="tag gold">逻辑漏洞</span><span class="tag muted">叙事陷阱</span><span class="tag muted">实践检验</span>
+</div>
+<hr class="divider">
+<h3 class="anim-up" style="font-size:16px;margin-bottom:12px;color:var(--gold)">观点演化与交锋轨迹</h3>
+<div class="anim-up">
+<div class="track-item"><div class="track-round" style="background:var(--confucius)">R1</div><div>原视频"读论语就能挣钱" <span class="track-arrow">→</span> 王阳明反驳：知行合一的"知"不是认知而是本体，"知"必体现于"行"</div></div>
+<div class="track-item"><div class="track-round" style="background:var(--luxun)">R2</div><div>原视频"讨厌孔子=做不到" <span class="track-arrow">→</span> 尼采反驳：这是奴隶道德的变种，把反抗解释为弱者怨气</div></div>
+<div class="track-item"><div class="track-round" style="background:var(--laozi)">R3</div><div>原视频"儒道互补" <span class="track-arrow">→</span> 柏拉图反驳：无程序正义约束的"互补"=精致自私的机会主义</div></div>
+<div class="track-item"><div class="track-round" style="background:var(--plato)">R4</div><div>原视频"成功靠氛围" <span class="track-arrow">→</span> 鲁迅反驳：没有制度约束的"人格魅力"=高级操纵的哲学包装</div></div>
+<div class="track-item"><div class="track-round" style="background:var(--buddha)">R5</div><div>原视频"精英佛学≠民间佛学" <span class="track-arrow">→</span> 佛陀反驳：我从未区分精英和大众，这是知识分子的傲慢</div></div>
+<div class="track-item"><div class="track-round" style="background:var(--nietzsche)">R6</div><div>综合"和解叙事" <span class="track-arrow">→</span> 全场反驳：跳过批判直接要求接受现状=精神鸦片，而非智慧</div></div>
+</div>
+</div>
+
+<!-- Page 3: R1 发言 -->
+
+</div>
+
+<div class="slide" data-title="Slide 3">
+<div class="frame">
+<div class="kicker">Round 1</div>
+<h2 class="h-xl">简单道理 ≠ 能执行</h2>
+<div class="anim-up keywords"><span class="tag red">知行鸿沟</span><span class="tag red">执行力结构</span><span class="tag gold">认知升级假象</span><span class="tag gold">精英偏见</span></div>
+<div class="quote" data-anim><div class="quote-text">"想挣钱怎么办？非常简单。回家买本论语每天读两张就够了。问题是你肯定不信，能执行吗？"</div><div class="quote-source">— 原视频 0:02:30</div></div>
+<div class="sp" data-anim>
+<div class="sh"><div class="speaker-avatar" style="background:var(--muted)">原</div><div><div class="sn">原视频论点</div><span class="sr">核心主张</span></div></div>
+<div class="st">
+<strong>原视频的论证链条：</strong><br>1. 知识分子不相信简单道理 → 需要发明新词别人才能听得进去<br>2. "马斯克第一性原理"和"透过现象看本质"是一回事<br>3. 犹太人跟中国人最会挣钱 → 因为儒家入世思想<br>4. 结论：论语标准做到什么程度 = 活成什么样子<br><br><em>问题：这个论证链条存在严重的因果倒置和幸存者偏差</em>
+</div>
+<div class="sp" data-anim>
+<div class="sh"><div class="speaker-avatar" style="background:var(--confucius)">王</div><div><div class="sn">王阳明</div><span class="sr">知行合一提出者</span></div></div>
+<div class="st">
+"原视频引用了我的'知行合一'，但完全误解了它的含义。"<br><br>知行合一的"知"不是"知道道理"，而是"知本"——知道根本。<strong>"知是行的开始，行是知的完成"</strong>，两者是同一过程的两面。<br><br><em>关键问题：</em>如果一个人"知道"但"做不到"，这意味着他不是真知，是假知。他读论语时有"行"吗？读完之后行为有任何改变吗？如果没有，说明你没有真知。<br><br><em>原视频的问题：</em>他把"读论语"当成"知"，但读论语只是"闻见之知"，不是"德性之知"。
+</div>
+<div class="sp" data-anim>
+<div class="sh"><div class="speaker-avatar" style="background:var(--luxun)">鲁</div><div><div class="sn">鲁迅</div><span class="sr">批判者</span></div></div>
+<div class="st">
+"原视频把'做不到'归因于'内心不信'——这是典型的<em>精英偏见</em>。"<br><br>我笔下的闰土，他是不知道勤劳致富吗？他知道。他能做到吗？不能。因为<strong>外部结构限制了行动能力，这不是认知问题，这是结构性问题。</strong><br><br>原视频把"能挣钱的精英"的共同特征（读论语）当成"挣钱的原因"，但这两者之间可能只是相关关系。真正的变量可能是：出身、资源、机遇——而不是"懂得了简单道理"。<br><br><em>用精英的经验来套所有人，是最大的认知谬误。</em>
+</div>
+</div>
+
+<!-- Page 4: R1 碰撞 -->
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="slide title-slide" data-title="Slide 4">
+<div class="frame">
+<div class="kicker">Round 1 · 碰撞交锋</div>
+<h2 class="h-xl">知行鸿沟的真正根源</h2>
+<p class="lead">认知问题还是结构问题？</p>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 柏拉图 → 王阳明 · 逻辑追问</div>
+<div class="st">"你说'做不到=不是真知'——但这个逻辑本身有问题。"<br><br>人的行为受到<strong>三重约束</strong>：<em>认知能力</em>（知不知道）、<em>意志能力</em>（愿不愿意）、<em>执行能力</em>（能不能）。"知"只能解决第一层。<br><br>亚里士多德说"德性是习惯"——你不能通过读一本手册就学会勇敢，必须反复练习。这个过程需要时间、资源、机会。<br><br><strong>追问：</strong>如果一个人完全理解"诚实是最好的策略"，但面对生存威胁时，他真的能选择诚实吗？</div></div>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 尼采 → 鲁迅 · 框架质疑</div>
+<div class="st">"你说'结构性问题'——但这种叙事本身可能也是一种陷阱。"<br><br>如果一个人从小被告知"你的处境是结构性的、你无法改变"，他会彻底放弃努力。<strong>我的质疑：</strong>原视频和你的反驳，都在用不同方式让普通人感到"我不够好"。</div></div>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 鲁迅 → 尼采 · 情节反驳</div>
+<div class="st">"你搞反了因果关系。"<br><br>我说"这是结构性问题"，目的是让人看清现实、找到真正解决路径。原视频说"读论语就能挣钱"才是真正的<em>麻痹</em>——让人以为改变认知就够了，不需要改变结构。<br><br><strong>关键区分：</strong>"结构有问题" ≠ "个人无能为力"；"认知有问题" ≠ "读两页书就能解决"。</div></div>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 孔子 → 全场 · 细节挑战</div>
+<div class="st">《论语》的核心是<em>"仁"</em>——不是认知问题，而是情感能力和实践能力。"仁者爱人"需要在具体人际关系中实践。<br><br><strong>原视频的问题：</strong>把《论语》简化成"成功学标准"，背离了孔子本意。真正的儒家不是教你"如何成功"，而是教你"如何成为一个好人"。</div></div>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 老子 → 全场 · 反例引入</div>
+<div class="st">马云读论语吗？他早期商业逻辑更接近<em>"无为而治"</em>——顺势而为。<br><br>原视频说"中国人因为儒家入世思想挣钱"——但同是儒家文化圈，越南、朝鲜、韩国发展路径差异巨大。<strong>真正的变量：资源禀赋、国际环境、政策制度、人口结构——而不是"读不读论语"。</strong></div></div>
+</div>
+
+<!-- Page 5: R2 发言 -->
+
+</div>
+
+<div class="slide" data-title="Slide 5">
+<div class="frame">
+<div class="kicker">Round 2</div>
+<h2 class="h-xl">讨厌孔子 = 自己做不到？</h2>
+<div class="anim-up keywords"><span class="tag red">奴隶道德</span><span class="tag gold">价值观冲突</span><span class="tag muted">受害者有罪论</span></div>
+<div class="quote" data-anim><div class="quote-text">"咱们大多数讨厌孔子的人，并不是因为觉得孔子说的那些话有哪儿不对，都只是因为咱们自己做不到而已。"</div><div class="quote-source">— 原视频 0:15:40</div></div>
+<div class="sp" data-anim>
+<div class="sh"><div class="speaker-avatar" style="background:var(--muted)">原</div><div><div class="sn">原视频论证结构</div><span class="sr">核心主张</span></div></div>
+<div class="st">
+<strong>论证拆解：</strong><br>1. 讨厌标准X → 2. X是正确的 → 3. 所以讨厌X=做不到X → 4. 所以讨厌X的人有问题<br><br><em>致命问题：</em>它假设了"讨厌一个标准 = 承认这个标准是对的"。但讨厌可能是因为你认为它是错的。<br><br>讨厌孔子可能是：1）讨厌但承认标准对（做不到）；2）<strong>讨厌且认为标准错（价值观冲突）</strong>；3）被标准伤害过（情感创伤）。原视频假设所有人都是第一种。
+</div>
+<div class="sp" data-anim>
+<div class="sh"><div class="speaker-avatar" style="background:var(--nietzsche)">尼</div><div><div class="sn">尼采</div><span class="sr">现代批判</span></div></div>
+<div class="st">
+"这是<em>'奴隶道德'</em>的典型逻辑。"<br><br><strong>奴隶道德的本质：</strong>弱者无法在竞争中获胜，于是宣称强者推崇的道德标准是虚伪的。原视频反过来用：既然你讨厌孔子，那你一定是做不到。<br><br>我批判的不是孔子，而是这种逻辑——它假设强者标准是唯一合法标准，然后把反抗解释为弱者怨气。<br><br><em>核心区分：</em><br>原视频的逻辑："你讨厌我推崇的标准 → 你有问题" = 强者的傲慢<br>真正的强者心态："我根本不在乎你的标准，我有我自己的标准" = 强者的自由
+</div>
+<div class="sp" data-anim>
+<div class="sh"><div class="speaker-avatar" style="background:var(--luxun)">鲁</div><div><div class="sn">鲁迅</div><span class="sr">批判者</span></div></div>
+<div class="st">
+"这个论断最危险的地方：它把对不公正秩序的反抗，解释为个人失败的怨气。"<br><br>一个人被儒家等级秩序压迫了一辈子——女人被要求"三从四德"，底层被要求"安贫乐道"。他"讨厌孔子"——你跟他说"你只是做不到"。<br><br><em>这是刽子手对受害者说："你恨我是因为你做不到像我这样杀人。"</em><br><br>这种逻辑让受害者为加害他们的秩序负责，而不是让秩序负责。<strong>"讨厌孔子"可能是一种正义的愤怒，而不是无能的怨气。</strong>
+</div>
+</div>
+
+<!-- Page 6: R2 碰撞 -->
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="slide" data-title="Slide 6">
+<div class="frame">
+<div class="kicker">Round 2 · 碰撞交锋</div>
+<h2 class="h-xl">标准之争：谁的价值观才是合法的？</h2>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 孔子 → 鲁迅 · 框架质疑</div>
+<div class="st">"你说儒家等级秩序压迫人——<em>谁有权定义什么是'压迫'？</em>"<br><br>你的价值观（人人平等）是20世纪产物。用今天价值观批判2500年前的思想公平吗？<br><br>但我也得承认：后世儒家确实发展出"你讨厌我=你有问题"的压迫逻辑。这是统治者需要，不是我的原意。《论语》说<strong>"当仁不让于师"</strong>——在仁义面前，连老师都不需要让步。</div></div>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 柏拉图 → 孔子 · 逻辑追问</div>
+<div class="st">"你说'用今天价值观批判孔子不公平'——这个逻辑会导致什么后果？"<br><br>如果不能批判历史上压迫性的思想，这些思想会继续以'传统'之名压迫今人。<strong>传统的意义不在于它是'过去的'，而在于它是否值得被继承。</strong><br><br>追问：一个思想体系在历史中产生的实际效果，应该成为评判它的标准吗？</div></div>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 老子 → 全场 · 情节反驳</div>
+<div class="st"><em>孔子本人讨厌什么？</em><br><br>孔子说"礼崩乐坏"，说"春秋无义战"——他讨厌的是他那个时代的不公正。为什么他的思想反而成了维护不公正的工具？<br><br><strong>答案是：</strong>任何思想一旦被权力收编，就会变成维护现状的工具。真正的儒家精神应该是批判的、变革的。</div></div>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 尼采 → 全场 · 反例引入</div>
+<div class="st">马丁·路德·金"讨厌"种族隔离制度——他"做不到"吗？他是<em>拒绝服从</em>。<br><br>原视频的逻辑：马丁·路德·金讨厌种族主义，是因为他自己做不到种族主义，所以他有问题。荒谬。<br><br><strong>真正的逻辑：</strong>讨厌一个标准，有时候恰恰因为你比那个标准要求的更好——你追求的是更高的正义。</div></div>
+</div>
+
+<!-- Page 7: R3 发言 -->
+
+</div>
+
+<div class="slide" data-title="Slide 7">
+<div class="frame">
+<div class="kicker">Round 3</div>
+<h2 class="h-xl">儒道能否互补？</h2>
+<div class="anim-up keywords"><span class="tag red">机会主义</span><span class="tag gold">程序正义</span><span class="tag muted">原则性</span><span class="tag muted">行动vs逃避</span></div>
+<div class="quote" data-anim><div class="quote-text">"身体是革命的本钱。如果连自己的身心情绪都调整不到健康状态，那你做事用得好到哪去？"</div><div class="quote-source">— 原视频 1:02:15</div></div>
+<div class="sp" data-anim>
+<div class="sh"><div class="speaker-avatar" style="background:var(--muted)">原</div><div><div class="sn">原视频"互补论"</div><span class="sr">核心主张</span></div></div>
+<div class="st">道家修身养性决定你实际能做什么，儒家建功立业决定你上线高低。两者互补，虚中有实，实中有虚。<br><br><em>深层问题：</em>这个"互补论"是一种<strong>实用主义的自我辩护</strong>——对我有利时用儒家，对我不利时用道家。</div></div>
+<div class="sp" data-anim>
+<div class="sh"><div class="speaker-avatar" style="background:var(--plato)">柏</div><div><div class="sn">柏拉图</div><span class="sr">西方哲学</span></div></div>
+<div class="st">"回避了关键问题：<em>当儒家和道家给你相反的建议时，你选哪个？</em>"<br><br>儒家说<strong>"知其不可而为之"</strong>，道家说<strong>"无为而无不为"</strong>——这两个建议相反，怎么互补？<br><br>这种没有原则的"互补"是<em>机会主义自我辩护</em>：今天说道家好调整心态，明天说儒家积极进取，后天说互补躺平有理。<br><br><strong>核心问题：</strong>"互补"需要程序正义来约束——什么时候该用儒、用道，需要原则来判断。</div></div>
+<div class="sp" data-anim>
+<div class="sh"><div class="speaker-avatar" style="background:var(--nietzsche)">尼</div><div><div class="sn">尼采</div><span class="sr">现代批判</span></div></div>
+<div class="st">"最危险：<em>它没有任何道德基础告诉你什么时候用儒、什么时候用道。</em>"<br><br>没有程序正义约束的"互补"= 为"精致的自私"提供哲学包装：<br>→ 对我有利时用儒家（让别人付出）<br>→ 对我不利时用道家（让自己解脱）<br><br><strong>真正的智慧应该有原则：</strong>什么情况下进取？什么情况下接受？这些需要道德基础，不是"互补"能解决的。</div></div>
+</div>
+
+<!-- Page 8: R3 碰撞 -->
+
+</div>
+
+<div class="slide title-slide" data-title="Slide 8">
+<div class="frame">
+<div class="kicker">Round 3 · 碰撞交锋</div>
+<h2 class="h-xl">互补论：智慧还是借口？</h2>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 孔子 → 柏拉图 · 细节挑战</div>
+<div class="st">"你误解了儒家的<em>'中庸'</em>。"<br><br>'中庸'不是'骑墙'，而是<strong>'恰到好处'</strong>——知道什么时候该进什么时候该退，这是实践智慧（phronesis）。<br><br>《论语》说"君子不器"——君子能根据情境灵活应对，这是<em>基于道德判断的实践智慧</em>，不是机会主义。</div></div>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 老子 → 孔子 · 逻辑追问</div>
+<div class="st">"你说'中庸是恰到好处'——但<em>谁来定义'恰到好处'？</em>"<br><br>《道德经》"不尚贤，使民不争"和你的"选贤与能"根本相反。儒家要等级秩序中的和谐，道家要自然状态中的自由。两个对'好社会'的想象根本不同，你怎么在它们之间'恰到好处'？</div></div>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 鲁迅 → 全场 · 框架质疑</div>
+<div class="st">"互补可能是<em>逃避选择的方式</em>。"<br><br>当你不确定该怎么办时，你说'儒道互补'——你不需要做选择，不需要负责任。不选择本身也是一种选择——选择现状。<br><br>原视频整期基调：<strong>不批判、不反抗、接受现状。这不是智慧，这是逃避。</strong></div></div>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 尼采 → 全场 · 反例引入</div>
+<div class="st">马丁·路德·金面对种族隔离，他应该'儒道互补'吗？<br><br>如果他用道家"不争"为自己辩护——"一切都是命运，我接受"——他还会发表"我有一个梦想"吗？<br><br><strong>历史上所有真正改变——废奴、民权、妇女解放——都靠的不是'互补'和'和谐'，而是'对抗'和'改变'。</strong></div></div>
+</div>
+
+<!-- Page 9: R4 发言 -->
+
+</div>
+
+<div class="slide" data-title="Slide 9">
+<div class="frame">
+<div class="kicker">Round 4</div>
+<h2 class="h-xl">成功靠"氛围"还是"权谋"？</h2>
+<div class="anim-up keywords"><span class="tag red">人格魅力</span><span class="tag gold">操纵</span><span class="tag muted">制度约束</span><span class="tag muted">历史教训</span></div>
+<div class="quote" data-anim><div class="quote-text">"真正能做成事能走得远的人，靠的绝对不是权谋手段，而是那种让人安心、让人舒服、让人愿意跟他们在一起的氛围。"</div><div class="quote-source">— 原视频 2:45:20</div></div>
+<div class="sp" data-anim>
+<div class="sh"><div class="speaker-avatar" style="background:var(--muted)">原</div><div><div class="sn">原视频论点</div><span class="sr">核心主张</span></div></div>
+<div class="st">
+<em>这个论点的问题：</em><br>a）把"权谋"和"原则"对立起来<br>b）把"人格魅力"当成成功唯一因素——忽视制度和结构<br>c）完全忽略了<em>"氛围"和"操纵"之间的界限</em>
+</div>
+<div class="sp" data-anim>
+<div class="sh"><div class="speaker-avatar" style="background:var(--nietzsche)">尼</div><div><div class="sn">尼采</div><span class="sr">现代批判</span></div></div>
+<div class="st">"混淆了<em>'真正的人格魅力'和'刻意营造的讨好氛围'。</em>"<br><br><strong>关键：</strong>历史上最善于"营造氛围"的人是谁？<br>→ 希特勒。演讲让整个德国疯狂。<br>→ 特朗普。造势集会也让人"安心、舒服"。<br><br><em>核心追问：</em>"氛围"和"操纵"的界限在哪里？原视频没讨论。真诚亲和力和刻意讨好，行为上可能完全一样——区别在动机和目的。</div></div>
+<div class="sp" data-anim>
+<div class="sh"><div class="speaker-avatar" style="background:var(--plato)">柏</div><div><div class="sn">柏拉图</div><span class="sr">西方哲学</span></div></div>
+<div class="st">"原视频<em>完全忽略了制度维度</em>。"<br><br><strong>亚里士多德的政治制度分类：</strong><br>→ 君主制（依赖好领导）<br>→ 贵族制（依赖一群好领导）<br>→ 共和制（依赖好制度）<br><br>依赖好领导的制度是脆弱的。原视频对应第一种。<br><br><em>关键：</em>如果"氛围"这么好，为什么还需要法律和三权分立？因为单独的人格魅力是靠不住的。</div></div>
+</div>
+
+<!-- Page 10: R4 碰撞 -->
+
+</div>
+</div>
+
+<div class="slide" data-title="Slide 10">
+<div class="frame">
+<div class="kicker">Round 4 · 碰撞交锋</div>
+<h2 class="h-xl">人格魅力与制度约束的辩证</h2>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 孔子 → 尼采 · 情节反驳</div>
+<div class="st">"你说希特勒也'营造氛围'——但你混淆了《论语》的本意。"<br><br>《论语》也强调<em>"礼"</em>——制度、规范。子曰：<strong>"君子之德风，小人之德草。"</strong>领导者的道德影响下属，但更重要的是职责边界。<br><br>把儒家简化成"让人舒服的氛围"是矮化。真正的儒家领导力是<strong>德治+法治</strong>。</div></div>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 老子 → 全场 · 框架质疑</div>
+<div class="st">《道德经》第17章：<em>"太上，不知有之；其次，亲而誉之；其次，畏之；其次，侮之。"</em><br><br>最高级领导：下属感觉不到他的存在。原视频"让人舒服的氛围"对应的是"亲而誉之"——<strong>第二等</strong>。<br><br>"让人舒服"本质是儒家逻辑。道家追求超越关系的自然秩序。</div></div>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 鲁迅 → 老子 · 逻辑追问</div>
+<div class="st">"你说'最好的领导让人不知有之'——这是不是另一种<em>'精神控制'</em>？"<br><br>让人意识不到被控制，才是最高级的控制。你的'无为而治'和原视频的'氛围论'都可能是高级操纵的包装。<br><br><strong>区别：有没有公开的制度约束。</strong></div></div>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 柏拉图 → 全场 · 反例引入</div>
+<div class="st">华盛顿拒绝第三次连任，建立两届卸任传统——靠的不是"氛围"，而是<em>制度设计</em>：宪法对连任次数的限制。<br><br><strong>好结果需要：</strong>人格魅力（愿意建好制度）+ 制度约束（限制坏行为），两者缺一不可。原视频把其中一个绝对化，完全忽视另一个。</div></div>
+</div>
+
+<!-- Page 11: R5 发言 -->
+
+</div>
+
+<div class="slide" data-title="Slide 11">
+<div class="frame">
+<div class="kicker">Round 5</div>
+<h2 class="h-xl">知识精英佛学 ≠ 民间佛学？</h2>
+<div class="anim-up keywords"><span class="tag red">众生平等</span><span class="tag gold">精英偏见</span><span class="tag muted">宗教实践</span><span class="tag muted">诉诸权威</span></div>
+<div class="quote" data-anim><div class="quote-text">"佛学给知识分子看的和老百姓嘴里传播的完全就不是一套东西。"</div><div class="quote-source">— 原视频 1:35:10</div></div>
+<div class="sp" data-anim>
+<div class="sh"><div class="speaker-avatar" style="background:var(--muted)">原</div><div><div class="sn">原视频论证结构</div><span class="sr">核心主张</span></div></div>
+<div class="st">1. 民间佛教有很多骗子（驱鬼等迷信）→ 2. 知识分子也信佛教（苏东坡、乔布斯等）→ 3. 结论：不要因为民间骗子就把佛教一棍子打死<br><br><em>逻辑谬误：诉诸权威 + 诉诸人数的混合谬误</em></div></div>
+<div class="sp" data-anim>
+<div class="sh"><div class="speaker-avatar" style="background:var(--buddha)">佛</div><div><div class="sn">佛陀</div><span class="sr">佛教正统</span></div></div>
+<div class="st">"<em>我从未区分过'知识分子'和'老百姓'。</em>"<br><br>《金刚经》<strong>"凡所有相，皆是虚妄"</strong>——连"佛"这个相都不执著，何况"大师"、"知识分子"？<br><br>你奶奶带你去"驱鬼"——那是民间迷信，不是佛教。《金刚经》说"一切有为法，如梦幻泡影"——执著于神通驱鬼的都不是佛教。<br><br>但我也承认：佛教传播中出现了分化。这是传播的必然结果，不是我的原意。</div></div>
+<div class="sp" data-anim>
+<div class="sh"><div class="speaker-avatar" style="background:var(--plato)">柏</div><div><div class="sn">柏拉图</div><span class="sr">西方哲学</span></div></div>
+<div class="st">"犯了一个<em>经典的逻辑错误</em>。"<br><br><strong>诉诸权威谬误：</strong>名人相信不等于命题为真。苏东坡是文学家，不是佛学家。乔布斯是企业家，不是冥想专家。<br><br>同样谬误：很多明星信星座→星座是真的？很多富豪信风水→风水是真的？<br><br><em>佛教的价值应该看理论和实践是否有效——实证检验、独立验证、可重复验证。不是看谁在做。</em></div></div>
+</div>
+
+<!-- Page 12: R5 碰撞 -->
+
+</div>
+
+<div class="slide title-slide" data-title="Slide 12">
+<div class="frame">
+<div class="kicker">Round 5 · 碰撞交锋</div>
+<h2 class="h-xl">宗教实践与认知偏差</h2>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 佛陀 → 柏拉图 · 逻辑追问</div>
+<div class="st">"你说'诉诸权威无效'——但佛教的核心不是信仰体系，而是<em>实践体系</em>。"<br><br>佛教本质不是"相信佛说的对"，而是"通过冥想等方法亲自验证"。这不是诉诸权威，是个人实践。<br><br><strong>追问：</strong>对于无法用科学验证的领域（如冥想的内心体验），除了诉诸权威和实践验证，还有什么方法？</div></div>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 尼采 → 佛陀 · 框架质疑</div>
+<div class="st">"你说'佛教是实践体系'——但<em>所有宗教都说自己是实践而非信仰</em>。"<br><br>基督教说"因信称义"，伊斯兰说"信主"。佛教和它们的本质区别？<br><br><strong>核心质疑：</strong>所有宗教都声称自己的是"真正的"，别人的是"迷信"——这是宗教本质特征，不是佛教的特殊问题。</div></div>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 鲁迅 → 全场 · 情节反驳</div>
+<div class="st">"<em>知识分子在其中扮演了什么角色？</em>"<br><br>知识分子把佛教'哲学化'，把普通人的宗教需求斥为'迷信'——谁有资格定义什么是'真正的佛教'？<br><br><strong>真正的众生平等：</strong>不是说"知识分子懂的才是真正的佛教"，而是每个人的宗教实践都有其价值。</div></div>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 老子 → 全场 · 反例引入</div>
+<div class="st">《道德经》第13章：<em>"及吾无身，吾有何患？"</em>——连自己的身体都不执著，何况什么信仰？<br><br>道家境界：不是"相信什么"，而是"什么都不信"。所有执著都是束缚——包括对"正信"的执著。<br><br><strong>原视频用"成功人士也信佛"来辩护——恰恰证明道家判断：连成功人士也在执著于某种"信仰"，这本身就是一种束缚。</strong></div></div>
+</div>
+
+<!-- Page 13: R6 发言 -->
+
+</div>
+
+<div class="slide" data-title="Slide 13">
+<div class="frame">
+<div class="kicker">Round 6</div>
+<h2 class="h-xl">和解叙事的深层陷阱</h2>
+<div class="anim-up keywords"><span class="tag red">和解叙事</span><span class="tag gold">接受现状</span><span class="tag muted">行动vs逃避</span><span class="tag muted">精神鸦片</span></div>
+<div class="sp" data-anim>
+<div class="sh"><div class="speaker-avatar" style="background:var(--muted)">原</div><div><div class="sn">整期视频叙事结构</div><span class="sr">批判性分析</span></div></div>
+<div class="st">
+<strong>Step 1：</strong>承认现实不完美，但不问为什么<br>
+<strong>Step 2：</strong>用儒释道"理解"现实，但不提改变<br>
+<strong>Step 3：</strong>调整心态、接受现状、让自己舒服<br><br>
+<em>这个叙事结构的危险：</em><br>
+→ 让你接受不公正，而不是改变不公正<br>
+→ 把系统性问题个人化<br>
+→ 用"内心修炼"消化这些问题<br><br>
+<strong>根本问题：跳过了批判的步骤，直接要求接受。</strong>
+</div>
+<div class="sp" data-anim>
+<div class="sh"><div class="speaker-avatar" style="background:var(--nietzsche)">尼</div><div><div class="sn">尼采</div><span class="sr">现代批判</span></div></div>
+<div class="st">
+"整期内容是一种<em>'精神鸦片'</em>——让你在痛苦中感到安慰，但不让你真正摆脱痛苦。"<br><br>
+<strong>精神鸦片的特征：</strong>暂时感觉良好→不解决根本问题→失去改变动力。<br><br>
+真正的精神自由不是"接受现实"，而是<strong>"有能力改变能改变的，接受不能改变的，有智慧区分这两者"</strong>。<br><br>
+<em>原视频只强调后半部分——接受，忽略了前半部分——改变。</em>
+</div>
+<div class="sp" data-anim>
+<div class="sh"><div class="speaker-avatar" style="background:var(--luxun)">鲁</div><div><div class="sn">鲁迅</div><span class="sr">批判者</span></div></div>
+<div class="st">
+"我写《阿Q正传》就是为了批判这种<em>精神胜利法</em>。"<br><br>
+阿Q被打后想"儿子打老子"——最典型的"调整心态"：不反抗、让自己舒服。但这种"智慧"让他<strong>永远处于被压迫位置</strong>。<br><br>
+原视频整个叙事就是"精神胜利法"的哲学包装。<br><br>
+<em>真正智慧：</em>先让人"看到"不公正，再讨论接受还是改变。<br>
+<em>假智慧：</em>跳过"看到"直接告诉你"接受"。
+</div>
+</div>
+
+<!-- Page 14: R6 碰撞 -->
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="slide" data-title="Slide 14">
+<div class="frame">
+<div class="kicker">Round 6 · 碰撞交锋</div>
+<h2 class="h-xl">行动与接受的真正平衡</h2>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 老子 → 全场 · 框架质疑</div>
+<div class="st">"<em>'不接受'本身也可能是一种执著。</em>"<br><br>《道德经》"圣人处无为之事，行不言之教"。最高级行动看起来没有行动——不是不做事，而是不以"做事"之名行"私利"之实。<br><br>原视频问题不是"接受现状"，而是接受了不该接受的。你们批判的精神鸦片，恰恰是"不知轻重地反抗一切"。</div></div>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 柏拉图 → 老子 · 逻辑追问</div>
+<div class="st">"你说'无为而无不为'——但<em>谁来决定什么是'该接受的'、什么是'该反抗的'？</em>"<br><br>如果标准是主观的，每个人都可以为自己的'躺平'找到理由。<br><br><strong>核心问题：</strong>"智慧"不能只是个人的，还需要社会共享的价值观和评判标准。</div></div>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 孔子 → 全场 · 情节反驳</div>
+<div class="st">"<em>儒家从来不是和解叙事的意思。</em>"<br><br>《论语》核心精神：<strong>"知其不可而为之"</strong>——明知做不到还要去做。这不是接受，是抗争。<br><br>原视频把儒家简化成"成功学"和"处世智慧"，是对儒家的矮化。</div></div>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 尼采 → 全场 · 反例引入</div>
+<div class="st">曼德拉。罗本岛监狱27年——他没有"接受现状"，也没有"愤恨"。<br><br>他改变了"南非不可能没有种族隔离"这个"现实"。<br><br><strong>真正智慧：</strong>不是接受，也不是盲目反抗，而是<em>"改变能改变的，接受不能改变的，有智慧区分这两者"</em></div></div>
+<div class="cb" data-anim>
+<div class="cl"><i class="fas fa-bolt"></i> 鲁迅 → 全场 · 框架质疑</div>
+<div class="st">"现实是：<em>大多数人连'认识到不公正'的能力都没有。</em>"<br><br>因为他们从小被教育"要接受"、"要心态好"。<br><br>原视频的'和解叙事'就是这样一种教育：让你从一开始就丧失反抗意识。<br><br><strong>真正的智慧应该：</strong>先让人"看到"不公正，再说"接受还是改变"。原视频跳过了第一步，直接告诉你"接受"。</div></div>
+</div>
+
+<!-- Page 15: 核心洞见 -->
+
+</div>
+
+<div class="slide" data-title="Slide 15">
+<div class="frame">
+<div class="kicker">核心洞见</div>
+<h2 class="h-xl">六大核心洞见</h2>
+<div class="insight-c" data-anim>
+<div class="insight-num">洞见 1 · 知行鸿沟</div>
+<div class="insight-q">知行鸿沟的真正根源</div>
+<div class="insight-a">因为"知"到"行"之间存在认知惯性、利益结构和外部约束三重鸿沟，所以"读论语就能挣钱"是一个过度简化的精英叙事——它把系统性问题个人化。</div></div>
+<div class="insight-c" data-anim>
+<div class="insight-num">洞见 2 · 讨厌≠做不到</div>
+<div class="insight-q">讨厌一个标准不等于承认自己做不到</div>
+<div class="insight-a">因为"讨厌一个标准"可能源于价值观冲突、情感创伤或更高的正义追求，所以原视频的论断是一种思想暴力——用"做不到"来关闭对标准本身的讨论。</div></div>
+<div class="insight-c" data-anim>
+<div class="insight-num">洞见 3 · 互补需要原则</div>
+<div class="insight-q">没有程序正义的互补是机会主义</div>
+<div class="insight-a">因为没有程序正义约束的"互补论"可能成为机会主义的工具，所以真正的儒道互补不是"今天儒家明天道家"，而是"在程序正义框架内的灵活应对"。</div></div>
+<div class="insight-c" data-anim>
+<div class="insight-num">洞见 4 · 氛围需要制度</div>
+<div class="insight-q">人格魅力需要制度约束</div>
+<div class="insight-a">因为"氛围"与"操纵"的边界难以界定，且个人魅力在没有制度约束时可能导致暴政，所以成功需要人格魅力与程序正义的双重保障。</div></div>
+<div class="insight-c" data-anim>
+<div class="insight-num">洞见 5 · 佛教不需要权威背书</div>
+<div class="insight-q">实用主义的宗教态度阻碍精神探索</div>
+<div class="insight-a">因为原视频用"成功人士也信佛"犯了诉诸权威的谬误，所以真正的问题不是"什么是真正的佛教"，而是"实用主义的宗教态度如何阻碍了真正的精神探索"。</div></div>
+<div class="insight-c" data-anim>
+<div class="insight-num">洞见 6 · 智慧先于接受</div>
+<div class="insight-q">批判先于接受</div>
+<div class="insight-a">因为原视频的"和解叙事"跳过了批判的步骤，直接要求接受现状，所以它不是智慧而是精神鸦片。真正的智慧：先看到不公正，再选择接受还是改变。</div></div>
+</div>
+
+<!-- Page 16: 开放问题 -->
+
+</div>
+
+<div class="slide title-slide" data-title="Slide 16">
+<div class="frame">
+<div class="kicker">留给你的思考</div>
+<h2 class="h-xl">开放问题</h2>
+<div class="oq" data-anim><div class="question-num">问题 1</div><div class="question-text">"知道"真的能带来"做到"吗？如果不能，差距在哪里？</div><div class="question-sub">认知升级、知识付费、读书学习——这些真的能改变行为吗？还是制造"我在进步"的幻觉？</div></div>
+<div class="oq" data-anim><div class="question-num">问题 2</div><div class="question-text">讨厌一个标准，是因为"做不到"还是"价值观冲突"？</div><div class="question-sub">如何区分"能力问题"和"价值问题"？什么时候讨厌是对的？什么时候是逃避？</div></div>
+<div class="oq" data-anim><div class="question-num">问题 3</div><div class="question-text">"儒道互补"是智慧还是借口？</div><div class="question-sub">当两个"智慧"给你相反的行动建议时，你需要什么原则来判断？</div></div>
+<div class="oq" data-anim><div class="question-num">问题 4</div><div class="question-text">"让人舒服的氛围"是领导力还是操纵？</div><div class="question-sub">如何区分真诚的亲和力和刻意的讨好？界限在哪里？</div></div>
+<div class="oq" data-anim><div class="question-num">问题 5</div><div class="question-text">什么时候该接受？什么时候该反抗？</div><div class="question-sub">有没有一种智慧能告诉你这两者的界限？还是这个判断需要实践？</div></div>
+<div class="oq" data-anim><div class="question-num">问题 6</div><div class="question-text">真正的儒家精神是什么？</div><div class="question-sub">原视频把儒家简化成"成功学"——但孔子说"知其不可而为之"。真正的儒家是批判的还是保守的？</div></div>
+</div>
+
+<!-- Page 17: 结语 -->
+
+</div>
+
+<div class="slide" data-title="Slide 17">
+<div class="frame">
+<div class="anim-up conclusion-quote">"真正的智慧不是接受现状，而是有勇气批判现状，同时有智慧区分能改变的与不能改变的。"</div>
+<div class="anim-up conclusion-text">原视频的论点并非全无道理，但其论证方式存在<strong>精英主义偏见、诉诸权威谬误、结构问题个人化</strong>等缺陷。</div>
+<div class="anim-up conclusion-text"><strong>最根本的问题：</strong>和解叙事跳过了批判的步骤，直接要求接受。真正的智慧应该是：先让人看到不公正，然后再说接受还是改变——而不是从未意识到不公正。</div>
+<div class="anim-up conclusion-text" style="color:var(--gold);font-weight:700;margin-top:16px;">批判不是为了否定，而是为了更清醒地选择；接受不是为了逃避，而是看清边界后的主动选择。</div>
+<div style="margin-top:32px;padding-top:20px;border-top:1px solid var(--border)">
+<p style="font-size:13px;color:var(--muted)">6位专家 · 6轮交锋 · 18页完整版 · 2026-05-25</p>
+</div>
+</div>
+</div>
+
+<div class="toc-backdrop" id="tocBackdrop"></div>
+<div class="toc-panel" id="tocPanel">
+<div class="toc-title">目录</div>
+<div id="tocList"></div>
+</div>
+<div class="nav-bar">
+<div class="nav-left">
+<button class="nav-btn" id="btnToc">☰ 目录</button>
+<button class="nav-btn" id="btnPrev">◀ 上一页</button>
+<button class="nav-btn" id="btnNext">下一页 ▶</button>
+</div>
+<div class="nav-right">
+<span class="nav-title" id="slideTitle"></span>
+<span class="nav-counter" id="slideCounter"></span>
+</div>
+</div>
+<div class="nav-dots" id="navDots"></div>
+</div>
+
+<script>
+(function(){
+var deck=document.getElementById("deck");
+var slides=deck.querySelectorAll(".slide");
+var total=slides.length;
+var cur=0;
+var dots=document.getElementById("navDots");
+var tocList=document.getElementById("tocList");
+var titleEl=document.getElementById("slideTitle");
+var counterEl=document.getElementById("slideCounter");
+var tocPanel=document.getElementById("tocPanel");
+var tocBackdrop=document.getElementById("tocBackdrop");
+var progressBar=document.getElementById("progressBar");
+
+for(var i=0;i<total;i++){
+  var d=document.createElement("button");
+  d.className="nd";
+  d.setAttribute("data-i",i);
+  d.onclick=(function(idx){return function(){go(idx)}})(i);
+  dots.appendChild(d);
+  var t=document.createElement("div");
+  t.className="toc-item";
+  t.setAttribute("data-i",i);
+  t.innerHTML='<span class="toc-label">'+(slides[i].getAttribute("data-title")||"Slide "+(i+1))+'</span><span class="toc-page">'+String(i+1).padStart(2,"0")+'</span>';
+  t.onclick=(function(idx){return function(){go(idx);closeTOC()}})(i);
+  tocList.appendChild(t);
+}
+
+function go(n){
+  if(n<0||n>=total)return;
+  slides[cur].classList.remove("active");
+  dots.children[cur].classList.remove("active");
+  tocList.children[cur].classList.remove("active");
+  cur=n;
+  slides[cur].classList.add("active");
+  dots.children[cur].classList.add("active");
+  tocList.children[cur].classList.add("active");
+  titleEl.textContent=slides[cur].getAttribute("data-title")||"";
+  counterEl.textContent=(cur+1)+" / "+total;
+  progressBar.style.width=((cur+1)/total*100)+"%";
+  slides[cur].scrollTop=0;
+}
+function toggleTOC(){tocPanel.classList.toggle("open");tocBackdrop.classList.toggle("open")}
+function closeTOC(){tocPanel.classList.remove("open");tocBackdrop.classList.remove("open")}
+
+document.addEventListener("keydown",function(e){
+  if(e.key==="ArrowRight"||e.key==="ArrowDown"||e.key===" "||e.key==="PageDown"){e.preventDefault();go(cur+1)}
+  else if(e.key==="ArrowLeft"||e.key==="ArrowUp"||e.key==="PageUp"){e.preventDefault();go(cur-1)}
+  else if(e.key==="Home"){e.preventDefault();go(0)}
+  else if(e.key==="End"){e.preventDefault();go(total-1)}
+  else if(e.key==="Escape"){closeTOC();go(0)}
+  else if(e.key==="t"||e.key==="T"){toggleTOC()}
+});
+var wheelTimer=null;
+deck.addEventListener("wheel",function(e){e.preventDefault();if(wheelTimer)return;wheelTimer=setTimeout(function(){wheelTimer=null},350);if(e.deltaY>0)go(cur+1);else if(e.deltaY<0)go(cur-1)},{passive:false});
+var touchX=0,touchY=0;
+deck.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX;touchY=e.touches[0].clientY});
+deck.addEventListener("touchend",function(e){
+  var dx=touchX-e.changedTouches[0].clientX,dy=touchY-e.changedTouches[0].clientY;
+  if(Math.abs(dy)>Math.abs(dx)){if(dy>50)go(cur+1);else if(dy<-50)go(cur-1)}
+  else{if(dx>50)go(cur+1);else if(dx<-50)go(cur-1)}
+});
+deck.addEventListener("click",function(e){
+  if(e.target.closest(".nav-btn,.nd,.toc-item,.toc-panel,.toc-backdrop"))return;
+  go(cur+1);
+});
+document.getElementById("btnToc").addEventListener("click",function(e){e.stopPropagation();toggleTOC()});
+document.getElementById("btnPrev").addEventListener("click",function(e){e.stopPropagation();go(cur-1)});
+document.getElementById("btnNext").addEventListener("click",function(e){e.stopPropagation();go(cur+1)});
+tocBackdrop.addEventListener("click",closeTOC);
+go(0);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+{
+  "batch": 2,
+  "rounds": [
+    {
+      "round": 116,
+      "expert1": "丹尼尔·卡尼曼",
+      "expert2": "塔勒布",
+      "belief1": "认知偏差是系统性的，可以通过设计和训练来弥补",
+      "belief2": "黑天鹅不可预测，应对黑天鹅比预测黑天鹅更重要",
+      "topic": "人的决策偏差是可以被系统性修正的（卡尼曼），还是黑天鹅事件永远无法被预测和避免（塔勒布）？",
+      "conflict_type": "method",
+      "strength": "strong"
+    },
+    {
+      "round": 117,
+      "expert1": "刘润",
+      "expert2": "吴军",
+      "belief1": "商业的本质是底层逻辑，掌握了底层逻辑就能应对万变",
+      "belief2": "科技浪潮才是决定商业格局的根本力量，顺势者昌",
+      "topic": "商业成功靠底层逻辑（刘润）还是靠把握科技浪潮（吴军）？",
+      "conflict_type": "method",
+      "strength": "strong"
+    },
+    {
+      "round": 118,
+      "expert1": "柯林斯",
+      "expert2": "巴菲特",
+      "belief1": "基业长青需要卓越的管理体系和核心理念",
+      "belief2": "长期价值投资才是穿越周期的根本",
+      "topic": "企业长青靠管理体系（柯林斯）还是靠价值投资理念（巴菲特）？",
+      "conflict_type": "value_priority",
+      "strength": "moderate"
+    },
+    {
+      "round": 119,
+      "expert1": "万维钢",
+      "expert2": "孔子",
+      "belief1": "精英主义是推动文明进步的动力，优秀的人应该引领世界",
+      "belief2": "仁者爱人，真正的智慧是让每个人都能成为更好的人",
+      "topic": "社会进步靠精英引领（万维钢）还是靠人人向善（孔子）？",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 120,
+      "expert1": "弗洛伊德",
+      "expert2": "尼采",
+      "belief1": "潜意识是行为的根本驱动力，理性只是冰山一角",
+      "belief2": "权力意志超越一切，人在虚无中创造自己的价值",
+      "topic": "人靠什么活着？是被潜意识和欲望驱动（弗洛伊德），还是通过权力意志主动创造价值（尼采）？",
+      "conflict_type": "direct",
+      "strength": "strong"
+    }
+  ]
+}

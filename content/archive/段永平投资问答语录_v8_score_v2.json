@@ -1,0 +1,229 @@
+{
+  "total": 72.5,
+  "grade": "C",
+  "dimensions": {
+    "attack_efficiency": {
+      "score": 83.3,
+      "weight": 0.25,
+      "weighted": 20.8,
+      "details": {
+        "total": 6,
+        "effective": 5,
+        "details": [
+          {
+            "attacker": "塔勒布",
+            "target": "巴菲特",
+            "effective": true,
+            "has_evidence": true,
+            "has_logic": true,
+            "has_specific": false
+          },
+          {
+            "attacker": "巴菲特",
+            "target": "塔勒布",
+            "effective": true,
+            "has_evidence": false,
+            "has_logic": true,
+            "has_specific": false
+          },
+          {
+            "attacker": "达利欧",
+            "target": "吴军",
+            "effective": false,
+            "has_evidence": false,
+            "has_logic": false,
+            "has_specific": false
+          },
+          {
+            "attacker": "柯林斯",
+            "target": "达利欧",
+            "effective": true,
+            "has_evidence": true,
+            "has_logic": false,
+            "has_specific": false
+          },
+          {
+            "attacker": "吴军",
+            "target": "塔勒布",
+            "effective": true,
+            "has_evidence": false,
+            "has_logic": true,
+            "has_specific": false
+          },
+          {
+            "attacker": "芒格",
+            "target": "柯林斯",
+            "effective": true,
+            "has_evidence": false,
+            "has_logic": true,
+            "has_specific": false
+          }
+        ]
+      }
+    },
+    "defense_rate": {
+      "score": 50.0,
+      "weight": 0.2,
+      "weighted": 10.0,
+      "details": {
+        "total_defended": 6,
+        "successful": 3
+      }
+    },
+    "evidence_hit": {
+      "score": 16.7,
+      "weight": 0.15,
+      "weighted": 2.5,
+      "details": {
+        "discussion_type": "hybrid",
+        "standard_name": "混合讨论",
+        "total_speeches": 12,
+        "with_evidence": 2,
+        "rate": 16.7,
+        "details": [
+          {
+            "type": "stance",
+            "expert": "巴菲特",
+            "has_evidence": true,
+            "evidence_count": 2,
+            "evidences": [
+              "在网易的投资最能说",
+              "那时候所有人都说"
+            ],
+            "content_preview": "段永平是真正懂投资的人。他把'买股票就是买公司'这句话做到了极致——不是挂在嘴边，而是体现在每一个投资决策里。我和段永平..."
+          },
+          {
+            "type": "stance",
+            "expert": "芒格",
+            "has_evidence": true,
+            "evidence_count": 1,
+            "evidences": [
+              "段永平在访谈中说"
+            ],
+            "content_preview": "段永平把中国的实业智慧和价值投资完美结合了。他在步步高做实业的时候，就建立了一套'本分'的企业文化——不骗人、不攻击竞争..."
+          },
+          {
+            "type": "stance",
+            "expert": "塔勒布",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "我要对段永平的整个体系提出根本性质疑。'买股票就是买公司'——这句话的问题在于，它假设你知道什么是好公司，而且你的判断是..."
+          },
+          {
+            "type": "stance",
+            "expert": "柯林斯",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "从实证研究的角度，我必须指出：段永平的体系有成功案例，但缺乏对照组。他在网易、苹果、茅台上成功了，但那些和他做出相反决策..."
+          },
+          {
+            "type": "stance",
+            "expert": "达利欧",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "段永平的微观投资哲学我非常认同，但我需要补充一个维度：系统性风险。他在2001年投资网易，2011年投资苹果，2013年..."
+          },
+          {
+            "type": "stance",
+            "expert": "吴军",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "段永平对中国投资者的意义，不在于他的投资回报有多高，而在于他证明了一件事：在中国，用价值投资的方式，也能赚到钱——只要你..."
+          },
+          {
+            "type": "clash",
+            "attacker": "塔勒布",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "巴菲特先生，你说段永平'真懂'，但你忽略了关键问题：他懂的是过去，不是未来。2001年的网易，他懂；但你怎么解释他持有苹..."
+          },
+          {
+            "type": "clash",
+            "attacker": "巴菲特",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "塔勒布先生，我要反驳你：苹果持仓不动，恰恰是段永平'真懂'的证明。你说的那些变化——乔布斯去世、AI竞争、地缘政治——都..."
+          },
+          {
+            "type": "clash",
+            "attacker": "达利欧",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "吴军你说段永平跨出能力圈了，但我要质疑的是：你确定能力圈是一个静止的概念吗？段永平从实业到投资，从消费电子到苹果到茅台，..."
+          },
+          {
+            "type": "clash",
+            "attacker": "柯林斯",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "达利欧你说宏观周期决定了段永平的成功，但你有没有数据支撑？我研究过很多卓越企业，发现一个反直觉的事实：在宏观环境相同的情..."
+          },
+          {
+            "type": "clash",
+            "attacker": "吴军",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "塔勒布你说段永平没有对照组，但我要反问：你有对照组吗？你说那些'做出相反决策的懂企业的投资者'——你指的谁？能不能列出来..."
+          },
+          {
+            "type": "clash",
+            "attacker": "芒格",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "柯林斯你说'不为清单'最重要，我完全同意。但我要补充：'不为清单'不是凭空来的，它来自于你对企业本质的深刻理解。段永平不..."
+          }
+        ]
+      }
+    },
+    "style_recognition": {
+      "score": 100.0,
+      "weight": 0.15,
+      "weighted": 15.0,
+      "details": {
+        "total": 6,
+        "distinctive": 6
+      }
+    },
+    "cognitive_contribution": {
+      "score": 100.0,
+      "weight": 0.1,
+      "weighted": 10.0,
+      "details": {
+        "total_rounds": 3,
+        "with_reversal": 3
+      }
+    },
+    "case_quality": {
+      "score": 100.0,
+      "weight": 0.1,
+      "weighted": 10.0,
+      "details": {
+        "total_rounds": 3,
+        "with_cases": 3
+      }
+    },
+    "structure": {
+      "score": 83.3,
+      "weight": 0.05,
+      "weighted": 4.2,
+      "details": {
+        "title": true,
+        "experts": true,
+        "rounds": true,
+        "final_insight": true,
+        "open_questions": true,
+        "books": false
+      }
+    }
+  }
+}

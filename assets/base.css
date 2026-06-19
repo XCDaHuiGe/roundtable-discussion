@@ -1,0 +1,131 @@
+/**
+ * base.css — 圆桌会议 HTML-PPT 设计令牌（Design Token）基础层
+ *
+ * 本文件定义所有视觉自定义属性（CSS Custom Properties），是整个圆桌系统的
+ * 设计 DNA。任何模板（roundtable-template.html、template.html、动画库等）
+ * 都应引用本文件以保持一致性。
+ *
+ * 用法：
+ *   <link rel="stylesheet" href="assets/base.css">
+ *
+ * 设计原则：
+ *   - 仅包含 :root 变量定义，不包含任何结构性 CSS
+ *   - 每个颜色令牌附带 --*-rgb 三元组，供 rgba() 动态控制透明度
+ *   - 默认主题为「编辑式」暖纸风格（editorial warm paper）
+ *   - 通过覆盖 :root 变量即可实现主题切换
+ *
+ * 版本：V1.0
+ * 更新：2026-06-18
+ */
+
+:root {
+  /* ==========================================================
+     1. COLOR TOKENS — 主色
+     ========================================================== */
+
+  /* --bg: 主背景（暖纸色，原 --paper） */
+  --bg: #f2eadc;
+  --bg-rgb: 242, 234, 220;
+
+  /* --bg-soft: 次要背景（卡片/面板底色） */
+  --bg-soft: #e8e0d0;
+  --bg-soft-rgb: 232, 224, 208;
+
+  /* --fg: 主前景/正文色（近黑，原 --ink） */
+  --fg: #171717;
+  --fg-rgb: 23, 23, 23;
+
+  /* --muted: 次要文字/辅助信息 */
+  --muted: #6b6560;
+  --muted-rgb: 107, 101, 96;
+
+  /* --accent: 主强调色（深红） */
+  --accent: #982b23;
+  --accent-rgb: 152, 43, 35;
+
+  /* --accent-2: 第二强调色（金色） */
+  --accent-2: #c9a027;
+  --accent-2-rgb: 201, 160, 39;
+
+  /* --accent-3: 第三强调色（靛蓝） */
+  --accent-3: #4a6a9a;
+  --accent-3-rgb: 74, 106, 154;
+
+  /* ==========================================================
+     2. COLOR TOKENS — 语义标签色
+     ========================================================== */
+
+  --gold: #d4a843;
+  --gold-rgb: 212, 168, 67;
+
+  --red: #c23b22;
+  --red-rgb: 194, 59, 34;
+
+  --blue: #4a6a9a;
+  --blue-rgb: 74, 106, 154;
+
+  --purple: #8a4aaa;
+  --purple-rgb: 138, 74, 170;
+
+  --green: #3a8a5c;
+  --green-rgb: 58, 138, 92;
+
+  --cyan: #4a9a9a;
+  --cyan-rgb: 74, 154, 154;
+
+  --orange: #d4843a;
+  --orange-rgb: 212, 132, 58;
+
+  /* ==========================================================
+     3. COLOR TOKENS — 状态色
+     ========================================================== */
+
+  --good: #3a8a5c;
+  --good-rgb: 58, 138, 92;
+
+  --warn: #d4a843;
+  --warn-rgb: 212, 168, 67;
+
+  --bad: #c23b22;
+  --bad-rgb: 194, 59, 34;
+
+  /* ==========================================================
+     4. TYPOGRAPHY TOKENS
+     ========================================================== */
+
+  --font-serif: 'Noto Serif SC', 'Source Han Serif SC', Georgia, serif;
+  --font-sans: 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif;
+  --font-mono: 'IBM Plex Mono', Consolas, monospace;
+  --font-display: 'Noto Serif SC', 'Source Han Serif SC', Georgia, serif;
+
+  /* ==========================================================
+     5. SPACING TOKENS
+     ========================================================== */
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* ==========================================================
+     6. SHAPE TOKENS
+     ========================================================== */
+
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 16px;
+
+  --shadow: 0 2px 8px rgba(0, 0, 0, .08);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, .12);
+
+  /* ==========================================================
+     7. TRANSITION TOKENS
+     ========================================================== */
+
+  --ease: cubic-bezier(.4, 0, .2, 1);
+  --duration: 0.3s;
+}

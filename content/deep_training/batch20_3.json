@@ -1,0 +1,55 @@
+{
+  "batch": 3,
+  "rounds": [
+    {
+      "round": 121,
+      "expert1": "菲利普·津巴多",
+      "expert2": "李诞",
+      "belief1": "服从权威和从众是人的本能，好人也会在压力下作恶",
+      "belief2": "人在乎的是活着比正确更重要，选择躺平是因为看透了",
+      "topic": "面对环境压力，人是会作恶（津巴多）还是选择躺平（李诞）？",
+      "conflict_type": "value_priority",
+      "strength": "moderate"
+    },
+    {
+      "round": 122,
+      "expert1": "达利欧",
+      "expert2": "丁元英",
+      "belief1": "理解并利用周期是最高级的智慧",
+      "belief2": "天道不以人的意志为转移，顺势借势才是根本",
+      "topic": "达利欧说周期可以理解利用，丁元英说天道不可违。人是驾驭周期还是顺应天道？",
+      "conflict_type": "method",
+      "strength": "strong"
+    },
+    {
+      "round": 123,
+      "expert1": "芮小丹",
+      "expert2": "西蒙娜·德·波伏娃",
+      "belief1": "女人不是天生的，是变成的——但我选择变成什么样由我自己决定",
+      "belief2": "爱不是生命的全部，自我实现才是",
+      "topic": "芮小丹说爱是本能，波伏娃说自我实现高于一切。女性的人生重心应该是爱还是自我？",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 124,
+      "expert1": "凯文·凯利",
+      "expert2": "尼克·博斯特罗姆",
+      "belief1": "AI和科技是生命进化的延续，乐观迎接",
+      "belief2": "AI可能带来存在性风险，必须谨慎对待",
+      "topic": "面对AI，应该乐观拥抱（凯文·凯利）还是审慎防范（博斯特罗姆）？",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 125,
+      "expert1": "项飙",
+      "expert2": "弗洛姆",
+      "belief1": "社会结构塑造了个体的生活方式和思维方式",
+      "belief2": "个体的自由和爱是抵抗异化的唯一途径",
+      "topic": "现代社会的问题根源在于社会结构（项飙）还是个体的异化（弗洛姆）？",
+      "conflict_type": "method",
+      "strength": "moderate"
+    }
+  ]
+}

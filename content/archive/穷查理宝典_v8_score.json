@@ -1,0 +1,135 @@
+{
+  "total": 51.2,
+  "grade": "F",
+  "dimensions": {
+    "attack_efficiency": {
+      "score": 50.0,
+      "weight": 0.25,
+      "weighted": 12.5,
+      "details": {
+        "total": 6,
+        "effective": 3,
+        "details": [
+          {
+            "attacker": "塔勒布",
+            "target": "巴菲特",
+            "type": "逻辑漏洞",
+            "effective": true,
+            "has_counter": false,
+            "has_evidence": false,
+            "has_logic": true,
+            "has_specific": false
+          },
+          {
+            "attacker": "巴菲特",
+            "target": "塔勒布",
+            "type": "逻辑漏洞",
+            "effective": false,
+            "has_counter": false,
+            "has_evidence": false,
+            "has_logic": false,
+            "has_specific": false
+          },
+          {
+            "attacker": "卡尼曼",
+            "target": "戈尔曼",
+            "type": "逻辑漏洞",
+            "effective": true,
+            "has_counter": false,
+            "has_evidence": false,
+            "has_logic": true,
+            "has_specific": false
+          },
+          {
+            "attacker": "戈尔曼",
+            "target": "卡尼曼",
+            "type": "逻辑漏洞",
+            "effective": false,
+            "has_counter": false,
+            "has_evidence": false,
+            "has_logic": false,
+            "has_specific": false
+          },
+          {
+            "attacker": "柯林斯",
+            "target": "塔勒布",
+            "type": "逻辑漏洞",
+            "effective": true,
+            "has_counter": false,
+            "has_evidence": true,
+            "has_logic": false,
+            "has_specific": false
+          },
+          {
+            "attacker": "吴军",
+            "target": "柯林斯",
+            "type": "逻辑漏洞",
+            "effective": false,
+            "has_counter": false,
+            "has_evidence": false,
+            "has_logic": false,
+            "has_specific": false
+          }
+        ]
+      }
+    },
+    "defense_rate": {
+      "score": 50.0,
+      "weight": 0.2,
+      "weighted": 10.0,
+      "details": {
+        "total_defended": 6,
+        "successful": 3
+      }
+    },
+    "evidence_hit": {
+      "score": 41.7,
+      "weight": 0.15,
+      "weighted": 6.3,
+      "details": {
+        "total_speeches": 12,
+        "with_evidence": 5
+      }
+    },
+    "style_recognition": {
+      "score": 50.0,
+      "weight": 0.15,
+      "weighted": 7.5,
+      "details": {
+        "total": 6,
+        "distinctive": 3
+      }
+    },
+    "cognitive_contribution": {
+      "score": 66.7,
+      "weight": 0.1,
+      "weighted": 6.7,
+      "details": {
+        "total_rounds": 3,
+        "with_reversal": 2
+      }
+    },
+    "case_quality": {
+      "score": 33.3,
+      "weight": 0.1,
+      "weighted": 3.3,
+      "details": {
+        "total_rounds": 3,
+        "with_cases": 1,
+        "total_cases": 3
+      }
+    },
+    "structure": {
+      "score": 100.0,
+      "weight": 0.05,
+      "weighted": 5.0,
+      "details": {
+        "title": true,
+        "experts": true,
+        "rounds": true,
+        "final_insight": true,
+        "open_questions": true
+      }
+    }
+  }
+}

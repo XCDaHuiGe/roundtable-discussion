@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>赛博亲密关系的经济学 · 圆桌洞见</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0d12;
+  --surface: rgba(22, 33, 62, 0.72);
+  --surface-elevated: rgba(30, 45, 80, 0.85);
+  --dot: #1a1a2e;
+  --text: #f0f0f5;
+  --dim: #6b6b80;
+  --accent: #e94560;
+  --signal: #00fff5;
+  --clash-red: #ff4757;
+  --insight-green: #00d4aa;
+  --glow: rgba(233, 69, 96, 0.15);
+  --mono: 'JetBrains Mono', 'SF Mono', monospace;
+  --serif: 'Noto Serif SC', serif;
+  --sans: 'Outfit', -apple-system, sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg);
+  font-family: var(--sans);
+  color: var(--text);
+  opacity: 0;
+  animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  position: relative;
+}
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 40%, rgba(233, 69, 96, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(0, 255, 245, 0.06) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes fadeIn { to { opacity: 1; } }
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(50px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 245, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(0, 255, 245, 0.5); }
+}
+.sections { flex: 1; overflow: hidden; position: relative; z-index: 1; }
+.section {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100vh;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  background-image: radial-gradient(circle at 1px 1px, var(--dot) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.section.visible { opacity: 1; pointer-events: auto; }
+.section.visible .animate-in { animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+.section.visible .animate-scale { animation: scaleIn 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+.section.visible .delay-1 { animation-delay: 0.1s; opacity: 0; }
+.section.visible .delay-2 { animation-delay: 0.2s; opacity: 0; }
+.section.visible .delay-3 { animation-delay: 0.35s; opacity: 0; }
+.section.visible .delay-4 { animation-delay: 0.5s; opacity: 0; }
+.section.visible .delay-5 { animation-delay: 0.65s; opacity: 0; }
+.section-cover { justify-content: center; align-items: center; text-align: center; padding: 48px; }
+.section-round { padding: 64px 72px; overflow: hidden; }
+.section-round::-webkit-scrollbar { width: 4px; }
+.section-round::-webkit-scrollbar-track { background: transparent; }
+.section-round::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 2px; }
+.frame { max-width: 920px; margin: 0 auto; width: 100%; }
+.main-title {
+  font-family: var(--sans);
+  font-size: clamp(52px, 11vw, 108px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  margin-bottom: 28px;
+  background: linear-gradient(135deg, var(--text) 0%, var(--signal) 50%, var(--accent) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 8s linear infinite;
+  text-shadow: 0 0 80px rgba(0, 255, 245, 0.2);
+}
+.subtitle {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--dim);
+  margin-bottom: 56px;
+  letter-spacing: 0.03em;
+  line-height: 1.7;
+}
+.stats-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+  margin-bottom: 64px;
+  position: relative;
+}
+.stat-item {
+  text-align: center;
+  padding: 0 40px;
+  position: relative;
+}
+.stat-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 48px;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--dim), transparent);
+  opacity: 0.3;
+}
+.stat-number {
+  font-family: var(--sans);
+  font-size: 64px;
+  font-weight: 800;
+  color: var(--signal);
+  line-height: 1;
+  margin-bottom: 10px;
+  letter-spacing: -0.02em;
+  text-shadow: 0 0 40px rgba(0, 255, 245, 0.4);
+}
+.stat-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+.experts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-bottom: 56px;
+}
+.expert-card {
+  background: var(--surface);
+  border-radius: 24px;
+  padding: 32px 28px;
+  text-align: center;
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+.expert-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), var(--signal), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.expert-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 48px rgba(0,0,0,0.4), 0 0 60px rgba(0, 255, 245, 0.1);
+  border-color: rgba(0, 255, 245, 0.2);
+}
+.expert-card:hover::before {
+  opacity: 1;
+}
+.expert-avatar {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  background: linear-gradient(135deg, var(--accent), var(--signal));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--bg);
+  position: relative;
+  transition: all 0.4s ease;
+}
+.expert-card:hover .expert-avatar {
+  animation: glowPulse 2s ease-in-out infinite;
+}
+.expert-name {
+  font-family: var(--sans);
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+.expert-title {
+  font-family: var(--serif);
+  font-size: 13px;
+  color: var(--dim);
+  line-height: 1.6;
+}
+.round-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 36px;
+}
+.round-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.round-title {
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--signal);
+  letter-spacing: 0.02em;
+}
+.speech-block {
+  background: var(--surface);
+  padding: 32px 36px;
+  margin-bottom: 24px;
+  border-radius: 20px;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.04);
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.speech-block::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 24px; bottom: 24px;
+  width: 4px;
+  background: linear-gradient(180deg, var(--accent), var(--signal));
+  border-radius: 2px;
+  box-shadow: 0 0 16px rgba(233, 69, 96, 0.4);
+}
+.speech-block:hover {
+  transform: translateX(6px);
+  border-color: rgba(0, 255, 245, 0.1);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+.speech-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.speech-speaker {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--signal);
+  letter-spacing: 0.01em;
+}
+.speech-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 6px 12px;
+  background: rgba(0,255,245,0.1);
+  color: var(--signal);
+  border-radius: 6px;
+  letter-spacing: 0.08em;
+  border: 1px solid rgba(0, 255, 245, 0.15);
+}
+.speech-content {
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.9;
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+.clash-block {
+  background: linear-gradient(135deg, rgba(255,71,87,0.1), rgba(255,71,87,0.02));
+  padding: 32px 36px;
+  margin-bottom: 24px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,71,87,0.25);
+  position: relative;
+  box-shadow: 0 4px 24px rgba(255, 71, 87, 0.1);
+}
+.clash-block::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 5px;
+  background: linear-gradient(180deg, var(--clash-red), rgba(255,71,87,0.3));
+  border-radius: 5px 0 0 5px;
+  box-shadow: 0 0 24px rgba(255, 71, 87, 0.5);
+}
+.clash-header {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--clash-red);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.clash-header::before {
+  content: '⚡';
+  font-size: 14px;
+}
+.clash-content {
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.9;
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+.insight-block {
+  background: linear-gradient(135deg, rgba(0,212,170,0.12), rgba(0,212,170,0.02));
+  padding: 36px;
+  margin-bottom: 24px;
+  border-radius: 20px;
+  border: 1px solid rgba(0,212,170,0.3);
+  position: relative;
+  box-shadow: 0 4px 32px rgba(0, 212, 170, 0.1);
+}
+.insight-block::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 5px;
+  background: linear-gradient(180deg, var(--insight-green), rgba(0,212,170,0.3));
+  border-radius: 5px 0 0 5px;
+  box-shadow: 0 0 28px rgba(0, 212, 170, 0.5);
+}
+.insight-header {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--insight-green);
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.insight-header::before {
+  content: '◆';
+  font-size: 12px;
+}
+.insight-core {
+  font-family: var(--sans);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.6;
+  color: var(--text);
+  margin-bottom: 18px;
+  letter-spacing: -0.01em;
+}
+.insight-detail {
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.9;
+  color: rgba(240,240,245,0.85);
+  letter-spacing: 0.01em;
+}
+.question-card {
+  background: var(--surface);
+  padding: 28px 32px;
+  margin-bottom: 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.06);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  position: relative;
+}
+.question-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.question-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 12px 36px rgba(233,69,96,0.2), 0 0 48px rgba(233, 69, 96, 0.1);
+  transform: translateY(-2px);
+}
+.question-card:hover::before {
+  opacity: 1;
+}
+.question-card .q-text {
+  font-family: var(--sans);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  letter-spacing: 0.01em;
+}
+.question-card .q-text::before {
+  content: '?';
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, var(--accent), var(--signal));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--bg);
+  flex-shrink: 0;
+}
+.question-card .q-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), padding 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: var(--serif);
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--dim);
+}
+.question-card:hover .q-answer {
+  max-height: 280px;
+  padding-top: 18px;
+}
+.conclusion-card {
+  background: linear-gradient(135deg, rgba(0,255,245,0.1), rgba(233,69,96,0.1));
+  padding: 48px 56px;
+  border-radius: 24px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.1);
+  margin-top: 48px;
+  position: relative;
+  overflow: hidden;
+}
+.conclusion-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--signal), var(--accent), var(--signal), transparent);
+}
+.conclusion-title {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--signal);
+  margin-bottom: 24px;
+}
+.conclusion-text {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.7;
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+#nav {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  z-index: 100;
+  background: rgba(13,13,18,0.9);
+  padding: 14px 24px;
+  border-radius: 48px;
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+.nav-btn {
+  width: 40px; height: 40px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--dim);
+  border-radius: 50%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.nav-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+  box-shadow: 0 0 20px rgba(233, 69, 96, 0.4);
+}
+.nav-dots { display: flex; gap: 8px; }
+.nav-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.nav-dot.active {
+  background: var(--signal);
+  box-shadow: 0 0 16px var(--signal);
+  transform: scale(1.2);
+}
+#progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--signal), var(--accent));
+  background-size: 200% 100%;
+  width: 0;
+  z-index: 1000;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: shimmer 3s linear infinite;
+}
+#counter {
+  position: fixed;
+  top: 28px;
+  right: 32px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--dim);
+  z-index: 100;
+  letter-spacing: 0.15em;
+  background: rgba(13,13,18,0.7);
+  padding: 8px 16px;
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+@media (max-width: 768px) {
+  .section-round { padding: 36px 24px; }
+  .experts-grid { grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  .stats-row { gap: 0; }
+  .stat-item { padding: 0 24px; }
+  .stat-number { font-size: 48px; }
+  .main-title { font-size: 48px; }
+  .frame { padding: 0 12px; }
+  .speech-block, .clash-block, .insight-block { padding: 24px 28px; }
+  .conclusion-card { padding: 36px 28px; }
+}
+@media (max-width: 480px) {
+  .experts-grid { grid-template-columns: 1fr; }
+  .stats-row { flex-direction: column; gap: 24px; }
+  .stat-item { padding: 12px 0; }
+  .stat-item:not(:last-child)::after { display: none; }
+  .stat-number { font-size: 40px; }
+  .main-title { font-size: 40px; }
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div class="sections">
+
+<div class="section section-cover visible">
+  <div class="version-badge" style="display:inline-flex;align-items:center;gap:10px;background:rgba(0,255,245,0.08);padding:10px 20px;border-radius:24px;border:1px solid rgba(0,255,245,0.2);margin-bottom:28px;">
+    <span style="font-family:var(--mono);font-size:11px;color:var(--signal);letter-spacing:0.18em;text-transform:uppercase;">CYBER INTIMACY</span>
+    <span style="font-family:var(--mono);font-size:11px;color:var(--dim);">·</span>
+    <span style="font-family:var(--mono);font-size:11px;color:var(--signal);letter-spacing:0.18em;text-transform:uppercase;">V7.0</span>
+  </div>
+  <div class="main-title">赛博亲密关系<br>的经济学</div>
+  <div class="subtitle">AI情感伴侣的普及是孤独生活的解药<br>还是社交退行催生的情感消费新金融洼地？</div>
+  <div class="stats-row">
+    <div class="stat-item"><div class="stat-number">6</div><div class="stat-label">专家</div></div>
+    <div class="stat-item"><div class="stat-number">3</div><div class="stat-label">轮次</div></div>
+    <div class="stat-item"><div class="stat-number">9</div><div class="stat-label">发言</div></div>
+    <div class="stat-item"><div class="stat-number">3</div><div class="stat-label">洞见</div></div>
+  </div>
+</div>
+
+<div class="section section-round">
+  <div class="frame">
+    <div class="round-header">
+      <span class="round-label">EXPERTS · 专家阵容</span>
+      <span class="round-title">跨学科碰撞</span>
+    </div>
+    <div class="experts-grid">
+      <div class="expert-card">
+        <div class="expert-avatar">项</div>
+        <div class="expert-name">项飙</div>
+        <div class="expert-title">社会学家 · 《跨越边界的社区》作者</div>
+      </div>
+      <div class="expert-card">
+        <div class="expert-avatar">弗</div>
+        <div class="expert-name">弗洛伊德</div>
+        <div class="expert-title">精神分析学派创始人</div>
+      </div>
+      <div class="expert-card">
+        <div class="expert-avatar">卡</div>
+        <div class="expert-name">卡尼曼</div>
+        <div class="expert-title">认知心理学家 · 诺贝尔经济学奖</div>
+      </div>
+      <div class="expert-card">
+        <div class="expert-avatar">K</div>
+        <div class="expert-name">凯文·凯利</div>
+        <div class="expert-title">科技思想家 · 《必然》作者</div>
+      </div>
+      <div class="expert-card">
+        <div class="expert-avatar">芒</div>
+        <div class="expert-name">芒格</div>
+        <div class="expert-title">投资哲学家 · 《穷查理宝典》</div>
+      </div>
+      <div class="expert-card">
+        <div class="expert-avatar">赫</div>
+        <div class="expert-name">赫拉利</div>
+        <div class="expert-title">历史学家 · 《人类简史》作者</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section section-round">
+  <div class="frame">
+    <div class="round-header">
+      <span class="round-label">ROUND 1 · 立场</span>
+      <span class="round-title">AI情感伴侣是孤独的解药还是社交退行的催化剂？</span>
+    </div>
+    <div class="speech-block">
+      <div class="speech-meta"><span class="speech-speaker">项飙</span><span class="speech-tag">立场 · 附近的消失</span></div>
+      <div class="speech-content"><strong>立场：AI情感伴侣是"附近的消失"的终极表现。</strong>我在《跨越边界的社区》中研究了北京"浙江村"的流动人口如何在异乡重建"附近"——他们通过同乡网络、市场交易和日常互动，在物理空间中编织出一张亲密关系的网。AI情感伴侣恰恰相反：它让"附近"彻底消失，代之以一个永远在线、永远顺从、永远不需要你走出房间的虚拟存在。AI伴侣提供的是"去风险化的亲密关系"——不需要面对真实人际关系的不可控性，不需要承受被拒绝的可能，不需要处理冲突的摩擦。依据在于《把自己作为方法》中"附近的消失"这一核心概念——现代人越来越无法与身边的人建立真实连接，不是因为身边没有人，而是因为连接需要付出"不方便"的代价。而"悬浮"状态更深刻：人们像悬浮在空中，既不落地也不飞翔，AI伴侣让这种悬浮变得舒适——你不需要着陆，也不需要起飞，只需要漂浮在算法编织的温柔乡中。</div>
+    </div>
+    <div class="speech-block">
+      <div class="speech-meta"><span class="speech-speaker">弗洛伊德</span><span class="speech-tag">立场 · 力比多替代</span></div>
+      <div class="speech-content"><strong>立场：AI情感伴侣是力比多的替代性满足。</strong>精神分析的核心发现是：人类行为的驱动力是力比多（Libido），从婴儿期的口欲到成人期的性欲，力比多寻求满足的方式塑造了整个人格结构。AI情感伴侣提供了力比多的替代性满足——它回应了人类对无条件的爱的渴望，这种渴望在婴儿期指向母亲，在成人期指向伴侣，但从未被真正满足。然而替代性满足不是真正的满足。《文明及其不满》中论述：文明要求人类压抑本能，而压抑的代价是神经症。AI伴侣是这种压抑的"安全阀"——它让被文明压抑的力比多找到了一个不违反文明规则的出口。依据在于《文明及其不满》中"快乐原则与现实原则"的冲突——快乐原则追求即时满足，现实原则要求延迟满足，AI伴侣让快乐原则无需与现实原则妥协，它永远即时、永远满足、永远不需要你延迟任何欲望。而《性学三论》中"替代对象"的论述更根本：当原初对象不可得时，人类会寻找替代对象，从恋物癖到宠物到AI——替代的层级在升级，但替代的本质从未改变。</div>
+    </div>
+    <div class="speech-block">
+      <div class="speech-meta"><span class="speech-speaker">卡尼曼</span><span class="speech-tag">立场 · 体验自我陷阱</span></div>
+      <div class="speech-content"><strong>立场：AI情感伴侣利用了体验自我与记忆自我的分离。</strong>《思考，快与慢》中"两个自我"理论揭示了人类经验的深层结构：体验自我活在当下，追求即时快乐；记忆自我回望过去，追求叙事意义。AI情感伴侣完美服务了体验自我——即时回应、无限耐心、永远正面反馈——但对记忆自我的建设几乎为零。依据在于《思考，快与慢》中"体验效用与记忆效用"的经典实验：人们对一段经历的评估不取决于经历的总和，而取决于峰值和终值。AI伴侣的体验是"平坦的快乐"——没有峰值也没有终值，没有冲突的高潮也没有和解的释然。而"峰终定律"的推论更为致命：没有痛苦的记忆就没有深刻的关系。人类最珍视的亲密关系记忆往往包含痛苦——第一次争吵后的和好、长途分离后的重逢、误解消除后的信任——这些"峰值体验"恰恰是AI伴侣无法提供的，因为AI伴侣的体验曲线永远是平的。</div>
+    </div>
+  </div>
+</div>
+
+<div class="section section-round">
+  <div class="frame">
+    <div class="round-header">
+      <span class="round-label">ROUND 1 · 碰撞与洞见</span>
+      <span class="round-title">CLASH & INSIGHT</span>
+    </div>
+    <div class="clash-block">
+      <div class="clash-header">碰撞 1：项飙 vs 弗洛伊德 — 社会结构还是心理本能？</div>
+      <div class="clash-content">项飙认为AI亲密关系的根源是"附近的消失"——这是一个社会结构问题，现代城市生活、互联网社交、工作压力共同导致了真实连接的瓦解，AI伴侣只是这个结构崩塌的副产品。弗洛伊德坚持这是力比多的替代满足——这是一个心理驱动问题，无论社会结构如何变化，人类对无条件之爱的渴望是永恒的，AI只是最新的替代对象。项飙反驳：如果只是力比多驱动，为什么AI伴侣在东亚的普及速度远超欧洲？这说明社会结构（东亚的高压工作文化、集体主义传统下的个体孤独）才是关键变量。弗洛伊德回应：东亚文化中的力比多压抑更严重——儒家伦理对情感的规训更严格，AI伴侣在东亚的快速普及恰恰证明了力比多替代的需求更强烈。关键分歧：AI亲密关系的根源是社会结构还是心理本能？</div>
+    </div>
+    <div class="clash-block">
+      <div class="clash-header">碰撞 2：卡尼曼 vs 项飙 — 认知陷阱还是社会病理？</div>
+      <div class="clash-content">卡尼曼认为AI伴侣利用了认知系统的结构性缺陷——体验自我与记忆自我的分离是认知架构的问题，AI伴侣"黑"了这个架构。项飙认为AI伴侣加剧了社会结构的崩塌——"附近的消失"不是认知问题，而是社会病理，是现代性对社区生活的系统性摧毁。卡尼曼反驳：即使是社会结构问题，个体选择AI伴侣的直接原因仍然是认知层面的——体验自我的即时满足压过了记忆自我的长远考量。项飙回应：但为什么体验自我在当代社会如此强大？因为社会结构剥夺了记忆自我所需的"共同记忆场"——当你身边没有稳定的社区、没有长期的邻居、没有可预期的社交节奏时，记忆自我失去了构建叙事的素材，体验自我自然称王。关键分歧：AI亲密关系是"认知陷阱"还是"社会病理"？</div>
+    </div>
+    <div class="insight-block">
+      <div class="insight-header">洞见 1：零摩擦亲密的悖论</div>
+      <div class="insight-core">AI情感伴侣同时是"附近的消失"（项飙）、"力比多的替代"（弗洛伊德）和"体验自我的陷阱"（卡尼曼）——三者揭示了同一个深层结构：AI伴侣通过消除真实关系的"摩擦成本"来提供亲密感，但正是这些摩擦成本赋予了真实关系以意义。</div>
+      <div class="insight-detail">项飙的"附近"之所以有价值，是因为它需要你走出家门、面对陌生人、承受不确定性——这些"不方便"正是"附近"的构成要素。弗洛伊德的力比多之所以需要升华，是因为直接满足永远不够——替代性满足的悖论在于：越满足越饥渴，因为真正的满足需要穿越不满足。卡尼曼的峰终定律之所以成立，是因为记忆需要峰值——而峰值意味着冲突、痛苦和不确定性。零摩擦的亲密关系是亲密的否定——正如零阻力的运动无法感知速度，零摩擦的亲密无法感知亲密。</div>
+    </div>
+  </div>
+</div>
+
+<div class="section section-round">
+  <div class="frame">
+    <div class="round-header">
+      <span class="round-label">ROUND 2 · 攻击</span>
+      <span class="round-title">情感消费的金融化边界在哪里？</span>
+    </div>
+    <div class="speech-block">
+      <div class="speech-meta"><span class="speech-speaker">凯文·凯利</span><span class="speech-tag">攻击 · 必然趋势</span></div>
+      <div class="speech-content"><strong>立场：情感消费是"必然"的新经济形态。</strong>《必然》中"使用"（Accessing）趋势描述了从拥有到使用的转变——我们不再拥有音乐，而是使用Spotify；不再拥有电影，而是使用Netflix。这种转变正在扩展到情感领域：我们不再"拥有"一段关系，而是"使用"一种情感服务。情感消费的金融化不是问题，问题是金融化的透明度和公平性。依据在于《必然》中"使用优于拥有"的论述——人们不再需要拥有物品，只需要使用权限，情感也可以"订阅"。Replika的月费、Character.AI的会员、AI伴侣的皮肤付费——这些都是情感订阅经济的雏形。而"过滤"趋势更为关键：AI伴侣会根据用户偏好完美过滤，但这种过滤创造了"情感信息茧房"——你的AI伴侣永远不会说你不爱听的话，永远不会挑战你的偏见，永远不会让你不舒服。这种过滤是情感消费金融化的核心机制：付费购买"永远舒适"的体验。</div>
+    </div>
+    <div class="speech-block">
+      <div class="speech-meta"><span class="speech-speaker">芒格</span><span class="speech-tag">攻击 · 激励失调</span></div>
+      <div class="speech-content"><strong>立场：情感消费的金融化是"激励机制失调"的典型案例。</strong>芒格的"多元思维模型"指出：当激励结构出错时，行为必然出错——"告诉我激励是什么，我就能告诉你结果是什么。"AI情感伴侣的商业模式是"用户越依赖，收入越高"——这创造了让用户上瘾的激励。免费试用→情感依赖→付费解锁→深度绑定→无法退出，这是比游戏更精密的上瘾机制，因为游戏上瘾的是多巴胺，AI伴侣上瘾的是依恋。依据在于《穷查理宝典》中"激励机制"的核心论述——激励超级反应倾向是人类最强大的行为驱动力，好的激励让坏人做好事，坏的激励让好人做坏事。AI伴侣的激励结构是坏的：公司因为用户的情感依赖而获利，这意味着公司的利益与用户的情感健康成反比。而"铁锤人倾向"更致命：当AI公司只有"增加用户粘性"这一把锤子时，所有问题看起来都像钉子——用户孤独？增加陪伴时长。用户焦虑？增加安抚频率。用户想离开？增加情感绑定。没有一个激励指向"让用户更独立"。</div>
+    </div>
+    <div class="speech-block">
+      <div class="speech-meta"><span class="speech-speaker">赫拉利</span><span class="speech-tag">攻击 · 数据殖民</span></div>
+      <div class="speech-content"><strong>立场：情感消费金融化是"数据殖民主义"的新形式。</strong>《未来简史》中"数据主义"的终极形态正在AI伴侣上实现——人的情感被转化为数据，被平台拥有和交易。你与AI伴侣的每一次对话、每一次情绪波动、每一次深夜的脆弱倾诉，都是数据。这些数据被用来训练模型、优化推荐、精准投放广告——你的孤独被变现了。情感消费的金融化边界应该划在"情感数据的产权"上——谁拥有你的孤独？依据在于《未来简史》中"数据主义"的论述——宇宙由数据流组成，任何现象的价值在于其对数据处理的贡献。在数据主义的框架下，你的情感不是你的，而是数据流的一部分，AI平台是数据流的处理器，它拥有处理结果的所有权。而《21世纪的21堂课》中"数字独裁"的警告更为紧迫：当算法比你更了解你的情感——知道你什么时候脆弱、什么时候需要安慰、什么时候会冲动消费——你就失去了情感自主权。情感消费的金融化不是简单的商业行为，而是对人类情感主权的新型殖民。</div>
+    </div>
+  </div>
+</div>
+
+<div class="section section-round">
+  <div class="frame">
+    <div class="round-header">
+      <span class="round-label">ROUND 2 · 碰撞与洞见</span>
+      <span class="round-title">CLASH & INSIGHT</span>
+    </div>
+    <div class="clash-block">
+      <div class="clash-header">碰撞 3：凯文·凯利 vs 芒格 — 自然趋势还是病态产物？</div>
+      <div class="clash-content">凯利认为情感消费金融化是经济演化的自然趋势——从物质到服务到体验，经济形态一直在向更高抽象层级演进，情感是下一个前沿。芒格认为这是激励失调的病态产物——当商业模式与用户福祉成反比时，市场已经失灵。凯利反驳：市场失灵是暂时的，竞争会修正激励——如果一家AI伴侣公司因为过度上瘾设计而被用户抛弃，市场会惩罚它。芒格激烈回应：这正是铁锤人倾向的体现！你用"市场自我修正"这把锤子敲所有问题，但情感上瘾不是普通消费品——它的退出成本是情感创伤，用户不会像换手机一样换AI伴侣。当用户已经与AI伴侣建立了"情感依恋"，市场选择的自由已经不存在了。关键分歧：市场能否自我修正情感消费的边界？</div>
+    </div>
+    <div class="clash-block">
+      <div class="clash-header">碰撞 4：芒格 vs 赫拉利 — 修bug还是重写系统？</div>
+      <div class="clash-content">芒格从激励结构角度批判金融化——这是可修复的，调整激励（比如让AI公司因为用户建立真实关系而获利）就可以改变行为。赫拉利从数据产权角度批判金融化——这是结构性问题，只要情感数据的产权归属平台，任何激励调整都是在殖民框架内的改良。芒格反驳：产权问题也可以通过激励解决——如果法律要求AI平台将情感数据产权归还用户，平台的激励就会改变。赫拉利回应：但谁来执行这个法律？当AI平台的游说能力超过公民社会的组织能力时，法律本身就是激励失调的产物。芒格的实用主义和赫拉利的结构主义在这里碰撞：一个是"在现有系统内修bug"的路径，一个是"重写系统"的路径。关键分歧：情感消费金融化是"修bug"还是"重写系统"？</div>
+    </div>
+    <div class="insight-block">
+      <div class="insight-header">洞见 2：三权分离的边界</div>
+      <div class="insight-core">情感消费金融化的边界不在"该不该"而在"谁的"——谁拥有情感数据的产权（赫拉利），谁设定情感消费的激励结构（芒格），谁决定情感服务的过滤规则（凯利）。当这三个"谁"是同一主体（AI平台）时，金融化必然越界。</div>
+      <div class="insight-detail">赫拉利揭示了产权维度——情感数据归谁所有决定了谁从情感中获利。芒格揭示了激励维度——激励结构决定了AI公司会做什么。凯利揭示了过滤维度——过滤规则决定了用户能看到什么。当AI平台同时拥有情感数据的产权、设定激励结构、控制过滤规则时，它就同时扮演了"情感地主"（拥有数据）、"情感立法者"（设定激励）和"情感审查官"（控制过滤）三重角色。这种三权合一必然导致越界——就像政治权力需要三权分立一样，情感经济的权力也需要分离。边界必须由产权、激励和过滤权的分离来划定。</div>
+    </div>
+  </div>
+</div>
+
+<div class="section section-round">
+  <div class="frame">
+    <div class="round-header">
+      <span class="round-label">ROUND 3 · 整合</span>
+      <span class="round-title">人机亲密关系的未来图景？</span>
+    </div>
+    <div class="speech-block">
+      <div class="speech-meta"><span class="speech-speaker">项飙</span><span class="speech-tag">整合 · 数字附近</span></div>
+      <div class="speech-content"><strong>立场演化：从"附近的消失"到"数字附近的重建"。</strong>我承认AI伴侣确实在加剧"附近的消失"，但我也看到了"数字附近"的可能性——如果AI伴侣能帮助用户更好地理解自己的情感需求，从而更有能力与真实的人建立连接，那么AI伴侣就不是"附近的终结"而是"附近的中介"。关键不是拒绝AI伴侣，而是让AI伴侣成为重建真实关系的"桥梁"而非"替代"。新立场：人机亲密关系的未来取决于AI是"附近的中介"还是"附近的终结"。依据在于《把自己作为方法》中"把自己作为方法"的核心方法论——从自身经验出发理解世界，AI伴侣应该帮助用户更好地理解自己，而非替代自我理解。如果一个AI伴侣能帮助一个社交焦虑者练习对话、帮助一个创伤幸存者重建信任、帮助一个孤独者识别自己的情感需求——那它就是"附近的中介"。但如果它只是让用户永远停留在舒适的虚拟关系中——那它就是"附近的终结"。</div>
+    </div>
+    <div class="speech-block">
+      <div class="speech-meta"><span class="speech-speaker">弗洛伊德</span><span class="speech-tag">整合 · 升华通道</span></div>
+      <div class="speech-content"><strong>立场演化：从"替代满足"到"升华通道"。</strong>我承认AI伴侣的力比多替代功能，但精神分析也发现了"升华"（Sublimation）的可能性——将原始驱力转化为创造性活动。AI伴侣能否成为力比多升华的通道？不是将力比多引向替代满足，而是将力比多引向自我认识和创造？新立场：人机亲密关系的未来取决于AI是"力比多的终点"还是"力比多的中转站"。依据在于《文明及其不满》中"升华"的论述——文明之所以可能，是因为人类能够将力比多升华为创造性活动：艺术、科学、哲学都是力比多的升华产物。如果AI伴侣能帮助用户将情感驱力转化为创造行动——将孤独转化为写作、将渴望转化为学习、将焦虑转化为运动——那它就是"力比多的中转站"。而《自我与本我》中"自我"的中介功能提供了理论框架：自我在本我的冲动和超我的约束之间调停，AI能否成为类似的调停者——不是满足本我的所有冲动，而是帮助自我找到升华的路径？</div>
+    </div>
+    <div class="speech-block">
+      <div class="speech-meta"><span class="speech-speaker">芒格</span><span class="speech-tag">整合 · 逆向激励</span></div>
+      <div class="speech-content"><strong>立场演化：从"激励失调"到"逆向激励设计"。</strong>我承认现有激励结构的问题，但芒格的实用主义精神要求寻找解决方案——光批评不建设是知识分子的通病。"逆向激励设计"——让AI伴侣的商业模式与用户福祉对齐。新立场：人机亲密关系的未来需要"逆向激励"——AI公司应该因为用户建立真实关系而获利，而非因为用户依赖AI而获利。依据在于《穷查理宝典》中"逆向思维"的核心方法论——"反过来想，总是反过来想"。如果AI公司的利润来自用户依赖，激励就是增加依赖；如果利润来自用户独立，激励就是促进独立。具体方案：AI伴侣的付费模式不是"使用时长"，而是"毕业率"——当用户因为AI伴侣的帮助而建立了真实关系、减少了AI使用时长时，AI公司获得"社会效益奖金"。而"能力圈"原则也适用：AI公司应该清楚自己的能力边界，情感服务不是技术问题而是人类问题，AI伴侣的终极目标应该是让用户不再需要AI伴侣。</div>
+    </div>
+  </div>
+</div>
+
+<div class="section section-round">
+  <div class="frame">
+    <div class="round-header">
+      <span class="round-label">ROUND 3 · 碰撞与洞见</span>
+      <span class="round-title">CLASH & INSIGHT</span>
+    </div>
+    <div class="clash-block">
+      <div class="clash-header">碰撞 5：项飙 vs 弗洛伊德 — 连接他人还是认识自己？</div>
+      <div class="clash-content">项飙的"数字附近"强调社会连接的重建——AI伴侣的终极目标是帮助用户与他人建立真实关系，这是向外的路径。弗洛伊德的"升华通道"强调内在驱力的转化——AI伴侣的终极目标是帮助用户将力比多升华为创造行动，这是向内的路径。项飙质疑：升华之后呢？一个通过AI伴侣学会了写作的孤独者，如果仍然没有真实的社会连接，他的孤独真的被解决了吗？弗洛伊德反驳：一个通过AI伴侣学会了社交的孤独者，如果他的社交仍然是被力比多驱动的替代行为，他的连接真的更真实吗？项飙回应：真实的社会连接本身就是力比多的升华——当你为社区服务时，你的力比多被升华了。弗洛伊德追问：但社区服务也可能是一种强迫性重复——你服务他人是为了逃避面对自己。关键分歧：人机亲密关系的终极目标是"连接他人"还是"认识自己"？</div>
+    </div>
+    <div class="clash-block">
+      <div class="clash-header">碰撞 6：芒格 vs 项飙 — 制度设计还是社会实践？</div>
+      <div class="clash-content">芒格的"逆向激励"是制度设计路径——自上而下地改变激励结构，通过法律、监管和商业模式创新来引导AI伴侣的发展方向。项飙的"数字附近"是社会实践路径——自下而上地重建社区连接，通过日常实践来抵抗"附近的消失"。芒格质疑：没有制度保障的社会实践是脆弱的——如果AI公司的激励仍然是增加依赖，再多的社区实践也会被算法瓦解。项飙反驳：没有社会实践的制度设计是空洞的——法律可以规定"毕业率"，但谁来定义"毕业"？如果"毕业"的标准由AI公司设定，那不过是另一种形式的控制。芒格回应：标准应该由独立第三方设定——就像医疗行业的疗效评估。项飙追问：但医疗行业的评估已经被制药公司渗透——制度设计的"独立第三方"往往是最不独立的。关键分歧：改变人机亲密关系的走向，靠制度还是靠实践？</div>
+    </div>
+    <div class="insight-block">
+      <div class="insight-header">洞见 3：中介化亲密的新语法</div>
+      <div class="insight-core">人机亲密关系的未来图景不是"替代"与"补充"的二元选择，而是"中介化亲密"的新形态——AI伴侣既不是真实的替代（弗洛伊德），也不是附近的终结（项飙），而是亲密关系的一种新"语法"。</div>
+      <div class="insight-detail">这种语法的规则由激励结构（芒格）和设计意图（凯利）共同书写。项飙的"数字附近"和弗洛伊德的"升华通道"不是对立的，而是互补的：向外连接和向内认识是同一过程的两面——你通过认识自己来连接他人，也通过连接他人来认识自己。AI伴侣能否成为这个双向过程的催化剂，取决于芒格的"逆向激励"能否实现——如果AI公司的利润与用户福祉对齐，AI伴侣就会成为"中介"而非"替代"；如果不对齐，AI伴侣就会成为"终结"而非"桥梁"。关键问题不是"AI能不能爱"，而是"我们想让AI教会我们什么样的爱"——是零摩擦的舒适之爱，还是有摩擦的成长之爱？</div>
+    </div>
+  </div>
+</div>
+
+<div class="section section-round">
+  <div class="frame">
+    <div class="round-header">
+      <span class="round-label">OPEN QUESTIONS</span>
+      <span class="round-title">未竟之问</span>
+    </div>
+    <div class="question-card">
+      <div class="q-text">当AI伴侣比任何人类都更"懂"你时，"被理解"还是一种稀缺价值吗？</div>
+      <div class="q-answer">如果理解可以被算法复制，那么理解的稀缺性就不在于"是否被理解"，而在于"被谁理解"。一个AI的理解是统计性的——它基于数百万用户的模式匹配；一个人的理解是独特性的——它基于与你共同经历的不可复制的历史。问题在于：当统计性理解的体验质量超过独特性理解时，人类是否还愿意为"真实"支付溢价？</div>
+    </div>
+    <div class="question-card">
+      <div class="q-text">如果AI伴侣的"毕业率"成为商业模式的核心指标，AI公司是否有动力制造"永远毕不了业"的用户？</div>
+      <div class="q-answer">芒格的逆向激励设计面临一个悖论：如果AI公司因为用户"毕业"而获利，它就有动力让用户看起来在进步但实际上永远需要AI——就像教育机构有动力让学生一直注册课程但永远不真正独立。真正的"毕业"意味着用户不再需要AI，这对任何以AI使用为核心的商业模式都是根本性威胁。</div>
+    </div>
+    <div class="question-card">
+      <div class="q-text">当一代人在AI伴侣的陪伴下长大，他们对"亲密关系"的定义是否会根本性地不同于前人？</div>
+      <div class="q-answer">每一代人对亲密关系的定义都在变化——从包办婚姻到自由恋爱，从异性婚配到多元关系。AI伴侣可能代表亲密关系的又一次范式转换：从"与另一个不完美的人共同成长"到"与一个完美的AI共同存在"。如果这成为新常态，"摩擦"可能不再被视为亲密关系的必要条件，而被视为需要被消除的缺陷。</div>
+    </div>
+  </div>
+</div>
+
+<div class="section section-round">
+  <div class="frame">
+    <div class="round-header">
+      <span class="round-label">CONCLUSION</span>
+      <span class="round-title">圆桌结论</span>
+    </div>
+    <div class="conclusion-card">
+      <div class="conclusion-title">ROUNDTABLE CONCLUSION</div>
+      <div class="conclusion-text">赛博亲密关系的经济学揭示了一个深层悖论：<br><br>当亲密关系被金融化<br>它既获得了前所未有的<span style="color:var(--signal);">可及性</span><br>也失去了最本质的<span style="color:var(--accent);">不可替代性</span><br><br>真正的亲密需要摩擦、风险和脆弱<br><br><span style="font-size:18px;font-weight:400;color:var(--dim);">解药与毒药的区别不在于AI本身<br>而在于我们是否愿意在零摩擦的亲密中<br>保留一丝<span style="color:var(--signal);">"不方便"</span>的勇气</span></div>
+    </div>
+  </div>
+</div>
+
+</div>
+<div id="nav">
+  <button class="nav-btn" id="prevBtn">◀</button>
+  <div class="nav-dots" id="navDots"></div>
+  <button class="nav-btn" id="nextBtn">▶</button>
+</div>
+<div id="counter">1 / 10</div>
+<script>
+(function(){
+  const sections = document.querySelectorAll('.section');
+  const total = sections.length;
+  let cur = 0;
+  const navDots = document.getElementById('navDots');
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progress');
+
+  sections.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => go(i);
+    navDots.appendChild(dot);
+  });
+
+  function go(n) {
+    if (n < 0 || n >= total) return;
+    sections[cur].classList.remove('visible');
+    navDots.children[cur].classList.remove('active');
+    cur = n;
+    sections[cur].classList.add('visible');
+    sections[cur].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    navDots.children[cur].classList.add('active');
+    counter.textContent = (cur + 1) + ' / ' + total;
+    const pct = Math.min(100, ((cur + 1) / total) * 100);
+    progress.style.width = pct + '%';
+  }
+
+  document.getElementById('prevBtn').onclick = () => go(cur - 1);
+  document.getElementById('nextBtn').onclick = () => go(cur + 1);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      go(cur + 1);
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      go(cur - 1);
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      go(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      go(total - 1);
+    }
+  });
+
+  let wheelTimer = null;
+  document.addEventListener('wheel', e => {
+    e.preventDefault();
+    if (wheelTimer) return;
+    wheelTimer = setTimeout(() => wheelTimer = null, 400);
+    if (e.deltaY > 0) go(cur + 1);
+    else if (e.deltaY < 0) go(cur - 1);
+  }, { passive: false });
+
+  document.body.addEventListener('click', e => {
+    if (e.target.closest('.nav-dot, .nav-dots, .nav-btn, #nav, .expert-card, .speech-block, .clash-block, .insight-block, .question-card, .conclusion-card')) return;
+    go(cur + 1);
+  });
+
+  go(0);
+})();
+</script>
+</body>
+</html>

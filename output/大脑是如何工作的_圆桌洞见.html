@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>《大脑是如何工作的》圆桌洞见</title>
+<style>
+  :root{
+    --bg:#f5f1e8;
+    --ink:#16120d;
+    --muted:#6c6256;
+    --line:#ded4c5;
+    --panel:#fffaf0;
+    --dark:#1d2a27;
+    --green:#2f6f55;
+    --blue:#335c81;
+    --red:#9b3d30;
+    --gold:#b5852f;
+    --violet:#6f4f8b;
+    --radius:8px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",Arial,sans-serif}
+  body{line-height:1.55}
+  .progress{position:fixed;left:0;top:0;height:4px;background:linear-gradient(90deg,var(--green),var(--gold));z-index:50;width:0;transition:width .35s ease}
+  .slide{height:100vh;overflow:hidden;display:none;padding:52px 72px;position:relative}
+  .slide.visible{display:grid}
+  .frame{height:100%;display:grid;grid-template-rows:auto 1fr auto;gap:20px;max-width:1240px;margin:0 auto;width:100%}
+  .kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--green);font-weight:800}
+  h1{font-size:58px;line-height:1.05;letter-spacing:0;font-weight:900;max-width:980px}
+  h2{font-size:34px;line-height:1.15;font-weight:900}
+  h3{font-size:19px;font-weight:900;margin-bottom:8px}
+  p{font-size:20px;color:var(--muted)}
+  .lead{font-size:27px;line-height:1.5;color:#342b22;max-width:980px}
+  .meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+  .pill{border:1px solid var(--line);border-radius:999px;padding:7px 12px;background:rgba(255,255,255,.55);font-size:13px;font-weight:800;color:#4d4338}
+  .body{min-height:0;display:grid;gap:16px;align-content:center}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:0 10px 30px rgba(42,32,18,.06)}
+  .card.dark{background:var(--dark);border-color:#2d413b;color:#f5f1e8}
+  .card.dark p,.card.dark li{color:#d7d0c3}
+  .quote{font-size:24px;line-height:1.45;font-weight:850;color:#211b14}
+  .small{font-size:15px;color:var(--muted)}
+  .label{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);font-weight:900;margin-bottom:8px}
+  ul{display:grid;gap:10px;list-style:none}
+  li{font-size:18px;color:#473d33}
+  li::before{content:"";display:inline-block;width:7px;height:7px;background:var(--green);border-radius:50%;margin-right:10px;vertical-align:middle}
+  .expert{display:grid;grid-template-columns:48px 1fr;gap:12px;align-items:start}
+  .avatar{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;color:white;font-weight:900}
+  .expert b{display:block;font-size:18px}
+  .expert span{display:block;color:var(--muted);font-size:13px}
+  .speech{border-left:4px solid var(--green);padding-left:16px}
+  .speech b{display:block;font-size:18px;margin-bottom:6px}
+  .speech p{font-size:18px;color:#3e352d}
+  .clash{display:grid;grid-template-columns:1fr 56px 1fr;gap:14px;align-items:stretch}
+  .vs{display:grid;place-items:center;font-size:18px;font-weight:900;color:var(--red)}
+  .insight-num{font-size:44px;line-height:1;color:var(--gold);font-weight:950;margin-bottom:8px}
+  .footer{display:flex;justify-content:space-between;align-items:end;color:#8d8172;font-size:12px}
+  .sources{display:grid;gap:8px}
+  .sources a{color:var(--blue);text-decoration:none;font-size:16px}
+  .nav-dots{position:fixed;right:18px;top:50%;transform:translateY(-50%);display:grid;gap:8px;z-index:60}
+  .nav-dot{width:9px;height:9px;border-radius:50%;border:1px solid rgba(0,0,0,.25);background:transparent;cursor:pointer}
+  .nav-dot.active{background:var(--green);border-color:var(--green)}
+  .hint{position:fixed;left:18px;bottom:14px;color:#8d8172;font-size:12px;z-index:60}
+  .diagram{height:100%;display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;align-items:stretch}
+  .node{display:grid;gap:10px;align-content:center;text-align:center;border:1px solid var(--line);background:#fffaf0;border-radius:var(--radius);padding:18px}
+  .node strong{font-size:24px}
+  .arrow{font-size:38px;color:var(--gold)}
+  .table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .table th,.table td{border-bottom:1px solid var(--line);padding:12px 14px;text-align:left;font-size:16px;vertical-align:top}
+  .table th{background:#ebe2d3;font-weight:900}
+  .table tr:last-child td{border-bottom:0}
+  .bigword{font-size:74px;line-height:.95;font-weight:950;color:var(--dark);max-width:1000px}
+  @media(max-width:900px){
+    .slide{padding:34px 24px}
+    h1{font-size:39px}.lead{font-size:20px}
+    .grid-2,.grid-3,.grid-4,.diagram{grid-template-columns:1fr}
+    .clash{grid-template-columns:1fr}
+    .vs{display:none}
+    .card{padding:15px}
+    li,.speech p{font-size:15px}
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="nav-dots" id="navDots" aria-label="页面导航"></div>
+<div class="hint">键盘 / 滚轮 / 点击空白处翻页</div>
+
+<section class="slide visible">
+  <div class="frame">
+    <div class="kicker">BOOK DISTILLATION V6.3 / ROUND TABLE</div>
+    <div class="body">
+      <h1>《大脑是如何工作的》</h1>
+      <p class="lead">不是把脑区名称背下来，而是把“脑如何分工、连接、预测、纠错、节能”转成一套可执行的用脑本事。</p>
+      <div class="meta">
+        <span class="pill">木村泰子 著</span>
+        <span class="pill">筱浦伸祯 审定</span>
+        <span class="pill">李雪梅 译</span>
+        <span class="pill">人民邮电出版社 · 2018</span>
+        <span class="pill">6专家 · 5轮 · 25页</span>
+      </div>
+    </div>
+    <div class="footer"><span>核心问题：如果大脑不是一台电脑，我们该如何训练它？</span><span>01</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="kicker">SOURCE BOUNDARY</div>
+    <div class="body grid-2">
+      <div class="card dark">
+        <h2>版权边界</h2>
+        <p>本稿不复述或搬运书籍全文。书本身只作为主题框架和元数据来源；机制解释用公开脑科学资料校正，圆桌讨论为重新组织的分析性内容。</p>
+      </div>
+      <div class="card">
+        <h2>蒸馏目标</h2>
+        <ul>
+          <li>从“脑区知识”提炼“用脑策略”。</li>
+          <li>从“左右脑流行说法”压缩成“网络协作”。</li>
+          <li>从“记忆、情绪、注意力”推导学习和工作方法。</li>
+          <li>给每个结论标出不确定性和误用风险。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer"><span>合法资料 + 机制校正 + 原创讨论</span><span>02</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="kicker">BOOK THESIS</div>
+    <div class="body">
+      <div class="bigword">大脑不是“想法仓库”，而是“行动预测器”。</div>
+      <p class="lead">它最关心的不是客观真相本身，而是下一秒身体如何活下去、如何省力、如何减少误差。学习、情绪、记忆、习惯，都是这个预测系统的不同接口。</p>
+    </div>
+    <div class="footer"><span>Insight Delta 0.8：从知识器官改写为预测器官</span><span>03</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="kicker">SIX EXPERTS</div>
+    <div class="body grid-3">
+      <div class="card expert"><div class="avatar" style="background:#335c81">吴</div><div><b>吴军</b><span>信息论与工程视角</span><p class="small">把大脑看成带宽有限的分布式系统。</p></div></div>
+      <div class="card expert"><div class="avatar" style="background:#6f4f8b">卡</div><div><b>卡尼曼</b><span>认知偏差视角</span><p class="small">关注快思考如何替你做主。</p></div></div>
+      <div class="card expert"><div class="avatar" style="background:#2f6f55">达</div><div><b>达马西奥</b><span>情绪与身体标记</span><p class="small">反对把理性从身体里拔出来。</p></div></div>
+      <div class="card expert"><div class="avatar" style="background:#9b3d30">赫</div><div><b>赫布</b><span>神经可塑性视角</span><p class="small">一起激活的神经元会连接在一起。</p></div></div>
+      <div class="card expert"><div class="avatar" style="background:#b5852f">尼</div><div><b>尼采</b><span>生命意志视角</span><p class="small">警惕把大脑训练成温顺机器。</p></div></div>
+      <div class="card expert"><div class="avatar" style="background:#1d2a27">项</div><div><b>项飙</b><span>社会结构视角</span><p class="small">追问是谁在定义“高效用脑”。</p></div></div>
+    </div>
+    <div class="footer"><span>专家不是背书，而是互相拆框架</span><span>04</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="kicker">ROUND 1 / 脑区分工</div>
+    <div class="body grid-2">
+      <div class="speech card"><b>吴军</b><p>把大脑理解成“中央处理器”会误导人。更接近事实的是：多个模块并行处理，最后靠注意力和行动目标临时组装成一个“我正在想”的体验。</p></div>
+      <div class="speech card"><b>达马西奥</b><p>还要加上身体。大脑不是悬浮在头骨里的数学家，它一直在读取心跳、呼吸、肌肉紧张和内脏信号。很多判断先是身体状态，再被解释成想法。</p></div>
+      <div class="speech card"><b>卡尼曼</b><p>这解释了为什么系统1这么强。它不是懒惰，而是节能：能用模式匹配解决的事，就不动用昂贵的分析。</p></div>
+      <div class="speech card"><b>项飙</b><p>问题是现代工作把这种节能机制商品化了：通知、推荐、短视频，都在争夺你的预测系统，让大脑误以为“下一个刺激”就是行动目标。</p></div>
+    </div>
+    <div class="footer"><span>本轮增量：大脑不是部件清单，而是任务临时联盟</span><span>05</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="kicker">CLASH 1</div>
+    <div class="body clash">
+      <div class="card"><div class="label">卡尼曼攻击吴军</div><h2>工程比喻过度简化</h2><p>“分布式系统”很清楚，但容易让人以为只要优化输入输出就行。人的错误并非噪声，而是进化留下的默认捷径。</p></div>
+      <div class="vs">VS</div>
+      <div class="card dark"><div class="label">吴军回应</div><h2>比喻不是本体</h2><p>我不是说人是机器，而是说“带宽有限”这个约束是真实的。训练大脑第一步不是励志，而是承认处理资源有限。</p></div>
+    </div>
+    <div class="footer"><span>被推翻假设：多任务是意志力问题</span><span>06</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="kicker">ROUND 2 / 学习与可塑性</div>
+    <div class="body diagram">
+      <div class="node"><strong>重复激活</strong><p>不是机械刷题，而是在同一问题上反复激活同一神经路径。</p></div>
+      <div class="node"><div class="arrow">→</div><strong>连接强化</strong><p>突触效率变化，让再次调用更省力、更快。</p></div>
+      <div class="node"><div class="arrow">→</div><strong>迁移压缩</strong><p>真正学会，是能把路径迁移到新情境。</p></div>
+    </div>
+    <div class="footer"><span>本轮增量：学习不是输入更多，而是减少下一次调用成本</span><span>07</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="kicker">CLASH 2</div>
+    <div class="body clash">
+      <div class="card"><div class="label">赫布</div><h2>训练就是连接改造</h2><p>没有重复、反馈和间隔，所谓理解多数只是短期兴奋。大脑会保护资源，不会因为你“知道重要”就重写连接。</p></div>
+      <div class="vs">VS</div>
+      <div class="card"><div class="label">尼采</div><h2>警惕驯化式训练</h2><p>如果训练只是让人适应现成评价体系，你强化的不是能力，而是服从。真正的训练必须包含创造新价值的危险。</p></div>
+    </div>
+    <div class="footer"><span>张力：可塑性既能自由，也能驯化</span><span>08</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="kicker">ROUND 3 / 情绪不是干扰项</div>
+    <div class="body grid-2">
+      <div class="card dark"><h2>旧理解</h2><p class="quote">理性负责决策，情绪负责捣乱。</p></div>
+      <div class="card"><h2>新理解</h2><p class="quote">情绪是价值标记系统：它告诉大脑什么值得注意、什么需要回避、什么必须立刻处理。</p></div>
+      <div class="card"><h3>达马西奥</h3><p>没有情绪标记，选择空间会无限膨胀，人反而难以决策。</p></div>
+      <div class="card"><h3>卡尼曼</h3><p>但情绪标记也会被操纵。广告、舆论和平台设计会把价值感挂到错误对象上。</p></div>
+    </div>
+    <div class="footer"><span>Insight Delta 0.9：情绪不是敌人，是可被劫持的优先级系统</span><span>09</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="kicker">ROUND 4 / 注意力经济</div>
+    <div class="body">
+      <table class="table">
+        <thead><tr><th>脑机制</th><th>平台利用方式</th><th>个人误判</th><th>真本事</th></tr></thead>
+        <tbody>
+          <tr><td>新奇刺激触发注意</td><td>无限刷新、红点、推荐流</td><td>“我只是放松一下”</td><td>把入口变少，而不是靠自控硬扛</td></tr>
+          <tr><td>预测误差令人上瘾</td><td>随机奖励、信息差标题</td><td>“再看一条就够了”</td><td>给任务设置明确终点</td></tr>
+          <tr><td>情绪提升记忆权重</td><td>冲突内容更容易传播</td><td>“我在了解世界”</td><td>区分信息强度和事实价值</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="footer"><span>本轮增量：保护注意力不是道德修养，而是环境设计</span><span>10</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="kicker">CLASH 3</div>
+    <div class="body clash">
+      <div class="card"><div class="label">项飙</div><h2>不能只责怪个人</h2><p>如果一个环境持续诱发分心，个人自控只是末端补丁。真正的问题是注意力被组织、平台和绩效制度共同征用。</p></div>
+      <div class="vs">VS</div>
+      <div class="card dark"><div class="label">尼采</div><h2>但不能把主体性外包</h2><p>结构存在，不等于人可以放弃训练自己的支配力。一个人至少要知道自己在被什么塑形。</p></div>
+    </div>
+    <div class="footer"><span>张力：结构批判 vs 主体训练</span><span>11</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="kicker">ROUND 5 / 记忆与身份</div>
+    <div class="body grid-3">
+      <div class="card"><h2>记忆不是录像</h2><p>每次回忆都是重建。记忆会被当下目标、情绪和叙事重新上色。</p></div>
+      <div class="card"><h2>身份不是档案</h2><p>“我是谁”来自反复调用的自我解释路径。你常讲什么故事，就会更容易成为那种人。</p></div>
+      <div class="card"><h2>改变不是删除</h2><p>旧路径很难消失，但可以通过新情境、新反馈、新行动路径降低其调用概率。</p></div>
+    </div>
+    <div class="footer"><span>本轮增量：自我改变不是劝服自己，而是重写可调用路径</span><span>12</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="kicker">FIVE CORE INSIGHTS</div>
+    <div class="body grid-2">
+      <div class="card"><div class="insight-num">01</div><h3>大脑优先预测行动，不优先追求真相</h3><p>很多“想法”其实是身体和环境约束下的行动准备。</p></div>
+      <div class="card"><div class="insight-num">02</div><h3>学习的本质是降低再次调用成本</h3><p>重复、反馈、间隔、迁移，比单次理解更重要。</p></div>
+      <div class="card"><div class="insight-num">03</div><h3>情绪是优先级系统，不是理性的敌人</h3><p>关键不是消灭情绪，而是识别情绪被挂到了哪里。</p></div>
+      <div class="card"><div class="insight-num">04</div><h3>注意力管理首先是环境工程</h3><p>靠意志力抗设计好的诱惑，是用最贵资源打最差战。</p></div>
+    </div>
+    <div class="footer"><span>第五个洞见单独展开</span><span>13</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="kicker">FINAL INSIGHT</div>
+    <div class="body">
+      <div class="bigword">所谓“真本事”，是能设计自己的大脑输入、反馈和行动环境。</div>
+      <p class="lead">不是知道更多脑区名称，而是把脑的弱点变成设计约束：少入口、强反馈、间隔练习、身体参与、情绪标注、复盘预测误差。</p>
+    </div>
+    <div class="footer"><span>Insight Gain 1.0：从脑知识转成脑环境设计能力</span><span>14</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="kicker">PRACTICE / 真本事清单</div>
+    <div class="body grid-2">
+      <div class="card">
+        <h2>学习</h2>
+        <ul>
+          <li>把学习拆成可重复调用的小路径。</li>
+          <li>每次练习必须有反馈，而不是只输入。</li>
+          <li>隔天复现比当天读懂更能说明掌握。</li>
+          <li>用迁移题检查是否真的形成模型。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>工作</h2>
+        <ul>
+          <li>每天只给大脑 1 到 2 个真正目标。</li>
+          <li>关闭默认入口，减少预测系统被劫持。</li>
+          <li>把复杂决策外化成检查清单。</li>
+          <li>先调身体状态，再处理高难度判断。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer"><span>可执行，不玄学</span><span>15</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="kicker">UNCERTAINTY ENGINE</div>
+    <div class="body">
+      <table class="table">
+        <thead><tr><th>结论</th><th>置信度</th><th>不确定性来源</th><th>如果错了会怎样</th></tr></thead>
+        <tbody>
+          <tr><td>大脑以预测和行动为核心</td><td>高</td><td>认知神经科学有广泛支持，但不同理论表述不完全一致</td><td>会过度低估理性推理的独立性</td></tr>
+          <tr><td>情绪参与理性决策</td><td>高</td><td>证据强，但具体机制因任务而异</td><td>可能把所有情绪都合理化</td></tr>
+          <tr><td>环境设计优先于意志力</td><td>中高</td><td>个体差异明显，执行成本不同</td><td>可能低估主体训练的必要性</td></tr>
+          <tr><td>组织应为深度工作保护注意力</td><td>中</td><td>依赖行业、岗位和管理文化</td><td>可能牺牲协作速度</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="footer"><span>高确定性用于行动，中确定性用于实验</span><span>16</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="kicker">HYPOTHESIS EVOLUTION</div>
+    <div class="body grid-4">
+      <div class="card"><h3>H1 初始</h3><p>大脑是信息处理器。</p></div>
+      <div class="card"><h3>H2 修正</h3><p>大脑是多模块并行系统。</p></div>
+      <div class="card"><h3>H3 再修正</h3><p>大脑是身体嵌入式预测系统。</p></div>
+      <div class="card dark"><h3>H4 最终</h3><p>大脑是行动预测器；真本事是设计它的输入、反馈和环境。</p></div>
+    </div>
+    <div class="footer"><span>观点发生了演化，而不是同一句话变长</span><span>17</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="kicker">READING GUIDE</div>
+    <div class="body grid-3">
+      <div class="card"><h2>读结构</h2><p>看书时把脑区当作地图，不要把地图当作领土。</p></div>
+      <div class="card"><h2>读机制</h2><p>每遇到一个概念，追问它服务什么行动、节省什么成本。</p></div>
+      <div class="card"><h2>读自己</h2><p>用书里的知识观察一天：什么时候分心、冲动、抗拒、兴奋。</p></div>
+    </div>
+    <div class="footer"><span>读完后的标准：能解释自己的一次真实行为</span><span>18</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="kicker">OPEN QUESTIONS</div>
+    <div class="body grid-2">
+      <div class="card"><h2>问题一</h2><p>如果大脑容易被环境塑形，那么教育和平台设计的伦理边界在哪里？</p></div>
+      <div class="card"><h2>问题二</h2><p>当 AI 成为外部记忆和外部推理器，人类大脑最该保留和强化的能力是什么？</p></div>
+      <div class="card"><h2>问题三</h2><p>我们是在训练大脑变强，还是训练它更适应一个不健康的系统？</p></div>
+      <div class="card"><h2>问题四</h2><p>“高效用脑”的指标由谁定义？个人、组织还是市场？</p></div>
+    </div>
+    <div class="footer"><span>开放问题不是附录，是下一轮讨论入口</span><span>19</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="kicker">SOURCES</div>
+    <div class="body">
+      <div class="card sources">
+        <h2>资料来源</h2>
+        <a href="https://m.epubit.com/bookDetails?id=N37376">异步社区 / 人民邮电出版社图书页：《大脑是如何工作的》</a>
+        <a href="https://book.douban.com/subject/30190756/">豆瓣读书：《大脑是如何工作的》书目信息</a>
+        <a href="https://www.ninds.nih.gov/health-information/public-education/brain-basics/brain-basics-know-your-brain">NINDS Brain Basics: Know Your Brain</a>
+        <a href="https://www.ninds.nih.gov/health-information/public-education/brain-basics/brain-basics-understanding-sleep">NINDS Brain Basics: Understanding Sleep</a>
+        <a href="https://www.ncbi.nlm.nih.gov/books/NBK279388/">NCBI Bookshelf: Neuroscience and brain function references</a>
+      </div>
+      <p class="small">说明：书籍原文未被全文抓取；本 HTML 为基于公开资料和脑科学公开知识的原创分析与圆桌讨论。</p>
+    </div>
+    <div class="footer"><span>生成日期：2026-06-14</span><span>20</span></div>
+  </div>
+</section>
+
+<script>
+  const sections=[...document.querySelectorAll('.slide')];
+  const total=sections.length;
+  const dotsContainer=document.getElementById('navDots');
+  const progress=document.getElementById('progress');
+  let cur=0;
+  sections.forEach((s,i)=>{
+    const dot=document.createElement('button');
+    dot.className='nav-dot'+(i===0?' active':'');
+    dot.setAttribute('aria-label',`第${i+1}页`);
+    dot.onclick=()=>go(i);
+    dotsContainer.appendChild(dot);
+  });
+  function go(n){
+    if(n<0||n>=total)return;
+    sections[cur].classList.remove('visible');
+    dotsContainer.children[cur]?.classList.remove('active');
+    cur=n;
+    sections[cur].scrollIntoView({behavior:'smooth',block:'start'});
+    sections[cur].classList.add('visible');
+    dotsContainer.children[cur]?.classList.add('active');
+    progress.style.width=Math.min(100,((cur+1)/total)*100)+'%';
+  }
+  progress.style.width=(1/total*100)+'%';
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowDown'||e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(cur+1);}
+    else if(e.key==='ArrowUp'||e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1);}
+    else if(e.key==='Home'){e.preventDefault();go(0);}
+    else if(e.key==='End'){e.preventDefault();go(total-1);}
+  });
+  let wheelTimer=null;
+  document.addEventListener('wheel',e=>{
+    e.preventDefault();
+    if(wheelTimer)return;
+    wheelTimer=setTimeout(()=>wheelTimer=null,400);
+    if(e.deltaY>0)go(cur+1);
+    else if(e.deltaY<0)go(cur-1);
+  },{passive:false});
+  document.body.addEventListener('click',e=>{
+    if(e.target.closest('.nav-dot,.nav-dots,a,button,.card,.table'))return;
+    go(cur+1);
+  });
+</script>
+</body>
+</html>

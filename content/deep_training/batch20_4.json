@@ -1,0 +1,55 @@
+{
+  "batch": 4,
+  "rounds": [
+    {
+      "round": 126,
+      "expert1": "丹尼尔·卡尼曼",
+      "expert2": "冯唐",
+      "belief1": "理性决策需要克服认知偏差，系统性方法优于直觉",
+      "belief2": "成事靠的是心法和实战经验，过度分析反而误事",
+      "topic": "决策靠系统性理性分析（卡尼曼）还是靠心法实战经验（冯唐）？",
+      "conflict_type": "method",
+      "strength": "strong"
+    },
+    {
+      "round": 127,
+      "expert1": "刘润",
+      "expert2": "柯林斯",
+      "belief1": "底层逻辑是商业的根本，理解了就能触类旁通",
+      "belief2": "从优秀到卓越需要的是清晰的理念和纪律文化",
+      "topic": "商业成功靠底层逻辑（刘润）还是靠卓越文化与纪律（柯林斯）？",
+      "conflict_type": "method",
+      "strength": "moderate"
+    },
+    {
+      "round": 128,
+      "expert1": "许知远",
+      "expert2": "吴晓波",
+      "belief1": "批判是知识分子的天职，社会需要不同的声音",
+      "belief2": "记录和理解比批判更重要，理解商业才能理解中国",
+      "topic": "知识分子的使命是批判（许知远）还是理解和记录（吴晓波）？",
+      "conflict_type": "value_priority",
+      "strength": "moderate"
+    },
+    {
+      "round": 129,
+      "expert1": "万维钢",
+      "expert2": "马克思",
+      "belief1": "精英是推动社会进步的动力，不平等是进步的代价",
+      "belief2": "阶级矛盾和公平正义才是根本问题",
+      "topic": "社会进步靠精英驱动（万维钢）还是靠解决阶级矛盾（马克思）？",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 130,
+      "expert1": "弗洛姆",
+      "expert2": "罗翔",
+      "belief1": "爱是对人类存在问题的根本解答",
+      "belief2": "正义才是社会的基石，爱不能代替正义",
+      "topic": "人类最终靠爱和解（弗洛姆）还是靠正义和法治（罗翔）？",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    }
+  ]
+}

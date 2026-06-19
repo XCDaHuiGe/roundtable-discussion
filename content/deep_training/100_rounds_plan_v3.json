@@ -1,0 +1,1002 @@
+[
+  {
+    "round": 231,
+    "expert1": "孔子",
+    "expert2": "芮小丹",
+    "belief1": "不患寡而患不均",
+    "belief2": "爱是本能不需要理论",
+    "topic": "水火不容:不患寡而患不均。但爱是本能不需要理论。谁的证据更硬?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 232,
+    "expert1": "老子",
+    "expert2": "万维钢",
+    "belief1": "大巧若拙,大辩若讷",
+    "belief2": "用理工科思维破除迷思",
+    "topic": "哪种方法更有效?大巧若拙,大辩若讷还是用理工科思维破除迷思?",
+    "conflict_type": "method",
+    "strength": "strong"
+  },
+  {
+    "round": 233,
+    "expert1": "韩非子",
+    "expert2": "李诞",
+    "belief1": "法不阿贵,绳不挠曲",
+    "belief2": "活着比正确更重要",
+    "topic": "什么更重要?法不阿贵,绳不挠曲还是活着比正确更重要?",
+    "conflict_type": "value_priority",
+    "strength": "strong"
+  },
+  {
+    "round": 234,
+    "expert1": "尼采",
+    "expert2": "孔子",
+    "belief1": "幸福就是有能力增加负担",
+    "belief2": "己所不欲勿施于人",
+    "topic": "水火不容:幸福就是有能力增加负担。但己所不欲勿施于人。谁的证据更硬?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 235,
+    "expert1": "马克思",
+    "expert2": "李诞",
+    "belief1": "哲学家只是解释世界问题在于改变世界",
+    "belief2": "笑是最高形式的思考",
+    "topic": "价值排序之争:哲学家只是解释世界问题在于改变世界更重要,还是笑是最高形式的思考更重要?",
+    "conflict_type": "value_priority",
+    "strength": "strong"
+  },
+  {
+    "round": 236,
+    "expert1": "弗洛伊德",
+    "expert2": "韩非子",
+    "belief1": "人的历史就是一部压抑史",
+    "belief2": "刑过不避大臣,赏善不遗匹夫",
+    "topic": "哪种方法更有效?人的历史就是一部压抑史还是刑过不避大臣,赏善不遗匹夫?",
+    "conflict_type": "method",
+    "strength": "strong"
+  },
+  {
+    "round": 237,
+    "expert1": "阿伦特",
+    "expert2": "万维钢",
+    "belief1": "恶是表面的深渊",
+    "belief2": "用理工科思维破除迷思",
+    "topic": "哪种方法更有效?恶是表面的深渊还是用理工科思维破除迷思?",
+    "conflict_type": "method",
+    "strength": "strong"
+  },
+  {
+    "round": 238,
+    "expert1": "西蒙娜·德·波伏娃",
+    "expert2": "塔勒布",
+    "belief1": "女人不是天生的而是变成的",
+    "belief2": "反脆弱是在不确定性中获益",
+    "topic": "水火不容:女人不是天生的而是变成的。但反脆弱是在不确定性中获益。谁的证据更硬?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 239,
+    "expert1": "弗洛姆",
+    "expert2": "许知远",
+    "belief1": "占有还是存在这是根本问题",
+    "belief2": "批判是知识分子的天职",
+    "topic": "价值排序之争:占有还是存在这是根本问题更重要,还是批判是知识分子的天职更重要?",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 240,
+    "expert1": "罗翔",
+    "expert2": "冯唐",
+    "belief1": "法律的目的是维护秩序而不是彰显权力",
+    "belief2": "不着急不害怕不要脸",
+    "topic": "终极对立:法律的目的是维护秩序而不是彰显权力 vs 不着急不害怕不要脸。两者只能信一个,选哪个?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 241,
+    "expert1": "丹尼尔·卡尼曼",
+    "expert2": "西蒙娜·德·波伏娃",
+    "belief1": "确认偏误让你只看到想看的",
+    "belief2": "他者即地狱",
+    "topic": "终极对立:确认偏误让你只看到想看的 vs 他者即地狱。两者只能信一个,选哪个?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 242,
+    "expert1": "芒格",
+    "expert2": "丹尼尔·戈尔曼",
+    "belief1": "反过来想总是反过来想",
+    "belief2": "情商比智商更能预测成功",
+    "topic": "方法论之争:解决问题的最佳路径是反过来想总是反过来想,还是情商比智商更能预测成功?",
+    "conflict_type": "method",
+    "strength": "strong"
+  },
+  {
+    "round": 243,
+    "expert1": "巴菲特",
+    "expert2": "芮小丹",
+    "belief1": "大潮退去才知道谁在裸泳",
+    "belief2": "纯粹本身就是力量",
+    "topic": "价值排序之争:大潮退去才知道谁在裸泳更重要,还是纯粹本身就是力量更重要?",
+    "conflict_type": "value_priority",
+    "strength": "strong"
+  },
+  {
+    "round": 244,
+    "expert1": "达利欧",
+    "expert2": "巴菲特",
+    "belief1": "原则是系统化决策的基础",
+    "belief2": "别人恐惧时我贪婪",
+    "topic": "不可调和:原则是系统化决策的基础。然而别人恐惧时我贪婪。真相在哪一边?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 245,
+    "expert1": "阿西莫夫",
+    "expert2": "马克思",
+    "belief1": "科技需要伦理导航",
+    "belief2": "资本从来到世间每个毛孔都滴着血",
+    "topic": "水火不容:科技需要伦理导航。但资本从来到世间每个毛孔都滴着血。谁的证据更硬?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 246,
+    "expert1": "尼克·博斯特罗姆",
+    "expert2": "弗洛姆",
+    "belief1": "存在性风险不是科幻",
+    "belief2": "孤独感是人最深的恐惧",
+    "topic": "终极对立:存在性风险不是科幻 vs 孤独感是人最深的恐惧。两者只能信一个,选哪个?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 247,
+    "expert1": "凯文·凯利",
+    "expert2": "阿伦特",
+    "belief1": "去中心化是必然趋势",
+    "belief2": "恶是表面的深渊",
+    "topic": "不能兼得时:去中心化是必然趋势和恶是表面的深渊你优先选哪个?",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 248,
+    "expert1": "吴军",
+    "expert2": "许知远",
+    "belief1": "AI是认知的延伸非替代",
+    "belief2": "批判是知识分子的天职",
+    "topic": "终极对立:AI是认知的延伸非替代 vs 批判是知识分子的天职。两者只能信一个,选哪个?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 249,
+    "expert1": "刘润",
+    "expert2": "丹尼尔·戈尔曼",
+    "belief1": "解决问题比证明自己更重要",
+    "belief2": "情商比智商更能预测成功",
+    "topic": "不可调和:解决问题比证明自己更重要。然而情商比智商更能预测成功。真相在哪一边?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 250,
+    "expert1": "项飙",
+    "expert2": "巴菲特",
+    "belief1": "全球化带来认同的焦虑",
+    "belief2": "安全边际是一切投资的核心",
+    "topic": "方法论之争:解决问题的最佳路径是全球化带来认同的焦虑,还是安全边际是一切投资的核心?",
+    "conflict_type": "method",
+    "strength": "strong"
+  },
+  {
+    "round": 251,
+    "expert1": "吴晓波",
+    "expert2": "阿西莫夫",
+    "belief1": "商业的力量改变社会",
+    "belief2": "理性可以解决任何冲突",
+    "topic": "终极对立:商业的力量改变社会 vs 理性可以解决任何冲突。两者只能信一个,选哪个?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 252,
+    "expert1": "柯林斯",
+    "expert2": "丹尼尔·戈尔曼",
+    "belief1": "第五级经理人谦卑而坚定",
+    "belief2": "自我觉察是情商的基础",
+    "topic": "终极对立:第五级经理人谦卑而坚定 vs 自我觉察是情商的基础。两者只能信一个,选哪个?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 253,
+    "expert1": "菲利普·津巴多",
+    "expert2": "马克思",
+    "belief1": "英雄是敢于在情境中说的人",
+    "belief2": "人是一切社会关系的总和",
+    "topic": "路径选择:英雄是敢于在情境中说的人还是人是一切社会关系的总和才是正解?",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 254,
+    "expert1": "尤瓦尔·赫拉利",
+    "expert2": "李诞",
+    "belief1": "数据主义正在取代人文主义",
+    "belief2": "躺平是对无效奋斗的拒绝",
+    "topic": "价值排序之争:数据主义正在取代人文主义更重要,还是躺平是对无效奋斗的拒绝更重要?",
+    "conflict_type": "value_priority",
+    "strength": "strong"
+  },
+  {
+    "round": 255,
+    "expert1": "丁元英",
+    "expert2": "许知远",
+    "belief1": "规律不以人的意志为转移",
+    "belief2": "批判是知识分子的天职",
+    "topic": "什么更重要?规律不以人的意志为转移还是批判是知识分子的天职?",
+    "conflict_type": "value_priority",
+    "strength": "strong"
+  },
+  {
+    "round": 256,
+    "expert1": "老子",
+    "expert2": "巴菲特",
+    "belief1": "道可道非常道",
+    "belief2": "大潮退去才知道谁在裸泳",
+    "topic": "哪种方法更有效?道可道非常道还是大潮退去才知道谁在裸泳?",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 257,
+    "expert1": "尼采",
+    "expert2": "马克思",
+    "belief1": "幸福就是有能力增加负担",
+    "belief2": "人是一切社会关系的总和",
+    "topic": "不可调和:幸福就是有能力增加负担。然而人是一切社会关系的总和。真相在哪一边?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 258,
+    "expert1": "弗洛伊德",
+    "expert2": "柯林斯",
+    "belief1": "在潜意识中没有时间概念",
+    "belief2": "飞轮效应持续积累终将爆发",
+    "topic": "路径选择:在潜意识中没有时间概念还是飞轮效应持续积累终将爆发才是正解?",
+    "conflict_type": "method",
+    "strength": "strong"
+  },
+  {
+    "round": 259,
+    "expert1": "罗翔",
+    "expert2": "芒格",
+    "belief1": "正义如圆虽不能至心向往之",
+    "belief2": "激励机制是超级力量",
+    "topic": "哪种方法更有效?正义如圆虽不能至心向往之还是激励机制是超级力量?",
+    "conflict_type": "method",
+    "strength": "strong"
+  },
+  {
+    "round": 260,
+    "expert1": "塔勒布",
+    "expert2": "尼采",
+    "belief1": "你不知道的事比你知道的事更重要",
+    "belief2": "凡不能毁灭我的必使我强大",
+    "topic": "路径选择:你不知道的事比你知道的事更重要还是凡不能毁灭我的必使我强大才是正解?",
+    "conflict_type": "method",
+    "strength": "strong"
+  },
+  {
+    "round": 261,
+    "expert1": "丹尼尔·卡尼曼",
+    "expert2": "尼克·博斯特罗姆",
+    "belief1": "锚定效应无处不在",
+    "belief2": "存在性风险不是科幻",
+    "topic": "不能兼得时:锚定效应无处不在和存在性风险不是科幻你优先选哪个?",
+    "conflict_type": "value_priority",
+    "strength": "strong"
+  },
+  {
+    "round": 262,
+    "expert1": "达利欧",
+    "expert2": "菲利普·津巴多",
+    "belief1": "拥抱现实应对现实",
+    "belief2": "斯坦福监狱实验是人性的镜子",
+    "topic": "水火不容:拥抱现实应对现实。但斯坦福监狱实验是人性的镜子。谁的证据更硬?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 263,
+    "expert1": "凯文·凯利",
+    "expert2": "芒格",
+    "belief1": "未来二十年最大变化尚未到来",
+    "belief2": "反过来想总是反过来想",
+    "topic": "不可调和:未来二十年最大变化尚未到来。然而反过来想总是反过来想。真相在哪一边?",
+    "conflict_type": "direct",
+    "strength": "moderate"
+  },
+  {
+    "round": 264,
+    "expert1": "吴军",
+    "expert2": "马克思",
+    "belief1": "信息密度决定认知深度",
+    "belief2": "宗教是人民的鸦片",
+    "topic": "路径选择:信息密度决定认知深度还是宗教是人民的鸦片才是正解?",
+    "conflict_type": "method",
+    "strength": "strong"
+  },
+  {
+    "round": 265,
+    "expert1": "刘润",
+    "expert2": "丁元英",
+    "belief1": "抓住本质就抓住了一切",
+    "belief2": "见路不走即见因果",
+    "topic": "水火不容:抓住本质就抓住了一切。但见路不走即见因果。谁的证据更硬?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 266,
+    "expert1": "项飙",
+    "expert2": "弗洛伊德",
+    "belief1": "关注具体的人而非抽象的概念",
+    "belief2": "人的历史就是一部压抑史",
+    "topic": "价值排序之争:关注具体的人而非抽象的概念更重要,还是人的历史就是一部压抑史更重要?",
+    "conflict_type": "value_priority",
+    "strength": "strong"
+  },
+  {
+    "round": 267,
+    "expert1": "吴晓波",
+    "expert2": "尼克·博斯特罗姆",
+    "belief1": "改革开放是当代中国的底层逻辑",
+    "belief2": "价值对齐是最硬的难题",
+    "topic": "什么更重要?改革开放是当代中国的底层逻辑还是价值对齐是最硬的难题?",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 268,
+    "expert1": "冯唐",
+    "expert2": "万维钢",
+    "belief1": "战略的本质是取舍",
+    "belief2": "精英是推动进步的关键少数",
+    "topic": "终极对立:战略的本质是取舍 vs 精英是推动进步的关键少数。两者只能信一个,选哪个?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 269,
+    "expert1": "尤瓦尔·赫拉利",
+    "expert2": "罗翔",
+    "belief1": "AI和生物技术终结人类时代",
+    "belief2": "法律的目的是维护秩序而不是彰显权力",
+    "topic": "不能兼得时:AI和生物技术终结人类时代和法律的目的是维护秩序而不是彰显权力你优先选哪个?",
+    "conflict_type": "value_priority",
+    "strength": "strong"
+  },
+  {
+    "round": 270,
+    "expert1": "孔子",
+    "expert2": "尤瓦尔·赫拉利",
+    "belief1": "不患寡而患不均",
+    "belief2": "人类的故事是虚构共识",
+    "topic": "终极对立:不患寡而患不均 vs 人类的故事是虚构共识。两者只能信一个,选哪个?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 271,
+    "expert1": "老子",
+    "expert2": "弗洛姆",
+    "belief1": "天下皆知美之为美斯恶矣",
+    "belief2": "现代人逃避自由",
+    "topic": "方法论之争:解决问题的最佳路径是天下皆知美之为美斯恶矣,还是现代人逃避自由?",
+    "conflict_type": "method",
+    "strength": "strong"
+  },
+  {
+    "round": 272,
+    "expert1": "韩非子",
+    "expert2": "芒格",
+    "belief1": "以法为教,以吏为师",
+    "belief2": "激励机制是超级力量",
+    "topic": "水火不容:以法为教,以吏为师。但激励机制是超级力量。谁的证据更硬?",
+    "conflict_type": "direct",
+    "strength": "moderate"
+  },
+  {
+    "round": 273,
+    "expert1": "阿伦特",
+    "expert2": "弗洛伊德",
+    "belief1": "恶是表面的深渊",
+    "belief2": "人的历史就是一部压抑史",
+    "topic": "不能兼得时:恶是表面的深渊和人的历史就是一部压抑史你优先选哪个?",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 274,
+    "expert1": "西蒙娜·德·波伏娃",
+    "expert2": "凯文·凯利",
+    "belief1": "女人不是天生的而是变成的",
+    "belief2": "技术是生命的第七王国",
+    "topic": "不可调和:女人不是天生的而是变成的。然而技术是生命的第七王国。真相在哪一边?",
+    "conflict_type": "direct",
+    "strength": "moderate"
+  },
+  {
+    "round": 275,
+    "expert1": "塔勒布",
+    "expert2": "阿伦特",
+    "belief1": "你不知道的事比你知道的事更重要",
+    "belief2": "极权主义下人人都是齿轮",
+    "topic": "什么更重要?你不知道的事比你知道的事更重要还是极权主义下人人都是齿轮?",
+    "conflict_type": "value_priority",
+    "strength": "strong"
+  },
+  {
+    "round": 276,
+    "expert1": "丹尼尔·卡尼曼",
+    "expert2": "马克思",
+    "belief1": "确认偏误让你只看到想看的",
+    "belief2": "宗教是人民的鸦片",
+    "topic": "水火不容:确认偏误让你只看到想看的。但宗教是人民的鸦片。谁的证据更硬?",
+    "conflict_type": "direct",
+    "strength": "moderate"
+  },
+  {
+    "round": 277,
+    "expert1": "达利欧",
+    "expert2": "丹尼尔·卡尼曼",
+    "belief1": "原则是系统化决策的基础",
+    "belief2": "思维懒惰是人类的天性",
+    "topic": "水火不容:原则是系统化决策的基础。但思维懒惰是人类的天性。谁的证据更硬?",
+    "conflict_type": "direct",
+    "strength": "moderate"
+  },
+  {
+    "round": 278,
+    "expert1": "阿西莫夫",
+    "expert2": "孔子",
+    "belief1": "知识本身即是危险",
+    "belief2": "己所不欲勿施于人",
+    "topic": "方法论之争:解决问题的最佳路径是知识本身即是危险,还是己所不欲勿施于人?",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 279,
+    "expert1": "吴军",
+    "expert2": "弗洛伊德",
+    "belief1": "信息密度决定认知深度",
+    "belief2": "本我所在自我必至",
+    "topic": "价值排序之争:信息密度决定认知深度更重要,还是本我所在自我必至更重要?",
+    "conflict_type": "value_priority",
+    "strength": "strong"
+  },
+  {
+    "round": 280,
+    "expert1": "刘润",
+    "expert2": "芒格",
+    "belief1": "一切商业的起点是消费者获益",
+    "belief2": "能力圈比能力更重要",
+    "topic": "水火不容:一切商业的起点是消费者获益。但能力圈比能力更重要。谁的证据更硬?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 281,
+    "expert1": "项飙",
+    "expert2": "尤瓦尔·赫拉利",
+    "belief1": "内卷是资源争夺的囚徒困境",
+    "belief2": "数据主义正在取代人文主义",
+    "topic": "不能兼得时:内卷是资源争夺的囚徒困境和数据主义正在取代人文主义你优先选哪个?",
+    "conflict_type": "value_priority",
+    "strength": "strong"
+  },
+  {
+    "round": 282,
+    "expert1": "吴晓波",
+    "expert2": "冯唐",
+    "belief1": "改革开放是当代中国的底层逻辑",
+    "belief2": "管理是一生的日常",
+    "topic": "方法论之争:解决问题的最佳路径是改革开放是当代中国的底层逻辑,还是管理是一生的日常?",
+    "conflict_type": "method",
+    "strength": "strong"
+  },
+  {
+    "round": 283,
+    "expert1": "柯林斯",
+    "expert2": "阿伦特",
+    "belief1": "先人后事是基业长青的起点",
+    "belief2": "孤独使人丧失思考能力",
+    "topic": "方法论之争:解决问题的最佳路径是先人后事是基业长青的起点,还是孤独使人丧失思考能力?",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 284,
+    "expert1": "菲利普·津巴多",
+    "expert2": "刘润",
+    "belief1": "好人也会在坏环境中作恶",
+    "belief2": "解决问题比证明自己更重要",
+    "topic": "水火不容:好人也会在坏环境中作恶。但解决问题比证明自己更重要。谁的证据更硬?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 285,
+    "expert1": "丁元英",
+    "expert2": "罗翔",
+    "belief1": "救主文化是弱势文化的根源",
+    "belief2": "法律是对人的最低要求",
+    "topic": "价值排序之争:救主文化是弱势文化的根源更重要,还是法律是对人的最低要求更重要?",
+    "conflict_type": "value_priority",
+    "strength": "strong"
+  },
+  {
+    "round": 286,
+    "expert1": "芮小丹",
+    "expert2": "李诞",
+    "belief1": "爱是本能不需要理论",
+    "belief2": "荒诞是生活的底色",
+    "topic": "哪种方法更有效?爱是本能不需要理论还是荒诞是生活的底色?",
+    "conflict_type": "method",
+    "strength": "strong"
+  },
+  {
+    "round": 287,
+    "expert1": "老子",
+    "expert2": "塔勒布",
+    "belief1": "天下皆知美之为美斯恶矣",
+    "belief2": "反脆弱是在不确定性中获益",
+    "topic": "什么更重要?天下皆知美之为美斯恶矣还是反脆弱是在不确定性中获益?",
+    "conflict_type": "value_priority",
+    "strength": "strong"
+  },
+  {
+    "round": 288,
+    "expert1": "韩非子",
+    "expert2": "芮小丹",
+    "belief1": "法不阿贵,绳不挠曲",
+    "belief2": "活得真实比活得正确更重要",
+    "topic": "水火不容:法不阿贵,绳不挠曲。但活得真实比活得正确更重要。谁的证据更硬?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 289,
+    "expert1": "尼采",
+    "expert2": "弗洛姆",
+    "belief1": "人是一根绳索悬于深渊之上",
+    "belief2": "爱是唯一理性的答案",
+    "topic": "方法论之争:解决问题的最佳路径是人是一根绳索悬于深渊之上,还是爱是唯一理性的答案?",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 290,
+    "expert1": "西蒙娜·德·波伏娃",
+    "expert2": "李诞",
+    "belief1": "爱不是拯救而是共同成长",
+    "belief2": "活着比正确更重要",
+    "topic": "不能兼得时:爱不是拯救而是共同成长和活着比正确更重要你优先选哪个?",
+    "conflict_type": "value_priority",
+    "strength": "strong"
+  },
+  {
+    "round": 291,
+    "expert1": "达利欧",
+    "expert2": "柯林斯",
+    "belief1": "痛苦加反思等于进步",
+    "belief2": "第五级经理人谦卑而坚定",
+    "topic": "价值排序之争:痛苦加反思等于进步更重要,还是第五级经理人谦卑而坚定更重要?",
+    "conflict_type": "value_priority",
+    "strength": "strong"
+  },
+  {
+    "round": 292,
+    "expert1": "阿西莫夫",
+    "expert2": "芮小丹",
+    "belief1": "科技需要伦理导航",
+    "belief2": "去做比去想更重要",
+    "topic": "哪种方法更有效?科技需要伦理导航还是去做比去想更重要?",
+    "conflict_type": "method",
+    "strength": "strong"
+  },
+  {
+    "round": 293,
+    "expert1": "尼克·博斯特罗姆",
+    "expert2": "西蒙娜·德·波伏娃",
+    "belief1": "AI安全是文明优先事项",
+    "belief2": "处境无法定义你如何回应才定义你",
+    "topic": "路径选择:AI安全是文明优先事项还是处境无法定义你如何回应才定义你才是正解?",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 294,
+    "expert1": "凯文·凯利",
+    "expert2": "韩非子",
+    "belief1": "技术是生命的第七王国",
+    "belief2": "以法为教,以吏为师",
+    "topic": "方法论之争:解决问题的最佳路径是技术是生命的第七王国,还是以法为教,以吏为师?",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 295,
+    "expert1": "吴军",
+    "expert2": "老子",
+    "belief1": "简单的东西才是最好的",
+    "belief2": "知足者富,强行者有志",
+    "topic": "哪种方法更有效?简单的东西才是最好的还是知足者富,强行者有志?",
+    "conflict_type": "method",
+    "strength": "strong"
+  },
+  {
+    "round": 296,
+    "expert1": "项飙",
+    "expert2": "丹尼尔·戈尔曼",
+    "belief1": "全球化带来认同的焦虑",
+    "belief2": "同理心是领导力的核心",
+    "topic": "终极对立:全球化带来认同的焦虑 vs 同理心是领导力的核心。两者只能信一个,选哪个?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 297,
+    "expert1": "许知远",
+    "expert2": "凯文·凯利",
+    "belief1": "娱乐至死是时代的精神危机",
+    "belief2": "拥抱科技就是拥抱人性",
+    "topic": "哪种方法更有效?娱乐至死是时代的精神危机还是拥抱科技就是拥抱人性?",
+    "conflict_type": "method",
+    "strength": "strong"
+  },
+  {
+    "round": 298,
+    "expert1": "吴晓波",
+    "expert2": "项飙",
+    "belief1": "中国企业家的创造力被低估了",
+    "belief2": "做具体的事爱具体的人",
+    "topic": "什么更重要?中国企业家的创造力被低估了还是做具体的事爱具体的人?",
+    "conflict_type": "value_priority",
+    "strength": "strong"
+  },
+  {
+    "round": 299,
+    "expert1": "万维钢",
+    "expert2": "菲利普·津巴多",
+    "belief1": "世界是复杂的不存在简单答案",
+    "belief2": "斯坦福监狱实验是人性的镜子",
+    "topic": "不可调和:世界是复杂的不存在简单答案。然而斯坦福监狱实验是人性的镜子。真相在哪一边?",
+    "conflict_type": "direct",
+    "strength": "moderate"
+  },
+  {
+    "round": 300,
+    "expert1": "冯唐",
+    "expert2": "刘润",
+    "belief1": "管理是一生的日常",
+    "belief2": "底层逻辑是万变不离其宗",
+    "topic": "方法论之争:解决问题的最佳路径是管理是一生的日常,还是底层逻辑是万变不离其宗?",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 301,
+    "expert1": "丁元英",
+    "expert2": "韩非子",
+    "belief1": "天道即自然规律",
+    "belief2": "以法为教,以吏为师",
+    "topic": "不可调和:天道即自然规律。然而以法为教,以吏为师。真相在哪一边?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 302,
+    "expert1": "孔子",
+    "expert2": "菲利普·津巴多",
+    "belief1": "仁者爱人,推己及人",
+    "belief2": "系统比个人更容易腐败",
+    "topic": "水火不容:仁者爱人,推己及人。但系统比个人更容易腐败。谁的证据更硬?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 303,
+    "expert1": "尼采",
+    "expert2": "芮小丹",
+    "belief1": "没有事实只有诠释",
+    "belief2": "爱是本能不需要理论",
+    "topic": "路径选择:没有事实只有诠释还是爱是本能不需要理论才是正解?",
+    "conflict_type": "method",
+    "strength": "strong"
+  },
+  {
+    "round": 304,
+    "expert1": "弗洛姆",
+    "expert2": "吴军",
+    "belief1": "爱是唯一理性的答案",
+    "belief2": "浪潮之巅顺势者昌",
+    "topic": "方法论之争:解决问题的最佳路径是爱是唯一理性的答案,还是浪潮之巅顺势者昌?",
+    "conflict_type": "method",
+    "strength": "strong"
+  },
+  {
+    "round": 305,
+    "expert1": "罗翔",
+    "expert2": "芮小丹",
+    "belief1": "法治优于人治",
+    "belief2": "人生不需要那么多为什么",
+    "topic": "方法论之争:解决问题的最佳路径是法治优于人治,还是人生不需要那么多为什么?",
+    "conflict_type": "method",
+    "strength": "strong"
+  },
+  {
+    "round": 306,
+    "expert1": "塔勒布",
+    "expert2": "万维钢",
+    "belief1": "经验优于理论",
+    "belief2": "承认无知是智慧的开始",
+    "topic": "哪种方法更有效?经验优于理论还是承认无知是智慧的开始?",
+    "conflict_type": "method",
+    "strength": "strong"
+  },
+  {
+    "round": 307,
+    "expert1": "丹尼尔·卡尼曼",
+    "expert2": "吴军",
+    "belief1": "思维懒惰是人类的天性",
+    "belief2": "信息密度决定认知深度",
+    "topic": "价值排序之争:思维懒惰是人类的天性更重要,还是信息密度决定认知深度更重要?",
+    "conflict_type": "value_priority",
+    "strength": "strong"
+  },
+  {
+    "round": 308,
+    "expert1": "巴菲特",
+    "expert2": "冯唐",
+    "belief1": "别人恐惧时我贪婪",
+    "belief2": "战略的本质是取舍",
+    "topic": "价值排序之争:别人恐惧时我贪婪更重要,还是战略的本质是取舍更重要?",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 309,
+    "expert1": "达利欧",
+    "expert2": "吴晓波",
+    "belief1": "极度求真极度透明",
+    "belief2": "制造业是中国经济的底盘",
+    "topic": "哪种方法更有效?极度求真极度透明还是制造业是中国经济的底盘?",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 310,
+    "expert1": "阿西莫夫",
+    "expert2": "万维钢",
+    "belief1": "科技需要伦理导航",
+    "belief2": "科学方法是最可靠的认知工具",
+    "topic": "哪种方法更有效?科技需要伦理导航还是科学方法是最可靠的认知工具?",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 311,
+    "expert1": "尼克·博斯特罗姆",
+    "expert2": "柯林斯",
+    "belief1": "存在性风险不是科幻",
+    "belief2": "刺猬理念让你聚焦一件事",
+    "topic": "终极对立:存在性风险不是科幻 vs 刺猬理念让你聚焦一件事。两者只能信一个,选哪个?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 312,
+    "expert1": "许知远",
+    "expert2": "万维钢",
+    "belief1": "这个时代最缺的是独立思考",
+    "belief2": "承认无知是智慧的开始",
+    "topic": "方法论之争:解决问题的最佳路径是这个时代最缺的是独立思考,还是承认无知是智慧的开始?",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 313,
+    "expert1": "尤瓦尔·赫拉利",
+    "expert2": "芒格",
+    "belief1": "人类的故事是虚构共识",
+    "belief2": "激励机制是超级力量",
+    "topic": "终极对立:人类的故事是虚构共识 vs 激励机制是超级力量。两者只能信一个,选哪个?",
+    "conflict_type": "direct",
+    "strength": "moderate"
+  },
+  {
+    "round": 314,
+    "expert1": "丁元英",
+    "expert2": "凯文·凯利",
+    "belief1": "强势文化造就强者",
+    "belief2": "AI不是威胁而是进化",
+    "topic": "不能兼得时:强势文化造就强者和AI不是威胁而是进化你优先选哪个?",
+    "conflict_type": "value_priority",
+    "strength": "strong"
+  },
+  {
+    "round": 315,
+    "expert1": "丹尼尔·戈尔曼",
+    "expert2": "冯唐",
+    "belief1": "认知控制在AI时代更重要",
+    "belief2": "成事心法是一生的修行",
+    "topic": "水火不容:认知控制在AI时代更重要。但成事心法是一生的修行。谁的证据更硬?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 316,
+    "expert1": "孔子",
+    "expert2": "许知远",
+    "belief1": "有教无类,因材施教",
+    "belief2": "娱乐至死是时代的精神危机",
+    "topic": "哪种方法更有效?有教无类,因材施教还是娱乐至死是时代的精神危机?",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 317,
+    "expert1": "老子",
+    "expert2": "尤瓦尔·赫拉利",
+    "belief1": "知足者富,强行者有志",
+    "belief2": "数据主义正在取代人文主义",
+    "topic": "不能兼得时:知足者富,强行者有志和数据主义正在取代人文主义你优先选哪个?",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 318,
+    "expert1": "尼采",
+    "expert2": "阿西莫夫",
+    "belief1": "凡不能毁灭我的必使我强大",
+    "belief2": "暴力是无能者的最后手段",
+    "topic": "不可调和:凡不能毁灭我的必使我强大。然而暴力是无能者的最后手段。真相在哪一边?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 319,
+    "expert1": "弗洛伊德",
+    "expert2": "凯文·凯利",
+    "belief1": "在潜意识中没有时间概念",
+    "belief2": "去中心化是必然趋势",
+    "topic": "不能兼得时:在潜意识中没有时间概念和去中心化是必然趋势你优先选哪个?",
+    "conflict_type": "value_priority",
+    "strength": "strong"
+  },
+  {
+    "round": 320,
+    "expert1": "阿伦特",
+    "expert2": "丁元英",
+    "belief1": "恶是表面的深渊",
+    "belief2": "规律不以人的意志为转移",
+    "topic": "方法论之争:解决问题的最佳路径是恶是表面的深渊,还是规律不以人的意志为转移?",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 321,
+    "expert1": "西蒙娜·德·波伏娃",
+    "expert2": "弗洛姆",
+    "belief1": "爱不是拯救而是共同成长",
+    "belief2": "现代人逃避自由",
+    "topic": "终极对立:爱不是拯救而是共同成长 vs 现代人逃避自由。两者只能信一个,选哪个?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 322,
+    "expert1": "罗翔",
+    "expert2": "马克思",
+    "belief1": "没有伦理约束的专业是危险的",
+    "belief2": "宗教是人民的鸦片",
+    "topic": "哪种方法更有效?没有伦理约束的专业是危险的还是宗教是人民的鸦片?",
+    "conflict_type": "method",
+    "strength": "strong"
+  },
+  {
+    "round": 323,
+    "expert1": "塔勒布",
+    "expert2": "柯林斯",
+    "belief1": "反脆弱是在不确定性中获益",
+    "belief2": "纪律文化优于个人英雄主义",
+    "topic": "哪种方法更有效?反脆弱是在不确定性中获益还是纪律文化优于个人英雄主义?",
+    "conflict_type": "method",
+    "strength": "moderate"
+  },
+  {
+    "round": 324,
+    "expert1": "丹尼尔·卡尼曼",
+    "expert2": "孔子",
+    "belief1": "思维懒惰是人类的天性",
+    "belief2": "仁者爱人,推己及人",
+    "topic": "路径选择:思维懒惰是人类的天性还是仁者爱人,推己及人才是正解?",
+    "conflict_type": "method",
+    "strength": "strong"
+  },
+  {
+    "round": 325,
+    "expert1": "巴菲特",
+    "expert2": "菲利普·津巴多",
+    "belief1": "安全边际是一切投资的核心",
+    "belief2": "系统比个人更容易腐败",
+    "topic": "哪种方法更有效?安全边际是一切投资的核心还是系统比个人更容易腐败?",
+    "conflict_type": "method",
+    "strength": "strong"
+  },
+  {
+    "round": 326,
+    "expert1": "达利欧",
+    "expert2": "阿西莫夫",
+    "belief1": "从更高的层面俯视自己",
+    "belief2": "暴力是无能者的最后手段",
+    "topic": "价值排序之争:从更高的层面俯视自己更重要,还是暴力是无能者的最后手段更重要?",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 327,
+    "expert1": "尼克·博斯特罗姆",
+    "expert2": "阿伦特",
+    "belief1": "价值对齐是最硬的难题",
+    "belief2": "恶是表面的深渊",
+    "topic": "什么更重要?价值对齐是最硬的难题还是恶是表面的深渊?",
+    "conflict_type": "value_priority",
+    "strength": "strong"
+  },
+  {
+    "round": 328,
+    "expert1": "刘润",
+    "expert2": "吴晓波",
+    "belief1": "一切商业的起点是消费者获益",
+    "belief2": "制造业是中国经济的底盘",
+    "topic": "什么更重要?一切商业的起点是消费者获益还是制造业是中国经济的底盘?",
+    "conflict_type": "value_priority",
+    "strength": "moderate"
+  },
+  {
+    "round": 329,
+    "expert1": "项飙",
+    "expert2": "柯林斯",
+    "belief1": "全球化带来认同的焦虑",
+    "belief2": "第五级经理人谦卑而坚定",
+    "topic": "终极对立:全球化带来认同的焦虑 vs 第五级经理人谦卑而坚定。两者只能信一个,选哪个?",
+    "conflict_type": "direct",
+    "strength": "strong"
+  },
+  {
+    "round": 330,
+    "expert1": "李诞",
+    "expert2": "冯唐",
+    "belief1": "活着比正确更重要",
+    "belief2": "成事心法是一生的修行",
+    "topic": "哪种方法更有效?活着比正确更重要还是成事心法是一生的修行?",
+    "conflict_type": "method",
+    "strength": "strong"
+  }
+]

@@ -1,0 +1,55 @@
+{
+  "batch": 17,
+  "rounds": [
+    {
+      "round": 311,
+      "expert1": "尼克·博斯特罗姆",
+      "expert2": "柯林斯",
+      "belief1": "存在性风险不是科幻",
+      "belief2": "刺猬理念让你聚焦一件事",
+      "topic": "终极对立:存在性风险不是科幻 vs 刺猬理念让你聚焦一件事。两者只能信一个,选哪个?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 312,
+      "expert1": "许知远",
+      "expert2": "万维钢",
+      "belief1": "这个时代最缺的是独立思考",
+      "belief2": "承认无知是智慧的开始",
+      "topic": "方法论之争:解决问题的最佳路径是这个时代最缺的是独立思考,还是承认无知是智慧的开始?",
+      "conflict_type": "method",
+      "strength": "moderate"
+    },
+    {
+      "round": 313,
+      "expert1": "尤瓦尔·赫拉利",
+      "expert2": "芒格",
+      "belief1": "人类的故事是虚构共识",
+      "belief2": "激励机制是超级力量",
+      "topic": "终极对立:人类的故事是虚构共识 vs 激励机制是超级力量。两者只能信一个,选哪个?",
+      "conflict_type": "direct",
+      "strength": "moderate"
+    },
+    {
+      "round": 314,
+      "expert1": "丁元英",
+      "expert2": "凯文·凯利",
+      "belief1": "强势文化造就强者",
+      "belief2": "AI不是威胁而是进化",
+      "topic": "不能兼得时:强势文化造就强者和AI不是威胁而是进化你优先选哪个?",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 315,
+      "expert1": "丹尼尔·戈尔曼",
+      "expert2": "冯唐",
+      "belief1": "认知控制在AI时代更重要",
+      "belief2": "成事心法是一生的修行",
+      "topic": "水火不容:认知控制在AI时代更重要。但成事心法是一生的修行。谁的证据更硬?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    }
+  ]
+}

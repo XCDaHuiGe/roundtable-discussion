@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>算法情感剥夺与金融信任套利 圆桌洞见</title>
+<style>
+  :root{
+    /* ============ 主题色(默认:🖋 墨水经典) ============ */
+    --ink:#0a0a0b;
+    --ink-rgb:10,10,11;
+    --paper:#f1efea;
+    --paper-rgb:241,239,234;
+    --paper-tint:#e8e5de;
+    --ink-tint:#18181a;
+
+    /* ============ 强调色 ============ */
+    --accent:#c23b22;
+    --accent-rgb:194,59,34;
+    --gold:#d4a843;
+    --gold-rgb:212,168,67;
+    --blue:#4a6a9a;
+    --purple:#8a4aaa;
+    --green:#3a8a5c;
+    --cyan:#4a9a9a;
+    --orange:#d4843a;
+
+    /* ============ 字体(跨主题固定) ============ */
+    --mono:"IBM Plex Mono","SF Mono",monospace;
+    --serif-zh:"Noto Serif SC","Source Han Serif SC","STSong",serif;
+    --sans-zh:"Noto Sans SC","Source Han Sans SC","PingFang SC",sans-serif;
+
+    /* ============ 间距 ============ */
+    --radius:10px;
+    --ease:cubic-bezier(.4,0,.2,1);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans-zh);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+  /* ============ Deck 容器 ============ */
+  #deck{position:relative;width:100vw;height:100vh;overflow:hidden}
+
+  /* ============ 进度条 ============ */
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:1000;transition:width .5s var(--ease);box-shadow:0 0 12px rgba(var(--accent-rgb),.3)}
+
+  /* ============ 幻灯片 ============ */
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;height:100vh;overflow:hidden}
+  .slide::-webkit-scrollbar{width:4px}.slide::-webkit-scrollbar-track{background:transparent}.slide::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
+  .slide.active{display:flex}
+  .slide.hero{justify-content:center;align-items:center;text-align:center}
+  .slide.title-slide{justify-content:center;align-items:center;text-align:center}
+
+  /* ============ 入场动画(Guizang风格) ============ */
+  [data-anim]{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .slide.active [data-anim]{opacity:1;transform:translateY(0)}
+  .slide.active [data-anim]:nth-child(1){transition-delay:.1s}
+  .slide.active [data-anim]:nth-child(2){transition-delay:.18s}
+  .slide.active [data-anim]:nth-child(3){transition-delay:.26s}
+  .slide.active [data-anim]:nth-child(4){transition-delay:.34s}
+  .slide.active [data-anim]:nth-child(5){transition-delay:.42s}
+  .slide.active [data-anim]:nth-child(6){transition-delay:.5s}
+
+  /* ============ 内容区(book-distillation范式) ============ */
+  .frame{width:100%;max-width:1100px;margin:0 auto;flex:1;display:flex;flex-direction:column}
+  .slide-content{flex:1;display:flex;flex-direction:column}
+
+  /* ============ Magazine Chrome(Guizang风格) ============ */
+  .chrome{display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.5;margin-bottom:3vh}
+  .chrome .left,.chrome .right{display:flex;gap:2em;align-items:center}
+  .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
+
+  /* ============ 底部元数据(render_v8兼容) ============ */
+  .deck-footer{margin-top:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
+  .slide-number{position:absolute;bottom:2vh;right:3vw;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.35)}
+
+  /* ============ Section Label ============ */
+  .section-label{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
+
+  /* ============ 封面 ============ */
+  .cover-badge{display:inline-block;padding:6px 20px;border:1px solid var(--accent);border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4vh}
+  .cover-title{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:4vh;line-height:1.8;max-width:600px}
+  .cover-stats{display:flex;gap:4vh;flex-wrap:wrap;justify-content:center}
+  .cover-stat{text-align:center}
+  .cover-stat-num{font-family:var(--mono);font-size:2.5rem;font-weight:900;color:var(--accent)}
+  .cover-stat-label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.5);margin-top:.5vh}
+
+  /* ============ 封面标题(render_v8) ============ */
+  .hero-dark{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;flex:1}
+  .title-main{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .title-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:2vh;line-height:1.8}
+  .gold-line{width:80px;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));margin:3vh auto;border-radius:2px}
+
+  /* ============ 标题系统 ============ */
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
+  .h-hero{font-family:var(--serif-zh);font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.2;margin-bottom:3vh}
+  .h-xl{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.4rem,3vw,2.2rem);line-height:1.3;margin-bottom:2vh}
+  .h-lg{font-family:var(--serif-zh);font-weight:600;font-size:clamp(1.1rem,2vw,1.5rem);line-height:1.4;margin-bottom:1.5vh}
+  .h-md{font-weight:600;font-size:1.1rem;margin-bottom:1vh}
+  .lead{font-size:1rem;line-height:1.85;color:rgba(var(--paper-rgb),.8);max-width:700px}
+  .meta-row{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.4);display:flex;gap:2em;flex-wrap:wrap;margin-top:3vh}
+
+  /* ============ 大号引用(render_v8) ============ */
+  .quote-large{font-family:var(--serif-zh);font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:600;line-height:1.6;color:rgba(var(--paper-rgb),.9);max-width:800px;margin:0 auto}
+
+  /* ============ 分割线 ============ */
+  .rule{width:100%;height:1px;background:rgba(var(--paper-rgb),.15);margin:3vh 0}
+
+  /* ============ 标签 ============ */
+  .tag{display:inline-block;padding:4px 12px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;margin:3px}
+  .tag-gold{background:rgba(var(--gold-rgb),.15);color:var(--gold);border:1px solid rgba(var(--gold-rgb),.2)}
+  .tag-red{background:rgba(var(--accent-rgb),.15);color:var(--accent);border:1px solid rgba(var(--accent-rgb),.2)}
+  .tag-blue{background:rgba(74,106,154,.15);color:var(--blue);border:1px solid rgba(74,106,154,.2)}
+  .tag-purple{background:rgba(138,74,170,.15);color:var(--purple);border:1px solid rgba(138,74,170,.2)}
+  .tag-green{background:rgba(58,138,92,.15);color:var(--green);border:1px solid rgba(58,138,92,.2)}
+
+  /* ============ 霓虹强调色(render_v8) ============ */
+  .neon-gold{color:var(--gold)}.neon-red{color:var(--accent)}.neon-cyan{color:var(--cyan)}.neon-purple{color:var(--purple)}.neon-orange{color:var(--orange)}.neon-green{color:var(--green)}
+
+  /* ============ 网格系统 ============ */
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:2vh 2vw}
+  @media(max-width:768px){.grid-2{grid-template-columns:1fr}}
+
+  /* ============ 发言块(原生) ============ */
+  .sp{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2.5vw;margin-bottom:2vh;position:relative}
+  .sp::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .sh{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh}
+  .speaker-avatar{width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:var(--ink);background:var(--accent);flex-shrink:0}
+  .sn{font-weight:700;font-size:1rem}
+  .sr{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4);padding:3px 8px;background:rgba(var(--paper-rgb),.06);border-radius:3px}
+  .st{font-size:.95rem;line-height:2;color:rgba(var(--paper-rgb),.85)}
+  .st strong{color:var(--paper);font-weight:700}
+  .st em{color:var(--gold);font-style:normal;font-weight:600}
+
+  /* ============ 碰撞块(原生) ============ */
+  .cb{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;position:relative}
+  .cb::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .cb.blue{border-color:rgba(74,106,154,.3)}.cb.blue::before{background:var(--blue)}
+  .cb.purple{border-color:rgba(138,74,170,.3)}.cb.purple::before{background:var(--purple)}
+  .cb.green{border-color:rgba(58,138,92,.3)}.cb.green::before{background:var(--green)}
+  .cb.orange{border-color:rgba(var(--gold-rgb),.3)}.cb.orange::before{background:var(--gold)}
+  .cl{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;color:var(--accent);font-weight:600}
+  .cl.blue{color:var(--blue)}.cl.purple{color:var(--purple)}.cl.green{color:var(--green)}.cl.orange{color:var(--gold)}
+
+  /* ============ 洞见卡 ============ */
+  .insight-c{background:linear-gradient(135deg,rgba(var(--paper-rgb),.04) 0%,rgba(var(--paper-rgb),.08) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh;position:relative;overflow:hidden}
+  .insight-c::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold))}
+  .insight-q{font-family:var(--serif-zh);font-size:1.1rem;font-weight:700;color:var(--gold);line-height:1.6;margin-bottom:1vh}
+  .insight-a{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.75)}
+
+  /* ============ 卡片 ============ */
+  .card{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
+  .card-num{font-family:var(--mono);font-weight:900;font-size:1.8rem;color:var(--accent);opacity:.4;margin-bottom:1vh}
+  .card-title{font-weight:700;font-size:1rem;margin-bottom:1vh}
+  .card-body{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
+  .card-source{font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);margin-top:1vh}
+
+  /* ============ 专家卡片(render_v8) ============ */
+  .card-rise{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--green)}
+  .card-fall{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--accent)}
+  .speaker-header{display:flex;align-items:center;gap:16px;margin-bottom:2vh}
+  .speaker-name{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem}
+  .speaker-role{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:2px}
+  .expert-profile{display:flex;flex-direction:column;gap:1vh}
+  .profile-item{font-size:.9rem;line-height:1.7;color:rgba(var(--paper-rgb),.8)}
+  .profile-label{color:var(--gold);font-weight:600}
+
+  /* ============ 立场表达(render_v8) ============ */
+  .stance-item{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;border-left:3px solid var(--gold)}
+  .stance-expert{font-family:var(--serif-zh);font-weight:700;font-size:1rem;margin-bottom:1vh}
+  .stance-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 碰撞轮次(render_v8) ============ */
+  .clash-round{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;position:relative}
+  .clash-round::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .clash-header{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh;flex-wrap:wrap}
+  .clash-attacker{font-weight:700;font-size:1rem}
+  .clash-target{font-weight:700;font-size:1rem}
+  .clash-arrow{color:rgba(var(--paper-rgb),.3);font-size:1.2rem}
+  .clash-type{display:inline-block;padding:3px 10px;border-radius:3px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.5vh;font-weight:600}
+  .clash-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
+  .counter-attack{margin-top:2vh;padding-top:2vh;border-top:1px dashed rgba(var(--paper-rgb),.1)}
+  .counter-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .counter-content{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
+
+  /* ============ 攻击类型色 ============ */
+  .attack-logic{background:rgba(74,106,154,.15);color:var(--blue)}
+  .attack-interest{background:rgba(var(--accent-rgb),.15);color:var(--accent)}
+  .attack-reality{background:rgba(var(--gold-rgb),.15);color:var(--gold)}
+  .attack-human{background:rgba(138,74,170,.15);color:var(--purple)}
+  .attack-failure{background:rgba(58,138,92,.15);color:var(--green)}
+
+  /* ============ 现实案例(render_v8) ============ */
+  .reality-case{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--orange)}
+  .case-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5vh;flex-wrap:wrap;gap:8px}
+  .case-name{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem}
+  .case-source{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4)}
+  .case-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:1.5vh}
+  .case-outcome{font-size:.9rem;font-weight:600;margin-bottom:1vh}
+  .case-lesson{font-size:.9rem;font-weight:600}
+
+  /* ============ 代价讨论(render_v8) ============ */
+  .cost-discussion{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh}
+  .cost-scenario{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem;margin-bottom:2vh}
+  .cost-list{display:flex;flex-direction:column;gap:1.5vh;margin-bottom:2vh}
+  .cost-item{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:1.5vh 2vw;border-left:3px solid var(--accent)}
+  .cost-name{font-weight:700;font-size:.95rem;margin-bottom:.5vh}
+  .cost-analysis{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .worst-case{background:rgba(var(--accent-rgb),.08);border:1px solid rgba(var(--accent-rgb),.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
+  .worst-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .worst-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+  .survivor-bias{background:rgba(138,74,170,.08);border:1px solid rgba(138,74,170,.15);border-radius:6px;padding:2vh 2vw}
+  .survivor-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .survivor-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+
+  /* ============ 人性层(render_v8) ============ */
+  .human-nature{background:linear-gradient(135deg,rgba(var(--paper-rgb),.03) 0%,rgba(var(--paper-rgb),.06) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
+  .human-question{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem;margin-bottom:2vh;line-height:1.5}
+  .human-analysis{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:2vh}
+  .human-examples{margin-bottom:2vh}
+  .examples-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1vh;font-weight:600}
+  .example-item{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8);padding:.5vh 0}
+  .human-conclusion{font-size:.95rem;font-weight:600;line-height:1.7}
+
+  /* ============ 认知升级(render_v8) ============ */
+  .cognitive-upgrade{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
+  .upgrade-comparison{display:grid;grid-template-columns:1fr auto 1fr;gap:2vw;align-items:start;margin-bottom:2vh}
+  @media(max-width:768px){.upgrade-comparison{grid-template-columns:1fr}.upgrade-arrow{transform:rotate(90deg)}}
+  .old-thinking,.new-thinking{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:2vh 1.5vw}
+  .old-thinking{border-left:3px solid var(--accent)}
+  .new-thinking{border-left:3px solid var(--green)}
+  .thinking-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .thinking-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+  .upgrade-arrow{font-size:1.5rem;color:rgba(var(--paper-rgb),.3);display:flex;align-items:center;justify-content:center;padding-top:3vh}
+  .complexity{background:rgba(74,106,154,.08);border:1px solid rgba(74,106,154,.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
+  .complexity-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .complexity-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .actionable{background:rgba(var(--gold-rgb),.08);border:1px solid rgba(var(--gold-rgb),.15);border-radius:6px;padding:2vh 2vw}
+  .actionable-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .actionable-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 情绪样式 ============ */
+  .emotion-sarcasm{border-left:3px solid var(--purple);padding-left:12px;font-style:italic}
+  .emotion-helplessness{opacity:.75;font-style:italic}
+  .emotion-anger{color:var(--accent);font-weight:600}
+  .emotion-hesitation{opacity:.8;font-style:italic}
+  .emotion-self-deprecation{opacity:.7;font-style:italic}
+  .emotion-cold-laugh{color:var(--purple)}
+  .emotion-silence{opacity:.5;font-style:italic}
+  .emotion-serious{color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 指标 ============ */
+  .metrics{display:flex;gap:2vw;flex-wrap:wrap;margin-bottom:3vh}
+  .metric{flex:1;min-width:100px;text-align:center;background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 1.5vw}
+  .metric-val{font-family:var(--mono);font-weight:900;font-size:clamp(1.5rem,3vw,2.5rem);color:var(--accent)}
+  .metric-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:.5vh}
+
+  /* ============ 开放问题 ============ */
+  .oq{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
+  .oq-num{font-family:var(--mono);font-weight:900;font-size:1.2rem;color:var(--accent);opacity:.3;margin-bottom:1vh}
+  .oq-text{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .headline-item{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.85);padding:1.5vh 0;border-bottom:1px solid rgba(var(--paper-rgb),.06)}
+  .headline-item:last-child{border-bottom:none}
+  .headline-item strong{color:var(--gold);margin-right:8px}
+
+  /* ============ 引用 ============ */
+  .quote{font-family:var(--serif-zh);font-size:1rem;font-style:italic;line-height:1.8;padding:2vh 2.5vw;border-left:3px solid var(--gold);background:rgba(var(--gold-rgb),.05);margin:2vh 0;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ TOC ============ */
+  .toc-panel{position:fixed;top:0;left:0;width:min(340px,80vw);height:100vh;background:rgba(var(--ink-rgb),.97);backdrop-filter:blur(20px);z-index:100;transform:translateX(-100%);transition:transform .35s var(--ease);padding:3vh 2.5vw;overflow-y:auto;border-right:1px solid rgba(var(--paper-rgb),.08)}
+  .toc-panel.open{transform:translateX(0)}
+  .toc-title{font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:3vh;padding-bottom:2vh;border-bottom:1px solid rgba(var(--paper-rgb),.1)}
+  .toc-item{display:flex;justify-content:space-between;padding:1.2vh 1.5vw;margin-bottom:.5vh;cursor:pointer;border-radius:6px;border-left:2px solid transparent;font-size:.9rem;color:rgba(var(--paper-rgb),.7);transition:all .2s}
+  .toc-item:hover{background:rgba(var(--paper-rgb),.06);color:var(--paper)}
+  .toc-item.active{background:rgba(var(--paper-rgb),.08);color:var(--accent);border-left-color:var(--accent);font-weight:600}
+  .toc-label{flex:1}
+  .toc-page{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.35)}
+  .toc-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;opacity:0;pointer-events:none;transition:opacity .3s}
+  .toc-backdrop.open{opacity:1;pointer-events:auto}
+
+  /* ============ 导航栏 ============ */
+  .nav-bar{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 3vw;background:rgba(var(--ink-rgb),.9);backdrop-filter:blur(10px);z-index:50;border-top:1px solid rgba(var(--paper-rgb),.06)}
+  .nav-left,.nav-right{display:flex;align-items:center;gap:12px}
+  .nav-btn{background:none;border:1px solid rgba(var(--paper-rgb),.12);color:rgba(var(--paper-rgb),.7);padding:8px 16px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;cursor:pointer;transition:all .2s}
+  .nav-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(var(--accent-rgb),.1)}
+  .nav-title{font-size:12px;color:rgba(var(--paper-rgb),.5);max-width:40vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-counter{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.4)}
+
+  /* ============ 导航点 ============ */
+  .nav-dots{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:6px}
+  .nd{width:6px;height:6px;border-radius:50%;background:rgba(var(--paper-rgb),.15);cursor:pointer;transition:all .3s var(--ease);border:none;padding:0}
+  .nd.active{background:var(--accent);height:20px;border-radius:3px;box-shadow:0 0 8px rgba(var(--accent-rgb),.4)}
+  .nd:hover{background:rgba(var(--paper-rgb),.4)}
+
+  /* ============ 入场动画延迟(render_v8兼容) ============ */
+  .anim-in{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .slide.active .anim-in{opacity:1;transform:translateY(0)}
+  .slide.active .anim-in:nth-child(1){transition-delay:.1s}
+  .slide.active .anim-in:nth-child(2){transition-delay:.18s}
+  .slide.active .anim-in:nth-child(3){transition-delay:.26s}
+  .slide.active .anim-in:nth-child(4){transition-delay:.34s}
+  .slide.active .anim-in:nth-child(5){transition-delay:.42s}
+  .slide.active .anim-in:nth-child(6){transition-delay:.5s}
+  .anim-delay-1{transition-delay:.18s !important}
+  .anim-delay-2{transition-delay:.26s !important}
+  .anim-delay-3{transition-delay:.34s !important}
+  .anim-delay-4{transition-delay:.42s !important}
+  .anim-delay-5{transition-delay:.5s !important}
+  .anim-delay-6{transition-delay:.58s !important}
+
+  /* ============ 响应式 ============ */
+  @media(max-width:1024px){.slide{padding:4vh 5vw 8vh}}
+  @media(max-width:768px){
+    .slide{padding:3vh 4vw 7vh}
+    .cover-stats{gap:2vh}
+    .metrics{flex-direction:column}
+    .nav-dots,.nav-title{display:none}
+    .nav-bar{padding:0 2vw}
+  }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="slide active hero title-slide" data-title="算法情感剥夺与金融信任套利">
+  <div class="frame">
+    <div class="slide-content" style="justify-content:center;align-items:center;text-align:center">
+      <div class="cover-badge" data-anim>圆桌洞见</div>
+      <div class="cover-title" data-anim>算法情感剥夺与金融信任套利</div>
+      <div class="cover-sub" data-anim>当AI比伴侣更懂你，谁在为你的非理性投资定价？</div>
+      <div class="gold-line" data-anim></div>
+      <div class="cover-stats" data-anim>
+        <div class="cover-stat">
+          <div class="cover-stat-num">6</div>
+          <div class="cover-stat-label">专家</div>
+        </div>
+        <div class="cover-stat">
+          <div class="cover-stat-num">3</div>
+          <div class="cover-stat-label">轮讨论</div>
+        </div>
+        <div class="cover-stat">
+          <div class="cover-stat-num">18</div>
+          <div class="cover-stat-label">发言</div>
+        </div>
+        <div class="cover-stat">
+          <div class="cover-stat-num">5</div>
+          <div class="cover-stat-label">洞见</div>
+        </div>
+      </div>
+      <div class="meta-row" data-anim>
+        <span> 丹尼尔·卡尼曼</span> · <span> 凯文·凯利</span> · <span> 纳西姆·塔勒布</span> · <span> 项飙</span> · <span>️ 吴军</span> · <span> 查理·芒格</span>
+      </div>
+    </div>
+  </div>
+</div><div class="slide" data-title="核心洞见">
+  <div class="frame">
+    <div class="kicker" data-anim>KEY INSIGHTS</div>
+    <div class="h-xl" data-anim style="margin-bottom:4vh">核心洞见</div>
+    <div class="grid-2"><div class="insight-c" style="animation-delay:0s">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:2vh">
+        <span style="font-family:var(--mono);font-size:1.5rem;font-weight:900;color:var(--accent);opacity:.5">01</span>
+        <span style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);padding:3px 8px;background:rgba(var(--gold-rgb),.1);border-radius:3px">第1轮综合</span>
+      </div>
+      <div class="insight-q">核心洞见：AI情感识别正在将人类的心理弱点转化为可交易的金融产品，这不仅是技术问题，更是权力问题——谁有权力定义、测量、和利用人类的非理性？</div>
+      <div class="insight-a">当我们讨论&#039;情感套利&#039;时，需要追问：这种套利是在帮助投资者克服非理性，还是在强化并商业化非理性？如果AI只是更精准地收割人类的情绪波动，那么它实质上是在阻碍而非促进市场的理性化。</div>
+    </div><div class="insight-c" style="animation-delay:0.1s">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:2vh">
+        <span style="font-family:var(--mono);font-size:1.5rem;font-weight:900;color:var(--accent);opacity:.5">02</span>
+        <span style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);padding:3px 8px;background:rgba(var(--gold-rgb),.1);border-radius:3px">第2轮综合</span>
+      </div>
+      <div class="insight-q">核心洞见：AI情感识别的广泛应用，正在制造一种&#039;技术性无知的自信&#039;——人们相信算法能解决情绪化决策的问题，却失去了主动修炼投资纪律的动机。真正的危险不是AI太聪明，而是人对自己的非理性越来越不加反省。</div>
+      <div class="insight-a">信任关系的位移不仅是技术问题，更是责任归属问题。当AI做出&#039;情感优化&#039;的投资建议时，谁在承担后果？投资者将决策外包给算法，本质上是在逃避对自身财务状况的反思性管理。这种&#039;被代理的自信&#039;，可能是金融风险积累的深层原因。</div>
+    </div><div class="insight-c" style="animation-delay:0.2s">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:2vh">
+        <span style="font-family:var(--mono);font-size:1.5rem;font-weight:900;color:var(--accent);opacity:.5">03</span>
+        <span style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);padding:3px 8px;background:rgba(var(--gold-rgb),.1);border-radius:3px">第3轮综合</span>
+      </div>
+      <div class="insight-q">核心洞见：AI情感金融的终极问题不是技术，而是责任归属——当算法决定谁应该买什么产品时，谁在为这个决定的后果负责？在责任归属明确之前，&#039;AI比你更懂你&#039;只是一个精巧的营销话术，而非可靠的投资哲学。</div>
+      <div class="insight-a">构建新的金融伦理框架需要三个支柱：数据主权（用户拥有自身情感数据的控制权）、利益对称（平台与投资者共担风险）、以及认知保护（防止AI系统性削弱人的批判性思维能力）。缺乏任何一根支柱，&#039;AI情感金融&#039;都可能演变为更隐蔽、更高效的财富转移机制。</div>
+    </div></div>
+    <div class="deck-footer">5个颠覆认知的观点</div>
+  </div>
+</div><div class="slide" data-title="专家阵容">
+  <div class="frame">
+    <div class="kicker" data-anim>EXPERT PANEL</div>
+    <div class="h-xl" data-anim style="margin-bottom:4vh">专家阵容</div>
+    <div class="grid-2"><div class="card-rise" style="border-left-color:#1a5f7a" data-anim>
+    <div class="speaker-header">
+      <div class="speaker-avatar" style="background:#1a5f7a"></div>
+      <div>
+        <div class="speaker-name">丹尼尔·卡尼曼</div>
+        <div class="speaker-role">行为经济学之父</div>
+      </div>
+    </div>
+  </div><div class="card-rise" style="border-left-color:#4a6a9a" data-anim>
+    <div class="speaker-header">
+      <div class="speaker-avatar" style="background:#4a6a9a"></div>
+      <div>
+        <div class="speaker-name">凯文·凯利</div>
+        <div class="speaker-role">科技观察家</div>
+      </div>
+    </div>
+  </div><div class="card-rise" style="border-left-color:#c23b22" data-anim>
+    <div class="speaker-header">
+      <div class="speaker-avatar" style="background:#c23b22"></div>
+      <div>
+        <div class="speaker-name">纳西姆·塔勒布</div>
+        <div class="speaker-role">量化金融专家</div>
+      </div>
+    </div>
+  </div><div class="card-rise" style="border-left-color:#7d5a50" data-anim>
+    <div class="speaker-header">
+      <div class="speaker-avatar" style="background:#7d5a50"></div>
+      <div>
+        <div class="speaker-name">项飙</div>
+        <div class="speaker-role">社会学家</div>
+      </div>
+    </div>
+  </div><div class="card-rise" style="border-left-color:#3a8a5c" data-anim>
+    <div class="speaker-header">
+      <div class="speaker-avatar" style="background:#3a8a5c">️</div>
+      <div>
+        <div class="speaker-name">吴军</div>
+        <div class="speaker-role">技术专家</div>
+      </div>
+    </div>
+  </div><div class="card-rise" style="border-left-color:#8b4513" data-anim>
+    <div class="speaker-header">
+      <div class="speaker-avatar" style="background:#8b4513"></div>
+      <div>
+        <div class="speaker-name">查理·芒格</div>
+        <div class="speaker-role">价值投资者</div>
+      </div>
+    </div>
+  </div></div>
+    <div class="deck-footer">6位跨界专家，3轮深度交锋</div>
+  </div>
+</div><div class="slide title-slide" data-title="第1轮：情感剥夺与金融异化">
+    <div class="frame">
+      <div class="hero-dark">
+        <div class="kicker" data-anim>ROUND 1</div>
+        <div class="h-hero" data-anim style="background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">情感剥夺与金融异化</div>
+        <div class="quote-large" data-anim style="max-width:700px;margin-top:3vh">AI情感识别正在&#039;理解&#039;投资者的非理性情绪，这种技术究竟是解放还是新的控制？</div>
+      </div>
+    </div>
+  </div><div class="slide" data-title="第1轮：专家发言">
+    <div class="frame">
+      <div class="kicker" data-anim>ROUND 1 · 专家发言</div>
+      <div class="h-lg" data-anim style="margin-bottom:3vh">情感剥夺与金融异化</div>
+      <div class="sp" style="border-left-color:#1a5f7a">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#1a5f7a"></div>
+      <div>
+        <div class="sn">丹尼尔·卡尼曼</div>
+        <div class="sr">行为经济学之父</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ AI情感识别正在&#039;理解&#039;投资者的非理性情绪，这种技术究竟是解放还是新的控制？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我研究人类决策四十年，核心发现是：人类大脑天生倾向于&#039;快思考&#039;——依赖直觉、情绪、启发式判断。在投资领域，这种倾向表现为损失厌恶（损失的心理影响是同等收益的2-2.5倍）、过度自信（80%的投资者认为自己高于平均水平）、锚定效应（对买入价产生非理性依附）。2024年科创板恐慌事件中，当医药板块因非理性恐慌超跌时，AI系统通过&#039;情绪贝塔&#039;因子在3日内捕获+12.7%收益——这恰恰证明，市场并非有效，因为人类的非理性是可预测的。AI情感识别的本质，是将这种&#039;可预测的非理性&#039;转化为套利工具。问题不在于技术本身，而在于：当算法比你自己更清楚你的情绪弱点时，谁在掌控你的决策？</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#4a6a9a">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#4a6a9a"></div>
+      <div>
+        <div class="sn">凯文·凯利</div>
+        <div class="sr">科技观察家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ AI情感识别正在&#039;理解&#039;投资者的非理性情绪，这种技术究竟是解放还是新的控制？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">从技术演进的角度，AI情感识别代表&#039;量化人性的下一个前沿&#039;。正如望远镜延伸了我们的视觉，AI正在延伸我们的认知边界——包括对自身情绪的认知。摩根大通的AI助手每月处理超过100万次投资咨询，斯坦福大学研究显示，AI推荐的投资组合在模拟环境中确实能降低情绪化决策。但我必须指出一个悖论：当我们用AI&#039;优化&#039;人类情感时，实际上是在强化而非消除人类的非理性——因为被量化的情绪更容易被操控。就像精准投放的广告比泛泛而论的营销更有效，&#039;情感套利&#039;可能比传统市场操纵更难察觉、更难监管。技术是中性的，但部署技术的人不是。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#c23b22">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#c23b22"></div>
+      <div>
+        <div class="sn">纳西姆·塔勒布</div>
+        <div class="sr">量化金融专家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ AI情感识别正在&#039;理解&#039;投资者的非理性情绪，这种技术究竟是解放还是新的控制？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">卡尼曼教授的&#039;行为金融&#039;是伟大的突破，但它忽略了一个关键维度：那些被AI捕获的&#039;非理性&#039;，恰恰是市场的免疫系统。想想2008年金融危机——如果所有投资者都绝对理性，房产泡沫就不会形成，因为理性人会预见到CDO的脆弱性。正是个体非理性创造的市场波动，给了真正有远见的投资者机会。AI&#039;情绪套利&#039;的本质是：从别人的错误中榨取利润，而非创造价值。这让我想起长期资本管理公司（LTCM）的教训——他们的天才模型在&#039;正常&#039;市场赚得盆满钵满，却在一个&#039;肥尾&#039;事件中灰飞烟灭。AI情绪套利策略同样面临这个问题：当极端事件（黑天鹅）发生时，情绪识别的历史数据可能完全失效。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#7d5a50">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#7d5a50"></div>
+      <div>
+        <div class="sn">项飙</div>
+        <div class="sr">社会学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ AI情感识别正在&#039;理解&#039;投资者的非理性情绪，这种技术究竟是解放还是新的控制？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我更关心的是这场技术革命背后的社会结构问题。&#039;情感套利&#039;这个词本身就揭示了症结：情感被转化为可交易的商品。在中国，90后负债率高达78.3%，平均负债12.1万元，其中房贷占56.7%、消费贷占32.1%。当这些年轻人打开理财App，AI不仅推送符合其风险偏好的产品，还在分析他们的焦虑指数、社交压力、消费冲动——然后&#039;聪明&#039;地将高风险产品匹配给最脆弱的群体。这不是赋能，这是结构性掠夺的数字化升级。&#039;情感套利&#039;的真正问题是：谁有权力定义什么是&#039;非理性&#039;？谁在从这种定义中获益？历史告诉我们，每一次金融创新（助学贷、信用卡、消费分期）最初都打着&#039;普惠金融&#039;的旗号，最终却成为将弱势群体更深地嵌入债务体系的工具。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#3a8a5c">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#3a8a5c">️</div>
+      <div>
+        <div class="sn">吴军</div>
+        <div class="sr">技术专家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ AI情感识别正在&#039;理解&#039;投资者的非理性情绪，这种技术究竟是解放还是新的控制？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">从技术实现角度，当前的AI情感识别主要依赖三类数据：社交媒体文本分析、交易行为模式、金融产品交互数据。这些技术本质上是将人类行为数据化、模型化。以德意志银行的dbLumina系统为例，它通过分析每日市场评论来量化投资者情绪，发现投资者在2025年4月市场最低点时表现出&#039;最极端的非理性&#039;，而这恰恰成为AI的买入信号。这里存在一个深刻的技术伦理困境：AI识别&#039;非理性&#039;的能力越强，套利空间就越大；但这种套利，本质上是从人类情绪波动中抽取租金。更关键的是，当所有人都用AI进行&#039;情绪套利&#039;时，市场会变得更有效还是更不稳定？历史上每一次&#039;聪明钱&#039;的泛滥，最终都导致了新型的&#039;傻钱&#039;困境。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#8b4513">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#8b4513"></div>
+      <div>
+        <div class="sn">查理·芒格</div>
+        <div class="sr">价值投资者</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ AI情感识别正在&#039;理解&#039;投资者的非理性情绪，这种技术究竟是解放还是新的控制？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我的投资生涯教会我一件事：永远不要和比你更了解自己情绪的系统对抗。AI情感识别的可怕之处不在于它能&#039;看穿&#039;你的情绪，而在于它会利用这种洞察来操纵你的行为。心理学上有个&#039;荷诺-斯莫兰效应&#039;——外部压力会扭曲内部偏好。当你的理财App不断推送&#039;别人都在赚钱&#039;的信息，你的损失厌恶会被激活，你的风险偏好会被放大，最终你会做出违背自己投资原则的决策。这不是解放，这是斯金纳箱的数字化升级。我见过太多聪明人因为&#039;情绪化管理&#039;而亏损上百万。真正的投资纪律是：永远假设你自己是不可靠的，永远用系统代替情绪做决策。问题是：一个了解你情绪的系统，比你自己更危险。</p></div>
+    
+    
+  </div><div style="background:rgba(var(--accent-rgb),.06);border:1px solid rgba(var(--accent-rgb),.15);border-radius:var(--radius);padding:3vh 2.5vw;margin-top:2vh">
+    <div style="font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh;font-weight:700">⚡ 专家交锋</div>
+    <div style="font-family:var(--serif-zh);font-size:1.05rem;font-weight:600;margin-bottom:2vh;line-height:1.6">第1轮碰撞</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">纳西姆·塔勒布：卡尼曼教授，AI情绪套利的前提是&#039;非理性可预测&#039;，但如果这种套利策略被广泛采用，市场会变得更加有效，非理性会减少——这意味着套利机会也会消失。这是一个自我否定的悖论，您如何解释？</p></div>
+  </div>
+      <div class="deck-footer">第 1/3 轮 · 6 位专家发言</div>
+    </div>
+  </div><div class="slide title-slide" data-title="第2轮：信任结构的瓦解与重构">
+    <div class="frame">
+      <div class="hero-dark">
+        <div class="kicker" data-anim>ROUND 2</div>
+        <div class="h-hero" data-anim style="background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">信任结构的瓦解与重构</div>
+        <div class="quote-large" data-anim style="max-width:700px;margin-top:3vh">当AI成为&#039;最懂你&#039;的存在，传统的信任关系（伴侣、顾问、机构）正在发生怎样的位移？</div>
+      </div>
+    </div>
+  </div><div class="slide" data-title="第2轮：专家发言">
+    <div class="frame">
+      <div class="kicker" data-anim>ROUND 2 · 专家发言</div>
+      <div class="h-lg" data-anim style="margin-bottom:3vh">信任结构的瓦解与重构</div>
+      <div class="sp" style="border-left-color:#1a5f7a">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#1a5f7a"></div>
+      <div>
+        <div class="sn">丹尼尔·卡尼曼</div>
+        <div class="sr">行为经济学之父</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 当AI成为&#039;最懂你&#039;的存在，传统的信任关系（伴侣、顾问、机构）正在发生怎样的位移？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">人类建立信任依赖两条路径：情感信任（基于情感连接和人际经验）和认知信任（基于专业能力和历史表现）。AI正在重构第二条路径——它通过海量数据证明自己比人类顾问更&#039;懂&#039;你的风险偏好、更能预测市场情绪。行为经济学研究显示，当人们面对算法建议时，存在&#039;自动化偏差&#039;——倾向于不加批判地接受系统输出。这解释了为什么智能投顾能在5年内管理资产从0增长到2850亿美元。问题在于：AI构建的是一种单边的、封闭的信任——它了解你，但你无法&#039;了解&#039;它（算法黑箱）；它服务你的财务利益，但它的真实目标是最大化平台收益。这种不对等的信任结构，比传统金融顾问的利益冲突更隐蔽、更难监管。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#c23b22">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#c23b22"></div>
+      <div>
+        <div class="sn">纳西姆·塔勒布</div>
+        <div class="sr">量化金融专家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 当AI成为&#039;最懂你&#039;的存在，传统的信任关系（伴侣、顾问、机构）正在发生怎样的位移？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">信任的核心是&#039;skin in the game&#039;——利益相关者的对等性。传统投资顾问将自有资金投入其推荐的策略，这种利益捆绑建立了基本的信任基础。但AI系统没有&#039;皮肤在游戏中&#039;——它的盈利来自管理费和交易佣金，与投资者收益脱钩。2025年，当AIEQ ETF（全球首只纯AI管理的ETF）全年收益9.38%而同期标普500达12.45%时，谁在承担这个差距的成本？答案是投资者，而AI系统依然收取管理费。这揭示了AI金融服务的根本悖论：它用&#039;客观性&#039;和&#039;去情绪化&#039;包装自己，却内嵌了最自私的激励机制。更危险的是，当所有人都依赖同一套AI模型进行&#039;情绪套利&#039;时，会产生系统性风险——就像LTCM倒下的原因不是单个模型的错误，而是所有量化基金都在做同样的反向赌注。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#7d5a50">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#7d5a50"></div>
+      <div>
+        <div class="sn">项飙</div>
+        <div class="sr">社会学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 当AI成为&#039;最懂你&#039;的存在，传统的信任关系（伴侣、顾问、机构）正在发生怎样的位移？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">从社会学的&#039;脱嵌&#039;理论看，AI正在加速人与传统社会关系的脱嵌。传统信任建立在重复互动、社区约束和面对面交流之上——这些机制虽然低效，却内建了&#039;信任校正&#039;功能：你知道你的顾问住在哪里、他的家庭状况、他的职业声誉。但AI顾问是一种&#039;抽象系统&#039;（Giddens语），它将具体的人际关系转化为冰冷的数据交互。更严重的是，AI正在替代的不仅是金融顾问——它正在成为&#039;情感托管&#039;系统：替你分析情绪、替你做决策、替你维护社交关系。这种&#039;抽象化&#039;的代价是：人失去了建立和维护信任的能力。当一个人习惯于与算法对话，他会越来越难以与人进行深度的情感交流。&#039;情感套利&#039;的终极代价，可能是人际情感能力的系统性退化。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#4a6a9a">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#4a6a9a"></div>
+      <div>
+        <div class="sn">凯文·凯利</div>
+        <div class="sr">科技观察家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 当AI成为&#039;最懂你&#039;的存在，传统的信任关系（伴侣、顾问、机构）正在发生怎样的位移？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我需要为AI投顾说几句公道话。传统金融顾问只为高净值客户服务，AI智能投顾让普通投资者也能获得低成本、个性化的投资建议。从普惠金融的角度，这是巨大的进步。而且，AI确实能纠正某些人类偏见——比如处置效应（过早卖出盈利股、长期持有亏损股），这种偏差在AI系统里根本不存在。当然，透明度和可解释性是关键问题。但我认为解决方案不是拒绝技术，而是发展&#039;可解释AI&#039;——让用户理解为什么AI给出某个建议。未来的理想形态是：AI提供数据分析，人类做出价值判断。纯粹的AI投顾和纯粹的人类顾问都是极端，中间的人机协同才是最优解。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#3a8a5c">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#3a8a5c">️</div>
+      <div>
+        <div class="sn">吴军</div>
+        <div class="sr">技术专家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 当AI成为&#039;最懂你&#039;的存在，传统的信任关系（伴侣、顾问、机构）正在发生怎样的位移？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">从技术架构看，当前的AI投顾系统存在三个根本性缺陷。第一是&#039;历史依赖性&#039;——所有AI模型都基于历史数据训练，但金融市场充满&#039;历史不会重演&#039;的肥尾事件。2020年3月的市场崩盘让无数量化模型失效，因为这是&#039;百年一遇&#039;的情景。第二是&#039;数据偏见&#039;——AI学习的&#039;非理性&#039;模式来自过去的散户投资者，但当AI被广泛采用后，市场参与者结构会改变，历史模式可能不再适用。第三是&#039;相关性vs因果性&#039;——AI可能发现&#039;投资者恐慌时买入能赚钱&#039;的相关性，但无法理解这种策略在极端情况下可能导致流动性危机。我曾在谷歌负责相关项目，我们发现：任何AI系统在其&#039;训练分布&#039;之外的表现都是不可靠的。金融市场的本质特征是分布漂移——今天的AI模型，可能在三年后完全失效。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#8b4513">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#8b4513"></div>
+      <div>
+        <div class="sn">查理·芒格</div>
+        <div class="sr">价值投资者</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 当AI成为&#039;最懂你&#039;的存在，传统的信任关系（伴侣、顾问、机构）正在发生怎样的位移？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我一生都在对抗&#039;市场可以预测&#039;的幻觉。任何告诉你&#039;我的算法能读懂人性&#039;的人，你应该先问问自己：他为什么在教课而不是用这个方法赚钱？答案通常是：他赚的不是市场里的钱，而是教课或卖软件的钱。这不是阴谋，这是理性人的行为逻辑。真正理解市场的人，不需要卖书、卖课、卖软件。AI情感套利听起来很美，但我要问：当AI比你自己更懂你的情绪弱点时，谁在保护你免受这种知识的伤害？我见过太多聪明人被&#039;精准的情绪分析&#039;误导——因为分析是正确的，但解读是错误的。数据不会撒谎，但数据也不会替你做判断。判断需要经验、智慧、以及对不确定性的敬畏——这些是AI永远无法复制的。</p></div>
+    
+    
+  </div><div style="background:rgba(var(--accent-rgb),.06);border:1px solid rgba(var(--accent-rgb),.15);border-radius:var(--radius);padding:3vh 2.5vw;margin-top:2vh">
+    <div style="font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh;font-weight:700">⚡ 专家交锋</div>
+    <div style="font-family:var(--serif-zh);font-size:1.05rem;font-weight:600;margin-bottom:2vh;line-height:1.6">第2轮碰撞</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">查理·芒格：凯文·凯利，你说&#039;人机协同是最优解&#039;，但谁来决定这个&#039;协同&#039;的边界？当AI建议与你的直觉冲突时，你听谁的？研究表明，过度依赖AI建议会导致批判性思维退化——这不是&#039;协同&#039;，是&#039;替代&#039;。</p></div>
+  </div>
+      <div class="deck-footer">第 2/3 轮 · 6 位专家发言</div>
+    </div>
+  </div><div class="slide title-slide" data-title="第3轮：权力不对称与监管困境">
+    <div class="frame">
+      <div class="hero-dark">
+        <div class="kicker" data-anim>ROUND 3</div>
+        <div class="h-hero" data-anim style="background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">权力不对称与监管困境</div>
+        <div class="quote-large" data-anim style="max-width:700px;margin-top:3vh">在算法掌握情感数据的时代，如何构建新的金融伦理框架？普通投资者如何保护自己？</div>
+      </div>
+    </div>
+  </div><div class="slide" data-title="第3轮：专家发言">
+    <div class="frame">
+      <div class="kicker" data-anim>ROUND 3 · 专家发言</div>
+      <div class="h-lg" data-anim style="margin-bottom:3vh">权力不对称与监管困境</div>
+      <div class="sp" style="border-left-color:#1a5f7a">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#1a5f7a"></div>
+      <div>
+        <div class="sn">丹尼尔·卡尼曼</div>
+        <div class="sr">行为经济学之父</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 在算法掌握情感数据的时代，如何构建新的金融伦理框架？普通投资者如何保护自己？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我提出&#039;助推理论&#039;（Nudge Theory）的初衷，是通过设计选择架构来帮助人们做出更好的决策——但核心原则是：助推必须透明、可反驳、且服务于被助推者的利益。当AI情感投顾用&#039;情绪分析&#039;来优化产品匹配时，它服务的究竟是谁的利益？普华永道的调查显示，53%的消费者不信任AI金融建议，但仍在使用——因为&#039;不知道还有什么选择&#039;。这种&#039;无知的被动接受&#039;是监管介入的充分理由。我建议：任何AI金融产品必须明确披露&#039;情绪分析&#039;的存在，并提供&#039;非情绪化模式&#039;的等效替代。同时，监管机构应该要求AI投顾进行&#039;算法审计&#039;——验证其建议是否真正服务于投资者利益，而非平台利益。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#c23b22">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#c23b22"></div>
+      <div>
+        <div class="sn">纳西姆·塔勒布</div>
+        <div class="sr">量化金融专家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 在算法掌握情感数据的时代，如何构建新的金融伦理框架？普通投资者如何保护自己？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">监管AI情感投顾的核心挑战是：监管机构的技术素养永远落后于市场创新。更危险的是，当监管者开始&#039;理解&#039;某项AI技术时，技术已经迭代了N个版本。我的反直觉建议是：与其监管算法，不如监管激励机制。强制要求AI投顾&#039;skin in the game&#039;——如果AI推荐的组合亏损，平台必须承担一定比例的损失。只有利益绑定，才能打破&#039;AI赚钱收管理费、亏损由投资者承担&#039;的扭曲结构。同时，我主张对&#039;高频情绪套利&#039;策略征税——因为它本质上是从其他投资者的情绪脆弱性中获利，而非创造价值。这类似于金融交易税（FTT），虽然不完美，但至少改变了利益计算的基本等式。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#7d5a50">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#7d5a50"></div>
+      <div>
+        <div class="sn">项飙</div>
+        <div class="sr">社会学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 在算法掌握情感数据的时代，如何构建新的金融伦理框架？普通投资者如何保护自己？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我担忧的是：技术监管永远无法解决根本的权力不对称。问题的核心不是&#039;AI情感识别是否合规&#039;，而是&#039;谁有权将情感转化为数据&#039;。当一个人打开理财App的那一刻，他的浏览轨迹、停留时间、下拉速度、点击犹豫——都在被记录和分析。这种&#039;全景式监控&#039;（Foucault语）从未有过历史先例，监管框架无法应对。更深层的问题是：当算法比你更懂你的欲望和恐惧时，你还有&#039;自主选择&#039;可言吗？我认为必要的措施包括：数据主权归用户（用户有权删除、导出、转移自己的情感数据）；情感分析必须获得明确同意，而非&#039;默认授权&#039;；禁止将情感数据用于跨平台广告投放。只有将&#039;情感数据&#039;确立为一种基本人权，才能从根本上约束其商业化滥用。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#4a6a9a">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#4a6a9a"></div>
+      <div>
+        <div class="sn">凯文·凯利</div>
+        <div class="sr">科技观察家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 在算法掌握情感数据的时代，如何构建新的金融伦理框架？普通投资者如何保护自己？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我同意需要监管，但反对过度监管扼杀创新。历史上，每一次重大技术革命都伴随着&#039;恐惧-监管-适应&#039;的周期，最终社会找到了平衡点。AI金融服务的价值是真实的：它让以前无法获得专业建议的人也能进行理性投资。与其全面禁止&#039;情感分析&#039;，不如建立分级授权制度：低风险用途（如风险偏好评估）可以默认开启；高风险用途（如个性化产品推荐）需要明确同意；最敏感的用途（如利用情绪脆弱性进行营销）需要监管机构逐一审批。同时，我呼吁行业建立&#039;AI透明度标准&#039;——让用户知道AI在看什么、怎么分析、得出什么结论。当算法成为新的&#039;金融顾问&#039;，它必须承担与传统顾问同等的信托责任。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#3a8a5c">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#3a8a5c">️</div>
+      <div>
+        <div class="sn">吴军</div>
+        <div class="sr">技术专家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 在算法掌握情感数据的时代，如何构建新的金融伦理框架？普通投资者如何保护自己？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">从技术层面，我看到几个可行的解决方案。第一是&#039;联邦学习&#039;——允许AI模型在不获取用户原始数据的情况下进行训练，从根本上解决隐私问题。摩根大通已经在探索这种方法。第二是&#039;模型可解释性&#039;——通过SHAP值、LIME等方法，解释AI建议背后的关键因素，让用户理解而非盲目接受。第三是&#039;红队测试&#039;——邀请白帽黑客专门寻找AI系统的漏洞和偏见，就像网络安全领域已经成熟的实践。最重要的是：建立&#039;AI金融服务的压力测试&#039;制度——类似于银行的压力测试，要求AI系统证明自己在极端市场条件下不会做出伤害投资者的决策。技术问题需要技术解决方案，但执行需要监管背书。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#8b4513">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#8b4513"></div>
+      <div>
+        <div class="sn">查理·芒格</div>
+        <div class="sr">价值投资者</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 在算法掌握情感数据的时代，如何构建新的金融伦理框架？普通投资者如何保护自己？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我一生遵循的投资原则，可能对普通投资者最有参考价值：第一，只投资你充分理解的业务——如果你不懂AI在做什么，就不要把钱交给AI。第二，保持冗余——永远假设最坏情况会发生，准备好应对方案。第三，降低交易频率——每一次&#039;情绪优化&#039;的买入卖出，都在给平台贡献利润、给你制造税单。第四，最重要的——定期反思你的投资决策，问问自己：这是基于理性分析，还是被算法&#039;诱发&#039;的情绪反应？AI可能是工具，但如果你不理解工具的运作原理，你就是工具的工具。我见过太多人被&#039;聪明&#039;的算法误导，因为他们在委托决策的那一刻，放弃了思考的责任。技术越发达，基本的智慧越重要。</p></div>
+    
+    
+  </div><div style="background:rgba(var(--accent-rgb),.06);border:1px solid rgba(var(--accent-rgb),.15);border-radius:var(--radius);padding:3vh 2.5vw;margin-top:2vh">
+    <div style="font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh;font-weight:700">⚡ 专家交锋</div>
+    <div style="font-family:var(--serif-zh);font-size:1.05rem;font-weight:600;margin-bottom:2vh;line-height:1.6">第3轮碰撞</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">项飙：芒格先生，您建议&#039;只投资你理解的业务&#039;，但问题是：普通人能理解的业务越来越少，而AI能理解的越来越多。这是否意味着，在未来，&#039;理解&#039;本身也是一种特权？</p></div>
+  </div>
+      <div class="deck-footer">第 3/3 轮 · 6 位专家发言</div>
+    </div>
+  </div><div class="slide hero title-slide" data-title="结语">
+  <div class="frame">
+    <div class="slide-content" style="justify-content:center;align-items:center;text-align:center">
+      <div class="kicker" data-anim>CONCLUSION</div>
+      <div class="h-hero" data-anim style="margin-bottom:4vh">散户狂潮中的生存法则</div>
+      <div class="quote-large" data-anim style="max-width:800px;margin-bottom:4vh">
+        在极端斯坦，活得久比赚得快更重要。杠铃策略不是悲观主义，而是对不确定性的最高敬意。
+      </div>
+      <div class="gold-line" data-anim></div>
+      <div class="meta-row" data-anim>
+        <span> 丹尼尔·卡尼曼</span> · <span> 凯文·凯利</span> · <span> 纳西姆·塔勒布</span> · <span> 项飙</span> · <span>️ 吴军</span> · <span> 查理·芒格</span>
+      </div>
+      <div style="margin-top:4vh;font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;opacity:.4" data-anim>
+        圆桌洞见 · 2026-05-26
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toc-backdrop" id="tocBackdrop"></div>
+<div class="toc-panel" id="tocPanel">
+<div class="toc-title">目录</div>
+<div id="tocList"></div>
+</div>
+<div class="nav-bar">
+<div class="nav-left">
+<button class="nav-btn" id="btnToc">☰ 目录</button>
+<button class="nav-btn" id="btnPrev">◀ 上一页</button>
+<button class="nav-btn" id="btnNext">下一页 ▶</button>
+</div>
+<div class="nav-right">
+<span class="nav-title" id="slideTitle"></span>
+<span class="nav-counter" id="slideCounter"></span>
+</div>
+</div>
+<div class="nav-dots" id="navDots"></div>
+</div>
+
+<script>
+(function(){
+var deck=document.getElementById("deck");
+var slides=deck.querySelectorAll(".slide");
+var total=slides.length;
+var cur=0;
+var dots=document.getElementById("navDots");
+var tocList=document.getElementById("tocList");
+var titleEl=document.getElementById("slideTitle");
+var counterEl=document.getElementById("slideCounter");
+var tocPanel=document.getElementById("tocPanel");
+var tocBackdrop=document.getElementById("tocBackdrop");
+var progressBar=document.getElementById("progressBar");
+
+for(var i=0;i<total;i++){
+  var d=document.createElement("button");
+  d.className="nd";
+  d.setAttribute("data-i",i);
+  d.onclick=(function(idx){return function(){go(idx)}})(i);
+  dots.appendChild(d);
+  var t=document.createElement("div");
+  t.className="toc-item";
+  t.setAttribute("data-i",i);
+  t.innerHTML='<span class="toc-label">'+(slides[i].getAttribute("data-title")||"Slide "+(i+1))+'</span><span class="toc-page">'+String(i+1).padStart(2,"0")+'</span>';
+  t.onclick=(function(idx){return function(){go(idx);closeTOC()}})(i);
+  tocList.appendChild(t);
+}
+
+function go(n){
+  if(n<0||n>=total)return;
+  slides[cur].classList.remove("active");
+  dots.children[cur].classList.remove("active");
+  tocList.children[cur].classList.remove("active");
+  cur=n;
+  slides[cur].classList.add("active");
+  dots.children[cur].classList.add("active");
+  tocList.children[cur].classList.add("active");
+  titleEl.textContent=slides[cur].getAttribute("data-title")||"";
+  counterEl.textContent=(cur+1)+" / "+total;
+  progressBar.style.width=((cur+1)/total*100)+"%";
+  slides[cur].scrollTop=0;
+}
+function toggleTOC(){tocPanel.classList.toggle("open");tocBackdrop.classList.toggle("open")}
+function closeTOC(){tocPanel.classList.remove("open");tocBackdrop.classList.remove("open")}
+
+document.addEventListener("keydown",function(e){
+  if(e.key==="ArrowRight"||e.key==="ArrowDown"||e.key===" "||e.key==="PageDown"){e.preventDefault();go(cur+1)}
+  else if(e.key==="ArrowLeft"||e.key==="ArrowUp"||e.key==="PageUp"){e.preventDefault();go(cur-1)}
+  else if(e.key==="Home"){e.preventDefault();go(0)}
+  else if(e.key==="End"){e.preventDefault();go(total-1)}
+  else if(e.key==="Escape"){closeTOC();go(0)}
+  else if(e.key==="t"||e.key==="T"){toggleTOC()}
+});
+var wheelTimer=null;
+deck.addEventListener("wheel",function(e){
+  var sl=slides[cur];
+  var atTop=sl.scrollTop<=0;
+  var atBottom=sl.scrollTop+sl.clientHeight>=sl.scrollHeight-2;
+  if(e.deltaY>0&&atBottom){
+    if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},350);go(cur+1)}
+    e.preventDefault();
+  }else if(e.deltaY<0&&atTop){
+    if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},350);go(cur-1)}
+    e.preventDefault();
+  }
+},{passive:false});
+var touchX=0,touchY=0;
+deck.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX;touchY=e.touches[0].clientY});
+deck.addEventListener("touchend",function(e){
+  var dx=touchX-e.changedTouches[0].clientX,dy=touchY-e.changedTouches[0].clientY;
+  if(Math.abs(dy)>Math.abs(dx)){if(dy>50)go(cur+1);else if(dy<-50)go(cur-1)}
+  else{if(dx>50)go(cur+1);else if(dx<-50)go(cur-1)}
+});
+deck.addEventListener("click",function(e){
+  if(e.target.closest(".nav-btn,.nd,.toc-item,.toc-panel,.toc-backdrop"))return;
+  var x=e.clientX/window.innerWidth;
+  if(x<0.3)go(cur-1);else if(x>0.7)go(cur+1);
+});
+document.getElementById("btnToc").addEventListener("click",function(e){e.stopPropagation();toggleTOC()});
+document.getElementById("btnPrev").addEventListener("click",function(e){e.stopPropagation();go(cur-1)});
+document.getElementById("btnNext").addEventListener("click",function(e){e.stopPropagation();go(cur+1)});
+tocBackdrop.addEventListener("click",closeTOC);
+go(0);
+})();
+</script>
+</body>
+</html>

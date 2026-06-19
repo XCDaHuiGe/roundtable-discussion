@@ -1,0 +1,55 @@
+{
+  "batch": 3,
+  "rounds": [
+    {
+      "round": 241,
+      "expert1": "丹尼尔·卡尼曼",
+      "expert2": "西蒙娜·德·波伏娃",
+      "belief1": "确认偏误让你只看到想看的",
+      "belief2": "他者即地狱",
+      "topic": "终极对立:确认偏误让你只看到想看的 vs 他者即地狱。两者只能信一个,选哪个?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 242,
+      "expert1": "芒格",
+      "expert2": "丹尼尔·戈尔曼",
+      "belief1": "反过来想总是反过来想",
+      "belief2": "情商比智商更能预测成功",
+      "topic": "方法论之争:解决问题的最佳路径是反过来想总是反过来想,还是情商比智商更能预测成功?",
+      "conflict_type": "method",
+      "strength": "strong"
+    },
+    {
+      "round": 243,
+      "expert1": "巴菲特",
+      "expert2": "芮小丹",
+      "belief1": "大潮退去才知道谁在裸泳",
+      "belief2": "纯粹本身就是力量",
+      "topic": "价值排序之争:大潮退去才知道谁在裸泳更重要,还是纯粹本身就是力量更重要?",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 244,
+      "expert1": "达利欧",
+      "expert2": "巴菲特",
+      "belief1": "原则是系统化决策的基础",
+      "belief2": "别人恐惧时我贪婪",
+      "topic": "不可调和:原则是系统化决策的基础。然而别人恐惧时我贪婪。真相在哪一边?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    },
+    {
+      "round": 245,
+      "expert1": "阿西莫夫",
+      "expert2": "马克思",
+      "belief1": "科技需要伦理导航",
+      "belief2": "资本从来到世间每个毛孔都滴着血",
+      "topic": "水火不容:科技需要伦理导航。但资本从来到世间每个毛孔都滴着血。谁的证据更硬?",
+      "conflict_type": "direct",
+      "strength": "strong"
+    }
+  ]
+}

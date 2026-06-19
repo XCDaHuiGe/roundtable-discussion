@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>无用阶级的诞生：当AI替代人类工作 圆桌洞见</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0A0A0A;
+  --bg: #111111;
+  --bg-card: rgba(255,255,255,0.04);
+  --bg-card-hover: rgba(255,255,255,0.08);
+  --fg: #F5F5F5;
+  --fg-muted: #A0A0A0;
+  --fg-dim: #606060;
+  --accent: #D4A04A;
+  --accent-soft: rgba(212,160,74,0.12);
+  --accent-glow: rgba(212,160,74,0.25);
+  --copper: #C07A3E;
+  --clash: #ff4757;
+  --clash-soft: rgba(255,71,87,0.12);
+  --clash-glow: rgba(255,71,87,0.35);
+  --insight: #00d4aa;
+  --insight-soft: rgba(0,212,170,0.12);
+  --insight-glow: rgba(0,212,170,0.40);
+  --border: rgba(255,255,255,0.08);
+  --border-accent: rgba(212,160,74,0.30);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --font-display: 'Noto Serif SC', serif;
+  --font-body: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  display: flex;
+  flex-direction: row;
+  width: max-content;
+  height: 100vh;
+  background: var(--bg-deep);
+  color: var(--fg);
+  font-family: var(--font-body);
+  line-height: 1.85;
+  opacity: 0;
+  animation: fadeIn 0.8s ease forwards;
+}
+@keyframes fadeIn { to { opacity: 1; } }
+::selection { background: var(--accent); color: var(--bg-deep); }
+.noise-overlay {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}
+.mesh-gradient {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(ellipse 70% 50% at 10% 20%, rgba(212,160,74,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 40% at 90% 80%, rgba(0,212,170,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse 30% 25% at 50% 50%, rgba(255,71,87,0.03) 0%, transparent 50%);
+}
+.slide {
+  width: 100vw; height: 100vh; min-width: 100vw; position: relative;
+  display: flex; flex-direction: column; scroll-snap-align: start;
+  opacity: 0; transform: translateX(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.slide.visible { opacity: 1; transform: translateX(0); }
+.stagger-item { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.slide.visible .stagger-item { opacity: 1; transform: translateY(0); }
+.slide.visible .stagger-item:nth-child(1) { transition-delay: 0.1s; }
+.slide.visible .stagger-item:nth-child(2) { transition-delay: 0.2s; }
+.slide.visible .stagger-item:nth-child(3) { transition-delay: 0.3s; }
+.slide.visible .stagger-item:nth-child(4) { transition-delay: 0.4s; }
+.slide.visible .stagger-item:nth-child(5) { transition-delay: 0.5s; }
+.slide.visible .stagger-item:nth-child(6) { transition-delay: 0.6s; }
+.slide.visible .stagger-item:nth-child(7) { transition-delay: 0.7s; }
+.slide.visible .stagger-item:nth-child(8) { transition-delay: 0.8s; }
+.slide-cover {
+  background: linear-gradient(135deg, #1A1A2E 0%, #16213E 50%, #0F0F23 100%);
+  color: var(--fg); padding: clamp(40px, 5vh, 80px) clamp(48px, 5vw, 100px);
+  justify-content: space-between; position: relative; overflow: hidden;
+}
+.slide-cover::before {
+  content: ''; position: absolute; top: -50%; right: -20%; width: 600px; height: 600px;
+  background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+  opacity: 0.5; animation: cover-glow 6s ease-in-out infinite;
+}
+@keyframes cover-glow { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.1); } }
+.slide-cover::after {
+  content: ''; position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(255,255,255,0.02) 59px, rgba(255,255,255,0.02) 60px),
+    repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(255,255,255,0.02) 59px, rgba(255,255,255,0.02) 60px);
+  pointer-events: none;
+}
+.cover-decor-line { position: absolute; top: 20%; left: 0; width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(212,160,74,0.2), transparent); }
+.cover-decor-line-2 { position: absolute; bottom: 30%; left: 0; width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,212,170,0.15), transparent); }
+.cover-logo { font-family: var(--font-mono); font-size: clamp(18px, 2vw, 28px); font-weight: 600; letter-spacing: 0.04em; color: var(--accent); position: relative; z-index: 2; }
+.cover-logo span { display: block; padding-left: 1em; font-weight: 400; color: var(--fg-muted); font-size: 0.85em; }
+.cover-body { max-width: 70%; position: relative; z-index: 2; }
+.cover-badge {
+  display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px;
+  background: linear-gradient(135deg, var(--accent-soft), rgba(212,160,74,0.06));
+  border: 1px solid var(--border-accent); border-radius: 100px;
+  font-family: var(--font-mono); font-size: clamp(10px, 1vw, 13px); font-weight: 500;
+  color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase;
+  margin-bottom: clamp(20px, 3vh, 36px); position: relative; overflow: hidden;
+}
+.cover-badge::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(212,160,74,0.2), transparent); animation: shimmer 3s ease-in-out infinite; }
+@keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+.cover-body h1 {
+  font-family: var(--font-display); font-size: clamp(40px, 5vw, 72px); font-weight: 800;
+  line-height: 1.1; margin-bottom: clamp(16px, 2vh, 28px); letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--fg), var(--fg-muted));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.cover-body .cover-sub { font-family: var(--font-display); font-size: clamp(16px, 1.8vw, 26px); font-weight: 400; margin-bottom: clamp(8px, 1vh, 16px); color: var(--fg-muted); line-height: 1.6; }
+.cover-body .cover-date { font-family: var(--font-mono); font-size: clamp(12px, 1.2vw, 16px); color: var(--fg-dim); letter-spacing: 0.02em; }
+.cover-footer { font-family: var(--font-mono); font-size: clamp(10px, 0.9vw, 12px); color: var(--fg-dim); letter-spacing: 0.08em; position: relative; z-index: 2; }
+.slide-content {
+  background: var(--bg); padding: clamp(24px, 3vh, 48px) clamp(40px, 4vw, 80px);
+  overflow: hidden; position: relative;
+}
+.slide-content::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.3; }
+.breadcrumb { font-family: var(--font-mono); font-size: clamp(11px, 1vw, 13px); color: var(--fg-dim); text-align: right; margin-bottom: clamp(12px, 1.5vh, 20px); letter-spacing: 0.02em; }
+.slide-title {
+  font-family: var(--font-display); font-size: clamp(24px, 2.5vw, 36px); font-weight: 800;
+  color: var(--fg); line-height: 1.35; margin-bottom: clamp(16px, 2vh, 28px);
+  letter-spacing: -0.01em; position: relative; padding-left: 28px;
+}
+.slide-title::before {
+  content: ''; position: absolute; left: 0; top: 4px; bottom: 4px; width: 5px;
+  background: linear-gradient(180deg, var(--accent), var(--copper)); border-radius: 3px;
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+.stats-flex { display: flex; justify-content: center; gap: 2px; margin: clamp(32px, 4vh, 56px) 0; flex-wrap: wrap; position: relative; }
+.stat-divider { width: 1px; height: 80px; background: linear-gradient(180deg, transparent, var(--border-accent), transparent); margin: 0 20px; flex-shrink: 0; }
+.stat-item {
+  text-align: center; padding: clamp(20px, 2.5vh, 32px) clamp(28px, 3vw, 48px);
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+  transition: all 0.3s ease; position: relative; overflow: hidden;
+}
+.stat-item::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0; transition: opacity 0.3s ease; }
+.stat-item:hover { background: var(--bg-card-hover); border-color: var(--border-accent); transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
+.stat-item:hover::before { opacity: 1; }
+.stat-number { font-family: var(--font-display); font-size: clamp(36px, 4vw, 52px); font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 10px; letter-spacing: -0.02em; }
+.stat-label { font-family: var(--font-body); font-size: clamp(12px, 1.2vw, 16px); color: var(--fg-muted); font-weight: 400; letter-spacing: 0.04em; }
+.experts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(18px, 2vw, 26px); margin-top: clamp(24px, 3vh, 36px); }
+.expert-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: clamp(24px, 3vh, 36px); transition: all 0.3s ease; position: relative; overflow: hidden;
+}
+.expert-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0; transition: opacity 0.3s ease; }
+.expert-card:hover { background: var(--bg-card-hover); border-color: var(--border-accent); transform: translateY(-6px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+.expert-card:hover::before { opacity: 1; }
+.expert-avatar {
+  width: clamp(52px, 5vw, 68px); height: clamp(52px, 5vw, 68px); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 900; font-size: clamp(18px, 2vw, 26px);
+  margin-bottom: clamp(14px, 1.8vh, 22px); transition: all 0.3s ease;
+}
+.expert-card:hover .expert-avatar { transform: translateY(-4px); box-shadow: 0 0 20px var(--accent-glow); }
+.expert-avatar.role-leader { background: linear-gradient(135deg, var(--accent), var(--copper)); color: var(--bg-deep); }
+.expert-avatar.role-challenger { background: linear-gradient(135deg, var(--clash), #c44a2e); color: #fff; }
+.expert-avatar.role-observer { background: linear-gradient(135deg, var(--insight), #358568); color: #fff; }
+.expert-name { font-family: var(--font-display); font-weight: 700; font-size: clamp(14px, 1.4vw, 18px); margin-bottom: 6px; color: var(--fg); letter-spacing: 0.01em; }
+.expert-role { font-family: var(--font-mono); font-size: clamp(10px, 1vw, 13px); color: var(--accent); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: clamp(10px, 1.2vh, 14px); }
+.expert-desc { font-family: var(--font-body); font-size: clamp(12px, 1.2vw, 15px); color: var(--fg-muted); line-height: 1.7; letter-spacing: 0.01em; }
+.speech-cards { display: flex; flex-direction: column; gap: clamp(16px, 2vh, 22px); margin-top: clamp(20px, 2.5vh, 28px); }
+.speech-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: clamp(24px, 3vh, 36px); transition: all 0.3s ease; position: relative; overflow: hidden;
+}
+.speech-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--copper), transparent); opacity: 0.6; }
+.speech-card:hover { background: var(--bg-card-hover); transform: translateY(-2px); }
+.speech-meta { display: flex; align-items: center; gap: clamp(14px, 1.8vw, 18px); margin-bottom: clamp(14px, 1.8vh, 20px); }
+.speaker-avatar {
+  width: clamp(44px, 4vw, 56px); height: clamp(44px, 4vw, 56px); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 900; font-size: clamp(15px, 1.5vw, 20px);
+  transition: all 0.3s ease;
+}
+.speech-card:hover .speaker-avatar { box-shadow: 0 0 15px var(--accent-glow); }
+.speaker-avatar.role-leader { background: linear-gradient(135deg, var(--accent), var(--copper)); color: var(--bg-deep); }
+.speaker-avatar.role-challenger { background: linear-gradient(135deg, var(--clash), #c44a2e); color: #fff; }
+.speaker-avatar.role-observer { background: linear-gradient(135deg, var(--insight), #358568); color: #fff; }
+.speaker-name { font-family: var(--font-display); font-weight: 700; font-size: clamp(14px, 1.4vw, 18px); color: var(--fg); letter-spacing: 0.01em; }
+.speaker-role { font-family: var(--font-mono); font-size: clamp(10px, 1vw, 13px); color: var(--fg-muted); letter-spacing: 0.04em; }
+.speech-content { font-family: var(--font-body); font-size: clamp(13px, 1.3vw, 16px); line-height: 1.9; color: var(--fg-muted); letter-spacing: 0.01em; }
+.clash-block {
+  background: linear-gradient(135deg, var(--clash-soft), rgba(212,160,74,0.06));
+  border: 1px solid rgba(255,71,87,0.25); border-radius: var(--radius);
+  padding: clamp(24px, 3vh, 36px); margin-top: clamp(20px, 2.5vh, 28px);
+  position: relative; overflow: hidden;
+  box-shadow: 0 0 40px var(--clash-glow), inset 0 0 60px rgba(255,71,87,0.05);
+}
+.clash-block::before {
+  content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 5px;
+  background: linear-gradient(180deg, var(--clash), #c44a2e); border-radius: 0 5px 5px 0;
+  box-shadow: 0 0 20px var(--clash-glow);
+}
+.clash-block::after { content: ''; position: absolute; top: 0; left: 5px; right: 0; height: 3px; background: linear-gradient(90deg, var(--clash), transparent); opacity: 0.4; }
+.clash-label {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--font-mono); font-size: clamp(12px, 1.2vw, 14px); font-weight: 700;
+  color: var(--clash); letter-spacing: 0.06em; text-transform: uppercase;
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+}
+.clash-item { margin-bottom: clamp(12px, 1.5vh, 16px); padding-bottom: clamp(12px, 1.5vh, 16px); border-bottom: 1px solid rgba(255,71,87,0.15); }
+.clash-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.clash-speaker { font-family: var(--font-display); font-weight: 700; font-size: clamp(13px, 1.3vw, 16px); color: var(--accent); margin-bottom: 8px; letter-spacing: 0.01em; }
+.clash-text { font-family: var(--font-body); font-size: clamp(12px, 1.2vw, 15px); line-height: 1.8; color: var(--fg-muted); letter-spacing: 0.01em; }
+.insight-block {
+  background: linear-gradient(135deg, var(--insight-soft), rgba(0,212,170,0.04));
+  border: 1px solid rgba(0,212,170,0.30); border-radius: var(--radius);
+  padding: clamp(28px, 3.5vh, 40px); margin-top: clamp(20px, 2.5vh, 28px);
+  position: relative; overflow: hidden;
+  box-shadow: 0 0 50px var(--insight-glow), inset 0 0 80px rgba(0,212,170,0.05);
+}
+.insight-block::before {
+  content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 5px;
+  background: linear-gradient(180deg, var(--insight), #358568); border-radius: 0 5px 5px 0;
+  box-shadow: 0 0 25px var(--insight-glow);
+}
+.insight-block::after { content: ''; position: absolute; top: 0; left: 5px; right: 0; height: 3px; background: linear-gradient(90deg, var(--insight), transparent); opacity: 0.5; }
+.insight-label {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--font-mono); font-size: clamp(12px, 1.2vw, 14px); font-weight: 700;
+  color: var(--insight); letter-spacing: 0.06em; text-transform: uppercase;
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+}
+.insight-core { font-family: var(--font-display); font-size: clamp(18px, 2vw, 26px); font-weight: 800; color: var(--fg); line-height: 1.45; margin-bottom: clamp(12px, 1.5vh, 16px); letter-spacing: -0.01em; }
+.insight-explain { font-family: var(--font-body); font-size: clamp(13px, 1.3vw, 16px); line-height: 1.85; color: var(--fg-muted); letter-spacing: 0.01em; }
+.conclusions-grid { display: flex; flex-direction: column; gap: clamp(16px, 2vh, 22px); margin-top: clamp(20px, 2.5vh, 28px); }
+.conclusion-item {
+  display: flex; gap: clamp(16px, 2vw, 22px); align-items: flex-start;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: clamp(20px, 2.5vh, 28px); transition: all 0.3s ease; position: relative; overflow: hidden;
+}
+.conclusion-item::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); opacity: 0; transition: opacity 0.3s ease; }
+.conclusion-item:hover { background: var(--bg-card-hover); transform: translateX(8px); box-shadow: 0 8px 30px rgba(212,160,74,0.15); }
+.conclusion-item:hover::before { opacity: 1; }
+.conclusion-num { font-family: var(--font-display); font-size: clamp(32px, 3.5vw, 44px); font-weight: 800; color: var(--accent); opacity: 0.4; line-height: 1; flex-shrink: 0; }
+.conclusion-text { font-family: var(--font-body); font-size: clamp(14px, 1.4vw, 18px); line-height: 1.7; color: var(--fg); flex: 1; letter-spacing: 0.01em; }
+.question-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: clamp(22px, 2.8vh, 32px); margin-bottom: clamp(14px, 1.8vh, 20px);
+  transition: all 0.3s ease; cursor: pointer; display: flex; align-items: flex-start;
+  gap: clamp(14px, 1.8vw, 18px); overflow: hidden; position: relative;
+}
+.question-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); opacity: 0; transition: opacity 0.3s ease; }
+.question-card:hover { background: var(--bg-card-hover); border-color: var(--accent); transform: translateX(8px); box-shadow: 0 8px 30px rgba(212,160,74,0.15); }
+.question-card:hover::before { opacity: 1; }
+.question-card .question-expand { display: none; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); font-family: var(--font-body); font-size: clamp(12px, 1.2vw, 15px); color: var(--fg-dim); line-height: 1.7; letter-spacing: 0.01em; }
+.question-card:hover .question-expand { display: block; animation: slideDown 0.3s ease; }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+.question-number { font-family: var(--font-mono); font-weight: 700; font-size: clamp(16px, 1.6vw, 22px); color: var(--accent); opacity: 0.5; flex-shrink: 0; line-height: 1.4; }
+.question-text { font-family: var(--font-body); font-size: clamp(13px, 1.3vw, 16px); color: var(--fg); line-height: 1.75; letter-spacing: 0.01em; }
+#nav {
+  position: fixed; bottom: clamp(16px, 2vh, 24px); left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: clamp(10px, 1.2vw, 16px); z-index: 100;
+  background: rgba(0,0,0,0.85); backdrop-filter: blur(20px);
+  padding: clamp(10px, 1.2vh, 14px) clamp(18px, 2vw, 28px);
+  border-radius: 100px; border: 1px solid var(--border);
+}
+.nav-btn {
+  width: clamp(36px, 3.5vw, 44px); height: clamp(36px, 3.5vw, 44px);
+  border: none; background: var(--bg-card); border-radius: 50%;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: clamp(12px, 1.2vw, 14px); color: var(--fg); transition: all 0.2s ease;
+}
+.nav-btn:hover { background: var(--accent); color: var(--bg-deep); transform: scale(1.1); }
+.dots { display: flex; gap: 8px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.3); cursor: pointer; transition: all 0.3s ease; }
+.dot:hover { background: rgba(255,255,255,0.5); transform: scale(1.2); }
+.dot.active { background: var(--accent); transform: scale(1.4); box-shadow: 0 0 10px var(--accent-glow); }
+#counter { position: fixed; top: clamp(12px, 1.5vh, 20px); right: clamp(16px, 2vw, 24px); font-family: var(--font-mono); font-size: clamp(11px, 1.1vw, 14px); color: var(--fg-muted); z-index: 100; background: rgba(0,0,0,0.6); padding: 8px 16px; border-radius: 100px; backdrop-filter: blur(10px); letter-spacing: 0.02em; }
+#progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 101; background: var(--border); }
+#progressBar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--copper)); transition: width 0.2s ease-out; box-shadow: 0 0 10px var(--accent-glow); }
+@media (max-width: 768px) { .experts-grid { grid-template-columns: repeat(2, 1fr); } .cover-body { max-width: 85%; } .stat-divider { display: none; } }
+@media (max-width: 480px) { .experts-grid { grid-template-columns: 1fr; } .stats-flex { flex-direction: column; gap: 14px; } .stat-item { width: 100%; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+</style>
+</head>
+<body>
+<div class="mesh-gradient"></div>
+<div class="noise-overlay"></div>
+<div id="progress"><div id="progressBar"></div></div>
+
+<!-- 封面 -->
+<div class="slide slide-cover visible">
+  <div class="cover-decor-line"></div>
+  <div class="cover-decor-line-2"></div>
+  <div class="cover-logo stagger-item">ROUND TABLE<span>圆桌洞见 V1.0</span></div>
+  <div class="cover-body">
+    <div class="cover-badge stagger-item"><i class="fas fa-brain"></i> AI时代的生存危机</div>
+    <h1 class="stagger-item">无用阶级的诞生</h1>
+    <p class="cover-sub stagger-item">当算法开始替代人类工作，我们如何重新定义存在的意义？</p>
+    <p class="cover-date stagger-item">2026.05.27 · 6位专家 · 3轮深度交锋</p>
+  </div>
+  <div class="cover-footer stagger-item">PRESSEDBY ROUNDTABLE ENGINE · V1.0</div>
+</div>
+
+<!-- 专家阵容 -->
+<div class="slide slide-content">
+  <div class="breadcrumb stagger-item">ROUND TABLE / 专家阵容</div>
+  <h2 class="slide-title stagger-item">六位思想巨擘</h2>
+  <div class="experts-grid">
+    <div class="expert-card stagger-item">
+      <div class="expert-avatar role-leader">赫</div>
+      <div class="expert-name">尤瓦尔·赫拉利</div>
+      <div class="expert-role">历史学家 · 《人类简史》作者</div>
+      <div class="expert-desc">关注AI对人类文明的颠覆性影响，提出"无用阶级"概念</div>
+    </div>
+    <div class="expert-card stagger-item">
+      <div class="expert-avatar role-observer">德</div>
+      <div class="expert-name">彼得·德鲁克</div>
+      <div class="expert-role">现代管理学之父</div>
+      <div class="expert-desc">从组织效率角度审视技术对劳动市场的结构性冲击</div>
+    </div>
+    <div class="expert-card stagger-item">
+      <div class="expert-avatar role-challenger">凯</div>
+      <div class="expert-name">凯文·凯利</div>
+      <div class="expert-role">《失控》作者 · 科技乐观主义者</div>
+      <div class="expert-desc">相信技术会创造新的工作形态，反对技术决定论</div>
+    </div>
+    <div class="expert-card stagger-item">
+      <div class="expert-avatar role-observer">项</div>
+      <div class="expert-name">项飙</div>
+      <div class="expert-role">人类学家 · 牛津大学教授</div>
+      <div class="expert-desc">从社会结构角度分析"悬浮"状态与工作意义的消解</div>
+    </div>
+    <div class="expert-card stagger-item">
+      <div class="expert-avatar role-leader">卡</div>
+      <div class="expert-name">丹尼尔·卡尼曼</div>
+      <div class="expert-role">诺贝尔经济学奖得主</div>
+      <div class="expert-desc">研究认知偏差如何影响人们对失业风险的判断</div>
+    </div>
+    <div class="expert-card stagger-item">
+      <div class="expert-avatar role-challenger">塔</div>
+      <div class="expert-name">纳西姆·塔勒布</div>
+      <div class="expert-role">《黑天鹅》作者 · 风险思想家</div>
+      <div class="expert-desc">警告技术替代带来的非线性风险与脆弱性</div>
+    </div>
+  </div>
+</div>
+
+<!-- Round 1: 立场表达 -->
+<div class="slide slide-content">
+  <div class="breadcrumb stagger-item">ROUND 1 / 立场表达</div>
+  <h2 class="slide-title stagger-item">当AI开始替代人类，谁将成为"无用阶级"？</h2>
+  <div class="speech-cards">
+    <div class="speech-card stagger-item">
+      <div class="speech-meta">
+        <div class="speaker-avatar role-leader">赫</div>
+        <div>
+          <div class="speaker-name">尤瓦尔·赫拉利</div>
+          <div class="speaker-role">历史学家</div>
+        </div>
+      </div>
+      <div class="speech-content">我在《未来简史》中警告过：21世纪最大的政治危机不是战争或饥荒，而是"无用阶级"的诞生。当AI能在大多数任务上超越人类时，数十亿人将面临一个前所未有的困境——不是被剥削，而是被彻底无视。资本主义需要的是消费者，不是劳动者。当算法能更高效地完成工作，人类的经济价值将被系统性地否定。这不是失业问题，而是存在意义的崩塌。历史上，人类通过劳动定义自我；当劳动不再是必需品，我们如何回答"我是谁"这个问题？</div>
+    </div>
+    <div class="speech-card stagger-item">
+      <div class="speech-meta">
+        <div class="speaker-avatar role-observer">德</div>
+        <div>
+          <div class="speaker-name">彼得·德鲁克</div>
+          <div class="speaker-role">管理学家</div>
+        </div>
+      </div>
+      <div class="speech-content">赫拉利的担忧过于抽象。从管理学角度看，技术替代从来不是零和游戏。20世纪初，美国农业人口占40%，现在不到2%——这些人并没有成为"无用阶级"，他们转型进入了服务业和知识产业。关键问题不是"AI会不会替代人"，而是"组织如何重新设计工作"。德鲁克在《后资本主义社会》中指出，知识工作者的兴起改变了生产关系。AI不会消灭工作，而是会重新定义什么是"有价值的劳动"。真正的危机是教育系统的滞后——我们还在培养工业时代的人才。</div>
+    </div>
+    <div class="speech-card stagger-item">
+      <div class="speech-meta">
+        <div class="speaker-avatar role-challenger">凯</div>
+        <div>
+          <div class="speaker-name">凯文·凯利</div>
+          <div class="speaker-role">科技思想家</div>
+        </div>
+      </div>
+      <div class="speech-content">两位都陷入了"存量思维"的陷阱。技术从来不是替代，而是释放。当汽车替代马车夫，我们没有看到"无用阶级"，而是看到了旅游业、快递业、郊区化的兴起。AI会创造我们今天无法想象的新职业——"AI训练师"、"算法伦理审计师"、"人机协作设计师"。我在《必然》中写道：未来20年最伟大的产品还没有被发明。真正的风险不是AI太强，而是我们用旧框架理解新世界。人类的价值不在于完成任务，而在于提出问题——这是AI永远无法替代的。</div>
+    </div>
+  </div>
+</div>
+
+<!-- Round 1 续：更多发言 -->
+<div class="slide slide-content">
+  <div class="breadcrumb stagger-item">ROUND 1 / 立场表达（续）</div>
+  <h2 class="slide-title stagger-item">社会结构的深层震荡</h2>
+  <div class="speech-cards">
+    <div class="speech-card stagger-item">
+      <div class="speech-meta">
+        <div class="speaker-avatar role-observer">项</div>
+        <div>
+          <div class="speaker-name">项飙</div>
+          <div class="speaker-role">人类学家</div>
+        </div>
+      </div>
+      <div class="speech-content">凯文·凯利的乐观忽视了一个关键维度：社会关系。我在研究中国农民工时发现，工作的意义不仅是收入，更是社会身份和人际网络。当AI替代工作，失去的不只是经济功能，而是整个社会联结的纽带。现代社会已经出现了"悬浮"状态——人们忙于工作却失去意义感。AI会加速这种悬浮，让人彻底脱离社会结构。更危险的是，这种替代是隐蔽的：不是突然失业，而是工作逐渐碎片化、零工化，最终失去尊严。"无用阶级"不是被机器打败，而是被系统遗忘。</div>
+    </div>
+    <div class="speech-card stagger-item">
+      <div class="speech-meta">
+        <div class="speaker-avatar role-leader">卡</div>
+        <div>
+          <div class="speaker-name">丹尼尔·卡尼曼</div>
+          <div class="speaker-role">行为经济学家</div>
+        </div>
+      </div>
+      <div class="speech-content">从认知科学角度看，人们对AI替代的恐惧存在严重的"可得性偏差"。我们更容易记住戏剧性的失业故事，而忽视渐进式的就业转型。数据显示，自动化每次技术革命后，总就业量最终都会恢复并增长。但这里有一个关键的心理学问题：损失厌恶。人们对失去工作的痛苦是获得新工作快乐的两倍。即使AI创造的新岗位多于消灭的旧岗位，转型过程中的心理创伤也是巨大的。政策制定者需要关注的不是就业总量，而是转型速度——过快的替代会造成社会撕裂。</div>
+    </div>
+    <div class="speech-card stagger-item">
+      <div class="speech-meta">
+        <div class="speaker-avatar role-challenger">塔</div>
+        <div>
+          <div class="speaker-name">纳西姆·塔勒布</div>
+          <div class="speaker-role">风险思想家</div>
+        </div>
+      </div>
+      <div class="speech-content">卡尼曼的数据分析忽略了一个根本问题：分布的尾部风险。历史上每次技术革命都伴随着剧烈的社会动荡——卢德运动、大萧条、民粹主义崛起。这次不同的是，AI的替代速度是非线性的。我在《反脆弱》中警告过：过度优化的系统最脆弱。当整个社会都依赖少数AI系统，一次算法错误就可能导致百万人同时失业。更可怕的是，这种脆弱性是隐蔽的——看起来稳定的系统，在黑天鹅事件来临时会瞬间崩溃。"无用阶级"不是渐进过程，而是可能在几个月内突然出现。</div>
+    </div>
+  </div>
+</div>
+
+<!-- Round 2: 互相攻击 -->
+<div class="slide slide-content">
+  <div class="breadcrumb stagger-item">ROUND 2 / 认知碰撞</div>
+  <h2 class="slide-title stagger-item">乐观主义的陷阱</h2>
+  <div class="speech-cards">
+    <div class="speech-card stagger-item">
+      <div class="speech-meta">
+        <div class="speaker-avatar role-challenger">塔</div>
+        <div>
+          <div class="speaker-name">纳西姆·塔勒布</div>
+          <div class="speaker-role">→ 攻击凯文·凯利</div>
+        </div>
+      </div>
+      <div class="speech-content">凯文·凯利，你的"技术释放论"是典型的幸存者偏差。你只看到了成功转型的案例，却忽视了那些被时代抛弃的群体。美国铁锈带的工人、日本失去的一代、欧洲的青年失业者——他们并没有"被释放"，而是被永久性地边缘化。你的"新职业"幻想也站不住脚：AI训练师需要高学历，算法伦理审计师需要技术背景。那些45岁的卡车司机、40岁的客服人员，他们怎么转型？技术乐观主义是一种特权视角，只有那些有能力适应的人才配谈"释放"。</div>
+    </div>
+    <div class="speech-card stagger-item">
+      <div class="speech-meta">
+        <div class="speaker-avatar role-leader">赫</div>
+        <div>
+          <div class="speaker-name">尤瓦尔·赫拉利</div>
+          <div class="speaker-role">→ 攻击德鲁克</div>
+        </div>
+      </div>
+      <div class="speech-content">德鲁克，你的"管理学视角"太狭隘了。你谈论的是如何让组织更高效地使用AI，却没有问一个更根本的问题：当组织不再需要人时，组织存在的意义是什么？你引用的农业转型案例是有问题的——那次转型花了70年，有足够的时间让两代人适应。AI的替代速度是以月计算的，不是以代计算的。更关键的是，工业革命创造了大量的中间层工作；AI革命恰恰在消灭中间层。这不是"重新定义工作"，而是"消灭工作"。</div>
+    </div>
+    <div class="speech-card stagger-item">
+      <div class="speech-meta">
+        <div class="speaker-avatar role-observer">项</div>
+        <div>
+          <div class="speaker-name">项飙</div>
+          <div class="speaker-role">→ 攻击卡尼曼</div>
+        </div>
+      </div>
+      <div class="speech-content">卡尼曼教授，你的数据掩盖了真实的社会代价。"总就业量恢复"是宏观叙事，但微观层面是无数家庭的破碎。中国有2.9亿农民工，他们中的大多数从事重复性劳动。当AI替代这些工作，他们不会变成"知识工作者"，而是会回到农村，成为被遗忘的一代。你的"转型速度"理论也忽视了权力结构：谁来为转型买单？资本家会用AI降低成本，而不是资助工人再培训。"损失厌恶"不是认知偏差，而是对真实痛苦的理性反应。</div>
+    </div>
+  </div>
+</div>
+
+<!-- Round 2 续：碰撞交锋 -->
+<div class="slide slide-content">
+  <div class="breadcrumb stagger-item">ROUND 2 / 碰撞交锋</div>
+  <h2 class="slide-title stagger-item">当理想主义撞上现实</h2>
+  <div class="clash-block stagger-item">
+    <div class="clash-label"><i class="fas fa-bolt"></i> 碰撞交锋 #1</div>
+    <div class="clash-item">
+      <div class="clash-speaker">凯文·凯利 → 纳西姆·塔勒布</div>
+      <div class="clash-text">塔勒布，你的"黑天鹅恐惧症"让你看不到历史的规律。每次技术革命都伴随着恐慌，但人类总能找到新的价值创造方式。你的风险模型假设的是静态社会，而人类社会是动态适应的。真正的反脆弱不是避免冲击，而是在冲击中进化。</div>
+    </div>
+    <div class="clash-item">
+      <div class="clash-speaker">纳西姆·塔勒布 → 凯文·凯利</div>
+      <div class="clash-text">凯利，你混淆了"系统最终恢复"和"个体在过程中幸存"。是的，人类社会最终会适应，但代价是什么？两次世界大战、大萧条、法西斯崛起——这些都是技术革命的"过渡期"。你说的"进化"对那些在过程中被碾碎的人来说毫无意义。系统会进化，但个体可能先死。</div>
+    </div>
+  </div>
+  <div class="clash-block stagger-item">
+    <div class="clash-label"><i class="fas fa-bolt"></i> 碰撞交锋 #2</div>
+    <div class="clash-item">
+      <div class="clash-speaker">尤瓦尔·赫拉利 → 彼得·德鲁克</div>
+      <div class="clash-text">德鲁克，你的管理学假设是"组织需要人"。但AI时代的核心悖论是：最高效的组织是不需要人的组织。当算法能比人类更好地完成决策、创造、甚至管理，"知识工作者"也会成为历史遗留概念。你还在用20世纪的框架理解21世纪的问题。</div>
+    </div>
+    <div class="clash-item">
+      <div class="clash-speaker">彼得·德鲁克 → 尤瓦尔·赫拉利</div>
+      <div class="clash-text">赫拉利，你陷入了"技术决定论"的陷阱。组织是由人组成的，效率不是唯一目标。即使AI能完美决策，人类仍然需要意义感、归属感、创造性表达。未来的组织不是"不需要人"，而是"以新的方式需要人"。你的悲观叙事本身就是一种认知偏差。</div>
+    </div>
+  </div>
+</div>
+
+<!-- Round 3: 认知整合 -->
+<div class="slide slide-content">
+  <div class="breadcrumb stagger-item">ROUND 3 / 认知整合</div>
+  <h2 class="slide-title stagger-item">超越二元对立：重新定义"有用"</h2>
+  <div class="speech-cards">
+    <div class="speech-card stagger-item">
+      <div class="speech-meta">
+        <div class="speaker-avatar role-leader">卡</div>
+        <div>
+          <div class="speaker-name">丹尼尔·卡尼曼</div>
+          <div class="speaker-role">认知整合者</div>
+        </div>
+      </div>
+      <div class="speech-content">经过两轮碰撞，我看到了一个被忽视的认知框架问题。我们一直在用"有用/无用"的二元对立来讨论AI替代，但这个框架本身就是工业时代的产物。在狩猎采集社会，没有人问"你有什么用"；在后稀缺社会，这个问题也将失去意义。真正的挑战不是保住"有用性"，而是超越它。UBI（全民基本收入）不是解决方案，因为它仍然假设收入等于价值。我们需要的是一种新的社会契约，将人的价值与劳动脱钩。</div>
+    </div>
+    <div class="speech-card stagger-item">
+      <div class="speech-meta">
+        <div class="speaker-avatar role-challenger">赫</div>
+        <div>
+          <div class="speaker-name">尤瓦尔·赫拉利</div>
+          <div class="speaker-role">认知整合者</div>
+        </div>
+      </div>
+      <div class="speech-content">卡尼曼的框架升级抓住了问题的核心。我想补充一个历史视角：人类曾经经历过类似的转型。农业革命前，人类的价值在于"生存能力"；农业革命后，价值变成了"生产能力"；工业革命后，变成了"劳动能力"。AI革命将迫使我们进行第四次价值重定义。问题是谁来主导这次重定义？如果让市场决定，答案将是"无用阶级"；如果让人类集体决定，答案可能是"后劳动社会"。这是一场关于人类自我定义的战争。</div>
+    </div>
+    <div class="speech-card stagger-item">
+      <div class="speech-meta">
+        <div class="speaker-avatar role-observer">项</div>
+        <div>
+          <div class="speaker-name">项飙</div>
+          <div class="speaker-role">认知整合者</div>
+        </div>
+      </div>
+      <div class="speech-content">两位的整合都指向一个关键洞察：工作的意义危机不是AI造成的，而是AI暴露的。现代社会早就把人异化为"人力资源"，AI只是让这种异化达到了临界点。解决方案不是保住工作，而是重建社会联结。我在研究中发现，人们最需要的不是收入，而是"被看见"——被社区看见、被历史看见、被他人看见。"无用阶级"的真正悲剧不是没有工作，而是没有观众。未来的社会设计应该围绕"可见性"展开，而不是围绕"生产力"。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 核心洞见 -->
+<div class="slide slide-content">
+  <div class="breadcrumb stagger-item">核心洞见</div>
+  <h2 class="slide-title stagger-item">穿越碰撞后的认知升华</h2>
+  <div class="insight-block stagger-item">
+    <div class="insight-label"><i class="fas fa-lightbulb"></i> 核心洞见</div>
+    <div class="insight-core">"无用阶级"不是技术问题，而是人类自我定义的危机</div>
+    <div class="insight-explain">经过三轮碰撞，六位专家达成一个深刻共识：AI替代工作的真正威胁不在于失业本身，而在于它暴露了现代社会"人=劳动力"这一根本假设的脆弱性。当劳动不再是生存的必需条件，人类必须回答一个被回避了200年的问题：如果我不是"有用"的，我还是"我"吗？</div>
+  </div>
+  <div class="insight-block stagger-item">
+    <div class="insight-label"><i class="fas fa-lightbulb"></i> 关键转折</div>
+    <div class="insight-core">从"保住工作"到"超越工作"的认知跃迁</div>
+    <div class="insight-explain">德鲁克的"重新定义工作"和凯利的"技术释放论"都是在旧框架内寻找出路。塔勒布的风险警告和项飙的社会分析则揭示了旧框架的不可持续性。卡尼曼和赫拉利的整合指向一条新路径：不是让人类变得更"有用"，而是建立一套不依赖"有用性"的社会评价体系。这需要超越经济学，进入哲学、人类学和政治学的综合思考。</div>
+  </div>
+  <div class="insight-block stagger-item">
+    <div class="insight-label"><i class="fas fa-lightbulb"></i> 行动启示</div>
+    <div class="insight-core">"可见性经济"可能是后劳动社会的组织原则</div>
+    <div class="insight-explain">项飙提出的"被看见"概念为后劳动社会提供了一个可能的组织原则。如果人类的基本需求从"被雇佣"转变为"被看见"，那么社会制度应该围绕"可见性"重新设计——不是UBI（全民基本收入），而是UBE（全民基本可见性）。每个人都有权被社区、历史和他人看见，无论其"经济价值"如何。这可能是避免"无用阶级"悲剧的唯一出路。</div>
+  </div>
+</div>
+
+<!-- 开放问题 -->
+<div class="slide slide-content">
+  <div class="breadcrumb stagger-item">开放问题</div>
+  <h2 class="slide-title stagger-item">留给未来的思考</h2>
+  <div class="question-card stagger-item">
+    <div class="question-number">Q1</div>
+    <div class="question-text">如果"有用性"不再是人的核心价值，我们如何建立一套新的社会评价体系？</div>
+    <div class="question-expand">这个问题指向后劳动社会的核心挑战：当经济贡献不再是衡量人的标准，什么可以替代它？创造力？社会参与？情感联结？还是纯粹的存在本身？</div>
+  </div>
+  <div class="question-card stagger-item">
+    <div class="question-number">Q2</div>
+    <div class="question-text">AI替代的速度是否可能超过人类适应的极限？如果是，我们有什么缓冲机制？</div>
+    <div class="question-expand">塔勒布的非线性风险警告值得认真对待。如果AI替代在几年内完成，而不是几代人，社会可能没有足够的时间进行结构性调整。UBI、再培训、缩短工时——这些缓冲机制够用吗？</div>
+  </div>
+  <div class="question-card stagger-item">
+    <div class="question-number">Q3</div>
+    <div class="question-text">"无用阶级"会成为一个自我实现的预言吗？</div>
+    <div class="question-expand">赫拉利的概念本身可能会加速其到来。当人们相信自己是"无用"的，他们可能会放弃努力，从而真的变得无用。语言和叙事在塑造现实中的力量不容忽视。</div>
+  </div>
+  <div class="question-card stagger-item">
+    <div class="question-number">Q4</div>
+    <div class="question-text">谁有权力定义什么是"有用"？</div>
+    <div class="question-expand">这个问题触及了权力结构的核心。目前，"有用性"是由市场定义的——能赚钱的就是有用的。但市场只是人类创造的一种工具，它不应该拥有定义人类价值的终极权力。那么，谁应该有这个权力？</div>
+  </div>
+</div>
+
+<!-- 结论 -->
+<div class="slide slide-content">
+  <div class="breadcrumb stagger-item">结论</div>
+  <h2 class="slide-title stagger-item">终章：从恐惧到重构</h2>
+  <div class="conclusions-grid">
+    <div class="conclusion-item stagger-item">
+      <div class="conclusion-num">01</div>
+      <div class="conclusion-text">"无用阶级"不是一个预测，而是一个警告。它提醒我们：人类不能继续用工业时代的框架理解AI时代的问题。</div>
+    </div>
+    <div class="conclusion-item stagger-item">
+      <div class="conclusion-num">02</div>
+      <div class="conclusion-text">技术乐观主义和技术悲观主义都是不完整的。真正的智慧在于理解：技术改变的不是就业数量，而是"价值"的定义。</div>
+    </div>
+    <div class="conclusion-item stagger-item">
+      <div class="conclusion-num">03</div>
+      <div class="conclusion-text">从"有用性"到"可见性"的认知跃迁，可能是人类应对AI挑战的关键。每个人都需要被看见，而不是被雇佣。</div>
+    </div>
+    <div class="conclusion-item stagger-item">
+      <div class="conclusion-num">04</div>
+      <div class="conclusion-text">政策制定者需要关注的不是"创造新工作"，而是"建立新社会契约"。UBI只是权宜之计，真正的解决方案需要更深层的制度创新。</div>
+    </div>
+    <div class="conclusion-item stagger-item">
+      <div class="conclusion-num">05</div>
+      <div class="conclusion-text">这场讨论最重要的结论是：AI不会消灭人类，但会迫使人类重新回答"什么是人"。这是一个哲学问题，不是一个技术问题。</div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:4vh;font-family:var(--font-mono);font-size:11px;color:var(--fg-dim);letter-spacing:0.1em;">
+    PRESSEDBY ROUNDTABLE ENGINE · 6 EXPERTS · 3 ROUNDS · 2026.05.27
+  </div>
+</div>
+
+<div id="nav">
+  <button class="nav-btn" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+</div>
+<div id="counter">1 / 1</div>
+<script>
+(function(){
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let cur = 0;
+  const dotsContainer = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progressBar');
+
+  slides.forEach((s, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => go(i);
+    dotsContainer.appendChild(dot);
+  });
+
+  function go(n) {
+    if (n < 0 || n >= total) return;
+    slides[cur].classList.remove('visible');
+    dotsContainer.children[cur]?.classList.remove('active');
+    cur = n;
+    slides[cur].scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' });
+    slides[cur].classList.add('visible');
+    dotsContainer.children[cur]?.classList.add('active');
+    counter.textContent = (cur + 1) + ' / ' + total;
+    const pct = Math.min(100, ((cur + 1) / total) * 100);
+    progress.style.width = pct + '%';
+  }
+
+  document.getElementById('prevBtn').onclick = () => go(cur - 1);
+  document.getElementById('nextBtn').onclick = () => go(cur + 1);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault(); go(cur + 1);
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault(); go(cur - 1);
+    } else if (e.key === 'Home') {
+      e.preventDefault(); go(0);
+    } else if (e.key === 'End') {
+      e.preventDefault(); go(total - 1);
+    }
+  });
+
+  let wheelTimer = null;
+  document.addEventListener('wheel', e => {
+    e.preventDefault();
+    if (wheelTimer) return;
+    wheelTimer = setTimeout(() => wheelTimer = null, 400);
+    if (e.deltaY > 0 || e.deltaX > 0) go(cur + 1);
+    else if (e.deltaY < 0 || e.deltaX < 0) go(cur - 1);
+  }, { passive: false });
+
+  document.body.addEventListener('click', e => {
+    if (e.target.closest('.nav-dot, .dots, .nav-btn, .expert-card, .speech-card, .clash-block, .insight-block, .question-card, .conclusion-item, .stat-item')) return;
+    go(cur + 1);
+  });
+
+  go(0);
+})();
+</script>
+</body>
+</html>

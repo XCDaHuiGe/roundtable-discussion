@@ -1,0 +1,99 @@
+{
+  "version": "V3.0",
+  "start_time": "2026-05-27T21:54:03.565069",
+  "end_time": "2026-05-27T21:54:03.617952",
+  "mode": "evolution",
+  "total_rounds": 4,
+  "target_score": 60.0,
+  "target_reached": true,
+  "duration_seconds": 0.07558917999267578,
+  "score_progression": [
+    59.0,
+    59.0,
+    40.8,
+    70.3
+  ],
+  "total_strategy_merges": 0,
+  "total_material_replacements": 0,
+  "rounds": [
+    {
+      "round": 1,
+      "discussion": "遥远的救世主_V8.json",
+      "book_title": "万维钢的擅长攻击：—正好对上芮小丹的弱点：———这是一场不对等的战斗。芮小丹如何自救？",
+      "score": 59.0,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 2,
+      "discussion": "遥远的救世主_V8.json",
+      "book_title": "万维钢的擅长攻击：—正好对上韩非子的弱点：———这是一场不对等的战斗。韩非子如何自救？",
+      "score": 59.0,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 3,
+      "discussion": "儒释道批判性分析_v8.json",
+      "book_title": "\"上善若水，柔弱胜刚强，最高明的力量是不争\"vs\"平庸之恶比极端之恶更可怕\"：老子和阿伦特的根本分歧",
+      "score": 40.8,
+      "grade": "F",
+      "topic_source": "evolution",
+      "evolutions": {}
+    },
+    {
+      "round": 4,
+      "discussion": "AI创意边际成本归零_v8.json",
+      "book_title": "\"段永平用实证证明：知道自己不做什么，是比知道自己做什么更强大的竞争优势\"vs\"大家把AI当作\"竞争",
+      "score": 70.3,
+      "grade": "C",
+      "topic_source": "evolution",
+      "evolutions": {
+        "凯文·凯利": {
+          "old_version": 1,
+          "new_version": 1,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 1.1872959335114277
+        },
+        "刘润": {
+          "old_version": 3,
+          "new_version": 3,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.8368200836820083
+        },
+        "李诞": {
+          "old_version": 1,
+          "new_version": 1,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.6475635421725757
+        },
+        "冯唐": {
+          "old_version": 1,
+          "new_version": 1,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.8592910848549946
+        },
+        "项飙": {
+          "old_version": 3,
+          "new_version": 3,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.6535947712418301
+        },
+        "吴军": {
+          "old_version": 3,
+          "new_version": 3,
+          "strategy_merges": [],
+          "material_replacements": [],
+          "density_delta": 0.5977286312014346
+        }
+      }
+    }
+  ]
+}

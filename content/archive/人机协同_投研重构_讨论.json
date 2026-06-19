@@ -1,0 +1,650 @@
+{
+  "metadata": {
+    "title": "人机协同：投研新物种的崛起与金融职场权力重构",
+    "subtitle": "当AI从辅助工具变成生产力核心",
+    "date": "2026-05-26",
+    "duration": "约3小时",
+    "experts_count": 6,
+    "rounds": 3,
+    "speech_count": 24,
+    "insights_count": 6
+  },
+  "experts": [
+    {
+      "id": "liurun",
+      "name": "刘润",
+      "avatar": "刘",
+      "role": "商业结构化视角",
+      "profile": "润米咨询创始人 · 前微软战略合作总监",
+      "color": "gold"
+    },
+    {
+      "id": "wuxiaobo",
+      "name": "吴晓波",
+      "avatar": "吴",
+      "role": "中国商业史视角",
+      "profile": "财经作家 · 商业史学家",
+      "color": "red"
+    },
+    {
+      "id": "munger",
+      "name": "查理·芒格",
+      "avatar": "芒",
+      "role": "多元思维模型",
+      "profile": "伯克希尔·哈撒韦副主席",
+      "color": "blue"
+    },
+    {
+      "id": "taleb",
+      "name": "纳西姆·塔勒布",
+      "avatar": "塔",
+      "role": "不确定性视角",
+      "profile": "《黑天鹅》作者 · 风险管理专家",
+      "color": "purple"
+    },
+    {
+      "id": "douwentao",
+      "name": "窦文涛",
+      "avatar": "窦",
+      "role": "人性观察视角",
+      "profile": "凤凰卫视主持人 · 谈话节目开创者",
+      "color": "green"
+    },
+    {
+      "id": "fengtang",
+      "name": "冯唐",
+      "avatar": "冯",
+      "role": "职场权力视角",
+      "profile": "麦肯锡前董事 · 跨界战略专家",
+      "color": "orange"
+    }
+  ],
+  "rounds": [
+    {
+      "round": 1,
+      "title": "立场表达：AI投研的颠覆性重构",
+      "description": "六位专家从各自视角阐述对AI投研变革的核心立场"
+    },
+    {
+      "round": 2,
+      "title": "攻防碰撞：中间层塌陷之争",
+      "description": "专家间直接交锋，探讨中间层分析师的命运"
+    },
+    {
+      "round": 3,
+      "title": "整合洞见：权力重构与新秩序",
+      "description": "从分歧走向共识，提炼圆桌的核心洞察"
+    }
+  ],
+  "discussions": [
+    {
+      "type": "slide",
+      "class": "hero",
+      "data_title": "封面",
+      "elements": [
+        {"type": "div", "class": "cover-badge", "text": "V8 · 圆桌洞见"},
+        {"type": "div", "class": "title-main", "text": "人机协同"},
+        {"type": "div", "class": "title-sub", "text": "投研新物种的崛起与金融职场权力重构"},
+        {"type": "div", "class": "gold-line"},
+        {"type": "div", "class": "meta-row", "text": "6位专家 · 3轮讨论 · 24次发言 · 6大洞见"}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "议题背景",
+      "elements": [
+        {"type": "div", "class": "section-label", "text": "议题背景"},
+        {"type": "div", "class": "h-hero", "text": "核心问题"},
+        {"type": "div", "class": "quote", "text": "当AI从辅助工具变成生产力核心，投研人员从信息处理器变成AI指挥官，金融职场的权力结构正在如何重构？"},
+        {"type": "div", "class": "rule"},
+        {"type": "div", "class": "h-lg", "text": "素材要点"},
+        {"type": "div", "class": "card", "content": [
+          {"type": "div", "class": "card-body", "text": "晨星全球CEO Kunal Kapoor：AI改变了财富管理行业的投研分析、组合构建、客户服务等多个环节"},
+          {"type": "div", "class": "card-body", "text": "招证香港实验：5个AI Agent并行，2.5小时完成人类分析师一周工作量，覆盖范围无上限"},
+          {"type": "div", "class": "card-body", "text": "天弘基金杨超：核心竞争力从阶段性模型本身转向驱动持续迭代的平台机制"},
+          {"type": "div", "class": "card-body", "text": "招商证券研究所成立AI研究所；华泰证券提出All in AI战略"},
+          {"type": "div", "class": "card-body", "text": "某中字头券商分析师：老板暗示组里HC冻结，预算向AI和算力倾斜"}
+        ]}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "六位专家",
+      "elements": [
+        {"type": "div", "class": "section-label", "text": "专家阵容"},
+        {"type": "div", "class": "h-hero", "text": "六位跨领域专家"},
+        {"type": "div", "class": "card-rise", "content": [
+          {"type": "div", "class": "speaker-header", "content": [
+            {"type": "div", "class": "speaker-avatar", "text": "刘"},
+            {"type": "div", "content": [
+              {"type": "div", "class": "speaker-name", "text": "刘润"},
+              {"type": "div", "class": "speaker-role", "text": "商业结构化视角"}
+            ]}
+          ]},
+          {"type": "div", "class": "profile-item", "text": "润米咨询创始人，前微软战略合作总监。擅长用交易成本理论拆解商业本质。"}
+        ]},
+        {"type": "div", "class": "card-rise", "content": [
+          {"type": "div", "class": "speaker-header", "content": [
+            {"type": "div", "class": "speaker-avatar", "text": "吴"},
+            {"type": "div", "content": [
+              {"type": "div", "class": "speaker-name", "text": "吴晓波"},
+              {"type": "div", "class": "speaker-role", "text": "中国商业史视角"}
+            ]}
+          ]},
+          {"type": "div", "class": "profile-item", "text": "财经作家，《激荡三十年》作者。以历史纵深解读商业变迁，坚信制度决定论。"}
+        ]},
+        {"type": "div", "class": "card-rise", "content": [
+          {"type": "div", "class": "speaker-header", "content": [
+            {"type": "div", "class": "speaker-avatar", "text": "芒"},
+            {"type": "div", "content": [
+              {"type": "div", "class": "speaker-name", "text": "查理·芒格"},
+              {"type": "div", "class": "speaker-role", "text": "多元思维模型"}
+            ]}
+          ]},
+          {"type": "div", "class": "profile-item", "text": "伯克希尔·哈撒韦副主席。倡导多元思维模型、逆向思维、避免愚蠢比追求聪明更重要。"}
+        ]},
+        {"type": "div", "class": "card-rise", "content": [
+          {"type": "div", "class": "speaker-header", "content": [
+            {"type": "div", "class": "speaker-avatar", "text": "塔"},
+            {"type": "div", "content": [
+              {"type": "div", "class": "speaker-name", "text": "纳西姆·塔勒布"},
+              {"type": "div", "class": "speaker-role", "text": "不确定性视角"}
+            ]}
+          ]},
+          {"type": "div", "class": "profile-item", "text": "《黑天鹅》作者。主张世界由极端事件主导，强调反脆弱性和风险共担原则。"}
+        ]},
+        {"type": "div", "class": "card-rise", "content": [
+          {"type": "div", "class": "speaker-header", "content": [
+            {"type": "div", "class": "speaker-avatar", "text": "窦"},
+            {"type": "div", "content": [
+              {"type": "div", "class": "speaker-name", "text": "窦文涛"},
+              {"type": "div", "class": "speaker-role", "text": "人性观察视角"}
+            ]}
+          ]},
+          {"type": "div", "class": "profile-item", "text": "凤凰卫视主持人，《锵锵三人行》《圆桌派》开创者。擅长从人性角度解读社会现象。"}
+        ]},
+        {"type": "div", "class": "card-rise", "content": [
+          {"type": "div", "class": "speaker-header", "content": [
+            {"type": "div", "class": "speaker-avatar", "text": "冯"},
+            {"type": "div", "content": [
+              {"type": "div", "class": "speaker-name", "text": "冯唐"},
+              {"type": "div", "class": "speaker-role", "text": "职场权力视角"}
+            ]}
+          ]},
+          {"type": "div", "class": "profile-item", "text": "麦肯锡前董事合伙人，华润医疗创始CEO。倡导成事学，精通职场权力博弈。"}
+        ]}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "圆桌规则",
+      "elements": [
+        {"type": "div", "class": "section-label", "text": "讨论规则"},
+        {"type": "div", "class": "h-hero", "text": "三轮碰撞 · 全员交锋"},
+        {"type": "div", "class": "card", "content": [
+          {"type": "div", "class": "card-num", "text": "01"},
+          {"type": "div", "class": "card-title", "text": "立场表达"},
+          {"type": "div", "class": "card-body", "text": "六位专家从各自视角阐述核心立场，必须引用书中2+个具体情节或案例作为依据"}
+        ]},
+        {"type": "div", "class": "card", "content": [
+          {"type": "div", "class": "card-num", "text": "02"},
+          {"type": "div", "class": "card-title", "text": "攻防碰撞"},
+          {"type": "div", "class": "card-body", "text": "专家间直接反驳与回应，每轮设置独立碰撞页，暴露真实分歧"}
+        ]},
+        {"type": "div", "class": "card", "content": [
+          {"type": "div", "class": "card-num", "text": "03"},
+          {"type": "div", "class": "card-title", "text": "整合洞见"},
+          {"type": "div", "class": "card-body", "text": "从分歧走向共识，提炼出超越单一视角的核心洞察"}
+        ]}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "第一轮：立场表达",
+      "elements": [
+        {"type": "div", "class": "section-label", "text": "第一轮"},
+        {"type": "div", "class": "h-hero", "text": "立场表达：AI投研的颠覆性重构"},
+        {"type": "div", "class": "lead", "text": "六位专家从各自视角阐述对AI投研变革的核心立场"}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "刘润：交易成本的终极革命",
+      "elements": [
+        {"type": "div", "class": "section-label", "text": "第一轮 · 立场"},
+        {"type": "div", "class": "sp", "content": [
+          {"type": "div", "class": "sh", "content": [
+            {"type": "div", "class": "speaker-avatar", "text": "刘"},
+            {"type": "div", "class": "sn", "text": "刘润"},
+            {"type": "div", "class": "sr", "text": "商业结构化视角"}
+          ]},
+          {"type": "div", "class": "st", "text": "我的核心观点是：AI对投研行业的改变，本质上是一次交易成本的终极革命。\n\n我用交易成本这个框架来分析一下。招证香港的5个AI Agent并行、2.5小时完成一周工作量，这意味着什么？意味着搜寻成本和比较成本趋近于零。传统分析师花70%时间在信息搜集和初步整理上，AI把这部分几乎完全替代了。\n\n但这里有一个关键转折——成本结构的变化必然带来权力结构的变化。当信息搜集这个动作不再值钱，谁变得值钱了？答案是：定义问题的人。\n\n天弘基金杨超说得对：核心竞争力从阶段性模型本身转向驱动持续迭代的平台机制。这就是交易成本理论的核心——商业模式创新，本质上是交易成本的重新分配。谁掌握了重新分配的权力，谁就掌握了新的护城河。\n\n所以我的判断是：未来投研行业的权力中心，会从信息垄断者转向问题定义者。不是你知道多少，而是你能提出什么样的好问题。"}
+        ]}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "吴晓波：制度视角下的权力更迭",
+      "elements": [
+        {"type": "div", "class": "section-label", "text": "第一轮 · 立场"},
+        {"type": "div", "class": "sp", "content": [
+          {"type": "div", "class": "sh", "content": [
+            {"type": "div", "class": "speaker-avatar", "text": "吴"},
+            {"type": "div", "class": "sn", "text": "吴晓波"},
+            {"type": "div", "class": "sr", "text": "中国商业史视角"}
+          ]},
+          {"type": "div", "class": "st", "text": "我研究商业史这么多年，最大的感受是：所有技术革命带来的权力重构，都不是单纯的技术问题，而是制度问题。\n\n招商证券成立AI研究所、华泰证券提出All in AI战略——这些动作的本质是什么？是制度创新。他们不是在用AI替代人，而是在用AI重构整个研究体系的生产关系。\n\n我想起改革开放初期，外资进入中国的时候，很多人担心狼来了。后来发现，狼来了不是问题，问题是你怎么和狼共舞。技术进来了，制度必须跟上。\n\n现在的问题是什么？HC冻结，预算向AI倾斜——这是典型的制度滞后。制度没有准备好接纳这种变革，所以只能用最简单的方式：减少人、增加机器。\n\n我的判断是：这一轮AI浪潮，最先冲击的是中间层。就像财新说的，只有两种分析师能存活——顶级洞察力的超级明星和精通AI工具的新物种。这不是危言耸听，这是历史的规律。每一次技术革命，都是一次中间层塌陷。"}
+        ]}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "芒格：多元思维下的冷静审视",
+      "elements": [
+        {"type": "div", "class": "section-label", "text": "第一轮 · 立场"},
+        {"type": "div", "class": "sp", "content": [
+          {"type": "div", "class": "sh", "content": [
+            {"type": "div", "class": "speaker-avatar", "text": "芒"},
+            {"type": "div", "class": "sn", "text": "查理·芒格"},
+            {"type": "div", "class": "sr", "text": "多元思维模型"}
+          ]},
+          {"type": "div", "class": "st", "text": "如果我反过来想这个问题，我会问：AI投研革命中，最大的风险是什么？答案是——过度乐观。\n\n我99岁了，见过太多改变一切的技术。互联网泡沫的时候，所有人都说这次不一样。结果呢？大多数人倾家荡产。现在AI来了，又是同样的故事。\n\n但我不是要否定AI。我是说，要用多元思维模型来理解这件事。\n\n从心理学角度看：激励机制扭曲的时候，系统性崩溃是必然的。投研行业现在的激励机制是什么？是发布报告数量还是报告质量？如果激励机制不改变，AI只是让糟糕的报告生产得更快。\n\n从生物学角度看：进化是渐进的，不是跳跃的。那些声称AI将彻底改变一切的人，忽略了组织惯性和人类行为的粘性。真正的变革，从来都是缓慢的、痛苦的。\n\n最后，从能力圈角度看：我一直说，知道自己不懂什么，比知道自己懂什么更重要。嘉实财富陶荣辉说这轮AI浪潮，最先冲击的是智力工作者——这话没错，但我们需要问：被冲击的是哪类智力工作者？答案是：那些以为自己懂其实并不真懂的人。"}
+        ]}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "塔勒布：黑天鹅视角下的警示",
+      "elements": [
+        {"type": "div", "class": "section-label", "text": "第一轮 · 立场"},
+        {"type": "div", "class": "sp", "content": [
+          {"type": "div", "class": "sh", "content": [
+            {"type": "div", "class": "speaker-avatar", "text": "塔"},
+            {"type": "div", "class": "sn", "text": "纳西姆·塔勒布"},
+            {"type": "div", "class": "sr", "text": "不确定性视角"}
+          ]},
+          {"type": "div", "class": "st", "text": "你们在讨论AI如何改变投研，但我更关心的问题是——当所有人都用同样的AI工具时，这个系统会发生什么？\n\n让我用黑天鹅理论来分析。招证香港的AI Agent可以在2.5小时内完成一周的工作量——这听起来很美，但问题在于：这种效率是真实的吗？\n\n我有一个关键问题：当所有分析师都用同样的AI工具，他们的研究结论会不会趋同？如果所有人的研究都是基于同样的数据源、同样的算法模型，所谓的独立判断还存在吗？\n\n这就是沉默证据——我们只看到AI提高效率的好处，但我们看不到的是：当黑天鹅事件发生时，所有AI优化过的系统可能同时崩溃。因为它们共享了相同的脆弱性。\n\n让我引用2025年8月我在新加坡峰会上的观点：多元化组合在普通市场看似合理，但在真正的压力测试下，相关性会同步共振，你以为分散了风险，其实根本没有。这个逻辑同样适用于AI投研。\n\n所以我的立场是：AI会放大系统脆弱性，而不是减少它。真正有价值的人，是那些能在AI失效时仍然保持判断力的人。"}
+        ]}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "窦文涛：人性视角的冷观察",
+      "elements": [
+        {"type": "div", "class": "section-label", "text": "第一轮 · 立场"},
+        {"type": "div", "class": "sp", "content": [
+          {"type": "div", "class": "sh", "content": [
+            {"type": "div", "class": "speaker-avatar", "text": "窦"},
+            {"type": "div", "class": "sn", "text": "窦文涛"},
+            {"type": "div", "class": "sr", "text": "人性观察视角"}
+          ]},
+          {"type": "div", "class": "st", "text": "你们说的这些数据和战略，我听着都有道理。但我想问一个最基本的问题：人为什么要听另一个人的研究报告？\n\n我做谈话节目这么多年，最大的感受是——人不是机器，人需要的是温度。你们有没有想过，为什么很多人宁可听一个不那么专业的大V，也不愿意看专业报告？\n\n因为那个大V有性格、有立场、有好恶、有温度。研究报告呢？冷冰冰的数据、滴水不漏的措辞——看着很专业，但看着很假。\n\n现在AI可以写研究报告了。但问题来了：当AI写的研究报告比人写的更专业、更客观、更全面的时候，人会相信它吗？\n\n我觉得不会。因为信任不是基于理性，而是基于情感连接。就像我们聊天——你们听我说话，不是为了获取信息，是为了感受这个人。\n\n所以我的判断是：真正危险的不是AI取代分析师，而是没有人味的分析师被AI取代。那些只会堆砌数据、没有自己观点的人，确实会被淘汰。但有温度、有性格、有独特视角的人，AI取代不了。"}
+        ]}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "冯唐：权力博弈的现实主义",
+      "elements": [
+        {"type": "div", "class": "section-label", "text": "第一轮 · 立场"},
+        {"type": "div", "class": "sp", "content": [
+          {"type": "div", "class": "sh", "content": [
+            {"type": "div", "class": "speaker-avatar", "text": "冯"},
+            {"type": "div", "class": "sn", "text": "冯唐"},
+            {"type": "div", "class": "sr", "text": "职场权力视角"}
+          ]},
+          {"type": "div", "class": "st", "text": "你们聊AI、聊技术、聊人性，我觉得都很好。但我更关心的问题是——权力怎么分配？\n\n我在麦肯锡干了十几年，又在华润做CEO，我太清楚职场是怎么运作的了。老板说HC冻结，预算向AI倾斜——这背后不是技术判断，是权力博弈。\n\n分析一下：HC冻结意味着什么？意味着中层管理者的地盘被压缩了。以前中层靠什么立足？靠团队、靠人头。现在AI可以替代团队，中层存在的理由就不充分了。\n\n所以我判断：这一轮AI浪潮，最先被优化掉的不是基层分析师，而是中层管理者。因为中层是成本最高、价值最模糊的一群人。\n\n那么谁能活下来？两种人：一种是能直接创造价值的人——顶级洞察力、直接对接客户；另一种是能驾驭AI工具的人——不是被工具替代，而是把工具用到极致。\n\n在麦肯锡，我们有句话：Ideas are cheap, execution is king. 放到AI时代，这句话要改一改：Data is cheap, judgment is king. 数据不值钱，判断力才值钱。"}
+        ]}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "第一轮总结",
+      "elements": [
+        {"type": "div", "class": "section-label", "text": "第一轮 · 小结"},
+        {"type": "div", "class": "h-hero", "text": "六大立场的共识与分歧"},
+        {"type": "div", "class": "card", "content": [
+          {"type": "div", "class": "card-title", "text": "共识"},
+          {"type": "div", "class": "card-body", "text": "AI正在重构投研行业的价值链条，信息搜集的价值大幅贬值，问题定义和判断力的价值上升"},
+          {"type": "div", "class": "card-body", "text": "中间层分析师面临最大冲击，需要转型"},
+          {"type": "div", "class": "card-body", "text": "工具掌握度成为新的核心竞争力"}
+        ]},
+        {"type": "div", "class": "card", "content": [
+          {"type": "div", "class": "card-title", "text": "分歧"},
+          {"type": "div", "class": "card-body", "text": "芒格/塔勒布：警惕系统性风险，不能过度乐观"},
+          {"type": "div", "class": "card-body", "text": "窦文涛：AI无法替代人际信任和情感连接"},
+          {"type": "div", "class": "card-body", "text": "冯唐：权力博弈比技术变革更重要"},
+          {"type": "div", "class": "card-body", "text": "吴晓波：制度滞后是变革的最大障碍"}
+        ]}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "第二轮：攻防碰撞",
+      "elements": [
+        {"type": "div", "class": "section-label", "text": "第二轮"},
+        {"type": "div", "class": "h-hero", "text": "攻防碰撞：中间层塌陷之争"},
+        {"type": "div", "class": "lead", "text": "专家间直接交锋，暴露真实分歧"}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "碰撞1：中间层能否被缓冲",
+      "elements": [
+        {"type": "div", "class": "clash-round", "content": [
+          {"type": "div", "class": "clash-header", "content": [
+            {"type": "div", "class": "clash-attacker", "text": "吴晓波"},
+            {"type": "div", "class": "clash-arrow", "text": "→"},
+            {"type": "div", "class": "clash-target", "text": "芒格"}
+          ]},
+          {"type": "div", "class": "clash-type", "text": "质疑 · 变革速度"},
+          {"type": "div", "class": "clash-content", "text": "你说要避免愚蠢、不要过度乐观，但在中国市场，变革的速度往往超出预期。招商证券、华泰证券已经大举投入，你说的渐进式变革真的适用于中国吗？财新的判断是：中间层大面积塌陷。历史规律在中国同样适用。"},
+          {"type": "div", "class": "counter-attack"},
+          {"type": "div", "class": "counter-label", "text": "反击"},
+          {"type": "div", "class": "counter-content", "text": "你说得对，变革可能很快。但快不等于顺利。我见过太多中国企业的 大跃进——速度很快，垮得也快。制度基础、组织能力、人才培养——这些不是靠钱和决心就能买来的。真正的问题不是AI有多强，而是组织能不能用好AI。"}
+        ]}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "碰撞2：AI是否放大脆弱性",
+      "elements": [
+        {"type": "div", "class": "clash-round", "content": [
+          {"type": "div", "class": "clash-header", "content": [
+            {"type": "div", "class": "clash-attacker", "text": "塔勒布"},
+            {"type": "div", "class": "clash-arrow", "text": "→"},
+            {"type": "div", "class": "clash-target", "text": "刘润"}
+          ]},
+          {"type": "div", "class": "clash-type", "text": "质疑 · 效率幻觉"},
+          {"type": "div", "class": "clash-content", "text": "你说AI降低了搜寻成本和比较成本，但你有没有想过：当所有人都用同样的AI工具时，研究结论会不会趋同？如果所有分析师都得出了相同的结论，这个效率有什么意义？你在用传统的交易成本框架分析AI时代的问题，但框架本身可能已经失效。"},
+          {"type": "div", "class": "counter-attack"},
+          {"type": "div", "class": "counter-label", "text": "反驳"},
+          {"type": "div", "class": "counter-content", "text": "你的质疑有道理，但你忽略了一点：框架是用来简化问题的工具，不是目的本身。我谈的不是AI时代的交易成本，而是权力如何转移。当AI替代了信息搜集，谁来定义问题？这本身就是一种新的交易成本——不是降低，而是转移。真正的问题不是结论是否趋同，而是谁来提出真正的好问题。"}
+        ]}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "碰撞3：温度能否抵御AI冲击",
+      "elements": [
+        {"type": "div", "class": "clash-round", "content": [
+          {"type": "div", "class": "clash-header", "content": [
+            {"type": "div", "class": "clash-attacker", "text": "窦文涛"},
+            {"type": "div", "class": "clash-arrow", "text": "→"},
+            {"type": "div", "class": "clash-target", "text": "冯唐"}
+          ]},
+          {"type": "div", "class": "clash-type", "text": "质疑 · 人性维度"},
+          {"type": "div", "class": "clash-content", "text": "你说数据不值钱，判断力才值钱，但判断力是怎么来的？是人际互动中磨练出来的。你在麦肯锡的判断力，不是凭空产生的，是和客户、团队、行业专家的互动中积累的。AI可以提供数据，但它能提供那种真实的挫败感吗？没有挫败感，判断力从哪来？"},
+          {"type": "div", "class": "counter-attack"},
+          {"type": "div", "class": "counter-label", "text": "反击"},
+          {"type": "div", "class": "counter-content", "text": "你说得对，判断力需要磨练。但磨练的方式在变。我年轻时的磨练是在谈判桌上、在客户现场；现在的磨练可以是在AI模拟环境里。关键不是环境，是有没有足够的压力测试。麦肯锡现在有AI模拟客户、模拟谈判——挫折感可以设计出来。当然，我同意，有些东西AI确实替代不了。但那是顶级人才的事，和大多数人无关。"}
+        ]}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "碰撞4：制度是助力还是阻力",
+      "elements": [
+        {"type": "div", "class": "clash-round", "content": [
+          {"type": "div", "class": "clash-header", "content": [
+            {"type": "div", "class": "clash-attacker", "text": "塔勒布"},
+            {"type": "div", "class": "clash-arrow", "text": "→"},
+            {"type": "div", "class": "clash-target", "text": "吴晓波"}
+          ]},
+          {"type": "div", "class": "clash-type", "text": "质疑 · 制度变革"},
+          {"type": "div", "class": "clash-content", "text": "你说所有的进步都是制度进步，但制度变革往往是滞后的。中信建投姚紫薇说AI投研L3已能承担独立分析师级工作——这意味着什么？意味着分析师这个岗位的制度定义已经过时了。但制度跟上来了吗？你是在用制度决定论解释现状，还是在用它为现状辩护？"},
+          {"type": "div", "class": "counter-attack"},
+          {"type": "div", "class": "counter-label", "text": "反驳"},
+          {"type": "div", "class": "counter-content", "text": "好问题。我承认，制度有时候是滞后的。但滞后不等于不变。问题是变的方向——是主动变，还是被逼着变？历史上，那些主动变革的企业活得更长；那些被逼着变的，往往死在路上。中国的投研机构现在面临的选择是：主动拥抱AI，重构制度；还是等着被AI颠覆？这才是关键。"}
+        ]}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "碰撞5：工具掌握度的价值",
+      "elements": [
+        {"type": "div", "class": "clash-round", "content": [
+          {"type": "div", "class": "clash-header", "content": [
+            {"type": "div", "class": "clash-attacker", "text": "芒格"},
+            {"type": "div", "class": "clash-arrow", "text": "→"},
+            {"type": "div", "class": "clash-target", "text": "窦文涛"}
+          ]},
+          {"type": "div", "class": "clash-type", "text": "质疑 · 能力边界"},
+          {"type": "div", "class": "clash-content", "text": "你说没有温度的分析师会被淘汰，这话对了一半。但你有没有想过：大多数分析师的问题不是缺少温度，而是缺少真正的洞察？温度可以伪装，洞察装不出来。当AI可以提供更全面、更客观、更及时的信息时，分析师的温度能弥补多少专业差距？你的论点建立在一个假设上——人比机器更值得信任。但这个假设在专业领域还成立吗？"},
+          {"type": "div", "class": "counter-attack"},
+          {"type": "div", "class": "counter-label", "text": "反驳"},
+          {"type": "div", "class": "counter-content", "text": "你说得对，洞察装不出来。但我想说的是：专业和信任是两回事。一个人可以非常专业，但别人不信任他——这种专业有什么价值？反过来，一个人可能没有那么专业，但别人信任他、愿意听他的——这种信任反而更值钱。在投研行业，最终买单的是人，不是机器。人的决策不是纯理性的。所以，信任这种非理性因素，可能比专业更重要。"}
+        ]}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "第二轮核心交锋",
+      "elements": [
+        {"type": "div", "class": "section-label", "text": "第二轮 · 核心交锋"},
+        {"type": "div", "class": "h-hero", "text": "五大矛盾点"},
+        {"type": "div", "class": "cb", "content": [
+          {"type": "div", "class": "cl", "text": "矛盾一"},
+          {"type": "div", "class": "h-md", "text": "中间层塌陷是不可避免还是可以被缓冲？"},
+          {"type": "div", "class": "card-body", "text": "吴晓波/冯唐：不可避免，制度变革滞后加剧冲击；芒格：关键是组织能不能用好AI"}
+        ]},
+        {"type": "div", "class": "cb", "content": [
+          {"type": "div", "class": "cl", "text": "矛盾二"},
+          {"type": "div", "class": "h-md", "text": "AI是降低风险还是放大系统脆弱性？"},
+          {"type": "div", "class": "card-body", "text": "塔勒布：所有人用同样的工具，结论趋同，脆弱性放大；刘润：问题定义权才是关键"}
+        ]},
+        {"type": "div", "class": "cb", "content": [
+          {"type": "div", "class": "cl", "text": "矛盾三"},
+          {"type": "div", "class": "h-md", "text": "判断力是来自人际互动还是可以被AI模拟？"},
+          {"type": "div", "class": "card-body", "text": "窦文涛：真实的挫败感不可替代；冯唐：挫折感可以设计出来"}
+        ]},
+        {"type": "div", "class": "cb", "content": [
+          {"type": "div", "class": "cl", "text": "矛盾四"},
+          {"type": "div", "class": "h-md", "text": "制度是助力变革还是阻力变革？"},
+          {"type": "div", "class": "card-body", "text": "塔勒布：制度定义已过时；吴晓波：主动变还是被逼着变，决定生死"}
+        ]},
+        {"type": "div", "class": "cb", "content": [
+          {"type": "div", "class": "cl", "text": "矛盾五"},
+          {"type": "div", "class": "h-md", "text": "专业能力重要还是人际信任重要？"},
+          {"type": "div", "class": "card-body", "text": "芒格：洞察装不出来；窦文涛：信任比专业更值钱"}
+        ]}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "第三轮：整合洞见",
+      "elements": [
+        {"type": "div", "class": "section-label", "text": "第三轮"},
+        {"type": "div", "class": "h-hero", "text": "整合洞见：权力重构与新秩序"},
+        {"type": "div", "class": "lead", "text": "从分歧走向共识，提炼超越单一视角的核心洞察"}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "洞见一：权力的转移而非消失",
+      "elements": [
+        {"type": "div", "class": "insight-c", "content": [
+          {"type": "div", "class": "insight-q", "text": "核心问题：AI时代，投研行业的权力是消失了，还是转移了？"},
+          {"type": "div", "class": "insight-a", "text": "经过三轮讨论，圆桌达成了第一个重要共识：权力不会消失，只会发生转移。"},
+          {"type": "div", "class": "insight-a", "text": "旧的权力基础——信息垄断——正在瓦解。新的权力基础正在形成：问题定义权、工具驾驭力、人际信任度、制度设计能力。"},
+          {"type": "div", "class": "insight-a", "text": "刘润：不是你知道多少，而是你能提出什么样的好问题。\n冯唐：数据不值钱，判断力才值钱。\n窦文涛：信任比专业更值钱。\n这三个判断，构成了新权力三角。"}
+        ]}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "洞见二：中间层的双面命运",
+      "elements": [
+        {"type": "div", "class": "insight-c", "content": [
+          {"type": "div", "class": "insight-q", "text": "核心问题：两种人存活论——中间层真的只能塌陷吗？"},
+          {"type": "div", "class": "insight-a", "text": "财新预言：未来只有两种分析师——顶级洞察力的超级明星和精通AI工具的新物种。"},
+          {"type": "div", "class": "insight-a", "text": "但圆桌洞见揭示了一个更复杂的图景：中间层不是铁板一块。它可以分为三类：\n\n纯执行层（信息搜集、报告撰写）→ 会被AI替代\n桥梁层（客户沟通、项目协调）→ 暂时保留，但角色转变\n判断层（问题定义、决策建议）→ AI增强，而非替代"},
+          {"type": "div", "class": "insight-a", "text": "芒格的补充很关键：真正的问题不是AI有多强，而是组织能不能用好AI。组织能力，决定了中间层的转型速度。"}
+        ]}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "洞见三：责任归属的新挑战",
+      "elements": [
+        {"type": "div", "class": "insight-c", "content": [
+          {"type": "div", "class": "insight-q", "text": "核心问题：当AI报告出错，谁来负责？可追溯性是解决方案吗？"},
+          {"type": "div", "class": "insight-a", "text": "这是圆桌洞见中最具分歧但也最具价值的问题之一。"},
+          {"type": "div", "class": "insight-a", "text": "塔勒布的风险共担框架：不要听从那些没有损失的人给出的建议。如果分析师用AI生成报告，谁为报告负责？如果AI不承担损失，它就不应该被信任。"},
+          {"type": "div", "class": "insight-a", "text": "冯唐的管理视角：责任归属不是非此即彼的，而是需要在制度层面重新设计。AI是工具，工具的使用责任在于使用者和设计者。"},
+          {"type": "div", "class": "insight-a", "text": "整合结论：可追溯性是必要条件，但不是充分条件。真正的解决方案是：建立新的风险共担机制——让AI的开发者、使用者、管理者共同承担风险，而不是让某一方单独负责。"}
+        ]}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "洞见四：研究员的角色升级",
+      "elements": [
+        {"type": "div", "class": "insight-c", "content": [
+          {"type": "div", "class": "insight-q", "text": "核心问题：AI时代的研究员——从寻找答案到定义问题，这是升级还是降级？"},
+          {"type": "div", "class": "insight-a", "text": "这个问题引发了圆桌最深层的讨论。"},
+          {"type": "div", "class": "insight-a", "text": "冯唐：这是绝对是升级。定义问题比找到答案更难、更有价值。那些只会找答案的人，本质上是高级打字员。\n\n窦文涛：升级？也许吧。但问题是——有多少人具备定义好问题的能力？大多数人连问对问题都不会，你让他们定义问题，这不是升级，是架空。\n\n刘润：这是一个能力断层的问题。旧的找答案能力正在贬值，新的定义问题能力还没建立起来。这个断层期是最危险的。"},
+          {"type": "div", "class": "insight-a", "text": "整合结论：从寻找答案到定义问题是方向上的升级，但路径上的断层才是真正的挑战。谁能在断层期建立新的能力，谁就能赢得下一场竞争。"}
+        ]}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "洞见五：权力基础的范式转移",
+      "elements": [
+        {"type": "div", "class": "insight-c", "content": [
+          {"type": "div", "class": "insight-q", "text": "核心问题：金融职场的权力基础——从人脉和资历到AI工具掌握度，这意味着什么？"},
+          {"type": "div", "class": "insight-a", "text": "吴晓波的历史视角很有启发性：每一次技术革命，都会带来权力基础的更迭。从人脉到AI，这不是简单的工具替换，而是整个权力逻辑的重构。"},
+          {"type": "div", "class": "insight-a", "text": "旧的权力逻辑：\n信息不对称 = 权力\n关系网络 = 资源\n资历深度 = 权威\n\n新的权力逻辑：\n问题质量 = 价值\n工具驾驭力 = 竞争力\n信任连接 = 护城河"},
+          {"type": "div", "class": "insight-a", "text": "但塔勒布的警告不能忽视：当所有人都有同样的AI，真正的差异化是什么？答案可能是：那些AI无法替代的能力——判断力、信任、创造力。\n\n所以，权力的转移不是从人转向机器，而是从旧的人的能力转向新的人的能力。"}
+        ]}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "洞见六：反脆弱的生存策略",
+      "elements": [
+        {"type": "div", "class": "insight-c", "content": [
+          {"type": "div", "class": "insight-q", "text": "核心问题：面对AI浪潮，投研人员如何构建反脆弱的职业生涯？"},
+          {"type": "div", "class": "insight-a", "text": "塔勒布的反脆弱理论在这里找到了完美的应用场景。"},
+          {"type": "div", "class": "insight-a", "text": "反脆弱不是不变，而是在变化中变强。\n\n冯唐的成事学提供了具体的行动框架：\n不着急：给转型时间，不要急于否定新事物\n不害怕：AI是工具，不是威胁\n不要脸：承认自己不懂AI，愿意从头学起"},
+          {"type": "div", "class": "insight-a", "text": "芒格的能力圈原则告诉我们：最重要的不是你的能力圈有多大，而是你知道它的边界在哪里。知道哪些是AI可以替代的，哪些是AI无法替代的——这本身就是一种重要的能力。"},
+          {"type": "div", "class": "insight-a", "text": "整合的反脆弱策略：\n1. 拥抱AI，但不要依赖AI\n2. 建立AI无法替代的能力：判断力、信任、创造力\n3. 把自己变成AI增强型人才，而不是AI依赖型人才\n4. 保持好奇心和学习能力——这是中年危机和AI替代的共同天敌"}
+        ]}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "终极问题",
+      "elements": [
+        {"type": "div", "class": "section-label", "text": "终极问题"},
+        {"type": "div", "class": "h-hero", "text": "人机协同的未来"},
+        {"type": "div", "class": "quote-large", "text": "当AI从辅助工具变成生产力核心，投研人员的价值不在于我们知道什么，而在于我们能提出什么问题、我们能建立什么信任、我们能做出什么判断。"},
+        {"type": "div", "class": "rule"},
+        {"type": "div", "class": "lead", "text": "这不是人类的失败，而是人类能力的升级——从信息处理升级为意义创造。"}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "专家寄语",
+      "elements": [
+        {"type": "div", "class": "section-label", "text": "专家寄语"},
+        {"type": "div", "class": "h-hero", "text": "六位专家的一句话"},
+        {"type": "div", "class": "card", "content": [
+          {"type": "div", "class": "speaker-header", "content": [
+            {"type": "div", "class": "speaker-avatar", "text": "刘"},
+            {"type": "div", "class": "speaker-name", "text": "刘润"}
+          ]},
+          {"type": "div", "class": "quote", "text": "不是AI替代你，是会用AI的人替代你。"}
+        ]},
+        {"type": "div", "class": "card", "content": [
+          {"type": "div", "class": "speaker-header", "content": [
+            {"type": "div", "class": "speaker-avatar", "text": "吴"},
+            {"type": "div", "class": "speaker-name", "text": "吴晓波"}
+          ]},
+          {"type": "div", "class": "quote", "text": "制度跟上技术，变革才能真正发生。"}
+        ]},
+        {"type": "div", "class": "card", "content": [
+          {"type": "div", "class": "speaker-header", "content": [
+            {"type": "div", "class": "speaker-avatar", "text": "芒"},
+            {"type": "div", "class": "speaker-name", "text": "查理·芒格"}
+          ]},
+          {"type": "div", "class": "quote", "text": "避免愚蠢比追求聪明更重要。不要被AI浪潮冲昏头脑。"}
+        ]},
+        {"type": "div", "class": "card", "content": [
+          {"type": "div", "class": "speaker-header", "content": [
+            {"type": "div", "class": "speaker-avatar", "text": "塔"},
+            {"type": "div", "class": "speaker-name", "text": "纳西姆·塔勒布"}
+          ]},
+          {"type": "div", "class": "quote", "text": "当所有人都有同样的AI，真正的差异化在于AI无法替代的能力。"}
+        ]},
+        {"type": "div", "class": "card", "content": [
+          {"type": "div", "class": "speaker-header", "content": [
+            {"type": "div", "class": "speaker-avatar", "text": "窦"},
+            {"type": "div", "class": "speaker-name", "text": "窦文涛"}
+          ]},
+          {"type": "div", "class": "quote", "text": "信任比专业更值钱。在AI时代，真实的情感连接愈发珍贵。"}
+        ]},
+        {"type": "div", "class": "card", "content": [
+          {"type": "div", "class": "speaker-header", "content": [
+            {"type": "div", "class": "speaker-avatar", "text": "冯"},
+            {"type": "div", "class": "speaker-name", "text": "冯唐"}
+          ]},
+          {"type": "div", "class": "quote", "text": "数据不值钱，判断力才值钱。成事的人不问为什么，只问怎么干。"}
+        ]}
+      ]
+    },
+    {
+      "type": "slide",
+      "data_title": "总结",
+      "elements": [
+        {"type": "div", "class": "section-label", "text": "圆桌洞见"},
+        {"type": "div", "class": "title-main", "text": "六大核心洞察"},
+        {"type": "div", "class": "gold-line"},
+        {"type": "div", "class": "card", "content": [
+          {"type": "div", "class": "card-num", "text": "1"},
+          {"type": "div", "class": "card-title", "text": "权力转移"},
+          {"type": "div", "class": "card-body", "text": "从信息垄断到问题定义，权力在转移，不在消失"}
+        ]},
+        {"type": "div", "class": "card", "content": [
+          {"type": "div", "class": "card-num", "text": "2"},
+          {"type": "div", "class": "card-title", "text": "中间层分化"},
+          {"type": "div", "class": "card-body", "text": "执行层被替代，桥梁层转型，判断层升级"}
+        ]},
+        {"type": "div", "class": "card", "content": [
+          {"type": "div", "class": "card-num", "text": "3"},
+          {"type": "div", "class": "card-title", "text": "责任重构"},
+          {"type": "div", "class": "card-body", "text": "需要新的风险共担机制，而非简单的可追溯性"}
+        ]},
+        {"type": "div", "class": "card", "content": [
+          {"type": "div", "class": "card-num", "text": "4"},
+          {"type": "div", "class": "card-title", "text": "能力断层"},
+          {"type": "div", "class": "card-body", "text": "从找答案到定义问题，方向升级但路径断裂"}
+        ]},
+        {"type": "div", "class": "card", "content": [
+          {"type": "div", "class": "card-num", "text": "5"},
+          {"type": "div", "class": "card-title", "text": "权力新逻辑"},
+          {"type": "div", "class": "card-body", "text": "从人脉+资历到问题质量+工具力+信任度"}
+        ]},
+        {"type": "div", "class": "card", "content": [
+          {"type": "div", "class": "card-num", "text": "6"},
+          {"type": "div", "class": "card-title", "text": "反脆弱生存"},
+          {"type": "div", "class": "card-body", "text": "拥抱AI但不全依赖，建立AI无法替代的能力"}
+        ]}
+      ]
+    },
+    {
+      "type": "slide",
+      "class": "hero",
+      "data_title": "尾声",
+      "elements": [
+        {"type": "div", "class": "section-label", "text": "人机协同"},
+        {"type": "div", "class": "title-main", "text": "不是替代，是升级"},
+        {"type": "div", "class": "gold-line"},
+        {"type": "div", "class": "meta-row", "text": "6位专家 · 3轮讨论 · 24次发言 · 6大洞见"},
+        {"type": "div", "class": "rule"},
+        {"type": "div", "class": "lead", "text": "这不是人类的失败，而是人类能力的升级——\n从信息处理升级为意义创造。"}
+      ]
+    }
+  ]
+}

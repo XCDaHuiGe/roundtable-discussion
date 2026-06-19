@@ -1,0 +1,17 @@
+/* Theme: catppuccin-mocha — Warm brown dark */
+body.theme-catppuccin-mocha {
+  --bg: #1e1e2e;
+  --bg-rgb: 30, 30, 46;
+  --bg-soft: #313244;
+  --bg-soft-rgb: 49, 50, 68;
+  --fg: #cdd6f4;
+  --fg-rgb: 205, 214, 244;
+  --muted: #7f849c;
+  --muted-rgb: 127, 132, 156;
+  --accent: #f38ba8;
+  --accent-rgb: 243, 139, 168;
+  --accent-2: #fab387;
+  --accent-2-rgb: 250, 179, 135;
+  --accent-3: #a6e3a1;
+  --accent-3-rgb: 166, 227, 161;
+}

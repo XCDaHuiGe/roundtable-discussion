@@ -1,0 +1,55 @@
+{
+  "batch": 18,
+  "rounds": [
+    {
+      "round": 216,
+      "expert1": "丁元英",
+      "expert2": "柯林斯",
+      "belief1": "规律是如来,不可说不可说",
+      "belief2": "先人后事:找对的人上车",
+      "topic": "怎么做才对？规律是如来,不可说不可说是正解，还是先人后事:找对的人上车才可靠？两种方法论，一个目标。",
+      "conflict_type": "method",
+      "strength": "strong"
+    },
+    {
+      "round": 217,
+      "expert1": "芮小丹",
+      "expert2": "凯文·凯利",
+      "belief1": "活得真实比活得正确更重要",
+      "belief2": "科技乐观主义:拥抱变化,技术解决技术的问题",
+      "topic": "方法论的争锋：解决同一个问题，活得真实比活得正确更重要和科技乐观主义:拥抱变化,技术解决技术的问题哪条路更有效？",
+      "conflict_type": "method",
+      "strength": "strong"
+    },
+    {
+      "round": 218,
+      "expert1": "丹尼尔·戈尔曼",
+      "expert2": "李诞",
+      "belief1": "自我觉察是情商的基础",
+      "belief2": "躺平是对无效奋斗的拒绝",
+      "topic": "价值的排序之争：自我觉察是情商的基础是第一位，还是躺平是对无效奋斗的拒绝才是根本？这个排序决定了完全不同的活法。",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 219,
+      "expert1": "孔子",
+      "expert2": "凯文·凯利",
+      "belief1": "有教无类,教育是改变人的根本力量",
+      "belief2": "科技乐观主义:拥抱变化,技术解决技术的问题",
+      "topic": "两种价值不可兼得时：追求有教无类,教育是改变人的根本力量，还是坚守科技乐观主义:拥抱变化,技术解决技术的问题？这是人生最艰难的选择题。",
+      "conflict_type": "value_priority",
+      "strength": "moderate"
+    },
+    {
+      "round": 220,
+      "expert1": "韩非子",
+      "expert2": "柯林斯",
+      "belief1": "以法为教,以吏为师,法治优于德治",
+      "belief2": "先人后事:找对的人上车",
+      "topic": "不可调和的矛盾：以法为教,以吏为师,法治优于德治。然而先人后事:找对的人上车。真相究竟在哪一边？",
+      "conflict_type": "direct",
+      "strength": "moderate"
+    }
+  ]
+}

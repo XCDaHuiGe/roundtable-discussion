@@ -1,0 +1,14 @@
+﻿__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+.trae/
+.worktrees/
+training_runs/

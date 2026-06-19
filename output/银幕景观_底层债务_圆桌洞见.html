@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>银幕景观与底层债务 圆桌洞见</title>
+<style>
+  :root{
+    /* ============ 主题色(默认:🖋 墨水经典) ============ */
+    --ink:#0a0a0b;
+    --ink-rgb:10,10,11;
+    --paper:#f1efea;
+    --paper-rgb:241,239,234;
+    --paper-tint:#e8e5de;
+    --ink-tint:#18181a;
+
+    /* ============ 强调色 ============ */
+    --accent:#c23b22;
+    --accent-rgb:194,59,34;
+    --gold:#d4a843;
+    --gold-rgb:212,168,67;
+    --blue:#4a6a9a;
+    --purple:#8a4aaa;
+    --green:#3a8a5c;
+    --cyan:#4a9a9a;
+    --orange:#d4843a;
+
+    /* ============ 字体(跨主题固定) ============ */
+    --mono:"IBM Plex Mono","SF Mono",monospace;
+    --serif-zh:"Noto Serif SC","Source Han Serif SC","STSong",serif;
+    --sans-zh:"Noto Sans SC","Source Han Sans SC","PingFang SC",sans-serif;
+
+    /* ============ 间距 ============ */
+    --radius:10px;
+    --ease:cubic-bezier(.4,0,.2,1);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans-zh);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+  /* ============ Deck 容器 ============ */
+  #deck{position:relative;width:100vw;height:100vh;overflow:hidden}
+
+  /* ============ 进度条 ============ */
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:1000;transition:width .5s var(--ease);box-shadow:0 0 12px rgba(var(--accent-rgb),.3)}
+
+  /* ============ 幻灯片 ============ */
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;height:100vh;overflow:hidden}
+  .slide::-webkit-scrollbar{width:4px}.slide::-webkit-scrollbar-track{background:transparent}.slide::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
+  .slide.active{display:flex}
+  .slide.hero{justify-content:center;align-items:center;text-align:center}
+  .slide.title-slide{justify-content:center;align-items:center;text-align:center}
+
+  /* ============ 入场动画(Guizang风格) ============ */
+  [data-anim]{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .slide.active [data-anim]{opacity:1;transform:translateY(0)}
+  .slide.active [data-anim]:nth-child(1){transition-delay:.1s}
+  .slide.active [data-anim]:nth-child(2){transition-delay:.18s}
+  .slide.active [data-anim]:nth-child(3){transition-delay:.26s}
+  .slide.active [data-anim]:nth-child(4){transition-delay:.34s}
+  .slide.active [data-anim]:nth-child(5){transition-delay:.42s}
+  .slide.active [data-anim]:nth-child(6){transition-delay:.5s}
+
+  /* ============ 内容区(book-distillation范式) ============ */
+  .frame{width:100%;max-width:1100px;margin:0 auto;flex:1;display:flex;flex-direction:column}
+  .slide-content{flex:1;display:flex;flex-direction:column}
+
+  /* ============ Magazine Chrome(Guizang风格) ============ */
+  .chrome{display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.5;margin-bottom:3vh}
+  .chrome .left,.chrome .right{display:flex;gap:2em;align-items:center}
+  .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
+
+  /* ============ 底部元数据(render_v8兼容) ============ */
+  .deck-footer{margin-top:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
+  .slide-number{position:absolute;bottom:2vh;right:3vw;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.35)}
+
+  /* ============ Section Label ============ */
+  .section-label{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
+
+  /* ============ 封面 ============ */
+  .cover-badge{display:inline-block;padding:6px 20px;border:1px solid var(--accent);border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4vh}
+  .cover-title{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:4vh;line-height:1.8;max-width:600px}
+  .cover-stats{display:flex;gap:4vh;flex-wrap:wrap;justify-content:center}
+  .cover-stat{text-align:center}
+  .cover-stat-num{font-family:var(--mono);font-size:2.5rem;font-weight:900;color:var(--accent)}
+  .cover-stat-label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.5);margin-top:.5vh}
+
+  /* ============ 封面标题(render_v8) ============ */
+  .hero-dark{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;flex:1}
+  .title-main{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .title-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:2vh;line-height:1.8}
+  .gold-line{width:80px;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));margin:3vh auto;border-radius:2px}
+
+  /* ============ 标题系统 ============ */
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
+  .h-hero{font-family:var(--serif-zh);font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.2;margin-bottom:3vh}
+  .h-xl{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.4rem,3vw,2.2rem);line-height:1.3;margin-bottom:2vh}
+  .h-lg{font-family:var(--serif-zh);font-weight:600;font-size:clamp(1.1rem,2vw,1.5rem);line-height:1.4;margin-bottom:1.5vh}
+  .h-md{font-weight:600;font-size:1.1rem;margin-bottom:1vh}
+  .lead{font-size:1rem;line-height:1.85;color:rgba(var(--paper-rgb),.8);max-width:700px}
+  .meta-row{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.4);display:flex;gap:2em;flex-wrap:wrap;margin-top:3vh}
+
+  /* ============ 大号引用(render_v8) ============ */
+  .quote-large{font-family:var(--serif-zh);font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:600;line-height:1.6;color:rgba(var(--paper-rgb),.9);max-width:800px;margin:0 auto}
+
+  /* ============ 分割线 ============ */
+  .rule{width:100%;height:1px;background:rgba(var(--paper-rgb),.15);margin:3vh 0}
+
+  /* ============ 标签 ============ */
+  .tag{display:inline-block;padding:4px 12px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;margin:3px}
+  .tag-gold{background:rgba(var(--gold-rgb),.15);color:var(--gold);border:1px solid rgba(var(--gold-rgb),.2)}
+  .tag-red{background:rgba(var(--accent-rgb),.15);color:var(--accent);border:1px solid rgba(var(--accent-rgb),.2)}
+  .tag-blue{background:rgba(74,106,154,.15);color:var(--blue);border:1px solid rgba(74,106,154,.2)}
+  .tag-purple{background:rgba(138,74,170,.15);color:var(--purple);border:1px solid rgba(138,74,170,.2)}
+  .tag-green{background:rgba(58,138,92,.15);color:var(--green);border:1px solid rgba(58,138,92,.2)}
+
+  /* ============ 霓虹强调色(render_v8) ============ */
+  .neon-gold{color:var(--gold)}.neon-red{color:var(--accent)}.neon-cyan{color:var(--cyan)}.neon-purple{color:var(--purple)}.neon-orange{color:var(--orange)}.neon-green{color:var(--green)}
+
+  /* ============ 网格系统 ============ */
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:2vh 2vw}
+  @media(max-width:768px){.grid-2{grid-template-columns:1fr}}
+
+  /* ============ 发言块(原生) ============ */
+  .sp{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2.5vw;margin-bottom:2vh;position:relative}
+  .sp::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .sh{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh}
+  .speaker-avatar{width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:var(--ink);background:var(--accent);flex-shrink:0}
+  .sn{font-weight:700;font-size:1rem}
+  .sr{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4);padding:3px 8px;background:rgba(var(--paper-rgb),.06);border-radius:3px}
+  .st{font-size:.95rem;line-height:2;color:rgba(var(--paper-rgb),.85)}
+  .st strong{color:var(--paper);font-weight:700}
+  .st em{color:var(--gold);font-style:normal;font-weight:600}
+
+  /* ============ 碰撞块(原生) ============ */
+  .cb{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;position:relative}
+  .cb::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .cb.blue{border-color:rgba(74,106,154,.3)}.cb.blue::before{background:var(--blue)}
+  .cb.purple{border-color:rgba(138,74,170,.3)}.cb.purple::before{background:var(--purple)}
+  .cb.green{border-color:rgba(58,138,92,.3)}.cb.green::before{background:var(--green)}
+  .cb.orange{border-color:rgba(var(--gold-rgb),.3)}.cb.orange::before{background:var(--gold)}
+  .cl{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;color:var(--accent);font-weight:600}
+  .cl.blue{color:var(--blue)}.cl.purple{color:var(--purple)}.cl.green{color:var(--green)}.cl.orange{color:var(--gold)}
+
+  /* ============ 洞见卡 ============ */
+  .insight-c{background:linear-gradient(135deg,rgba(var(--paper-rgb),.04) 0%,rgba(var(--paper-rgb),.08) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh;position:relative;overflow:hidden}
+  .insight-c::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold))}
+  .insight-q{font-family:var(--serif-zh);font-size:1.1rem;font-weight:700;color:var(--gold);line-height:1.6;margin-bottom:1vh}
+  .insight-a{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.75)}
+
+  /* ============ 卡片 ============ */
+  .card{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
+  .card-num{font-family:var(--mono);font-weight:900;font-size:1.8rem;color:var(--accent);opacity:.4;margin-bottom:1vh}
+  .card-title{font-weight:700;font-size:1rem;margin-bottom:1vh}
+  .card-body{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
+  .card-source{font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);margin-top:1vh}
+
+  /* ============ 专家卡片(render_v8) ============ */
+  .card-rise{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--green)}
+  .card-fall{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--accent)}
+  .speaker-header{display:flex;align-items:center;gap:16px;margin-bottom:2vh}
+  .speaker-name{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem}
+  .speaker-role{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:2px}
+  .expert-profile{display:flex;flex-direction:column;gap:1vh}
+  .profile-item{font-size:.9rem;line-height:1.7;color:rgba(var(--paper-rgb),.8)}
+  .profile-label{color:var(--gold);font-weight:600}
+
+  /* ============ 立场表达(render_v8) ============ */
+  .stance-item{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;border-left:3px solid var(--gold)}
+  .stance-expert{font-family:var(--serif-zh);font-weight:700;font-size:1rem;margin-bottom:1vh}
+  .stance-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 碰撞轮次(render_v8) ============ */
+  .clash-round{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;position:relative}
+  .clash-round::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .clash-header{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh;flex-wrap:wrap}
+  .clash-attacker{font-weight:700;font-size:1rem}
+  .clash-target{font-weight:700;font-size:1rem}
+  .clash-arrow{color:rgba(var(--paper-rgb),.3);font-size:1.2rem}
+  .clash-type{display:inline-block;padding:3px 10px;border-radius:3px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.5vh;font-weight:600}
+  .clash-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
+  .counter-attack{margin-top:2vh;padding-top:2vh;border-top:1px dashed rgba(var(--paper-rgb),.1)}
+  .counter-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .counter-content{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
+
+  /* ============ 攻击类型色 ============ */
+  .attack-logic{background:rgba(74,106,154,.15);color:var(--blue)}
+  .attack-interest{background:rgba(var(--accent-rgb),.15);color:var(--accent)}
+  .attack-reality{background:rgba(var(--gold-rgb),.15);color:var(--gold)}
+  .attack-human{background:rgba(138,74,170,.15);color:var(--purple)}
+  .attack-failure{background:rgba(58,138,92,.15);color:var(--green)}
+
+  /* ============ 现实案例(render_v8) ============ */
+  .reality-case{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--orange)}
+  .case-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5vh;flex-wrap:wrap;gap:8px}
+  .case-name{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem}
+  .case-source{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4)}
+  .case-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:1.5vh}
+  .case-outcome{font-size:.9rem;font-weight:600;margin-bottom:1vh}
+  .case-lesson{font-size:.9rem;font-weight:600}
+
+  /* ============ 代价讨论(render_v8) ============ */
+  .cost-discussion{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh}
+  .cost-scenario{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem;margin-bottom:2vh}
+  .cost-list{display:flex;flex-direction:column;gap:1.5vh;margin-bottom:2vh}
+  .cost-item{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:1.5vh 2vw;border-left:3px solid var(--accent)}
+  .cost-name{font-weight:700;font-size:.95rem;margin-bottom:.5vh}
+  .cost-analysis{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .worst-case{background:rgba(var(--accent-rgb),.08);border:1px solid rgba(var(--accent-rgb),.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
+  .worst-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .worst-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+  .survivor-bias{background:rgba(138,74,170,.08);border:1px solid rgba(138,74,170,.15);border-radius:6px;padding:2vh 2vw}
+  .survivor-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .survivor-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+
+  /* ============ 人性层(render_v8) ============ */
+  .human-nature{background:linear-gradient(135deg,rgba(var(--paper-rgb),.03) 0%,rgba(var(--paper-rgb),.06) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
+  .human-question{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem;margin-bottom:2vh;line-height:1.5}
+  .human-analysis{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:2vh}
+  .human-examples{margin-bottom:2vh}
+  .examples-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1vh;font-weight:600}
+  .example-item{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8);padding:.5vh 0}
+  .human-conclusion{font-size:.95rem;font-weight:600;line-height:1.7}
+
+  /* ============ 认知升级(render_v8) ============ */
+  .cognitive-upgrade{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
+  .upgrade-comparison{display:grid;grid-template-columns:1fr auto 1fr;gap:2vw;align-items:start;margin-bottom:2vh}
+  @media(max-width:768px){.upgrade-comparison{grid-template-columns:1fr}.upgrade-arrow{transform:rotate(90deg)}}
+  .old-thinking,.new-thinking{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:2vh 1.5vw}
+  .old-thinking{border-left:3px solid var(--accent)}
+  .new-thinking{border-left:3px solid var(--green)}
+  .thinking-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .thinking-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+  .upgrade-arrow{font-size:1.5rem;color:rgba(var(--paper-rgb),.3);display:flex;align-items:center;justify-content:center;padding-top:3vh}
+  .complexity{background:rgba(74,106,154,.08);border:1px solid rgba(74,106,154,.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
+  .complexity-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .complexity-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .actionable{background:rgba(var(--gold-rgb),.08);border:1px solid rgba(var(--gold-rgb),.15);border-radius:6px;padding:2vh 2vw}
+  .actionable-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .actionable-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 情绪样式 ============ */
+  .emotion-sarcasm{border-left:3px solid var(--purple);padding-left:12px;font-style:italic}
+  .emotion-helplessness{opacity:.75;font-style:italic}
+  .emotion-anger{color:var(--accent);font-weight:600}
+  .emotion-hesitation{opacity:.8;font-style:italic}
+  .emotion-self-deprecation{opacity:.7;font-style:italic}
+  .emotion-cold-laugh{color:var(--purple)}
+  .emotion-silence{opacity:.5;font-style:italic}
+  .emotion-serious{color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 指标 ============ */
+  .metrics{display:flex;gap:2vw;flex-wrap:wrap;margin-bottom:3vh}
+  .metric{flex:1;min-width:100px;text-align:center;background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 1.5vw}
+  .metric-val{font-family:var(--mono);font-weight:900;font-size:clamp(1.5rem,3vw,2.5rem);color:var(--accent)}
+  .metric-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:.5vh}
+
+  /* ============ 开放问题 ============ */
+  .oq{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
+  .oq-num{font-family:var(--mono);font-weight:900;font-size:1.2rem;color:var(--accent);opacity:.3;margin-bottom:1vh}
+  .oq-text{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .headline-item{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.85);padding:1.5vh 0;border-bottom:1px solid rgba(var(--paper-rgb),.06)}
+  .headline-item:last-child{border-bottom:none}
+  .headline-item strong{color:var(--gold);margin-right:8px}
+
+  /* ============ 引用 ============ */
+  .quote{font-family:var(--serif-zh);font-size:1rem;font-style:italic;line-height:1.8;padding:2vh 2.5vw;border-left:3px solid var(--gold);background:rgba(var(--gold-rgb),.05);margin:2vh 0;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ TOC ============ */
+  .toc-panel{position:fixed;top:0;left:0;width:min(340px,80vw);height:100vh;background:rgba(var(--ink-rgb),.97);backdrop-filter:blur(20px);z-index:100;transform:translateX(-100%);transition:transform .35s var(--ease);padding:3vh 2.5vw;overflow-y:auto;border-right:1px solid rgba(var(--paper-rgb),.08)}
+  .toc-panel.open{transform:translateX(0)}
+  .toc-title{font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:3vh;padding-bottom:2vh;border-bottom:1px solid rgba(var(--paper-rgb),.1)}
+  .toc-item{display:flex;justify-content:space-between;padding:1.2vh 1.5vw;margin-bottom:.5vh;cursor:pointer;border-radius:6px;border-left:2px solid transparent;font-size:.9rem;color:rgba(var(--paper-rgb),.7);transition:all .2s}
+  .toc-item:hover{background:rgba(var(--paper-rgb),.06);color:var(--paper)}
+  .toc-item.active{background:rgba(var(--paper-rgb),.08);color:var(--accent);border-left-color:var(--accent);font-weight:600}
+  .toc-label{flex:1}
+  .toc-page{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.35)}
+  .toc-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;opacity:0;pointer-events:none;transition:opacity .3s}
+  .toc-backdrop.open{opacity:1;pointer-events:auto}
+
+  /* ============ 导航栏 ============ */
+  .nav-bar{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 3vw;background:rgba(var(--ink-rgb),.9);backdrop-filter:blur(10px);z-index:50;border-top:1px solid rgba(var(--paper-rgb),.06)}
+  .nav-left,.nav-right{display:flex;align-items:center;gap:12px}
+  .nav-btn{background:none;border:1px solid rgba(var(--paper-rgb),.12);color:rgba(var(--paper-rgb),.7);padding:8px 16px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;cursor:pointer;transition:all .2s}
+  .nav-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(var(--accent-rgb),.1)}
+  .nav-title{font-size:12px;color:rgba(var(--paper-rgb),.5);max-width:40vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-counter{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.4)}
+
+  /* ============ 导航点 ============ */
+  .nav-dots{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:6px}
+  .nd{width:6px;height:6px;border-radius:50%;background:rgba(var(--paper-rgb),.15);cursor:pointer;transition:all .3s var(--ease);border:none;padding:0}
+  .nd.active{background:var(--accent);height:20px;border-radius:3px;box-shadow:0 0 8px rgba(var(--accent-rgb),.4)}
+  .nd:hover{background:rgba(var(--paper-rgb),.4)}
+
+  /* ============ 入场动画延迟(render_v8兼容) ============ */
+  .anim-in{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .slide.active .anim-in{opacity:1;transform:translateY(0)}
+  .slide.active .anim-in:nth-child(1){transition-delay:.1s}
+  .slide.active .anim-in:nth-child(2){transition-delay:.18s}
+  .slide.active .anim-in:nth-child(3){transition-delay:.26s}
+  .slide.active .anim-in:nth-child(4){transition-delay:.34s}
+  .slide.active .anim-in:nth-child(5){transition-delay:.42s}
+  .slide.active .anim-in:nth-child(6){transition-delay:.5s}
+  .anim-delay-1{transition-delay:.18s !important}
+  .anim-delay-2{transition-delay:.26s !important}
+  .anim-delay-3{transition-delay:.34s !important}
+  .anim-delay-4{transition-delay:.42s !important}
+  .anim-delay-5{transition-delay:.5s !important}
+  .anim-delay-6{transition-delay:.58s !important}
+
+  /* ============ 响应式 ============ */
+  @media(max-width:1024px){.slide{padding:4vh 5vw 8vh}}
+  @media(max-width:768px){
+    .slide{padding:3vh 4vw 7vh}
+    .cover-stats{gap:2vh}
+    .metrics{flex-direction:column}
+    .nav-dots,.nav-title{display:none}
+    .nav-bar{padding:0 2vw}
+  }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="slide active hero title-slide" data-title="银幕景观与底层债务">
+  <div class="frame">
+    <div class="slide-content" style="justify-content:center;align-items:center;text-align:center">
+      <div class="cover-badge" data-anim>圆桌洞见</div>
+      <div class="cover-title" data-anim>银幕景观与底层债务</div>
+      <div class="cover-sub" data-anim>电影叙事如何将金融杠杆内化为普通人的生活方式？</div>
+      <div class="gold-line" data-anim></div>
+      <div class="cover-stats" data-anim>
+        <div class="cover-stat">
+          <div class="cover-stat-num">6</div>
+          <div class="cover-stat-label">专家</div>
+        </div>
+        <div class="cover-stat">
+          <div class="cover-stat-num">3</div>
+          <div class="cover-stat-label">轮讨论</div>
+        </div>
+        <div class="cover-stat">
+          <div class="cover-stat-num">18</div>
+          <div class="cover-stat-label">发言</div>
+        </div>
+        <div class="cover-stat">
+          <div class="cover-stat-num">5</div>
+          <div class="cover-stat-label">洞见</div>
+        </div>
+      </div>
+      <div class="meta-row" data-anim>
+        <span> 大卫·哈维</span> · <span> 吴晓波</span> · <span> 项飙</span> · <span> 余华</span> · <span>️ 查理·芒格</span> · <span> 丹尼尔·卡尼曼</span>
+      </div>
+    </div>
+  </div>
+</div><div class="slide" data-title="核心洞见">
+  <div class="frame">
+    <div class="kicker" data-anim>KEY INSIGHTS</div>
+    <div class="h-xl" data-anim style="margin-bottom:4vh">核心洞见</div>
+    <div class="grid-2"><div class="insight-c" style="animation-delay:0s">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:2vh">
+        <span style="font-family:var(--mono);font-size:1.5rem;font-weight:900;color:var(--accent);opacity:.5">01</span>
+        <span style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);padding:3px 8px;background:rgba(var(--gold-rgb),.1);border-radius:3px">第1轮综合</span>
+      </div>
+      <div class="insight-q">核心洞见：电影叙事通过将&#039;金融杠杆生活方式&#039;符号化，正在制造一种新型的&#039;消费拜物教&#039;——它不崇拜商品本身，而是崇拜商品所代表的生活方式。这种拜物教的危险在于：它将结构性不平等&#039;自然化&#039;，让人们相信当前</div>
+      <div class="insight-a">消费主义叙事的高明之处是：它不是告诉你&#039;你应该买这个&#039;，而是告诉你&#039;你是这种人&#039;。当你接受了后者的逻辑，前者的消费就变成了&#039;自我实现&#039;。</div>
+    </div><div class="insight-c" style="animation-delay:0.1s">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:2vh">
+        <span style="font-family:var(--mono);font-size:1.5rem;font-weight:900;color:var(--accent);opacity:.5">02</span>
+        <span style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);padding:3px 8px;background:rgba(var(--gold-rgb),.1);border-radius:3px">第2轮综合</span>
+      </div>
+      <div class="insight-q">核心洞见：金融化叙事的危险不在于它&#039;说谎&#039;（很多叙事确实基于真实案例），而在于它&#039;选择性地说真话&#039;——只展示成功，不展示失败；只展示可能性，不展示概率；只展示&#039;正常人&#039;都在做的事，不展示&#039;正常人&#039;也在</div>
+      <div class="insight-a">电影叙事的&#039;选择性真相&#039;制造了一种特殊的认知扭曲：它让你相信，你所看到的&#039;成功故事&#039;代表了一种普遍的可能性，而不是统计学上的小概率事件。</div>
+    </div><div class="insight-c" style="animation-delay:0.2s">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:2vh">
+        <span style="font-family:var(--mono);font-size:1.5rem;font-weight:900;color:var(--accent);opacity:.5">03</span>
+        <span style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);padding:3px 8px;background:rgba(var(--gold-rgb),.1);border-radius:3px">第3轮综合</span>
+      </div>
+      <div class="insight-q">核心洞见：银幕景观与底层债务的恶性循环，本质上是&#039;叙事权力&#039;的失衡——金融资本掌控了&#039;讲故事&#039;的权力，而普通人只有&#039;听故事&#039;的被动性。解构这个循环需要的不仅是&#039;更好的叙事&#039;，更是&#039;叙事的民主化&#039;——让</div>
+      <div class="insight-a">电影工业的政治经济学需要被重新思考：当制作预算被金融资本主导，当发行渠道被平台垄断，&#039;替代性叙事&#039;如何获得可见性？这不仅是文化问题，更是权力问题。</div>
+    </div></div>
+    <div class="deck-footer">5个颠覆认知的观点</div>
+  </div>
+</div><div class="slide" data-title="专家阵容">
+  <div class="frame">
+    <div class="kicker" data-anim>EXPERT PANEL</div>
+    <div class="h-xl" data-anim style="margin-bottom:4vh">专家阵容</div>
+    <div class="grid-2"><div class="card-rise" style="border-left-color:#8b0000" data-anim>
+    <div class="speaker-header">
+      <div class="speaker-avatar" style="background:#8b0000"></div>
+      <div>
+        <div class="speaker-name">大卫·哈维</div>
+        <div class="speaker-role">文化地理学家</div>
+      </div>
+    </div>
+  </div><div class="card-rise" style="border-left-color:#4a4a4a" data-anim>
+    <div class="speaker-header">
+      <div class="speaker-avatar" style="background:#4a4a4a"></div>
+      <div>
+        <div class="speaker-name">吴晓波</div>
+        <div class="speaker-role">财经作家</div>
+      </div>
+    </div>
+  </div><div class="card-rise" style="border-left-color:#7d5a50" data-anim>
+    <div class="speaker-header">
+      <div class="speaker-avatar" style="background:#7d5a50"></div>
+      <div>
+        <div class="speaker-name">项飙</div>
+        <div class="speaker-role">社会学家</div>
+      </div>
+    </div>
+  </div><div class="card-rise" style="border-left-color:#556b2f" data-anim>
+    <div class="speaker-header">
+      <div class="speaker-avatar" style="background:#556b2f"></div>
+      <div>
+        <div class="speaker-name">余华</div>
+        <div class="speaker-role">作家</div>
+      </div>
+    </div>
+  </div><div class="card-rise" style="border-left-color:#8b4513" data-anim>
+    <div class="speaker-header">
+      <div class="speaker-avatar" style="background:#8b4513">️</div>
+      <div>
+        <div class="speaker-name">查理·芒格</div>
+        <div class="speaker-role">价值投资者</div>
+      </div>
+    </div>
+  </div><div class="card-rise" style="border-left-color:#1a5f7a" data-anim>
+    <div class="speaker-header">
+      <div class="speaker-avatar" style="background:#1a5f7a"></div>
+      <div>
+        <div class="speaker-name">丹尼尔·卡尼曼</div>
+        <div class="speaker-role">行为经济学家</div>
+      </div>
+    </div>
+  </div></div>
+    <div class="deck-footer">6位跨界专家，3轮深度交锋</div>
+  </div>
+</div><div class="slide title-slide" data-title="第1轮：消费主义的银幕化">
+    <div class="frame">
+      <div class="hero-dark">
+        <div class="kicker" data-anim>ROUND 1</div>
+        <div class="h-hero" data-anim style="background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">消费主义的银幕化</div>
+        <div class="quote-large" data-anim style="max-width:700px;margin-top:3vh">电影叙事如何在意识形态层面将&#039;高杠杆生活方式&#039;建构为值得追求的&#039;中产梦想&#039;？</div>
+      </div>
+    </div>
+  </div><div class="slide" data-title="第1轮：专家发言">
+    <div class="frame">
+      <div class="kicker" data-anim>ROUND 1 · 专家发言</div>
+      <div class="h-lg" data-anim style="margin-bottom:3vh">消费主义的银幕化</div>
+      <div class="sp" style="border-left-color:#8b0000">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#8b0000"></div>
+      <div>
+        <div class="sn">大卫·哈维</div>
+        <div class="sr">文化地理学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 电影叙事如何在意识形态层面将&#039;高杠杆生活方式&#039;建构为值得追求的&#039;中产梦想&#039;？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我在《后现代的状况》中发展了&#039;空间积累&#039;理论，今天这个理论需要更新：数字资本主义创造了一种新的&#039;象征性积累&#039;形式——消费不再只是&#039;拥有商品&#039;，而是&#039;成为某种人&#039;。电影叙事是这个过程的核心载体。想想好莱坞电影中的&#039;成功人士&#039;形象：住在大房子里、开豪华车、穿名牌服装、喝昂贵的酒。这些符号不是在描述生活，而是在&#039;召唤&#039;一种身份认同。鲍德里亚的&#039;拟像&#039;理论在这里获得了新的意义：电影不是&#039;反映&#039;现实，而是&#039;生产&#039;现实——当银幕上的生活方式成为欲望的对象，观众开始将自身现实与银幕幻象对比，从而产生&#039;不足感&#039;和&#039;消费动机&#039;。2025年的电影市场正在见证这种&#039;大事件消费&#039;现象——《哪吒2》形成了文化大事件，其票房成为中国电影工业胜利与民族文化自豪感的集体认同，观影行为超越娱乐消费，变成参与社会互动的全民仪式。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#4a4a4a">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#4a4a4a"></div>
+      <div>
+        <div class="sn">吴晓波</div>
+        <div class="sr">财经作家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 电影叙事如何在意识形态层面将&#039;高杠杆生活方式&#039;建构为值得追求的&#039;中产梦想&#039;？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">从财经观察的角度，中国的中产焦虑有其独特的制度根源。2018年至2021年房地产狂热期流传的&#039;中产返贫三件套&#039;——高杠杆买房、太太全职在家、孩子读国际学校，如今又添了三个新坑：高息理财陷阱、跟风裸辞创业、为面子大方借钱，六件套凑齐了三四样，家庭基本就站在悬崖边上。这种焦虑并非凭空产生，而是被系统性地&#039;制造&#039;出来的。电影叙事在这个过程中扮演了关键角色：当银幕上的&#039;成功人士&#039;都住别墅、开豪车、送孩子读国际学校时，&#039;标配&#039;的定义就被不断抬高。更危险的是，这种&#039;标配&#039;被建构为&#039;通往幸福的必经之路&#039;——一种线性的、普世的中产叙事。当真实收入增长放缓、房价高企、就业不稳时，被电影叙事建构的&#039;中产标配&#039;就成了压在普通人头上的大山。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#7d5a50">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#7d5a50"></div>
+      <div>
+        <div class="sn">项飙</div>
+        <div class="sr">社会学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 电影叙事如何在意识形态层面将&#039;高杠杆生活方式&#039;建构为值得追求的&#039;中产梦想&#039;？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我用一个概念来理解这种现象：&#039;愿景阶层&#039;（visionary class）。布迪厄（Pierre Bourdieu）分析了&#039;文化资本&#039;如何区隔阶级；今天，电影叙事正在创造一种&#039;银幕资本&#039;——那些在银幕上被展示的生活方式，成为文化资本的核心组成部分。更深层的问题是：电影叙事制造了一种&#039;时间性焦虑&#039;。中产叙事的核心不是&#039;你现在是什么&#039;，而是&#039;你应该成为什么&#039;——这种面向未来的焦虑，比当下的匮乏更折磨人。当韩国电影《无可奈何》将这种焦虑推向极致——一个中年中产为了保住&#039;体面&#039;不惜犯罪——它不是在鼓励这种行为，而是在展示结构性暴力如何内化为个体的道德困境。电影的价值恰恰在于：它能揭示那些被意识形态遮蔽的结构性矛盾，让观众在震撼中反思自身处境。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#556b2f">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#556b2f"></div>
+      <div>
+        <div class="sn">余华</div>
+        <div class="sr">作家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 电影叙事如何在意识形态层面将&#039;高杠杆生活方式&#039;建构为值得追求的&#039;中产梦想&#039;？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">作为一个作家，我深知叙事的&#039;召唤&#039;力量。我在《活着》中描写的是中国农民的生活——艰难、沉默、但有尊严。如果同样的故事被改编成&#039;逆袭叙事&#039;——主角通过奋斗买下祖宅、成为人生赢家——它传递的意识形态就完全不同。电影工业的本质是&#039;造梦机器&#039;，而&#039;美国梦&#039;的叙事模板是最成功的梦境——它告诉你：无论出身如何，通过努力和消费，你可以成为你想成为的任何人。这个叙事在文化上是振奋的，在经济学上是危险的：它将结构性不平等（阶级固化、机会减少）转化为个人失败（不够努力、不够聪明），从而消解了对制度的批判。当观众在电影中看到&#039;逆袭&#039;，他们不会问&#039;为什么逆袭这么难&#039;，而是问&#039;为什么我不够努力&#039;。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#8b4513">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#8b4513">️</div>
+      <div>
+        <div class="sn">查理·芒格</div>
+        <div class="sr">价值投资者</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 电影叙事如何在意识形态层面将&#039;高杠杆生活方式&#039;建构为值得追求的&#039;中产梦想&#039;？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">从投资哲学看，&#039;消费主义叙事&#039;的最大危害是：它将&#039;负债&#039;包装为&#039;投资&#039;，将&#039;消费&#039;包装为&#039;自我提升&#039;。电影中常见的桥段：主人公刷卡买下奢侈品，然后镜头一转，暗示这带来了更好的机会或人脉。这是彻头彻尾的谎言——奢侈品消费不会带来任何经济回报，它只是财富转移的仪式。更危险的是&#039;投资叙事&#039;的普及化：当普通人开始&#039;投资&#039;股票、基金、房产时，他们往往缺乏基本的风险评估能力。2025年数据显示，中国90后负债率高达78.3%，平均负债12.1万元，其中房贷占56.7%、消费贷款占32.1%。这种负债结构的形成，与&#039;银幕叙事&#039;的长期熏陶密不可分——电影告诉你&#039;有房才有家&#039;、&#039;有车才有面子&#039;、&#039;投资才能财富自由&#039;，但从不告诉你这些选择的代价和风险。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#1a5f7a">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#1a5f7a"></div>
+      <div>
+        <div class="sn">丹尼尔·卡尼曼</div>
+        <div class="sr">行为经济学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 电影叙事如何在意识形态层面将&#039;高杠杆生活方式&#039;建构为值得追求的&#039;中产梦想&#039;？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">行为科学揭示了电影叙事如何绕过理性思维，激活情感脑区。神经经济学研究显示：当人们看到银幕上的&#039;美好生活&#039;时，大脑的奖励系统（伏隔核）会被激活，产生&#039;渴望&#039;的情绪——这种渴望与理性判断无关，它发生在意识层面之下。更精妙的是&#039;锚定效应&#039;在叙事中的运用：电影将&#039;成功人士&#039;的生活方式作为锚点，观众以此校准自己的期望和欲望。当你的参照框架是电影中的中产生活时，年薪30万听起来就像&#039;失败&#039;；当你的参照框架是真实的中位数收入时，同样的30万意味着&#039;优越&#039;。电影工业深谙此道——它们持续提高&#039;可见的成功标准&#039;，让观众永远在追逐一个被刻意拉高的目标。这种&#039;叙事锚定&#039;比任何广告都更有效，因为它不是被&#039;推送&#039;给观众的，而是观众主动&#039;观看&#039;的。</p></div>
+    
+    
+  </div><div style="background:rgba(var(--accent-rgb),.06);border:1px solid rgba(var(--accent-rgb),.15);border-radius:var(--radius);padding:3vh 2.5vw;margin-top:2vh">
+    <div style="font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh;font-weight:700">⚡ 专家交锋</div>
+    <div style="font-family:var(--serif-zh);font-size:1.05rem;font-weight:600;margin-bottom:2vh;line-height:1.6">第1轮碰撞</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">大卫·哈维：吴晓波先生，你说&#039;焦虑被系统性制造&#039;，但是否存在一种&#039;反身性&#039;——即观众在观看电影时也意识到这是虚构，从而保持批判距离？还是说，大多数观众会不自觉地将银幕叙事当作&#039;行为指南&#039;？</p></div>
+  </div>
+      <div class="deck-footer">第 1/3 轮 · 6 位专家发言</div>
+    </div>
+  </div><div class="slide title-slide" data-title="第2轮：金融化叙事的深层机制">
+    <div class="frame">
+      <div class="hero-dark">
+        <div class="kicker" data-anim>ROUND 2</div>
+        <div class="h-hero" data-anim style="background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">金融化叙事的深层机制</div>
+        <div class="quote-large" data-anim style="max-width:700px;margin-top:3vh">电影叙事如何将复杂的金融逻辑简化为情感共鸣的故事，从而影响观众的金融决策？</div>
+      </div>
+    </div>
+  </div><div class="slide" data-title="第2轮：专家发言">
+    <div class="frame">
+      <div class="kicker" data-anim>ROUND 2 · 专家发言</div>
+      <div class="h-lg" data-anim style="margin-bottom:3vh">金融化叙事的深层机制</div>
+      <div class="sp" style="border-left-color:#8b0000">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#8b0000"></div>
+      <div>
+        <div class="sn">大卫·哈维</div>
+        <div class="sr">文化地理学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 电影叙事如何将复杂的金融逻辑简化为情感共鸣的故事，从而影响观众的金融决策？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">金融化的叙事策略本质上是一种&#039;具体化&#039;（embodiment）——将抽象的金融逻辑转化为可感知的情感故事。想想2008年金融危机：它本质上是一系列复杂的金融衍生品交易（CDO、CDS）引发的系统性风险。但好莱坞如何呈现这场危机？通过《贪婪》（The Big Short）中具体的人物——医生、赌徒、单亲爸爸——的个人遭遇。观众不需要理解MBS的运作机制，他们只需要&#039;感同身受&#039;这些小人物的遭遇。这种叙事策略的效果是双重的：一方面，它确实帮助大众&#039;理解&#039;金融危机的伤害；另一方面，它将复杂的结构性危机&#039;个人化&#039;，从而遮蔽了真正的问题——金融体系本身的逻辑。&#039;贪婪的银行家&#039;是一个容易理解的反派，但它转移了对&#039;金融化&#039;作为资本积累新形式的批判。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#4a4a4a">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#4a4a4a"></div>
+      <div>
+        <div class="sn">吴晓波</div>
+        <div class="sr">财经作家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 电影叙事如何将复杂的金融逻辑简化为情感共鸣的故事，从而影响观众的金融决策？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">从中国电影的财经叙事演变，我观察到一个令人担忧的趋势：&#039;创业叙事&#039;取代&#039;劳动叙事&#039;成为主流。20年前的电影，主角通过辛勤劳动获得成功；今天的电影，主角通过&#039;抓住机会&#039;（买房、炒股、创业）实现逆袭。这种转变反映了真实的经济结构变化——实体经济的利润率下降，金融投资的收益率相对上升。但它制造的意识形态效应是危险的：它告诉年轻人，勤劳不能致富，只有&#039;杠杆&#039;才能。这种叙事正在制造一代&#039;金融化的主体&#039;——他们不再相信劳动的价值，而是相信&#039;钱生钱&#039;的逻辑。更具体地说，它在培养&#039;金融消费者&#039;而非&#039;经济生产者&#039;：关注股价而非就业，关注理财而非创造。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#8b4513">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#8b4513">️</div>
+      <div>
+        <div class="sn">查理·芒格</div>
+        <div class="sr">价值投资者</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 电影叙事如何将复杂的金融逻辑简化为情感共鸣的故事，从而影响观众的金融决策？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">从价值投资哲学看，电影叙事对&#039;成功&#039;的定义与我所坚持的&#039;内在价值&#039;理念完全相反。芒格的投资原则是：关注企业的真实价值（盈利、资产、护城河），而非市场波动（股价涨跌、估值泡沫）。电影叙事传递的信息恰恰相反：成功等于&#039;财务自由&#039;（可以不用工作）、等于&#039;奢侈品自由&#039;（想买什么就买什么）、等于&#039;身份自由&#039;（被尊重、被仰望）。这些定义的核心是&#039;消费能力&#039;，而非&#039;生产能力&#039;或&#039;价值创造能力&#039;。更糟糕的是，电影中的&#039;投资成功&#039;往往是投机——押注房产、追涨杀跌、杠杆博弈。真正的投资智慧（耐心、理性、长期主义）在电影叙事中几乎缺席。《大空头》的叙事揭示了做空者如何从危机中获利，但它没有告诉观众：长期价值投资如何获得稳定回报。这种&#039;叙事缺失&#039;本身就是一个意识形态选择。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#7d5a50">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#7d5a50"></div>
+      <div>
+        <div class="sn">项飙</div>
+        <div class="sr">社会学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 电影叙事如何将复杂的金融逻辑简化为情感共鸣的故事，从而影响观众的金融决策？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我想引入&#039;焦虑经济&#039;这个概念。电影叙事不仅在&#039;展示&#039;中产生活，更在&#039;制造&#039;中产焦虑。韩炳哲说现代功绩社会的核心是&#039;自我剥削&#039;，而&#039;中产焦虑&#039;是这种自我剥削的情感燃料。电影工业深谙此道：它不断制造&#039;别人都成功了&#039;的幻象，让你感到落后；不断制造&#039;你本可以&#039;的可能性，让你感到后悔。2025年的数据显示，35-45岁中产家庭返贫比例达51%——这个数据背后，有多少是因为&#039;电影叙事诱导的高消费&#039;而非真实的&#039;经济下行&#039;？电影告诉你&#039;亏得起&#039;（房子会升值、工资会涨），但从不告诉你&#039;万一亏不起呢&#039;。这种不对等的风险叙事，正是金融化叙事的核心功能。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#556b2f">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#556b2f"></div>
+      <div>
+        <div class="sn">余华</div>
+        <div class="sr">作家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 电影叙事如何将复杂的金融逻辑简化为情感共鸣的故事，从而影响观众的金融决策？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">作为文学创作者，我深知叙事的&#039;情感说服&#039;机制。电影编剧有一句行话：&#039;展示，不要讲述&#039;（Show, don&#039;t tell）。这个原则应用到金融叙事上，就变成了：不要告诉观众&#039;杠杆很危险&#039;，而是&#039;展示&#039;一个普通人通过杠杆获得成功的故事。这种&#039;展示&#039;的力量远比抽象说教强大——因为观众不会记住&#039;杠杆危险&#039;这个命题，但他们会记住&#039;这个普通人通过杠杆成功了&#039;这个故事。更狡猾的是：电影往往在结尾加上&#039;免责声明&#039;（&#039;本片纯属虚构&#039;），让叙事者逃脱道德责任。这是现代叙事工业的&#039;清洁机制&#039;——它既传播了特定的价值观，又保持了&#039;客观中立&#039;的人设。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#1a5f7a">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#1a5f7a"></div>
+      <div>
+        <div class="sn">丹尼尔·卡尼曼</div>
+        <div class="sr">行为经济学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 电影叙事如何将复杂的金融逻辑简化为情感共鸣的故事，从而影响观众的金融决策？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">行为科学提供了理解金融叙事的精确工具。第一个机制是&#039;可得性启发&#039;（availability heuristic）——人们倾向于根据&#039;容易想起&#039;的例子做判断。电影叙事正是利用这个原理：它提供了大量&#039;杠杆成功&#039;的生动案例，让你觉得&#039;杠杆致富&#039;很常见；但它不会告诉你&#039;杠杆失败&#039;的案例，因为这些案例往往没有&#039;故事性&#039;。第二个机制是&#039;乐观偏差&#039;（optimism bias）——人们倾向于低估自己的风险。电影主角的冒险成功，让观众不自觉地把自己代入&#039;成功者&#039;的角色，忽视了统计学意义上的失败概率。第三个机制是&#039;社会规范效应&#039;——当银幕上的&#039;正常人&#039;都在高消费、高杠杆时，&#039;量入为出&#039;就变成了&#039;异类行为&#039;。这三个机制的叠加效果是：电影叙事系统性地提升了观众对风险的容忍度。</p></div>
+    
+    
+  </div><div style="background:rgba(var(--accent-rgb),.06);border:1px solid rgba(var(--accent-rgb),.15);border-radius:var(--radius);padding:3vh 2.5vw;margin-top:2vh">
+    <div style="font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh;font-weight:700">⚡ 专家交锋</div>
+    <div style="font-family:var(--serif-zh);font-size:1.05rem;font-weight:600;margin-bottom:2vh;line-height:1.6">第2轮碰撞</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">大卫·哈维：芒格先生，你说&#039;金融化叙事&#039;的问题在于它传递了&#039;错误的价值观&#039;，但也许问题是：观众会批判性地解读这些叙事，而非照单全收？观众是否有能力识别电影中的&#039;金融套路&#039;？</p></div>
+  </div>
+      <div class="deck-footer">第 2/3 轮 · 6 位专家发言</div>
+    </div>
+  </div><div class="slide title-slide" data-title="第3轮：解构与重构：替代性叙事">
+    <div class="frame">
+      <div class="hero-dark">
+        <div class="kicker" data-anim>ROUND 3</div>
+        <div class="h-hero" data-anim style="background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">解构与重构：替代性叙事</div>
+        <div class="quote-large" data-anim style="max-width:700px;margin-top:3vh">什么样的电影叙事能帮助观众建立更健康的金融认知和消费伦理？</div>
+      </div>
+    </div>
+  </div><div class="slide" data-title="第3轮：专家发言">
+    <div class="frame">
+      <div class="kicker" data-anim>ROUND 3 · 专家发言</div>
+      <div class="h-lg" data-anim style="margin-bottom:3vh">解构与重构：替代性叙事</div>
+      <div class="sp" style="border-left-color:#8b0000">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#8b0000"></div>
+      <div>
+        <div class="sn">大卫·哈维</div>
+        <div class="sr">文化地理学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 什么样的电影叙事能帮助观众建立更健康的金融认知和消费伦理？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我在《希望的空间》中提出了一种&#039;反资本主义的地理学&#039;——寻找资本主义空间化过程中的&#039;裂缝&#039;和&#039;替代可能性&#039;。在电影叙事领域，这意味着需要一种&#039;去拜物教化&#039;的叙事策略。具体来说：不是展示&#039;金融工具如何帮你成功&#039;，而是展示&#039;金融体系如何运作&#039;；不是展示&#039;成功者的生活方式&#039;，而是展示&#039;普通人的真实生活&#039;；不是展示&#039;个别的逆袭&#039;，而是展示&#039;结构性的困境&#039;。《韩国寄生虫》提供了这种叙事的典范——它不是告诉你&#039;如何成为上流社会&#039;，而是揭示阶级壁垒的&#039;不可穿透性&#039;。这种叙事的批判力量远大于&#039;逆袭叙事&#039;，因为它让观众在震撼中反思，而非在代入中沉溺。电影工业需要的不是&#039;更正确&#039;的叙事，而是&#039;更诚实&#039;的叙事。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#4a4a4a">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#4a4a4a"></div>
+      <div>
+        <div class="sn">吴晓波</div>
+        <div class="sr">财经作家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 什么样的电影叙事能帮助观众建立更健康的金融认知和消费伦理？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">从财经写作的角度，我主张&#039;复杂性叙事&#039;取代&#039;简化性叙事&#039;。当前的财经电影倾向于将金融世界简化为&#039;好人与坏人&#039;、&#039;赢家和输家&#039;、&#039;冒险与保守&#039;的二元对立。这种简化服务于商业逻辑——它让电影&#039;可看&#039;，但让观众&#039;误读&#039;。真正的财经叙事应该呈现复杂性：不确定性（而非确定性）、概率思维（而非结果导向）、系统思维（而非个人英雄）。具体来说，一部关于投资的电影应该呈现：专业投资者如何评估风险（而非如何&#039;赌对&#039;）、普通投资者如何被系统性&#039;收割&#039;（而非如何&#039;逆袭&#039;）、金融创新如何创造和毁灭价值（而非单纯的&#039;进步&#039;或&#039;贪婪&#039;）。这种复杂叙事的商业吸引力较低，但它能建立更健康的金融认知。问题是：在票房压力下，谁愿意拍这种&#039;不性感&#039;的电影？</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#7d5a50">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#7d5a50"></div>
+      <div>
+        <div class="sn">项飙</div>
+        <div class="sr">社会学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 什么样的电影叙事能帮助观众建立更健康的金融认知和消费伦理？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我提出一个&#039;附近叙事&#039;的概念——与&#039;全球视野&#039;、&#039;宏大叙事&#039;相对的电影叙事。&#039;附近&#039;的核心是：关注你周围的具体的人、地方、问题，而非遥远的精英或抽象的&#039;社会&#039;。这种叙事策略能对抗消费主义的两个核心机制：&#039;普遍化&#039;（将精英生活方式推广为普遍理想）和&#039;未来化&#039;（用&#039;未来幸福&#039;合理化&#039;当下牺牲&#039;）。具体来说：拍一个&#039;普通人如何在县城生活&#039;的电影，而非&#039;如何在大城市逆袭&#039;的电影；拍一个&#039;今天如何好好活着&#039;的故事，而非&#039;明天如何财务自由&#039;的故事；拍一个&#039;与邻居如何相处&#039;的叙事，而非&#039;如何超越竞争对手&#039;的故事。这种叙事不是&#039;保守&#039;或&#039;退步&#039;，而是一种&#039;重建生活价值&#039;的政治行动。&#039;附近&#039;的重建，是对全球金融化的抵抗。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#556b2f">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#556b2f"></div>
+      <div>
+        <div class="sn">余华</div>
+        <div class="sr">作家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 什么样的电影叙事能帮助观众建立更健康的金融认知和消费伦理？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">作为一个作家，我相信叙事的根本力量在于&#039;诚实&#039;。电影工业需要的不是&#039;金融教育片&#039;（没有人会看），而是&#039;诚实的故事&#039;——诚实地呈现生活的复杂性、诚实地面对失败的可能性、诚实地承认选择的代价。我在《活着》中没有告诉读者&#039;活着是有意义的&#039;，我只是展示了&#039;活着本身就是意义&#039;。这种存在主义的态度，比任何&#039;成功学叙事&#039;都更有治愈力。具体到金融叙事：不要告诉观众&#039;你应该怎样做&#039;，而是展示&#039;真实的人如何在不确定中做出选择&#039;；不要美化失败，也不要美化成功，而是诚实呈现每一种选择的重量。电影可以娱乐，但电影也可以&#039;治疗&#039;——通过提供一种&#039;共同叙事&#039;，让观众感到&#039;不是我一个人在挣扎&#039;。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#8b4513">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#8b4513">️</div>
+      <div>
+        <div class="sn">查理·芒格</div>
+        <div class="sr">价值投资者</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 什么样的电影叙事能帮助观众建立更健康的金融认知和消费伦理？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">从价值投资哲学，我提出一个&#039;反叙事&#039;的策略：展示&#039;不投资&#039;的价值。当前所有的金融叙事都在告诉你：&#039;你应该投资，否则你会落后。&#039;这种叙事的预设是：财富最大化是人生的核心目标。但价值投资的真正洞见是：知道&#039;不做什么&#039;比知道&#039;做什么&#039;更重要。&#039;不负债&#039;、&#039;不投机&#039;、&#039;不跟随大众&#039;——这些&#039;负面清单&#039;比任何&#039;投资秘籍&#039;都更有价值。电影叙事应该展示：一个人如何通过&#039;不参与&#039;金融游戏而过上充实的生活；一个人如何通过&#039;知足&#039;而非&#039;贪婪&#039;获得内心的平静。这种叙事的价值不在于&#039;反金融&#039;，而在于&#039;超越金融&#039;——它帮助观众重新排序人生的价值，而不是把金融决策当作人生的核心决策。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#1a5f7a">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#1a5f7a"></div>
+      <div>
+        <div class="sn">丹尼尔·卡尼曼</div>
+        <div class="sr">行为经济学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 什么样的电影叙事能帮助观众建立更健康的金融认知和消费伦理？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">从行为科学的角度，我提出一个具体的建议：电影应该&#039;展示概率&#039;而非&#039;讲述故事&#039;。人类天生不擅长概率思维——我们更容易被具体的故事打动，而非抽象的统计。所以，电影叙事的策略应该是：不是告诉观众&#039;杠杆有风险&#039;（抽象的），而是展示&#039;100个使用杠杆的人中，70个失败了&#039;（具体的）。这不是说教，而是叙事的重组。具体技术：将个人故事嵌入统计背景——先展示一个杠杆失败的个人案例，然后展示&#039;这在统计上并不罕见&#039;；将长期后果&#039;可视化&#039;——不只是展示&#039;成功那一刻&#039;，而是展示&#039;成功之后的代价&#039;。行为科学的核心洞见是：人类不是&#039;理性计算机&#039;，而是&#039;情感动物&#039;。电影的武器不是逻辑，而是情感——关键是选择用情感来传递&#039;什么&#039;。</p></div>
+    
+    
+  </div><div style="background:rgba(var(--accent-rgb),.06);border:1px solid rgba(var(--accent-rgb),.15);border-radius:var(--radius);padding:3vh 2.5vw;margin-top:2vh">
+    <div style="font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh;font-weight:700">⚡ 专家交锋</div>
+    <div style="font-family:var(--serif-zh);font-size:1.05rem;font-weight:600;margin-bottom:2vh;line-height:1.6">第3轮碰撞</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">余华：项飙先生，你说&#039;重建附近&#039;是对全球金融化的抵抗，但这是否意味着一种&#039;退缩&#039;？当全球金融体系已经渗透到生活的每一个角落时，&#039;重建附近&#039;是否只是一种&#039;心理安慰&#039;而非真实的改变？</p></div>
+  </div>
+      <div class="deck-footer">第 3/3 轮 · 6 位专家发言</div>
+    </div>
+  </div><div class="slide hero title-slide" data-title="结语">
+  <div class="frame">
+    <div class="slide-content" style="justify-content:center;align-items:center;text-align:center">
+      <div class="kicker" data-anim>CONCLUSION</div>
+      <div class="h-hero" data-anim style="margin-bottom:4vh">散户狂潮中的生存法则</div>
+      <div class="quote-large" data-anim style="max-width:800px;margin-bottom:4vh">
+        在极端斯坦，活得久比赚得快更重要。杠铃策略不是悲观主义，而是对不确定性的最高敬意。
+      </div>
+      <div class="gold-line" data-anim></div>
+      <div class="meta-row" data-anim>
+        <span> 大卫·哈维</span> · <span> 吴晓波</span> · <span> 项飙</span> · <span> 余华</span> · <span>️ 查理·芒格</span> · <span> 丹尼尔·卡尼曼</span>
+      </div>
+      <div style="margin-top:4vh;font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;opacity:.4" data-anim>
+        圆桌洞见 · 2026-05-26
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toc-backdrop" id="tocBackdrop"></div>
+<div class="toc-panel" id="tocPanel">
+<div class="toc-title">目录</div>
+<div id="tocList"></div>
+</div>
+<div class="nav-bar">
+<div class="nav-left">
+<button class="nav-btn" id="btnToc">☰ 目录</button>
+<button class="nav-btn" id="btnPrev">◀ 上一页</button>
+<button class="nav-btn" id="btnNext">下一页 ▶</button>
+</div>
+<div class="nav-right">
+<span class="nav-title" id="slideTitle"></span>
+<span class="nav-counter" id="slideCounter"></span>
+</div>
+</div>
+<div class="nav-dots" id="navDots"></div>
+</div>
+
+<script>
+(function(){
+var deck=document.getElementById("deck");
+var slides=deck.querySelectorAll(".slide");
+var total=slides.length;
+var cur=0;
+var dots=document.getElementById("navDots");
+var tocList=document.getElementById("tocList");
+var titleEl=document.getElementById("slideTitle");
+var counterEl=document.getElementById("slideCounter");
+var tocPanel=document.getElementById("tocPanel");
+var tocBackdrop=document.getElementById("tocBackdrop");
+var progressBar=document.getElementById("progressBar");
+
+for(var i=0;i<total;i++){
+  var d=document.createElement("button");
+  d.className="nd";
+  d.setAttribute("data-i",i);
+  d.onclick=(function(idx){return function(){go(idx)}})(i);
+  dots.appendChild(d);
+  var t=document.createElement("div");
+  t.className="toc-item";
+  t.setAttribute("data-i",i);
+  t.innerHTML='<span class="toc-label">'+(slides[i].getAttribute("data-title")||"Slide "+(i+1))+'</span><span class="toc-page">'+String(i+1).padStart(2,"0")+'</span>';
+  t.onclick=(function(idx){return function(){go(idx);closeTOC()}})(i);
+  tocList.appendChild(t);
+}
+
+function go(n){
+  if(n<0||n>=total)return;
+  slides[cur].classList.remove("active");
+  dots.children[cur].classList.remove("active");
+  tocList.children[cur].classList.remove("active");
+  cur=n;
+  slides[cur].classList.add("active");
+  dots.children[cur].classList.add("active");
+  tocList.children[cur].classList.add("active");
+  titleEl.textContent=slides[cur].getAttribute("data-title")||"";
+  counterEl.textContent=(cur+1)+" / "+total;
+  progressBar.style.width=((cur+1)/total*100)+"%";
+  slides[cur].scrollTop=0;
+}
+function toggleTOC(){tocPanel.classList.toggle("open");tocBackdrop.classList.toggle("open")}
+function closeTOC(){tocPanel.classList.remove("open");tocBackdrop.classList.remove("open")}
+
+document.addEventListener("keydown",function(e){
+  if(e.key==="ArrowRight"||e.key==="ArrowDown"||e.key===" "||e.key==="PageDown"){e.preventDefault();go(cur+1)}
+  else if(e.key==="ArrowLeft"||e.key==="ArrowUp"||e.key==="PageUp"){e.preventDefault();go(cur-1)}
+  else if(e.key==="Home"){e.preventDefault();go(0)}
+  else if(e.key==="End"){e.preventDefault();go(total-1)}
+  else if(e.key==="Escape"){closeTOC();go(0)}
+  else if(e.key==="t"||e.key==="T"){toggleTOC()}
+});
+var wheelTimer=null;
+deck.addEventListener("wheel",function(e){
+  var sl=slides[cur];
+  var atTop=sl.scrollTop<=0;
+  var atBottom=sl.scrollTop+sl.clientHeight>=sl.scrollHeight-2;
+  if(e.deltaY>0&&atBottom){
+    if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},350);go(cur+1)}
+    e.preventDefault();
+  }else if(e.deltaY<0&&atTop){
+    if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},350);go(cur-1)}
+    e.preventDefault();
+  }
+},{passive:false});
+var touchX=0,touchY=0;
+deck.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX;touchY=e.touches[0].clientY});
+deck.addEventListener("touchend",function(e){
+  var dx=touchX-e.changedTouches[0].clientX,dy=touchY-e.changedTouches[0].clientY;
+  if(Math.abs(dy)>Math.abs(dx)){if(dy>50)go(cur+1);else if(dy<-50)go(cur-1)}
+  else{if(dx>50)go(cur+1);else if(dx<-50)go(cur-1)}
+});
+deck.addEventListener("click",function(e){
+  if(e.target.closest(".nav-btn,.nd,.toc-item,.toc-panel,.toc-backdrop"))return;
+  var x=e.clientX/window.innerWidth;
+  if(x<0.3)go(cur-1);else if(x>0.7)go(cur+1);
+});
+document.getElementById("btnToc").addEventListener("click",function(e){e.stopPropagation();toggleTOC()});
+document.getElementById("btnPrev").addEventListener("click",function(e){e.stopPropagation();go(cur-1)});
+document.getElementById("btnNext").addEventListener("click",function(e){e.stopPropagation();go(cur+1)});
+tocBackdrop.addEventListener("click",closeTOC);
+go(0);
+})();
+</script>
+</body>
+</html>

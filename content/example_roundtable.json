@@ -1,0 +1,74 @@
+{
+  "title": "示例圆桌洞见",
+  "subtitle": "AI生成的JSON内容示例",
+  "style": "严肃",
+  "dashboard": {
+    "total_experts": 3,
+    "total_rounds": 2,
+    "total_clashes": 4,
+    "total_insights": 2,
+    "experts": ["专家A", "专家B", "专家C"]
+  },
+  "rounds": [
+    {
+      "round_number": 1,
+      "topic": "核心问题讨论",
+      "question": "这个问题的本质是什么？",
+      "speakers": [
+        {
+          "name": "专家A",
+          "role": "主辩手",
+          "avatar_color": "#c23b22",
+          "content": "这是专家A的发言内容，需要至少100个字符。Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        },
+        {
+          "name": "专家B",
+          "role": "挑战者",
+          "avatar_color": "#4a6a9a",
+          "content": "这是专家B的反驳内容，需要至少100个字符。Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        }
+      ],
+      "clashes": [
+        {
+          "type": "逻辑追问",
+          "expert": "专家C",
+          "content": "这是碰撞内容，需要至少50个字符。Duis aute irure dolor in reprehenderit."
+        }
+      ],
+      "insight": {
+        "statement": "核心洞见：这是一个因果推理的洞见句",
+        "explanation": "洞见的详细解释，说明为什么这个观点重要。"
+      }
+    },
+    {
+      "round_number": 2,
+      "topic": "深入探讨",
+      "question": "如何将理论应用到实践？",
+      "speakers": [
+        {
+          "name": "专家C",
+          "role": "观察者",
+          "avatar_color": "#3a8a5c",
+          "content": "这是专家C的观察内容，需要至少100个字符。Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        }
+      ],
+      "clashes": [],
+      "insight": {
+        "statement": "实践洞见：知行合一的关键",
+        "explanation": "将理论转化为行动的具体方法。"
+      }
+    }
+  ],
+  "tensions": [
+    {
+      "axis": "理论 vs 实践",
+      "description": "知道和做到之间的鸿沟"
+    }
+  ],
+  "open_questions": [
+    {
+      "question": "在你的生活中，如何应用这些洞见？"
+    }
+  ],
+  "conclusion": "圆桌洞见的核心价值在于多元视角的碰撞"
+}

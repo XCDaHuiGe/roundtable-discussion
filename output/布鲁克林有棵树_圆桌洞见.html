@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>布鲁克林有棵树 圆桌洞见</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#0a0a0b;--paper:#f1efea;--accent:#c9a227;--red:#e94560;--blue:#3498db;--purple:#9b59b6;--orange:#f39c12;--green:#2ecc71;--radius:6px;--ease:cubic-bezier(.25,.46,.45,.94)}
+html,body{height:100%;overflow:hidden;font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:var(--ink);color:var(--paper)}
+.deck{position:relative;width:100vw;height:100vh;overflow:hidden}
+.slide{position:absolute;inset:0;height:100vh;display:none;flex-direction:column;padding:5vh 6vw;overflow:hidden}
+.slide.active{display:flex}
+.slide.hero{justify-content:center;align-items:center;text-align:center;overflow:hidden}
+.slide.title-slide{justify-content:center;align-items:center;text-align:center}
+.frame{width:100%;max-width:1000px;margin:0 auto}
+.kicker{font-family:monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.45;margin-bottom:2vh}
+.h-hero{font-weight:900;font-size:clamp(2.5rem,8vw,5rem);line-height:1.1;margin-bottom:2.5vh}
+.h-xl{font-weight:700;font-size:clamp(1.4rem,3.5vw,2.2rem);line-height:1.25;margin-bottom:2vh}
+.h-lg{font-weight:700;font-size:clamp(1.1rem,2.5vw,1.6rem);line-height:1.3;margin-bottom:1.5vh}
+.h-md{font-weight:600;font-size:clamp(.95rem,1.5vw,1.2rem);margin-bottom:1vh}
+.lead{font-weight:300;font-size:clamp(.9rem,1.2vw,1.05rem);line-height:1.85;opacity:.85}
+.meta-row{font-family:monospace;font-size:12px;opacity:.45;display:flex;gap:1.5em;flex-wrap:wrap;margin-top:2vh}
+.tag{display:inline-block;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:600;margin:2px}
+.tag-gold{background:rgba(201,162,39,.18);color:#c9a227;border:1px solid rgba(201,162,39,.25)}
+.tag-red{background:rgba(192,57,43,.18);color:#e74c3c;border:1px solid rgba(192,57,43,.25)}
+.tag-blue{background:rgba(41,128,185,.18);color:#3498db;border:1px solid rgba(41,128,185,.25)}
+.tag-purple{background:rgba(142,68,173,.18);color:#9b59b6;border:1px solid rgba(142,68,173,.25)}
+.tag-green{background:rgba(39,174,96,.18);color:#2ecc71;border:1px solid rgba(39,174,96,.25)}
+.tag-brown{background:rgba(139,69,19,.18);color:#d4a574;border:1px solid rgba(139,69,19,.25)}
+.sp{margin-bottom:2.5vh;padding:1.5vh 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.sp:last-child{border-bottom:none}
+.sh{display:flex;align-items:center;gap:10px;margin-bottom:.8vh}
+.sn{font-weight:700;font-size:clamp(.9rem,1.1vw,1rem)}
+.sr{font-size:11px;opacity:.4;font-family:monospace}
+.st{font-size:clamp(.85rem,1.1vw,1rem);line-height:1.85;opacity:.82;padding-left:.5vw}
+.st em{color:var(--accent);font-style:normal;font-weight:600}
+.cb{border-radius:var(--radius);padding:2vh 2vw;margin:1.2vh 0;border-left:3px solid var(--red);background:rgba(233,69,96,.06)}
+.cb.blue{border-color:var(--blue);background:rgba(52,152,219,.06)}
+.cb.purple{border-color:var(--purple);background:rgba(155,89,182,.06)}
+.cb.orange{border-color:var(--orange);background:rgba(243,156,18,.06)}
+.cb.green{border-color:var(--green);background:rgba(46,204,113,.06)}
+.cl{font-family:monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6vh;color:var(--red)}
+.cl.blue{color:var(--blue)}.cl.purple{color:var(--purple)}.cl.orange{color:var(--orange)}.cl.green{color:var(--green)}
+.insight-c{text-align:center;max-width:680px;margin:3vh auto;padding:3vh 3vw;background:rgba(201,162,39,.05);border:1px solid rgba(201,162,39,.12);border-radius:var(--radius)}
+.insight-q{font-size:1.05rem;font-weight:700;color:var(--accent);line-height:1.6;margin-bottom:1vh}
+.insight-a{font-size:.92rem;opacity:.75;line-height:1.75}
+.card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:2vh 2.5vw;margin-bottom:1.5vh}
+.card-num{font-weight:900;font-size:1.6rem;color:var(--accent);line-height:1;margin-bottom:.5vh;opacity:.5}
+.card-title{font-weight:700;font-size:1rem;margin-bottom:.6vh}
+.card-body{font-size:.88rem;line-height:1.75;opacity:.78}
+.card-source{font-family:monospace;font-size:11px;opacity:.35;margin-top:.8vh}
+.metrics{display:flex;gap:2vw;flex-wrap:wrap;margin-bottom:2vh}
+.metric{flex:1;min-width:90px;text-align:center;background:rgba(255,255,255,.03);border-radius:var(--radius);padding:2vh 1vw}
+.metric-val{font-weight:900;font-size:clamp(1.5rem,3vw,2.2rem);color:var(--accent)}
+.metric-label{font-size:11px;opacity:.45;font-family:monospace;margin-top:.3vh}
+.oq{background:rgba(255,255,255,.03);border:1px dashed rgba(255,255,255,.08);border-radius:var(--radius);padding:2vh 2.5vw;margin-bottom:1.5vh}
+.oq-num{font-weight:900;font-size:1.3rem;color:var(--accent);opacity:.35;margin-bottom:.4vh}
+.oq-text{font-size:.95rem;line-height:1.7}
+.quote{font-size:clamp(.92rem,1.15vw,1.02rem);font-style:italic;line-height:1.8;padding:2vh 2.5vw;border-left:3px solid var(--accent);background:rgba(201,162,39,.04);margin:2vh 0}
+.hyp-step{padding:1vh 1.5vw;border-left:3px solid;margin-bottom:1vh;background:rgba(255,255,255,.02)}
+.tbar{display:flex;justify-content:space-between;padding:.7vh 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.88rem}
+.tbar-val{font-family:monospace;font-size:12px;color:var(--accent)}
+/* TOC */
+.toc-panel{position:fixed;top:0;left:0;width:min(340px,80vw);height:100vh;background:rgba(10,10,11,.97);z-index:100;transform:translateX(-100%);transition:transform .35s var(--ease);padding:4vh 3vw;overflow-y:auto;border-right:1px solid rgba(255,255,255,.06)}
+.toc-panel.open{transform:translateX(0)}
+.toc-title{font-family:monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;opacity:.4;margin-bottom:3vh}
+.toc-item{display:flex;justify-content:space-between;padding:.8vh 0;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.04)}
+.toc-item:hover .toc-label{opacity:1;color:var(--accent)}
+.toc-item.active .toc-label{color:var(--accent);opacity:1;font-weight:600}
+.toc-label{font-size:.85rem;opacity:.7;transition:opacity .2s}
+.toc-page{font-family:monospace;font-size:11px;opacity:.3}
+.toc-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99;opacity:0;pointer-events:none;transition:opacity .3s}
+.toc-backdrop.open{opacity:1;pointer-events:auto}
+/* Nav bar */
+.nav-bar{position:fixed;bottom:0;left:0;right:0;height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 3vw;background:rgba(10,10,11,.85);z-index:50;border-top:1px solid rgba(255,255,255,.05)}
+.nav-left,.nav-right{display:flex;align-items:center;gap:12px}
+.nav-btn{background:none;border:1px solid rgba(255,255,255,.12);color:var(--paper);padding:6px 14px;border-radius:20px;font-size:12px;cursor:pointer;font-family:monospace;transition:all .2s;opacity:.6}
+.nav-btn:hover{opacity:1;border-color:var(--accent);color:var(--accent)}
+.nav-title{font-size:12px;opacity:.5;max-width:40vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav-counter{font-family:monospace;font-size:12px;opacity:.4}
+/* Dots */
+.nav-dots{position:fixed;right:1.5vw;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:6px}
+.nd{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.12);cursor:pointer;transition:all .3s var(--ease);border:none;padding:0}
+.nd.active{background:var(--accent);height:18px;border-radius:3px}
+.nd:hover{background:rgba(255,255,255,.35)}
+@media(max-width:1024px){.slide{padding:3vh 5vw}.st{font-size:clamp(.85rem,1.15vw,.98rem)}}
+@media(max-width:768px){.slide{padding:3vh 6vw}.st{font-size:.88rem}.h-xl{font-size:clamp(1.2rem,5vw,1.8rem)}.metrics{flex-direction:column}.nav-dots,.nav-title{display:none}}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--accent);z-index:999;transition:width .35s ease;width:0}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<div class="deck" id="deck">
+
+<div class="slide hero active" data-title="封面">
+<div class="frame">
+<div class="kicker">Roundtable Insights V2.7</div>
+<h1 class="h-hero">布鲁克林有棵树</h1>
+<p class="lead" style="max-width:640px;margin:0 auto 3vh">一棵天堂树长在贫民窟的酸性土壤里。<br>没有阳光，没有浇水，但它活下来了。</p>
+<div class="meta-row" style="justify-content:center"><span>贝蒂·史密斯</span><span>·</span><span>6位专家</span><span>·</span><span>7轮讨论</span></div>
+<p style="margin-top:5vh;font-family:monospace;font-size:11px;opacity:.25">← → ↑ ↓ 翻页 · T 目录 · 滚轮 · 点击</p>
+</div></div>
+<div class="slide" data-title="洞见全景"><div class="frame">
+<div class="kicker">Core Insights</div><h2 class="h-xl">五大核心洞见</h2>
+<div class="card"><div class="card-num">01</div><div class="card-title">贫困不是经济状态，而是一种认知操作系统</div><div class="card-body">弗兰西一家的贫困不只是缺钱，而是一整套嵌入日常的生存逻辑。<em>需求层次在弗兰西身上不是金字塔，而是一张同时运行的网。</em></div><div class="card-source">马斯洛 vs 格拉德威尔 Round 1</div></div>
+<div class="card"><div class="card-num">02</div><div class="card-title">凯蒂的教育执念是一种代际意义建构</div><div class="card-body"><em>教育的意义不在于回报率，而在于存在的确证。</em></div><div class="card-source">孔子 vs 塞利格曼 Round 2</div></div>
+<div class="card"><div class="card-num">03</div><div class="card-title">韧性不是美德，是生存的默认设置</div><div class="card-body"><em>我们赞美韧性，是因为我们还没有能力消除苦难。</em></div><div class="card-source">加缪 vs 马斯洛 Round 3</div></div>
+<div class="card"><div class="card-num">04</div><div class="card-title">弗兰西的成长是认知建构，不是向上流动</div><div class="card-body"><em>她的成长是认知层面的，不是经济层面的。</em></div><div class="card-source">芒格 vs 格拉德威尔 Round 5</div></div>
+<div class="card"><div class="card-num">05</div><div class="card-title">个体韧性是必要但不充分条件</div><div class="card-body"><em>把系统性胜利归因于个体美德，是对贫困者的第二次暴力。</em></div><div class="card-source">芒格 vs 孔子 Round 7</div></div>
+</div></div>
+<div class="slide" data-title="讨论深度仪表盘"><div class="frame">
+<div class="kicker">Metrics</div><h2 class="h-xl">深度讨论仪表盘</h2>
+<div class="metrics">
+<div class="metric"><div class="metric-val">7</div><div class="metric-label">轮次</div></div>
+<div class="metric"><div class="metric-val">42</div><div class="metric-label">发言</div></div>
+<div class="metric"><div class="metric-val">5</div><div class="metric-label">洞见</div></div>
+<div class="metric"><div class="metric-val">2</div><div class="metric-label">Shock</div></div>
+<div class="metric"><div class="metric-val">14</div><div class="metric-label">碰撞</div></div>
+</div>
+<h3 class="h-md" style="margin-top:3vh">专家阵容</h3>
+<div style="margin-top:1vh">
+<span class="tag tag-gold">马斯洛 · 主辩手</span>
+<span class="tag tag-red">塞利格曼 · 挑战者</span>
+<span class="tag tag-blue">加缪 · 挑战者</span>
+<span class="tag tag-purple">芒格 · 挑战者</span>
+<span class="tag tag-green">孔子 · 调和者</span>
+<span class="tag tag-brown">格拉德威尔 · 观察者</span>
+</div>
+</div></div>
+<div class="slide title-slide" data-title="Round 1 · 需求层次 vs 生存现实"><div class="frame">
+<div class="kicker">Round 1</div><h1 class="h-hero" style="font-size:clamp(2rem,6vw,3.5rem)">需求层次 vs 生存现实</h1>
+<p class="lead" style="max-width:600px;margin:0 auto">当马斯洛金字塔遇上布鲁克林贫民窟</p>
+</div></div>
+<div class="slide" data-title="Round 1 · 发言（上）"><div class="frame"><div class="kicker">Speeches</div><h2 class="h-lg">需求层次能否解释贫困中的成长？</h2><div class="sp"><div class="sh"><span class="sn">马斯洛</span><span class="sr">主辩手</span></div><div class="st">弗兰西每个星期六去捡破烂，十磅纸卖一分钱。但就在这种极端匮乏中，她在太平梯上读书，想象自己住在天堂树上。她同时在追求生理需求和自我实现——<em>需求层次不是阶梯，而是同时运行的并行系统</em>。一个饥饿的孩子可以在捡破烂间隙构想一整座想象中的城市。</div></div><div class="sp"><div class="sh"><span class="sn">塞利格曼</span><span class="sr">挑战者</span></div><div class="st">弗兰西被嘲笑捡破烂时脸涨红了，但弟弟尼雷大摇大摆走回来。同样的贫困为什么反应不同？<em>羞耻感恰恰是弗兰西后来成长的动力</em>——她不是因为贫困而成长，而是因为对贫困的觉知而成长。</div></div><div class="sp"><div class="sh"><span class="sn">加缪</span><span class="sr">挑战者</span></div><div class="st">弗兰西坐在太平梯上觉得自己住在树上——这不是需求满足，也不是乐观归因，而是<em>纯粹的荒谬行为</em>。一个饿着肚子的孩子用想象力把自己变成树上的居民。人通过创造意义来对抗无意义。</div></div></div></div>
+<div class="slide" data-title="Round 1 · 发言（下）"><div class="frame"><div class="sp"><div class="sh"><span class="sn">芒格</span><span class="sr">挑战者</span></div><div class="st">弗兰西的妈妈凯蒂是清洁工，所以两个孩子享有特权能下到地下室捡破烂。<em>贫困家庭的孩子必须通过母亲的低薪工作才能获得捡破烂的机会</em>，而收入根本无法改变任何事情。这是多重锁定的贫困陷阱。</div></div><div class="sp"><div class="sh"><span class="sn">孔子</span><span class="sr">调和者</span></div><div class="st">凯蒂虽然不识字，却坚持让孩子每天读一页圣经、一页莎士比亚。一个不识字的清洁工母亲做了完全不合理的决定——不让孩子赚钱，而是让他们读书。这是<em>朴素的代际伦理</em>：教育是打破阶层固化的唯一通道。</div></div><div class="sp"><div class="sh"><span class="sn">格拉德威尔</span><span class="sr">观察者</span></div><div class="st">弗兰西能去图书馆——1912年布鲁克林是免费的。她能上公立学校——美国已建立免费公共教育体系。<em>个体韧性必须嵌入在制度韧性中才能生效</em>。</div></div></div></div>
+<div class="slide" data-title="Round 1 · 碰撞"><div class="frame"><div class="kicker">Collision</div><h2 class="h-lg">碰撞：需求层次能否解释贫困中的成长？</h2><div class="cb "><div class="cl ">情节反驳</div><div class="sh"><span class="sn">马斯洛</span></div><div class="st">弗兰西捡破烂时被嘲笑脸涨红了，但在卡尼捏她脸蛋时没退缩——因为不退缩能多拿一分钱。十一岁的孩子在羞耻和利益之间做了精确计算。<em>这是人类需求系统的自我调节。</em></div></div><div class="cb "><div class="sh"><span class="sn">格拉德威尔</span></div><div class="st">弗兰西的优势来自性别偏见的系统漏洞——卡尼对女孩子更喜欢些。这是运气不是自我实现。把成功归因于心理素质就犯了幸存者偏差。</div></div><div class="cb purple"><div class="cl purple">逻辑追问</div><div class="sh"><span class="sn">塞利格曼</span></div><div class="st">弗兰西和尼雷反应不同，答案在于<em>认知解释风格</em>的差异——尼雷把嘲笑外部化，弗兰西内部化。凯蒂对弗兰西更严格，差异化教育创造了不同认知模式。</div></div><div class="cb purple"><div class="sh"><span class="sn">马斯洛</span></div><div class="st">弗兰西的羞耻感证明了<em>尊重需求是人类最基本的需求之一</em>。不是认知风格导致不同反应，而是需求的相对优势导致不同反应。</div></div><div class="insight-c"><div class="insight-q">洞见句</div><div class="insight-a">因为弗兰西在极端贫困中同时追求生存和意义，而传统需求层次理论假设这不可能，所以贫困不是需求金字塔的底层——而是一张所有需求同时被激活、同时被剥夺的张力网络。</div></div></div></div>
+<div class="slide title-slide" data-title="Round 2 · 教育的意义"><div class="frame"><div class="kicker">Round 2</div><h1 class="h-hero" style="font-size:clamp(2rem,6vw,3.5rem)">教育的意义</h1><p class="lead" style="max-width:600px;margin:0 auto">一个不识字的母亲为什么要让孩子读莎士比亚？</p></div></div>
+<div class="slide" data-title="Round 2 · 发言（上）"><div class="frame"><div class="kicker">Speeches</div><h2 class="h-lg">凯蒂的教育执念</h2><div class="sp"><div class="sh"><span class="sn">塞利格曼</span><span class="sr">主辩手</span></div><div class="st">凯蒂的母亲玛丽说：秘诀就是读书写字。你可以没吃没穿，但你必须让孩子接受教育。凯蒂坚持让弗兰西每天读一页圣经、一页莎士比亚。凯蒂不是在投资，她在<em>执行一个信念系统</em>——把读书视为神圣行为的家庭文化。</div></div><div class="sp"><div class="sh"><span class="sn">孔子</span><span class="sr">调和者</span></div><div class="st">圣经提供道德秩序和超越性意义，莎士比亚提供语言之美和人性洞察。这和我两千五百年前的教育理念一致——教学生《诗经》和《礼记》，不是为了谋生，而是为了让他们成人。在凯蒂的价值体系中，<em>精神生活是独立的、更高的价值</em>。</div></div><div class="sp"><div class="sh"><span class="sn">马斯洛</span><span class="sr">挑战者</span></div><div class="st">凯蒂只让弗兰西读两本书——因为凯蒂自己不知道还有什么书。她的知识边界决定了她的教育选择。弗兰西后来超越了这个天花板——<em>自我实现的驱动力是独立于家庭教育的</em>。凯蒂点燃了火，但弗兰西自己找到了燃料。</div></div></div></div>
+<div class="slide" data-title="Round 2 · 发言（下）"><div class="frame"><div class="sp"><div class="sh"><span class="sn">加缪</span><span class="sr">挑战者</span></div><div class="st">弗兰西在太平梯上读书时不是在学习知识，而是在<em>用文字创造一个替代现实</em>。凯蒂让弗兰西读莎士比亚，是为了让她拥有一个可以逃离的内心空间。</div></div><div class="sp"><div class="sh"><span class="sn">芒格</span><span class="sr">挑战者</span></div><div class="st">凯蒂只让孩子们读两本书，每天只读一页——极低效率的教育方案。但凯蒂没有资源。她的教育策略是<em>极度约束条件下的最优解</em>。凯蒂的教育执念之所以伟大，不是因为产生了最好的结果，而是在最差的条件下产生了任何结果。</div></div><div class="sp"><div class="sh"><span class="sn">格拉德威尔</span><span class="sr">观察者</span></div><div class="st">弗兰西能去图书馆——安德鲁·卡内基在全美捐建了超过1600座公共图书馆。弗兰西的成长不是凯蒂一个人的胜利，而是<em>一个时代的制度红利</em>。</div></div></div></div>
+<div class="slide" data-title="Round 2 · 碰撞"><div class="frame"><div class="kicker">Collision</div><h2 class="h-lg">碰撞：教育是投资、仪式还是逃离？</h2><div class="cb blue"><div class="cl blue">细节挑战</div><div class="sh"><span class="sn">孔子</span></div><div class="st">凯蒂的母亲玛丽是文盲，但玛丽的母亲建议每天读一页。传承链条：文盲外婆→文盲母亲→识字的孩子。<em>这不是信念系统，这是代际教育工程。</em></div></div><div class="cb blue"><div class="sh"><span class="sn">塞利格曼</span></div><div class="st">工程需要计划和反馈，凯蒂两者都没有。这是习得性乐观的行为模式——在没有证据的情况下坚持行动。但你的有教无类比我的理论更能解释凯蒂的坚持。</div></div><div class="cb orange"><div class="cl orange">框架质疑</div><div class="sh"><span class="sn">马斯洛</span></div><div class="st">弗兰西在图书馆按字母顺序从A到Z——这是系统性知识建构，不是文学性逃离。</div></div><div class="cb orange"><div class="sh"><span class="sn">加缪</span></div><div class="st">一个十一岁的孩子按字母顺序读书，这是<em>用秩序对抗混乱</em>。她的生活充满不确定性，字母顺序是她唯一能控制的东西。</div></div><div class="insight-c"><div class="insight-q">洞见句</div><div class="insight-a">因为凯蒂坚持让弗兰西每天读圣经和莎士比亚，而凯蒂自己不识字，所以教育不是知识传递——而是一种代际意义建构：每一代人都在为下一代铺设她自己无法走完的路。</div></div></div></div>
+<div class="slide title-slide" data-title="Round 3 · Shock ⚡ · 天堂树的荒谬"><div class="frame"><div class="kicker">Round 3 · Shock ⚡</div><h1 class="h-hero" style="font-size:clamp(2rem,6vw,3.5rem)">天堂树的荒谬</h1><p class="lead" style="max-width:600px;margin:0 auto">韧性是美德还是没有选择的默认状态？</p></div></div>
+<div class="slide" data-title="Round 3 · 发言（上）"><div class="frame"><div class="kicker">Speeches</div><h2 class="h-lg">韧性是美德还是没有选择的默认状态？</h2><div class="sp"><div class="sh"><span class="sn">加缪</span><span class="sr">主辩手</span></div><div class="st">凯蒂说：如果世界上只有这么一棵树，你就会觉得它漂亮。我们不觉得天堂树漂亮，是因为它太常见了。穷人的韧性太常见了——这不是美德，这是<em>生存的默认设置</em>。弗兰西一家不是因为坚强才活下来了，而是因为没有别的选择。</div></div><div class="sp"><div class="sh"><span class="sn">马斯洛</span><span class="sr">挑战者</span></div><div class="st">弗兰西的父亲约翰尼面对同样的贫困，反应是酗酒和崩溃。如果韧性是默认设置，为什么约翰尼没有？<em>韧性不是默认设置，而是需要激活条件的。</em></div></div><div class="sp"><div class="sh"><span class="sn">塞利格曼</span><span class="sr">挑战者</span></div><div class="st">约翰尼的崩溃是习得性无助的结果。但约翰尼的无助没有传染给弗兰西——因为她从母亲那里获得了<em>习得性乐观</em>。</div></div></div></div>
+<div class="slide" data-title="Round 3 · 发言（下）"><div class="frame"><div class="sp"><div class="sh"><span class="sn">芒格</span><span class="sr">挑战者</span></div><div class="st">约翰尼是有才华的歌手，但在1912年歌手太多工作太少。<em>在错误的市场中，才华不仅无用甚至有害</em>——它创造了无法满足的期望。</div></div><div class="sp"><div class="sh"><span class="sn">孔子</span><span class="sr">调和者</span></div><div class="st">约翰尼在弗兰西毕业前去世了，但他提前安排了毕业礼物。仁不是能力，而是对他人的关切。<em>仁心才是默认设置。</em></div></div><div class="sp"><div class="sh"><span class="sn">格拉德威尔</span><span class="sr">观察者</span></div><div class="st"><em>向上流动的前提是存在一个可以流动的社会结构。</em>1912年正值进步主义时代。韧性是必要条件，但时代是充分条件。</div></div></div></div>
+<div class="slide" data-title="Round 3 · 碰撞"><div class="frame"><div class="kicker">Collision</div><h2 class="h-lg">碰撞</h2><div class="cb red"><div class="cl red">情节反驳</div><div class="sh"><span class="sn">马斯洛</span></div><div class="st">弗兰西的姨妈茜茜结过三次婚，生活混乱但充满活力。人类不是只有推石头一种选择，还可以跳舞、换一种方式推石头。</div></div><div class="cb red"><div class="sh"><span class="sn">加缪</span></div><div class="st">茜茜的混乱应对本质上也是对荒谬的创造性回应——她的每一次婚姻都是对命运的主动选择。</div></div><div class="cb green"><div class="cl green">反例引入</div><div class="sh"><span class="sn">塞利格曼</span></div><div class="st">你只看到了活下来的人。幸存者偏差是所有韧性叙事的最大陷阱。</div></div><div class="cb green"><div class="sh"><span class="sn">加缪</span></div><div class="st">所有关于人类的故事都是幸存者的故事。但我承认你的习得性乐观比我的荒谬论更能解释弗兰西和约翰尼的差异。</div></div><div class="insight-c"><div class="insight-q">洞见句</div><div class="insight-a">因为凯蒂说如果世界上只有这么一棵树你就会觉得它漂亮，所以我们赞美韧性不是因为它了不起——而是因为我们还没有能力消除制造韧性的苦难本身。</div></div></div></div>
+<div class="slide title-slide" data-title="Round 4 · 父亲的缺席"><div class="frame"><div class="kicker">Round 4</div><h1 class="h-hero" style="font-size:clamp(2rem,6vw,3.5rem)">父亲的缺席</h1><p class="lead" style="max-width:600px;margin:0 auto">一个酗酒的父亲能否被原谅？</p></div></div>
+<div class="slide" data-title="Round 4 · 发言（上）"><div class="frame"><div class="kicker">Speeches</div><h2 class="h-lg">一个酗酒的父亲能否被原谅？</h2><div class="sp"><div class="sh"><span class="sn">孔子</span><span class="sr">主辩手</span></div><div class="st">约翰尼是弗兰西生活中唯一会唱歌给她听的人、唯一会用温柔方式对待她的人。凯蒂是坚强的但从不温柔。约翰尼给了弗兰西<em>被温柔对待的经验</em>——一个同时看到坚强和温柔的人才能理解完整的人性。</div></div><div class="sp"><div class="sh"><span class="sn">塞利格曼</span><span class="sr">挑战者</span></div><div class="st">约翰尼的温柔有代价——不稳定性和不可预测性。有时清醒有时醉酒。<em>这创造了焦虑型依恋</em>——弗兰西学会了：我爱的人可能随时消失。</div></div><div class="sp"><div class="sh"><span class="sn">芒格</span><span class="sr">挑战者</span></div><div class="st">约翰尼的悲剧不是个人悲剧而是时代悲剧。1912年没有社会保障、没有失业保险。约翰尼的酗酒是<em>一个没有选项的人的理性崩溃</em>。</div></div></div></div>
+<div class="slide" data-title="Round 4 · 发言（下）"><div class="frame"><div class="sp"><div class="sh"><span class="sn">加缪</span><span class="sr">挑战者</span></div><div class="st">约翰尼面对荒谬世界选择了用酒精创造替代现实。弗兰西用读书，约翰尼用酒精。<em>读书的替代现实可以带回主世界，酒精的只能带走更多。</em></div></div><div class="sp"><div class="sh"><span class="sn">马斯洛</span><span class="sr">挑战者</span></div><div class="st">约翰尼的悲剧在于自我实现路径被堵死了——歌唱是他的自我实现方式，但在1912年这不是正当职业。<em>他被夹在自我实现和社会期望之间。</em></div></div><div class="sp"><div class="sh"><span class="sn">格拉德威尔</span><span class="sr">观察者</span></div><div class="st">约翰尼的故事揭示了贫困社区中的男性角色困境——男性被期望成为养家者但经济结构不允许。<em>性别化的成功标准</em>使得同样的贫困对男女产生完全不同的影响。</div></div></div></div>
+<div class="slide" data-title="Round 4 · 碰撞"><div class="frame"><div class="kicker">Collision</div><h2 class="h-lg">碰撞</h2><div class="cb red"><div class="cl red">情节反驳</div><div class="sh"><span class="sn">塞利格曼</span></div><div class="st">约翰尼在弗兰西面前扮演好爸爸，不在时就酗酒。这种表演性的温柔创造了混乱型依恋。</div></div><div class="cb red"><div class="sh"><span class="sn">孔子</span></div><div class="st">也许约翰尼的温柔才是真实的，酗酒才是表演？清醒时他精神抖擞衣着整洁。酒精把他变成了另一个人。</div></div><div class="cb purple"><div class="cl purple">逻辑追问</div><div class="sh"><span class="sn">马斯洛</span></div><div class="st">弗兰西读书后更强大，约翰尼喝酒后更脆弱。差异在于读书创造的替代现实是可逆的，酒精的不可逆。</div></div><div class="cb purple"><div class="sh"><span class="sn">加缪</span></div><div class="st">区别在于替代现实的可持续性——读书可以持续积累，酒精只能持续几小时。这是时间维度的差异。</div></div><div class="insight-c"><div class="insight-q">洞见句</div><div class="insight-a">因为约翰尼在弗兰西毕业前安排了鲜花和卡片，而他生前从未展示过这种远见，所以一个人的爱和他的能力是两件独立的事——我们不能用失败来否定爱，也不能用爱来原谅失败。</div></div></div></div>
+<div class="slide title-slide" data-title="Round 5 · Shock ⚡ · 环境 vs 个体"><div class="frame"><div class="kicker">Round 5 · Shock ⚡</div><h1 class="h-hero" style="font-size:clamp(2rem,6vw,3.5rem)">环境 vs 个体</h1><p class="lead" style="max-width:600px;margin:0 auto">弗兰西的成功是个人奋斗还是时代红利？</p></div></div>
+<div class="slide" data-title="Round 5 · 发言（上）"><div class="frame"><div class="kicker">Speeches</div><h2 class="h-lg">弗兰西的成功是个人奋斗还是时代红利？</h2><div class="sp"><div class="sh"><span class="sn">格拉德威尔</span><span class="sr">主辩手</span></div><div class="st">弗兰西的故事是环境决定论最有力的案例。纽约有最发达的公共图书馆系统；1912年正值进步主义时代；弗兰西是白人。<em>比10000小时更重要的是你在哪里度过这10000小时。</em></div></div><div class="sp"><div class="sh"><span class="sn">芒格</span><span class="sr">挑战者</span></div><div class="st">如果环境决定一切，和弗兰西同一条街上的其他孩子呢？他们共享完全相同的环境。<em>环境是必要条件但不是充分条件。</em></div></div><div class="sp"><div class="sh"><span class="sn">马斯洛</span><span class="sr">挑战者</span></div><div class="st">弗兰西在图书馆按字母顺序从A到Z——完全是自发的自我实现行为。<em>当基本需求得到最低限度满足后，自我实现的驱动力就会自动启动。</em></div></div></div></div>
+<div class="slide" data-title="Round 5 · 发言（下）"><div class="frame"><div class="sp"><div class="sh"><span class="sn">加缪</span><span class="sr">挑战者</span></div><div class="st">弗兰西从A到Z的阅读不是自我实现，而是强迫性的秩序创造。她不是因为想要成长而成长，而是因为<em>无法忍受现状</em>。</div></div><div class="sp"><div class="sh"><span class="sn">塞利格曼</span><span class="sr">挑战者</span></div><div class="st">弗兰西选择去密歇根大学——这是有方向的成长选择。人类可以在回应荒谬的同时<em>追求超越荒谬的东西</em>。</div></div><div class="sp"><div class="sh"><span class="sn">孔子</span><span class="sr">调和者</span></div><div class="st">弗兰西的故事告诉我们：<em>教育的价值在于打开可能性</em>。学习的快乐在于发现自己可以学到更多。</div></div></div></div>
+<div class="slide" data-title="Round 5 · 碰撞"><div class="frame"><div class="kicker">Collision</div><h2 class="h-lg">碰撞</h2><div class="cb blue"><div class="cl blue">细节挑战</div><div class="sh"><span class="sn">芒格</span></div><div class="st">图书馆对所有孩子开放但不是所有人都找到了尊严。弗兰西有独特的认知特质——把阅读从获取知识转化为创造身份。</div></div><div class="cb blue"><div class="sh"><span class="sn">格拉德威尔</span></div><div class="st">你怎么知道这不是环境塑造的？特质只有在合适的环境中才能表达。一颗种子再好没有土壤也长不出树。</div></div><div class="cb orange"><div class="cl orange">框架质疑</div><div class="sh"><span class="sn">马斯洛</span></div><div class="st">弗兰西在太平梯上的体验是高峰体验——暂时超越日常需求和痛苦。</div></div><div class="cb orange"><div class="sh"><span class="sn">加缪</span></div><div class="st">弗兰西的阅读习惯持续了整个童年——这是长期的替代现实构建不是暂时超越。</div></div><div class="insight-c"><div class="insight-q">洞见句</div><div class="insight-a">因为弗兰西在图书馆里按字母顺序从A读到Z而她的母亲只让她读两本书，所以弗兰西的成长不是家庭教育的线性延伸——而是一个个体在环境缝隙中自发建构认知世界的过程。</div></div></div></div>
+<div class="slide title-slide" data-title="Round 6 · 女性叙事"><div class="frame"><div class="kicker">Round 6</div><h1 class="h-hero" style="font-size:clamp(2rem,6vw,3.5rem)">女性叙事</h1><p class="lead" style="max-width:600px;margin:0 auto">三代女性：坚忍、混乱与重构</p></div></div>
+<div class="slide" data-title="Round 6 · 发言（上）"><div class="frame"><div class="kicker">Speeches</div><h2 class="h-lg">三代女性：坚忍、混乱与重构</h2><div class="sp"><div class="sh"><span class="sn">塞利格曼</span><span class="sr">主辩手</span></div><div class="st">玛丽、凯蒂和弗兰西代表三种不同的心理韧性模式。玛丽是智慧型，凯蒂是执行型，弗兰西是探索型。这三种模式创造了<em>代际韧性传递链</em>：智慧→执行→探索。</div></div><div class="sp"><div class="sh"><span class="sn">马斯洛</span><span class="sr">挑战者</span></div><div class="st">茜茜姨妈是未完成自我实现的人。她的混乱不是无序，而是<em>对多种可能性的同时追求</em>。</div></div><div class="sp"><div class="sh"><span class="sn">加缪</span><span class="sr">挑战者</span></div><div class="st">茜茜不是未完成的人——她是<em>拒绝被完成的人</em>。凯蒂选择坚忍，弗兰西选择探索，茜茜选择永不选择。</div></div></div></div>
+<div class="slide" data-title="Round 6 · 发言（下）"><div class="frame"><div class="sp"><div class="sh"><span class="sn">芒格</span><span class="sr">挑战者</span></div><div class="st">玛丽的教育策略成功，部分原因是清洁工的工作时间允许她在家照顾孩子。<em>女性的韧性不只是心理特质，更是劳动市场结构的产物。</em></div></div><div class="sp"><div class="sh"><span class="sn">孔子</span><span class="sr">调和者</span></div><div class="st">三位女性代表儒家教育理想三阶段：知之→好之→乐之。<em>教育的最高境界是创造对学习的热爱。</em></div></div><div class="sp"><div class="sh"><span class="sn">格拉德威尔</span><span class="sr">观察者</span></div><div class="st">三位女性的成功都建立在她们都是女性这个前提上。正是因为被限制在家庭领域凯蒂才有时间执行教育策略。压迫和赋能<em>奇异地共存</em>。</div></div></div></div>
+<div class="slide" data-title="Round 6 · 碰撞"><div class="frame"><div class="kicker">Collision</div><h2 class="h-lg">碰撞</h2><div class="cb red"><div class="cl red">情节反驳</div><div class="sh"><span class="sn">马斯洛</span></div><div class="st">茜茜从不被限制在家庭领域——她出去工作换丈夫过想过的生活。女性韧性不是压迫的产物而是多种可能回应中的一种。</div></div><div class="cb red"><div class="sh"><span class="sn">格拉德威尔</span></div><div class="st">茜茜的自由是有代价的——前两段婚姻都失败了。不同的生存策略都有各自的代价。</div></div><div class="cb green"><div class="cl green">反例引入</div><div class="sh"><span class="sn">加缪</span></div><div class="st">弗兰西的弟弟尼雷接受了同样的家庭教育但没有成功。你的代际传递链只对女性有效。</div></div><div class="cb green"><div class="sh"><span class="sn">塞利格曼</span></div><div class="st">弗兰西在图书馆里找到了真正的快乐。稀缺性创造初始动机但真正的坚持来自内在满足感。</div></div><div class="insight-c"><div class="insight-q">洞见句</div><div class="insight-a">因为玛丽是文盲却提出教育策略凯蒂不识字却每天执行弗兰西从阅读中获得快乐，所以教育的代际传递不是知识的传递——而是对学习热爱的传递。</div></div></div></div>
+<div class="slide title-slide" data-title="Round 7 · 元讨论"><div class="frame"><div class="kicker">Round 7</div><h1 class="h-hero" style="font-size:clamp(2rem,6vw,3.5rem)">元讨论</h1><p class="lead" style="max-width:600px;margin:0 auto">我们从弗兰西的故事中学到了什么？</p></div></div>
+<div class="slide" data-title="Round 7 · 发言（上）"><div class="frame"><div class="kicker">Speeches</div><h2 class="h-lg">我们从弗兰西的故事中学到了什么？</h2><div class="sp"><div class="sh"><span class="sn">芒格</span><span class="sr">主辩手</span></div><div class="st">经过六轮讨论弗兰西的故事不能被任何单一理论解释。<em>每一个理论都是必要的但没有一个是充分的。</em>真理不在任何一个学科里而在多个学科的交叉地带。</div></div><div class="sp"><div class="sh"><span class="sn">加缪</span><span class="sr">挑战者</span></div><div class="st">弗兰西的故事之所以伟大不是因为它包含了所有维度而是因为它<em>抵抗被任何维度完全解释</em>。好的文学永远比任何理论都多。</div></div><div class="sp"><div class="sh"><span class="sn">孔子</span><span class="sr">调和者</span></div><div class="st">弗兰西本人可能会说：你们说的我都不懂我只知道我喜欢读书。这是<em>理论和经验之间的永恒鸿沟</em>。最好的教育不是教人理论而是教人更好地体验生活。</div></div></div></div>
+<div class="slide" data-title="Round 7 · 发言（下）"><div class="frame"><div class="sp"><div class="sh"><span class="sn">马斯洛</span><span class="sr">挑战者</span></div><div class="st">弗兰西的成长是从满足需求到创造意义的转变。故事开始时行为由生存驱动结尾时由<em>存在性价值</em>驱动。</div></div><div class="sp"><div class="sh"><span class="sn">塞利格曼</span><span class="sr">挑战者</span></div><div class="st">弗兰西的成长需要三个关键心理能力：延迟满足、认知重构、意义建构。<em>韧性不是一种特质而是一组可以培养的能力。</em></div></div><div class="sp"><div class="sh"><span class="sn">格拉德威尔</span><span class="sr">观察者</span></div><div class="st">弗兰西的故事对今天的贫困者有什么意义？今天的贫困社区没有1912年的公共图书馆。<em>创造韧性的社会条件正在消失。</em></div></div></div></div>
+<div class="slide" data-title="Round 7 · 碰撞"><div class="frame"><div class="kicker">Collision</div><h2 class="h-lg">碰撞</h2><div class="cb red"><div class="cl red">情节反驳</div><div class="sh"><span class="sn">芒格</span></div><div class="st">弗兰西的核心经验——在匮乏中寻找意义——是人类的普遍经验。工具变了但人性没变。</div></div><div class="cb red"><div class="sh"><span class="sn">格拉德威尔</span></div><div class="st">弗兰西去图书馆是主动选择今天的孩子上网是被动卷入。<em>主动选择创造能动性被动卷入创造依赖性。工具塑造人性。</em></div></div><div class="cb purple"><div class="cl purple">逻辑追问</div><div class="sh"><span class="sn">加缪</span></div><div class="st">弗兰西读的两本书是圣经和莎士比亚——两者有两千年历史。真正伟大的叙事能同时存在于特定时代和所有时代。</div></div><div class="cb purple"><div class="sh"><span class="sn">芒格</span></div><div class="st">我们的目的是产生对今天有用的洞见。提取底层逻辑忽略时代细节。</div></div><div class="insight-c"><div class="insight-q">洞见句</div><div class="insight-a">因为我们在七轮讨论中用了六种理论框架而每一种都只能解释故事的一部分，所以真正的深度不在于选择正确的理论——而在于理解每种理论照亮了什么遮蔽了什么。</div></div></div></div>
+<div class="slide" data-title="假设演化与张力图谱"><div class="frame">
+<div class="kicker">Evolution</div><h2 class="h-xl">假设演化与张力图谱</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:3vw;margin-top:1vh">
+<div><h3 class="h-md">假设演化轨迹</h3>
+<div class="hyp-step" style="border-color:var(--accent)"><div style="font-family:monospace;font-size:10px;opacity:.4">初始</div><div style="font-size:.88rem">弗兰西的故事是一个贫困女孩通过教育实现向上流动的励志叙事。</div></div>
+<div class="hyp-step" style="border-color:var(--blue)"><div style="font-family:monospace;font-size:10px;opacity:.4">R1-R2</div><div style="font-size:.88rem">成长不是线性流动而是需求层次并行运行中的认知建构。</div></div>
+<div class="hyp-step" style="border-color:var(--purple)"><div style="font-family:monospace;font-size:10px;opacity:.4">R3-R4</div><div style="font-size:.88rem">韧性是生存默认设置；约翰尼的失败揭示了个体韧性的局限。</div></div>
+<div class="hyp-step" style="border-color:var(--red)"><div style="font-family:monospace;font-size:10px;opacity:.4">R5-R6</div><div style="font-size:.88rem">成功需要环境+家庭+个体三因素；女性韧性在压迫和赋能间共存。</div></div>
+<div class="hyp-step" style="border-color:var(--green)"><div style="font-family:monospace;font-size:10px;opacity:.4">R7</div><div style="font-size:.88rem">故事不能被单一理论解释——深度在于理解每种理论照亮了什么。</div></div></div>
+<div><h3 class="h-md">认知张力图谱</h3>
+<div class="tbar"><span>马斯洛 vs 加缪</span><span class="tbar-val" style="color:var(--red)">0.92</span></div>
+<div style="font-size:.78rem;opacity:.5;padding:.3vh 0 1.5vh">需求层次的乐观主义 vs 荒谬论的悲观主义</div>
+<div class="tbar"><span>格拉德威尔 vs 芒格</span><span class="tbar-val" style="color:var(--purple)">0.85</span></div>
+<div style="font-size:.78rem;opacity:.5;padding:.3vh 0 1.5vh">环境决定论 vs 多因素模型</div>
+<div class="tbar"><span>塞利格曼 vs 加缪</span><span class="tbar-val" style="color:var(--blue)">0.78</span></div>
+<div style="font-size:.78rem;opacity:.5;padding:.3vh 0 1.5vh">习得性乐观 vs 荒谬创造</div>
+<div class="tbar"><span>孔子 vs 马斯洛</span><span class="tbar-val" style="color:var(--green)">0.72</span></div>
+<div style="font-size:.78rem;opacity:.5;padding:.3vh 0">代际伦理 vs 个体需求</div>
+</div></div></div></div>
+<div class="slide" data-title="开放问题"><div class="frame">
+<div class="kicker">Open Questions</div><h2 class="h-xl">留给读者的五个开放问题</h2>
+<div class="oq"><div class="oq-num">01</div><div class="oq-text">弗兰西的阅读习惯是自我实现的驱动力还是对混乱环境的防御机制？两者的边界在哪里？</div></div>
+<div class="oq"><div class="oq-num">02</div><div class="oq-text">凯蒂的教育执念在今天是否仍然有效？在信息过载但注意力稀缺的时代"每天读一页"还有意义吗？</div></div>
+<div class="oq"><div class="oq-num">03</div><div class="oq-text">约翰尼的悲剧是个人失败还是社会失败？我们是否有权要求一个没有选项的人"坚强"？</div></div>
+<div class="oq"><div class="oq-num">04</div><div class="oq-text">弗兰西的故事是否可以被"复制"？如果不能我们应该提取什么可以被复制的东西？</div></div>
+<div class="oq"><div class="oq-num">05</div><div class="oq-text">当社会条件不再支持向上流动时个体的意义建构是否仍然可能？还是说意义建构本身就是一种特权？</div></div>
+</div></div>
+<div class="slide" data-title="结语"><div class="frame" style="text-align:center;max-width:700px;margin:0 auto;display:flex;flex-direction:column;justify-content:center;min-height:80vh">
+<div class="kicker">Conclusion</div><h2 class="h-xl">一棵树的意义</h2>
+<div class="quote" style="text-align:left;margin:3vh auto;max-width:580px">"她坐在太平梯上觉得自己住在树上。夏天的每个星期六下午弗兰西都是这么想象的。"<br><br>——贝蒂·史密斯《布鲁克林有棵树》</div>
+<p class="lead" style="margin:2vh auto;max-width:580px">弗兰西的故事不是励志故事不是社会学案例不是心理学实验。<br><br>它是一个关于<em>人类如何在匮乏中创造意义</em>的故事。<br><br>我们用六种理论框架分析了这个故事每一种都照亮了一部分每一种都遮蔽了一部分。<br><br>也许这就是好书的意义——它永远比任何理论都多。</p>
+<div class="meta-row" style="justify-content:center;margin-top:4vh"><span>6位专家</span><span>·</span><span>7轮讨论</span><span>·</span><span>42次发言</span><span>·</span><span>5个核心洞见</span></div>
+</div></div>
+
+<div class="toc-backdrop" id="tocBackdrop"></div>
+<div class="toc-panel" id="tocPanel">
+<div class="toc-title">目录</div>
+<div id="tocList"></div>
+</div>
+<div class="nav-bar">
+<div class="nav-left">
+<button class="nav-btn" id="btnToc">☰ 目录</button>
+<button class="nav-btn" id="btnPrev">◀ 上一页</button>
+<button class="nav-btn" id="btnNext">下一页 ▶</button>
+</div>
+<div class="nav-right">
+<span class="nav-title" id="slideTitle"></span>
+<span class="nav-counter" id="slideCounter"></span>
+</div>
+</div>
+<div class="nav-dots" id="navDots"></div>
+</div>
+
+<script>
+(function(){
+var deck=document.getElementById("deck");
+var slides=deck.querySelectorAll(".slide");
+var total=slides.length;
+var cur=0;
+var dots=document.getElementById("navDots");
+var tocList=document.getElementById("tocList");
+var titleEl=document.getElementById("slideTitle");
+var counterEl=document.getElementById("slideCounter");
+var tocPanel=document.getElementById("tocPanel");
+var tocBackdrop=document.getElementById("tocBackdrop");
+
+for(var i=0;i<total;i++){
+  var d=document.createElement("button");
+  d.className="nd";
+  d.setAttribute("data-i",i);
+  d.onclick=(function(idx){return function(){go(idx)}})(i);
+  dots.appendChild(d);
+  var t=document.createElement("div");
+  t.className="toc-item";
+  t.setAttribute("data-i",i);
+  t.innerHTML='<span class="toc-label">'+(slides[i].getAttribute("data-title")||"Slide "+(i+1))+'</span><span class="toc-page">'+String(i+1).padStart(2,"0")+'</span>';
+  t.onclick=(function(idx){return function(){go(idx);closeTOC()}})(i);
+  tocList.appendChild(t);
+}
+
+function go(n){
+  if(n<0||n>=total)return;
+  slides[cur].classList.remove("active");
+  dots.children[cur].classList.remove("active");
+  tocList.children[cur].classList.remove("active");
+  cur=n;
+  slides[cur].classList.add("active");
+  dots.children[cur].classList.add("active");
+  tocList.children[cur].classList.add("active");
+  titleEl.textContent=slides[cur].getAttribute("data-title")||"";
+  counterEl.textContent=(cur+1)+" / "+total;
+  slides[cur].scrollTop=0;
+  var pb=document.getElementById('progressBar');
+  if(pb)pb.style.width=((cur+1)/slides.length*100)+'%';
+}
+function toggleTOC(){tocPanel.classList.toggle("open");tocBackdrop.classList.toggle("open")}
+function closeTOC(){tocPanel.classList.remove("open");tocBackdrop.classList.remove("open")}
+
+document.addEventListener("keydown",function(e){
+  if(e.key==="ArrowRight"||e.key==="ArrowDown"||e.key===" "||e.key==="PageDown"){e.preventDefault();go(cur+1)}
+  else if(e.key==="ArrowLeft"||e.key==="ArrowUp"||e.key==="PageUp"){e.preventDefault();go(cur-1)}
+  else if(e.key==="Home"){e.preventDefault();go(0)}
+  else if(e.key==="End"){e.preventDefault();go(total-1)}
+  else if(e.key==="Escape"){closeTOC();go(0)}
+  else if(e.key==="t"||e.key==="T"){toggleTOC()}
+});
+var wheelTimer=null;
+deck.addEventListener("wheel",function(e){e.preventDefault();if(wheelTimer)return;wheelTimer=setTimeout(function(){wheelTimer=null},350);if(e.deltaY>0)go(cur+1);else if(e.deltaY<0)go(cur-1)},{passive:false});
+var touchX=0,touchY=0;
+deck.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX;touchY=e.touches[0].clientY});
+deck.addEventListener("touchend",function(e){
+  var dx=touchX-e.changedTouches[0].clientX,dy=touchY-e.changedTouches[0].clientY;
+  if(Math.abs(dy)>Math.abs(dx)){if(dy>50)go(cur+1);else if(dy<-50)go(cur-1)}
+  else{if(dx>50)go(cur+1);else if(dx<-50)go(cur-1)}
+});
+deck.addEventListener("click",function(e){
+  if(e.target.closest(".nav-btn,.nd,.toc-item,.toc-panel,.toc-backdrop"))return;
+  go(cur+1);
+});
+document.getElementById("btnToc").addEventListener("click",function(e){e.stopPropagation();toggleTOC()});
+document.getElementById("btnPrev").addEventListener("click",function(e){e.stopPropagation();go(cur-1)});
+document.getElementById("btnNext").addEventListener("click",function(e){e.stopPropagation();go(cur+1)});
+tocBackdrop.addEventListener("click",closeTOC);
+go(0);
+})();
+</script>
+</body>
+</html>

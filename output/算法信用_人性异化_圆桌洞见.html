@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算法信用评分对人性的异化 圆桌洞见</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Noto+Serif+SC:wght@600;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0d0d0d;
+  --bg-terminal: #0a0a0a;
+  --bg-card: rgba(20, 20, 20, 0.95);
+  --bg-elevated: rgba(30, 30, 30, 0.98);
+  --text-primary: #e2deda;
+  --text-secondary: rgba(226, 222, 218, 0.78);
+  --text-tertiary: rgba(226, 222, 218, 0.55);
+  --text-muted: rgba(226, 222, 218, 0.38);
+  --acid: #c9f044;
+  --acid-glow: rgba(201, 240, 68, 0.4);
+  --accent-red: #ff4757;
+  --accent-green: #00d4aa;
+  --accent-blue: #0a84ff;
+  --border-subtle: rgba(226, 222, 218, 0.1);
+  --border-light: rgba(226, 222, 218, 0.18);
+  --mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  --display: 'Noto Serif SC', Georgia, serif;
+  --body: 'Outfit', 'Noto Sans SC', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg-primary); color: var(--text-primary); font-family: var(--body); -webkit-font-smoothing: antialiased; }
+.frame { position: fixed; inset: 0; padding: 5vh 4vw; background: radial-gradient(ellipse 100% 80% at 50% 0%, rgba(201, 240, 68, 0.04) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(201, 240, 68, 0.02) 0%, transparent 30%), repeating-linear-gradient(0deg, rgba(226, 222, 218, 0.04) 0 1px, transparent 1px 40px), repeating-linear-gradient(90deg, rgba(226, 222, 218, 0.04) 0 1px, transparent 1px 40px), var(--bg-primary); overflow: hidden; }
+.frame::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 1; }
+.frame::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, transparent 50%, rgba(0, 0, 0, 0.5) 100%); pointer-events: none; z-index: 2; }
+.inner { position: relative; width: 100%; height: 100%; overflow: hidden; border: 1px solid var(--border-light); border-radius: 16px; background: linear-gradient(90deg, rgba(201, 240, 68, 0.03) 1px, transparent 1px), linear-gradient(180deg, rgba(201, 240, 68, 0.02) 1px, transparent 1px), radial-gradient(circle at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.4) 100%), var(--bg-terminal); background-size: 80px 100%, 100% 80px, auto; box-shadow: 0 0 100px rgba(201, 240, 68, 0.06), 0 40px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(226, 222, 218, 0.12), inset 0 0 150px rgba(0, 0, 0, 0.4); }
+.slides { position: absolute; inset: 0; }
+.slide { position: absolute; inset: 0; display: none; flex-direction: column; padding: 28px; opacity: 0; transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+.slide.active { display: flex; opacity: 1; }
+#progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--acid), var(--accent-green)); z-index: 100; transition: width 0.35s ease; box-shadow: 0 0 16px var(--acid-glow), 0 0 32px rgba(201, 240, 68, 0.2); }
+.meta-line { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.15em; }
+.meta-line.top { padding-bottom: 20px; border-bottom: 1px solid var(--border-subtle); }
+.meta-line.bottom { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border-subtle); }
+.hero-zone { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
+.hero-label { font-family: var(--mono); font-size: 13px; color: var(--acid); letter-spacing: 0.3em; margin-bottom: 24px; text-transform: uppercase; }
+.hero-title { font-family: var(--mono); font-weight: 800; font-size: clamp(36px, 7vw, 80px); color: var(--text-primary); line-height: 1.15; letter-spacing: -0.02em; text-shadow: 0 0 40px rgba(201, 240, 68, 0.15); }
+.hero-title .glow { color: var(--acid); text-shadow: 0 0 30px var(--acid-glow), 0 0 60px rgba(201, 240, 68, 0.2); }
+.hero-sub { font-family: var(--body); font-size: clamp(18px, 2.8vw, 32px); color: var(--text-tertiary); margin-top: 20px; line-height: 1.6; letter-spacing: 0.01em; }
+.hero-accent { color: var(--acid); font-weight: 700; }
+.version-badge { display: inline-flex; align-items: center; gap: 10px; background: rgba(201, 240, 68, 0.08); padding: 10px 20px; border-radius: 24px; border: 1px solid rgba(201, 240, 68, 0.2); margin-bottom: 28px; }
+.version-badge span { font-family: var(--mono); font-size: 11px; color: var(--acid); letter-spacing: 0.18em; text-transform: uppercase; }
+.stats-grid { display: flex; justify-content: center; gap: clamp(36px, 7vw, 100px); margin: 6% 0; flex-wrap: wrap; }
+.stat-item { text-align: center; position: relative; padding: 0 28px; }
+.stat-item::after { content: ''; position: absolute; right: 0; top: 10%; bottom: 10%; width: 1px; background: linear-gradient(180deg, transparent, var(--acid), transparent); opacity: 0.2; }
+.stat-item:last-child::after { display: none; }
+.stat-num { font-family: var(--mono); font-weight: 800; font-size: clamp(64px, 12vw, 110px); color: var(--acid); line-height: 1; letter-spacing: -0.03em; text-shadow: 0 0 40px var(--acid-glow), 0 0 80px rgba(201, 240, 68, 0.2); }
+.stat-label { font-family: var(--mono); font-size: 12px; color: var(--text-muted); letter-spacing: 0.2em; margin-top: 16px; text-transform: uppercase; }
+.experts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 5% 0; }
+.expert-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 28px 24px; text-align: center; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+.expert-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--acid), transparent); opacity: 0; transition: opacity 0.4s ease; }
+.expert-card::after { content: ''; position: absolute; inset: 0; border-radius: 12px; box-shadow: inset 0 0 30px rgba(201, 240, 68, 0); transition: box-shadow 0.4s ease; pointer-events: none; }
+.expert-card:hover { transform: translateY(-6px); border-color: rgba(201, 240, 68, 0.3); background: var(--bg-elevated); }
+.expert-card:hover::before { opacity: 1; }
+.expert-card:hover::after { box-shadow: inset 0 0 30px rgba(201, 240, 68, 0.05); }
+.expert-avatar { width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 16px; background: linear-gradient(135deg, var(--acid), var(--accent-green)); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-weight: 700; font-size: 24px; color: var(--bg-primary); box-shadow: 0 0 24px var(--acid-glow); position: relative; }
+.expert-card:hover .expert-avatar { box-shadow: 0 0 0 4px rgba(201, 240, 68, 0.15), 0 0 40px var(--acid-glow); }
+.expert-name { font-family: var(--mono); font-weight: 700; font-size: 16px; color: var(--text-primary); margin-bottom: 8px; letter-spacing: 0.02em; }
+.expert-role { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; }
+.round-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 32px; margin: 20px 0; position: relative; overflow: hidden; }
+.round-block::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--acid), transparent); }
+.round-title { font-family: var(--mono); font-weight: 800; font-size: clamp(20px, 3.5vw, 32px); color: var(--acid); margin-bottom: 20px; text-align: center; letter-spacing: 0.08em; text-shadow: 0 0 20px rgba(201, 240, 68, 0.2); }
+.clash-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 24px 28px; margin: 16px 0; border-left: 4px solid var(--accent-red); position: relative; box-shadow: -10px 0 30px rgba(255, 71, 87, 0.12); }
+.clash-block::after { content: ''; position: absolute; left: 4px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--accent-red), transparent); opacity: 0.4; }
+.clash-title { font-family: var(--mono); font-weight: 700; font-size: 16px; color: var(--accent-red); margin-bottom: 14px; letter-spacing: 0.06em; }
+.clash-content { font-family: var(--body); font-size: clamp(13px, 1.5vw, 17px); color: var(--text-secondary); line-height: 1.9; letter-spacing: 0.01em; }
+.insight-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 24px 28px; margin: 16px 0; border-left: 4px solid var(--accent-green); position: relative; box-shadow: -10px 0 30px rgba(0, 212, 170, 0.12); }
+.insight-block::after { content: ''; position: absolute; left: 4px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--accent-green), transparent); opacity: 0.4; }
+.insight-title { font-family: var(--mono); font-weight: 700; font-size: 16px; color: var(--accent-green); margin-bottom: 14px; letter-spacing: 0.06em; }
+.insight-content { font-family: var(--body); font-size: clamp(13px, 1.5vw, 17px); color: var(--text-secondary); line-height: 1.9; letter-spacing: 0.01em; }
+.insight-core { font-weight: 700; font-size: clamp(16px, 1.8vw, 20px); color: var(--text-primary); display: block; margin: 14px 0; letter-spacing: -0.01em; }
+.question-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; margin: 16px 0; overflow: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.question-card:hover { border-color: rgba(201, 240, 68, 0.25); box-shadow: 0 0 20px rgba(201, 240, 68, 0.08); }
+.question-header { padding: 20px 28px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid transparent; transition: all 0.3s ease; }
+.question-header:hover { background: rgba(201, 240, 68, 0.03); }
+.question-card.open .question-header { border-bottom-color: var(--border-subtle); }
+.question-text { font-family: var(--mono); font-weight: 700; font-size: clamp(14px, 1.8vw, 18px); color: var(--text-primary); letter-spacing: 0.02em; }
+.question-toggle { font-family: var(--mono); font-size: 18px; color: var(--acid); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.question-card.open .question-toggle { transform: rotate(45deg); }
+.question-answer { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+.question-card.open .question-answer { max-height: 500px; }
+.question-answer-inner { padding: 20px 28px; font-family: var(--body); font-size: clamp(12px, 1.3vw, 15px); color: var(--text-secondary); line-height: 1.9; letter-spacing: 0.01em; }
+.conclusion-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 48px; margin: 0 auto; max-width: 800px; text-align: center; position: relative; overflow: hidden; }
+.conclusion-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, transparent, var(--acid), transparent); }
+.conclusion-card::after { content: ''; position: absolute; inset: 0; box-shadow: inset 0 0 50px rgba(201, 240, 68, 0.03); pointer-events: none; }
+.conclusion-text { font-family: var(--mono); font-weight: 800; font-size: clamp(26px, 4vw, 44px); color: var(--text-primary); line-height: 1.4; letter-spacing: 0.02em; }
+.question-block { flex: 1; display: flex; align-items: center; justify-content: center; }
+.question-text-large { font-family: var(--mono); font-weight: 800; font-size: clamp(28px, 5vw, 52px); color: var(--text-primary); line-height: 1.4; text-align: center; max-width: 90%; letter-spacing: 0.02em; }
+.statements-grid { flex: 1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; overflow: auto; }
+.statement-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 20px; transition: all 0.3s ease; }
+.statement-block:hover { border-color: var(--border-light); box-shadow: 0 0 16px rgba(201, 240, 68, 0.05); }
+.statement-meta { display: flex; justify-content: space-between; margin-bottom: 12px; }
+.statement-speaker { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--acid); }
+.statement-role { font-family: var(--mono); font-size: 10px; color: var(--text-muted); }
+.statement-text { font-family: var(--body); font-size: clamp(12px, 1.3vw, 15px); line-height: 1.85; color: var(--text-secondary); letter-spacing: 0.01em; }
+#nav { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 18px; z-index: 100; background: rgba(13, 13, 13, 0.92); padding: 14px 24px; border-radius: 28px; border: 1px solid var(--border-subtle); backdrop-filter: blur(16px); box-shadow: 0 0 30px rgba(201, 240, 68, 0.05); }
+.nav-btn { width: 40px; height: 40px; border: 1px solid var(--border-light); background: transparent; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--text-secondary); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.nav-btn:hover { background: rgba(201, 240, 68, 0.12); border-color: var(--acid); color: var(--acid); box-shadow: 0 0 16px rgba(201, 240, 68, 0.2); }
+.dots { display: flex; gap: 8px; }
+.dot { width: 9px; height: 9px; border-radius: 3px; background: var(--text-muted); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.dot:hover { background: var(--text-tertiary); }
+.dot.active { background: var(--acid); box-shadow: 0 0 12px var(--acid-glow); }
+#counter { position: fixed; top: 24px; right: 28px; font-family: var(--mono); font-size: 12px; color: var(--text-muted); z-index: 100; background: rgba(13, 13, 13, 0.85); padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border-subtle); letter-spacing: 0.1em; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes glowPulse { 0%, 100% { box-shadow: 0 0 24px var(--acid-glow); } 50% { box-shadow: 0 0 48px rgba(201, 240, 68, 0.6); } }
+@keyframes scanline { 0% { transform: translateY(-100%); } 100% { transform: translateY(100vh); } }
+@keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.98; } }
+.slide .a { opacity: 0; }
+.slide.active .a { animation-fill-mode: both; }
+@media (max-width: 1024px) { .experts-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 768px) { .frame { padding: 3vh 2vw; } .inner { border-radius: 12px; } .slide { padding: 20px; } .stats-grid { gap: 28px; } .stat-item { padding: 0 20px; } .stat-num { font-size: 52px; } .experts-grid { grid-template-columns: 1fr; gap: 16px; } .expert-card { padding: 24px 20px; } .statements-grid { grid-template-columns: 1fr; gap: 12px; } #nav { padding: 10px 18px; gap: 12px; bottom: 24px; } .nav-btn { width: 36px; height: 36px; } .round-block, .conclusion-card { padding: 28px 24px; } .clash-block, .insight-block, .question-header { padding: 20px 24px; } }
+</style>
+</head>
+<body>
+<div id="progress" style="width: 0%;"></div>
+<div class="frame"><div class="inner">
+<div class="slides">
+
+<!-- Slide 1: 封面 -->
+<div class="slide active">
+  <div class="meta-line top">
+    <span>ROUNDTABLE INSIGHTS</span>
+    <span>V1.0 · GEEK REPORT</span>
+  </div>
+  <div class="hero-zone">
+    <div class="version-badge"><span>ALGORITHM × HUMANITY</span></div>
+    <div class="hero-title">算法信用评分<span class="glow">对人性的异化</span></div>
+    <div class="hero-sub">当信用成为<span class="hero-accent">数字枷锁</span>，人的尊严如何安放？</div>
+  </div>
+  <div class="meta-line bottom">
+    <span>6 EXPERTS · 3 ROUNDS</span>
+    <span>2026.05.27</span>
+  </div>
+</div>
+
+<!-- Slide 2: 专家阵容 -->
+<div class="slide">
+  <div class="meta-line top"><span>EXPERT PANEL</span><span>6位思想者</span></div>
+  <div class="experts-grid">
+    <div class="expert-card"><div class="expert-avatar">芒</div><div class="expert-name">查理·芒格</div><div class="expert-role">投资思想家 · 多元思维模型</div></div>
+    <div class="expert-card"><div class="expert-avatar">卡</div><div class="expert-name">丹尼尔·卡尼曼</div><div class="expert-role">行为经济学之父 · 诺贝尔奖得主</div></div>
+    <div class="expert-card"><div class="expert-avatar">凯</div><div class="expert-name">凯文·凯利</div><div class="expert-role">《失控》作者 · 科技观察者</div></div>
+    <div class="expert-card"><div class="expert-avatar">项</div><div class="expert-name">项飙</div><div class="expert-role">人类学家 · 社会结构研究者</div></div>
+    <div class="expert-card"><div class="expert-avatar">塔</div><div class="expert-name">纳西姆·塔勒布</div><div class="expert-role">《黑天鹅》作者 · 风险哲学家</div></div>
+    <div class="expert-card"><div class="expert-avatar">赫</div><div class="expert-name">尤瓦尔·赫拉利</div><div class="expert-role">《人类简史》作者 · 历史学家</div></div>
+  </div>
+  <div class="meta-line bottom"><span>SPEAKERS</span><span>2026.05.27</span></div>
+</div>
+
+<!-- Slide 3: Round 1 -->
+<div class="slide">
+  <div class="meta-line top"><span>ROUND 1</span><span>立场表达</span></div>
+  <div class="round-block">
+    <div class="round-title">算法评分如何重塑人的行为？</div>
+    <div class="statements-grid">
+      <div class="statement-block">
+        <div class="statement-meta"><span class="statement-speaker">查理·芒格</span><span class="statement-role">投资思想家</span></div>
+        <div class="statement-text">从多元思维模型看，信用评分系统是一个典型的"激励机制扭曲"案例。当你把人的价值简化为一个三位数的分数，你就创造了一个完美的博弈系统——人们不是在变得更有信用，而是在学会如何刷分。这就像学校教育：学生不是在学习，而是在考试。我在伯克希尔见过太多这样的例子：表面信用良好的人，实际上是最危险的借款人。算法看不到人的复杂性，它只能看到行为的影子。</div>
+      </div>
+      <div class="statement-block">
+        <div class="statement-meta"><span class="statement-speaker">丹尼尔·卡尼曼</span><span class="statement-role">行为经济学家</span></div>
+        <div class="statement-text">芒格的观点触及了一个关键的心理学问题：外部激励会挤出内在动机。当人们为了分数而行动时，他们的行为会变得"表演化"——不是因为善良而善良，而是因为善良能加分。我在《思考，快与慢》中研究过这种现象：当人类的道德行为被量化，道德本身就会被腐蚀。更可怕的是，算法会创造一种"自我实现的预言"：分数低的人会变得更不守信，因为他们已经被系统判定为"不可信"。</div>
+      </div>
+      <div class="statement-block">
+        <div class="statement-meta"><span class="statement-speaker">凯文·凯利</span><span class="statement-role">科技观察者</span></div>
+        <div class="statement-text">两位的担忧是合理的，但忽略了技术的另一面。信用评分系统的核心价值是"去人情化"——在没有算法的时代，谁来决定你的信用？是银行经理的主观判断、你的社会关系、你的家族背景。算法至少提供了一个"可申诉"的标准。问题不是算法本身，而是算法的设计。如果算法能纳入更多维度——社区贡献、志愿服务、创造性成就——它就能成为一种正向激励，而不是数字枷锁。</div>
+      </div>
+    </div>
+  </div>
+  <div class="meta-line bottom"><span>ROUND 1</span><span>1/3</span></div>
+</div>
+
+<!-- Slide 4: Round 1 续 -->
+<div class="slide">
+  <div class="meta-line top"><span>ROUND 1</span><span>立场表达（续）</span></div>
+  <div class="round-block">
+    <div class="round-title">算法凝视下的社会结构</div>
+    <div class="statements-grid">
+      <div class="statement-block">
+        <div class="statement-meta"><span class="statement-speaker">项飙</span><span class="statement-role">人类学家</span></div>
+        <div class="statement-text">从人类学角度看，信用评分系统是一种新型的"社会分层机制"。传统社会用出身、种族、性别来分层；现代社会用教育、职业、收入；算法社会用信用分数。这种分层更隐蔽，也更残酷——因为它是"动态"的。你可能今天是"优质客户"，明天就变成"风险人群"。我在研究中国农民工时发现，这种不确定性比固定的不平等更让人焦虑。算法创造了"悬浮的底层"——你永远不知道自己什么时候会被系统抛弃。</div>
+      </div>
+      <div class="statement-block">
+        <div class="statement-meta"><span class="statement-speaker">纳西姆·塔勒布</span><span class="statement-role">风险哲学家</span></div>
+        <div class="statement-text">项飙的分析揭示了一个更深层的问题：算法信用系统的脆弱性。这种系统是典型的"平均斯坦"思维——它假设人的行为是正态分布的，但现实是"极端斯坦"的。一次黑天鹅事件——比如疫情、金融危机——就能让数亿人的信用评分同时崩塌。更可怕的是，这种崩塌是自我强化的：评分下降→借贷成本上升→违约风险增加→评分进一步下降。系统在正常时期看起来很稳定，但在极端时期会瞬间崩溃。</div>
+      </div>
+      <div class="statement-block">
+        <div class="statement-meta"><span class="statement-speaker">尤瓦尔·赫拉利</span><span class="statement-role">历史学家</span></div>
+        <div class="statement-text">三位的分析都指向一个更大的历史趋势：人类正在从"讲故事的动物"变成"被数据讲述的动物"。在传统社会，你的信用是由你的故事决定的——你的家族、你的承诺、你的声誉。在算法社会，你的故事被压缩成一个数字，而这个数字是由不了解你的算法生成的。这是一种"去叙事化"——人的复杂性被抹平，变成一个可以被计算、被预测、被控制的对象。这是人类历史上最深刻的异化之一。</div>
+      </div>
+    </div>
+  </div>
+  <div class="meta-line bottom"><span>ROUND 1</span><span>2/3</span></div>
+</div>
+
+<!-- Slide 5: Round 2 -->
+<div class="slide">
+  <div class="meta-line top"><span>ROUND 2</span><span>认知碰撞</span></div>
+  <div class="round-block">
+    <div class="round-title">乐观主义的代价</div>
+    <div class="clash-block">
+      <div class="clash-title">塔勒布 → 凯文·凯利</div>
+      <div class="clash-content">凯文·凯利，你的"可申诉标准"是一种危险的天真。在现实中，算法的决策过程是不透明的——你甚至不知道自己为什么被扣分。更关键的是，"纳入更多维度"意味着更多的数据收集，这意味着更多的隐私侵犯。你在用技术乐观主义掩盖一个根本问题：算法信用系统的本质是让人类为机器服务，而不是让机器为人类服务。当你的行为需要符合算法的"期望"时，你就不再是自由的人，而是算法的奴隶。</div>
+    </div>
+    <div class="clash-block">
+      <div class="clash-title">芒格 → 卡尼曼</div>
+      <div class="clash-content">卡尼曼教授，你的"外部激励挤出内在动机"理论需要一个重要的修正：在信用评分的语境下，被挤出的不是"内在动机"，而是"人性的复杂性"。人的行为本来是多维的——有时候慷慨，有时候自私；有时候守信，有时候违约。算法把这些复杂的行为模式压缩成一个单一的分数，这不是"激励扭曲"，而是"维度坍缩"。更可怕的是，人们会逐渐内化这种简化——他们开始相信自己就是那个分数，从而失去了自我认知的丰富性。</div>
+    </div>
+  </div>
+  <div class="meta-line bottom"><span>ROUND 2</span><span>1/2</span></div>
+</div>
+
+<!-- Slide 6: Round 2 续 -->
+<div class="slide">
+  <div class="meta-line top"><span>ROUND 2</span><span>认知碰撞（续）</span></div>
+  <div class="round-block">
+    <div class="round-title">当理想主义撞上现实</div>
+    <div class="clash-block">
+      <div class="clash-title">项飙 → 赫拉利</div>
+      <div class="clash-content">赫拉利，你的"去叙事化"概念很精彩，但忽略了一个关键维度：权力。算法信用系统不是中立的技术工具，而是权力的延伸。在中国，信用评分与社会控制体系深度整合——低分者不能坐高铁、不能住酒店、不能送孩子上好学校。这不是"去叙事化"，而是"叙事垄断"——系统在替你讲述一个关于你的故事，而你没有反驳的权利。更可怕的是，这种权力是隐蔽的：它不像警察或法官那样可见，而是隐藏在代码和数据中。</div>
+    </div>
+    <div class="clash-block">
+      <div class="clash-title">卡尼曼 → 项飙</div>
+      <div class="clash-content">项飙的"叙事垄断"概念抓住了问题的核心，但需要补充一个心理学视角：人们对算法的服从比对权威的服从更深。当法官判你有罪时，你至少知道这是一个"人"的决定，你可以质疑、上诉、反抗。但当算法给你低分时，你甚至不知道该向谁抗议。这种"无人格的权威"会造成一种特殊的无助感——你无法与一个不存在的对手辩论。更可怕的是，人们会逐渐接受这种权威，把它视为"客观"和"公正"的，从而放弃质疑的权利。</div>
+    </div>
+  </div>
+  <div class="meta-line bottom"><span>ROUND 2</span><span>2/2</span></div>
+</div>
+
+<!-- Slide 7: Round 3 -->
+<div class="slide">
+  <div class="meta-line top"><span>ROUND 3</span><span>认知整合</span></div>
+  <div class="round-block">
+    <div class="round-title">超越算法：重新定义信用</div>
+    <div class="statements-grid">
+      <div class="statement-block">
+        <div class="statement-meta"><span class="statement-speaker">查理·芒格</span><span class="statement-role">认知整合者</span></div>
+        <div class="statement-text">经过两轮碰撞，我看到了一个被忽视的元问题：我们一直在用"如何改进算法"的框架讨论问题，但真正的解决方案可能在算法之外。信用的本质不是"可预测性"，而是"信任"。信任是一种关系，不是一个数字。当算法把信任简化为分数时，它摧毁的恰恰是信任的基础——人的复杂性和不可预测性。也许我们需要的不是更好的算法，而是回归到一种更原始、更人性化的信任机制。</div>
+      </div>
+      <div class="statement-block">
+        <div class="statement-meta"><span class="statement-speaker">尤瓦尔·赫拉利</span><span class="statement-role">认知整合者</span></div>
+        <div class="statement-text">芒格的整合指向了一个深刻的历史悖论：人类发明信用评分是为了扩大信任的范围——让陌生人之间也能建立经济关系。但在这个过程中，我们摧毁了信任的内涵。传统社会的信用是"厚"的——它包含你的故事、你的关系、你的道德品格。算法信用是"薄"的——它只包含你的行为数据。这种"薄信用"能支撑经济运转，但无法支撑人的尊严。未来的挑战是：如何在扩大信任范围的同时，保持信任的"厚度"。</div>
+      </div>
+      <div class="statement-block">
+        <div class="statement-meta"><span class="statement-speaker">项飙</span><span class="statement-role">认知整合者</span></div>
+        <div class="statement-text">两位的整合都指向一个关键洞察：信用评分的异化不是技术问题，而是社会契约的问题。当我们把信用交给算法时，我们实际上是在重新谈判社会契约——从"我信任你这个人"变成"我信任算法对你的评估"。这种契约的转变是不可逆的，因为算法已经嵌入了社会基础设施。但我们可以重新设计算法的价值取向：不是"预测违约概率"，而是"促进社会联结"。信用系统应该奖励那些增强社区韧性的人，而不是那些最会刷分的人。</div>
+      </div>
+    </div>
+  </div>
+  <div class="meta-line bottom"><span>ROUND 3</span><span>FINAL</span></div>
+</div>
+
+<!-- Slide 8: 核心洞见 -->
+<div class="slide">
+  <div class="meta-line top"><span>INSIGHT</span><span>核心洞见</span></div>
+  <div class="insight-block">
+    <div class="insight-title">核心洞见</div>
+    <div class="insight-core">算法信用评分的真正威胁不是"评分不准"，而是"评分太准"</div>
+    <div class="insight-content">经过三轮碰撞，六位专家达成一个深刻共识：算法信用系统最大的风险不是技术缺陷，而是技术成功。当算法能完美预测人的行为时，人就失去了"不可预测性"——而这恰恰是自由意志的核心。一个完全可预测的人，就是一个完全被控制的人。信用评分的终极悖论是：它越准确，对人性的异化就越深。</div>
+  </div>
+  <div class="insight-block">
+    <div class="insight-title">关键转折</div>
+    <div class="insight-core">从"薄信用"到"厚信用"的认知跃迁</div>
+    <div class="insight-content">芒格和赫拉利的整合指向一个关键区分：算法信用是"薄"的（只包含行为数据），人性信用是"厚"的（包含故事、关系、道德品格）。现代社会需要的是在两者之间找到平衡——不是用算法替代人性，而是用算法辅助人性。信用系统应该增强人的"可讲述性"，而不是压缩人的复杂性。</div>
+  </div>
+  <div class="meta-line bottom"><span>INSIGHT</span><span>2026.05.27</span></div>
+</div>
+
+<!-- Slide 9: 开放问题 -->
+<div class="slide">
+  <div class="meta-line top"><span>OPEN QUESTIONS</span><span>留给未来</span></div>
+  <div class="question-card">
+    <div class="question-header">
+      <div class="question-text">Q1: 如果信用评分完全准确，人还有自由意志吗？</div>
+      <div class="question-toggle">+</div>
+    </div>
+    <div class="question-answer"><div class="question-answer-inner">这个问题触及了决定论与自由意志的核心张力。如果算法能完美预测你的行为，那你的"选择"还算是选择吗？</div></div>
+  </div>
+  <div class="question-card">
+    <div class="question-header">
+      <div class="question-text">Q2: 谁应该为算法的错误负责？</div>
+      <div class="question-toggle">+</div>
+    </div>
+    <div class="question-answer"><div class="question-answer-inner">当算法误判一个人的信用时，责任在算法开发者、数据提供者、还是使用者？现有的法律框架无法回答这个问题。</div></div>
+  </div>
+  <div class="question-card">
+    <div class="question-header">
+      <div class="question-text">Q3: 信用评分能否成为一种民主工具？</div>
+      <div class="question-toggle">+</div>
+    </div>
+    <div class="question-answer"><div class="question-answer-inner">如果信用评分由社区共同设计和监督，它能否从控制工具转变为赋权工具？这需要什么样的制度创新？</div></div>
+  </div>
+  <div class="question-card">
+    <div class="question-header">
+      <div class="question-text">Q4: 人类能否与算法建立"信任关系"？</div>
+      <div class="question-toggle">+</div>
+    </div>
+    <div class="question-answer"><div class="question-answer-inner">信任通常被认为是人与人之间的关系。但随着算法越来越多地介入决策，人与算法之间能否建立类似的信任？这需要什么样的透明度和问责机制？</div></div>
+  </div>
+  <div class="meta-line bottom"><span>QUESTIONS</span><span>4 OPEN</span></div>
+</div>
+
+<!-- Slide 10: 结论 -->
+<div class="slide">
+  <div class="meta-line top"><span>CONCLUSION</span><span>终章</span></div>
+  <div class="question-block">
+    <div class="conclusion-card">
+      <div class="conclusion-text">算法信用评分的本质不是<br>技术问题，而是<span style="color:var(--acid)">人性问题</span>。<br>当我们把信任交给算法时，<br>我们失去的不是隐私，<br>而是<span style="color:var(--accent-red)">成为人的权利</span>。</div>
+    </div>
+  </div>
+  <div class="meta-line bottom"><span>PRESSEDBY ROUNDTABLE ENGINE</span><span>2026.05.27</span></div>
+</div>
+
+</div>
+</div></div>
+
+<div id="nav">
+  <button class="nav-btn" id="prevBtn">◀</button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn">▶</button>
+</div>
+<div id="counter">1 / 1</div>
+<script>
+(function(){
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let cur = 0;
+  const dotsContainer = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progress');
+  let wheelTimer = null;
+  
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => go(i);
+    dotsContainer.appendChild(dot);
+  });
+  
+  function go(n) {
+    if (n < 0 || n >= total) return;
+    slides[cur].classList.remove('active');
+    dotsContainer.children[cur].classList.remove('active');
+    cur = n;
+    slides[cur].classList.add('active');
+    dotsContainer.children[cur].classList.add('active');
+    counter.textContent = (cur + 1) + ' / ' + total;
+    const pct = Math.min(100, ((cur + 1) / total) * 100);
+    progress.style.width = pct + '%';
+  }
+  
+  document.getElementById('prevBtn').onclick = () => go(cur - 1);
+  document.getElementById('nextBtn').onclick = () => go(cur + 1);
+  
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault(); go(cur + 1);
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault(); go(cur - 1);
+    } else if (e.key === 'Home') { e.preventDefault(); go(0);
+    } else if (e.key === 'End') { e.preventDefault(); go(total - 1); }
+  });
+  
+  document.addEventListener('wheel', e => {
+    e.preventDefault();
+    if (wheelTimer) return;
+    wheelTimer = setTimeout(() => wheelTimer = null, 400);
+    if (e.deltaY > 0) go(cur + 1);
+    else if (e.deltaY < 0) go(cur - 1);
+  }, { passive: false });
+  
+  document.body.addEventListener('click', e => {
+    if (e.target.closest('.nav-btn, .dot, .expert-card, .question-card, .clash-block, .insight-block, .round-block, .statement-block, .conclusion-card')) return;
+    go(cur + 1);
+  });
+  
+  document.querySelectorAll('.question-header').forEach(header => {
+    header.onclick = e => {
+      e.stopPropagation();
+      header.parentElement.classList.toggle('open');
+    };
+  });
+  
+  go(0);
+})();
+</script>
+</body>
+</html>

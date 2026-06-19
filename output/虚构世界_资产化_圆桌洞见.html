@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>虚构世界资产化 圆桌洞见</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0A;--bg2:#111111;--bg-card:rgba(255,255,255,0.04);--fg:#F5F5F5;--fg2:#A0A0A0;--fg3:#606060;--accent:#D4A04A;--accent2:#C07A3E;--accent-glow:rgba(212,160,74,0.25);--clash:#ff4757;--insight:#00d4aa;--border:rgba(255,255,255,0.08);--serif:'Noto Serif SC',serif;--sans:'Outfit',sans-serif;--mono:'JetBrains Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:smooth}
+body{display:flex;flex-direction:row;width:max-content;height:100vh;background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.85}
+.slide{width:100vw;height:100vh;min-width:100vw;scroll-snap-align:start;display:flex;flex-direction:column;padding:clamp(24px,3vh,48px) clamp(40px,4vw,80px)}
+.slide-cover{background:linear-gradient(135deg,#1A1A2E,#16213E,#0F0F23);justify-content:center;align-items:center;text-align:center}
+.cover-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;background:rgba(212,160,74,0.12);border:1px solid rgba(212,160,74,0.3);border-radius:100px;font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:0.08em;margin-bottom:32px}
+.cover-title{font-family:var(--serif);font-size:clamp(40px,5vw,72px);font-weight:800;line-height:1.1;margin-bottom:24px;background:linear-gradient(135deg,var(--fg),var(--fg2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cover-sub{font-family:var(--serif);font-size:clamp(16px,1.8vw,26px);color:var(--fg2);margin-bottom:16px}
+.cover-meta{font-family:var(--mono);font-size:14px;color:var(--fg3)}
+.slide-content{background:var(--bg2);overflow:hidden;position:relative}
+.slide-content::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0.3}
+.breadcrumb{font-family:var(--mono);font-size:13px;color:var(--fg3);text-align:right;margin-bottom:20px}
+.slide-title{font-family:var(--serif);font-size:clamp(24px,2.5vw,36px);font-weight:800;margin-bottom:24px;padding-left:24px;position:relative}
+.slide-title::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:5px;background:linear-gradient(180deg,var(--accent),var(--accent2));border-radius:3px}
+.experts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:24px}
+.expert-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:28px;text-align:center;transition:all 0.3s}
+.expert-card:hover{transform:translateY(-6px);border-color:rgba(212,160,74,0.3);box-shadow:0 12px 40px rgba(0,0,0,0.3)}
+.expert-avatar{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:900;font-size:24px;margin:0 auto 16px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--bg)}
+.expert-avatar.green{background:linear-gradient(135deg,#00d4aa,#358568)}
+.expert-avatar.pink{background:linear-gradient(135deg,#FF6B9D,#FF8FAE)}
+.expert-name{font-family:var(--serif);font-weight:700;font-size:16px;margin-bottom:6px}
+.expert-role{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:0.06em}
+.speech-cards{display:flex;flex-direction:column;gap:20px;margin-top:24px}
+.speech-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:28px;transition:all 0.3s;position:relative}
+.speech-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2),transparent);opacity:0.6}
+.speech-card:hover{transform:translateY(-2px)}
+.speech-meta{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.speaker-avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:900;font-size:18px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--bg)}
+.speaker-avatar.green{background:linear-gradient(135deg,#00d4aa,#358568)}
+.speaker-avatar.pink{background:linear-gradient(135deg,#FF6B9D,#FF8FAE)}
+.speaker-name{font-family:var(--serif);font-weight:700;font-size:16px}
+.speaker-role{font-family:var(--mono);font-size:11px;color:var(--fg2)}
+.speech-content{font-size:15px;line-height:1.9;color:var(--fg2)}
+.clash-block{background:rgba(255,71,87,0.08);border:1px solid rgba(255,71,87,0.25);border-radius:16px;padding:28px;margin-top:24px;box-shadow:0 0 40px rgba(255,71,87,0.1)}
+.clash-block::before{content:'';display:block;height:3px;background:linear-gradient(90deg,var(--clash),transparent);margin-bottom:20px}
+.clash-label{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--clash);letter-spacing:0.06em;margin-bottom:20px}
+.clash-item{margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid rgba(255,71,87,0.15)}
+.clash-item:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.clash-speaker{font-family:var(--serif);font-weight:700;font-size:14px;color:var(--accent);margin-bottom:8px}
+.clash-text{font-size:14px;line-height:1.8;color:var(--fg2)}
+.insight-block{background:rgba(0,212,170,0.08);border:1px solid rgba(0,212,170,0.3);border-radius:16px;padding:32px;margin-top:24px;box-shadow:0 0 50px rgba(0,212,170,0.1)}
+.insight-block::before{content:'';display:block;height:3px;background:linear-gradient(90deg,var(--insight),transparent);margin-bottom:20px}
+.insight-label{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--insight);letter-spacing:0.06em;margin-bottom:20px}
+.insight-core{font-family:var(--serif);font-size:clamp(18px,2vw,24px);font-weight:800;line-height:1.45;margin-bottom:16px}
+.insight-explain{font-size:15px;line-height:1.85;color:var(--fg2)}
+.conclusions{display:flex;flex-direction:column;gap:20px;margin-top:24px}
+.conclusion-item{display:flex;gap:20px;align-items:flex-start;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;transition:all 0.3s}
+.conclusion-item:hover{transform:translateX(8px);box-shadow:0 8px 30px rgba(212,160,74,0.15)}
+.conclusion-num{font-family:var(--serif);font-size:40px;font-weight:800;color:var(--accent);opacity:0.4;line-height:1;flex-shrink:0}
+.conclusion-text{font-size:16px;line-height:1.7;color:var(--fg)}
+#nav{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:16px;z-index:100;background:rgba(0,0,0,0.85);backdrop-filter:blur(20px);padding:12px 24px;border-radius:100px;border:1px solid var(--border)}
+.nav-btn{width:40px;height:40px;border:none;background:var(--bg-card);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--fg);transition:all 0.2s}
+.nav-btn:hover{background:var(--accent);color:var(--bg)}
+.dots{display:flex;gap:8px}
+.dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.3);cursor:pointer;transition:all 0.3s}
+.dot.active{background:var(--accent);transform:scale(1.4);box-shadow:0 0 10px var(--accent-glow)}
+#counter{position:fixed;top:20px;right:24px;font-family:var(--mono);font-size:13px;color:var(--fg2);z-index:100;background:rgba(0,0,0,0.6);padding:8px 16px;border-radius:100px;backdrop-filter:blur(10px)}
+#progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:101;background:var(--border)}
+#progressBar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 0.2s}
+@media(max-width:768px){.experts-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div id="progress"><div id="progressBar"></div></div>
+
+<div class="slide slide-cover">
+<div class="cover-badge">CONSULTING REPORT · V1.0</div>
+<h1 class="cover-title">虚构世界资产化</h1>
+<p class="cover-sub">当IP、虚拟地产、数字藏品成为资产类别，我们是否正在见证"想象力"的金融化？</p>
+<p class="cover-meta">6位专家 · 3轮深度交锋 · 2026.05.27</p>
+</div>
+
+<div class="slide slide-content">
+<div class="breadcrumb">EXPERT PANEL</div>
+<h2 class="slide-title">六位思想巨擘</h2>
+<div class="experts-grid">
+<div class="expert-card"><div class="expert-avatar">博</div><div class="expert-name">豪尔赫·博尔赫斯</div><div class="expert-role">文学大师</div></div>
+<div class="expert-card"><div class="expert-avatar pink">余</div><div class="expert-name">余华</div><div class="expert-role">文学大师</div></div>
+<div class="expert-card"><div class="expert-avatar">芒</div><div class="expert-name">查理·芒格</div><div class="expert-role">投资思想家</div></div>
+<div class="expert-card"><div class="expert-avatar green">凯</div><div class="expert-name">凯文·凯利</div><div class="expert-role">科技观察者</div></div>
+<div class="expert-card"><div class="expert-avatar pink">卡</div><div class="expert-name">丹尼尔·卡尼曼</div><div class="expert-role">行为经济学家</div></div>
+<div class="expert-card"><div class="expert-avatar">赫</div><div class="expert-name">尤瓦尔·赫拉利</div><div class="expert-role">历史学家</div></div>
+</div>
+</div>
+
+<div class="slide slide-content">
+<div class="breadcrumb">ROUND 1 / 立场表达</div>
+<h2 class="slide-title">虚构世界为何能成为资产？</h2>
+<div class="speech-cards">
+<div class="speech-card"><div class="speech-meta"><div class="speaker-avatar">博</div><div><div class="speaker-name">豪尔赫·博尔赫斯</div><div class="speaker-role">文学大师</div></div></div><div class="speech-content">虚构世界资产化是一个古老的悖论。我在《特隆、乌克巴尔、奥比斯·特蒂乌斯》中探索过这个主题：一个虚构的世界可以通过足够多的人相信它而获得"真实性"。当漫威宇宙被估值数百亿美元时，它不再是"虚构"的——它是一种社会现实。虚构世界的价值不在于它是否"真实"，而在于它是否"有效"——即它能否影响人们的行为、情感和消费决策。从这个角度看，虚构世界是最古老的投资标的——宗教、神话、国家认同，都是"虚构世界资产化"的案例。</div></div>
+<div class="speech-card"><div class="speech-meta"><div class="speaker-avatar pink">余</div><div><div class="speaker-name">余华</div><div class="speaker-role">文学大师</div></div></div><div class="speech-content">博尔赫斯说得太抽象了。让我用更直接的方式说：虚构世界资产化的本质是"情感的商品化"。当人们为哈利·波特的魔杖付费时，他们不是在买一根木棍，而是在买一种情感体验——童年的魔法、冒险的刺激、归属的温暖。这种情感体验是真实的，所以它的价格也是真实的。但问题是：当情感被商品化时，情感本身会不会被贬值？当每一种情感体验都可以用金钱购买时，我们是否还拥有真正的情感？</div></div>
+<div class="speech-card"><div class="speech-meta"><div class="speaker-avatar">芒</div><div><div class="speaker-name">查理·芒格</div><div class="speaker-role">投资思想家</div></div></div><div class="speech-content">两位文学大师的观点需要一个重要的补充：虚构世界资产化不是新现象——品牌经济学一直在做这件事。可口可乐的品牌价值超过其有形资产的数十倍；这个"品牌"本质上就是一个虚构世界——它讲述了一个关于快乐、分享、美国梦的故事。IP资产化的不同之处在于：它更加显性、更加可交易、更加全球化。但底层逻辑是一样的：人类愿意为故事付费，而故事是有价值的。</div></div>
+</div>
+</div>
+
+<div class="slide slide-content">
+<div class="breadcrumb">ROUND 1 / 立场表达（续）</div>
+<h2 class="slide-title">技术如何加速虚构资产化？</h2>
+<div class="speech-cards">
+<div class="speech-card"><div class="speech-meta"><div class="speaker-avatar green">凯</div><div><div class="speaker-name">凯文·凯利</div><div class="speaker-role">科技观察者</div></div></div><div class="speech-content">芒格的品牌经济学论需要一个关键补充：技术正在改变虚构世界的"创造成本"和"传播速度"。在传统时代，创造一个虚构世界需要几十年——想想托尔金的中土世界。现在，AI可以在几小时内生成一个完整的虚构世界——包括地图、历史、角色、冲突。这意味着虚构世界的供给会爆炸性增长，但人类的注意力是有限的。未来最有价值的虚构世界不是"最好"的，而是"最先被记住"的。</div></div>
+<div class="speech-card"><div class="speech-meta"><div class="speaker-avatar pink">卡</div><div><div class="speaker-name">丹尼尔·卡尼曼</div><div class="speaker-role">行为经济学家</div></div></div><div class="speech-content">凯文·凯利的"注意力稀缺"论需要补充一个心理学视角：人们对虚构世界的情感投入具有"锁定效应"。一旦你在一个虚构世界中投入了时间和情感，你就很难"退出"——这是一种沉没成本谬误，但它创造了稳定的收入流。迪士尼之所以能持续盈利，不是因为它的故事最好，而是因为它在几代人心中创造了情感锁定。虚构世界资产化的真正价值不在于"创造"新世界，而在于"锁定"现有世界。</div></div>
+<div class="speech-card"><div class="speech-meta"><div class="speaker-avatar">赫</div><div><div class="speaker-name">尤瓦尔·赫拉利</div><div class="speaker-role">历史学家</div></div></div><div class="speech-content">从历史角度看，虚构世界资产化是人类社会"想象的秩序"的最新形态。金钱、国家、公司——这些都是虚构的秩序，但它们因为足够多的人相信而具有了真实的力量。IP资产化只是把这个过程变得更加显性。更关键的是，AI和区块链技术正在创造新的"虚构秩序"——NFT、元宇宙、DAO。这些新秩序还没有被足够多的人相信，所以它们的价值是不稳定的。但一旦它们获得足够的"共识"，它们就会像金钱一样真实。</div></div>
+</div>
+</div>
+
+<div class="slide slide-content">
+<div class="breadcrumb">ROUND 2 / 认知碰撞</div>
+<h2 class="slide-title">虚构资产的风险与泡沫</h2>
+<div class="clash-block">
+<div class="clash-label">碰撞交锋 #1</div>
+<div class="clash-item"><div class="clash-speaker">芒格 → 凯文·凯利</div><div class="clash-text">凯文·凯利，你的"AI生成虚构世界"论忽略了价值的稀缺性。当虚构世界的供给爆炸性增长时，每个虚构世界的价值都会被稀释——这是基本的供需关系。更关键的是，AI生成的虚构世界缺乏"生命经验"——它们是算法的产物，不是人类创造的。人类愿意为故事付费，是因为故事背后有一个"人"。当这个"人"变成算法时，故事的价值就会下降。</div></div>
+<div class="clash-item"><div class="clash-speaker">凯文·凯利 → 芒格</div><div class="clash-text">芒格先生，你的"稀缺性"论需要区分两种价值：使用价值和符号价值。是的，AI会增加虚构世界的供给，但这不会降低它们的使用价值——人们仍然需要故事来逃避现实、获得意义、建立社交联结。而且，AI可能会创造一种新的符号价值：参与感。当用户可以参与虚构世界的创造时，他们对这个世界的情感投入会更深，而不是更浅。</div></div>
+</div>
+<div class="clash-block">
+<div class="clash-label">碰撞交锋 #2</div>
+<div class="clash-item"><div class="clash-speaker">博尔赫斯 → 赫拉利</div><div class="clash-text">赫拉利，你的"想象的秩序"论需要一个关键修正：不是所有的虚构秩序都能获得"共识"。大多数虚构世界都会被遗忘——只有极少数能存活下来。当投资者为虚构世界付费时，他们实际上是在赌哪一个虚构世界能获得足够的"共识"。这是一种高风险的赌注，因为"共识"是不可预测的——它取决于文化、时机、运气。</div></div>
+<div class="clash-item"><div class="clash-speaker">卡尼曼 → 余华</div><div class="clash-text">余华先生，你的"情感商品化"担忧需要一个重要的补充：情感商品化不一定会贬值情感。在很多情况下，商品化反而会增强情感——当人们为一个虚构世界付费时，他们实际上是在"投资"自己的情感，这会增加他们对这个世界的情感投入。心理学中的"宜家效应"表明：人们对亲手组装的家具评价更高。同样，人们对"付费参与"的虚构世界评价更高。</div></div>
+</div>
+</div>
+
+<div class="slide slide-content">
+<div class="breadcrumb">ROUND 3 / 认知整合</div>
+<h2 class="slide-title">超越泡沫：虚构资产的长期价值</h2>
+<div class="speech-cards">
+<div class="speech-card"><div class="speech-meta"><div class="speaker-avatar">博</div><div><div class="speaker-name">豪尔赫·博尔赫斯</div><div class="speaker-role">认知整合者</div></div></div><div class="speech-content">经过两轮碰撞，我看到了一个被忽视的悖论：虚构世界资产化既是"贬值"也是"升值"。当虚构世界被商品化时，它的"神秘感"会被贬值——魔法不再是魔法，而是商品。但同时，它的"可及性"会被升值——更多的人可以接触到这个虚构世界，更多的人可以参与其中。虚构世界资产化的真正风险不是"贬值"，而是"同质化"——当所有虚构世界都为了商业化而变得相似时，它们就会失去独特性。</div></div>
+<div class="speech-card"><div class="speech-meta"><div class="speaker-avatar pink">余</div><div><div class="speaker-name">余华</div><div class="speaker-role">认知整合者</div></div></div><div class="speech-content">博尔赫斯的"同质化"担忧指向一个更深层的问题：虚构世界资产化可能会摧毁文学的"自由"。当虚构世界成为资产时，它的创造者就必须考虑商业回报——这会限制他们的想象力。那些不商业化的故事——比如实验文学、先锋叙事——会被边缘化。虚构世界资产化可能会创造一个"赢者通吃"的市场：少数IP获得巨额回报，大多数创造者被遗忘。</div></div>
+<div class="speech-card"><div class="speech-meta"><div class="speaker-avatar">芒</div><div><div class="speaker-name">查理·芒格</div><div class="speaker-role">认知整合者</div></div></div><div class="speech-content">两位的整合都指向一个关键洞察：虚构世界资产化不是"好"或"坏"——它是一种新的经济形态，有其自身的逻辑和风险。投资者需要学会区分两种虚构世界：那些有"深度"的——能经得起时间考验的；和那些只有"热度"的——很快就会被遗忘的。前者是长期资产，后者是投机泡沫。虚构世界资产化的核心挑战是：如何在商业化的同时保持深度。</div></div>
+</div>
+</div>
+
+<div class="slide slide-content">
+<div class="breadcrumb">核心洞见</div>
+<h2 class="slide-title">穿越碰撞后的认知升华</h2>
+<div class="insight-block">
+<div class="insight-label">核心洞见</div>
+<div class="insight-core">虚构世界资产化不是"泡沫"，而是"想象力经济"的诞生</div>
+<div class="insight-explain">经过三轮碰撞，六位专家达成一个深刻共识：虚构世界的价值不在于它是否"真实"，而在于它是否"有效"——即它能否影响人们的行为、情感和消费决策。虚构世界资产化是人类社会"想象的秩序"的最新形态，它有其自身的逻辑和风险。</div>
+</div>
+<div class="insight-block">
+<div class="insight-label">关键转折</div>
+<div class="insight-core">从"实物资产"到"想象力资产"的范式转换</div>
+<div class="insight-explain">赫拉利的"想象的秩序"和芒格的"品牌经济学"指向同一个结论：人类愿意为故事付费，而故事是有价值的。虚构世界资产化是这个逻辑的最新演绎。未来的投资者需要学会评估"想象力资产"——不是看它的有形价值，而是看它的叙事力量。</div>
+</div>
+</div>
+
+<div class="slide slide-content">
+<div class="breadcrumb">结论</div>
+<h2 class="slide-title">终章：从虚构到真实</h2>
+<div class="conclusions">
+<div class="conclusion-item"><div class="conclusion-num">01</div><div class="conclusion-text">虚构世界的价值不在于它是否"真实"，而在于它是否"有效"——即它能否影响人们的行为和情感。</div></div>
+<div class="conclusion-item"><div class="conclusion-num">02</div><div class="conclusion-text">虚构世界资产化不是新现象——品牌经济学一直在做这件事。IP资产化只是把这个过程变得更加显性。</div></div>
+<div class="conclusion-item"><div class="conclusion-num">03</div><div class="conclusion-text">AI会增加虚构世界的供给，但这不会降低它们的价值——因为人类对故事的需求是无限的。</div></div>
+<div class="conclusion-item"><div class="conclusion-num">04</div><div class="conclusion-text">虚构世界资产化的核心挑战是：如何在商业化的同时保持深度。那些只有"热度"的IP是投机泡沫，那些有"深度"的IP是长期资产。</div></div>
+<div class="conclusion-item"><div class="conclusion-num">05</div><div class="conclusion-text">未来的投资者需要学会评估"想象力资产"——不是看它的有形价值，而是看它的叙事力量。</div></div>
+</div>
+</div>
+
+<div id="nav">
+<button class="nav-btn" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+<div class="dots" id="dots"></div>
+<button class="nav-btn" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+</div>
+<div id="counter">1 / 1</div>
+<script>
+(function(){const slides=document.querySelectorAll('.slide'),total=slides.length;let cur=0;const dots=document.getElementById('dots'),counter=document.getElementById('counter'),progress=document.getElementById('progressBar');slides.forEach((_,i)=>{const d=document.createElement('div');d.className='dot'+(i===0?' active':'');d.onclick=()=>go(i);dots.appendChild(d)});function go(n){if(n<0||n>=total)return;slides[cur].classList.remove('visible');dots.children[cur]?.classList.remove('active');cur=n;slides[cur].scrollIntoView({behavior:'smooth',block:'start',inline:'start'});slides[cur].classList.add('visible');dots.children[cur]?.classList.add('active');counter.textContent=(cur+1)+' / '+total;progress.style.width=Math.min(100,((cur+1)/total)*100)+'%'}document.getElementById('prevBtn').onclick=()=>go(cur-1);document.getElementById('nextBtn').onclick=()=>go(cur+1);document.addEventListener('keydown',e=>{if(e.key==='ArrowDown'||e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(cur+1)}else if(e.key==='ArrowUp'||e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1)}else if(e.key==='Home'){e.preventDefault();go(0)}else if(e.key==='End'){e.preventDefault();go(total-1)}});let wt=null;document.addEventListener('wheel',e=>{e.preventDefault();if(wt)return;wt=setTimeout(()=>wt=null,400);if(e.deltaY>0||e.deltaX>0)go(cur+1);else if(e.deltaY<0||e.deltaX<0)go(cur-1)},{passive:false});document.body.addEventListener('click',e=>{if(e.target.closest('.nav-btn,.dots,.expert-card,.speech-card,.clash-block,.insight-block,.conclusion-item'))return;go(cur+1)});go(0)})();
+</script>
+</body>
+</html>

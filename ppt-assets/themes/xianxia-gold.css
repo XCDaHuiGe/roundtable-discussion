@@ -1,0 +1,43 @@
+/* theme: xianxia-gold — 玄幻修真金焰主题 */
+:root{
+  --bg:#08081a;--bg-soft:#0d0d28;--surface:#151540;--surface-2:#1c1c58;
+  --border:rgba(200,168,98,.22);--border-strong:rgba(200,168,98,.40);
+  --text-1:#e0d8f0;--text-2:#b0a8d0;--text-3:#6e6898;
+  --accent:#d4a24c;--accent-2:#e87840;--accent-3:#7b4fa0;
+  --good:#4aaf6c;--warn:#e8a040;--bad:#e0445a;
+  --grad:linear-gradient(135deg,#d4a24c,#e87840 55%,#c04040);
+  --grad-soft:linear-gradient(135deg,rgba(212,162,76,.15),rgba(232,120,64,.12));
+  --radius:14px;--radius-sm:8px;--radius-lg:22px;
+  --shadow:0 0 40px rgba(123,79,160,.12),0 4px 20px rgba(0,0,0,.4);
+  --shadow-lg:0 0 60px rgba(212,162,76,.18),0 8px 40px rgba(0,0,0,.5);
+  --font-sans:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;
+  --font-serif:'Noto Serif SC','SimSun',serif;
+  --font-display:var(--font-serif);
+  --font-mono:'JetBrains Mono','Cascadia Code',monospace;
+}
+
+body{background:
+  radial-gradient(ellipse at 20% 0%,rgba(212,162,76,.10),transparent 55%),
+  radial-gradient(ellipse at 80% 100%,rgba(123,79,160,.12),transparent 55%),
+  radial-gradient(ellipse at 50% 50%,rgba(232,120,64,.06),transparent 70%),
+  var(--bg)}
+
+h1.title,h2.title,.h1,.h2{
+  text-shadow:0 0 20px rgba(212,162,76,.25),0 0 45px rgba(123,79,160,.15)}
+
+.kicker{color:var(--accent-2);text-shadow:0 0 8px rgba(232,120,64,.35)}
+
+.card{background:rgba(21,21,64,.75);backdrop-filter:blur(8px);
+  border:1px solid rgba(200,168,98,.10)}
+
+.divider-accent{background:var(--grad);box-shadow:0 0 16px rgba(212,162,76,.4)}
+
+.deck-header{border-bottom:1px solid var(--border)}
+
+blockquote{border-left:3px solid var(--accent);padding:8px 16px;
+  background:rgba(212,162,76,.06);border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  margin:12px 0;font-style:italic;color:var(--text-2)}
+
+.fire-badge{display:inline-block;background:linear-gradient(135deg,#e87840,#c04040);
+  color:#fff;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600;
+  letter-spacing:.04em;box-shadow:0 0 10px rgba(232,120,64,.35)}

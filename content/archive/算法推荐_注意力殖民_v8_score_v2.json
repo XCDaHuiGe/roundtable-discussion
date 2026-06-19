@@ -1,0 +1,371 @@
+{
+  "total": 73.6,
+  "grade": "C",
+  "dimensions": {
+    "attack_efficiency": {
+      "score": 100.0,
+      "weight": 0.25,
+      "weighted": 25.0,
+      "details": {
+        "total": 9,
+        "effective": 9,
+        "details": [
+          {
+            "attacker": "韩炳哲",
+            "target": "傅盛",
+            "effective": true,
+            "has_evidence": false,
+            "has_logic": true,
+            "has_specific": false
+          },
+          {
+            "attacker": "丹尼尔·卡尼曼",
+            "target": "李诞",
+            "effective": true,
+            "has_evidence": false,
+            "has_logic": false,
+            "has_specific": false
+          },
+          {
+            "attacker": "项飙",
+            "target": "傅盛",
+            "effective": true,
+            "has_evidence": false,
+            "has_logic": true,
+            "has_specific": false
+          },
+          {
+            "attacker": "韩炳哲",
+            "target": "李诞",
+            "effective": true,
+            "has_evidence": true,
+            "has_logic": true,
+            "has_specific": false
+          },
+          {
+            "attacker": "项飙",
+            "target": "傅盛",
+            "effective": true,
+            "has_evidence": false,
+            "has_logic": false,
+            "has_specific": false
+          },
+          {
+            "attacker": "丹尼尔·卡尼曼",
+            "target": "李诞",
+            "effective": true,
+            "has_evidence": true,
+            "has_logic": false,
+            "has_specific": false
+          },
+          {
+            "attacker": "韩炳哲",
+            "target": "丹尼尔·卡尼曼",
+            "effective": true,
+            "has_evidence": false,
+            "has_logic": true,
+            "has_specific": false
+          },
+          {
+            "attacker": "项飙",
+            "target": "李诞",
+            "effective": true,
+            "has_evidence": false,
+            "has_logic": false,
+            "has_specific": false
+          },
+          {
+            "attacker": "傅盛",
+            "target": "韩炳哲",
+            "effective": true,
+            "has_evidence": false,
+            "has_logic": false,
+            "has_specific": false
+          }
+        ]
+      }
+    },
+    "defense_rate": {
+      "score": 100.0,
+      "weight": 0.2,
+      "weighted": 20.0,
+      "details": {
+        "total_defended": 9,
+        "successful": 9
+      }
+    },
+    "evidence_hit": {
+      "score": 7.4,
+      "weight": 0.15,
+      "weighted": 1.1,
+      "details": {
+        "discussion_type": "topic_based",
+        "standard_name": "通用话题讨论",
+        "total_speeches": 27,
+        "with_evidence": 2,
+        "rate": 7.4,
+        "details": [
+          {
+            "type": "stance",
+            "expert": "韩炳哲",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "算法推荐的本质是一种'数字化的全景敞视监狱'。你以为你在自由选择，实际上你的每一次点击、每一次停留都在被记录、分析、预测..."
+          },
+          {
+            "type": "stance",
+            "expert": "丹尼尔·卡尼曼",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "从认知科学的角度，算法推荐利用的是人类大脑的系统1——快速、自动、无意识的决策系统。当你刷短视频时，你不是在'选择'，而..."
+          },
+          {
+            "type": "stance",
+            "expert": "项飙",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "算法推荐正在加速'附近'的消失。过去，你的信息来源是你的邻居、你的同事、你的社区——这些'附近'的人构成了你的认知边界。..."
+          },
+          {
+            "type": "stance",
+            "expert": "傅盛",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "你们都在批判算法推荐，但有没有想过：在算法出现之前，人类的注意力就是被'殖民'的——被电视、被报纸、被广告牌。算法推荐至..."
+          },
+          {
+            "type": "stance",
+            "expert": "尼尔·波兹曼",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "我想提醒大家：媒介即隐喻。每一种媒介都在塑造我们理解世界的方式。印刷术让'理性论证'成为可能，电视让'娱乐'成为一切的尺..."
+          },
+          {
+            "type": "stance",
+            "expert": "李诞",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "你们说的都太严肃了。我作为一个内容创作者，想说一个特别简单的事：算法推荐让'有趣'变得比'有用'更重要。你知道为什么脱口..."
+          },
+          {
+            "type": "clash",
+            "attacker": "韩炳哲",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "你说'算法让小商家触达目标用户'——但你有没有想过，这种'精准触达'的本质是什么？是让商家能够绕过用户的理性判断，直接操..."
+          },
+          {
+            "type": "clash",
+            "attacker": "丹尼尔·卡尼曼",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "你说'算法只是放大器，问题在人类的情绪本能'——但这个论证有一个关键漏洞：放大器是有方向的。一个中性的放大器应该同时放大..."
+          },
+          {
+            "type": "clash",
+            "attacker": "项飙",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "你说'用户不是被动的容器，他们可以选择'——但你的产品团队在设计产品时，有没有把'用户可能沉迷'作为设计约束？还是把'用..."
+          },
+          {
+            "type": "stance",
+            "expert": "韩炳哲",
+            "has_evidence": true,
+            "evidence_count": 1,
+            "evidences": [
+              "在自己的茧房里自说"
+            ],
+            "content_preview": "算法推荐正在创造一种'数字化的暴政'——不是通过强制，而是通过诱惑。民主需要公民能够接触到多元的观点，能够在公共空间进行..."
+          },
+          {
+            "type": "stance",
+            "expert": "丹尼尔·卡尼曼",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "从认知科学的角度，算法推荐正在系统性地削弱公民的'慢思考'能力。民主决策需要理性、需要权衡、需要考虑长远——这些都是系统..."
+          },
+          {
+            "type": "stance",
+            "expert": "项飙",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "我想提出一个更具体的问题：算法推荐正在改变'公共空间'的性质。过去的公共空间（广场、报纸、电视）是'共同的'——每个人看..."
+          },
+          {
+            "type": "stance",
+            "expert": "傅盛",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "你们把算法推荐妖魔化了。算法推荐也有积极的一面：它让边缘群体的声音能够被听见。在过去，媒体的'把关人'决定了什么声音能进..."
+          },
+          {
+            "type": "stance",
+            "expert": "尼尔·波兹曼",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "媒介形态决定公共话语的性质。印刷术创造了'理性公共讨论'的可能性，电视把公共讨论变成了'表演'，而算法推荐正在把公共讨论..."
+          },
+          {
+            "type": "stance",
+            "expert": "李诞",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "你们讨论的'民主'太抽象了。普通人关心的不是'公共讨论的质量'，而是'我的声音能不能被听到'。算法推荐至少给了普通人一个..."
+          },
+          {
+            "type": "clash",
+            "attacker": "韩炳哲",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "你说'算法让普通人发声'——但发声不等于被听见。算法推荐的逻辑是'赢家通吃'：头部内容获得80%的流量，长尾内容被淹没。..."
+          },
+          {
+            "type": "clash",
+            "attacker": "项飙",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "你说'算法让边缘群体被听见'——但你有没有注意到，算法推荐的'边缘群体'往往是那些能够制造最大情绪波动的群体？温和的、理..."
+          },
+          {
+            "type": "clash",
+            "attacker": "丹尼尔·卡尼曼",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "你说'普通人关心的是自己的声音能不能被听到'——但你有没有想过，'被听到'和'被理解'是两件事？算法推荐可以让一条短视频..."
+          },
+          {
+            "type": "stance",
+            "expert": "韩炳哲",
+            "has_evidence": true,
+            "evidence_count": 1,
+            "evidences": [
+              "的算法是一个悖论"
+            ],
+            "content_preview": "我不相信'以人为本的算法'这个概念。算法的本质是优化，而优化的本质是量化。当你把'人'量化成'用户画像'、'行为数据'、..."
+          },
+          {
+            "type": "stance",
+            "expert": "丹尼尔·卡尼曼",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "我对'以人为本的算法'持谨慎乐观。从行为科学的角度，算法可以被设计成'助推'用户做出更好的选择——比如推荐更健康的食物、..."
+          },
+          {
+            "type": "stance",
+            "expert": "项飙",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "我认为'以人为本的算法'需要重新定义'人'。当前的算法把'人'定义为'消费者'——一个需要被满足的欲望集合。但'人'不只..."
+          },
+          {
+            "type": "stance",
+            "expert": "傅盛",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "作为创业者，我必须说：'以人为本的算法'需要商业模式的支撑。当前的算法之所以'以停留时间为导向'，是因为广告模式决定了'..."
+          },
+          {
+            "type": "stance",
+            "expert": "尼尔·波兹曼",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "我对'更好的算法'持怀疑态度。历史告诉我们，每一种新媒介都会带来新的问题，而'用技术解决技术问题'往往创造更多的问题。电..."
+          },
+          {
+            "type": "stance",
+            "expert": "李诞",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "你们讨论的'以人为本的算法'太理想化了。现实是：用户想要的是'有趣的内容'，不是'对他们有益的内容'。如果你设计一个'以..."
+          },
+          {
+            "type": "clash",
+            "attacker": "韩炳哲",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "你说算法可以被设计成'助推'用户做出更好的选择——但谁来定义'更好的选择'？你吗？政府吗？还是'行为科学家'？你的'选择..."
+          },
+          {
+            "type": "clash",
+            "attacker": "项飙",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "你说'真正的以人为本是尊重用户的选择'——但你有没有注意到，这个论证恰恰是烟草公司、垃圾食品公司、赌博公司最喜欢的论证？..."
+          },
+          {
+            "type": "clash",
+            "attacker": "傅盛",
+            "has_evidence": false,
+            "evidence_count": 0,
+            "evidences": [],
+            "content_preview": "你说'真正的解决方案是更少的算法'——但你能想象一个'没有算法'的数字世界吗？每天有500小时的视频上传到YouTube..."
+          }
+        ]
+      }
+    },
+    "style_recognition": {
+      "score": 16.7,
+      "weight": 0.15,
+      "weighted": 2.5,
+      "details": {
+        "total": 18,
+        "distinctive": 3
+      }
+    },
+    "cognitive_contribution": {
+      "score": 100.0,
+      "weight": 0.1,
+      "weighted": 10.0,
+      "details": {
+        "total_rounds": 3,
+        "with_reversal": 3
+      }
+    },
+    "case_quality": {
+      "score": 100.0,
+      "weight": 0.1,
+      "weighted": 10.0,
+      "details": {
+        "total_rounds": 3,
+        "with_cases": 3
+      }
+    },
+    "structure": {
+      "score": 100.0,
+      "weight": 0.05,
+      "weighted": 5.0,
+      "details": {
+        "title": true,
+        "experts": true,
+        "rounds": true,
+        "final_insight": true,
+        "open_questions": true
+      }
+    }
+  }
+}

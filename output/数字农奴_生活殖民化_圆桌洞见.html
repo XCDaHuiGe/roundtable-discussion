@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>永恒在线的数字农奴 圆桌洞见</title>
+<style>
+  :root{
+    /* ============ 主题色(默认:🖋 墨水经典) ============ */
+    --ink:#0a0a0b;
+    --ink-rgb:10,10,11;
+    --paper:#f1efea;
+    --paper-rgb:241,239,234;
+    --paper-tint:#e8e5de;
+    --ink-tint:#18181a;
+
+    /* ============ 强调色 ============ */
+    --accent:#c23b22;
+    --accent-rgb:194,59,34;
+    --gold:#d4a843;
+    --gold-rgb:212,168,67;
+    --blue:#4a6a9a;
+    --purple:#8a4aaa;
+    --green:#3a8a5c;
+    --cyan:#4a9a9a;
+    --orange:#d4843a;
+
+    /* ============ 字体(跨主题固定) ============ */
+    --mono:"IBM Plex Mono","SF Mono",monospace;
+    --serif-zh:"Noto Serif SC","Source Han Serif SC","STSong",serif;
+    --sans-zh:"Noto Sans SC","Source Han Sans SC","PingFang SC",sans-serif;
+
+    /* ============ 间距 ============ */
+    --radius:10px;
+    --ease:cubic-bezier(.4,0,.2,1);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans-zh);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+  /* ============ Deck 容器 ============ */
+  #deck{position:relative;width:100vw;height:100vh;overflow:hidden}
+
+  /* ============ 进度条 ============ */
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:1000;transition:width .5s var(--ease);box-shadow:0 0 12px rgba(var(--accent-rgb),.3)}
+
+  /* ============ 幻灯片 ============ */
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:6vh 8vw 10vh;height:100vh;overflow:hidden}
+  .slide::-webkit-scrollbar{width:4px}.slide::-webkit-scrollbar-track{background:transparent}.slide::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
+  .slide.active{display:flex}
+  .slide.hero{justify-content:center;align-items:center;text-align:center}
+  .slide.title-slide{justify-content:center;align-items:center;text-align:center}
+
+  /* ============ 入场动画(Guizang风格) ============ */
+  [data-anim]{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .slide.active [data-anim]{opacity:1;transform:translateY(0)}
+  .slide.active [data-anim]:nth-child(1){transition-delay:.1s}
+  .slide.active [data-anim]:nth-child(2){transition-delay:.18s}
+  .slide.active [data-anim]:nth-child(3){transition-delay:.26s}
+  .slide.active [data-anim]:nth-child(4){transition-delay:.34s}
+  .slide.active [data-anim]:nth-child(5){transition-delay:.42s}
+  .slide.active [data-anim]:nth-child(6){transition-delay:.5s}
+
+  /* ============ 内容区(book-distillation范式) ============ */
+  .frame{width:100%;max-width:1100px;margin:0 auto;flex:1;display:flex;flex-direction:column}
+  .slide-content{flex:1;display:flex;flex-direction:column}
+
+  /* ============ Magazine Chrome(Guizang风格) ============ */
+  .chrome{display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.5;margin-bottom:3vh}
+  .chrome .left,.chrome .right{display:flex;gap:2em;align-items:center}
+  .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
+
+  /* ============ 底部元数据(render_v8兼容) ============ */
+  .deck-footer{margin-top:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.4;padding-top:2vh}
+  .slide-number{position:absolute;bottom:2vh;right:3vw;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.35)}
+
+  /* ============ Section Label ============ */
+  .section-label{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
+
+  /* ============ 封面 ============ */
+  .cover-badge{display:inline-block;padding:6px 20px;border:1px solid var(--accent);border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4vh}
+  .cover-title{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:4vh;line-height:1.8;max-width:600px}
+  .cover-stats{display:flex;gap:4vh;flex-wrap:wrap;justify-content:center}
+  .cover-stat{text-align:center}
+  .cover-stat-num{font-family:var(--mono);font-size:2.5rem;font-weight:900;color:var(--accent)}
+  .cover-stat-label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.5);margin-top:.5vh}
+
+  /* ============ 封面标题(render_v8) ============ */
+  .hero-dark{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;flex:1}
+  .title-main{font-family:var(--serif-zh);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.2;margin-bottom:3vh;background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .title-sub{font-size:1.1rem;color:rgba(var(--paper-rgb),.7);margin-bottom:2vh;line-height:1.8}
+  .gold-line{width:80px;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));margin:3vh auto;border-radius:2px}
+
+  /* ============ 标题系统 ============ */
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh}
+  .h-hero{font-family:var(--serif-zh);font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.2;margin-bottom:3vh}
+  .h-xl{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.4rem,3vw,2.2rem);line-height:1.3;margin-bottom:2vh}
+  .h-lg{font-family:var(--serif-zh);font-weight:600;font-size:clamp(1.1rem,2vw,1.5rem);line-height:1.4;margin-bottom:1.5vh}
+  .h-md{font-weight:600;font-size:1.1rem;margin-bottom:1vh}
+  .lead{font-size:1rem;line-height:1.85;color:rgba(var(--paper-rgb),.8);max-width:700px}
+  .meta-row{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(var(--paper-rgb),.4);display:flex;gap:2em;flex-wrap:wrap;margin-top:3vh}
+
+  /* ============ 大号引用(render_v8) ============ */
+  .quote-large{font-family:var(--serif-zh);font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:600;line-height:1.6;color:rgba(var(--paper-rgb),.9);max-width:800px;margin:0 auto}
+
+  /* ============ 分割线 ============ */
+  .rule{width:100%;height:1px;background:rgba(var(--paper-rgb),.15);margin:3vh 0}
+
+  /* ============ 标签 ============ */
+  .tag{display:inline-block;padding:4px 12px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;margin:3px}
+  .tag-gold{background:rgba(var(--gold-rgb),.15);color:var(--gold);border:1px solid rgba(var(--gold-rgb),.2)}
+  .tag-red{background:rgba(var(--accent-rgb),.15);color:var(--accent);border:1px solid rgba(var(--accent-rgb),.2)}
+  .tag-blue{background:rgba(74,106,154,.15);color:var(--blue);border:1px solid rgba(74,106,154,.2)}
+  .tag-purple{background:rgba(138,74,170,.15);color:var(--purple);border:1px solid rgba(138,74,170,.2)}
+  .tag-green{background:rgba(58,138,92,.15);color:var(--green);border:1px solid rgba(58,138,92,.2)}
+
+  /* ============ 霓虹强调色(render_v8) ============ */
+  .neon-gold{color:var(--gold)}.neon-red{color:var(--accent)}.neon-cyan{color:var(--cyan)}.neon-purple{color:var(--purple)}.neon-orange{color:var(--orange)}.neon-green{color:var(--green)}
+
+  /* ============ 网格系统 ============ */
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:2vh 2vw}
+  @media(max-width:768px){.grid-2{grid-template-columns:1fr}}
+
+  /* ============ 发言块(原生) ============ */
+  .sp{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2.5vw;margin-bottom:2vh;position:relative}
+  .sp::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .sh{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh}
+  .speaker-avatar{width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:var(--ink);background:var(--accent);flex-shrink:0}
+  .sn{font-weight:700;font-size:1rem}
+  .sr{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4);padding:3px 8px;background:rgba(var(--paper-rgb),.06);border-radius:3px}
+  .st{font-size:.95rem;line-height:2;color:rgba(var(--paper-rgb),.85)}
+  .st strong{color:var(--paper);font-weight:700}
+  .st em{color:var(--gold);font-style:normal;font-weight:600}
+
+  /* ============ 碰撞块(原生) ============ */
+  .cb{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;position:relative}
+  .cb::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .cb.blue{border-color:rgba(74,106,154,.3)}.cb.blue::before{background:var(--blue)}
+  .cb.purple{border-color:rgba(138,74,170,.3)}.cb.purple::before{background:var(--purple)}
+  .cb.green{border-color:rgba(58,138,92,.3)}.cb.green::before{background:var(--green)}
+  .cb.orange{border-color:rgba(var(--gold-rgb),.3)}.cb.orange::before{background:var(--gold)}
+  .cl{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;color:var(--accent);font-weight:600}
+  .cl.blue{color:var(--blue)}.cl.purple{color:var(--purple)}.cl.green{color:var(--green)}.cl.orange{color:var(--gold)}
+
+  /* ============ 洞见卡 ============ */
+  .insight-c{background:linear-gradient(135deg,rgba(var(--paper-rgb),.04) 0%,rgba(var(--paper-rgb),.08) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh;position:relative;overflow:hidden}
+  .insight-c::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold))}
+  .insight-q{font-family:var(--serif-zh);font-size:1.1rem;font-weight:700;color:var(--gold);line-height:1.6;margin-bottom:1vh}
+  .insight-a{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.75)}
+
+  /* ============ 卡片 ============ */
+  .card{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
+  .card-num{font-family:var(--mono);font-weight:900;font-size:1.8rem;color:var(--accent);opacity:.4;margin-bottom:1vh}
+  .card-title{font-weight:700;font-size:1rem;margin-bottom:1vh}
+  .card-body{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
+  .card-source{font-family:var(--mono);font-size:10px;color:rgba(var(--paper-rgb),.35);margin-top:1vh}
+
+  /* ============ 专家卡片(render_v8) ============ */
+  .card-rise{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--green)}
+  .card-fall{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--accent)}
+  .speaker-header{display:flex;align-items:center;gap:16px;margin-bottom:2vh}
+  .speaker-name{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem}
+  .speaker-role{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:2px}
+  .expert-profile{display:flex;flex-direction:column;gap:1vh}
+  .profile-item{font-size:.9rem;line-height:1.7;color:rgba(var(--paper-rgb),.8)}
+  .profile-label{color:var(--gold);font-weight:600}
+
+  /* ============ 立场表达(render_v8) ============ */
+  .stance-item{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh;border-left:3px solid var(--gold)}
+  .stance-expert{font-family:var(--serif-zh);font-weight:700;font-size:1rem;margin-bottom:1vh}
+  .stance-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 碰撞轮次(render_v8) ============ */
+  .clash-round{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.12);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;position:relative}
+  .clash-round::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent);border-radius:var(--radius) 0 0 var(--radius)}
+  .clash-header{display:flex;align-items:center;gap:12px;margin-bottom:1.5vh;flex-wrap:wrap}
+  .clash-attacker{font-weight:700;font-size:1rem}
+  .clash-target{font-weight:700;font-size:1rem}
+  .clash-arrow{color:rgba(var(--paper-rgb),.3);font-size:1.2rem}
+  .clash-type{display:inline-block;padding:3px 10px;border-radius:3px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.5vh;font-weight:600}
+  .clash-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85)}
+  .counter-attack{margin-top:2vh;padding-top:2vh;border-top:1px dashed rgba(var(--paper-rgb),.1)}
+  .counter-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .counter-content{font-size:.9rem;line-height:1.85;color:rgba(var(--paper-rgb),.8)}
+
+  /* ============ 攻击类型色 ============ */
+  .attack-logic{background:rgba(74,106,154,.15);color:var(--blue)}
+  .attack-interest{background:rgba(var(--accent-rgb),.15);color:var(--accent)}
+  .attack-reality{background:rgba(var(--gold-rgb),.15);color:var(--gold)}
+  .attack-human{background:rgba(138,74,170,.15);color:var(--purple)}
+  .attack-failure{background:rgba(58,138,92,.15);color:var(--green)}
+
+  /* ============ 现实案例(render_v8) ============ */
+  .reality-case{background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh;border-left:4px solid var(--orange)}
+  .case-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5vh;flex-wrap:wrap;gap:8px}
+  .case-name{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem}
+  .case-source{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.4)}
+  .case-content{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:1.5vh}
+  .case-outcome{font-size:.9rem;font-weight:600;margin-bottom:1vh}
+  .case-lesson{font-size:.9rem;font-weight:600}
+
+  /* ============ 代价讨论(render_v8) ============ */
+  .cost-discussion{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2.5vh 2vw;margin-bottom:2vh}
+  .cost-scenario{font-family:var(--serif-zh);font-weight:700;font-size:1.05rem;margin-bottom:2vh}
+  .cost-list{display:flex;flex-direction:column;gap:1.5vh;margin-bottom:2vh}
+  .cost-item{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:1.5vh 2vw;border-left:3px solid var(--accent)}
+  .cost-name{font-weight:700;font-size:.95rem;margin-bottom:.5vh}
+  .cost-analysis{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .worst-case{background:rgba(var(--accent-rgb),.08);border:1px solid rgba(var(--accent-rgb),.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
+  .worst-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .worst-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+  .survivor-bias{background:rgba(138,74,170,.08);border:1px solid rgba(138,74,170,.15);border-radius:6px;padding:2vh 2vw}
+  .survivor-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .survivor-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+
+  /* ============ 人性层(render_v8) ============ */
+  .human-nature{background:linear-gradient(135deg,rgba(var(--paper-rgb),.03) 0%,rgba(var(--paper-rgb),.06) 100%);border:1px solid rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
+  .human-question{font-family:var(--serif-zh);font-weight:700;font-size:1.1rem;margin-bottom:2vh;line-height:1.5}
+  .human-analysis{font-size:.92rem;line-height:1.85;color:rgba(var(--paper-rgb),.85);margin-bottom:2vh}
+  .human-examples{margin-bottom:2vh}
+  .examples-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1vh;font-weight:600}
+  .example-item{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8);padding:.5vh 0}
+  .human-conclusion{font-size:.95rem;font-weight:600;line-height:1.7}
+
+  /* ============ 认知升级(render_v8) ============ */
+  .cognitive-upgrade{background:rgba(var(--paper-rgb),.03);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:3vh 2.5vw;margin-bottom:2vh}
+  .upgrade-comparison{display:grid;grid-template-columns:1fr auto 1fr;gap:2vw;align-items:start;margin-bottom:2vh}
+  @media(max-width:768px){.upgrade-comparison{grid-template-columns:1fr}.upgrade-arrow{transform:rotate(90deg)}}
+  .old-thinking,.new-thinking{background:rgba(var(--paper-rgb),.04);border-radius:6px;padding:2vh 1.5vw}
+  .old-thinking{border-left:3px solid var(--accent)}
+  .new-thinking{border-left:3px solid var(--green)}
+  .thinking-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .thinking-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+  .upgrade-arrow{font-size:1.5rem;color:rgba(var(--paper-rgb),.3);display:flex;align-items:center;justify-content:center;padding-top:3vh}
+  .complexity{background:rgba(74,106,154,.08);border:1px solid rgba(74,106,154,.15);border-radius:6px;padding:2vh 2vw;margin-bottom:1.5vh}
+  .complexity-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .complexity-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .actionable{background:rgba(var(--gold-rgb),.08);border:1px solid rgba(var(--gold-rgb),.15);border-radius:6px;padding:2vh 2vw}
+  .actionable-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1vh;font-weight:600}
+  .actionable-content{font-size:.9rem;line-height:1.8;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 情绪样式 ============ */
+  .emotion-sarcasm{border-left:3px solid var(--purple);padding-left:12px;font-style:italic}
+  .emotion-helplessness{opacity:.75;font-style:italic}
+  .emotion-anger{color:var(--accent);font-weight:600}
+  .emotion-hesitation{opacity:.8;font-style:italic}
+  .emotion-self-deprecation{opacity:.7;font-style:italic}
+  .emotion-cold-laugh{color:var(--purple)}
+  .emotion-silence{opacity:.5;font-style:italic}
+  .emotion-serious{color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ 指标 ============ */
+  .metrics{display:flex;gap:2vw;flex-wrap:wrap;margin-bottom:3vh}
+  .metric{flex:1;min-width:100px;text-align:center;background:rgba(var(--paper-rgb),.04);border:1px solid rgba(var(--paper-rgb),.08);border-radius:var(--radius);padding:2vh 1.5vw}
+  .metric-val{font-family:var(--mono);font-weight:900;font-size:clamp(1.5rem,3vw,2.5rem);color:var(--accent)}
+  .metric-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--paper-rgb),.45);margin-top:.5vh}
+
+  /* ============ 开放问题 ============ */
+  .oq{background:rgba(var(--paper-rgb),.03);border:1px dashed rgba(var(--paper-rgb),.1);border-radius:var(--radius);padding:2vh 2vw;margin-bottom:1.5vh}
+  .oq-num{font-family:var(--mono);font-weight:900;font-size:1.2rem;color:var(--accent);opacity:.3;margin-bottom:1vh}
+  .oq-text{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.8)}
+  .headline-item{font-size:.95rem;line-height:1.8;color:rgba(var(--paper-rgb),.85);padding:1.5vh 0;border-bottom:1px solid rgba(var(--paper-rgb),.06)}
+  .headline-item:last-child{border-bottom:none}
+  .headline-item strong{color:var(--gold);margin-right:8px}
+
+  /* ============ 引用 ============ */
+  .quote{font-family:var(--serif-zh);font-size:1rem;font-style:italic;line-height:1.8;padding:2vh 2.5vw;border-left:3px solid var(--gold);background:rgba(var(--gold-rgb),.05);margin:2vh 0;color:rgba(var(--paper-rgb),.85)}
+
+  /* ============ TOC ============ */
+  .toc-panel{position:fixed;top:0;left:0;width:min(340px,80vw);height:100vh;background:rgba(var(--ink-rgb),.97);backdrop-filter:blur(20px);z-index:100;transform:translateX(-100%);transition:transform .35s var(--ease);padding:3vh 2.5vw;overflow-y:auto;border-right:1px solid rgba(var(--paper-rgb),.08)}
+  .toc-panel.open{transform:translateX(0)}
+  .toc-title{font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:3vh;padding-bottom:2vh;border-bottom:1px solid rgba(var(--paper-rgb),.1)}
+  .toc-item{display:flex;justify-content:space-between;padding:1.2vh 1.5vw;margin-bottom:.5vh;cursor:pointer;border-radius:6px;border-left:2px solid transparent;font-size:.9rem;color:rgba(var(--paper-rgb),.7);transition:all .2s}
+  .toc-item:hover{background:rgba(var(--paper-rgb),.06);color:var(--paper)}
+  .toc-item.active{background:rgba(var(--paper-rgb),.08);color:var(--accent);border-left-color:var(--accent);font-weight:600}
+  .toc-label{flex:1}
+  .toc-page{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.35)}
+  .toc-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;opacity:0;pointer-events:none;transition:opacity .3s}
+  .toc-backdrop.open{opacity:1;pointer-events:auto}
+
+  /* ============ 导航栏 ============ */
+  .nav-bar{position:fixed;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 3vw;background:rgba(var(--ink-rgb),.9);backdrop-filter:blur(10px);z-index:50;border-top:1px solid rgba(var(--paper-rgb),.06)}
+  .nav-left,.nav-right{display:flex;align-items:center;gap:12px}
+  .nav-btn{background:none;border:1px solid rgba(var(--paper-rgb),.12);color:rgba(var(--paper-rgb),.7);padding:8px 16px;border-radius:4px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;cursor:pointer;transition:all .2s}
+  .nav-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(var(--accent-rgb),.1)}
+  .nav-title{font-size:12px;color:rgba(var(--paper-rgb),.5);max-width:40vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-counter{font-family:var(--mono);font-size:11px;color:rgba(var(--paper-rgb),.4)}
+
+  /* ============ 导航点 ============ */
+  .nav-dots{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:6px}
+  .nd{width:6px;height:6px;border-radius:50%;background:rgba(var(--paper-rgb),.15);cursor:pointer;transition:all .3s var(--ease);border:none;padding:0}
+  .nd.active{background:var(--accent);height:20px;border-radius:3px;box-shadow:0 0 8px rgba(var(--accent-rgb),.4)}
+  .nd:hover{background:rgba(var(--paper-rgb),.4)}
+
+  /* ============ 入场动画延迟(render_v8兼容) ============ */
+  .anim-in{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .slide.active .anim-in{opacity:1;transform:translateY(0)}
+  .slide.active .anim-in:nth-child(1){transition-delay:.1s}
+  .slide.active .anim-in:nth-child(2){transition-delay:.18s}
+  .slide.active .anim-in:nth-child(3){transition-delay:.26s}
+  .slide.active .anim-in:nth-child(4){transition-delay:.34s}
+  .slide.active .anim-in:nth-child(5){transition-delay:.42s}
+  .slide.active .anim-in:nth-child(6){transition-delay:.5s}
+  .anim-delay-1{transition-delay:.18s !important}
+  .anim-delay-2{transition-delay:.26s !important}
+  .anim-delay-3{transition-delay:.34s !important}
+  .anim-delay-4{transition-delay:.42s !important}
+  .anim-delay-5{transition-delay:.5s !important}
+  .anim-delay-6{transition-delay:.58s !important}
+
+  /* ============ 响应式 ============ */
+  @media(max-width:1024px){.slide{padding:4vh 5vw 8vh}}
+  @media(max-width:768px){
+    .slide{padding:3vh 4vw 7vh}
+    .cover-stats{gap:2vh}
+    .metrics{flex-direction:column}
+    .nav-dots,.nav-title{display:none}
+    .nav-bar{padding:0 2vw}
+  }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="slide active hero title-slide" data-title="永恒在线的数字农奴">
+  <div class="frame">
+    <div class="slide-content" style="justify-content:center;align-items:center;text-align:center">
+      <div class="cover-badge" data-anim>圆桌洞见</div>
+      <div class="cover-title" data-anim>永恒在线的数字农奴</div>
+      <div class="cover-sub" data-anim>工作社会学视角下的科技突围与生活殖民化</div>
+      <div class="gold-line" data-anim></div>
+      <div class="cover-stats" data-anim>
+        <div class="cover-stat">
+          <div class="cover-stat-num">6</div>
+          <div class="cover-stat-label">专家</div>
+        </div>
+        <div class="cover-stat">
+          <div class="cover-stat-num">3</div>
+          <div class="cover-stat-label">轮讨论</div>
+        </div>
+        <div class="cover-stat">
+          <div class="cover-stat-num">18</div>
+          <div class="cover-stat-label">发言</div>
+        </div>
+        <div class="cover-stat">
+          <div class="cover-stat-num">5</div>
+          <div class="cover-stat-label">洞见</div>
+        </div>
+      </div>
+      <div class="meta-row" data-anim>
+        <span> 马克思</span> · <span> 韩炳哲</span> · <span> 项飙</span> · <span> 凯文·凯利</span> · <span>️ 刘润</span> · <span> 丹尼尔·卡尼曼</span>
+      </div>
+    </div>
+  </div>
+</div><div class="slide" data-title="核心洞见">
+  <div class="frame">
+    <div class="kicker" data-anim>KEY INSIGHTS</div>
+    <div class="h-xl" data-anim style="margin-bottom:4vh">核心洞见</div>
+    <div class="grid-2"><div class="insight-c" style="animation-delay:0s">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:2vh">
+        <span style="font-family:var(--mono);font-size:1.5rem;font-weight:900;color:var(--accent);opacity:.5">01</span>
+        <span style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);padding:3px 8px;background:rgba(var(--gold-rgb),.1);border-radius:3px">第1轮综合</span>
+      </div>
+      <div class="insight-q">核心洞见：数字农奴制的本质不是&#039;新技术&#039;，而是&#039;旧剥削逻辑的新载体&#039;。平台经济通过将劳动过程&#039;游戏化&#039;，将剥削内化为&#039;自我实现&#039;，这是比传统工厂制度更隐蔽、更有效的控制机制。</div>
+      <div class="insight-a">从封建主义到工业资本主义，人类花了数百年才建立起&#039;劳动权利&#039;的法律框架。数字封建主义正在绕过这些框架——不是因为它&#039;超越&#039;了法律，而是因为法律还没有&#039;看见&#039;它。</div>
+    </div><div class="insight-c" style="animation-delay:0.1s">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:2vh">
+        <span style="font-family:var(--mono);font-size:1.5rem;font-weight:900;color:var(--accent);opacity:.5">02</span>
+        <span style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);padding:3px 8px;background:rgba(var(--gold-rgb),.1);border-radius:3px">第2轮综合</span>
+      </div>
+      <div class="insight-q">核心洞见：&#039;生活殖民化&#039;的本质不是&#039;工作时间延长&#039;，而是&#039;时间的商品化&#039;——当算法可以量化、评估、优化每一分钟时，时间就从&#039;生命的载体&#039;变成了&#039;可交易的资源&#039;。这种转化，比任何物理奴役都更深层地触及了</div>
+      <div class="insight-a">工业革命用工厂时钟统一了工作时间；数字革命用智能手机消灭了工作时间的边界。前者至少保留了&#039;下班&#039;的幻觉；后者连幻觉都不给了。</div>
+    </div><div class="insight-c" style="animation-delay:0.2s">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:2vh">
+        <span style="font-family:var(--mono);font-size:1.5rem;font-weight:900;color:var(--accent);opacity:.5">03</span>
+        <span style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);padding:3px 8px;background:rgba(var(--gold-rgb),.1);border-radius:3px">第3轮综合</span>
+      </div>
+      <div class="insight-q">核心洞见：&#039;数字农奴制&#039;的突围需要的不仅是技术或管理改革，更是一种&#039;时间伦理&#039;的重构——承认人类生活不只有一个维度（生产性），肯定&#039;休闲&#039;、&#039;关系&#039;、&#039;存在&#039;的独立价值。这是一场政治斗争，也是一场文化</div>
+      <div class="insight-a">工业革命用工厂制度将劳动从生活中&#039;抽取&#039;出来；数字革命正在将劳动重新&#039;注入&#039;生活——但不是恢复前现代的&#039;生活即劳动&#039;，而是创造一种新的奴役形式。突围的可能在于：重新理解&#039;什么是值得过的生活&#039;。</div>
+    </div></div>
+    <div class="deck-footer">5个颠覆认知的观点</div>
+  </div>
+</div><div class="slide" data-title="专家阵容">
+  <div class="frame">
+    <div class="kicker" data-anim>EXPERT PANEL</div>
+    <div class="h-xl" data-anim style="margin-bottom:4vh">专家阵容</div>
+    <div class="grid-2"><div class="card-rise" style="border-left-color:#8b0000" data-anim>
+    <div class="speaker-header">
+      <div class="speaker-avatar" style="background:#8b0000"></div>
+      <div>
+        <div class="speaker-name">马克思</div>
+        <div class="speaker-role">政治经济学家</div>
+      </div>
+    </div>
+  </div><div class="card-rise" style="border-left-color:#2f4f4f" data-anim>
+    <div class="speaker-header">
+      <div class="speaker-avatar" style="background:#2f4f4f"></div>
+      <div>
+        <div class="speaker-name">韩炳哲</div>
+        <div class="speaker-role">哲学家</div>
+      </div>
+    </div>
+  </div><div class="card-rise" style="border-left-color:#7d5a50" data-anim>
+    <div class="speaker-header">
+      <div class="speaker-avatar" style="background:#7d5a50"></div>
+      <div>
+        <div class="speaker-name">项飙</div>
+        <div class="speaker-role">社会学家</div>
+      </div>
+    </div>
+  </div><div class="card-rise" style="border-left-color:#4a6a9a" data-anim>
+    <div class="speaker-header">
+      <div class="speaker-avatar" style="background:#4a6a9a"></div>
+      <div>
+        <div class="speaker-name">凯文·凯利</div>
+        <div class="speaker-role">科技观察家</div>
+      </div>
+    </div>
+  </div><div class="card-rise" style="border-left-color:#4a6a9a" data-anim>
+    <div class="speaker-header">
+      <div class="speaker-avatar" style="background:#4a6a9a">️</div>
+      <div>
+        <div class="speaker-name">刘润</div>
+        <div class="speaker-role">商业观察家</div>
+      </div>
+    </div>
+  </div><div class="card-rise" style="border-left-color:#1a5f7a" data-anim>
+    <div class="speaker-header">
+      <div class="speaker-avatar" style="background:#1a5f7a"></div>
+      <div>
+        <div class="speaker-name">丹尼尔·卡尼曼</div>
+        <div class="speaker-role">行为经济学家</div>
+      </div>
+    </div>
+  </div></div>
+    <div class="deck-footer">6位跨界专家，3轮深度交锋</div>
+  </div>
+</div><div class="slide title-slide" data-title="第1轮：数字封建主义的新形态">
+    <div class="frame">
+      <div class="hero-dark">
+        <div class="kicker" data-anim>ROUND 1</div>
+        <div class="h-hero" data-anim style="background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">数字封建主义的新形态</div>
+        <div class="quote-large" data-anim style="max-width:700px;margin-top:3vh">当平台经济将劳动者重新置于&#039;数字农奴&#039;状态时，技术与资本的关系正在发生怎样的历史性回退？</div>
+      </div>
+    </div>
+  </div><div class="slide" data-title="第1轮：专家发言">
+    <div class="frame">
+      <div class="kicker" data-anim>ROUND 1 · 专家发言</div>
+      <div class="h-lg" data-anim style="margin-bottom:3vh">数字封建主义的新形态</div>
+      <div class="sp" style="border-left-color:#8b0000">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#8b0000"></div>
+      <div>
+        <div class="sn">马克思</div>
+        <div class="sr">政治经济学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 当平台经济将劳动者重新置于&#039;数字农奴&#039;状态时，技术与资本的关系正在发生怎样的历史性回退？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我在《资本论》中揭示了资本增殖的内在逻辑：资本增殖的秘密在于无偿占有剩余劳动。在数字资本主义时代，这个逻辑获得了全新的技术形态。传统工厂中，资本家通过控制生产资料（机器、厂房）来控制劳动过程；今天，平台企业通过控制&#039;数据基础设施&#039;（算法、平台、用户界面）来控制劳动过程。数字平台的&#039;协议规范&#039;、&#039;算法规训&#039;、&#039;技术规制&#039;，本质上是数字时代的&#039;劳动纪律&#039;。更精妙的是：今天的农奴被迫劳动是因为不劳动会饿死；今天的&#039;云农奴&#039;主动劳动是因为平台设计了&#039;即时奖励机制&#039;——每一单完成后的红包、每一次升级后的勋章。这种&#039;自愿服从&#039;比强制劳动更有效，因为它内化了剥削的动机。正如我在19世纪所写的：&#039;资本害怕没有利润或利润太少，就像自然界害怕真空一样。&#039;数字资本对剩余数据的贪婪，正在将整个人类劳动史&#039;再封建化&#039;。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#2f4f4f">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#2f4f4f"></div>
+      <div>
+        <div class="sn">韩炳哲</div>
+        <div class="sr">哲学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 当平台经济将劳动者重新置于&#039;数字农奴&#039;状态时，技术与资本的关系正在发生怎样的历史性回退？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我在《倦怠社会》中描绘了一种新的社会病理：&#039;功绩社会&#039;。功绩社会的核心机制是&#039;自我剥削&#039;——不是外部力量强迫你劳动，而是你自己说服自己必须劳动。外卖骑手不是被监工鞭打的苦力，他们是&#039;自由的&#039;个体，可以自主决定接单与否。但这种&#039;自由&#039;是幻觉：平台的算法设计让骑手们不得不延长劳动时间，因为休息意味着收入下降、评分降低、被算法边缘化。更致命的是，功绩社会摧毁了&#039;休息&#039;的合法性——在&#039;你可以做任何事&#039;（You can do anything）的文化中，&#039;你不想做任何事&#039;变成了道德污点。&#039;倦怠&#039;不是疲劳，而是无法疲劳的疲惫。平台经济将这种倦怠推向了极致：它将剥削包装为赋权，将服从包装为自由，将奴役包装为创业。这不是封建主义的简单回归，而是一种更隐蔽、更有效的控制技术。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#7d5a50">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#7d5a50"></div>
+      <div>
+        <div class="sn">项飙</div>
+        <div class="sr">社会学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 当平台经济将劳动者重新置于&#039;数字农奴&#039;状态时，技术与资本的关系正在发生怎样的历史性回退？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">从社会学的&#039;监控资本主义&#039;视角，平台经济正在构建一种前所未有的&#039;数据封建主义&#039;。马克思区分了&#039;封建地租&#039;和&#039;资本主义地租&#039;；今天我们需要区分&#039;传统地租&#039;和&#039;数字地租&#039;。传统地租基于对土地的生产性开发；数字地租基于对数据的提取性榨取。当用户&#039;免费&#039;使用社交媒体时，他们实际上在支付&#039;数据地租&#039;——用个人数据换取平台服务。更严重的是，数字地租具有&#039;封建性&#039;：用户依附于平台，就像农奴依附于领主——你无法轻易&#039;离开&#039;微信，因为你的社交关系在那里；你无法轻易&#039;离开&#039;美团，因为你的消费记录在那里。这种依附是隐形的，因为表面上看，用户&#039;自愿&#039;选择留在平台。但&#039;自愿&#039;本身是被设计的：当所有社交关系都数字化时，离开平台的代价就变得不可承受。&#039;云农奴&#039;不只是隐喻，它是社会结构的历史性重构。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#4a6a9a">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#4a6a9a"></div>
+      <div>
+        <div class="sn">凯文·凯利</div>
+        <div class="sr">科技观察家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 当平台经济将劳动者重新置于&#039;数字农奴&#039;状态时，技术与资本的关系正在发生怎样的历史性回退？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我需要为平台经济提供另一种解读。历史上，每一次技术革命都伴随着&#039;旧秩序被颠覆&#039;的恐慌，但最终创造了更多的自由和选择。平台经济的真相是：它为大量原本被排斥在正规就业市场之外的人提供了收入机会。全球零工经济劳动者已达劳动力市场的12%，其中70%集中于数字平台；印度劳工在亚马逊MechanicalTurk上占比超60%，时薪不足2美元，但如果没有这个平台，他们可能连这2美元都赚不到。&#039;数字农奴&#039;叙事的问题是：它假设存在一个&#039;前平台&#039;的黄金时代，但实际上，大多数零工劳动者在此之前处于更差的境地——失业、非正规就业、完全没有社会保障。平台经济的不平等是真实的，但&#039;不平等&#039;和&#039;剥削&#039;不是同义词。真正的政策问题不是&#039;消灭平台&#039;，而是&#039;规范平台&#039;——建立最低工资、社会保障、集体谈判权等基本权利保护。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#4a6a9a">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#4a6a9a">️</div>
+      <div>
+        <div class="sn">刘润</div>
+        <div class="sr">商业观察家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 当平台经济将劳动者重新置于&#039;数字农奴&#039;状态时，技术与资本的关系正在发生怎样的历史性回退？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">从商业逻辑看，平台经济创造了巨大的效率提升，但也内嵌了&#039;成本外部化&#039;的结构性缺陷。传统企业雇用员工，需要承担管理成本、培训成本、社会保障成本；平台企业通过&#039;灵活用工&#039;，将这些成本&#039;外部化&#039;给了劳动者个体和社会。这不是商业模式的问题，而是&#039;规则设计&#039;的问题。就像工业化早期，工厂主将环境污染成本&#039;外部化&#039;给社区，最终通过监管将外部成本&#039;内部化&#039;——今天的平台经济同样需要监管来&#039;内部化&#039;平台的&#039;劳动成本&#039;。具体路径：确立平台劳动者的&#039;劳动者身份&#039;（而非&#039;独立承包商&#039;）；强制平台为劳动者缴纳社会保险；建立算法透明度要求——让劳动者知道评分标准、申诉渠道。更重要的是：允许平台劳动者组建工会或行会，通过集体谈判来平衡议价能力不对称。平台经济不是洪水猛兽，但它需要被&#039;驯服&#039;——就像19世纪的工业资本主义最终被劳动法和福利国家&#039;驯服&#039;一样。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#1a5f7a">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#1a5f7a"></div>
+      <div>
+        <div class="sn">丹尼尔·卡尼曼</div>
+        <div class="sr">行为经济学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 当平台经济将劳动者重新置于&#039;数字农奴&#039;状态时，技术与资本的关系正在发生怎样的历史性回退？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">行为科学揭示了平台&#039;控制机制&#039;的心理学基础。平台的算法设计深度利用了人类的&#039;损失厌恶&#039;（损失比等量收益带来的痛苦更大）、&#039;即时满足偏差&#039;（偏好短期奖励而非长期利益）、&#039;社会规范压力&#039;（渴望认可、恐惧惩罚）。当骑手看到&#039;今日收入&#039;的实时更新时，多巴胺系统被激活；当他看到&#039;距离超时&#039;的警告时，焦虑系统被激活。这种&#039;双重激活&#039;正是&#039;强迫性劳动&#039;的神经基础。更隐蔽的是&#039;游戏化设计&#039;：等级系统、徽章成就、排行榜竞争——这些机制将劳动转化为&#039;游戏&#039;，让人在&#039;玩&#039;的过程中被剥削。游戏化管理的本质是：让你&#039;想要&#039;做你&#039;必须&#039;做的事。当一个外卖骑手为了保住&#039;金牌骑手&#039;的称号而主动延长工作时间时，他不是在被强迫，而是在&#039;自我实现&#039;——这种&#039;自我实现&#039;正是最深的枷锁。</p></div>
+    
+    
+  </div><div style="background:rgba(var(--accent-rgb),.06);border:1px solid rgba(var(--accent-rgb),.15);border-radius:var(--radius);padding:3vh 2.5vw;margin-top:2vh">
+    <div style="font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh;font-weight:700">⚡ 专家交锋</div>
+    <div style="font-family:var(--serif-zh);font-size:1.05rem;font-weight:600;margin-bottom:2vh;line-height:1.6">第1轮碰撞</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">韩炳哲：马克思先生说&#039;数字农奴制是资本主义的倒退&#039;，但资本主义的核心是&#039;流动性&#039;和&#039;契约自由&#039;。平台经济不正是通过&#039;零工&#039;模式摧毁了这种流动性吗？当骑手被困在单一平台时，这与封建主义的&#039;固定依附&#039;有何区别？</p></div>
+  </div>
+      <div class="deck-footer">第 1/3 轮 · 6 位专家发言</div>
+    </div>
+  </div><div class="slide title-slide" data-title="第2轮：生活殖民化与时间主权">
+    <div class="frame">
+      <div class="hero-dark">
+        <div class="kicker" data-anim>ROUND 2</div>
+        <div class="h-hero" data-anim style="background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">生活殖民化与时间主权</div>
+        <div class="quote-large" data-anim style="max-width:700px;margin-top:3vh">当工作边界从&#039;工厂大门&#039;延伸到&#039;卧室床头&#039;时，劳动与生活的二元对立正在如何瓦解？</div>
+      </div>
+    </div>
+  </div><div class="slide" data-title="第2轮：专家发言">
+    <div class="frame">
+      <div class="kicker" data-anim>ROUND 2 · 专家发言</div>
+      <div class="h-lg" data-anim style="margin-bottom:3vh">生活殖民化与时间主权</div>
+      <div class="sp" style="border-left-color:#8b0000">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#8b0000"></div>
+      <div>
+        <div class="sn">马克思</div>
+        <div class="sr">政治经济学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 当工作边界从&#039;工厂大门&#039;延伸到&#039;卧室床头&#039;时，劳动与生活的二元对立正在如何瓦解？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我提出&#039;劳动异化&#039;理论的核心洞见是：资本主义将劳动从&#039;生活的有机部分&#039;变成&#039;生活的外在强制&#039;。在工厂制度下，劳动与生活的界限至少在空间上是清晰的——工厂之外是生活，工厂之内是劳动。今天的&#039;在家工作&#039;（WFH）和&#039;永远在线&#039;（always-on）文化彻底模糊了这个界限。远程工作者不是&#039;更自由&#039;，而是&#039;更被控制&#039;——因为控制不再需要&#039;可见的监督&#039;，它通过&#039;随时可达&#039;的通讯工具实现。资本家曾经需要建造工厂来囚禁工人的时间；今天，他们只需要一部智能手机。更深层的问题是：当工作侵入生活，&#039;生活&#039;本身也发生了质变——它变成了&#039;工作能力的再生产&#039;。下班后的健身、社交、娱乐，本质上都变成了&#039;为明天的工作做准备&#039;。生活没有扩张，它只是被工作&#039;殖民化&#039;了。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#2f4f4f">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#2f4f4f"></div>
+      <div>
+        <div class="sn">韩炳哲</div>
+        <div class="sr">哲学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 当工作边界从&#039;工厂大门&#039;延伸到&#039;卧室床头&#039;时，劳动与生活的二元对立正在如何瓦解？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我在《精神政治学》中描述了一个悖论：数字化本应带来&#039;解放&#039;（信息自由、沟通无限），却带来了更深的&#039;规训&#039;。原因在于：数字技术的&#039;连接性&#039;被用于生产&#039;孤独的个体&#039;——人们被连接着，却越来越孤立。&#039;永远在线&#039;的本质不是&#039;随时可以联系&#039;，而是&#039;永远无法断开&#039;。微信的工作群可以在凌晨两点发消息，可以在你休假时@你，可以用&#039;已读不回&#039;制造焦虑。这种&#039;无边界性&#039;摧毁了&#039;休息&#039;的心理前提——真正的休息不是身体不动，而是意识可以从&#039;生产模式&#039;切换到&#039;存在模式&#039;。当这种切换被永久性阻断时，倦怠就成了现代人的宿命。&#039;躺平&#039;作为一种文化现象，正是对这种&#039;无边界性&#039;的反叛——它的本质不是懒惰，而是对时间主权的绝望争取。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#7d5a50">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#7d5a50"></div>
+      <div>
+        <div class="sn">项飙</div>
+        <div class="sr">社会学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 当工作边界从&#039;工厂大门&#039;延伸到&#039;卧室床头&#039;时，劳动与生活的二元对立正在如何瓦解？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">从&#039;附近&#039;的消失这个概念出发，工作入侵生活不仅是时间问题，更是空间问题和社会问题。列斐伏尔（Henri Lefebvre）说&#039;空间是政治的&#039;；今天的问题是：数字空间的政治性是否比物理空间更难抵抗？传统工厂有&#039;关门&#039;的概念——关上门就是生活；数字工作场所没有&#039;关门&#039;，因为它就住在你的手机里。&#039;附近&#039;的消失意味着：你不再认识你的邻居，却必须随时回应全球的工作邮件。这种&#039;时空压缩&#039;（Harvey语）制造了一种特殊的焦虑：&#039;我是否浪费了时间？&#039;当每一分钟都被算法记录和评估时，时间就失去了它的&#039;自然性&#039;——它变成了可量化的资源，必须被&#039;最优配置&#039;。问题是：谁在定义&#039;最优&#039;？答案是：那个最急于增殖的资本逻辑。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#4a6a9a">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#4a6a9a"></div>
+      <div>
+        <div class="sn">凯文·凯利</div>
+        <div class="sr">科技观察家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 当工作边界从&#039;工厂大门&#039;延伸到&#039;卧室床头&#039;时，劳动与生活的二元对立正在如何瓦解？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我必须挑战&#039;工作入侵生活&#039;的悲观叙事。历史地看，&#039;工作-生活平衡&#039;是一个现代性建构——在前工业时代和农业社会中，工作与生活从未分离；工业革命创造了&#039;工厂时间&#039;，才有了&#039;8小时工作制&#039;的斗争。今天的&#039;边界模糊&#039;可能是向&#039;前现代&#039;的一种回归——只不过回归的形式是数字化的，而非物理的。关键问题是：谁受益于这种模糊？如果是雇主，那确实需要监管；如果是劳动者本人，那可能是解放。例如，远程工作让父母可以接送孩子的同时处理邮件；让照顾老人的员工可以在家工作。&#039;工作入侵生活&#039;的问题本质上是&#039;权力不对称&#039;的问题，而非技术本身的问题。解决方案是&#039;赋权&#039;而非&#039;隔离&#039;——赋予劳动者拒绝&#039;永远在线&#039;的权利，同时保留他们选择&#039;灵活边界&#039;的自由。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#4a6a9a">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#4a6a9a">️</div>
+      <div>
+        <div class="sn">刘润</div>
+        <div class="sr">商业观察家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 当工作边界从&#039;工厂大门&#039;延伸到&#039;卧室床头&#039;时，劳动与生活的二元对立正在如何瓦解？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">从管理学角度，&#039;工作-生活边界&#039;的模糊是组织设计失败的症状，而非技术进步的必然。好的组织设计应该做到：任务导向的工作（需要协作、决策）允许灵活边界；效率导向的工作（重复性、标准化）需要明确边界。现实中，大多数组织的问题是：它们在&#039;需要灵活性&#039;的借口下，将所有工作都变成了&#039;永远在线&#039;。这是管理者的懒惰——与其设计清晰的任务边界和验收标准，不如要求员工&#039;随时待命&#039;。浙大管理学院的研究揭示了一个悖论：AI辅助的工作能提升即时任务绩效，却会降低后续独立任务的内在动机。当工作者从&#039;AI协作&#039;转向&#039;独立工作&#039;时，无聊感显著增加。这说明：&#039;永远在线&#039;不仅是时间侵占，更是能力剥夺——它让人们在&#039;被辅助&#039;中失去独立工作的耐心和信心。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#1a5f7a">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#1a5f7a"></div>
+      <div>
+        <div class="sn">丹尼尔·卡尼曼</div>
+        <div class="sr">行为经济学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 当工作边界从&#039;工厂大门&#039;延伸到&#039;卧室床头&#039;时，劳动与生活的二元对立正在如何瓦解？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">行为科学提供了&#039;边界模糊&#039;如何影响认知的具体机制。人类大脑需要&#039;切换成本&#039;——从工作模式切换到休息模式，需要时间和认知资源。&#039;永远在线&#039;消除了切换时间，但无法消除切换成本——它只是将成本转移到了&#039;心理层面&#039;。结果是：即使你&#039;随时在线&#039;，你的认知资源也无法真正&#039;离线&#039;。MIT的研究显示，长时间暴露在AI辅助环境中，大脑的内在动机和掌控感会下降——这解释了为什么&#039;永远在线&#039;的员工常常感到&#039;做了很多，但毫无成就感&#039;。更深层的问题是&#039;认知卸载&#039;的成瘾性：当我们习惯于让AI处理&#039;认知负荷&#039;后，大脑会主动&#039;逃避&#039;高认知负荷的任务。这不仅是疲劳，而是大脑结构的适应性改变——就像长期使用导航的人会丧失空间导航能力，长期&#039;在线&#039;的人会丧失&#039;离线&#039;的能力。</p></div>
+    
+    
+  </div><div style="background:rgba(var(--accent-rgb),.06);border:1px solid rgba(var(--accent-rgb),.15);border-radius:var(--radius);padding:3vh 2.5vw;margin-top:2vh">
+    <div style="font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh;font-weight:700">⚡ 专家交锋</div>
+    <div style="font-family:var(--serif-zh);font-size:1.05rem;font-weight:600;margin-bottom:2vh;line-height:1.6">第2轮碰撞</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">马克思：韩炳哲先生，你说&#039;躺平&#039;是对时间主权的争取，但从行为经济学看，&#039;躺平&#039;群体中有多少人是因为&#039;习得性无助&#039;而被动放弃，而非主动选择？这两种&#039;不工作&#039;在政治意涵上有本质区别。</p></div>
+  </div>
+      <div class="deck-footer">第 2/3 轮 · 6 位专家发言</div>
+    </div>
+  </div><div class="slide title-slide" data-title="第3轮：突围路径与制度重构">
+    <div class="frame">
+      <div class="hero-dark">
+        <div class="kicker" data-anim>ROUND 3</div>
+        <div class="h-hero" data-anim style="background:linear-gradient(135deg,var(--paper) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">突围路径与制度重构</div>
+        <div class="quote-large" data-anim style="max-width:700px;margin-top:3vh">在算法统治的时代，劳动者如何重获时间主权和生活自主？</div>
+      </div>
+    </div>
+  </div><div class="slide" data-title="第3轮：专家发言">
+    <div class="frame">
+      <div class="kicker" data-anim>ROUND 3 · 专家发言</div>
+      <div class="h-lg" data-anim style="margin-bottom:3vh">突围路径与制度重构</div>
+      <div class="sp" style="border-left-color:#8b0000">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#8b0000"></div>
+      <div>
+        <div class="sn">马克思</div>
+        <div class="sr">政治经济学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 在算法统治的时代，劳动者如何重获时间主权和生活自主？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我在19世纪就指出了问题的根本：劳动者无法通过&#039;个人行动&#039;摆脱被剥削的命运，因为资本的力量来自于&#039;制度&#039;——法律、产权、政治权力的系统性支撑。今天的数字农奴制同样如此：单个骑手无法对抗算法，因为算法背后是整个平台的制度设计。突围的唯一路径是&#039;集体行动&#039;——建立数字时代的&#039;劳动组合&#039;：平台劳动者工会、数字游行者联盟、去中心化协作组织。历史上，8小时工作制不是资本家的恩赐，而是工人运动的结果。平台经济的劳动组织同样需要这种政治力量。具体诉求：算法透明化（让劳动者知道评分标准）；最低报酬保障（消除&#039;计件工资&#039;的剥削）；集体谈判权（允许劳动者代表参与规则制定）；数据主权（劳动者拥有自己的行为数据）。这些诉求的实现需要政治意愿——而政治意愿需要组织化的压力。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#2f4f4f">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#2f4f4f"></div>
+      <div>
+        <div class="sn">韩炳哲</div>
+        <div class="sr">哲学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 在算法统治的时代，劳动者如何重获时间主权和生活自主？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">马克思的&#039;集体行动&#039;路径是必要的，但不充分。真正的突围需要&#039;心理革命&#039;——重新定义&#039;什么是值得过的生活&#039;。功绩社会的核心是&#039;自我剥削&#039;的意识形态：它告诉你&#039;你可以做任何事&#039;（You can do anything），同时隐含着&#039;你必须做任何事&#039;（You must do everything）。打破这种意识形态的第一步是&#039;承认倦怠&#039;——不是作为个人弱点，而是作为结构性暴力。&#039;躺平&#039;、&#039;佛系&#039;、&#039;反内卷&#039;等亚文化现象，正是这种心理革命的萌芽。但这些抵抗形式过于个体化，容易被消费主义收编——&#039;躺平&#039;可以变成一种&#039;生活方式产品&#039;，在社交媒体上被&#039;展示&#039;和&#039;消费&#039;。真正的抵抗必须从&#039;个体叙事&#039;走向&#039;集体叙事&#039;——建立一种新的&#039;时间伦理&#039;，将&#039;慢&#039;、&#039;闲&#039;、&#039;非生产性&#039;重新确立为有价值的生活形态。这不仅是政治斗争，更是文化战争。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#7d5a50">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#7d5a50"></div>
+      <div>
+        <div class="sn">项飙</div>
+        <div class="sr">社会学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 在算法统治的时代，劳动者如何重获时间主权和生活自主？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我提出一个可能被忽视的维度：&#039;附近&#039;的重构。平台经济摧毁了地方社区，同时制造了&#039;原子化的个体&#039;——每个人都孤立地位于自己的手机屏幕前。突围的第一步是&#039;重建附近&#039;——在物理空间和数字空间之间找到新的平衡。具体策略：鼓励&#039;错峰工作&#039;——打破&#039;永远在线&#039;的同步性压力；发展&#039;社区经济&#039;——用地方性的小网络替代全球性的大平台；建立&#039;断联权&#039;——从法律层面保障劳动者&#039;不在线&#039;的权利。更重要的是：重构&#039;成功&#039;的定义。当前社会将&#039;高收入、高职位、高可见度&#039;视为成功，这正是&#039;内卷&#039;的文化基础。突围需要一种&#039;去增长的发展观&#039;——承认&#039;足够&#039;的可能性，选择质量而非数量，选择深度而非广度。这种文化转变无法被&#039;推动&#039;，但可以被&#039;激发&#039;——通过重建&#039;附近&#039;，让人看到&#039;另一种生活的可能性&#039;。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#4a6a9a">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#4a6a9a"></div>
+      <div>
+        <div class="sn">凯文·凯利</div>
+        <div class="sr">科技观察家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 在算法统治的时代，劳动者如何重获时间主权和生活自主？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">我提供一个技术乐观主义者的视角：技术不仅是问题，也是解决方案。区块链技术可以实现&#039;算法透明&#039;——让劳动者验证评分系统的公正性；去中心化平台（如open-source项目）可以绕过平台资本的剥削；AI工具可以自动化最无聊的工作，让人聚焦更有意义的活动。更激进的设想：&#039;数字游牧&#039;（digital nomad）模式打破了&#039;工作-生活平衡&#039;的二元对立，因为它让工作和生活在地理上同步流动，而非在时间上分割。更现实的路径：利用现有技术建立&#039;个人数据主权&#039;系统——劳动者拥有自己的行为数据，可以选择向谁共享、如何获益。这类似于&#039;数据工会&#039;的概念：劳动者集体谈判数据使用权，而非被动接受平台的单边条款。技术不能解决所有问题，但没有技术，任何解决方案都无法规模化。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#4a6a9a">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#4a6a9a">️</div>
+      <div>
+        <div class="sn">刘润</div>
+        <div class="sr">商业观察家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 在算法统治的时代，劳动者如何重获时间主权和生活自主？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">从制度设计角度，突围需要三个层面的改革。第一层面：劳动法修订——将平台劳动者纳入&#039;劳动者&#039;范畴，强制平台承担雇主责任（社保、最低工资、工伤赔偿）；第二层面：算法治理——要求平台公开算法逻辑，允许劳动者质疑和申诉，建立独立的算法监管机构；第三层面：竞争政策——打破平台垄断，强制开放&#039;互操作性&#039;（允许不同平台的数据和关系可迁移），让劳动者有真正的&#039;退出权&#039;。这三个层面需要同步推进，因为单一层面的改革都会被其他层面的不变所抵消。历史上，每一次劳动保护法律的建立，都伴随着资本的大规模抵抗和适应；平台经济的&#039;驯服&#039;同样不会是和平的——它需要政治动员、舆论压力和监管创新。但这是可能的：欧盟的数字服务法（DSA）已经迈出了第一步。</p></div>
+    
+    
+  </div><div class="sp" style="border-left-color:#1a5f7a">
+    <div class="sh">
+      <div class="speaker-avatar" style="background:#1a5f7a"></div>
+      <div>
+        <div class="sn">丹尼尔·卡尼曼</div>
+        <div class="sr">行为经济学家</div>
+      </div>
+    </div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--gold);margin-bottom:1.5vh;padding-bottom:1vh;border-bottom:1px solid rgba(var(--paper-rgb),.08)">▸ 在算法统治的时代，劳动者如何重获时间主权和生活自主？</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">从行为科学的角度，我提出一个&#039;反直觉&#039;的建议：不要与算法对抗，而是&#039;利用&#039;算法。算法的逻辑是&#039;优化可测量的指标&#039;——那么，让它为你的&#039;幸福&#039;优化。具体方法：建立&#039;个人幸福仪表盘&#039;，追踪真正重要的指标（非手机屏幕时间、深度睡眠、面对面交流、运动时长）；将这些指标&#039;注入&#039;算法逻辑——当你选择工作时，让算法知道你不只是在乎收入，也在乎时间自主；发展&#039;行为免疫&#039;——刻意保持&#039;离线&#039;的能力，定期进行&#039;数字斋戒&#039;，训练大脑&#039;不在线&#039;的承受力。但我必须承认：这些都是&#039;个人适应&#039;策略，它们不能替代&#039;结构性改变&#039;。行为科学能帮助个人更好地生存，但不能代替政治行动来解决制度问题。个人和结构，两条战线缺一不可。</p></div>
+    
+    
+  </div><div style="background:rgba(var(--accent-rgb),.06);border:1px solid rgba(var(--accent-rgb),.15);border-radius:var(--radius);padding:3vh 2.5vw;margin-top:2vh">
+    <div style="font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:2vh;font-weight:700">⚡ 专家交锋</div>
+    <div style="font-family:var(--serif-zh);font-size:1.05rem;font-weight:600;margin-bottom:2vh;line-height:1.6">第3轮碰撞</div>
+    <div class="st"><p style="margin-bottom:1.2vh;line-height:1.9">韩炳哲：项飙先生，&#039;重建附近&#039;在实践上非常困难——当你的工作、社交、消费全部数字化时，&#039;附近&#039;的吸引力如何与&#039;全球连接&#039;的吸引力竞争？</p></div>
+  </div>
+      <div class="deck-footer">第 3/3 轮 · 6 位专家发言</div>
+    </div>
+  </div><div class="slide hero title-slide" data-title="结语">
+  <div class="frame">
+    <div class="slide-content" style="justify-content:center;align-items:center;text-align:center">
+      <div class="kicker" data-anim>CONCLUSION</div>
+      <div class="h-hero" data-anim style="margin-bottom:4vh">散户狂潮中的生存法则</div>
+      <div class="quote-large" data-anim style="max-width:800px;margin-bottom:4vh">
+        在极端斯坦，活得久比赚得快更重要。杠铃策略不是悲观主义，而是对不确定性的最高敬意。
+      </div>
+      <div class="gold-line" data-anim></div>
+      <div class="meta-row" data-anim>
+        <span> 马克思</span> · <span> 韩炳哲</span> · <span> 项飙</span> · <span> 凯文·凯利</span> · <span>️ 刘润</span> · <span> 丹尼尔·卡尼曼</span>
+      </div>
+      <div style="margin-top:4vh;font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;opacity:.4" data-anim>
+        圆桌洞见 · 2026-05-26
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toc-backdrop" id="tocBackdrop"></div>
+<div class="toc-panel" id="tocPanel">
+<div class="toc-title">目录</div>
+<div id="tocList"></div>
+</div>
+<div class="nav-bar">
+<div class="nav-left">
+<button class="nav-btn" id="btnToc">☰ 目录</button>
+<button class="nav-btn" id="btnPrev">◀ 上一页</button>
+<button class="nav-btn" id="btnNext">下一页 ▶</button>
+</div>
+<div class="nav-right">
+<span class="nav-title" id="slideTitle"></span>
+<span class="nav-counter" id="slideCounter"></span>
+</div>
+</div>
+<div class="nav-dots" id="navDots"></div>
+</div>
+
+<script>
+(function(){
+var deck=document.getElementById("deck");
+var slides=deck.querySelectorAll(".slide");
+var total=slides.length;
+var cur=0;
+var dots=document.getElementById("navDots");
+var tocList=document.getElementById("tocList");
+var titleEl=document.getElementById("slideTitle");
+var counterEl=document.getElementById("slideCounter");
+var tocPanel=document.getElementById("tocPanel");
+var tocBackdrop=document.getElementById("tocBackdrop");
+var progressBar=document.getElementById("progressBar");
+
+for(var i=0;i<total;i++){
+  var d=document.createElement("button");
+  d.className="nd";
+  d.setAttribute("data-i",i);
+  d.onclick=(function(idx){return function(){go(idx)}})(i);
+  dots.appendChild(d);
+  var t=document.createElement("div");
+  t.className="toc-item";
+  t.setAttribute("data-i",i);
+  t.innerHTML='<span class="toc-label">'+(slides[i].getAttribute("data-title")||"Slide "+(i+1))+'</span><span class="toc-page">'+String(i+1).padStart(2,"0")+'</span>';
+  t.onclick=(function(idx){return function(){go(idx);closeTOC()}})(i);
+  tocList.appendChild(t);
+}
+
+function go(n){
+  if(n<0||n>=total)return;
+  slides[cur].classList.remove("active");
+  dots.children[cur].classList.remove("active");
+  tocList.children[cur].classList.remove("active");
+  cur=n;
+  slides[cur].classList.add("active");
+  dots.children[cur].classList.add("active");
+  tocList.children[cur].classList.add("active");
+  titleEl.textContent=slides[cur].getAttribute("data-title")||"";
+  counterEl.textContent=(cur+1)+" / "+total;
+  progressBar.style.width=((cur+1)/total*100)+"%";
+  slides[cur].scrollTop=0;
+}
+function toggleTOC(){tocPanel.classList.toggle("open");tocBackdrop.classList.toggle("open")}
+function closeTOC(){tocPanel.classList.remove("open");tocBackdrop.classList.remove("open")}
+
+document.addEventListener("keydown",function(e){
+  if(e.key==="ArrowRight"||e.key==="ArrowDown"||e.key===" "||e.key==="PageDown"){e.preventDefault();go(cur+1)}
+  else if(e.key==="ArrowLeft"||e.key==="ArrowUp"||e.key==="PageUp"){e.preventDefault();go(cur-1)}
+  else if(e.key==="Home"){e.preventDefault();go(0)}
+  else if(e.key==="End"){e.preventDefault();go(total-1)}
+  else if(e.key==="Escape"){closeTOC();go(0)}
+  else if(e.key==="t"||e.key==="T"){toggleTOC()}
+});
+var wheelTimer=null;
+deck.addEventListener("wheel",function(e){
+  var sl=slides[cur];
+  var atTop=sl.scrollTop<=0;
+  var atBottom=sl.scrollTop+sl.clientHeight>=sl.scrollHeight-2;
+  if(e.deltaY>0&&atBottom){
+    if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},350);go(cur+1)}
+    e.preventDefault();
+  }else if(e.deltaY<0&&atTop){
+    if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},350);go(cur-1)}
+    e.preventDefault();
+  }
+},{passive:false});
+var touchX=0,touchY=0;
+deck.addEventListener("touchstart",function(e){touchX=e.touches[0].clientX;touchY=e.touches[0].clientY});
+deck.addEventListener("touchend",function(e){
+  var dx=touchX-e.changedTouches[0].clientX,dy=touchY-e.changedTouches[0].clientY;
+  if(Math.abs(dy)>Math.abs(dx)){if(dy>50)go(cur+1);else if(dy<-50)go(cur-1)}
+  else{if(dx>50)go(cur+1);else if(dx<-50)go(cur-1)}
+});
+deck.addEventListener("click",function(e){
+  if(e.target.closest(".nav-btn,.nd,.toc-item,.toc-panel,.toc-backdrop"))return;
+  var x=e.clientX/window.innerWidth;
+  if(x<0.3)go(cur-1);else if(x>0.7)go(cur+1);
+});
+document.getElementById("btnToc").addEventListener("click",function(e){e.stopPropagation();toggleTOC()});
+document.getElementById("btnPrev").addEventListener("click",function(e){e.stopPropagation();go(cur-1)});
+document.getElementById("btnNext").addEventListener("click",function(e){e.stopPropagation();go(cur+1)});
+tocBackdrop.addEventListener("click",closeTOC);
+go(0);
+})();
+</script>
+</body>
+</html>

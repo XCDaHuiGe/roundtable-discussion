@@ -1,0 +1,55 @@
+{
+  "batch": 3,
+  "rounds": [
+    {
+      "round": 141,
+      "expert1": "芒格",
+      "expert2": "尼克·博斯特罗姆",
+      "belief1": "反过来想,总是反过来想",
+      "belief2": "超级AI可能带来存在性风险",
+      "topic": "价值的排序之争：反过来想,总是反过来想是第一位，还是超级AI可能带来存在性风险才是根本？这个排序决定了完全不同的活法。",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 142,
+      "expert1": "达利欧",
+      "expert2": "芒格",
+      "belief1": "极度求真和极度透明是组织的基础",
+      "belief2": "能力圈:知道自己不知道比知道更重要",
+      "topic": "两种价值不可兼得时：追求极度求真和极度透明是组织的基础，还是坚守能力圈:知道自己不知道比知道更重要？这是人生最艰难的选择题。",
+      "conflict_type": "value_priority",
+      "strength": "moderate"
+    },
+    {
+      "round": 143,
+      "expert1": "阿西莫夫",
+      "expert2": "罗翔",
+      "belief1": "机器人三定律是科技伦理的底线",
+      "belief2": "正义是法律的根本追求,虽不能至心向往之",
+      "topic": "价值的排序之争：机器人三定律是科技伦理的底线是第一位，还是正义是法律的根本追求,虽不能至心向往之才是根本？这个排序决定了完全不同的活法。",
+      "conflict_type": "value_priority",
+      "strength": "strong"
+    },
+    {
+      "round": 144,
+      "expert1": "凯文·凯利",
+      "expert2": "阿西莫夫",
+      "belief1": "未来二十年最大的变化尚未到来",
+      "belief2": "理性是解决冲突的最高准则",
+      "topic": "路径之争：达到目的的最佳途径是未来二十年最大的变化尚未到来，还是理性是解决冲突的最高准则？方法决定结果。",
+      "conflict_type": "method",
+      "strength": "moderate"
+    },
+    {
+      "round": 145,
+      "expert1": "吴军",
+      "expert2": "项飙",
+      "belief1": "科技浪潮决定商业格局,顺势者昌",
+      "belief2": "附近在消失,人们正在失去对身边世界的感知",
+      "topic": "方法论的争锋：解决同一个问题，科技浪潮决定商业格局,顺势者昌和附近在消失,人们正在失去对身边世界的感知哪条路更有效？",
+      "conflict_type": "method",
+      "strength": "strong"
+    }
+  ]
+}

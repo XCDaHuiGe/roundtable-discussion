@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《遥远的救世主》圆桌洞见</title>
+<style>
+
+/* ═══════════════════════════════════════════════════════════════
+   V13 圆桌洞见 — 借鉴 guizang-ppt-skill 设计语言
+   字体：衬线标题 + 非衬线正文 + 等宽元数据
+   ═══════════════════════════════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+/* ─── 主题变量 ─── */
+body.theme-editorial{
+  --paper:#f2eadc;--paper-soft:#fffaf4;--paper-rgb:242,234,220;
+  --ink:#171717;--ink-rgb:23,23,23;
+  --muted:#3f3b35;--muted-rgb:63,59,53;
+  --accent:#982b23;--accent-rgb:152,43,35;
+  --accent-2:#bf8a2e;--accent-3:#244d66;
+  --serif:'Noto Serif SC','Source Han Serif SC',Georgia,serif;
+  --sans:'Noto Sans SC','Microsoft YaHei',Arial,sans-serif;
+  --mono:'IBM Plex Mono',Consolas,monospace;
+  font-family:var(--sans);color:var(--ink);background:var(--paper)
+}
+body.theme-obsidian{
+  --paper:#111318;--paper-soft:#181b22;--paper-rgb:17,19,24;
+  --ink:#f4efe4;--ink-rgb:244,239,228;
+  --muted:#c9c2b4;--muted-rgb:201,194,180;
+  --accent:#e05a47;--accent-rgb:224,90,71;
+  --accent-2:#d7a64a;--accent-3:#78a8c8;
+  --serif:'Noto Serif SC','Source Han Serif SC',Georgia,serif;
+  --sans:'Noto Sans SC','Microsoft YaHei',Arial,sans-serif;
+  --mono:'IBM Plex Mono',Consolas,monospace;
+  font-family:var(--sans);color:var(--ink);background:var(--paper)
+}
+body.theme-blueprint{
+  --paper:#e8eef2;--paper-soft:#f8fbfd;--paper-rgb:232,238,242;
+  --ink:#102233;--ink-rgb:16,34,51;
+  --muted:#334b5c;--muted-rgb:51,75,92;
+  --accent:#1d5f8f;--accent-rgb:29,95,143;
+  --accent-2:#b17624;--accent-3:#7a2d3b;
+  --serif:'Noto Serif SC','Source Han Serif SC',Georgia,serif;
+  --sans:'Noto Sans SC','Microsoft YaHei',Arial,sans-serif;
+  --mono:'IBM Plex Mono',Consolas,monospace;
+  font-family:var(--sans);color:var(--ink);background:var(--paper)
+}
+
+/* ─── Slide 基础 ─── */
+.slide{
+  height:100vh;width:100vw;overflow:hidden;display:none;
+  align-items:center;justify-content:center;
+  padding:48px 72px;
+  position:relative
+}
+.slide::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  transition:opacity .5s ease
+}
+.slide.visible{display:flex}
+
+/* ─── 背景纹理 ─── */
+.slide::before{
+  background:
+    radial-gradient(circle at 8% 12%,rgba(var(--accent-rgb),.08),transparent 24%),
+    linear-gradient(90deg,rgba(var(--ink-rgb),.04) 1px,transparent 1px),
+    linear-gradient(180deg,rgba(var(--ink-rgb),.03) 1px,transparent 1px)
+}
+body.theme-obsidian .slide::before{
+  background:
+    radial-gradient(circle at 8% 12%,rgba(var(--accent-rgb),.12),transparent 24%),
+    linear-gradient(90deg,rgba(var(--ink-rgb),.04) 1px,transparent 1px),
+    linear-gradient(180deg,rgba(var(--ink-rgb),.03) 1px,transparent 1px)
+}
+
+/* ─── 阅读页容器 ─── */
+.reading-page{
+  width:100%;height:100%;max-width:1280px;max-height:800px;
+  display:grid;grid-template-rows:auto 1fr auto;gap:20px;
+  overflow:hidden
+}
+
+/* ─── 头部（借鉴 guizang chrome 风格） ─── */
+.reading-header{
+  display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);
+  gap:32px;align-items:end;
+  border-bottom:3px solid var(--ink);padding-bottom:16px
+}
+.reading-kicker{
+  font-family:var(--mono);font-size:11px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--accent);font-weight:600
+}
+.reading-title{
+  font-family:var(--serif);font-size:clamp(32px,3.6vw,52px);
+  line-height:1.08;margin:8px 0 0;font-weight:900;letter-spacing:-.01em
+}
+.reading-thesis{
+  font-family:var(--serif);font-size:17px;line-height:1.65;margin:0;
+  color:var(--muted);border-left:4px solid var(--accent);padding-left:18px
+}
+
+/* ─── 正文区 ─── */
+.reading-body{min-height:0;overflow:hidden}
+.reading-block{
+  border-top:1px solid rgba(var(--ink-rgb),.12);padding:12px 0 0;min-height:0
+}
+.reading-block-title{
+  font-family:var(--serif);font-size:18px;font-weight:700;
+  margin:0 0 8px;line-height:1.3
+}
+.reading-block-label{
+  display:inline-block;font-family:var(--mono);font-size:10px;
+  font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:8px
+}
+.reading-block-text{
+  font-family:var(--sans);font-size:14px;line-height:1.65;
+  color:var(--muted);margin:0
+}
+
+/* ─── 底部洞见条（借鉴 guizang takeaway 风格） ─── */
+.takeaway-strip{
+  border:3px solid var(--ink);background:var(--paper-soft);
+  padding:14px 20px;display:grid;grid-template-columns:120px 1fr;
+  gap:20px;align-items:center;overflow:hidden;
+  box-shadow:8px 8px 0 rgba(var(--ink-rgb),.08)
+}
+.takeaway-strip strong{
+  font-family:var(--mono);font-size:12px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--accent)
+}
+.takeaway-strip p{
+  font-family:var(--serif);font-size:17px;line-height:1.45;margin:0;font-weight:700
+}
+
+/* ─── Brief 网格（4 区域） ─── */
+.brief-grid{
+  display:grid;grid-template-columns:1.12fr .88fr;grid-template-rows:1fr 1fr;
+  gap:16px;height:100%
+}
+.brief-zone{
+  background:var(--paper-soft);border:1px solid rgba(var(--ink-rgb),.12);
+  padding:18px 20px;overflow:hidden;
+  box-shadow:0 12px 32px rgba(var(--ink-rgb),.06)
+}
+.brief-zone:nth-child(1){border-left:6px solid var(--accent)}
+.brief-zone:nth-child(2){border-left:6px solid var(--accent-2)}
+.brief-zone:nth-child(3){border-left:6px solid var(--accent-3)}
+.brief-zone:nth-child(4){border-left:6px solid var(--ink)}
+.brief-zone h3{
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;margin:0 0 14px;color:var(--accent)
+}
+.brief-zone .reading-block{border-top:0;padding-top:0;margin-bottom:12px}
+
+/* ─── 立场光谱 ─── */
+.stance-spectrum{height:100%;display:grid;grid-template-columns:30% 1fr;gap:22px}
+.issue-tree{
+  background:var(--ink);color:var(--paper);padding:24px;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:space-between
+}
+.issue-tree h3{
+  font-family:var(--serif);font-size:22px;margin:0 0 14px;color:var(--paper)
+}
+.issue-tree p{
+  font-family:var(--sans);font-size:15px;line-height:1.65;margin:0;
+  color:rgba(var(--paper-rgb),.82)
+}
+.issue-tree .reading-block{border-top-color:rgba(var(--paper-rgb),.2)}
+.issue-tree .reading-block-text{color:rgba(var(--paper-rgb),.82)}
+.spectrum-map{
+  position:relative;background:var(--paper-soft);
+  border:1px solid rgba(var(--ink-rgb),.12);padding:18px 22px;
+  overflow:hidden;box-shadow:0 12px 32px rgba(var(--ink-rgb),.06)
+}
+.spectrum-axis{
+  height:4px;background:var(--ink);margin:24px 8px 18px;position:relative
+}
+.spectrum-axis::before,.spectrum-axis::after{
+  position:absolute;top:-28px;font-family:var(--mono);font-size:11px;
+  font-weight:600;letter-spacing:.08em;color:var(--ink)
+}
+.spectrum-axis::before{content:"文化解释";left:0}
+.spectrum-axis::after{content:"结构解释";right:0}
+.stance-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-auto-rows:minmax(0,1fr);gap:10px;height:calc(100% - 47px)
+}
+.stance-card{
+  background:var(--paper-soft);border-left:4px solid var(--accent-2);
+  padding:12px 14px;overflow:hidden;min-height:0
+}
+.stance-card .reading-block-title{font-size:15px;margin-bottom:5px}
+.stance-card .reading-block-label{font-size:9px;margin-bottom:5px}
+.stance-card .reading-block-text{font-size:12px;line-height:1.45}
+
+/* ─── 碰撞法庭 ─── */
+.clash-courtroom{height:100%;display:grid;grid-template-columns:1fr 200px 1fr;gap:18px;align-items:stretch}
+.clash-side,.clash-center{
+  background:var(--paper-soft);border:1px solid rgba(var(--ink-rgb),.12);
+  padding:24px;overflow:hidden;
+  box-shadow:0 12px 32px rgba(var(--ink-rgb),.06)
+}
+.clash-side.attack{border-top:6px solid var(--accent)}
+.clash-side.defense{border-top:6px solid var(--accent-3)}
+.clash-center{
+  display:flex;flex-direction:column;justify-content:center;text-align:center;
+  border:3px solid var(--ink);background:var(--ink);color:var(--paper);
+  box-shadow:8px 8px 0 rgba(var(--ink-rgb),.1)
+}
+.clash-center h3{font-family:var(--serif);font-size:20px;margin:0 0 12px;color:var(--paper)}
+.clash-center .reading-block-text{color:rgba(var(--paper-rgb),.82)}
+
+/* ─── 封面 ─── */
+.cover-page{
+  width:100%;height:100%;max-width:1280px;max-height:800px;
+  display:grid;grid-template-columns:1fr 340px;gap:40px;overflow:hidden
+}
+.cover-main{
+  display:flex;flex-direction:column;justify-content:center;
+  border-top:8px solid var(--ink);border-bottom:3px solid var(--ink)
+}
+.cover-kicker{
+  font-family:var(--mono);font-size:12px;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:24px
+}
+.cover-title{
+  font-family:var(--serif);font-size:clamp(52px,7vw,96px);
+  line-height:1;margin:0 0 28px;font-weight:900;letter-spacing:-.02em
+}
+.cover-thesis{
+  font-family:var(--sans);font-size:22px;line-height:1.55;
+  color:var(--muted);max-width:720px;margin:0
+}
+.cover-side{
+  background:var(--ink);color:var(--paper);padding:32px;
+  display:grid;grid-template-rows:auto 1fr auto;overflow:hidden;
+  box-shadow:12px 12px 0 rgba(var(--ink-rgb),.1)
+}
+.cover-meta{
+  font-family:var(--sans);font-size:14px;line-height:1.8;
+  color:rgba(var(--paper-rgb),.82)
+}
+.cover-stats{display:grid;grid-template-columns:1fr;gap:14px;align-self:center}
+.cover-stat{border-top:1px solid rgba(var(--paper-rgb),.25);padding-top:12px}
+.cover-stat b{
+  display:block;font-family:var(--serif);font-size:40px;line-height:1;
+  font-weight:900;color:var(--paper)
+}
+.cover-stat span{
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent-2)
+}
+.cover-takeaway{
+  font-family:var(--serif);font-size:16px;line-height:1.5;
+  font-weight:700;color:var(--paper)
+}
+
+/* ─── 导航（借鉴 guizang nav 风格） ─── */
+#progress{
+  position:fixed;left:0;top:0;height:3px;width:0;
+  background:var(--accent);z-index:50;transition:width .35s ease
+}
+.nav-dots{
+  position:fixed;right:20px;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:8px;z-index:60
+}
+.nav-dot{
+  width:8px;height:8px;border-radius:50%;
+  border:1px solid rgba(var(--ink-rgb),.3);background:rgba(var(--ink-rgb),.08);
+  cursor:pointer;padding:0;transition:all .3s ease
+}
+.nav-dot:hover{background:rgba(var(--ink-rgb),.2);transform:scale(1.2)}
+.nav-dot.active{
+  background:var(--accent);border-color:var(--accent);transform:scale(1.3)
+}
+.nav-ui{
+  position:fixed;left:20px;bottom:18px;z-index:60;
+  display:flex;align-items:center;gap:10px;
+  color:var(--muted);font-family:var(--mono);font-size:11px
+}
+.nav-btn{
+  width:32px;height:32px;border:1px solid rgba(var(--ink-rgb),.2);
+  background:var(--paper-soft);color:var(--ink);cursor:pointer;
+  font-family:var(--mono);font-size:14px;transition:all .2s ease
+}
+.nav-btn:hover{background:var(--accent);color:var(--paper);border-color:var(--accent)}
+
+/* ─── ESC 索引视图 ─── */
+#esc-overlay{
+  position:fixed;inset:0;z-index:100;background:rgba(var(--ink-rgb),.92);
+  display:none;align-items:center;justify-content:center;
+  backdrop-filter:blur(8px)
+}
+#esc-overlay.visible{display:flex}
+#esc-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:16px;padding:40px;max-width:90vw;max-height:85vh;overflow:hidden
+}
+.esc-thumb{
+  aspect-ratio:16/10;background:var(--paper-soft);border:2px solid transparent;
+  cursor:pointer;overflow:hidden;position:relative;transition:all .2s ease
+}
+.esc-thumb:hover{border-color:var(--accent);transform:scale(1.02)}
+.esc-thumb.active{border-color:var(--accent);box-shadow:0 0 20px rgba(var(--accent-rgb),.3)}
+.esc-thumb-label{
+  position:absolute;bottom:0;left:0;right:0;padding:8px;
+  background:rgba(var(--ink-rgb),.8);color:var(--paper);
+  font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase
+}
+
+/* ─── 响应式 ─── */
+@media(max-width:900px){
+  .slide{padding:32px 24px}
+  .reading-header,.stance-spectrum,.clash-courtroom,.cover-page{grid-template-columns:1fr}
+  .brief-grid,.stance-grid{grid-template-columns:1fr}
+  .reading-title{font-size:28px}
+  .cover-title{font-size:40px}
+  .reading-page{max-height:820px}
+  .cover-side{display:none}
+  .clash-courtroom{grid-template-columns:1fr;gap:12px}
+  .clash-center{min-height:120px}
+}
+
+</style>
+</head>
+<body class="theme-blueprint">
+<div id="progress"></div>
+<div id="navDots" class="nav-dots"></div>
+<div class="nav-ui">
+  <button id="prevBtn" class="nav-btn" type="button" aria-label="上一页">&lt;</button>
+  <span id="counter">1 / 17</span>
+  <button id="nextBtn" class="nav-btn" type="button" aria-label="下一页">&gt;</button>
+</div>
+<div id="esc-overlay">
+  <div id="esc-grid"></div>
+</div>
+<section class="slide visible" data-page-type="cover" data-layout="cover">
+<div class="cover-page">
+  <main class="cover-main">
+    <div class="cover-kicker">READING DECK / 圆桌洞见</div>
+    <h1 class="cover-title reading-title">《遥远的救世主》圆桌洞见</h1>
+    <p class="cover-thesis">文化属性 · 杀富济贫 · 天道与规律 · 6位专家 · 3轮碰撞</p>
+  </main>
+  <aside class="cover-side">
+    <div class="cover-meta">丁元英 / 尼采 / 老子 / 韩非子 / 马克思 / 芒格 / 文化属性：强势文化 vs 弱势文化 / 杀富济贫：王庙</div>
+    <div class="cover-stats"><div class="cover-stat"><b>6</b><span>专家</span></div><div class="cover-stat"><b>3</b><span>轮次</span></div><div class="cover-stat"><b>5</b><span>洞见</span></div></div>
+    <div class="cover-takeaway">本 deck 以阅读型结构呈现核心争议、专家立场和最终洞见。</div>
+  </aside>
+</div>
+</section>
+<section class="slide" data-page-type="insight_reading" data-layout="reading_brief_4zone">
+<div class="reading-page">
+  <header class="reading-header">
+    <div>
+      <div class="reading-kicker">阅读重点</div>
+      <h1 class="reading-title">核心洞见</h1>
+    </div>
+    <p class="reading-thesis">先看结论，再进入圆桌讨论。</p>
+  </header>
+  <main class="reading-body"><div class="brief-grid"><section class="brief-zone"><h3>问题定义</h3><article class="reading-block" data-kind="insight">
+  
+  <h3 class="reading-block-title">文化属性是一个情境应对系统，而非人的本质特征</h3>
+  <p class="reading-block-text">丁元英把文化属性分为强势和弱势，但这个分类是一个动态光谱而非固定标签。同一个人在面对不同情境时会切换不同的应对模式——丁元英在商业上是强势文化，在感情上却是逃避型人格。真正的问题不是&#x27;你是什么文化属性&#x27;，而是&#x27;什么情境激活了你的弱势模式&#x27;。改变文化属性的关键不是&#x27;修炼内心&#x27;，而…</p>
+</article><article class="reading-block" data-kind="insight">
+  
+  <h3 class="reading-block-title">芮小丹式活法：自我即天道</h3>
+  <p class="reading-block-text">在所有角色中，芮小丹是对&#x27;天道&#x27;最彻底的实践者——不是因为她在智力上理解了天道，而是因为她在行动上活出了自己。她选择刑警职业不是因为&#x27;应该&#x27;，而是因为&#x27;想&#x27;；她选择自杀不是因为&#x27;活不下去&#x27;，而是因为&#x27;不想那样活&#x27;。芮小丹证明了一件事：强势文化的最高境界不是&#x27;理解规律&#x27;，而是&#x27;成…</p>
+</article></section><section class="brief-zone"><h3>结构化内容</h3><article class="reading-block" data-kind="insight">
+  
+  <h3 class="reading-block-title">杀富济贫的终极困境：合法未必合道，合道未必合情</h3>
+  <p class="reading-block-text">丁元英的格律诗计划在法律上是完美的，在商业上是成功的，在道德上是模糊的，在人性上是残酷的。林雨峰的死揭示了&#x27;道法自然&#x27;的冰冷面——规律不以人的意志为转移，但人的情感同样不以规律为转移。丁元英能理性接受这个结果，但冯世杰们不能。杀富济贫的根本问题不是&#x27;能不能&#x27;，而是&#x27;痛不痛&#x27;——…</p>
+</article></section><section class="brief-zone"><h3>证据与观点</h3><article class="reading-block" data-kind="insight">
+  
+  <h3 class="reading-block-title">救世主情结的悖论：反救世主是最精致的救世主</h3>
+  <p class="reading-block-text">丁元英用整本书论证&#x27;没有救世主&#x27;——但他的角色恰恰是王庙村的&#x27;救世主&#x27;。他策划了一切，承担了一切，然后说&#x27;我只是顺应规律&#x27;。这种&#x27;我不是救世主&#x27;的姿态本身就是一种救世主情结——我不需要当救世主，但我知道怎么救你。真正的反救世主不是&#x27;我不当救世主&#x27;，而是&#x27;没有人需要被救&#x27;——每个…</p>
+</article></section><section class="brief-zone"><h3>读者带走什么</h3><article class="reading-block" data-kind="insight">
+  
+  <h3 class="reading-block-title">如实观照的认知边界：理性也有自己的井底</h3>
+  <p class="reading-block-text">丁元英说&#x27;实事求是&#x27;、&#x27;如实观照&#x27;——但他的理性同样有其边界。他预测了商业结果，但没有预测到林雨峰自杀对他的情感冲击；他知道&#x27;扒着井沿看一眼&#x27;的后果，但没有解决这个问题。认知科学告诉我们：人类的理性是一种有限的资源——即使是最理性的人，也只能在高能耗的&#x27;系统2&#x27;状态下短暂地如实…</p>
+</article></section></div></main>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>这些洞见是后续专家冲突的阅读索引。</p></footer>
+</div>
+</section>
+<section class="slide" data-page-type="roundtable_reading" data-layout="stance_spectrum">
+<div class="reading-page">
+  <header class="reading-header">
+    <div>
+      <div class="reading-kicker">阅读重点</div>
+      <h1 class="reading-title">第1轮：文化属性：强势文化 vs 弱势文化</h1>
+    </div>
+    <p class="reading-thesis">丁元英说&#x27;强势文化造就强者，弱势文化造就弱者&#x27;——这个命题成立吗？文化真的能决定命运吗？</p>
+  </header>
+  <main class="reading-body"><div class="stance-spectrum">
+  <aside class="issue-tree">
+    <h3>命题拆解</h3>
+    <p>丁元英说&#x27;强势文化造就强者，弱势文化造就弱者&#x27;——这个命题成立吗？文化真的能决定命运吗？</p>
+    <div class="reading-block"><span class="reading-block-label">判断路径</span><p class="reading-block-text">先看专家站位，再看他们背后的解释框架：文化、制度、资本、规律与行动选择。</p></div>
+  </aside>
+  <section class="spectrum-map">
+    <div class="spectrum-axis"></div>
+    <div class="stance-grid"><article class="reading-block stance-card" data-kind="stance">
+  <span class="reading-block-label">制度解释</span>
+  <h3 class="reading-block-title">丁元英</h3>
+  <p class="reading-block-text">强势文化就是遵循事物规律的文化，弱势文化就是依赖强者的道德期望破格获取的文化。这是我在柏林6年得出的结论。透视社会依次有三个层面：技术、制度、文化。小到一个人，大到一个国家一个民族，任何一种命运归根到底都是那…</p>
+</article><article class="reading-block stance-card" data-kind="stance">
+  <span class="reading-block-label">规律解释</span>
+  <h3 class="reading-block-title">尼采</h3>
+  <p class="reading-block-text">丁元英的文化属性理论，在我看来就是&#x27;主人道德&#x27;与&#x27;奴隶道德&#x27;的东方版本。弱势文化就是尼采所说的&#x27;奴隶道德&#x27;——弱者发明了&#x27;道德&#x27;这个概念，把强者的强力意志妖魔化，为自己的无能寻找合法性。@丁元英 你说的&#x27;破格…</p>
+</article><article class="reading-block stance-card" data-kind="stance">
+  <span class="reading-block-label">规律解释</span>
+  <h3 class="reading-block-title">老子</h3>
+  <p class="reading-block-text">丁元英说&#x27;道法自然&#x27;，但他真的理解什么是&#x27;道&#x27;吗？我说道可道，非常道——真正的道是不可言说的，一旦被命名、被定义、被用作理论武器，它就不再是道了。@丁元英 你把文化分为强势和弱势，这本身就是&#x27;有为&#x27;——你在&#x27;…</p>
+</article><article class="reading-block stance-card" data-kind="stance">
+  <span class="reading-block-label">制度解释</span>
+  <h3 class="reading-block-title">韩非子</h3>
+  <p class="reading-block-text">文化属性决定论——荒谬。儒以文乱法，你们这些谈文化的人，就是在用抽象概念掩盖真实问题。@丁元英 你说透视社会有技术、制度、文化三个层面，但我问你：秦国的强大是靠文化吗？不是，是靠商鞅变法——废井田、开阡陌、奖…</p>
+</article><article class="reading-block stance-card" data-kind="stance">
+  <span class="reading-block-label">制度解释</span>
+  <h3 class="reading-block-title">马克思</h3>
+  <p class="reading-block-text">丁元英的文化属性论，从历史唯物主义的角度看，是颠倒的因果关系。不是文化决定经济基础，而是经济基础决定文化。@韩非子 我同意你对制度的重视，但我要更进一步：制度本身也是生产关系的产物。王庙村的贫困不是因为&#x27;弱势…</p>
+</article><article class="reading-block stance-card" data-kind="stance">
+  <span class="reading-block-label">制度解释</span>
+  <h3 class="reading-block-title">芒格</h3>
+  <p class="reading-block-text">我用多元思维模型来分析这个命题。@丁元英 你的强势文化论，从进化论的角度看是合理的——不适应环境的基因会被淘汰。从心理学角度看，&#x27;依赖强者&#x27;确实是一种认知偏误——社会认同偏误、权威偏误都在强化弱势文化。但@马…</p>
+</article></div>
+  </section>
+</div></main>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>阅读重点：看清专家不是在重复观点，而是在不同解释框架之间竞争。</p></footer>
+</div>
+</section>
+<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
+<div class="reading-page">
+  <header class="reading-header">
+    <div>
+      <div class="reading-kicker">阅读重点</div>
+      <h1 class="reading-title">尼采 对 老子：现实矛盾</h1>
+    </div>
+    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
+  </header>
+  <main class="reading-body"><div class="clash-courtroom">
+  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
+  <span class="reading-block-label">攻击</span>
+  <h3 class="reading-block-title">尼采</h3>
+  <p class="reading-block-text">老子，你说的&#x27;道可道，非常道&#x27;是对思考的逃避。当你说&#x27;道不可言说&#x27;，你实际上是在禁止追问。但哲学就是追问！你的&#x27;无为&#x27;在强者手中是智慧，在弱者手中就是顺从——而大多数人恰恰是弱者。你的&#x27;道&#x27;，在不平等的社会里，变成了&#x27;各安其位&#x27;的意识形态。</p>
+</article></section>
+  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">现实矛盾</p></section>
+  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
+  <span class="reading-block-label">回应</span>
+  <h3 class="reading-block-title">老子</h3>
+  <p class="reading-block-text">尼采，你误解了我的&#x27;道&#x27;。我不是禁止追问，而是提醒：语言是有限的，真理不能用二元对立的概念来框定。你说超人创造规律——但超人的创造也必须符合天道。狂风不终朝，骤雨不终日——即使是超人，也不能违背自然规律。你的&#x27;强力意志&#x27;本身就是天地之道的一部分，而不是超越于道之上。</p>
+</article></section>
+</div></main>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：现实矛盾。</p></footer>
+</div>
+</section>
+<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
+<div class="reading-page">
+  <header class="reading-header">
+    <div>
+      <div class="reading-kicker">阅读重点</div>
+      <h1 class="reading-title">马克思 对 丁元英：逻辑漏洞</h1>
+    </div>
+    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
+  </header>
+  <main class="reading-body"><div class="clash-courtroom">
+  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
+  <span class="reading-block-label">攻击</span>
+  <h3 class="reading-block-title">马克思</h3>
+  <p class="reading-block-text">丁元英，你说强势文化是&#x27;遵循规律&#x27;，但这个&#x27;规律&#x27;是谁定义的？在资本主义社会，所谓&#x27;规律&#x27;就是资本增殖的规律。你说&#x27;遵循规律&#x27;是强势文化，那穷人遵循了什么规律？他们遵循了被剥削的规律！你的强势文化论，本质上是把&#x27;适应现状&#x27;等同于&#x27;强大&#x27;——这就是社会达尔文主义。</p>
+</article></section>
+  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">逻辑漏洞</p></section>
+  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
+  <span class="reading-block-label">回应</span>
+  <h3 class="reading-block-title">丁元英</h3>
+  <p class="reading-block-text">马克思，你说规律是资本的规律——但规律不是由谁定义的，它是客观存在的。你说农民遵循了被剥削的规律——对，这正是因为他们没有认识规律。如果他们认识到了自己在资本链条中的位置，就会做出改变。扶贫不是靠同情和道德，而是靠让他们认识到经济规律并利用它。这就是我在王庙村做的事——不是给鱼…</p>
+</article></section>
+</div></main>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：逻辑漏洞。</p></footer>
+</div>
+</section>
+<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
+<div class="reading-page">
+  <header class="reading-header">
+    <div>
+      <div class="reading-kicker">阅读重点</div>
+      <h1 class="reading-title">尼采 对 丁元英：人性弱点</h1>
+    </div>
+    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
+  </header>
+  <main class="reading-body"><div class="clash-courtroom">
+  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
+  <span class="reading-block-label">攻击</span>
+  <h3 class="reading-block-title">尼采</h3>
+  <p class="reading-block-text">丁元英，你把自己放在一个&#x27;看透了&#x27;的位置上——你看透了文化属性，看透了社会规律。但这是不是一种新的&#x27;权力意志&#x27;？你不是在&#x27;遵循&#x27;规律，你是在&#x27;利用&#x27;规律。你的杀富济贫，本质上是你个人强力意志的展现。你把自己当成了&#x27;超人&#x27;——但真正的超人不需要理论来证明自己。你越是强调&#x27;规律&#x27;…</p>
+</article></section>
+  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">人性弱点</p></section>
+  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
+  <span class="reading-block-label">回应</span>
+  <h3 class="reading-block-title">丁元英</h3>
+  <p class="reading-block-text">尼采，你说我是超人——但我恰恰是最不&#x27;超人&#x27;的人。我做的事很简单：王庙村有生产力，乐圣有市场网络，我只是让这两者对接。我没有创造规律，我只是发现了已经存在的可能性。你说的超人创造规律——那是英雄主义的幻觉。真正的力量是认识自己的渺小。你不知道的是，扶贫计划从一开始我就知道结果是…</p>
+</article></section>
+</div></main>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：人性弱点。</p></footer>
+</div>
+</section>
+<section class="slide" data-page-type="roundtable_reading" data-layout="stance_spectrum">
+<div class="reading-page">
+  <header class="reading-header">
+    <div>
+      <div class="reading-kicker">阅读重点</div>
+      <h1 class="reading-title">第2轮：杀富济贫：王庙村扶贫计划的是与非</h1>
+    </div>
+    <p class="reading-thesis">丁元英策划的格律诗事件是合理的市场竞争还是精心设计的陷阱？杀富济贫在道德上站得住脚吗？</p>
+  </header>
+  <main class="reading-body"><div class="stance-spectrum">
+  <aside class="issue-tree">
+    <h3>命题拆解</h3>
+    <p>丁元英策划的格律诗事件是合理的市场竞争还是精心设计的陷阱？杀富济贫在道德上站得住脚吗？</p>
+    <div class="reading-block"><span class="reading-block-label">判断路径</span><p class="reading-block-text">先看专家站位，再看他们背后的解释框架：文化、制度、资本、规律与行动选择。</p></div>
+  </aside>
+  <section class="spectrum-map">
+    <div class="spectrum-axis"></div>
+    <div class="stance-grid"><article class="reading-block stance-card" data-kind="stance">
+  <span class="reading-block-label">资本解释</span>
+  <h3 class="reading-block-title">丁元英</h3>
+  <p class="reading-block-text">杀富济贫的本质不是道德行为，是经济行为。乐圣的&#x27;富&#x27;不是偷来的——林雨峰是认真做事的实业家。但市场经济就是这样：你没有犯错误，不代表你不会被淘汰。格律诗做的事很简单：用更低成本生产同等质量的产品。这不违法，不…</p>
+</article><article class="reading-block stance-card" data-kind="stance">
+  <span class="reading-block-label">资本解释</span>
+  <h3 class="reading-block-title">尼采</h3>
+  <p class="reading-block-text">杀富济贫——这个说法本身就暴露了问题。你不是在杀&#x27;富&#x27;，你是在杀林雨峰。你有名字，有面孔。@丁元英 你说这是市场规律——但你在策划时就知道林雨峰会反应激烈，你知道他的性格、他的骄傲、他的底线在哪。你设计的不是…</p>
+</article><article class="reading-block stance-card" data-kind="stance">
+  <span class="reading-block-label">综合解释</span>
+  <h3 class="reading-block-title">老子</h3>
+  <p class="reading-block-text">杀富济贫，以有心为善，虽善不赏。@丁元英 你做的事从一开始就是&#x27;有为&#x27;——你有心策划、精心设计、步步为营。但上德不德，是以有德；下德不失德，是以无德。真正的德不是&#x27;做善事&#x27;，而是&#x27;不刻意做&#x27;。你&#x27;杀富&#x27;是为了…</p>
+</article><article class="reading-block stance-card" data-kind="stance">
+  <span class="reading-block-label">制度解释</span>
+  <h3 class="reading-block-title">韩非子</h3>
+  <p class="reading-block-text">杀富济贫的关键问题不是道德，是法律。@丁元英 你在法庭上的辩护是精彩的——农户是独立经营者而非格律诗员工。但你利用了法律的一个灰色地带：农户在法律上是&#x27;独立经营者&#x27;，在经济事实上他们没有任何议价能力。这不是违…</p>
+</article><article class="reading-block stance-card" data-kind="stance">
+  <span class="reading-block-label">资本解释</span>
+  <h3 class="reading-block-title">马克思</h3>
+  <p class="reading-block-text">杀富济贫——这是最典型的资产阶级改良主义。@丁元英 你以为你在挑战资本逻辑，实际上你在资本逻辑内部完成了一次资源重组。你没有改变王庙村的生产关系——农户依然是分散的、弱势的、依附于市场链条的小生产者。你把&#x27;贫…</p>
+</article><article class="reading-block stance-card" data-kind="stance">
+  <span class="reading-block-label">制度解释</span>
+  <h3 class="reading-block-title">芒格</h3>
+  <p class="reading-block-text">用我的多元思维模型来分析这个案例。@丁元英 从商业角度看，格律诗事件是教科书级的竞争策略——你发现了乐圣价值链中的薄弱环节，用创新的生产组织方式突破了壁垒。从法律角度看，你在灰色地带运作，但这在商业竞争中并不…</p>
+</article></div>
+  </section>
+</div></main>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>阅读重点：看清专家不是在重复观点，而是在不同解释框架之间竞争。</p></footer>
+</div>
+</section>
+<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
+<div class="reading-page">
+  <header class="reading-header">
+    <div>
+      <div class="reading-kicker">阅读重点</div>
+      <h1 class="reading-title">尼采 对 丁元英：人性弱点</h1>
+    </div>
+    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
+  </header>
+  <main class="reading-body"><div class="clash-courtroom">
+  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
+  <span class="reading-block-label">攻击</span>
+  <h3 class="reading-block-title">尼采</h3>
+  <p class="reading-block-text">丁元英，你最让我愤怒的不是杀富济贫本身，而是你假装没有选择。你说&#x27;市场规律如此&#x27;——但你设计了这一切！你设计了格律诗的价格策略，计算了乐圣的反应，预测了林雨峰可能的自杀。你什么都知道，但你选择了做。然后你说&#x27;我只是顺应规律&#x27;——这是最虚伪的逃避。你不敢承认：我做了选择，我承担后…</p>
+</article></section>
+  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">人性弱点</p></section>
+  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
+  <span class="reading-block-label">回应</span>
+  <h3 class="reading-block-title">丁元英</h3>
+  <p class="reading-block-text">尼采，你说我虚伪——但你所谓的&#x27;超人&#x27;不就是自己创造价值、自己承担责任吗？我承认：我策划了这一切，我预测了林雨峰可能的结局，我依然选择了做。因为我知道：我不做，王庙村依然是王庙村，乐圣依然是乐圣，什么都不会改变。你说规律是借口——我说规律是边界。我只能在边界内行动。我没有创造规…</p>
+</article></section>
+</div></main>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：人性弱点。</p></footer>
+</div>
+</section>
+<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
+<div class="reading-page">
+  <header class="reading-header">
+    <div>
+      <div class="reading-kicker">阅读重点</div>
+      <h1 class="reading-title">马克思 对 丁元英：现实矛盾</h1>
+    </div>
+    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
+  </header>
+  <main class="reading-body"><div class="clash-courtroom">
+  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
+  <span class="reading-block-label">攻击</span>
+  <h3 class="reading-block-title">马克思</h3>
+  <p class="reading-block-text">丁元英，你说你在边界内行动——但你没有问：这个边界是谁设定的？是资本。你所谓的&#x27;规律&#x27;就是资本增殖的规律。你帮王庙村赚钱，但没有帮他们掌握资本。你让他们从一个依附对象（土地）转向另一个依附对象（市场）。这不是解放，是换了一个东家。你说你在&#x27;边界内&#x27;行动——但真正的变革不是尊重边…</p>
+</article></section>
+  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">现实矛盾</p></section>
+  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
+  <span class="reading-block-label">回应</span>
+  <h3 class="reading-block-title">丁元英</h3>
+  <p class="reading-block-text">马克思，你说边界是资本设定的——我同意。但打破边界的代价是什么？我说过：扶贫的本质不是改变生产关系，是让穷人先活下来。如果你连温饱都没有，谈什么生产关系？你说我让村民从依附土地变成依附市场——但市场至少给了他们可能性。我不否认这是一个渐进改良而不是革命——但在当下的条件下，这是…</p>
+</article></section>
+</div></main>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：现实矛盾。</p></footer>
+</div>
+</section>
+<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
+<div class="reading-page">
+  <header class="reading-header">
+    <div>
+      <div class="reading-kicker">阅读重点</div>
+      <h1 class="reading-title">老子 对 尼采：逻辑漏洞</h1>
+    </div>
+    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
+  </header>
+  <main class="reading-body"><div class="clash-courtroom">
+  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
+  <span class="reading-block-label">攻击</span>
+  <h3 class="reading-block-title">老子</h3>
+  <p class="reading-block-text">尼采，你说丁元英不敢承认选择——但你有没有想过，&#x27;选择&#x27;和&#x27;顺应&#x27;不是对立的？水选择流向低处，不是因为水的意志，是因为万有引力。丁元英选择做这件事，也不是因为他的意志，而是因为他看到了可能性。你以为&#x27;超人&#x27;在自由创造，但其实超人也在被自然法则约束。你的&#x27;超人哲学&#x27;最大的问题就是…</p>
+</article></section>
+  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">逻辑漏洞</p></section>
+  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
+  <span class="reading-block-label">回应</span>
+  <h3 class="reading-block-title">尼采</h3>
+  <p class="reading-block-text">老子，你说人和自然是一体的——但你说的&#x27;一体&#x27;和丁元英说的&#x27;遵循规律&#x27;有什么区别？你们都在消解个体的责任。水没有选择，但人有。如果你把丁元英的选择等同于水往低处流，那你就是在为一切行为提供哲学辩护。你说道才是根本——但&#x27;道&#x27;这个字，也可以成为暴行的遮羞布。多少统治者用&#x27;天道&#x27;来…</p>
+</article></section>
+</div></main>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：逻辑漏洞。</p></footer>
+</div>
+</section>
+<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
+<div class="reading-page">
+  <header class="reading-header">
+    <div>
+      <div class="reading-kicker">阅读重点</div>
+      <h1 class="reading-title">芒格 对 马克思：现实矛盾</h1>
+    </div>
+    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
+  </header>
+  <main class="reading-body"><div class="clash-courtroom">
+  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
+  <span class="reading-block-label">攻击</span>
+  <h3 class="reading-block-title">芒格</h3>
+  <p class="reading-block-text">马克思，你说要打破边界——但你提供一个可操作的方案了吗？你批评丁元英的改良主义，但你自己的方案——完全推翻资本主义——在历史上造成了多少灾难？丁元英做的事虽然不完美，但至少是&#x27;可执行的&#x27;。你在用完美的理论攻击不完美的实践——但完美的理论如果不落地，只是空中楼阁。</p>
+</article></section>
+  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">现实矛盾</p></section>
+  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
+  <span class="reading-block-label">回应</span>
+  <h3 class="reading-block-title">马克思</h3>
+  <p class="reading-block-text">芒格，你说我的理论不落地？那你告诉我：丁元英的方案落地的结果是什么？林雨峰自杀，格律诗被收购，王庙村村民的收入有没有持续增长——你在书中看到后续了吗？一个不改变生产关系、只在分配层面做调整的方案，注定是短命的。你说我的理论造成灾难——那是因为那些实践歪曲了我的理论。真正的马克思…</p>
+</article></section>
+</div></main>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：现实矛盾。</p></footer>
+</div>
+</section>
+<section class="slide" data-page-type="roundtable_reading" data-layout="stance_spectrum">
+<div class="reading-page">
+  <header class="reading-header">
+    <div>
+      <div class="reading-kicker">阅读重点</div>
+      <h1 class="reading-title">第3轮：神即道，道法自然，如来——天道与规律的本质</h1>
+    </div>
+    <p class="reading-thesis">丁元英说的&#x27;神即道，道法自然，如来&#x27;——这三个概念的统一意味着什么？天道是客观规律还是主观认知？</p>
+  </header>
+  <main class="reading-body"><div class="stance-spectrum">
+  <aside class="issue-tree">
+    <h3>命题拆解</h3>
+    <p>丁元英说的&#x27;神即道，道法自然，如来&#x27;——这三个概念的统一意味着什么？天道是客观规律还是主观认知？</p>
+    <div class="reading-block"><span class="reading-block-label">判断路径</span><p class="reading-block-text">先看专家站位，再看他们背后的解释框架：文化、制度、资本、规律与行动选择。</p></div>
+  </aside>
+  <section class="spectrum-map">
+    <div class="spectrum-axis"></div>
+    <div class="stance-grid"><article class="reading-block stance-card" data-kind="stance">
+  <span class="reading-block-label">规律解释</span>
+  <h3 class="reading-block-title">丁元英</h3>
+  <p class="reading-block-text">神即道，道法自然，如来。这三句话打通了基督教、道家、佛教的核心——规律不以人的意志为转移。神不是一个人格化的存在，神就是道，道就是自然规律，如来就是如实观照——如实地看待事物的本来面目。@老子 你说的&#x27;道法自…</p>
+</article><article class="reading-block stance-card" data-kind="stance">
+  <span class="reading-block-label">规律解释</span>
+  <h3 class="reading-block-title">尼采</h3>
+  <p class="reading-block-text">丁元英把神等同于道、把道等同于规律——这是一种精致的无神论。@丁元英 你取消了神的位格，把它变成了一个冰冷的物理规律。但我要问你：如果神就是规律，那谁是规律的创造者？没有创造者，规律从何而来？你用一个问题取代…</p>
+</article><article class="reading-block stance-card" data-kind="stance">
+  <span class="reading-block-label">规律解释</span>
+  <h3 class="reading-block-title">老子</h3>
+  <p class="reading-block-text">丁元英，你说&#x27;道法自然&#x27;，但你理解的道和我说的道是两回事。@丁元英 你把道等同于客观规律——这是现代科学的理解，不是我说的道。我说道生一，一生二，二生三，三生万物——道是万物的本源，但它不是可以被认识的&#x27;规律…</p>
+</article><article class="reading-block stance-card" data-kind="stance">
+  <span class="reading-block-label">制度解释</span>
+  <h3 class="reading-block-title">韩非子</h3>
+  <p class="reading-block-text">你们谈道、谈神、谈规律——但治国不需要这些形而上的东西。@丁元英 你说的&#x27;道法自然&#x27;——但道如果不可控，法从何而来？法家认为：道是抽象的，法是具体的。道是天道，法是王法——天道通过王法来实现。你说规律不以人的…</p>
+</article><article class="reading-block stance-card" data-kind="stance">
+  <span class="reading-block-label">资本解释</span>
+  <h3 class="reading-block-title">马克思</h3>
+  <p class="reading-block-text">丁元英把规律自然化了——这是一个经典的意识形态操作。@丁元英 你说规律不以人的意志为转移——但&#x27;规律&#x27;在不同的历史阶段有不同的内容。在封建时代，规律是&#x27;君权神授&#x27;；在资本主义时代，规律是&#x27;自由市场&#x27;。你说这是…</p>
+</article><article class="reading-block stance-card" data-kind="stance">
+  <span class="reading-block-label">资本解释</span>
+  <h3 class="reading-block-title">芒格</h3>
+  <p class="reading-block-text">从实用主义的角度，我不关心&#x27;神&#x27;是什么、&#x27;道&#x27;是什么，我关心的是：这个框架能帮助我做出更好的决策吗？@丁元英 你说的&#x27;如实观照&#x27;——就是认知心理学说的&#x27;保持客观&#x27;。你说的&#x27;规律不以人的意志为转移&#x27;——就是&#x27;不…</p>
+</article></div>
+  </section>
+</div></main>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>阅读重点：看清专家不是在重复观点，而是在不同解释框架之间竞争。</p></footer>
+</div>
+</section>
+<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
+<div class="reading-page">
+  <header class="reading-header">
+    <div>
+      <div class="reading-kicker">阅读重点</div>
+      <h1 class="reading-title">尼采 对 丁元英：逻辑漏洞</h1>
+    </div>
+    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
+  </header>
+  <main class="reading-body"><div class="clash-courtroom">
+  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
+  <span class="reading-block-label">攻击</span>
+  <h3 class="reading-block-title">尼采</h3>
+  <p class="reading-block-text">丁元英，你把神变成规律，然后说自己&#x27;遵循规律&#x27;——这是最高明的权力修辞！当你说&#x27;这是规律&#x27;的时候，你实际上在说：&#x27;这不是我的选择，这是天意。&#x27;你把一切责任都推给了&#x27;规律&#x27;。你扶贫失败？不是你的错，是规律。林雨峰自杀？不是你的错，是规律。你什么时候为自己做的选择负过责任？你什么时…</p>
+</article></section>
+  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">逻辑漏洞</p></section>
+  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
+  <span class="reading-block-label">回应</span>
+  <h3 class="reading-block-title">丁元英</h3>
+  <p class="reading-block-text">尼采，你说我躲在规律后面——但你有没有想过？承认规律的存在不是逃避责任，而是减少幻觉。祈求救世主是逃避，但承认自己只是规律中的一个变量不是逃避——是清醒。我没有说&#x27;规律决定一切&#x27;——我说&#x27;规律是边界，我在边界内选择&#x27;。林雨峰的死，我负有责任——我选择了做这件事，我知道他可能自杀…</p>
+</article></section>
+</div></main>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：逻辑漏洞。</p></footer>
+</div>
+</section>
+<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
+<div class="reading-page">
+  <header class="reading-header">
+    <div>
+      <div class="reading-kicker">阅读重点</div>
+      <h1 class="reading-title">马克思 对 丁元英：现实矛盾</h1>
+    </div>
+    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
+  </header>
+  <main class="reading-body"><div class="clash-courtroom">
+  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
+  <span class="reading-block-label">攻击</span>
+  <h3 class="reading-block-title">马克思</h3>
+  <p class="reading-block-text">丁元英，你说你&#x27;在边界内选择&#x27;——但这个边界是谁设定的？是资本。你在资本设定的边界内&#x27;遵循规律&#x27;，然后说你&#x27;在担当&#x27;。不，你在当资本的代理人。你说你在扶贫，但你只是让穷人的劳动更高效地被资本体系吸收。你说神即道，道法自然——但我告诉你：真正的道不是&#x27;顺应&#x27;，是&#x27;认识并改变&#x27;。费…</p>
+</article></section>
+  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">现实矛盾</p></section>
+  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
+  <span class="reading-block-label">回应</span>
+  <h3 class="reading-block-title">丁元英</h3>
+  <p class="reading-block-text">马克思，你说我应该追问规律的来源——但你有没有想过，追问一个规律&#x27;为什么存在&#x27;和&#x27;如何利用这个规律&#x27;是两个不同的问题。一个溺水的人，你要先给他救生圈才能给他讲水的流体力学。王庙村的人需要先赚钱，才谈得上批判资本逻辑。我不是在当资本的代理人——我是在用资本的工具来完成我的目的。你…</p>
+</article></section>
+</div></main>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：现实矛盾。</p></footer>
+</div>
+</section>
+<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
+<div class="reading-page">
+  <header class="reading-header">
+    <div>
+      <div class="reading-kicker">阅读重点</div>
+      <h1 class="reading-title">老子 对 尼采：现实矛盾</h1>
+    </div>
+    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
+  </header>
+  <main class="reading-body"><div class="clash-courtroom">
+  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
+  <span class="reading-block-label">攻击</span>
+  <h3 class="reading-block-title">老子</h3>
+  <p class="reading-block-text">尼采，你说丁元英躲在规律后面——但你有没有想过，你的&#x27;超人&#x27;才是最大的逃避？你说超人创造规律——但超人能创造物理规律吗？超人能不吃饭不睡觉吗？超人能不死吗？你把&#x27;人&#x27;神化了。你的超人哲学本质上是一种新的宗教——上帝死了，超人代替了上帝。你把&#x27;强力意志&#x27;当作新的神，然后说你自己是…</p>
+</article></section>
+  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">现实矛盾</p></section>
+  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
+  <span class="reading-block-label">回应</span>
+  <h3 class="reading-block-title">尼采</h3>
+  <p class="reading-block-text">老子，你说超人哲学是宗教——但你有没有注意到，你的指责本身就在维护一种&#x27;秩序&#x27;？你在维护一个&#x27;人不能超越自然&#x27;的秩序。你说人不能超越自然——但人的本质就是超越自然。你没有发明火吗？你没有建造城市吗？你没有写《道德经》吗？所有这些都在超越自然。你说&#x27;道法自然&#x27;——但写《道德经》本…</p>
+</article></section>
+</div></main>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：现实矛盾。</p></footer>
+</div>
+</section>
+<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
+<div class="reading-page">
+  <header class="reading-header">
+    <div>
+      <div class="reading-kicker">阅读重点</div>
+      <h1 class="reading-title">芒格 对 马克思：逻辑漏洞</h1>
+    </div>
+    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
+  </header>
+  <main class="reading-body"><div class="clash-courtroom">
+  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
+  <span class="reading-block-label">攻击</span>
+  <h3 class="reading-block-title">芒格</h3>
+  <p class="reading-block-text">马克思，你说资本逻辑不是自然规律——我同意。但你说它是&#x27;历史产物&#x27;，然后呢？你提供替代方案了吗？在替代方案到来之前，普通人怎么办？王庙村的村民不能等到资本主义消亡了再吃饭。你的理论提供了&#x27;终极真理&#x27;，但没有提供&#x27;中间方案&#x27;。这就是为什么丁元英的实践比你更接近现实——他至少做了点…</p>
+</article></section>
+  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">逻辑漏洞</p></section>
+  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
+  <span class="reading-block-label">回应</span>
+  <h3 class="reading-block-title">马克思</h3>
+  <p class="reading-block-text">芒格，你说我的理论没有中间方案——你错了。我的理论恰恰提供了中间方案：合作社、工人自治、公有制的多种形式。你说丁元英&#x27;做了点什么&#x27;——但他做的只是加固了资本逻辑。你说我只有&#x27;终极真理&#x27;——但你看王庙村的后续：格律诗被乐圣收购了，农户回到了依附状态。丁元英的&#x27;中间方案&#x27;比什么都不…</p>
+</article></section>
+</div></main>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：逻辑漏洞。</p></footer>
+</div>
+</section>
+<section class="slide" data-page-type="summary_reading" data-layout="reading_brief_4zone">
+<div class="reading-page">
+  <header class="reading-header">
+    <div>
+      <div class="reading-kicker">阅读重点</div>
+      <h1 class="reading-title">读者最终带走什么</h1>
+    </div>
+    <p class="reading-thesis">丁元英把文化属性分为强势和弱势，但这个分类是一个动态光谱而非固定标签。同一个人在面对不同情境时会切换不同的应对模式——丁元英在商业上是强势文化，在感情上却是逃避型人格。</p>
+  </header>
+  <main class="reading-body"><div class="brief-grid"><section class="brief-zone"><h3>问题定义</h3><article class="reading-block" data-kind="takeaway">
+  
+  <h3 class="reading-block-title">文化属性是一个情境应对系统，而非人的本质特征</h3>
+  <p class="reading-block-text">丁元英把文化属性分为强势和弱势，但这个分类是一个动态光谱而非固定标签。同一个人在面对不同情境时会切换不同的应对模式——丁元英在商业上是强势文化，在感情上却是逃避型人格。真正的问题不是&#x27;你是什么文化属性&#x27;，而是&#x27;什么情境激活了你的弱势模式&#x27;。改变文化属性的关键不是&#x27;修炼内心&#x27;，而…</p>
+</article></section><section class="brief-zone"><h3>结构化内容</h3><article class="reading-block" data-kind="takeaway">
+  
+  <h3 class="reading-block-title">杀富济贫的终极困境：合法未必合道，合道未必合情</h3>
+  <p class="reading-block-text">丁元英的格律诗计划在法律上是完美的，在商业上是成功的，在道德上是模糊的，在人性上是残酷的。林雨峰的死揭示了&#x27;道法自然&#x27;的冰冷面——规律不以人的意志为转移，但人的情感同样不以规律为转移。丁元英能理性接受这个结果，但冯世杰们不能。杀富济贫的根本问题不是&#x27;能不能&#x27;，而是&#x27;痛不痛&#x27;——…</p>
+</article></section><section class="brief-zone"><h3>证据与观点</h3><article class="reading-block" data-kind="question">
+  
+  <h3 class="reading-block-title">开放问题</h3>
+  <p class="reading-block-text">如果你知道自己策划的计划会让一个人自杀，你还做吗？丁元英做了——你呢？</p>
+</article></section><section class="brief-zone"><h3>读者带走什么</h3></section></div></main>
+  <footer class="takeaway-strip"><strong>最终洞见</strong><p>阅读完成后，至少应带走一个可复用的判断框架。</p></footer>
+</div>
+</section>
+
+<script>
+(function(){
+  const sections=[...document.querySelectorAll('.slide')];
+  const total=sections.length;
+  let cur=0;
+  const dotsContainer=document.getElementById('navDots');
+  const progress=document.getElementById('progress');
+  const counter=document.getElementById('counter');
+  const escOverlay=document.getElementById('esc-overlay');
+  const escGrid=document.getElementById('esc-grid');
+
+  // 生成导航点
+  sections.forEach((s,i)=>{
+    const dot=document.createElement('button');
+    dot.className='nav-dot'+(i===0?' active':'');
+    dot.setAttribute('aria-label','第 '+(i+1)+' 页');
+    dot.onclick=()=>go(i);
+    dotsContainer.appendChild(dot);
+  });
+
+  // 生成 ESC 缩略图
+  sections.forEach((s,i)=>{
+    const thumb=document.createElement('div');
+    thumb.className='esc-thumb'+(i===0?' active':'');
+    thumb.innerHTML='<div class="esc-thumb-label">'+(i+1)+' / '+total+'</div>';
+    thumb.onclick=()=>{go(i);toggleEsc(false)};
+    escGrid.appendChild(thumb);
+  });
+
+  function go(n){
+    if(n<0||n>=total)return;
+    sections[cur].classList.remove('visible');
+    dotsContainer.children[cur]?.classList.remove('active');
+    escGrid.children[cur]?.classList.remove('active');
+    cur=n;
+    sections[cur].scrollIntoView({behavior:'smooth',block:'start'});
+    sections[cur].classList.add('visible');
+    dotsContainer.children[cur]?.classList.add('active');
+    escGrid.children[cur]?.classList.add('active');
+    const pct=Math.min(100,((cur+1)/total)*100);
+    progress.style.width=pct+'%';
+    if(counter)counter.textContent=(cur+1)+' / '+total;
+  }
+
+  function toggleEsc(show){
+    if(show===undefined)show=!escOverlay.classList.contains('visible');
+    escOverlay.classList.toggle('visible',show);
+  }
+
+  document.getElementById('prevBtn').onclick=()=>go(cur-1);
+  document.getElementById('nextBtn').onclick=()=>go(cur+1);
+
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'){
+      e.preventDefault();toggleEsc();return;
+    }
+    if(escOverlay.classList.contains('visible'))return;
+    if(e.key==='ArrowDown'||e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){
+      e.preventDefault();go(cur+1);
+    }else if(e.key==='ArrowUp'||e.key==='ArrowLeft'||e.key==='PageUp'){
+      e.preventDefault();go(cur-1);
+    }else if(e.key==='Home'){
+      e.preventDefault();go(0);
+    }else if(e.key==='End'){
+      e.preventDefault();go(total-1);
+    }
+  });
+
+  let wheelTimer=null;
+  document.addEventListener('wheel',e=>{
+    if(escOverlay.classList.contains('visible'))return;
+    e.preventDefault();
+    if(wheelTimer)return;
+    wheelTimer=setTimeout(()=>wheelTimer=null,400);
+    if(e.deltaY>0)go(cur+1);
+    else if(e.deltaY<0)go(cur-1);
+  },{passive:false});
+
+  document.body.addEventListener('click',e=>{
+    if(e.target.closest('.nav-dot,.nav-dots,.nav-btn,.reading-block,.stance-card,.clash-side,.clash-center,.esc-thumb,#esc-overlay'))return;
+    go(cur+1);
+  });
+
+  escOverlay.addEventListener('click',e=>{
+    if(e.target===escOverlay)toggleEsc(false);
+  });
+
+  go(0);
+})();
+</script>
+
+</body>
+</html>

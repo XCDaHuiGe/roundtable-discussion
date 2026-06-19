@@ -1,0 +1,17 @@
+/* Theme: blueprint — Cool technical */
+body.theme-blueprint {
+  --bg: #e8eef2;
+  --bg-rgb: 232, 238, 242;
+  --bg-soft: #dce4ea;
+  --bg-soft-rgb: 220, 228, 234;
+  --fg: #102233;
+  --fg-rgb: 16, 34, 51;
+  --muted: #5a6a78;
+  --muted-rgb: 90, 106, 120;
+  --accent: #1d5f8f;
+  --accent-rgb: 29, 95, 143;
+  --accent-2: #b17624;
+  --accent-2-rgb: 177, 118, 36;
+  --accent-3: #7a2d3b;
+  --accent-3-rgb: 122, 45, 59;
+}

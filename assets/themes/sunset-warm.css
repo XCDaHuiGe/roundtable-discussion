@@ -1,0 +1,17 @@
+/* Theme: sunset-warm — Warm sunset orange */
+body.theme-sunset-warm {
+  --bg: #1a1016;
+  --bg-rgb: 26, 16, 22;
+  --bg-soft: #261e24;
+  --bg-soft-rgb: 38, 30, 36;
+  --fg: #f5e6d3;
+  --fg-rgb: 245, 230, 211;
+  --muted: #a08878;
+  --muted-rgb: 160, 136, 120;
+  --accent: #e87040;
+  --accent-rgb: 232, 112, 64;
+  --accent-2: #d4a843;
+  --accent-2-rgb: 212, 168, 67;
+  --accent-3: #c25a3c;
+  --accent-3-rgb: 194, 90, 60;
+}

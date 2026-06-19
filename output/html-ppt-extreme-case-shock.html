@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case Shock 激进展示逻辑 Demo</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden}
+body{
+  --ink:#0a0b0d;
+  --paper:#f6efe4;
+  --red:#e43d2f;
+  --amber:#f0b23f;
+  --cyan:#71d8e6;
+  --green:#79d66b;
+  --muted:#9a8d7c;
+  font-family:"Noto Sans SC","Microsoft YaHei",Arial,sans-serif;
+  background:var(--ink);
+  color:var(--paper);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.slide{
+  width:100vw;
+  height:100vh;
+  overflow:hidden;
+  display:none;
+  position:relative;
+  padding:42px 64px;
+  isolation:isolate;
+}
+.slide.visible{display:block}
+.stage{position:relative;z-index:3;width:100%;height:100%;overflow:hidden}
+.serif{font-family:"Noto Serif SC","Source Han Serif SC",SimSun,serif}
+.mono{font-family:"IBM Plex Mono",Consolas,monospace}
+.micro{
+  font-family:"IBM Plex Mono",Consolas,monospace;
+  font-size:11px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  font-weight:800;
+}
+.progress{position:fixed;left:0;top:0;height:3px;width:0;background:var(--red);z-index:80;transition:width .28s ease}
+.nav-dots{position:fixed;right:22px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:90}
+.nav-dot{width:9px;height:9px;border-radius:0;border:1px solid rgba(246,239,228,.48);background:rgba(246,239,228,.1);cursor:pointer;padding:0;transform:rotate(45deg)}
+.nav-dot.active{background:var(--paper);border-color:var(--paper);box-shadow:0 0 0 4px rgba(228,61,47,.34)}
+.control{position:fixed;left:22px;bottom:20px;z-index:90;display:flex;align-items:center;gap:10px;color:rgba(246,239,228,.78);font-family:Consolas,monospace;font-size:12px}
+.control button{width:34px;height:34px;border:1px solid rgba(246,239,228,.26);background:rgba(246,239,228,.08);color:var(--paper);font:800 14px/1 Consolas,monospace;cursor:pointer}
+[data-anim]{opacity:0;transform:translateY(24px) scale(.98);transition:opacity .65s cubic-bezier(.2,.8,.2,1),transform .65s cubic-bezier(.2,.8,.2,1)}
+.visible [data-anim]{opacity:1;transform:translateY(0) scale(1)}
+.visible [data-anim]:nth-child(2){transition-delay:.06s}
+.visible [data-anim]:nth-child(3){transition-delay:.12s}
+.visible [data-anim]:nth-child(4){transition-delay:.18s}
+.visible [data-anim]:nth-child(5){transition-delay:.24s}
+.visible [data-anim]:nth-child(6){transition-delay:.30s}
+
+/* Shared texture */
+.grain::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  opacity:.24;
+  background:
+    repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 4px),
+    radial-gradient(circle at 22% 16%,rgba(255,255,255,.09),transparent 22%),
+    radial-gradient(circle at 78% 82%,rgba(228,61,47,.12),transparent 26%);
+  mix-blend-mode:screen;
+}
+.slice-line{position:absolute;background:var(--red);z-index:2;box-shadow:0 0 26px rgba(228,61,47,.55)}
+
+/* 01 Shock poster */
+.shock{background:#08090b;color:var(--paper)}
+.shock .scan{
+  position:absolute;
+  inset:-20%;
+  z-index:0;
+  background:
+    conic-gradient(from 215deg at 58% 46%,transparent 0 46deg,rgba(228,61,47,.34) 47deg 53deg,transparent 54deg 360deg),
+    radial-gradient(circle at 58% 46%,rgba(240,178,63,.22),transparent 23%),
+    linear-gradient(135deg,#090a0d 0%,#11151a 52%,#250d0b 100%);
+  animation:slowSpin 18s linear infinite;
+}
+@keyframes slowSpin{to{transform:rotate(360deg)}}
+.shock .stage{display:grid;grid-template-columns:1fr 330px;gap:34px;align-items:stretch}
+.shock-main{display:flex;flex-direction:column;justify-content:center;position:relative}
+.shock-main::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:11%;
+  width:11px;
+  height:78%;
+  background:var(--red);
+  box-shadow:0 0 34px rgba(228,61,47,.6);
+}
+.shock h1{font-size:clamp(72px,10vw,150px);line-height:.86;font-weight:900;letter-spacing:0;margin-left:34px;max-width:980px}
+.shock .lead{margin:28px 0 0 38px;max-width:780px;font-size:22px;line-height:1.6;color:rgba(246,239,228,.76)}
+.shock-side{border:1px solid rgba(246,239,228,.22);background:rgba(246,239,228,.05);padding:24px;display:grid;grid-template-rows:auto 1fr auto;overflow:hidden;backdrop-filter:blur(10px)}
+.case-id{align-self:center;display:grid;gap:14px}
+.case-id div{border-top:1px solid rgba(246,239,228,.22);padding-top:13px}
+.case-id b{display:block;font-size:36px;line-height:1;color:var(--amber)}
+.case-id span{font-size:13px;line-height:1.5;color:rgba(246,239,228,.64)}
+
+/* 02 Evidence wall */
+.wall{background:#171310;color:#151515}
+.wall::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(90deg,rgba(246,239,228,.06) 1px,transparent 1px),
+    linear-gradient(180deg,rgba(246,239,228,.045) 1px,transparent 1px),
+    radial-gradient(circle at 50% 50%,#3a2b21,#171310 68%);
+  background-size:44px 44px,44px 44px,auto;
+}
+.wall .stage{display:grid;grid-template-columns:300px 1fr;gap:28px}
+.wall-brief{color:var(--paper);display:flex;flex-direction:column;justify-content:space-between;border-right:1px solid rgba(246,239,228,.22);padding-right:26px}
+.wall-brief h2{font-size:50px;line-height:1.02}
+.wall-brief p{font-size:17px;line-height:1.72;color:rgba(246,239,228,.72)}
+.evidence-board{position:relative;height:100%;perspective:1100px}
+.thread{position:absolute;height:2px;background:rgba(228,61,47,.78);transform-origin:left center;box-shadow:0 0 18px rgba(228,61,47,.45)}
+.thread.t1{left:11%;top:28%;width:64%;transform:rotate(14deg)}
+.thread.t2{left:16%;top:67%;width:58%;transform:rotate(-18deg)}
+.thread.t3{left:44%;top:18%;width:38%;transform:rotate(71deg)}
+.pin{position:absolute;width:13px;height:13px;background:var(--red);border-radius:50%;box-shadow:0 0 0 5px rgba(228,61,47,.18)}
+.pin.p1{left:10%;top:27%}.pin.p2{left:72%;top:43%}.pin.p3{left:20%;top:68%}.pin.p4{left:54%;top:16%}.pin.p5{left:82%;top:78%}
+.evidence{
+  position:absolute;
+  width:260px;
+  min-height:156px;
+  background:#f7efe2;
+  border:1px solid rgba(0,0,0,.26);
+  padding:18px;
+  box-shadow:0 18px 34px rgba(0,0,0,.38);
+  overflow:hidden;
+}
+.evidence b{display:block;font-size:20px;line-height:1.18;margin:10px 0;color:#0f0f0f}
+.evidence p{font-size:13px;line-height:1.55;color:#51473c}
+.evidence .tag{color:#b83b2c}
+.e1{left:4%;top:7%;transform:rotate(-5deg)}
+.e2{left:42%;top:8%;transform:rotate(3deg)}
+.e3{left:18%;top:47%;transform:rotate(4deg)}
+.e4{right:2%;top:38%;transform:rotate(-6deg)}
+.e5{right:16%;bottom:2%;transform:rotate(3deg)}
+
+/* 03 Interrogation */
+.interrogate{background:#050607;color:var(--paper)}
+.interrogate::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 50% 4%,rgba(246,239,228,.32),transparent 18%),
+    linear-gradient(180deg,#050607,#101215 58%,#070809);
+}
+.interrogate .lamp{
+  position:absolute;
+  left:50%;
+  top:-28px;
+  width:220px;
+  height:220px;
+  transform:translateX(-50%);
+  background:radial-gradient(circle,rgba(246,239,228,.95),rgba(246,239,228,.12) 42%,transparent 64%);
+  filter:blur(2px);
+  z-index:1;
+}
+.interrogate .stage{display:grid;grid-template-rows:160px 1fr 120px;gap:22px}
+.question-line{text-align:center;align-self:end}
+.question-line h2{font-size:62px;line-height:1.02}
+.table-scene{position:relative;border-top:2px solid rgba(246,239,228,.28);border-bottom:2px solid rgba(246,239,228,.2);display:grid;grid-template-columns:1fr 250px 1fr;gap:24px;align-items:center}
+.witness,.prosecutor{padding:24px;border:1px solid rgba(246,239,228,.22);background:rgba(246,239,228,.06);overflow:hidden}
+.witness h3,.prosecutor h3{font-size:38px;line-height:1.08;margin:14px 0}
+.witness p,.prosecutor p{font-size:16px;line-height:1.68;color:rgba(246,239,228,.72)}
+.center-file{height:250px;background:#f7efe2;color:#101010;padding:24px;display:flex;flex-direction:column;justify-content:center;transform:rotate(-2deg);box-shadow:0 30px 60px rgba(0,0,0,.55)}
+.center-file b{font-size:34px;line-height:1.05}
+.center-file span{margin-top:18px;color:#594d42;font-size:14px;line-height:1.5}
+.answer-strip{display:grid;grid-template-columns:170px 1fr;gap:20px;align-items:center;border:1px solid rgba(246,239,228,.22);background:rgba(228,61,47,.12);padding:20px 24px}
+.answer-strip p{font-size:22px;line-height:1.45;font-weight:800}
+
+/* 04 X-ray */
+.xray{background:#dfe7e9;color:#081014}
+.xray::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 50% 50%,rgba(113,216,230,.45),transparent 28%),
+    linear-gradient(90deg,rgba(8,16,20,.06) 1px,transparent 1px),
+    linear-gradient(180deg,rgba(8,16,20,.06) 1px,transparent 1px);
+  background-size:auto,36px 36px,36px 36px;
+}
+.xray .stage{display:grid;grid-template-columns:38% 1fr;gap:34px}
+.diagnosis{display:flex;flex-direction:column;justify-content:space-between;border-right:3px solid #081014;padding-right:30px}
+.diagnosis h2{font-size:62px;line-height:.98}
+.diagnosis p{font-size:18px;line-height:1.7;color:#31505a}
+.scan-panel{position:relative;display:grid;place-items:center;overflow:hidden}
+.scan-card{
+  width:min(680px,100%);
+  height:600px;
+  border:2px solid #081014;
+  background:rgba(255,255,255,.38);
+  position:relative;
+  box-shadow:12px 12px 0 rgba(8,16,20,.12);
+  overflow:hidden;
+}
+.scan-card::before{
+  content:"";
+  position:absolute;
+  left:-10%;
+  top:42%;
+  width:120%;
+  height:6px;
+  background:var(--red);
+  box-shadow:0 0 28px rgba(228,61,47,.6);
+  animation:scan 3.8s ease-in-out infinite;
+}
+@keyframes scan{50%{top:16%}}
+.bone{
+  position:absolute;
+  border:2px solid rgba(8,16,20,.8);
+  background:rgba(113,216,230,.25);
+}
+.bone.b1{left:12%;top:14%;width:210px;height:170px;border-radius:54% 46% 42% 58%;transform:rotate(-9deg)}
+.bone.b2{right:14%;top:16%;width:210px;height:180px;border-radius:44% 56% 60% 40%;transform:rotate(8deg)}
+.bone.b3{left:22%;bottom:17%;width:390px;height:190px;border-radius:48% 52% 40% 60%;transform:rotate(3deg)}
+.lesion{position:absolute;width:24px;height:24px;background:var(--red);border-radius:50%;box-shadow:0 0 0 12px rgba(228,61,47,.16),0 0 28px rgba(228,61,47,.75)}
+.lesion.l1{left:42%;top:31%}.lesion.l2{right:27%;bottom:30%}
+.label{
+  position:absolute;
+  max-width:210px;
+  background:#081014;
+  color:#e9f5f8;
+  padding:12px 14px;
+  font-size:13px;
+  line-height:1.45;
+}
+.label.a{left:8%;bottom:8%}.label.b{right:6%;top:8%}
+
+/* 05 Cost blast */
+.blast{background:#f5efe4;color:#111}
+.blast .stage{display:grid;grid-template-columns:1fr 410px;gap:38px;align-items:stretch}
+.blast-word{display:flex;flex-direction:column;justify-content:center;position:relative}
+.blast-word h2{font-size:clamp(76px,12vw,170px);line-height:.78;font-weight:900;letter-spacing:0}
+.blast-word .red{color:var(--red)}
+.blast-word p{font-size:21px;line-height:1.62;max-width:760px;margin-top:34px;color:#51483d}
+.cost-stack{display:grid;grid-template-rows:repeat(4,1fr);gap:14px}
+.cost{
+  border:2px solid #111;
+  padding:18px;
+  background:#fffaf2;
+  overflow:hidden;
+  position:relative;
+}
+.cost::after{content:"";position:absolute;right:-26px;top:-26px;width:88px;height:88px;border-radius:50%;background:rgba(228,61,47,.16)}
+.cost b{font-size:28px;line-height:1;display:block;margin-bottom:10px}
+.cost p{font-size:14px;line-height:1.55;color:#594f44}
+.cost:nth-child(2){background:#111;color:#f5efe4}.cost:nth-child(2) p{color:rgba(245,239,228,.72)}
+.cost:nth-child(3){background:#e43d2f;color:#fff}.cost:nth-child(3) p{color:rgba(255,255,255,.8)}
+
+/* 06 Method page */
+.method{background:#10151a;color:var(--paper)}
+.method::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(90deg,rgba(246,239,228,.055) 1px,transparent 1px),
+    linear-gradient(180deg,rgba(246,239,228,.045) 1px,transparent 1px);
+  background-size:56px 56px;
+}
+.method .stage{display:grid;grid-template-rows:auto 1fr auto;gap:22px}
+.method-head{display:grid;grid-template-columns:1fr 380px;gap:36px;align-items:end;border-bottom:2px solid rgba(246,239,228,.28);padding-bottom:18px}
+.method h2{font-size:58px;line-height:1}
+.method-head p{font-size:17px;line-height:1.65;color:rgba(246,239,228,.7)}
+.logic-flow{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;align-items:stretch}
+.logic{
+  border:1px solid rgba(246,239,228,.24);
+  background:rgba(246,239,228,.06);
+  padding:20px;
+  display:grid;
+  grid-template-rows:auto auto 1fr;
+  gap:14px;
+  overflow:hidden;
+}
+.logic b{font-family:Consolas,monospace;color:var(--amber);font-size:13px;letter-spacing:.12em}
+.logic h3{font-size:26px;line-height:1.15}
+.logic p{font-size:14px;line-height:1.6;color:rgba(246,239,228,.66)}
+.method-foot{border-left:8px solid var(--red);padding-left:20px;font-size:23px;line-height:1.45;font-weight:900}
+
+@media(max-width:900px){
+  .slide{padding:28px 24px}
+  .shock .stage,.wall .stage,.xray .stage,.blast .stage,.method-head{grid-template-columns:1fr}
+  .shock-side,.wall-brief,.diagnosis{display:none}
+  .evidence{width:210px;min-height:130px}
+  .table-scene{grid-template-columns:1fr}.center-file{display:none}
+  .logic-flow,.cost-stack{grid-template-columns:1fr 1fr;grid-template-rows:none}
+  .nav-dots{display:none}
+  .shock h1,.blast-word h2{font-size:64px}
+  .question-line h2,.diagnosis h2,.method h2{font-size:40px}
+}
+@media(max-height:720px){
+  .slide{padding:30px 56px}
+  .shock h1,.blast-word h2{font-size:82px}
+  .shock .lead,.wall-brief p,.diagnosis p,.method-head p{font-size:15px}
+  .evidence{min-height:128px}.evidence b{font-size:18px}.evidence p{font-size:12px}
+  .question-line h2,.diagnosis h2,.method h2{font-size:42px}
+  .scan-card{height:480px}
+  .logic h3{font-size:22px}.logic p{font-size:12px}
+}
+</style>
+</head>
+<body>
+<div id="progress" class="progress"></div>
+<div id="navDots" class="nav-dots"></div>
+<div class="control">
+  <button id="prevBtn" type="button" aria-label="上一页">&lt;</button>
+  <span id="counter">1 / 6</span>
+  <button id="nextBtn" type="button" aria-label="下一页">&gt;</button>
+</div>
+
+<section class="slide shock grain visible" data-screen-label="01 Shock Poster" data-page-type="case_shock" data-display-logic="impact">
+  <div class="scan"></div>
+  <div class="stage">
+    <main class="shock-main">
+      <div class="micro" data-anim>DISPLAY LOGIC / IMPACT FIRST</div>
+      <h1 class="serif" data-anim>这不是案例<br>这是事故现场</h1>
+      <p class="lead" data-anim>同一个 `case_shock`，不要先套模板。先判断观看动作：这一页要把读者从抽象讨论里拽出来，让他意识到观点碰到现实会产生损伤。</p>
+    </main>
+    <aside class="shock-side" data-anim>
+      <div class="micro">Case ID</div>
+      <div class="case-id">
+        <div><b>01</b><span>内容信号：现实案例推翻抽象观点</span></div>
+        <div><b>冲击</b><span>第一眼先给结论，不解释。</span></div>
+        <div><b>证物</b><span>第二层才展示事件、结果、代价。</span></div>
+      </div>
+      <div class="micro">No Template First</div>
+    </aside>
+  </div>
+</section>
+
+<section class="slide wall grain" data-screen-label="02 Evidence Wall" data-page-type="case_shock" data-display-logic="evidence">
+  <div class="stage">
+    <aside class="wall-brief">
+      <div class="micro" data-anim>DISPLAY LOGIC / EVIDENCE WALL</div>
+      <h2 class="serif" data-anim>把材料贴到墙上，而不是排进卡片</h2>
+      <p data-anim>当内容里有事件链、人物关系、代价和结果时，最好的页面类型不是“案例页”，而是“证据墙”：读者要看到线索如何互相指认。</p>
+      <div class="micro" data-anim>Variant: forensic board</div>
+    </aside>
+    <main class="evidence-board">
+      <div class="thread t1"></div><div class="thread t2"></div><div class="thread t3"></div>
+      <div class="pin p1"></div><div class="pin p2"></div><div class="pin p3"></div><div class="pin p4"></div><div class="pin p5"></div>
+      <article class="evidence e1" data-anim><span class="micro tag">Evidence A</span><b class="serif">抽象观点</b><p>“只要意志足够强，系统就会让路。”这句话听起来完整，但它还没有接受现实审讯。</p></article>
+      <article class="evidence e2" data-anim><span class="micro tag">Evidence B</span><b class="serif">现实阻力</b><p>规则、资源、身份、关系网同时发力，个人选择被压缩成很窄的缝。</p></article>
+      <article class="evidence e3" data-anim><span class="micro tag">Evidence C</span><b class="serif">关键转折</b><p>事件没有证明“人不努力”，而是证明努力本身也需要结构性条件。</p></article>
+      <article class="evidence e4" data-anim><span class="micro tag">Evidence D</span><b class="serif">代价</b><p>当代价被隐藏时，观点会显得轻盈；当代价出现时，理论必须重新称重。</p></article>
+      <article class="evidence e5" data-anim><span class="micro tag">Verdict</span><b class="serif">判断</b><p>案例页的核心不是复述情节，而是让观点承担现实成本。</p></article>
+    </main>
+  </div>
+</section>
+
+<section class="slide interrogate grain" data-screen-label="03 Interrogation Room" data-page-type="case_shock" data-display-logic="cross_exam">
+  <div class="lamp"></div>
+  <div class="stage">
+    <header class="question-line" data-anim>
+      <div class="micro">DISPLAY LOGIC / CROSS EXAMINATION</div>
+      <h2 class="serif">把观点叫进审讯室</h2>
+    </header>
+    <main class="table-scene">
+      <section class="prosecutor" data-anim>
+        <div class="micro">Question</div>
+        <h3 class="serif">你解释了成功，解释失败了吗？</h3>
+        <p>如果一个理论只能解释胜利者，它其实没有解释现实，只是在给结果贴标签。</p>
+      </section>
+      <aside class="center-file" data-anim>
+        <b class="serif">EXHIBIT 01</b>
+        <span>事件、结果、代价、反例。每一项都不是装饰，而是审讯材料。</span>
+      </aside>
+      <section class="witness" data-anim>
+        <div class="micro">Answer</div>
+        <h3 class="serif">失败不是噪声，是模型边界</h3>
+        <p>真正的洞见要把失败案例纳入解释，否则它只是漂亮叙述，不是判断工具。</p>
+      </section>
+    </main>
+    <footer class="answer-strip" data-anim>
+      <div class="micro">Takeaway</div>
+      <p>展示逻辑决定页面形态：这里不是“专家冲突页”，而是“观点受审页”。</p>
+    </footer>
+  </div>
+</section>
+
+<section class="slide xray" data-screen-label="04 X-Ray Diagnosis" data-page-type="case_shock" data-display-logic="diagnosis">
+  <div class="stage">
+    <aside class="diagnosis">
+      <div class="micro" data-anim>DISPLAY LOGIC / DIAGNOSIS</div>
+      <h2 class="serif" data-anim>把案例当 X 光片</h2>
+      <p data-anim>有些内容不是要“讲清楚”，而是要“照出来”：表层事件背后藏着哪两个病灶？哪条因果链被普通叙述遮住了？</p>
+      <div class="micro" data-anim>Variant: diagnostic scan</div>
+    </aside>
+    <main class="scan-panel" data-anim>
+      <div class="scan-card">
+        <div class="bone b1"></div>
+        <div class="bone b2"></div>
+        <div class="bone b3"></div>
+        <div class="lesion l1"></div>
+        <div class="lesion l2"></div>
+        <div class="label a"><b>病灶 A</b><br>把结构问题误读成个人品质问题。</div>
+        <div class="label b"><b>病灶 B</b><br>把结果倒推为原因，忽略中间机制。</div>
+      </div>
+    </main>
+  </div>
+</section>
+
+<section class="slide blast grain" data-screen-label="05 Cost Blast" data-page-type="case_shock" data-display-logic="cost">
+  <div class="stage">
+    <main class="blast-word" data-anim>
+      <div class="micro">DISPLAY LOGIC / COST EXPLOSION</div>
+      <h2 class="serif">代价<br><span class="red">爆破</span></h2>
+      <p>如果案例没有代价，它只是故事。如果代价被视觉化，读者会立刻明白：这不是观点分歧，这是现实在收费。</p>
+    </main>
+    <aside class="cost-stack">
+      <article class="cost" data-anim><b class="serif">认知成本</b><p>旧框架失效，读者必须换一套解释坐标。</p></article>
+      <article class="cost" data-anim><b class="serif">行动成本</b><p>新的判断会改变选择，不再允许舒适误读。</p></article>
+      <article class="cost" data-anim><b class="serif">关系成本</b><p>有些真相会破坏原来的协作叙事。</p></article>
+      <article class="cost" data-anim><b class="serif">时间成本</b><p>系统性问题不能靠一句金句即时修复。</p></article>
+    </aside>
+  </div>
+</section>
+
+<section class="slide method grain" data-screen-label="06 Method" data-page-type="method" data-display-logic="meta">
+  <div class="stage">
+    <header class="method-head" data-anim>
+      <h2 class="serif">这才是我要升级的生成逻辑</h2>
+      <p>页面类型保留，但它不是入口。入口是内容信号与展示逻辑，页面类型只是落地形态。</p>
+    </header>
+    <main class="logic-flow">
+      <article class="logic" data-anim><b>01</b><h3 class="serif">内容信号</h3><p>是否有现实代价、反例、冲突、位移、系统机制。</p></article>
+      <article class="logic" data-anim><b>02</b><h3 class="serif">观看动作</h3><p>冲击、审讯、诊断、证据、爆破、收束。</p></article>
+      <article class="logic" data-anim><b>03</b><h3 class="serif">情绪温度</h3><p>黑场压迫、冷静剖面、出版留白、强对比。</p></article>
+      <article class="logic" data-anim><b>04</b><h3 class="serif">构图策略</h3><p>证据墙、审讯室、X 光片、代价海报。</p></article>
+      <article class="logic" data-anim><b>05</b><h3 class="serif">HTML 落地</h3><p>固定翻页器和无滚动规则，开放视觉表达。</p></article>
+    </main>
+    <footer class="method-foot" data-anim>结论：`case_shock` 不是模板名，它是一组可能的展示逻辑。生成器应该选择逻辑，再选择形态。</footer>
+  </div>
+</section>
+
+<script>
+(function(){
+  const sections=[...document.querySelectorAll('.slide')];
+  const total=sections.length;
+  let cur=0;
+  const dotsContainer=document.getElementById('navDots');
+  const progress=document.getElementById('progress');
+  const counter=document.getElementById('counter');
+
+  sections.forEach((s,i)=>{
+    const dot=document.createElement('button');
+    dot.className='nav-dot'+(i===0?' active':'');
+    dot.setAttribute('aria-label','第'+(i+1)+'页');
+    dot.onclick=()=>go(i);
+    dotsContainer.appendChild(dot);
+  });
+
+  function go(n){
+    if(n<0||n>=total)return;
+    sections[cur].classList.remove('visible');
+    dotsContainer.children[cur]?.classList.remove('active');
+    cur=n;
+    sections[cur].scrollIntoView({behavior:'smooth',block:'start'});
+    sections[cur].classList.add('visible');
+    dotsContainer.children[cur]?.classList.add('active');
+    progress.style.width=Math.min(100,((cur+1)/total)*100)+'%';
+    counter.textContent=(cur+1)+' / '+total;
+  }
+
+  document.getElementById('prevBtn').onclick=()=>go(cur-1);
+  document.getElementById('nextBtn').onclick=()=>go(cur+1);
+
+  let keyTimer=null;
+  document.addEventListener('keydown',e=>{
+    if(keyTimer)return;
+    if(e.key==='ArrowDown'||e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){
+      e.preventDefault();keyTimer=setTimeout(()=>keyTimer=null,220);go(cur+1);
+    }else if(e.key==='ArrowUp'||e.key==='ArrowLeft'||e.key==='PageUp'){
+      e.preventDefault();keyTimer=setTimeout(()=>keyTimer=null,220);go(cur-1);
+    }else if(e.key==='Home'){
+      e.preventDefault();keyTimer=setTimeout(()=>keyTimer=null,220);go(0);
+    }else if(e.key==='End'){
+      e.preventDefault();keyTimer=setTimeout(()=>keyTimer=null,220);go(total-1);
+    }
+  });
+
+  let wheelTimer=null;
+  document.addEventListener('wheel',e=>{
+    e.preventDefault();
+    if(wheelTimer)return;
+    wheelTimer=setTimeout(()=>wheelTimer=null,400);
+    if(e.deltaY>0)go(cur+1);
+    else if(e.deltaY<0)go(cur-1);
+  },{passive:false});
+
+  document.body.addEventListener('click',e=>{
+    if(e.target.closest('.nav-dot,.nav-dots,.control,button,.evidence,.argument,.witness,.prosecutor,.center-file,.cost,.logic,.scan-card'))return;
+    go(cur+1);
+  });
+
+  go(0);
+})();
+</script>
+</body>
+</html>

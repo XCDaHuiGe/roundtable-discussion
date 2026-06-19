@@ -1,0 +1,17 @@
+/* Theme: dracula — Dark purple-red */
+body.theme-dracula {
+  --bg: #282a36;
+  --bg-rgb: 40, 42, 54;
+  --bg-soft: #343746;
+  --bg-soft-rgb: 52, 55, 70;
+  --fg: #f8f8f2;
+  --fg-rgb: 248, 248, 242;
+  --muted: #6272a4;
+  --muted-rgb: 98, 114, 164;
+  --accent: #ff5555;
+  --accent-rgb: 255, 85, 85;
+  --accent-2: #bd93f9;
+  --accent-2-rgb: 189, 147, 249;
+  --accent-3: #50fa7b;
+  --accent-3-rgb: 80, 250, 123;
+}

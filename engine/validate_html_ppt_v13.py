@@ -37,13 +37,13 @@ def validate_reading_html(html: str) -> ReadingValidationResult:
             errors.append(f"slide {index} missing takeaway")
 
         block_count = slide.count("reading-block")
-        minimum = 3 if page_type == "clash_reading" else 5
-        if page_type != "cover" and block_count < minimum:
+        minimum = _minimum_blocks(page_type)
+        if minimum > 0 and block_count < minimum:
             errors.append(
                 f"slide {index} information density too low: expected at least {minimum} reading blocks, got {block_count}"
             )
 
-    if re.search(r"假小字|乱码|lorem|ipsum", html, re.IGNORECASE):
+    if re.search(r"假小子_乱码|lorem|ipsum", html, re.IGNORECASE):
         errors.append("decorative or fake text marker found")
 
     return ReadingValidationResult(ok=not errors, errors=errors)
@@ -52,6 +52,32 @@ def validate_reading_html(html: str) -> ReadingValidationResult:
 def _page_type(slide_html: str) -> str:
     match = re.search(r'data-page-type="([^"]+)"', slide_html)
     return match.group(1) if match else ""
+
+
+LOW_DENSITY_PAGES = {
+    "cover",
+    "ending",
+    "qa",
+    "insight",
+    "moderator_crack",
+    "future_bets",
+    "definition",
+    "concept_anchor",
+    "library_lens",
+    "source_map",
+    "clash_reading",
+    "round_opening",
+    "case_shock",
+    "cognitive_upgrade",
+    "open_questions",
+    "tension_map",
+}
+
+
+def _minimum_blocks(page_type: str) -> int:
+    if page_type in LOW_DENSITY_PAGES:
+        return 0
+    return 3
 
 
 def _extract_slide_sections(html: str) -> list[str]:

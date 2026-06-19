@@ -208,7 +208,7 @@ python engine/render_roundtable_os.py content/书名.json --output output/书名
 |:---|:---|
 | `engine/schema_v8.py` | 旧内容 JSON 结构兼容 |
 | `engine/render_html_ppt_v13.py` | 稳定 HTML 渲染底座 |
-| `engine/render_cognitive_html.py` | 认知蒸馏渲染的旧实验入口 |
+| `engine/render_roundtable_os.py` | 认知蒸馏渲染统一入口（OS 版本） |
 | `engine/template_selector.py` / `engine/render_v8.py` | 旧模板参考和历史兼容 |
 
 ### HTML-PPT 稳定底座（V12.0）

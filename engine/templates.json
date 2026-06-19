@@ -57,20 +57,6 @@
       "description": "像素科技风格，适合游戏、创意话题"
     },
     {
-      "id": "v2-starry",
-      "name": "星空夜幕",
-      "file": "template-v2-starry.html",
-      "origin": "original",
-      "description": "星空深邃风格，适合哲学、宇宙话题"
-    },
-    {
-      "id": "v3-magazine",
-      "name": "杂志封面",
-      "file": "template-v3-magazine.html",
-      "origin": "original",
-      "description": "杂志封面风格，适合投资、商业话题"
-    },
-    {
       "id": "y2k-brand",
       "name": "Y2K品牌",
       "file": "template-y2k-brand.html",
@@ -132,12 +118,122 @@
       "reason": "forced"
     },
     {
-      "template": "v2-starry",
+      "template": "consulting-report",
       "topic": null,
       "reason": "forced"
     },
     {
       "template": "editorial",
+      "topic": null,
+      "reason": "forced"
+    },
+    {
+      "template": "geek-report",
+      "topic": null,
+      "reason": "forced"
+    },
+    {
+      "template": "clean-review",
+      "topic": null,
+      "reason": "forced"
+    },
+    {
+      "template": "rain-notes",
+      "topic": null,
+      "reason": "forced"
+    },
+    {
+      "template": "consulting-report",
+      "topic": null,
+      "reason": "forced"
+    },
+    {
+      "template": "editorial",
+      "topic": null,
+      "reason": "forced"
+    },
+    {
+      "template": "geek-report",
+      "topic": null,
+      "reason": "forced"
+    },
+    {
+      "template": "clean-review",
+      "topic": null,
+      "reason": "forced"
+    },
+    {
+      "template": "rain-notes",
+      "topic": null,
+      "reason": "forced"
+    },
+    {
+      "template": "consulting-report",
+      "topic": null,
+      "reason": "forced"
+    },
+    {
+      "template": "editorial",
+      "topic": null,
+      "reason": "forced"
+    },
+    {
+      "template": "geek-report",
+      "topic": null,
+      "reason": "forced"
+    },
+    {
+      "template": "clean-review",
+      "topic": null,
+      "reason": "forced"
+    },
+    {
+      "template": "rain-notes",
+      "topic": null,
+      "reason": "forced"
+    },
+    {
+      "template": "sunrise",
+      "topic": null,
+      "reason": "forced"
+    },
+    {
+      "template": "dot-matrix",
+      "topic": null,
+      "reason": "forced"
+    },
+    {
+      "template": "pixel-report",
+      "topic": null,
+      "reason": "forced"
+    },
+    {
+      "template": "y2k-brand",
+      "topic": null,
+      "reason": "forced"
+    },
+    {
+      "template": "story-field",
+      "topic": null,
+      "reason": "forced"
+    },
+    {
+      "template": "studio-photo",
+      "topic": null,
+      "reason": "forced"
+    },
+    {
+      "template": "shiny-tiles",
+      "topic": null,
+      "reason": "forced"
+    },
+    {
+      "template": "dot-matrix-light",
+      "topic": null,
+      "reason": "forced"
+    },
+    {
+      "template": "premium-dark",
       "topic": null,
       "reason": "forced"
     }

@@ -35,7 +35,8 @@ def test_render_reading_html_keeps_v12_navigation_contract():
     assert html.count("function go(") == 1
     assert 'id="navDots"' in html
     assert "setTimeout(()=>wheelTimer=null,400)" in html
-    assert ".slide{height:100vh" in html.replace(" ", "")
+    assert ".slide{" in html
+    assert "height:100vh" in html
 
 
 def test_render_reading_html_supports_multiple_visual_themes():

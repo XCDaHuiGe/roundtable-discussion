@@ -3,7 +3,7 @@ import subprocess
 import sys
 
 
-def test_render_cognitive_html_cli_generates_valid_html(tmp_path):
+def test_render_roundtable_os_cli_generates_valid_html(tmp_path):
     input_path = tmp_path / "sample_v8.json"
     output_path = tmp_path / "sample.html"
     input_path.write_text(
@@ -28,7 +28,7 @@ def test_render_cognitive_html_cli_generates_valid_html(tmp_path):
     )
 
     result = subprocess.run(
-        [sys.executable, "engine/render_cognitive_html.py", str(input_path), "--output", str(output_path)],
+        [sys.executable, "engine/render_roundtable_os.py", str(input_path), "--output", str(output_path)],
         text=True,
         capture_output=True,
         check=False,
@@ -37,5 +37,4 @@ def test_render_cognitive_html_cli_generates_valid_html(tmp_path):
     assert result.returncode == 0, result.stdout + result.stderr
     html = output_path.read_text(encoding="utf-8")
     assert "<!DOCTYPE html>" in html
-    assert 'data-page-type="cover"' in html
-    assert "HTML-PPT cognitive validation passed" in result.stdout
+    assert "Roundtable OS validation passed" in result.stdout

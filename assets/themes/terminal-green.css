@@ -1,0 +1,19 @@
+/* Theme: terminal-green — Matrix/terminal green on black */
+body.theme-terminal-green {
+  --bg: #0a0a0a;
+  --bg-rgb: 10, 10, 10;
+  --bg-soft: #141414;
+  --bg-soft-rgb: 20, 20, 20;
+  --fg: #00ff41;
+  --fg-rgb: 0, 255, 65;
+  --muted: #006b1a;
+  --muted-rgb: 0, 107, 26;
+  --accent: #00ff41;
+  --accent-rgb: 0, 255, 65;
+  --accent-2: #00cc33;
+  --accent-2-rgb: 0, 204, 51;
+  --accent-3: #33ff66;
+  --accent-3-rgb: 51, 255, 102;
+  --font-serif: 'IBM Plex Mono', Consolas, monospace;
+  --font-display: 'IBM Plex Mono', Consolas, monospace;
+}

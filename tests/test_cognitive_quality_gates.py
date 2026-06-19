@@ -41,3 +41,98 @@ def test_validate_cognitive_quality_reports_missing_delta_and_rank():
     assert "missing_delta_sentence" in codes
     assert "insufficient_candidate_generators" in codes
     assert "missing_qa_chain" in codes
+
+
+def test_qa_chain_dependency_correct():
+    """qa_chain 依赖顺序正确 → 通过"""
+    model = complete_model()
+    model.distillation.qa_chain = [
+        {"question": "问题1", "answer": {"conclusion": "答案1", "boundary": ""}, "depends_on": None},
+        {"question": "问题2", "answer": {"conclusion": "答案2", "boundary": ""}, "depends_on": "问题1"},
+        {"question": "问题3", "answer": {"conclusion": "答案3", "boundary": ""}, "depends_on": "问题2"},
+    ]
+
+    result = validate_cognitive_quality(model)
+
+    # 没有关于依赖链的 warning
+    warning_codes = {issue["code"] for issue in result["warnings"]}
+    assert "missing_depends_on" not in warning_codes
+    assert "broken_dependency_chain" not in warning_codes
+
+
+def test_qa_chain_dependency_broken():
+    """qa_chain 依赖链断裂 → warning"""
+    model = complete_model()
+    model.distillation.qa_chain = [
+        {"question": "问题1", "answer": {"conclusion": "答案1", "boundary": ""}, "depends_on": None},
+        {"question": "问题2", "answer": {"conclusion": "答案2", "boundary": ""}, "depends_on": "不存在的问题"},
+    ]
+
+    result = validate_cognitive_quality(model)
+
+    # 应该有 broken_dependency_chain warning
+    warning_codes = {issue["code"] for issue in result["warnings"]}
+    assert "broken_dependency_chain" in warning_codes
+
+
+def test_qa_chain_missing_depends_on():
+    """qa_chain 缺少 depends_on → warning"""
+    model = complete_model()
+    model.distillation.qa_chain = [
+        {"question": "问题1", "answer": {"conclusion": "答案1", "boundary": ""}, "depends_on": None},
+        {"question": "问题2", "answer": {"conclusion": "答案2", "boundary": ""}},  # 缺少 depends_on
+    ]
+
+    result = validate_cognitive_quality(model)
+
+    # 应该有 missing_depends_on warning
+    warning_codes = {issue["code"] for issue in result["warnings"]}
+    assert "missing_depends_on" in warning_codes
+
+
+def test_root_rank_backtest_insufficient():
+    """根秩回测不足 3 项 → error"""
+    model = complete_model()
+    model.root_rank.regeneration_matrix = [
+        {"generator": "适应回路", "phenomenon": "习惯形成"},
+        {"generator": "适应回路", "phenomenon": "情绪反应"},
+    ]
+
+    result = validate_cognitive_quality(model)
+
+    # 应该有 insufficient_root_rank_backtest error
+    error_codes = {issue["code"] for issue in result["errors"]}
+    assert "insufficient_root_rank_backtest" in error_codes
+
+
+def test_root_rank_backtest_with_non_root_generators():
+    """regeneration_matrix 中包含非 root_generators 的项 → 只统计有效的"""
+    model = complete_model()
+    model.root_rank.root_generators = ["适应回路"]
+    model.root_rank.regeneration_matrix = [
+        {"generator": "适应回路", "phenomenon": "习惯形成"},
+        {"generator": "适应回路", "phenomenon": "情绪反应"},
+        {"generator": "非根生成器", "phenomenon": "其他现象"},  # 这个不应该被统计
+    ]
+
+    result = validate_cognitive_quality(model)
+
+    # 应该有 insufficient_root_rank_backtest error（只有 2 个有效）
+    error_codes = {issue["code"] for issue in result["errors"]}
+    assert "insufficient_root_rank_backtest" in error_codes
+
+
+def test_root_rank_backtest_sufficient():
+    """根秩回测足够 → 通过"""
+    model = complete_model()
+    model.root_rank.regeneration_matrix = [
+        {"generator": "适应回路", "phenomenon": "习惯形成"},
+        {"generator": "适应回路", "phenomenon": "情绪反应"},
+        {"generator": "适应回路", "phenomenon": "学习迁移"},
+    ]
+
+    result = validate_cognitive_quality(model)
+
+    # 不应该有 insufficient_root_rank_backtest error
+    error_codes = {issue["code"] for issue in result["errors"]}
+    assert "insufficient_root_rank_backtest" not in error_codes

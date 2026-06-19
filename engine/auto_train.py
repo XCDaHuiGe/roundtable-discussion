@@ -1,20 +1,25 @@
 # -*- coding: utf-8 -*-
 """
-深度训练引擎 V9.0 — Agent=LLM，Python=机械操作
+深度训练引擎 V10.0 — Agent=LLM，Python=机械操作 + 门控验证
 
 核心设计：
-  - Agent（你）本身就是LLM，负责搜索、阅读、生成辩论
-  - Python模块只做机械操作：评分、提取、升级、保存
-  - 不依赖任何外部LLM API（call_llm_json已删除）
+  - Agent（你）本身就是LLM，负责搜索、阅读、生成辩论、反思
+  - Python模块只做机械操作：评分、提取、门控验证、升级、保存
+  - 不依赖任何外部LLM API
 
-Agent执行流程：
+进化闭环（借鉴 SkillOpt）：
   1. Agent调用 step1_generate_topics() → 获取话题列表
   2. Agent自己用WebSearch/AnySearch搜索 → 采集素材
   3. Agent自己阅读专家档案 → 理解专家风格
   4. Agent自己生成辩论JSON → 传入step4评分
   5. Agent调用 step4_score_and_extract() → 机械评分+提取
-  6. Agent调用 step5_upgrade_experts() → 机械升级档案
-  7. Agent调用 save_training_result() → 机械保存
+  6. Agent生成 reflection.json → 结构化反思（教师角色）
+  7. Agent调用 step5_upgrade_experts() → 门控验证 + 升级
+     - Gate: 新分 > 历史平均？通过才升级
+     - Edit Budget: 每轮最多 3 条升级
+     - Snapshot: 升级前保存快照
+     - Rollback: 门控拒绝时回退
+  8. Agent调用 save_training_result() → 机械保存
 
 CLI模式（调试用）：
   python auto_train.py --check           # 检查同质化
@@ -37,6 +42,11 @@ from training.debate_arena import DebateArena, DebateTopic
 from training.fusion_engine import FusionEngine
 from scorer import score_discussion, default_scores
 from training.llm_extractor import LLMStrategyExtractor
+from training.reflection_schema import (
+    load_reflection, validate_reflection, gate_upgrade,
+    save_to_history, snapshot_expert, rollback_expert, cleanup_snapshots,
+    REFLECTION_PROMPT,
+)
 
 EXPERT_LIBRARY = os.path.join(os.path.dirname(__file__), '..', 'expert-library')
 MEMORY_DIR = os.path.join(os.path.dirname(__file__), '..', 'memory')

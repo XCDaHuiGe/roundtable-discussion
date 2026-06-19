@@ -1,0 +1,17 @@
+/* Theme: editorial — Warm magazine style (DEFAULT) */
+body.theme-editorial {
+  --bg: #f2eadc;
+  --bg-rgb: 242, 234, 220;
+  --bg-soft: #e8e0d0;
+  --bg-soft-rgb: 232, 224, 208;
+  --fg: #171717;
+  --fg-rgb: 23, 23, 23;
+  --muted: #6b6560;
+  --muted-rgb: 107, 101, 96;
+  --accent: #982b23;
+  --accent-rgb: 152, 43, 35;
+  --accent-2: #bf8a2e;
+  --accent-2-rgb: 191, 138, 46;
+  --accent-3: #244d66;
+  --accent-3-rgb: 36, 77, 102;
+}

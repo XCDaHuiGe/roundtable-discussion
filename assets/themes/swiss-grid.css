@@ -1,0 +1,19 @@
+/* Theme: swiss-grid — Swiss International Style (no serif, Klein blue) */
+body.theme-swiss-grid {
+  --bg: #ffffff;
+  --bg-rgb: 255, 255, 255;
+  --bg-soft: #f0f0f0;
+  --bg-soft-rgb: 240, 240, 240;
+  --fg: #0a0a0a;
+  --fg-rgb: 10, 10, 10;
+  --muted: #666666;
+  --muted-rgb: 102, 102, 102;
+  --accent: #002fa7;
+  --accent-rgb: 0, 47, 167;
+  --accent-2: #f5f500;
+  --accent-2-rgb: 245, 245, 0;
+  --accent-3: #00a550;
+  --accent-3-rgb: 0, 165, 80;
+  --font-serif: 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif;
+  --font-display: 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif;
+}

@@ -676,12 +676,158 @@ def adapt_to_rain_notes(data: Dict, colors: List[str]) -> str:
     return '\n'.join(slides_html)
 
 
+def adapt_to_generic(data: Dict, colors: List[str]) -> str:
+    """通用适配器：适用于 sunrise, dot-matrix, pixel-report, y2k-brand,
+    story-field, studio-photo, shiny-tiles, dot-matrix-light, premium-dark
+    这些模板共有的 CSS 类名：.slide, .slide-cover, .expert-card, .speech-block, .clash-block"""
+    title = sanitize_text(data.get('title', ''))
+    subtitle = sanitize_text(data.get('subtitle', ''))
+    rounds = data.get('rounds', [])
+    experts = data.get('experts', [])
+
+    slides_html = []
+
+    # 封面
+    slides_html.append(f'''
+<div class="slide slide-cover">
+  <div class="cover-logo">圆桌洞见<span>Roundtable Insight</span></div>
+  <div class="cover-body">
+    <h1>{title}</h1>
+    <p class="cover-sub">{subtitle}</p>
+    <p class="cover-date">{len(experts)} 位专家 · {len(rounds)} 轮讨论</p>
+  </div>
+  <div class="cover-footer">本报告由 AI 专家圆桌生成</div>
+</div>''')
+
+    # 专家阵容
+    if experts:
+        expert_cards = ""
+        for e in experts[:6]:
+            name = _expert_name(e)
+            initial = get_expert_initial(name)
+            role = _expert_title(e)
+            desc = _expert_desc(e)[:60]
+            expert_cards += f'''
+    <div class="expert-card">
+      <div class="expert-avatar">{initial}</div>
+      <div class="expert-name">{name}</div>
+      <div class="expert-role">{role}</div>
+      <div class="expert-desc">{desc}...</div>
+    </div>'''
+        slides_html.append(f'''
+<div class="slide">
+  <div class="breadcrumb">专家阵容</div>
+  <h2 class="slide-title">{title}</h2>
+  <div class="experts-grid">{expert_cards}
+  </div>
+</div>''')
+
+    # 每轮讨论
+    for i, rd in enumerate(rounds):
+        rn = i + 1
+        topic = _round_topic(rd)
+        core_q = _round_question(rd)
+
+        # 轮次标题页
+        slides_html.append(f'''
+<div class="slide">
+  <div class="breadcrumb">Round {rn} / {len(rounds)}</div>
+  <h2 class="slide-title">{topic}</h2>
+  {f'<p style="color:rgba(255,255,255,0.5);font-size:0.9em;margin-top:8px;">{core_q}</p>' if core_q else ''}
+</div>''')
+
+        # 发言（使用 .speech-block）
+        stances = rd.get('stances', [])
+        if stances:
+            blocks_html = ""
+            for s in stances[:3]:
+                speaker = _stance_expert(s)
+                content = _stance_text(s)
+                initial = get_expert_initial(speaker)
+                blocks_html += f'''
+        <div class="speech-block">
+          <div class="speech-meta">
+            <div class="speaker-avatar" style="background:{get_expert_color(speaker, colors)}">{initial}</div>
+            <div>
+              <div class="speaker-name">{speaker}</div>
+            </div>
+          </div>
+          <div class="speech-content">{content}</div>
+        </div>'''
+            slides_html.append(f'''
+<div class="slide">
+  <div class="breadcrumb">Round {rn} 发言</div>
+  {blocks_html}
+</div>''')
+
+        # 碰撞（使用 .clash-block + .clash-item）
+        clashes = _clash_rounds(rd)
+        if clashes:
+            clashes_html = ""
+            for c in clashes[:3]:
+                attacker = sanitize_text(c.get('attacker', c.get('speaker', '')))
+                target = sanitize_text(c.get('target', ''))
+                atk = sanitize_text(c.get('attack_content', c.get('content', '')))
+                counter = sanitize_text(c.get('counter_attack', ''))
+                header = f"{attacker} → {target}" if target else attacker
+                clashes_html += f'''
+        <div class="clash-item">
+          <div class="clash-speaker">{header}</div>
+          <div class="clash-text">{atk}</div>
+          {f'<div class="clash-text" style="margin-top:8px;opacity:0.8;">反击：{counter}</div>' if counter else ''}
+        </div>'''
+            slides_html.append(f'''
+<div class="slide">
+  <div class="breadcrumb">Round {rn} 碰撞</div>
+  <div class="clash-block">{clashes_html}
+  </div>
+</div>''')
+
+        # 深度分析
+        deep_html = _render_round_deep(rd, colors)
+        if deep_html:
+            slides_html.append(f'''
+<div class="slide">
+  <div class="breadcrumb">Round {rn} 深度分析</div>
+  {deep_html}
+</div>''')
+
+        # 综合答案
+        synthesis = _synthesis_block(rd)
+        if synthesis:
+            slides_html.append(f'''
+<div class="slide">
+  <div class="breadcrumb">Round {rn} 综合答案</div>
+  {_render_synthesis_html(synthesis, colors)}
+</div>''')
+
+    # 最终洞见
+    final_html = _final_slide(data, colors)
+    if final_html:
+        slides_html.append(f'''
+<div class="slide">
+  <div class="breadcrumb">最终洞见</div>
+  {final_html}
+</div>''')
+
+    return '\n'.join(slides_html)
+
+
 ADAPTERS = {
     'consulting-report': adapt_to_consulting_report,
     'editorial': adapt_to_editorial,
     'geek-report': adapt_to_geek_report,
     'clean-review': adapt_to_clean_review,
     'rain-notes': adapt_to_rain_notes,
+    'sunrise': adapt_to_generic,
+    'dot-matrix': adapt_to_generic,
+    'pixel-report': adapt_to_generic,
+    'y2k-brand': adapt_to_generic,
+    'story-field': adapt_to_generic,
+    'studio-photo': adapt_to_generic,
+    'shiny-tiles': adapt_to_generic,
+    'dot-matrix-light': adapt_to_generic,
+    'premium-dark': adapt_to_generic,
 }
 
 

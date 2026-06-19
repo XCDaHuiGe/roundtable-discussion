@@ -1,0 +1,17 @@
+/* Theme: magazine-bold — Bold editorial magazine */
+body.theme-magazine-bold {
+  --bg: #faf8f5;
+  --bg-rgb: 250, 248, 245;
+  --bg-soft: #efeade;
+  --bg-soft-rgb: 239, 234, 222;
+  --fg: #1a1a1a;
+  --fg-rgb: 26, 26, 26;
+  --muted: #6b6560;
+  --muted-rgb: 107, 101, 96;
+  --accent: #c41e3a;
+  --accent-rgb: 196, 30, 58;
+  --accent-2: #1a5276;
+  --accent-2-rgb: 26, 82, 118;
+  --accent-3: #d4a843;
+  --accent-3-rgb: 212, 168, 67;
+}

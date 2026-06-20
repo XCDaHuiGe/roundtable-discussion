@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>遥远的救世主 · 神即道·道法自然·如来</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #eedfc7;
+  --paper-soft: #f5ead8;
+  --ink: #2a1e13;
+  --ink-rgb: 42,30,19;
+  --muted: #6b5b4f;
+  --accent: #8b4513;
+  --accent-rgb: 139,69,19;
+  --serif: 'Noto Serif SC', Georgia, serif;
+  --sans: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+  --mono: 'IBM Plex Mono', Consolas, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
+body { font-family: var(--sans); color: var(--ink); background: var(--paper); -webkit-font-smoothing: antialiased; }
+.slide { height: 100vh; width: 100vw; display: none; padding: 48px 72px; position: relative; overflow: hidden; }
+.slide.visible { display: flex; }
+.slide.light { background: var(--paper); color: var(--ink); }
+.slide.dark { background: var(--ink); color: var(--paper); }
+.slide.hero { align-items: center; justify-content: center; }
+.slide::before { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(90deg, rgba(var(--ink-rgb),.03) 1px, transparent 1px), linear-gradient(180deg, rgba(var(--ink-rgb),.02) 1px, transparent 1px); background-size: 64px 64px; }
+.chrome { position: absolute; top: 20px; left: 72px; right: 72px; display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); z-index: 10; }
+.foot { position: absolute; bottom: 20px; left: 72px; right: 72px; display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--muted); z-index: 10; }
+.h-hero { font-family: var(--serif); font-size: clamp(48px, 8vw, 120px); font-weight: 900; line-height: 1; letter-spacing: -0.02em; }
+.h-xl { font-family: var(--serif); font-size: clamp(36px, 5vw, 72px); font-weight: 700; line-height: 1.1; }
+.h-lg { font-family: var(--serif); font-size: clamp(28px, 3vw, 48px); font-weight: 700; line-height: 1.2; }
+.h-md { font-family: var(--serif); font-size: clamp(20px, 2vw, 32px); font-weight: 700; line-height: 1.3; }
+.h-sm { font-family: var(--serif); font-size: clamp(16px, 1.5vw, 24px); font-weight: 700; line-height: 1.4; }
+.lead { font-family: var(--serif); font-size: clamp(18px, 1.5vw, 24px); font-weight: 400; line-height: 1.8; max-width: 680px; }
+.body { font-family: var(--sans); font-size: clamp(15px, 1.2vw, 18px); font-weight: 400; line-height: 1.8; max-width: 680px; }
+.kicker { font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
+.meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+.cover { display: flex; flex-direction: column; justify-content: center; min-height: 80vh; gap: 24px; position: relative; z-index: 1; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; position: relative; z-index: 1; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; position: relative; z-index: 1; }
+.card { background: var(--paper-soft); border: 1px solid rgba(var(--ink-rgb),.1); padding: 24px; position: relative; z-index: 1; }
+.card-dark { background: rgba(var(--ink-rgb),.8); border: 1px solid rgba(var(--paper-rgb),.2); padding: 24px; color: var(--paper); position: relative; z-index: 1; }
+.quote { border-left: 4px solid var(--accent); padding-left: 24px; position: relative; z-index: 1; }
+.quote-text { font-family: var(--serif); font-size: clamp(20px, 2vw, 32px); font-weight: 700; line-height: 1.5; font-style: italic; }
+.quote-author { font-family: var(--mono); font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-top: 16px; }
+.tag { display: inline-block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; padding: 4px 12px; border: 1px solid var(--accent); color: var(--accent); }
+.divider { width: 64px; height: 2px; background: var(--accent); margin: 16px 0; }
+.debate { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; position: relative; z-index: 1; }
+.debate-col { display: flex; flex-direction: column; gap: 24px; }
+.statement { position: relative; padding: 24px; border: 1px solid rgba(var(--ink-rgb),.1); background: var(--paper-soft); opacity: 0; transform: translateY(20px); }
+.slide.dark .statement { background: rgba(var(--ink-rgb),.6); border-color: rgba(var(--paper-rgb),.15); }
+.statement-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.statement-avatar { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 20px; font-weight: 700; color: var(--paper); flex-shrink: 0; }
+.statement-info { display: flex; flex-direction: column; gap: 2px; }
+.statement-name { font-family: var(--serif); font-size: 18px; font-weight: 700; }
+.statement-role { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+.statement-body { font-family: var(--sans); font-size: 15px; line-height: 1.8; }
+.slide.dark .statement-body { color: rgba(var(--paper-rgb),.85); }
+.attack-mark { position: absolute; top: -8px; right: 16px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; padding: 2px 10px; background: var(--accent); color: var(--paper); }
+.counter-mark { position: absolute; top: -8px; right: 16px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; padding: 2px 10px; background: rgba(var(--ink-rgb),.6); color: var(--paper); }
+.slide.dark .counter-mark { background: rgba(var(--paper-rgb),.3); color: var(--paper); }
+.debate-connector { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, transparent, var(--accent) 20%, var(--accent) 80%, transparent); z-index: 0; }
+.debate-question { text-align: center; padding: 32px; position: relative; z-index: 1; opacity: 0; transform: scale(0.95); }
+.anim-fade-up { opacity: 0; transform: translateY(30px); }
+.anim-fade-in { opacity: 0; }
+.feedback-point { position: absolute; top: 8px; right: 8px; font-family: var(--mono); font-size: 10px; background: var(--accent); color: var(--paper); padding: 2px 8px; z-index: 100; opacity: 0.7; }
+.slide.dark .feedback-point { background: var(--paper); color: var(--ink); }
+</style>
+</head>
+<body>
+
+<!-- 封面 -->
+<section class="slide light hero visible">
+  <div class="feedback-point">[反馈点1：封面]</div>
+  <div class="chrome"><div>豆豆 · 长篇小说</div><div>01 / 20</div></div>
+  <div class="cover">
+    <div class="kicker anim-fade-up">遥远的救世主</div>
+    <h1 class="h-hero anim-fade-up">神即道</h1>
+    <p class="lead anim-fade-up">道法自然·如来 —— 六维思想实验室</p>
+    <div class="divider anim-fade-up"></div>
+    <div class="meta anim-fade-up">丁元英 · 文化属性 · 强势文化 vs 弱势文化</div>
+  </div>
+  <div class="foot"><div>圆桌洞见 · Roundtable Insight</div><div>— 2026 —</div></div>
+</section>
+
+<!-- 核心问题 -->
+<section class="slide dark hero">
+  <div class="feedback-point">[反馈点2：核心问题]</div>
+  <div class="chrome"><div>核心问题</div><div>02 / 20</div></div>
+  <div class="cover" style="text-align:center; max-width:800px; margin:0 auto;">
+    <div class="kicker anim-fade-up">核心问题</div>
+    <blockquote class="h-lg anim-fade-up" style="font-style:italic; margin:24px 0;">
+      "强势文化造就强者，弱势文化造就弱者，这是规律，不以人的意志为转移。"
+    </blockquote>
+    <div class="divider anim-fade-up" style="margin:24px auto;"></div>
+    <div class="meta anim-fade-up">—— 丁元英</div>
+  </div>
+  <div class="foot"><div>核心问题</div><div>Question</div></div>
+</section>
+
+<!-- 文化属性 -->
+<section class="slide light">
+  <div class="feedback-point">[反馈点3：阅读页]</div>
+  <div class="chrome"><div>第一章 · 文化属性</div><div>03 / 20</div></div>
+  <div style="display:grid; grid-template-rows: auto 1fr; gap:48px; min-height:80vh; align-content:start; padding-top:8vh; position:relative; z-index:1;">
+    <div>
+      <div class="kicker anim-fade-up">文化属性</div>
+      <h2 class="h-xl anim-fade-up">强势文化 vs 弱势文化</h2>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="body anim-fade-up" style="margin-bottom:32px;">
+          丁元英提出的核心理论：文化属性决定命运。
+        </div>
+        <div class="card anim-fade-up" style="margin-bottom:24px;">
+          <div class="h-sm">强势文化</div>
+          <div class="body" style="margin-top:8px;">
+            遵循事物规律的文化。
+            不依赖他人，不期望破格获取。
+            <br><br>
+            <strong>特征：</strong>独立思考、尊重规律、承担责任。
+          </div>
+        </div>
+        <div class="card anim-fade-up">
+          <div class="h-sm">弱势文化</div>
+          <div class="body" style="margin-top:8px;">
+            依赖强者的道德期望破格获取的文化。
+            期待救世主，期待奇迹。
+            <br><br>
+            <strong>特征：</strong>依赖他人、期望捷径、推卸责任。
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="quote anim-fade-up">
+          <div class="quote-text">
+            "透视社会依次有三个层面：技术、制度和文化。"
+          </div>
+          <div class="quote-author">—— 丁元英</div>
+        </div>
+        <div class="anim-fade-up" style="margin-top:32px;">
+          <div class="tag">核心洞察</div>
+          <div class="body" style="margin-top:16px;">
+            丁元英认为，任何一种命运归根到底都是那种文化属性的产物。
+            <br><br>
+            强势文化是少数人的文化，因为遵循规律需要付出代价。
+            弱势文化是多数人的文化，因为依赖他人更轻松。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><div>第一章 · 文化属性</div><div>Culture</div></div>
+</section>
+
+<!-- 格律诗案例 -->
+<section class="slide dark">
+  <div class="feedback-point">[反馈点4：案例页]</div>
+  <div class="chrome"><div>案例分析 · 格律诗</div><div>04 / 20</div></div>
+  <div style="display:grid; grid-template-rows: auto 1fr; gap:48px; min-height:80vh; align-content:start; padding-top:8vh; position:relative; z-index:1;">
+    <div>
+      <div class="kicker anim-fade-up">案例分析</div>
+      <h2 class="h-xl anim-fade-up">格律诗：文化属性的实验</h2>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="card-dark anim-fade-up" style="margin-bottom:24px;">
+          <div class="meta" style="margin-bottom:12px;">背景</div>
+          <div class="h-sm">王庙村扶贫</div>
+          <div class="body" style="color:rgba(238,223,199,.7); margin-top:8px;">
+            丁元英答应芮小丹，给王庙村一个"神话"。
+            他策划了格律诗音响公司，利用农村廉价劳动力和手工生产成本优势。
+          </div>
+        </div>
+        <div class="card-dark anim-fade-up" style="margin-bottom:24px;">
+          <div class="meta" style="margin-bottom:12px;">策略</div>
+          <div class="h-sm">价格颠覆</div>
+          <div class="body" style="color:rgba(238,223,199,.7); margin-top:8px;">
+            格律诗以极低价格冲击高端音响市场，
+            与乐圣音响进行价格竞争。
+            这不是慈善，是商业。
+          </div>
+        </div>
+        <div class="card-dark anim-fade-up">
+          <div class="meta" style="margin-bottom:12px;">结果</div>
+          <div class="h-sm">林雨峰自杀</div>
+          <div class="body" style="color:rgba(238,223,199,.7); margin-top:8px;">
+            乐圣音响创始人林雨峰因竞争失败而自杀。
+            这是文化属性的必然结果。
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="quote anim-fade-up" style="margin-bottom:32px;">
+          <div class="quote-text">
+            "神就是道，道就是规律，规律如来，容不得你思议，按规律办事的人就是神。"
+          </div>
+          <div class="quote-author">—— 丁元英</div>
+        </div>
+        <div class="anim-fade-up">
+          <div class="tag">核心观点</div>
+          <div class="body" style="color:rgba(238,223,199,.7); margin-top:16px;">
+            丁元英不是在"设计"扶贫，是在"揭示"规律。
+            <br><br>
+            市场经济规律在农村经济中的运作方式，
+            不取决于丁元英的意志，取决于规律本身。
+            <br><br>
+            <strong>关键问题：</strong>丁元英是"揭示"规律还是"利用"规律？
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><div>案例分析 · 格律诗</div><div>Case Study</div></div>
+</section>
+
+<!-- 圆桌讨论1：神即道 -->
+<section class="slide light">
+  <div class="feedback-point">[反馈点5：深度讨论]</div>
+  <div class="chrome"><div>圆桌讨论 · Round 1</div><div>05 / 20</div></div>
+  <div style="display:grid; grid-template-rows: auto 1fr; gap:24px; min-height:80vh; align-content:start; padding-top:6vh; position:relative; z-index:1;">
+    <div class="debate-question">
+      <div class="kicker">Round 1 · 核心问题</div>
+      <h2 class="h-lg">丁元英的"神即道"揭示了什么？</h2>
+      <p class="lead" style="font-size:16px;">6位专家从不同角度审视丁元英的文化属性理论</p>
+    </div>
+    <div class="debate">
+      <div class="debate-connector"></div>
+      <div class="debate-col">
+        <div class="statement">
+          <div class="attack-mark">质疑</div>
+          <div class="statement-head">
+            <div class="statement-avatar" style="background:#ef4444;">尼</div>
+            <div class="statement-info">
+              <div class="statement-name">尼采</div>
+              <div class="statement-role">权力意志哲学家</div>
+            </div>
+          </div>
+          <div class="statement-body">
+            丁元英，你说"神即道"——这恰恰是我要摧毁的东西。
+            <br><br>
+            我说"上帝死了"，不是因为我不相信超越性存在，
+            而是因为我不相信人需要一个外在的权威来告诉自己该怎么活。
+            <br><br>
+            <strong>你说"规律不以人的意志为转移"——这是一种新形式的宿命论。</strong>
+            你说王庙村的人"注定"是弱势文化——这和教会说穷人"注定"要受苦有什么区别？
+          </div>
+        </div>
+        <div class="statement">
+          <div class="attack-mark">质疑</div>
+          <div class="statement-head">
+            <div class="statement-avatar" style="background:#f59e0b;">韩</div>
+            <div class="statement-info">
+              <div class="statement-name">韩非子</div>
+              <div class="statement-role">法家思想家</div>
+            </div>
+          </div>
+          <div class="statement-body">
+            丁元英，你说"透视社会依次有三个层面：技术、制度和文化"——
+            但你忽略了第四个层面：<strong>权力</strong>。
+            <br><br>
+            你的格律诗案例中，真正起作用的不是"文化属性"，
+            是你设计的商业模式和利益分配机制。
+            <br><br>
+            <strong>文化只是表象，制度才是根本。</strong>
+          </div>
+        </div>
+      </div>
+      <div class="debate-col">
+        <div class="statement">
+          <div class="counter-mark">反驳</div>
+          <div class="statement-head">
+            <div class="statement-avatar" style="background:#3b82f6;">丁</div>
+            <div class="statement-info">
+              <div class="statement-name">丁元英</div>
+              <div class="statement-role">文化属性理论家</div>
+            </div>
+          </div>
+          <div class="statement-body">
+            尼采，你说我"新形式的宿命论"——你误解了。
+            <br><br>
+            我说"规律不以人的意志为转移"，
+            不是说人不能改变命运，
+            是说<strong>改变命运必须遵循规律</strong>。
+            <br><br>
+            你可以选择不遵循规律，
+            但你不能选择不承受后果。
+            这不是宿命论，是因果律。
+          </div>
+        </div>
+        <div class="statement">
+          <div class="counter-mark">反驳</div>
+          <div class="statement-head">
+            <div class="statement-avatar" style="background:#10b981;">老</div>
+            <div class="statement-info">
+              <div class="statement-name">老子</div>
+              <div class="statement-role">道家哲学家</div>
+            </div>
+          </div>
+          <div class="statement-body">
+            丁元英，你说"神即道，道法自然"——
+            这和我的思想是一致的。
+            <br><br>
+            但你忽略了一点：<strong>道不是用来"利用"的，是用来"顺应"的。</strong>
+            <br><br>
+            你用"道"来策划商业竞争，
+            这是"术"，不是"道"。
+            真正的"道"是无为而治，不是有为而争。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><div>圆桌讨论 · Round 1</div><div>Discussion</div></div>
+</section>
+
+<!-- 圆桌讨论2：弱势文化 -->
+<section class="slide dark">
+  <div class="feedback-point">[反馈点6：深度讨论]</div>
+  <div class="chrome"><div>圆桌讨论 · Round 2</div><div>06 / 20</div></div>
+  <div style="display:grid; grid-template-rows: auto 1fr; gap:24px; min-height:80vh; align-content:start; padding-top:6vh; position:relative; z-index:1;">
+    <div class="debate-question">
+      <div class="kicker">Round 2 · 核心交锋</div>
+      <h2 class="h-lg">弱势文化是"注定"的吗？</h2>
+      <p class="lead" style="font-size:16px; color:rgba(238,223,199,.7);">王庙村的人真的"注定"是弱势文化吗？</p>
+    </div>
+    <div class="debate">
+      <div class="debate-connector"></div>
+      <div class="debate-col">
+        <div class="statement">
+          <div class="attack-mark">质疑</div>
+          <div class="statement-head">
+            <div class="statement-avatar" style="background:#8b5cf6;">马</div>
+            <div class="statement-info">
+              <div class="statement-name">马克思</div>
+              <div class="statement-role">政治经济学家</div>
+            </div>
+          </div>
+          <div class="statement-body" style="color:rgba(238,223,199,.85);">
+            丁元英，你说"弱势文化是依赖强者的道德期望破格获取的文化"——
+            但你忽略了<strong>经济基础</strong>的作用。
+            <br><br>
+            王庙村的人为什么是"弱势文化"？
+            不是因为他们"选择"了依赖，
+            是因为他们<strong>没有资源</strong>去独立。
+            <br><br>
+            <strong>文化是经济基础的产物，不是原因。</strong>
+          </div>
+        </div>
+        <div class="statement">
+          <div class="attack-mark">质疑</div>
+          <div class="statement-head">
+            <div class="statement-avatar" style="background:#06b6d4;">芒</div>
+            <div class="statement-info">
+              <div class="statement-name">芒格</div>
+              <div class="statement-role">多元思维模型家</div>
+            </div>
+          </div>
+          <div class="statement-body" style="color:rgba(238,223,199,.85);">
+            丁元英，你的"文化属性"理论有一个<strong>逻辑漏洞</strong>：
+            <br><br>
+            你说"强势文化造就强者"，
+            但你没有解释<strong>为什么有些人选择了强势文化，有些人选择了弱势文化</strong>。
+            <br><br>
+            如果文化是"选择"的，那选择的依据是什么？
+            如果文化是"注定"的，那你的理论就是宿命论。
+          </div>
+        </div>
+      </div>
+      <div class="debate-col">
+        <div class="statement">
+          <div class="counter-mark">反驳</div>
+          <div class="statement-head">
+            <div class="statement-avatar" style="background:#3b82f6;">丁</div>
+            <div class="statement-info">
+              <div class="statement-name">丁元英</div>
+              <div class="statement-role">反驳</div>
+            </div>
+          </div>
+          <div class="statement-body" style="color:rgba(238,223,199,.85);">
+            马克思，你说"文化是经济基础的产物"——
+            但你忽略了<strong>文化对经济基础的反作用</strong>。
+            <br><br>
+            同样的经济条件下，
+            有些人选择了奋斗，有些人选择了等待。
+            这个选择就是文化属性的体现。
+            <br><br>
+            <strong>经济基础是条件，文化属性是选择。</strong>
+          </div>
+        </div>
+        <div class="statement">
+          <div class="counter-mark">反驳</div>
+          <div class="statement-head">
+            <div class="statement-avatar" style="background:#ef4444;">尼</div>
+            <div class="statement-info">
+              <div class="statement-name">尼采</div>
+              <div class="statement-role">反驳</div>
+            </div>
+          </div>
+          <div class="statement-body" style="color:rgba(238,223,199,.85);">
+            芒格，你问"为什么有些人选择了强势文化"——
+            答案是：<strong>意志</strong>。
+            <br><br>
+            有些人有<strong>权力意志</strong>，想要超越自己；
+            有些人没有，只能依赖他人。
+            <br><br>
+            丁元英的"文化属性"理论，
+            本质上就是我的"权力意志"理论的中国版。
+            <br><br>
+            <strong>区别在于：我认为意志可以培养，他认为文化是固定的。</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><div>圆桌讨论 · Round 2</div><div>Debate</div></div>
+</section>
+
+<!-- 圆桌讨论3：救世主 -->
+<section class="slide light">
+  <div class="feedback-point">[反馈点7：深度讨论]</div>
+  <div class="chrome"><div>圆桌讨论 · Round 3</div><div>07 / 20</div></div>
+  <div style="display:grid; grid-template-rows: auto 1fr; gap:24px; min-height:80vh; align-content:start; padding-top:6vh; position:relative; z-index:1;">
+    <div class="debate-question">
+      <div class="kicker">Round 3 · 深度交锋</div>
+      <h2 class="h-lg">遥远的救世主：谁是救世主？</h2>
+      <p class="lead" style="font-size:16px;">丁元英是王庙村的"救世主"吗？</p>
+    </div>
+    <div class="debate">
+      <div class="debate-connector"></div>
+      <div class="debate-col">
+        <div class="statement">
+          <div class="attack-mark">质疑</div>
+          <div class="statement-head">
+            <div class="statement-avatar" style="background:#f59e0b;">韩</div>
+            <div class="statement-info">
+              <div class="statement-name">韩非子</div>
+              <div class="statement-role">质疑</div>
+            </div>
+          </div>
+          <div class="statement-body">
+            丁元英，你说"按规律办事的人就是神"——
+            但你策划的格律诗案例中，<strong>林雨峰自杀了</strong>。
+            <br><br>
+            如果你是"神"，为什么你的"规律"会导致人死亡？
+            <br><br>
+            <strong>你的"规律"是冷血的，不是神圣的。</strong>
+          </div>
+        </div>
+        <div class="statement">
+          <div class="attack-mark">质疑</div>
+          <div class="statement-head">
+            <div class="statement-avatar" style="background:#10b981;">老</div>
+            <div class="statement-info">
+              <div class="statement-name">老子</div>
+              <div class="statement-role">质疑</div>
+            </div>
+          </div>
+          <div class="statement-body">
+            丁元英，你说"遥远的救世主"——
+            但真正的救世主不是遥远的，<strong>是近在咫尺的自己</strong>。
+            <br><br>
+            你说王庙村的人需要"觉悟"，
+            但你没有告诉他们<strong>如何觉悟</strong>。
+            <br><br>
+            <strong>你只是揭示了问题，没有给出答案。</strong>
+          </div>
+        </div>
+      </div>
+      <div class="debate-col">
+        <div class="statement">
+          <div class="counter-mark">反驳</div>
+          <div class="statement-head">
+            <div class="statement-avatar" style="background:#3b82f6;">丁</div>
+            <div class="statement-info">
+              <div class="statement-name">丁元英</div>
+              <div class="statement-role">反驳</div>
+            </div>
+          </div>
+          <div class="statement-body">
+            韩非子，你说我的"规律"是冷血的——
+            但<strong>规律本身没有温度</strong>。
+            <br><br>
+            林雨峰的自杀不是我的"规律"造成的，
+            是他自己的<strong>文化属性</strong>造成的。
+            <br><br>
+            他选择了竞争，就要承担竞争的后果。
+            这不是冷血，是<strong>因果</strong>。
+          </div>
+        </div>
+        <div class="statement">
+          <div class="counter-mark">反驳</div>
+          <div class="statement-head">
+            <div class="statement-avatar" style="background:#06b6d4;">芒</div>
+            <div class="statement-info">
+              <div class="statement-name">芒格</div>
+              <div class="statement-role">反驳</div>
+            </div>
+          </div>
+          <div class="statement-body">
+            老子，你说丁元英"只是揭示了问题"——
+            但<strong>揭示问题本身就是答案</strong>。
+            <br><br>
+            多数人连问题都看不到，
+            丁元英至少让他们看到了<strong>自己的文化属性</strong>。
+            <br><br>
+            <strong>觉悟不是别人给的，是自己悟的。</strong>
+            丁元英能做的，只是"开一扇窗户"。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><div>圆桌讨论 · Round 3</div><div>Savior</div></div>
+</section>
+
+<!-- 认知升华 -->
+<section class="slide dark hero">
+  <div class="feedback-point">[反馈点8：升华页]</div>
+  <div class="chrome"><div>圆桌讨论 · 升华</div><div>08 / 20</div></div>
+  <div class="cover" style="text-align:center; max-width:800px; margin:0 auto;">
+    <div class="kicker anim-fade-up">认知升华</div>
+    <blockquote class="h-lg anim-fade-up" style="font-style:italic; margin:24px 0;">
+      "从来就没有救世主，也不靠神仙皇帝。"
+    </blockquote>
+    <div class="divider anim-fade-up" style="margin:24px auto;"></div>
+    <div class="lead anim-fade-up" style="color:rgba(238,223,199,.7);">
+      遥远的救世主，不是遥远的别人，是遥远的自己。<br>
+      觉悟不是别人给的，是自己悟的。
+    </div>
+    <div class="meta anim-fade-up" style="margin-top:24px;">—— 圆桌讨论 · 6位专家共识</div>
+  </div>
+  <div class="foot"><div>圆桌讨论 · 升华</div><div>Insight</div></div>
+</section>
+
+<!-- 金句集 -->
+<section class="slide dark">
+  <div class="feedback-point">[反馈点9：金句集]</div>
+  <div class="chrome"><div>金句集</div><div>09 / 20</div></div>
+  <div style="display:grid; grid-template-rows: auto 1fr; gap:48px; min-height:80vh; align-content:start; padding-top:8vh; position:relative; z-index:1;">
+    <div>
+      <div class="kicker anim-fade-up">Quotes</div>
+      <h2 class="h-xl anim-fade-up">丁元英的金句</h2>
+    </div>
+    <div class="three-col">
+      <div class="card-dark anim-fade-up">
+        <div class="quote-text" style="font-size:18px; margin-bottom:12px;">
+          "神就是道，道就是规律，规律如来，容不得你思议。"
+        </div>
+        <div class="meta">核心信仰</div>
+      </div>
+      <div class="card-dark anim-fade-up">
+        <div class="quote-text" style="font-size:18px; margin-bottom:12px;">
+          "强势文化就是遵循事物规律的文化。"
+        </div>
+        <div class="meta">文化属性</div>
+      </div>
+      <div class="card-dark anim-fade-up">
+        <div class="quote-text" style="font-size:18px; margin-bottom:12px;">
+          "透视社会依次有三个层面：技术、制度和文化。"
+        </div>
+        <div class="meta">认知框架</div>
+      </div>
+      <div class="card-dark anim-fade-up">
+        <div class="quote-text" style="font-size:18px; margin-bottom:12px;">
+          "从来就没有救世主，也不靠神仙皇帝。"
+        </div>
+        <div class="meta">觉悟</div>
+      </div>
+      <div class="card-dark anim-fade-up">
+        <div class="quote-text" style="font-size:18px; margin-bottom:12px;">
+          "认识这个人就是开了一扇窗户。"
+        </div>
+        <div class="meta">价值</div>
+      </div>
+      <div class="card-dark anim-fade-up">
+        <div class="quote-text" style="font-size:18px; margin-bottom:12px;">
+          "按规律办事的人就是神。"
+        </div>
+        <div class="meta">实践</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><div>金句集</div><div>Wisdom</div></div>
+</section>
+
+<!-- 专家共识 -->
+<section class="slide light">
+  <div class="feedback-point">[反馈点10：共识页]</div>
+  <div class="chrome"><div>专家共识</div><div>10 / 20</div></div>
+  <div style="display:grid; grid-template-rows: auto 1fr; gap:48px; min-height:80vh; align-content:start; padding-top:8vh; position:relative; z-index:1;">
+    <div>
+      <div class="kicker anim-fade-up">Consensus</div>
+      <h2 class="h-xl anim-fade-up">6位专家的核心共识</h2>
+    </div>
+    <div class="three-col">
+      <div class="card anim-fade-up">
+        <div class="h-sm">规律是客观的</div>
+        <div class="body" style="margin-top:8px;">
+          不以人的意志为转移。
+          遵循规律是成功的前提。
+        </div>
+      </div>
+      <div class="card anim-fade-up">
+        <div class="h-sm">文化属性决定命运</div>
+        <div class="body" style="margin-top:8px;">
+          强势文化造就强者，弱势文化造就弱者。
+          这是规律，不以人的意志为转移。
+        </div>
+      </div>
+      <div class="card anim-fade-up">
+        <div class="h-sm">救世主是自己</div>
+        <div class="body" style="margin-top:8px;">
+          遥远的救世主，不是遥远的别人，是遥远的自己。
+          觉悟不是别人给的，是自己悟的。
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><div>专家共识</div><div>Insight</div></div>
+</section>
+
+<!-- 核心问题 -->
+<section class="slide dark hero">
+  <div class="feedback-point">[反馈点11：问题页]</div>
+  <div class="chrome"><div>核心问题</div><div>11 / 20</div></div>
+  <div class="cover" style="text-align:center; max-width:800px; margin:0 auto;">
+    <div class="kicker anim-fade-up">留给你的问题</div>
+    <blockquote class="h-lg anim-fade-up" style="font-style:italic; margin:24px 0;">
+      "你的文化属性是什么？"
+    </blockquote>
+    <div class="divider anim-fade-up" style="margin:24px auto;"></div>
+    <div class="lead anim-fade-up" style="color:rgba(238,223,199,.7);">
+      你是强势文化还是弱势文化？<br>
+      你在等待救世主，还是成为自己的救世主？
+    </div>
+  </div>
+  <div class="foot"><div>核心问题</div><div>Reflect</div></div>
+</section>
+
+<!-- 行动建议 -->
+<section class="slide light">
+  <div class="feedback-point">[反馈点12：行动页]</div>
+  <div class="chrome"><div>行动建议</div><div>12 / 20</div></div>
+  <div style="display:grid; grid-template-rows: auto 1fr; gap:48px; min-height:80vh; align-content:start; padding-top:8vh; position:relative; z-index:1;">
+    <div>
+      <div class="kicker anim-fade-up">Action</div>
+      <h2 class="h-xl anim-fade-up">读完这本书，你可以做什么</h2>
+    </div>
+    <div class="three-col">
+      <div class="card anim-fade-up">
+        <div class="h-sm">审视自己的文化属性</div>
+        <div class="body" style="margin-top:8px;">
+          你是依赖他人，还是独立思考？
+          你在等待机会，还是创造机会？
+        </div>
+      </div>
+      <div class="card anim-fade-up">
+        <div class="h-sm">遵循规律</div>
+        <div class="body" style="margin-top:8px;">
+          不要期望破格获取。
+          按规律办事，才是真正的强者。
+        </div>
+      </div>
+      <div class="card anim-fade-up">
+        <div class="h-sm">成为自己的救世主</div>
+        <div class="body" style="margin-top:8px;">
+          遥远的救世主，不是遥远的别人，是遥远的自己。
+          觉悟不是别人给的，是自己悟的。
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><div>行动建议</div><div>Start</div></div>
+</section>
+
+<!-- 结束页 -->
+<section class="slide dark hero">
+  <div class="feedback-point">[反馈点13：结束页]</div>
+  <div class="chrome"><div>结束</div><div>13 / 20</div></div>
+  <div class="cover" style="text-align:center; max-width:800px; margin:0 auto;">
+    <div class="kicker anim-fade-up">Thank You</div>
+    <h1 class="h-hero anim-fade-up" style="font-size:clamp(36px, 6vw, 96px);">神即道</h1>
+    <p class="lead anim-fade-up" style="color:rgba(238,223,199,.7); margin-top:24px;">
+      道法自然·如来<br>
+      按规律办事的人就是神
+    </p>
+    <div class="divider anim-fade-up" style="margin:32px auto;"></div>
+    <div class="meta anim-fade-up">
+      基于豆豆《遥远的救世主》<br>
+      6位专家圆桌讨论 · 圆桌洞见
+    </div>
+  </div>
+  <div class="foot"><div>圆桌洞见</div><div>— 2026 —</div></div>
+</section>
+
+<!-- 翻页逻辑 -->
+<script>
+let current = 0;
+const slides = document.querySelectorAll('.slide');
+function go(n) {
+  slides[current].classList.remove('visible');
+  current = Math.max(0, Math.min(n, slides.length - 1));
+  slides[current].classList.add('visible');
+  animateSlide(slides[current]);
+}
+function animateSlide(slide) {
+  const els = slide.querySelectorAll('.anim-fade-up');
+  els.forEach((el, i) => {
+    el.style.transition = `opacity 0.6s ease ${i * 0.1}s, transform 0.6s ease ${i * 0.1}s`;
+    el.style.opacity = '1';
+    el.style.transform = 'translateY(0)';
+  });
+  const fadeIns = slide.querySelectorAll('.anim-fade-in');
+  fadeIns.forEach((el, i) => {
+    el.style.transition = `opacity 0.8s ease ${i * 0.1}s`;
+    el.style.opacity = '1';
+  });
+  const statements = slide.querySelectorAll('.statement');
+  statements.forEach((el, i) => {
+    el.style.transition = `opacity 0.6s ease ${0.2 + i * 0.15}s, transform 0.6s ease ${0.2 + i * 0.15}s`;
+    el.style.opacity = '1';
+    el.style.transform = 'translateY(0)';
+  });
+  const questions = slide.querySelectorAll('.debate-question');
+  questions.forEach(el => {
+    el.style.transition = 'opacity 0.8s ease 0.1s, transform 0.8s ease 0.1s';
+    el.style.opacity = '1';
+    el.style.transform = 'scale(1)';
+  });
+}
+document.addEventListener('keydown', e => {
+  if (['ArrowRight','ArrowDown','Space','PageDown'].includes(e.code)) {
+    e.preventDefault(); go(current + 1);
+  } else if (['ArrowLeft','ArrowUp','PageUp'].includes(e.code)) {
+    e.preventDefault(); go(current - 1);
+  } else if (e.code === 'Home') {
+    e.preventDefault(); go(0);
+  } else if (e.code === 'End') {
+    e.preventDefault(); go(slides.length - 1);
+  }
+});
+let wheelTimer = null;
+document.addEventListener('wheel', e => {
+  if (wheelTimer) return;
+  wheelTimer = setTimeout(() => { wheelTimer = null; }, 800);
+  if (e.deltaY > 0) go(current + 1);
+  else if (e.deltaY < 0) go(current - 1);
+}, { passive: true });
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  const diff = touchStartX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 50) {
+    if (diff > 0) go(current + 1);
+    else go(current - 1);
+  }
+});
+document.addEventListener('click', e => {
+  const x = e.clientX;
+  if (x > window.innerWidth * 0.7) go(current + 1);
+  else if (x < window.innerWidth * 0.3) go(current - 1);
+});
+slides[0].classList.add('visible');
+animateSlide(slides[0]);
+</script>
+
+</body>
+</html>

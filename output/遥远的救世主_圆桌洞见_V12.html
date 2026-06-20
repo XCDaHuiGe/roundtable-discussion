@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>遥远的救世主 · 圆桌洞见</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff;--text:#1a1a1a;--dim:#666;--light:#999;--accent:#c41e3a;--accent-bg:rgba(196,30,58,.06);--gold:#b8860b;--gold-bg:rgba(184,134,11,.06);--serif:'Noto Serif SC',Georgia,serif;--sans:'Noto Sans SC','Microsoft YaHei',sans-serif;--mono:'IBM Plex Mono',Consolas,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;font-family:var(--sans);color:var(--text);background:var(--bg)}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:60px 40px 60px 280px;z-index:1;opacity:0;transform:translateY(20px);transition:all .6s cubic-bezier(.25,.46,.45,.94)}
+.slide.active{display:flex;opacity:1;transform:translateY(0)}
+.progress{position:fixed;top:0;left:0;height:2px;background:var(--accent);z-index:100;transition:width .4s}
+.nav{position:fixed;right:24px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:6px;z-index:100}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(26,26,26,.12);cursor:pointer;transition:all .3s}
+.dot.active{background:var(--accent);transform:scale(1.5)}
+.num{position:fixed;bottom:20px;right:24px;font-family:var(--mono);font-size:11px;color:var(--light);z-index:100}
+.chrome{position:fixed;top:20px;left:280px;right:80px;display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--light);z-index:10}
+.content{max-width:800px;width:100%;position:relative;z-index:2}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+.h1{font-family:var(--serif);font-size:clamp(36px,6vw,72px);font-weight:900;line-height:1.1;margin-bottom:20px}
+.h2{font-family:var(--serif);font-size:clamp(24px,3.5vw,40px);font-weight:700;line-height:1.2;margin-bottom:16px}
+.h3{font-family:var(--serif);font-size:clamp(16px,2vw,24px);font-weight:700;line-height:1.3;margin-bottom:12px}
+.h4{font-family:var(--serif);font-size:15px;font-weight:700;margin-bottom:8px}
+.lead{font-size:clamp(14px,1.3vw,17px);line-height:1.8;color:var(--dim);max-width:500px}
+.accent{color:var(--accent)}.gold{color:var(--gold)}
+.tag{display:inline-block;padding:3px 10px;border-radius:2px;font-family:var(--mono);font-size:10px;letter-spacing:.05em;margin:2px;border:1px solid}
+.tag-accent{border-color:var(--accent);color:var(--accent)}
+.tag-gold{border-color:var(--gold);color:var(--gold)}
+.card{background:#fafafa;border:1px solid rgba(26,26,26,.06);padding:16px;margin-bottom:10px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.insight{border-left:3px solid var(--accent);padding:12px 16px;background:var(--accent-bg);margin-bottom:10px}
+.insight-q{font-family:var(--serif);font-size:14px;font-weight:700;color:var(--accent);margin-bottom:6px}
+.insight-a{font-size:13px;line-height:1.6;color:var(--dim)}
+.tension{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.tension-label{font-size:12px;min-width:130px;color:var(--dim)}
+.tension-track{flex:1;height:5px;background:rgba(26,26,26,.06);overflow:hidden}
+.tension-fill{height:100%;transition:width .6s}
+.tension-val{font-family:var(--mono);font-size:10px;min-width:32px;text-align:right}
+.quote{border-left:2px solid var(--accent);padding:10px 14px;margin:8px 0;font-family:var(--serif);font-size:14px;line-height:1.7;font-style:italic;color:var(--dim)}
+.speech{border-left:2px solid rgba(26,26,26,.1);padding:12px 14px;margin-bottom:8px;background:#fafafa}
+.speech[data-type="attack"]{border-left-color:var(--accent);background:var(--accent-bg)}
+.speech[data-type="counter"]{border-left-color:var(--gold);background:var(--gold-bg)}
+.speech-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.speech-avatar{width:24px;height:24px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0}
+.speech-name{font-size:12px;font-weight:700}
+.speech-role{font-family:var(--mono);font-size:9px;color:var(--light)}
+.speech-body{font-size:12px;line-height:1.6;color:var(--dim)}
+.speech-body strong{color:var(--text)}
+.dialogue{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.scene{border-left:3px solid var(--gold);padding:12px 14px;background:var(--gold-bg);margin-bottom:10px}
+.scene-title{font-family:var(--serif);font-size:14px;font-weight:700;color:var(--gold);margin-bottom:6px}
+.scene-body{font-size:12px;line-height:1.6;color:var(--dim)}
+.scene-quote{font-style:italic;margin-top:6px;padding-top:6px;border-top:1px solid rgba(184,134,11,.15)}
+[data-anim]{opacity:0;transform:translateY(12px);transition:all .4s cubic-bezier(.25,.46,.45,.94)}
+.slide.active [data-anim]{opacity:1;transform:translateY(0)}
+.slide.active [data-anim]:nth-child(1){transition-delay:.04s}
+.slide.active [data-anim]:nth-child(2){transition-delay:.08s}
+.slide.active [data-anim]:nth-child(3){transition-delay:.12s}
+.slide.active [data-anim]:nth-child(4){transition-delay:.16s}
+.slide.active [data-anim]:nth-child(5){transition-delay:.2s}
+.divider{width:40px;height:1px;background:var(--accent);margin:12px 0}
+.toc-sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:#f8f8f8;border-right:1px solid rgba(26,26,26,.08);z-index:50;overflow-y:auto;padding:20px 0;scrollbar-width:thin;scrollbar-color:rgba(26,26,26,.1) transparent}
+.toc-header{padding:0 20px 16px;border-bottom:1px solid rgba(26,26,26,.08)}
+.toc-title{font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--light)}
+.toc-list{padding:4px 0}
+.toc-item{display:block;padding:6px 20px;font-size:12px;color:var(--dim);cursor:pointer;transition:all .15s;border-left:3px solid transparent}
+.toc-item:hover{color:var(--text);background:rgba(26,26,26,.03)}
+.toc-item.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-bg);font-weight:600}
+.toc-item .toc-num{font-family:var(--mono);font-size:9px;color:var(--light);margin-right:6px}
+@media(max-width:1024px){.slide{padding:60px 24px}.toc-sidebar{display:none}.chrome{left:24px}}
+</style>
+</head>
+<body>
+
+<div class="toc-sidebar" id="tocSidebar">
+<div class="toc-header"><div class="toc-title">目录</div></div>
+<div class="toc-list" id="tocList"></div>
+</div>
+
+<div class="progress" id="progress"></div>
+<div class="nav" id="nav"></div>
+<div class="num" id="num"></div>
+<div class="chrome"><span>遥远的救世主 · 圆桌洞见</span><span id="title"></span></div>
+
+<section class="slide active" data-title="封面">
+<div class="content" style="text-align:center;">
+<div class="kicker" data-anim>圆桌洞见 · 50页深度分析</div>
+<h1 class="h1" data-anim>遥远的救世主</h1>
+<p class="lead" data-anim style="text-align:center;margin:0 auto;">神即道·道法自然·如来<br>文化属性决定命运，这是规律，也是天道。</p>
+<div class="divider" data-anim style="margin:16px auto;"></div>
+<div data-anim style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+<span class="tag tag-accent">6位专家</span><span class="tag tag-accent">10轮交锋</span><span class="tag tag-accent">5个洞见</span><span class="tag tag-accent">50页</span>
+</div></div></section>
+<section class="slide" data-title="书名释义">
+<div class="content" style="text-align:center;">
+<div class="kicker" data-anim>TITLE</div>
+<h2 class="h2" data-anim>救世主之所以遥远</h2>
+<div class="divider" data-anim style="margin:16px auto;"></div>
+<p class="lead" data-anim style="text-align:center;margin:0 auto;font-size:18px;">
+"是因为他根本不存在；<br>或者说，<span class="accent">救世主就是那个遵循事物规律的自己</span>"
+</p>
+<p class="lead" data-anim style="text-align:center;margin:12px auto 0;">
+书名本身就是一个悖论的解：遥远 = 不存在 / 存在于自身 = 不遥远
+</p></div></section>
+<section class="slide" data-title="核心命题">
+<div class="content" style="text-align:center;">
+<div class="kicker" data-anim>PHILOSOPHY</div>
+<blockquote class="h2" data-anim style="font-style:italic;max-width:500px;margin:0 auto;">
+"世上没有救世主，能救你的只有你自己——这就是天道。"
+</blockquote>
+<div class="divider" data-anim style="margin:16px auto;"></div>
+<p class="lead" data-anim style="text-align:center;margin:0 auto;">
+丁元英用"杀富济贫"的商业实验，把这句话拍进了每一个读过它的人的骨头里。
+</p></div></section>
+<section class="slide" data-title="文化属性">
+<div class="content">
+<div class="kicker" data-anim>CONCEPT</div>
+<h2 class="h2" data-anim>文化属性</h2>
+<div class="card" data-anim style="margin-bottom:12px;">
+<p style="text-align:center;font-size:15px;line-height:1.8;">
+透视社会依次有三个层面：技术、制度和文化。<br>任何一种命运归根到底都是<span class="accent" style="font-weight:700;">文化属性的产物</span>。
+</p></div>
+<div class="grid-2" data-anim>
+<div class="card" style="border-left:3px solid var(--gold);"><div class="h4" style="color:var(--gold);">强势文化</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">遵循事物规律，自强不息，创造价值，不依赖他人</p></div>
+<div class="card" style="border-left:3px solid var(--accent);"><div class="h4" style="color:var(--accent);">弱势文化</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">期待救世主，依赖强者，等待被拯救，缺乏自主性</p></div>
+</div></div></section>
+<section class="slide" data-title="故事脉络">
+<div class="content">
+<div class="kicker" data-anim>PLOT</div>
+<h2 class="h2" data-anim>四幕叙事</h2>
+<div class="grid-2" data-anim style="margin-top:12px;">
+<div class="card"><div class="h4 accent">起</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">丁元英隐居古城。芮小丹受托照看——通过《天国的女儿》觉醒。两人建立联系。</p></div>
+<div class="card"><div class="h4 gold">承</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">格律诗成立。丁元英设计"杀富济贫"——以扶贫为名，对抗乐圣。王庙村生产基地建立。</p></div>
+<div class="card"><div class="h4" style="color:#e67e22;">转</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">商业战争爆发。乐圣起诉格律诗。叶晓明/刘冰/冯世杰退股。肖亚文接盘胜诉。</p></div>
+<div class="card"><div class="h4 accent">合</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">芮小丹殉道。刘冰跳楼。林雨峰自杀。丁元英离去。三死一隐。</p></div>
+</div></div></section>
+<section class="slide" data-title="丁元英">
+<div class="content">
+<div class="kicker" data-anim>CHARACTER 1/8</div>
+<h2 class="h2" data-anim>丁元英</h2>
+<p class="lead" data-anim>理性觉悟者</p>
+<div class="grid-2" data-anim style="margin-top:12px;">
+<div class="card" style="border-left:3px solid var(--gold);"><div class="h4">核心欲望</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">验证文化属性理论</p></div>
+<div class="card" style="border-left:3px solid var(--accent);"><div class="h4">核心矛盾</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">理性觉悟vs不近人情</p></div>
+</div>
+<div class="card" data-anim style="margin-top:8px;"><p style="font-size:12px;line-height:1.6;color:var(--dim);"><strong>弧线</strong>：隐居→设计神话→验证理论→再隐居（循环弧线）</p></div>
+</div></section>
+<section class="slide" data-title="芮小丹">
+<div class="content">
+<div class="kicker" data-anim>CHARACTER 2/8</div>
+<h2 class="h2" data-anim>芮小丹</h2>
+<p class="lead" data-anim>自在者</p>
+<div class="grid-2" data-anim style="margin-top:12px;">
+<div class="card" style="border-left:3px solid var(--accent);"><div class="h4">核心欲望</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">追求自在的生存状态</p></div>
+<div class="card" style="border-left:3px solid var(--accent);"><div class="h4">核心矛盾</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">独立人格vs世俗职业期待</p></div>
+</div>
+<div class="card" data-anim style="margin-top:8px;"><p style="font-size:12px;line-height:1.6;color:var(--dim);"><strong>弧线</strong>：受托照看→觉醒→自主追求→殉道（上升弧线）</p></div>
+</div></section>
+<section class="slide" data-title="刘冰">
+<div class="content">
+<div class="kicker" data-anim>CHARACTER 3/8</div>
+<h2 class="h2" data-anim>刘冰</h2>
+<p class="lead" data-anim>破格获取者</p>
+<div class="grid-2" data-anim style="margin-top:12px;">
+<div class="card" style="border-left:3px solid var(--accent);"><div class="h4">核心欲望</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">被尊重（不是钱本身，是身份感）</p></div>
+<div class="card" style="border-left:3px solid var(--accent);"><div class="h4">核心矛盾</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">自尊心vs自身格局</p></div>
+</div>
+<div class="card" data-anim style="margin-top:8px;"><p style="font-size:12px;line-height:1.6;color:var(--dim);"><strong>弧线</strong>：卖唱片→入格律诗→退股→纠缠→自杀（坠落弧线）</p></div>
+</div></section>
+<section class="slide" data-title="林雨峰">
+<div class="content">
+<div class="kicker" data-anim>CHARACTER 4/8</div>
+<h2 class="h2" data-anim>林雨峰</h2>
+<p class="lead" data-anim>民族品牌旗帜</p>
+<div class="grid-2" data-anim style="margin-top:12px;">
+<div class="card" style="border-left:3px solid var(--#e67e22);"><div class="h4">核心欲望</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">民族品牌的尊严</p></div>
+<div class="card" style="border-left:3px solid var(--accent);"><div class="h4">核心矛盾</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">自信→傲慢→轻敌→崩溃</p></div>
+</div>
+<div class="card" data-anim style="margin-top:8px;"><p style="font-size:12px;line-height:1.6;color:var(--dim);"><strong>弧线</strong>：民族品牌领袖→被起诉→败诉→坠崖（坠落弧线）</p></div>
+</div></section>
+<section class="slide" data-title="肖亚文">
+<div class="content">
+<div class="kicker" data-anim>CHARACTER 5/8</div>
+<h2 class="h2" data-anim>肖亚文</h2>
+<p class="lead" data-anim>觉悟变现者</p>
+<div class="grid-2" data-anim style="margin-top:12px;">
+<div class="card" style="border-left:3px solid var(--gold);"><div class="h4">核心欲望</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">将认知转化为收益</p></div>
+<div class="card" style="border-left:3px solid var(--accent);"><div class="h4">核心矛盾</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">认知优势vs风险承受</p></div>
+</div>
+<div class="card" data-anim style="margin-top:8px;"><p style="font-size:12px;line-height:1.6;color:var(--dim);"><strong>弧线</strong>：打工者→敏锐判断→接盘→掌控（上升弧线）</p></div>
+</div></section>
+<section class="slide" data-title="欧阳雪">
+<div class="content">
+<div class="kicker" data-anim>CHARACTER 6/8</div>
+<h2 class="h2" data-anim>欧阳雪</h2>
+<p class="lead" data-anim>实干者</p>
+<div class="grid-2" data-anim style="margin-top:12px;">
+<div class="card" style="border-left:3px solid var(--gold);"><div class="h4">核心欲望</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">守住自己的本分</p></div>
+<div class="card" style="border-left:3px solid var(--accent);"><div class="h4">核心矛盾</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">信任vs独立判断</p></div>
+</div>
+<div class="card" data-anim style="margin-top:8px;"><p style="font-size:12px;line-height:1.6;color:var(--dim);"><strong>弧线</strong>：小餐馆老板→格律诗法人→坚守→从容（上升弧线）</p></div>
+</div></section>
+<section class="slide" data-title="冯世杰">
+<div class="content">
+<div class="kicker" data-anim>CHARACTER 7/8</div>
+<h2 class="h2" data-anim>冯世杰</h2>
+<p class="lead" data-anim>链接者</p>
+<div class="grid-2" data-anim style="margin-top:12px;">
+<div class="card" style="border-left:3px solid var(--gold);"><div class="h4">核心欲望</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">为村里找条活路</p></div>
+<div class="card" style="border-left:3px solid var(--accent);"><div class="h4">核心矛盾</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">责任vs自保</p></div>
+</div>
+<div class="card" data-anim style="margin-top:8px;"><p style="font-size:12px;line-height:1.6;color:var(--dim);"><strong>弧线</strong>：引丁元英进村→退股→再入局（循环弧线）</p></div>
+</div></section>
+<section class="slide" data-title="叶晓明">
+<div class="content">
+<div class="kicker" data-anim>CHARACTER 8/8</div>
+<h2 class="h2" data-anim>叶晓明</h2>
+<p class="lead" data-anim>精明的短视者</p>
+<div class="grid-2" data-anim style="margin-top:12px;">
+<div class="card" style="border-left:3px solid var(--accent);"><div class="h4">核心欲望</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">保住自己的利益</p></div>
+<div class="card" style="border-left:3px solid var(--accent);"><div class="h4">核心矛盾</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">聪明vs格局</p></div>
+</div>
+<div class="card" data-anim style="margin-top:8px;"><p style="font-size:12px;line-height:1.6;color:var(--dim);"><strong>弧线</strong>：音响店老板→格律诗总经理→退股（坠落弧线）</p></div>
+</div></section>
+<section class="slide" data-title="专家阵容">
+<div class="content">
+<div class="kicker" data-anim>EXPERTS</div>
+<h2 class="h2" data-anim>6位专家</h2>
+<div class="grid-3" data-anim style="margin-top:12px;">
+<div class="card"><div class="h4">芒格</div><p style="font-size:11px;color:var(--dim);">多元思维模型家</p></div>
+<div class="card"><div class="h4">尼采</div><p style="font-size:11px;color:var(--dim);">权力意志哲学家</p></div>
+<div class="card"><div class="h4">老子</div><p style="font-size:11px;color:var(--dim);">道家哲学家</p></div>
+<div class="card"><div class="h4">卡尼曼</div><p style="font-size:11px;color:var(--dim);">认知心理学家</p></div>
+<div class="card"><div class="h4">塔勒布</div><p style="font-size:11px;color:var(--dim);">反脆弱思想家</p></div>
+<div class="card"><div class="h4">项飙</div><p style="font-size:11px;color:var(--dim);">人类学家</p></div>
+</div></div></section>
+<section class="slide" data-title="R1 文化属性之辩">
+<div class="content">
+<div class="kicker" data-anim>R1</div>
+<h2 class="h2" data-anim>文化属性到底是什么？</h2>
+<div class="dialogue" data-anim>
+<div>
+<div class="speech" data-type="attack">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--accent);">尼</div><div><div class="speech-name">尼采</div><div class="speech-role">质疑</div></div></div>
+<div class="speech-body">丁元英说强势文化造就强者——大多数人确实活在奴隶道德中，等待外力来改变命运。王庙村的村民有手有脚，却等着一个高人来指点迷津。问题不在于有没有文化属性，而在于<strong>有没有勇气打破它</strong>。</div></div>
+<div class="speech" data-type="attack">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--accent);">芒</div><div><div class="speech-name">芒格</div><div class="speech-role">质疑</div></div></div>
+<div class="speech-body">用激励重新审视：丁元英的激励是验证理论。刘冰的激励是阶层跃迁。林雨峰的激励是面子大于生存。冯世杰的激励是村庄利益。<strong>文化属性是结果，不是原因。</strong></div></div>
+</div><div><div class="speech" data-type="counter">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--gold);">老</div><div><div class="speech-name">老子</div><div class="speech-role">反驳</div></div></div>
+<div class="speech-body">文化属性这个概念本身就值得怀疑。道可道，非常道。你一旦用一个概念去框定一种文化，你就已经偏离了那个文化的本质。丁元英没有追问：<strong>谁来判断什么是规律？</strong></div></div>
+<div class="speech" data-type="counter">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--gold);">卡</div><div><div class="speech-name">卡尼曼</div><div class="speech-role">调和</div></div></div>
+<div class="speech-body">从认知科学角度看，文化属性更接近于<strong>集体启发式</strong>。它确实存在，但不是命运，而是默认设置。默认设置可以被改变，但改变方式不是居高临下地教化。</div></div>
+</div></div></div></section>
+<section class="slide" data-title="R2 丁元英的矛盾">
+<div class="content">
+<div class="kicker" data-anim>R2</div>
+<h2 class="h2" data-anim>丁元英是自身理论的最大反例</h2>
+<div class="dialogue" data-anim>
+<div>
+<div class="speech" data-type="attack">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--accent);">尼</div><div><div class="speech-name">尼采</div><div class="speech-role">质疑</div></div></div>
+<div class="speech-body">丁元英自称信奉天道，但他的全部行为都在<strong>人为干预因果链</strong>。如果天道不以人的意志为转移，那他的干预为何有效？<strong>天道的不可违逆性就被他自己推翻了。</strong></div></div>
+<div class="speech" data-type="attack">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--accent);">塔</div><div><div class="speech-name">塔勒布</div><div class="speech-role">系统推演</div></div></div>
+<div class="speech-body">格律诗事件的<strong>单点依赖</strong>——所有节点都依赖丁元英的初始设计。他离开后系统断裂。没有冗余的系统必然崩溃。</div></div>
+</div><div><div class="speech" data-type="counter">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--accent);">芒</div><div><div class="speech-name">芒格</div><div class="speech-role">反驳</div></div></div>
+<div class="speech-body">真正危险的不是弱势文化，而是<strong>任何单一框架</strong>。在手握锤子的人眼里，一切都像钉子。丁元英手握文化属性这把锤子，他看不见刘冰的绝望、芮小丹的自主选择。</div></div>
+<div class="speech" data-type="counter">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--gold);">老</div><div><div class="speech-name">老子</div><div class="speech-role">反驳</div></div></div>
+<div class="speech-body">丁元英的天道本质上是<strong>理性主义的傲慢</strong>。但真正的天道恰恰相反——它承认世界的不可知性，并在不可知中保持谦卑。</div></div>
+</div></div></div></section>
+<section class="slide" data-title="R3 芮小丹之死">
+<div class="content">
+<div class="kicker" data-anim>R3</div>
+<h2 class="h2" data-anim>全书最大的反驳</h2>
+<div class="dialogue" data-anim>
+<div>
+<div class="speech" data-type="counter">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--gold);">卡</div><div><div class="speech-name">卡尼曼</div><div class="speech-role">心理学</div></div></div>
+<div class="speech-body">芮小丹的死不是弱势文化的产物，而是<strong>存在主义式的绝对自由</strong>。她在那一刻完全按照自己的意志行动。丁元英吐血，是因为他意识到：芮小丹做到了他做不到的事。</div></div>
+<div class="speech" data-type="counter">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--gold);">项</div><div><div class="speech-name">项飙</div><div class="speech-role">社会学</div></div></div>
+<div class="speech-body">芮小丹的存在本身就是对弱势文化造就弱者的否定：个体的觉醒与行动力可以突破文化属性的预设。<strong>丁元英的理论框架无法解释芮小丹这样的变量。</strong></div></div>
+</div><div><div class="speech" data-type="attack">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--accent);">尼</div><div><div class="speech-name">尼采</div><div class="speech-role">质疑</div></div></div>
+<div class="speech-body">你们不能因为芮小丹死了就把她神圣化。芮小丹不需要被神化，她只是一个<strong>活得真实的人</strong>。</div></div>
+<div class="speech" data-type="counter">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--gold);">老</div><div><div class="speech-name">老子</div><div class="speech-role">反驳</div></div></div>
+<div class="speech-body">芮小丹让我想起上善若水。真正的道不是用来辩论的，而是用来活的。丁元英穷尽一生去理解道，却不如芮小丹简简单单地活出了道。</div></div>
+</div></div></div></section>
+<section class="slide" data-title="R4 叶晓明效应">
+<div class="content">
+<div class="kicker" data-anim>R4</div>
+<h2 class="h2" data-anim>多数人会在关键时刻退出</h2>
+<div class="dialogue" data-anim>
+<div>
+<div class="speech" data-type="attack">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--accent);">芒</div><div><div class="speech-name">芒格</div><div class="speech-role">激励分析</div></div></div>
+<div class="speech-body">告诉我激励机制，我就能告诉你结果。叶晓明的激励是跟着丁元英发财。当危机来临，第一反应不是解决问题，而是保护利益——这是典型的<strong>激励扭曲</strong>。</div></div>
+<div class="speech" data-type="counter">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--gold);">项</div><div><div class="speech-name">项飙</div><div class="speech-role">社会学</div></div></div>
+<div class="speech-body">叶晓明的失败不是认知局限，是<strong>社会结构的空洞</strong>。他们没有附近的参照系——没有邻里互助、没有社区支持。丁元英成了他们唯一的附近，当丁元英失效，他们就悬浮了。</div></div>
+</div><div><div class="speech" data-type="attack">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--gold);">卡</div><div><div class="speech-name">卡尼曼</div><div class="speech-role">认知偏差</div></div></div>
+<div class="speech-body">叶晓明展示了典型的<strong>损失厌恶</strong>：对损失的敏感度是对收益的2.5倍。退股不是理性计算，是情绪淹没。</div></div>
+<div class="speech" data-type="counter">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--gold);">老</div><div><div class="speech-name">老子</div><div class="speech-role">反驳</div></div></div>
+<div class="speech-body">叶晓明的退股恰恰证明了<strong>无为的智慧</strong>。有时候，不行动比行动更明智。问题在于：他是被动的无为，还是主动的无为？</div></div>
+</div></div></div></section>
+<section class="slide" data-title="R5 格律诗本质">
+<div class="content">
+<div class="kicker" data-anim>R5</div>
+<h2 class="h2" data-anim>扶贫还是商业博弈？</h2>
+<div class="dialogue" data-anim>
+<div>
+<div class="speech" data-type="attack">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--accent);">塔</div><div><div class="speech-name">塔勒布</div><div class="speech-role">反脆弱</div></div></div>
+<div class="speech-body">格律诗的商业模式本质是<strong>利用信息不对称制造黑天鹅</strong>。王庙村农民是工具而非受益者。真正获益的是肖亚文。扶贫的终点是劫贫济富。</div></div>
+<div class="speech" data-type="attack">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--accent);">芒</div><div><div class="speech-name">芒格</div><div class="speech-role">激励分析</div></div></div>
+<div class="speech-body">格律诗的股权结构中，农民获得的是计件工资——没有股权、没有分红。这不是扶贫，这是<strong>雇佣关系</strong>。</div></div>
+</div><div><div class="speech" data-type="counter">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--gold);">老</div><div><div class="speech-name">老子</div><div class="speech-role">反驳</div></div></div>
+<div class="speech-body">丁元英为什么要设计这样一个实验？表面上是为了芮小丹，但本质上是<strong>证明自己的理论</strong>。王庙村的农民不是目的，而是手段。</div></div>
+<div class="speech" data-type="counter">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--gold);">卡</div><div><div class="speech-name">卡尼曼</div><div class="speech-role">认知偏差</div></div></div>
+<div class="speech-body">丁元英展示了典型的<strong>知识的诅咒</strong>。他知道得太多，以至于无法与普通人正常交流。这不是觉悟，是社交功能的退化。</div></div>
+</div></div></div></section>
+<section class="slide" data-title="R6 36秒沉默">
+<div class="content">
+<div class="kicker" data-anim>R6</div>
+<h2 class="h2" data-anim>芮小丹殉道前的电话</h2>
+<div class="dialogue" data-anim>
+<div>
+<div class="speech" data-type="counter">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--accent);">尼</div><div><div class="speech-name">尼采</div><div class="speech-role">哲学解读</div></div></div>
+<div class="speech-body">丁元英的沉默是<strong>尊重</strong>，不是冷漠。他比任何人都清楚，说任何话都改变不了结果。但我要追问：如果丁元英真的相信文化属性决定命运，那芮小丹的死是不是注定的？</div></div>
+<div class="speech" data-type="attack">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--gold);">项</div><div><div class="speech-name">项飙</div><div class="speech-role">社会学</div></div></div>
+<div class="speech-body">36秒的沉默暴露了丁元英的<strong>情感无能</strong>。他不是不想说话，是不知道该说什么。他的理性框架在终极人性面前彻底失效。</div></div>
+</div><div><div class="speech" data-type="counter">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--gold);">卡</div><div><div class="speech-name">卡尼曼</div><div class="speech-role">心理学</div></div></div>
+<div class="speech-body">从心理学角度看，36秒的沉默是<strong>冻结反应</strong>。面对无法控制的威胁，人的大脑会死机。丁元英的沉默不是尊重，是瘫痪。</div></div>
+<div class="speech" data-type="counter">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--accent);">芒</div><div><div class="speech-name">芒格</div><div class="speech-role">实用主义</div></div></div>
+<div class="speech-body">无论怎么解读，36秒的沉默都是丁元英的<strong>最大失败</strong>。他可以预判林雨峰的反应，但无法处理芮小丹的爱。说明理性有边界。</div></div>
+</div></div></div></section>
+<section class="slide" data-title="R7 白纸档案袋">
+<div class="content">
+<div class="kicker" data-anim>R7</div>
+<h2 class="h2" data-anim>人性的终极测试</h2>
+<div class="dialogue" data-anim>
+<div>
+<div class="speech" data-type="attack">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--accent);">尼</div><div><div class="speech-name">尼采</div><div class="speech-role">权力意志</div></div></div>
+<div class="speech-body">白纸档案袋是丁元英设计的<strong>道德陷阱</strong>。他给了刘冰一个武器，然后看他怎么用。但丁元英有什么资格测试别人？他把自己放在了上帝的位置上。</div></div>
+<div class="speech" data-type="attack">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--gold);">项</div><div><div class="speech-name">项飙</div><div class="speech-role">社会学</div></div></div>
+<div class="speech-body">刘冰的勒索行为不是弱势文化的产物，是<strong>绝望的挣扎</strong>。他已经被踢出了格律诗，失去了所有的社会资本。白纸档案袋是他唯一的筹码。</div></div>
+</div><div><div class="speech" data-type="counter">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--gold);">老</div><div><div class="speech-name">老子</div><div class="speech-role">道家</div></div></div>
+<div class="speech-body">白纸档案袋是全书最深刻的隐喻：<strong>你以为是什么，它就是什么</strong>。刘冰以为是武器，所以它成了武器。白纸本身没有意义——意义是人赋予的。</div></div>
+<div class="speech" data-type="counter">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--accent);">芒</div><div><div class="speech-name">芒格</div><div class="speech-role">实用主义</div></div></div>
+<div class="speech-body">白纸档案袋的真正意义是：<strong>人的行为是由内在驱动的，不是由外在决定的</strong>。刘冰选择了成为弱势文化的代表——这是他的自由，也是他的悲剧。</div></div>
+</div></div></div></section>
+<section class="slide" data-title="R8 林雨峰之死">
+<div class="content">
+<div class="kicker" data-anim>R8</div>
+<h2 class="h2" data-anim>死于面子</h2>
+<div class="dialogue" data-anim>
+<div>
+<div class="speech" data-type="attack">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--accent);">尼</div><div><div class="speech-name">尼采</div><div class="speech-role">超人哲学</div></div></div>
+<div class="speech-body">林雨峰的死是<strong>主人道德的悲剧</strong>。他宁死不屈，这正是超人的品质——但他的超人方向错了。他把面子当成了价值，把认输当成了耻辱。</div></div>
+<div class="speech" data-type="attack">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--accent);">塔</div><div><div class="speech-name">塔勒布</div><div class="speech-role">反脆弱</div></div></div>
+<div class="speech-body">林雨峰的座右铭是只有矛没有盾——这正是<strong>脆弱性的典型表现</strong>。他只懂得进攻，不懂得防守。真正的强者不是永不失败，而是能从失败中恢复。</div></div>
+</div><div><div class="speech" data-type="counter">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--accent);">芒</div><div><div class="speech-name">芒格</div><div class="speech-role">逆向思维</div></div></div>
+<div class="speech-body">林雨峰的死给我们一个教训：<strong>永远不要把身份和成就绑定</strong>。他的身份是乐圣CEO，当乐圣败诉，他的身份就崩塌了。</div></div>
+<div class="speech" data-type="counter">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--gold);">卡</div><div><div class="speech-name">卡尼曼</div><div class="speech-role">前景理论</div></div></div>
+<div class="speech-body">林雨峰的行为符合<strong>前景理论</strong>：人对损失的敏感度是对收益的2.5倍。乐圣的失败对他来说不是收益归零，而是身份毁灭。</div></div>
+</div></div></div></section>
+<section class="slide" data-title="R9 理论vs实践">
+<div class="content">
+<div class="kicker" data-anim>R9</div>
+<h2 class="h2" data-anim>文化属性理论的实践检验</h2>
+<div class="dialogue" data-anim>
+<div>
+<div class="speech" data-type="attack">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--accent);">芒</div><div><div class="speech-name">芒格</div><div class="speech-role">实用主义</div></div></div>
+<div class="speech-body">告诉我激励机制，我就能告诉你结果。文化属性是结果，不是原因。<strong>永远不要用文化解释可以被激励解释的行为。</strong></div></div>
+<div class="speech" data-type="counter">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--gold);">老</div><div><div class="speech-name">老子</div><div class="speech-role">道家</div></div></div>
+<div class="speech-body">文化属性理论的盲点在于：<strong>它试图用有限的概念框定无限的道</strong>。道可道，非常道。你一旦说出来，就已经偏离了。</div></div>
+</div><div><div class="speech" data-type="attack">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--accent);">塔</div><div><div class="speech-name">塔勒布</div><div class="speech-role">系统推演</div></div></div>
+<div class="speech-body">文化属性理论是一个<strong>不可证伪的理论</strong>：赢了就是强势文化，输了就贴弱势标签。永远正确等于永远无用。</div></div>
+<div class="speech" data-type="counter">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--gold);">卡</div><div><div class="speech-name">卡尼曼</div><div class="speech-role">认知科学</div></div></div>
+<div class="speech-body">文化属性理论的真正价值不在于它的真理性，而在于它的<strong>启发性</strong>。它提供了一个有用的框架来思考人的行为。</div></div>
+</div></div></div></section>
+<section class="slide" data-title="R10 终极问题">
+<div class="content">
+<div class="kicker" data-anim>R10</div>
+<h2 class="h2" data-anim>世上有没有救世主？</h2>
+<div class="dialogue" data-anim>
+<div>
+<div class="speech" data-type="counter">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--gold);">老</div><div><div class="speech-name">老子</div><div class="speech-role">道家</div></div></div>
+<div class="speech-body">世上没有救世主，但<strong>人人皆可成为救世主</strong>。丁元英的错误在于：他想成为别人的救世主，而不是帮助别人成为自己的救世主。</div></div>
+<div class="speech" data-type="counter">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--accent);">尼</div><div><div class="speech-name">尼采</div><div class="speech-role">超人哲学</div></div></div>
+<div class="speech-body">世上没有救世主，<strong>只有超人</strong>。芮小丹是全书唯一真正超越的人。她不寻求救世主，也不扮演救世主。</div></div>
+</div><div><div class="speech" data-type="counter">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--accent);">芒</div><div><div class="speech-name">芒格</div><div class="speech-role">多元思维</div></div></div>
+<div class="speech-body">世上没有救世主，<strong>只有认知免疫系统</strong>。真正的智慧是知道什么时候用什么框架。</div></div>
+<div class="speech" data-type="counter">
+<div class="speech-head"><div class="speech-avatar" style="background:var(--gold);">卡</div><div><div class="speech-name">卡尼曼</div><div class="speech-role">认知科学</div></div></div>
+<div class="speech-body">世上没有救世主，<strong>只有自我认知</strong>。丁元英看透了别人的文化属性，却看不透自己的。</div></div>
+</div></div></div></section>
+<section class="slide" data-title="核心张力">
+<div class="content">
+<div class="kicker" data-anim>TENSIONS</div>
+<h2 class="h2" data-anim>4组核心张力</h2>
+<div data-anim style="margin-top:16px;">
+<div class="tension"><div class="tension-label">决定论vs自由意志</div><div class="tension-track"><div class="tension-fill" style="width:95%;background:var(--accent);"></div></div><div class="tension-val accent">95%</div></div>
+<div class="tension"><div class="tension-label">控制vs接纳</div><div class="tension-track"><div class="tension-fill" style="width:93%;background:var(--gold);"></div></div><div class="tension-val gold">93%</div></div>
+<div class="tension"><div class="tension-label">精英主义vs平等主义</div><div class="tension-track"><div class="tension-fill" style="width:92%;background:var(--accent);"></div></div><div class="tension-val accent">92%</div></div>
+<div class="tension"><div class="tension-label">理论vs实践</div><div class="tension-track"><div class="tension-fill" style="width:88%;background:var(--gold);"></div></div><div class="tension-val gold">88%</div></div>
+</div></div></section>
+<section class="slide" data-title="涌现框架">
+<div class="content">
+<div class="kicker" data-anim>FRAMEWORKS</div>
+<h2 class="h2" data-anim>从废墟中生长</h2>
+<div style="display:flex;flex-direction:column;gap:10px;" data-anim>
+<div class="card" style="border-left:3px solid var(--gold);"><div class="h4 gold">框架1：文化属性是默认设置，不是命运</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">四个学科共同指向：问题在于，大多数人从不检查自己的默认设置。</p></div>
+<div class="card" style="border-left:3px solid var(--gold);"><div class="h4 gold">框架2：制度可以绕过文化属性，但不能消灭它</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">丁元英从不教育王庙村人，他只是设计了一个自动筛选机制。</p></div>
+<div class="card" style="border-left:3px solid var(--gold);"><div class="h4 gold">框架3：觉悟者永远是自身理论的反例</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">所有文化决定论的倡导者都面临同样的困境。</p></div>
+</div></div></section>
+<section class="slide" data-title="5个洞见">
+<div class="content">
+<div class="kicker" data-anim>INSIGHTS</div>
+<h2 class="h2" data-anim>5个核心洞见</h2>
+<div style="display:flex;flex-direction:column;gap:8px;" data-anim>
+<div class="insight"><div class="insight-q">01 文化属性是默认设置，不是命运</div></div>
+<div class="insight"><div class="insight-q">02 丁元英是自身理论的最大反例</div></div>
+<div class="insight"><div class="insight-q">03 理论不可证伪：循环论证</div></div>
+<div class="insight"><div class="insight-q">04 极端推演取消主体性</div></div>
+<div class="insight"><div class="insight-q">05 叶晓明效应</div></div>
+</div></div></section>
+<section class="slide" data-title="天国的女儿">
+<div class="content">
+<div class="kicker" data-anim>SCENE</div>
+<h2 class="h2" data-anim>天国的女儿</h2>
+<div class="scene" data-anim>
+<div class="scene-title">第6章</div>
+<div class="scene-body">
+"一个纯净到一尘不染的女声仿佛从天国里倾泻而下。一声，只一声，芮小丹骤然有一种灵魂之门被撞开的颤栗。"
+<div class="scene-quote">全书第一个觉醒时刻。音乐是超越文化属性的。</div>
+</div></div></div></section>
+<section class="slide" data-title="生死子弹">
+<div class="content">
+<div class="kicker" data-anim>SCENE</div>
+<h2 class="h2" data-anim>生死子弹</h2>
+<div class="scene" data-anim>
+<div class="scene-title">第14章</div>
+<div class="scene-body">
+"一支枪口从砖坯墙的另一侧伸出来顶到了她的头上。枪居然没有打响。"
+<div class="scene-quote">全书最戏剧性的转折。偶然性打破了文化属性的决定论。</div>
+</div></div></div></section>
+<section class="slide" data-title="审讯王明阳">
+<div class="content">
+<div class="kicker" data-anim>SCENE</div>
+<h2 class="h2" data-anim>审讯王明阳</h2>
+<div class="scene" data-anim>
+<div class="scene-title">第15章</div>
+<div class="scene-body">
+"强盗的本质是破格获取，破格获取与直接获取是两个不同的概念。"
+<div class="scene-quote">文化属性理论的第一次实战检验。</div>
+</div></div></div></section>
+<section class="slide" data-title="五台山论道">
+<div class="content">
+<div class="kicker" data-anim>SCENE</div>
+<h2 class="h2" data-anim>五台山论道</h2>
+<div class="scene" data-anim>
+<div class="scene-title">第20章</div>
+<div class="scene-body">
+"大爱不爱。一、不做道德评判；二、不在经验里打转；三、不拘泥于形式主义的经验。"
+<div class="scene-quote">全书的哲学核心。丁元英获得了哲学授权。</div>
+</div></div></div></section>
+<section class="slide" data-title="清仓行动">
+<div class="content">
+<div class="kicker" data-anim>SCENE</div>
+<h2 class="h2" data-anim>清仓行动</h2>
+<div class="scene" data-anim>
+<div class="scene-title">第30章</div>
+<div class="scene-body">
+"格律诗音响在北京音像展上以远低于乐圣同类产品的价格一次性清仓。"
+<div class="scene-quote">杀富济贫正式启动。</div>
+</div></div></div></section>
+<section class="slide" data-title="退股风波">
+<div class="content">
+<div class="kicker" data-anim>SCENE</div>
+<h2 class="h2" data-anim>退股风波</h2>
+<div class="scene" data-anim>
+<div class="scene-title">第32章</div>
+<div class="scene-body">
+"叶晓明、刘冰、冯世杰在欧阳雪面前要求退股。欧阳雪一个人承担所有。"
+<div class="scene-quote">全书的人性分水岭。</div>
+</div></div></div></section>
+<section class="slide" data-title="芮小丹殉道">
+<div class="content">
+<div class="kicker" data-anim>SCENE</div>
+<h2 class="h2" data-anim>芮小丹殉道</h2>
+<div class="scene" data-anim>
+<div class="scene-title">第42章</div>
+<div class="scene-body">
+"她拨通了丁元英的电话。电话那头，36秒的沉默。"
+<div class="scene-quote">全书的情感与道德顶点。</div>
+</div></div></div></section>
+<section class="slide" data-title="白纸档案袋">
+<div class="content">
+<div class="kicker" data-anim>SCENE</div>
+<h2 class="h2" data-anim>白纸档案袋</h2>
+<div class="scene" data-anim>
+<div class="scene-title">第45章</div>
+<div class="scene-body">
+"丁元英给了刘冰一个密封的档案袋。打开里面全是白纸。"
+<div class="scene-quote">全书最精妙的人性测试。</div>
+</div></div></div></section>
+<section class="slide" data-title="符号系统">
+<div class="content">
+<div class="kicker" data-anim>SYMBOLS</div>
+<h2 class="h2" data-anim>5大核心符号</h2>
+<div class="grid-3" data-anim style="margin-top:12px;">
+<div class="card"><div class="h4">《天国的女儿》CD</div><p style="font-size:11px;color:var(--dim);">精神自由，超越文化属性</p></div>
+<div class="card"><div class="h4">窄门</div><p style="font-size:11px;color:var(--dim);">觉悟的代价</p></div>
+<div class="card"><div class="h4">井沿</div><p style="font-size:11px;color:var(--dim);">认知局限的悲剧</p></div>
+<div class="card"><div class="h4">白纸档案袋</div><p style="font-size:11px;color:var(--dim);">道德的镜子</p></div>
+<div class="card"><div class="h4">音响</div><p style="font-size:11px;color:var(--dim);">文化属性的载体</p></div>
+</div></div></section>
+<section class="slide" data-title="伏笔追踪">
+<div class="content">
+<div class="kicker" data-anim>FORESHADOWING</div>
+<h2 class="h2" data-anim>6条伏笔线</h2>
+<div class="grid-2" data-anim style="margin-top:12px;">
+<div class="card" style="border-left:3px solid var(--gold);"><div class="h4 gold">"我不做慈善"</div><p style="font-size:11px;color:var(--dim);">格律诗确实不是慈善，是文化实验</p></div>
+<div class="card" style="border-left:3px solid var(--gold);"><div class="h4 gold">刘冰的宝马车情结</div><p style="font-size:11px;color:var(--dim);">物质欲望压垮精神世界</p></div>
+<div class="card" style="border-left:3px solid var(--gold);"><div class="h4 gold">"当警察是我的需要"</div><p style="font-size:11px;color:var(--dim);">她为职业理想献出生命</p></div>
+<div class="card" style="border-left:3px solid var(--gold);"><div class="h4 gold">丁元英从不解释</div><p style="font-size:11px;color:var(--dim);">不解释=筛选真正的强势文化者</p></div>
+<div class="card" style="border-left:3px solid var(--gold);"><div class="h4 gold">"大爱不爱"</div><p style="font-size:11px;color:var(--dim);">每个角色的命运都在印证</p></div>
+<div class="card" style="border-left:3px solid var(--gold);"><div class="h4 gold">肖亚文"开了一扇窗户"</div><p style="font-size:11px;color:var(--dim);">她真的爬上了窗台</p></div>
+</div></div></section>
+<section class="slide" data-title="金句墙">
+<div class="content">
+<div class="kicker" data-anim>QUOTES</div>
+<h2 class="h2" data-anim>值得截图的话</h2>
+<div style="display:flex;flex-direction:column;gap:6px;" data-anim>
+<div class="quote">文化属性不是命运，而是默认设置——问题在于，大多数人从不检查自己的默认设置。</div>
+<div class="quote">原著的伟大之处在于——它提出了一个漂亮的理论，然后用一个漂亮的故事推翻了它。</div>
+<div class="quote">丁元英宣称的天道，如果推向极端，会取消他本人作为觉悟者的主体性。</div>
+<div class="quote">制度可以绕过文化属性，但不能消灭它。</div>
+<div class="quote">觉悟者永远是自身理论的反例——因为他们证明了觉醒是可能的。</div>
+<div class="quote">芮小丹做到了他做不到的事——在看透文化属性之后，依然能用生命完成对自由的兑现。</div>
+<div class="quote">将底层的依赖定性为弱势，将精英间的依赖美化为合作，是阶级偏见的文化包装。</div>
+<div class="quote">你设计的制度越精巧，执行时的摩擦成本就越高。</div>
+<div class="quote">神就是道，道就是规律，规律如来，容不得你思议。</div>
+<div class="quote">你不知道你，所以你是你。如果你知道了你，你就不是你了。</div>
+<div class="quote">只要不是我觉到悟到的，你给不了我，给了我也拿不住。</div>
+<div class="quote">强势文化造就强者，弱势文化造就弱者，这是规律，不以人的意志为转移。</div>
+<div class="quote">更高级的哲人独处着，这并不是因为他想孤独，而是因为在他的周围找不到他的同类。</div>
+<div class="quote">我是摆馄饨摊过来的，不吃这个。</div>
+<div class="quote">丁元英，你撒谎啦！</div>
+<div class="quote">人，原来是可以被憋死的。</div>
+
+</div></div></section>
+<section class="slide" data-title="社会辩论">
+<div class="content">
+<div class="kicker" data-anim>DEBATE</div>
+<h2 class="h2" data-anim>社会舆论风暴</h2>
+<div style="display:flex;flex-direction:column;gap:8px;" data-anim>
+<div class="card" style="border-left:3px solid var(--accent);"><div class="h4 accent">"是法律的失败还是文化的失败？"</div></div>
+<div class="card" style="border-left:3px solid var(--accent);"><div class="h4 accent">"杀富济贫的深层思考"</div></div>
+<div class="card" style="border-left:3px solid var(--accent);"><div class="h4 accent">"弱势群体的得救之道在哪里？"</div></div>
+<div class="card" style="border-left:3px solid var(--accent);"><div class="h4 accent">"王庙村模式：扶贫还是剥削？"</div></div>
+<div class="card" style="border-left:3px solid var(--accent);"><div class="h4 accent">"丁元英：天才还是魔鬼？"</div></div>
+</div></div></section>
+<section class="slide" data-title="哲学核心">
+<div class="content">
+<div class="kicker" data-anim>PHILOSOPHY</div>
+<h2 class="h2" data-anim>四大命题</h2>
+<div class="grid-2" data-anim style="margin-top:12px;">
+<div class="card" style="border-top:3px solid var(--gold);"><div class="h4 gold">道法自然</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">客观规律不以人的意志为转移。</p></div>
+<div class="card" style="border-top:3px solid var(--gold);"><div class="h4 gold">大爱不爱</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">真正的爱不是溺爱和包办。</p></div>
+<div class="card" style="border-top:3px solid var(--gold);"><div class="h4 gold">当生则生当死则死</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">尊严来自于自主选择的能力。</p></div>
+<div class="card" style="border-top:3px solid var(--gold);"><div class="h4 gold">世上没有救世主</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">能救你的只有你自己。</p></div>
+</div></div></section>
+<section class="slide" data-title="人物关系">
+<div class="content">
+<div class="kicker" data-anim>RELATIONS</div>
+<h2 class="h2" data-anim>人物关系网络</h2>
+<div class="grid-3" data-anim style="margin-top:12px;">
+<div class="card" style="text-align:center;border-top:3px solid var(--gold);"><div class="h4 gold">丁元英</div><p style="font-size:11px;color:var(--dim);">理论者</p></div>
+<div class="card" style="text-align:center;border-top:3px solid var(--accent);"><div class="h4 accent">芮小丹</div><p style="font-size:11px;color:var(--dim);">自在者</p></div>
+<div class="card" style="text-align:center;border-top:3px solid var(--accent);"><div class="h4 accent">刘冰</div><p style="font-size:11px;color:var(--dim);">破格获取</p></div>
+<div class="card" style="text-align:center;border-top:3px solid #e67e22;"><div class="h4" style="color:#e67e22;">林雨峰</div><p style="font-size:11px;color:var(--dim);">傲慢者</p></div>
+<div class="card" style="text-align:center;border-top:3px solid var(--gold);"><div class="h4 gold">肖亚文</div><p style="font-size:11px;color:var(--dim);">套利者</p></div>
+<div class="card" style="text-align:center;border-top:3px solid var(--gold);"><div class="h4 gold">欧阳雪</div><p style="font-size:11px;color:var(--dim);">实干者</p></div>
+</div></div></section>
+<section class="slide" data-title="章节地图">
+<div class="content">
+<div class="kicker" data-anim>CHAPTERS</div>
+<h2 class="h2" data-anim>49章张力分布</h2>
+<div data-anim style="margin-top:12px;">
+<div class="card" style="margin-bottom:6px;"><div class="h4">Ch1-5 布局</div><p style="font-size:11px;color:var(--dim);">丁隐居·人物建制</p></div>
+<div class="card" style="margin-bottom:6px;border-left:3px solid var(--accent);"><div class="h4 accent">Ch6-9 高潮1</div><p style="font-size:11px;color:var(--dim);">《天国的女儿》觉醒</p></div>
+<div class="card" style="margin-bottom:6px;border-left:3px solid var(--gold);"><div class="h4 gold">Ch20 哲学高潮</div><p style="font-size:11px;color:var(--dim);">五台山问道</p></div>
+<div class="card" style="margin-bottom:6px;border-left:3px solid var(--accent);"><div class="h4 accent">Ch29-35 商业高潮</div><p style="font-size:11px;color:var(--dim);">诉讼·退股·肖亚文</p></div>
+<div class="card" style="margin-bottom:6px;border-left:3px solid var(--accent);"><div class="h4 accent">Ch42 情感高潮</div><p style="font-size:11px;color:var(--dim);">芮小丹之死</p></div>
+<div class="card" style="border-left:3px solid var(--accent);"><div class="h4 accent">Ch45 道德高潮</div><p style="font-size:11px;color:var(--dim);">刘冰跳楼</p></div>
+</div></div></section>
+<section class="slide" data-title="讨论指标">
+<div class="content">
+<div class="kicker" data-anim>METRICS</div>
+<h2 class="h2" data-anim>讨论深度仪表盘</h2>
+<div class="grid-3" data-anim style="margin-top:16px;">
+<div class="card" style="text-align:center;"><div class="h3 accent">10</div><p style="font-size:11px;color:var(--dim);">讨论轮次</p></div>
+<div class="card" style="text-align:center;"><div class="h3 gold">6</div><p style="font-size:11px;color:var(--dim);">参与专家</p></div>
+<div class="card" style="text-align:center;"><div class="h3 accent">5</div><p style="font-size:11px;color:var(--dim);">核心洞见</p></div>
+<div class="card" style="text-align:center;"><div class="h3 gold">6</div><p style="font-size:11px;color:var(--dim);">反例</p></div>
+<div class="card" style="text-align:center;"><div class="h3 accent">5</div><p style="font-size:11px;color:var(--dim);">被推翻假设</p></div>
+<div class="card" style="text-align:center;"><div class="h3 gold">4</div><p style="font-size:11px;color:var(--dim);">核心张力</p></div>
+</div></div></section>
+<section class="slide" data-title="开放问题">
+<div class="content">
+<div class="kicker" data-anim>QUESTIONS</div>
+<h2 class="h2" data-anim>留给你的问题</h2>
+<div class="grid-2" data-anim style="margin-top:12px;">
+<div class="card" style="border-left:3px solid var(--gold);"><div class="h4 gold">Q1</div><p style="font-size:12px;color:var(--dim);">如果强势文化本身也是一种文化属性，追求强势文化是否也是等靠要？</p></div>
+<div class="card" style="border-left:3px solid var(--gold);"><div class="h4 gold">Q2</div><p style="font-size:12px;color:var(--dim);">丁元英说没有救世主，但他自己扮演了救世主。这是虚伪还是无奈？</p></div>
+<div class="card" style="border-left:3px solid var(--gold);"><div class="h4 gold">Q3</div><p style="font-size:12px;color:var(--dim);">芮小丹的死是觉悟还是逃避？</p></div>
+<div class="card" style="border-left:3px solid var(--gold);"><div class="h4 gold">Q4</div><p style="font-size:12px;color:var(--dim);">你的默认设置是什么？你检查过吗？</p></div>
+</div></div></section>
+
+<section class="slide" data-title="肖亚文的判断力">
+<div class="content">
+<div class="kicker" data-anim>ANALYSIS</div>
+<h2 class="h2" data-anim style="color:var(--gold);">肖亚文的判断力</h2>
+<div class="card" data-anim style="border-left:3px solid var(--gold);background:var(--gold-bg);margin-bottom:12px;">
+<div class="h4" style="color:var(--gold);">区分赢家的唯一标准</div>
+<p style="font-size:14px;line-height:1.7;">当所有人看到风险并逃离时，她看到了机会并逆势入场。这不是运气，不是胆量，而是基于深度理解的认知优势。</p>
+</div>
+<div class="quote" data-anim>"我的机会就在于败诉的风险。风险，就是她的护城河。"</div>
+</div>
+</section>
+
+<section class="slide" data-title="欧阳雪的信任">
+<div class="content">
+<div class="kicker" data-anim>ANALYSIS</div>
+<h2 class="h2" data-anim>欧阳雪：信任的力量</h2>
+<div class="card" data-anim style="border-left:3px solid var(--gold);margin-bottom:12px;">
+<div class="h4">为什么她是强势文化代表？</div>
+<p style="font-size:14px;line-height:1.7;">她不懂商业逻辑，但她懂信任与担当。她的风险承受能力来自底层生活的磨砺。</p>
+</div>
+<div class="quote" data-anim>"我是摆馄饨摊过来的，不吃这个。"</div>
+</div>
+</section>
+
+<section class="slide" data-title="冯世杰的链接">
+<div class="content">
+<div class="kicker" data-anim>ANALYSIS</div>
+<h2 class="h2" data-anim>冯世杰：链接者</h2>
+<div class="card" data-anim style="border-left:3px solid var(--gold);margin-bottom:12px;">
+<div class="h4">王庙村的真正希望</div>
+<p style="font-size:14px;line-height:1.7;">他是村里唯一能链接农村逻辑和城市商业逻辑的人。退股不是背叛——是止损。</p>
+</div>
+</div>
+</section>
+
+<section class="slide" data-title="叶晓明的短视">
+<div class="content">
+<div class="kicker" data-anim>ANALYSIS</div>
+<h2 class="h2" data-anim>叶晓明：精明的短视者</h2>
+<div class="card" data-anim style="border-left:3px solid var(--accent);margin-bottom:12px;">
+<div class="h4">聪明到足以识别风险</div>
+<p style="font-size:14px;line-height:1.7;">但不足以看到风险背后的价值。他是弱势文化中的聪明人。</p>
+</div>
+</div>
+</section>
+
+<section class="slide" data-title="被推翻假设">
+<div class="content">
+<div class="kicker" data-anim>COLLAPSED</div>
+<h2 class="h2" data-anim>5个被推翻的假设</h2>
+<div style="display:flex;flex-direction:column;gap:8px;" data-anim>
+<div class="card" style="border-left:3px solid var(--accent);"><p style="font-size:12px;"><strong>强势文化优于弱势文化</strong> — 林雨峰与刘冰死于同一种方式</p></div>
+<div class="card" style="border-left:3px solid var(--accent);"><p style="font-size:12px;"><strong>文化属性决定命运是分析框架</strong> — 它是丁元英的认知武器</p></div>
+<div class="card" style="border-left:3px solid var(--accent);"><p style="font-size:12px;"><strong>扶贫是纯粹善行</strong> — 三方激励：验证理论+给神话+向韩楚风证明</p></div>
+<div class="card" style="border-left:3px solid var(--accent);"><p style="font-size:12px;"><strong>芮小丹是被启蒙的</strong> — 她认识丁之前就有独立人格</p></div>
+<div class="card" style="border-left:3px solid var(--accent);"><p style="font-size:12px;"><strong>丁元英是作者代言人</strong> — 他的沉默是批判</p></div>
+</div></div></section>
+
+<section class="slide" data-title="版本信息">
+<div class="content">
+<div class="kicker" data-anim>VERSION</div>
+<h2 class="h2" data-anim>V12 · 最终版本</h2>
+<div class="card" data-anim style="margin-top:12px;">
+<div class="h4">分析方法</div>
+<p style="font-size:12px;line-height:1.6;color:var(--dim);">
+6 Agent并行分析 + 能量评分筛选 + 语料汇总<br>
+专家阵容：芒格、尼采、老子、卡尼曼、塔勒布、项飙<br>
+讨论轮次：10轮深度交锋<br>
+核心产出：5个洞见、6个反例、5个被推翻假设、4组核心张力<br>
+视觉风格：白底+红色点缀+左侧导航
+</p>
+</div></div></section>
+
+<section class="slide" data-title="结束">
+<div class="content" style="text-align:center;">
+<div class="kicker" data-anim>FINALE</div>
+<h1 class="h1" data-anim style="font-size:clamp(28px,5vw,56px);">检查你的默认设置</h1>
+<p class="lead" data-anim style="text-align:center;margin:0 auto;">
+文化属性不是命运，而是默认设置。<br>问题在于，大多数人从不检查自己的默认设置。
+</p>
+<div class="divider" data-anim style="margin:16px auto;"></div>
+<div data-anim style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+<span class="tag tag-accent">6位专家</span><span class="tag tag-accent">10轮交锋</span><span class="tag tag-accent">5个洞见</span><span class="tag tag-accent">16句金句</span>
+</div></div></section>
+
+<script>
+const slides=document.querySelectorAll('.slide'),total=slides.length;
+let cur=0;
+const nav=document.getElementById('nav');
+const tocList=document.getElementById('tocList');
+
+slides.forEach((s,i)=>{
+  const d=document.createElement('div');
+  d.className='dot'+(i===0?' active':'');
+  d.onclick=()=>go(i);
+  nav.appendChild(d);
+  
+  const t=document.createElement('div');
+  t.className='toc-item'+(i===0?' active':'');
+  t.innerHTML='<span class="toc-num">'+String(i+1).padStart(2,'0')+'</span>'+(s.dataset.title||'Slide '+(i+1));
+  t.onclick=()=>go(i);
+  tocList.appendChild(t);
+});
+
+function go(n){
+  if(n<0||n>=total)return;
+  slides[cur].classList.remove('active');
+  cur=n;
+  slides[cur].classList.add('active');
+  document.getElementById('progress').style.width=((cur+1)/total*100)+'%';
+  document.getElementById('num').textContent=String(cur+1).padStart(2,'0')+' / '+total;
+  document.getElementById('title').textContent=slides[cur].dataset.title||'';
+  nav.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
+  tocList.querySelectorAll('.toc-item').forEach((t,i)=>t.classList.toggle('active',i===cur));
+  const active=tocList.querySelector('.toc-item.active');
+  if(active)active.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+document.addEventListener('keydown',e=>{
+  if(['ArrowRight','ArrowDown','Space','PageDown'].includes(e.code)){e.preventDefault();go(cur+1)}
+  else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.code)){e.preventDefault();go(cur-1)}
+  else if(e.code==='Home'){e.preventDefault();go(0)}
+  else if(e.code==='End'){e.preventDefault();go(total-1)}
+});
+
+let wt=null;
+document.addEventListener('wheel',e=>{if(wt)return;wt=setTimeout(()=>{wt=null},400);if(e.deltaY>0)go(cur+1);else if(e.deltaY<0)go(cur-1)},{passive:true});
+
+let tx=0;
+document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX});
+document.addEventListener('touchend',e=>{const d=tx-e.changedTouches[0].clientX;if(Math.abs(d)>50){d>0?go(cur+1):go(cur-1)}});
+
+document.addEventListener('click',e=>{
+  if(e.target.closest('.dot,.toc-item'))return;
+  const x=e.clientX/innerWidth;
+  if(x<.3)go(cur-1);else if(x>.7)go(cur+1);
+});
+
+go(0);
+</script>
+</body></html>

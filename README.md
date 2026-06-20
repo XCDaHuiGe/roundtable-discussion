@@ -10,6 +10,23 @@
 - 💡 **通俗表达训练** - 用最通俗的语言解释最深刻的哲思
 - 🎨 **圆桌 OS HTML-PPT渲染** - 一条主链路生成阅读型单文件 HTML-PPT
 
+## 最新升级（2026-06-20）
+
+### 专家灵魂升级
+
+| 模块 | 说明 | 状态 |
+|:---|:---|:---:|
+| 知识边界检查器 | 确保专家不乱引用理论 | ✅ |
+| Prompt V3 | Bloom Level 5-6，反直觉开场+金句+追问 | ✅ |
+| 金句页渲染 | 专门的金句页视觉设计 | ✅ |
+| 交锋约束 | 反驳基于自己的知识体系 | ✅ |
+
+**核心改进：**
+- 专家不再乱引用理论（老子不会谈AI，芒格不会谈量子）
+- 每个发言有"反直觉开场"+"判断性结论"+"可截图金句"
+- 金句有专门的视觉设计（单人/双人对比页）
+- 交锋基于自己的知识体系，不借用其他专家概念
+
 ## 最新成果
 
 | 指标 | 数值 |
@@ -19,6 +36,7 @@
 | **最强专家** | 项飙(V78/94次)、李诞(V76/94次)、冯唐(V75/81次) |
 | **深度训练JSON** | 330+文件 |
 | **圆桌洞见** | 职场困境、AI时代工作、人生哲学等 |
+| **知识边界覆盖** | 31/32位专家 |
 
 ## 快速开始
 
@@ -44,11 +62,18 @@ python train.py 100
 │   ├── render_roundtable_os.py # 统一 HTML-PPT 生成入口
 │   ├── cognitive_model/        # 认知蒸馏结构
 │   ├── quality_gates/          # 内容质量门
-│   └── html_ppt/               # 页面规划与合同
+│   ├── html_ppt/               # 页面规划与合同
+│   ├── knowledge_boundary_checker.py  # 知识边界检查器
+│   ├── knowledge_boundary_integration.py  # 集成模块
+│   ├── attack_constraint.py   # 交锋约束
+│   ├── quote_page_renderer.py # 金句页渲染
+│   └── prompts/
+│       ├── expert_speak_v2.py  # Prompt V2
+│       └── expert_speak_v3.py  # Prompt V3 (Bloom 5-6)
 ├── expert-library/       # 专家库（32位）
 │   └── experts/
 │       ├── philosophy/   # 哲学家（孔子、老子、韩非子、尼采等）
-│       ├── economics/    # 经济学家（巴菲特、芒格、达利欧等）
+│       ├── economics/    # 经济学家（巴菲特、芒格、塔勒布等）
 │       ├── psychology/   # 心理学家（卡尼曼、弗洛伊德、弗洛姆等）
 │       ├── sociology/    # 社会学家（项飙、赫拉利、阿伦特等）
 │       ├── literature/   # 文学/商业（李诞、冯唐、吴军、刘润等）
@@ -72,22 +97,6 @@ python train.py 100
 | **社会** | 项飙(V78/94)、马克思(V28/29) | 123+ |
 
 ## 圆桌洞见案例
-
-## 统一主链路
-
-```bash
-python engine/render_roundtable_os.py content/书名.json --output output/书名_圆桌洞见.html
-```
-
-圆桌 OS 是一个整体：内容结构、认知蒸馏、页面规划、视觉渲染和质量校验都收束到同一条默认链路。历史上的模块名只作为内部兼容存在，不再作为用户需要选择的版本。
-
-## 已讨论书目
-
-| 书名 | 作者 | 原著书名 | 页数 | 专家 | 轮次 | 发言 | 洞见 | 链接 |
-|:---|:---|:---|---:|:---:|---:|---:|---:|:---|
-| 《曾国藩传》 | 张宏杰 | 曾国藩传 | 18 | 6专家 | 5轮 | 30发言 | 5洞见 | [查看洞见](output/曾国藩传_圆桌洞见.html) |
-| 《大脑是如何工作的》 | 木村泰子；筱浦伸祯审定 | 大脑是如何工作的 | 20 | 6专家 | 5轮 | 18发言 | 5洞见 | [查看洞见](output/大脑是如何工作的_圆桌洞见.html) |
-| 《遥远的救世主》 | 豆豆 | 遥远的救世主 | 28 | 6专家 | 3轮 | 18发言 | 5洞见 | [查看洞见](output/遥远的救世主_圆桌洞见.html) |
 
 ### 职场困境：INTJ倦怠决策
 
@@ -130,6 +139,7 @@ python engine/render_roundtable_os.py content/书名.json --output output/书名
 | 深度训练 | WebSearch + 知乎MCP |
 | 融合增强 | AI策略提取 |
 | 对抗训练 | 进化式升级 + 对抗自训练 |
+| **专家灵魂升级** | **知识边界 + Prompt V3 + 金句页 + 交锋约束** |
 
 ## 知乎MCP服务
 
@@ -144,7 +154,9 @@ python main.py --port 18061
 - [使用指南](docs/USAGE_GUIDE.md)
 - [SKILL.md](SKILL.md) - Skills详细说明
 - [AGENTS.md](AGENTS.md) - 项目指令
+- [UPGRADE_SPEC_V2.md](UPGRADE_SPEC_V2.md) - 升级规范
+- [EXPERT_SOUL_SPEC.md](EXPERT_SOUL_SPEC.md) - 专家灵魂升级规范
 
 ---
 
-*更新时间：2026-06-17 · 系统：圆桌 OS*
+*更新时间：2026-06-20 · 系统：圆桌 OS*

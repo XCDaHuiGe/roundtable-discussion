@@ -1,0 +1,1703 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>圆桌讨论</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0A0A0A;
+      --bg2: #111111;
+      --bg3: #1A1A1A;
+      --text: #F5F5F5;
+      --text2: #A0A0A0;
+      --text3: #606060;
+      --accent: #D4A04A;
+      --accent-light: #E8C47A;
+      --accent-dark: #B8862D;
+      --clash: #ff4757;
+      --insight: #00d4aa;
+      --card-bg: rgba(212,160,74,0.08);
+      --card-border: rgba(212,160,74,0.2);
+      --glow: rgba(212,160,74,0.3);
+      --slide-w: 100vw;
+      --slide-h: 100vh;
+      --font-display: 'Noto Serif SC', serif;
+      --font-body: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    html { font-size: 16px; scroll-behavior: auto; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      overflow-y: hidden;
+      height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Slideshow container ─── */
+    .slideshow {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+    .slideshow::-webkit-scrollbar { display: none; }
+    .slideshow { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* ─── Slide ─── */
+    .slide {
+      flex: 0 0 var(--slide-w);
+      width: var(--slide-w);
+      height: var(--slide-h);
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 4rem 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ─── Progress bar ─── */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      z-index: 1000;
+      transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      box-shadow: 0 0 10px var(--glow);
+    }
+
+    /* ─── Page counter ─── */
+    .page-counter {
+      position: fixed;
+      top: 1.5rem;
+      right: 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text3);
+      z-index: 1000;
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Nav dots ─── */
+    .nav-dots {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 1000;
+      padding: 8px 16px;
+      background: rgba(10,10,10,0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      outline: none;
+    }
+    .nav-dot:hover { background: var(--text2); transform: scale(1.3); }
+    .nav-dot.active {
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--glow);
+      transform: scale(1.2);
+    }
+
+    /* ─── Slide header ─── */
+    .slide-header {
+      width: 100%;
+      max-width: 1000px;
+      margin-bottom: 2.5rem;
+    }
+    .slide-tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+    .slide-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    /* ─── Cover slide ─── */
+    .cover-slide {
+      background: radial-gradient(ellipse at 30% 50%, rgba(20,20,20,1) 0%, var(--bg) 70%);
+    }
+    .cover-glow {
+      position: absolute;
+      top: 50%;
+      left: 30%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .cover-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .cover-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      margin-bottom: 2rem;
+    }
+    .cover-title {
+      font-family: var(--font-display);
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 1rem;
+      max-width: 700px;
+    }
+    .cover-subtitle {
+      font-size: 1.1rem;
+      color: var(--text2);
+      margin-bottom: 1.5rem;
+    }
+    .cover-books {
+      font-size: 0.9rem;
+      color: var(--text3);
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+    .cover-stats {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .cover-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .cover-stat-num {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .cover-stat-label {
+      font-size: 0.85rem;
+      color: var(--text3);
+      margin-top: 0.25rem;
+    }
+    .cover-stat-divider {
+      width: 1px;
+      height: 40px;
+      background: var(--text3);
+      opacity: 0.3;
+    }
+    .cover-experts {
+      font-size: 0.9rem;
+      color: var(--text2);
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Expert grid ─── */
+    .expert-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 1000px;
+    }
+    .expert-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      transition: all 0.3s ease;
+    }
+    .expert-card:hover {
+      border-color: var(--card-color, var(--accent));
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      transform: translateY(-2px);
+    }
+    .expert-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0A0A0A;
+      flex-shrink: 0;
+    }
+    .expert-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .expert-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+    .expert-title {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-bottom: 0.5rem;
+    }
+    .expert-stance {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 8px;
+      border-radius: 3px;
+      margin-bottom: 0.5rem;
+    }
+    .expert-belief {
+      font-size: 0.8rem;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+
+    /* ─── Question slide ─── */
+    .question-slide {
+      background: radial-gradient(ellipse at 50% 50%, rgba(20,20,20,1) 0%, var(--bg) 70%);
+    }
+    .question-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    .question-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .question-topic {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 1.5rem 0;
+      line-height: 1.3;
+    }
+    .question-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--accent);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .question-text {
+      font-size: 1.15rem;
+      color: var(--text2);
+      line-height: 1.8;
+    }
+
+    /* ─── Stances ─── */
+    .stances-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .stance-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .stance-item:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .stance-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0A0A0A;
+      flex-shrink: 0;
+    }
+    .stance-body {
+      flex: 1;
+    }
+    .stance-speaker {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .stance-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Clash ─── */
+    .clash-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .clash-block {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+    }
+    .clash-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clash);
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .clash-item {
+      margin-bottom: 1rem;
+    }
+    .clash-item:last-child { margin-bottom: 0; }
+    .clash-speaker {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .clash-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      padding-left: 1rem;
+      border-left: 2px solid var(--card-border);
+    }
+    .clash-attack .clash-text {
+      border-left-color: var(--clash);
+    }
+    .clash-counter .clash-text {
+      border-left-color: var(--insight);
+    }
+
+    /* ─── Reality cases ─── */
+    .cases-container {
+      width: 100%;
+      max-width: 1000px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .case-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .case-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .case-header {
+      margin-bottom: 1rem;
+    }
+    .case-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .case-source {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-top: 0.25rem;
+    }
+    .case-content {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .case-outcome, .case-lesson {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+    .case-label {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-right: 0.5rem;
+    }
+
+    /* ─── Cost discussion ─── */
+    .cost-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .cost-scenario {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-scenario-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-scenario-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .cost-analysis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .cost-dimension {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .cost-value {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .cost-worst {
+      background: rgba(255,71,87,0.08);
+      border: 1px solid rgba(255,71,87,0.2);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-worst-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clash);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-worst-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .cost-survivor {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .cost-survivor-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-survivor-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Human nature ─── */
+    .hn-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .hn-question {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .hn-analysis {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+    }
+    .hn-examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .hn-example {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .hn-conclusion {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .hn-conclusion-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .hn-conclusion-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Cognitive upgrade ─── */
+    .upgrade-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .upgrade-block {
+      display: flex;
+      gap: 1.5rem;
+      align-items: stretch;
+      margin-bottom: 1.5rem;
+    }
+    .upgrade-before, .upgrade-after {
+      flex: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .upgrade-before {
+      border-color: rgba(255,71,87,0.2);
+      background: rgba(255,71,87,0.05);
+    }
+    .upgrade-after {
+      border-color: rgba(0,212,170,0.2);
+      background: rgba(0,212,170,0.05);
+    }
+    .upgrade-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+    .upgrade-before .upgrade-label { color: var(--clash); }
+    .upgrade-after .upgrade-label { color: var(--insight); }
+    .upgrade-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .upgrade-arrow {
+      display: flex;
+      align-items: center;
+      font-size: 2rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .upgrade-complexity, .upgrade-actionable {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .upgrade-complexity-label, .upgrade-actionable-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .upgrade-complexity-text, .upgrade-actionable-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Final insight ─── */
+    .insight-slide {
+      background: radial-gradient(ellipse at 50% 50%, rgba(0,212,170,0.05) 0%, var(--bg) 60%);
+    }
+    .insight-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0,212,170,0.15) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .insight-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .insight-title {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--insight);
+      margin: 1.5rem 0;
+    }
+    .insight-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--insight);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .insight-text {
+      font-size: 1.1rem;
+      color: var(--text2);
+      line-height: 1.9;
+    }
+
+    /* ─── Open questions ─── */
+    .oq-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .oq-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .oq-item:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+    .oq-num {
+      font-family: var(--font-mono);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+      width: 32px;
+      text-align: center;
+    }
+    .oq-text {
+      font-size: 1rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      .slide { padding: 2rem 1.5rem; }
+      .cover-title { font-size: 2rem; }
+      .question-topic { font-size: 1.8rem; }
+      .slide-title { font-size: 1.6rem; }
+      .expert-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+      .upgrade-block { flex-direction: column; }
+      .upgrade-arrow { transform: rotate(90deg); justify-content: center; }
+      .cases-container { grid-template-columns: 1fr; }
+      .cost-analysis { grid-template-columns: 1fr; }
+      .hn-examples { grid-template-columns: 1fr; }
+      .nav-dots { display: none; }
+    }
+    @media (max-width: 480px) {
+      .expert-grid { grid-template-columns: 1fr; }
+      .cover-stats { gap: 1rem; }
+      .cover-stat-num { font-size: 2rem; }
+    }
+    
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<div class="page-counter" id="pageCounter">1 / 28</div>
+
+<div class="slideshow" id="slideshow">
+
+    <div class="slide cover-slide">
+      <div class="cover-glow"></div>
+      <div class="cover-content">
+        <div class="cover-badge">ROUNDTABLE DISCUSSION</div>
+        <h1 class="cover-title">圆桌讨论</h1>
+        
+        
+        <div class="cover-stats">
+          <div class="cover-stat">
+            <span class="cover-stat-num">6</span>
+            <span class="cover-stat-label">位专家</span>
+          </div>
+          <div class="cover-stat-divider"></div>
+          <div class="cover-stat">
+            <span class="cover-stat-num">3</span>
+            <span class="cover-stat-label">轮讨论</span>
+          </div>
+        </div>
+        <div class="cover-experts">项飙 · 韩炳哲 · 芒格 · 老子 · 尼采 · 李诞</div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">EXPERTS</span>
+        <h2 class="slide-title">专家阵营</h2>
+      </div>
+      <div class="expert-grid">
+        <div class="expert-card" style="--card-color: #4A90D9">
+          <div class="expert-avatar" style="background: #4A90D9">项</div>
+          <div class="expert-info">
+            <div class="expert-name">项飙</div>
+            <div class="expert-title">人类学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #7B68EE">
+          <div class="expert-avatar" style="background: #7B68EE">韩</div>
+          <div class="expert-info">
+            <div class="expert-name">韩炳哲</div>
+            <div class="expert-title">哲学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #2E8B57">
+          <div class="expert-avatar" style="background: #2E8B57">芒</div>
+          <div class="expert-info">
+            <div class="expert-name">芒格</div>
+            <div class="expert-title">投资家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #8B6914">
+          <div class="expert-avatar" style="background: #8B6914">老</div>
+          <div class="expert-info">
+            <div class="expert-name">老子</div>
+            <div class="expert-title">道家，春秋</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #B22222">
+          <div class="expert-avatar" style="background: #B22222">尼</div>
+          <div class="expert-info">
+            <div class="expert-name">尼采</div>
+            <div class="expert-title">哲学家，19世纪</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #FF8C00">
+          <div class="expert-avatar" style="background: #FF8C00">李</div>
+          <div class="expert-info">
+            <div class="expert-name">李诞</div>
+            <div class="expert-title">脱口秀</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 1</span>
+        <h2 class="question-topic">学历通胀：教育是在赋能还是在内耗？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">当硕士送外卖、博士考街道办成为常态，18年教育投入的回报率是否已经崩塌？教育究竟是在赋能个体，还是在制造一场全社会的内耗？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4A90D9">项</div>
+          <div class="stance-body">
+            <div class="stance-speaker">项飙</div>
+            <div class="stance-text">教育内卷的本质不是教育问题，是社会流动通道收窄后的集体焦虑转移。中国社会过去三十年的核心叙事是&#x27;知识改变命运&#x27;，这条通道曾经真实存在——1990年代的大学生确实能跨越阶层。但当这条通道变窄，人们不是去质疑通道本身，而是疯狂加大投入力度，就像一群人挤在一扇越来越小的门前，每个人都踮起脚尖，结果所有人都更累，但谁也没多前进半步。这就是我所说的&#x27;悬浮&#x27;状态——所有人都在动，但没有人真正前进。学历通胀不是教育的失败，是社会结构的失败。当一个社会无法为受过教育的人提供匹配的位置时，教育就从赋能变成了内耗。更深层的问题是：我们把教育当成了唯一的阶层上升通道，这本身就是一种结构性暴力。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #7B68EE">韩</div>
+          <div class="stance-body">
+            <div class="stance-speaker">韩炳哲</div>
+            <div class="stance-text">当代教育的困境在于它已经从规训机制蜕变为绩效机制。福柯时代的学校是外在规训——老师监视学生，考试惩罚懒惰。但今天的教育是一种更精致的暴力：每个学生都是自己的监工。你不是被逼着学习，你是&#x27;自愿&#x27;地、&#x27;积极&#x27;地卷入这场无限竞争。这种&#x27;积极暴力&#x27;比传统规训更可怕，因为它让受害者以为自己是自由的。学历通胀的真正含义不是学历不值钱了，而是&#x27;自我优化&#x27;的军备竞赛没有终点。硕士变标配，那就读博士；博士变标配，那就再加海外经历。这不是教育，这是一种永不停歇的自我剥削。每个人都既是施暴者又是受害者，在&#x27;你能行&#x27;的励志口号中精疲力竭。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #2E8B57">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">从投资回报率的角度看，今天的教育投入已经严重偏离了理性区间。我年轻时，法学院学位是一张通往中产的确定性门票，投入产出比极高。但今天的现实是：一个家庭花100万培养一个硕士，毕业后月薪8000，这笔回收周期长达十年以上。如果你把同样的钱和时间投入一个小生意，或者直接进入职场积累经验，复利效应可能远超学历带来的溢价。这就是典型的&#x27;沉没成本谬误&#x27;——人们因为已经投入了太多，所以不愿承认这条路可能走不通。教育系统培养了大量&#x27;高学历穷人&#x27;，他们拥有知识但缺乏创造价值的能力。企业要的是能解决问题的人，不是能通过考试的人。我见过太多聪明人把时间浪费在证书堆砌上，而不是思考真正重要的问题。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8B6914">老</div>
+          <div class="stance-body">
+            <div class="stance-speaker">老子</div>
+            <div class="stance-text">天之道，损有余而补不足；人之道则不然，损不足以奉有余。今之学者，日诵万言而不知其所用，夜习百艺而不明其所归。学问本为明道，今反为蔽道之具。譬如水之就下，本自然之理；人强令之逆行，虽竭力而不达。天下皆知学问之为善，斯不善已。教育之道，当如水之润物，无声而化；今人以教为灌，以学为填，器满则溢，智塞则昏。无为而无不为，此教化之本也。强学而失其真，不如不学而守其朴。朴散则为器，器成则朴亡——学历愈多而真知愈少，此非学之过，乃执之过也。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #B22222">尼</div>
+          <div class="stance-body">
+            <div class="stance-speaker">尼采</div>
+            <div class="stance-text">当代教育制造的是一种新型的奴隶——不是被锁链束缚的奴隶，而是被文凭束缚的奴隶。他们以为自己在追求自由，实际上每一步都在加深自己的枷锁。十八年的驯化，足以将一头雄狮变成一只温顺的绵羊。教育体制教人服从、教人循规、教人在标准答案中寻找安全感——而这些恰恰是伟大灵魂最不需要的东西。我呼唤的超人，不是拥有最多证书的人，而是敢于在没有路标的大地上独自行走的人。当代年轻人最大的悲剧不是找不到工作，而是在十八年的规训之后，已经丧失了质疑这种规训的能力。他们渴望的不是创造，而是在既有体系中获得一个位置。这是精神上的末人——只求安逸，不敢冒险。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF8C00">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">读了18年书出来找不到工作，这事儿其实挺黑色幽默的。你想啊，一个孩子6岁上学，24岁硕士毕业，中间经历了无数次考试、竞赛、补习班，最后发现社会给他的回应是：&#x27;你很优秀，但我们没有岗位。&#x27;这不是教育，这是一场大型行为艺术。我觉得最讽刺的是，很多人读研不是因为想做研究，是因为本科找不到工作，读完研发现还是找不到，然后又有人说要读博。这不是学历通胀，这是学历通缩——大家都在追涨，但标的物一直在跌。说白了，教育已经变成了一种安慰剂：你不确定未来怎么办？那就继续读书吧。读书本身没问题，但把它当成延迟面对现实的方式，那就跟酗酒差不多了。都是在逃避，只不过一个伤肝，一个伤钱包。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #2E8B57">芒格 → 项飙</div>
+            <div class="clash-text">项飙教授，你把问题归结为&#x27;社会结构的失败&#x27;，这在学术上很优美，但对一个正在纠结要不要读研的年轻人没有任何帮助。结构问题不是他能改变的，但他必须在今天做出选择。你的分析很好，但分析不等于答案。一个18岁的孩子需要的是具体的行动指南，不是对社会结构的批判。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #4A90D9">项飙</div>
+              <div class="clash-text">芒格先生，你说的&#x27;行动指南&#x27;恰恰是问题所在。如果我们只教年轻人如何在既有规则下做最优选择，而不教他们审视规则本身，那我们就是在帮他们成为更精致的囚徒。我并不是说结构批判能直接解决个人问题，但一个不理解结构的人，他的&#x27;理性选择&#x27;往往是盲目的。你的投资智慧建立在理解市场结构之上，同理，人生选择也需要建立在理解社会结构之上。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #7B68EE">韩炳哲 → 芒格</div>
+            <div class="clash-text">芒格先生，你用投资回报率来衡量教育，这本身就是绩效社会的思维方式。教育的价值不能完全用金钱来衡量——一个人通过教育获得的批判性思维、审美能力、对世界的理解，这些都是无法量化的。把教育简化为投入产出比，正是当代社会最大的异化。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #2E8B57">芒格</div>
+              <div class="clash-text">韩炳哲教授，我不是说教育没有内在价值，我说的是当一个家庭倾尽所有供孩子读书，结果孩子毕业后连基本的经济独立都无法实现时，讨论&#x27;无法量化的价值&#x27;是一种残忍的奢侈。你可以批判绩效社会，但你不能要求一个背负学贷的年轻人用&#x27;审美能力&#x27;来还债。先解决生存问题，再谈精神升华，这是基本的人道主义。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #B22222">尼采 → 韩炳哲</div>
+            <div class="clash-text">韩炳哲教授，你描述了绩效暴力和自我剥削，但你的分析缺少一种力量——出路在哪里？你像一个精准的诊断者，指出了病症，却不开药方。如果每个人都既是施暴者又是受害者，那谁来打破这个循环？仅仅意识到自己在自我剥削，并不能停止自我剥削。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #7B68EE">韩炳哲</div>
+              <div class="clash-text">尼采先生，你给出了&#x27;超人&#x27;的药方，但超人是一个美学概念，不是社会方案。你呼唤英雄式的个体突破，但大多数人不是查拉图斯特拉，他们需要的是可以在日常生活中实践的智慧。承认困境的真实性，本身就是走出困境的第一步。我的工作不是提供乌托邦蓝图，而是让人们看清自己所处的牢笼。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">斯坦福博士报考安徽乡镇公务员</div>
+            <div class="case-source">2024年安徽省公务员考试录用公示</div>
+          </div>
+          <div class="case-content">2024年，一名斯坦福大学博士毕业生报考安徽省某乡镇公务员岗位，引发社会广泛讨论。该岗位并非一线城市核心岗位，而是基层乡镇。按常理，斯坦福博士的就业选择应该极为丰富，但该考生选择了一个与其学历层次看似不匹配的岗位。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 该考生被录用，引发&#x27;学历是否过度浪费&#x27;的持续争议。部分人认为这是个人自由选择，也有人指出这反映了高学历人才就业市场的结构性扭曲。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 当最顶尖的学历都无法保证匹配的就业机会时，说明问题不在个人能力，而在整个就业市场的供需结构。学历的价值正在与岗位的层次脱钩，这不是个别现象，而是系统性趋势。
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">美团骑手中的硕士研究生</div>
+            <div class="case-source">美团研究院《2020上半年骑手就业报告》及后续追踪</div>
+          </div>
+          <div class="case-content">美团平台数据显示，外卖骑手中有数万名研究生学历从业者。这些骑手并非都是过渡性就业，相当比例已经从事外卖配送超过两年。他们的年龄集中在28-35岁，正处于传统观念中&#x27;事业上升期&#x27;。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 该数据引发广泛社会讨论，&#x27;硕士送外卖&#x27;成为学历贬值的标志性符号。部分骑手表示，送外卖的实际收入并不低于他们能找到的办公室工作，且时间更自由。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 当高学历者发现体力劳动的回报率不低于脑力劳动时，教育投资的经济逻辑已经被动瓦解。这不意味着读书无用，而是说明我们的就业市场无法消化如此庞大的高学历劳动力供给。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">一个普通家庭倾尽积蓄供孩子完成18年教育（本科+硕士），孩子毕业后进入就业市场面临学历贬值的现实。</span>
+        </div>
+        <div class="cost-analysis">
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">最糟糕的情况是：一个家庭花光积蓄供孩子读完硕士，孩子毕业后找不到对口工作，只能从事与学历无关的低薪岗位，同时背负沉重的心理负担——既辜负了父母的期望，又无法接受&#x27;高学历低收入&#x27;的落差。更坏的是，这种挫败感可能导致整个家庭对教育失去信心，形成&#x27;读书无用论&#x27;的代际传递，让下一代过早放弃教育机会。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">我们总是看到那些&#x27;名校毕业、年薪百万&#x27;的成功案例，但这些是幸存者偏差的典型案例。名校毕业生中的成功者会被媒体反复报道，而那些同样优秀却因为行业周期、家庭变故、健康问题而未能成功的大多数人，他们的故事从未被讲述。更隐蔽的幸存者偏差是：我们看到的是&#x27;读了书的人过得还行&#x27;，却看不到&#x27;如果他们把同样的时间和精力投入其他领域，可能过得更好&#x27;。教育的价值不能只看绝对值，还要看相对于其他选择的机会成本。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">为什么明知学历贬值，人们仍然疯狂追求更高的学历？</div>
+        <div class="hn-analysis">这种行为模式背后有三重心理机制在起作用。第一是损失厌恶：已经投入了12年读到本科，不愿意承认这条路可能走不通，于是继续加大投入，期望&#x27;回本&#x27;。第二是从众效应：当周围所有人都在考研、考博时，不这样做会产生巨大的社会焦虑，即使理性上知道这可能不是最优选择。第三是确定性偏好：相比于充满不确定性的创业或自由职业，&#x27;读书-考试-拿证&#x27;是一条路径清晰的道路，它给人虚假的安全感。本质上，追求学历是一种风险规避行为——人们宁愿在一个拥挤的赛道上跑，也不愿开辟一条新路。</div>
+        <div class="hn-examples">
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">人类对学历的执着，本质上是对确定性的渴望。在一个充满不确定性的世界里，文凭是最容易量化的&#x27;确定性&#x27;——它是一个具体的数字、一个明确的标签、一个可以向他人展示的证明。但问题在于，真正的确定性从来不在外部的标签上，而在一个人解决问题的能力、适应变化的韧性、以及面对未知的勇气上。学历可以是这些品质的证明，但绝不是它们的替代品。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">学历是通往成功的敲门砖，更高的学历意味着更好的前途，教育投入的回报是确定的。</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">学历是众多能力证明方式中的一种，而且正在快速贬值。真正的竞争力来自不可替代的能力——创造力、跨领域整合能力、人际沟通能力、以及在不确定性中做出决策的勇气。教育的价值不在于拿到什么证书，而在于是否培养了这些核心能力。</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">这个问题的复杂性在于：它既是个人选择问题，也是社会结构问题；既涉及经济理性，也涉及心理需求；既有短期考量，也有长期影响。没有简单的&#x27;读书无用&#x27;或&#x27;读书万能&#x27;的答案。真相是：教育仍然有价值，但它的价值形式已经改变——从&#x27;学历溢价&#x27;转变为&#x27;能力溢价&#x27;。那些能够将教育转化为实际能力的人，仍然会获得回报；那些只是在堆砌学历的人，将面临越来越残酷的淘汰。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">三个具体建议：一、在决定是否继续深造之前，先问自己一个尖锐的问题——&#x27;我读这个学位是为了学到什么具体的能力，还是为了逃避面对就业市场？&#x27;如果是后者，果断停下来。二、把教育投资分散化——不要把所有筹码押在学历上，同时投资于实践经验、人际网络、个人品牌和可迁移技能。三、学会区分&#x27;确定性幻觉&#x27;和&#x27;真正的确定性&#x27;——文凭给你的是一种虚假的安全感，而真正的能力和韧性才是你在任何环境下都能生存的保障。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 2</span>
+        <h2 class="question-topic">能力vs学历：企业到底需要什么？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">企业招聘时，学历筛选和能力评估之间的张力如何解决？当&#x27;第一学历&#x27;成为隐性门槛，能力是否还有机会突围？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4A90D9">项</div>
+          <div class="stance-body">
+            <div class="stance-speaker">项飙</div>
+            <div class="stance-text">企业用学历筛选人，不是因为他们真的相信学历等于能力，而是因为学历是最便宜的筛选工具。在一个人力资源供给过剩的市场中，企业面对成千上万的简历，用学历过滤是最省时间的方式。这背后是一个冷酷的逻辑：企业不是在找最优秀的人，而是在用最低成本排除&#x27;可能不行&#x27;的人。这种筛选机制制造了一个恶性循环——因为企业看重学历，所以个人拼命刷学历；因为个人学历普遍提高，企业不得不提高门槛。最终，学历变成了一个&#x27;军备竞赛&#x27;中的武器，它的实际功能已经从&#x27;证明能力&#x27;变成了&#x27;通过筛选&#x27;。真正的悲剧在于：那些被学历筛选机制排除的人，往往不是没有能力，而是没有机会证明自己的能力。这是一种制度性的不公平。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #7B68EE">韩</div>
+          <div class="stance-body">
+            <div class="stance-speaker">韩炳哲</div>
+            <div class="stance-text">企业对学历的执着，本质上是一种&#x27;透明社会&#x27;的症状。在我们的时代，一切都必须是可量化、可比较、可排序的。学历提供了一种虚假的透明性——它让复杂的个体被简化为一个可以快速比较的数字。但真正的能力是不可见的、不可量化的、不可比较的。一个有创造力的人的价值，无法通过任何证书来证明。企业的&#x27;学历崇拜&#x27;反映了一种深层的不信任——不信任自己的判断力，不信任人的多维性，不信任那些无法被标准化的东西。这种不信任最终伤害的是企业自己：它们通过学历筛选得到的，往往是最会考试的人，而不是最有价值的人。标准化的人只能创造标准化的价值。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #2E8B57">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">我投资过几百家公司，看过几千个管理团队，我的经验是：学历和长期成功之间的相关性远低于大多数人想象。最好的创业者中，有哈佛MBA，也有高中辍学生。真正预测成功的是几个特质：诚实、好奇心、延迟满足的能力、以及在不确定性中做出合理决策的能力。这些东西，没有任何学位能保证。企业招聘过度依赖学历，犯的是&#x27;代理指标谬误&#x27;的错误——他们把学历当成了能力的代理指标，但这个代理指标越来越不准确。好的企业应该建立自己的能力评估体系，而不是把筛选工作外包给大学。花旗银行曾经只招常春藤毕业生，后来发现这帮人并不比州立大学的毕业生更能创造价值。这不是学历的问题，是筛选方法的问题。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8B6914">老</div>
+          <div class="stance-body">
+            <div class="stance-speaker">老子</div>
+            <div class="stance-text">善行无辙迹，善言无瑕谪。用人之道，不在其名而在其实。千里马常有，而伯乐不常有。今之用人者，先观其门第，次察其文书，末考其言行——此本末倒置也。上善若水，水善利万物而不争。人才亦如是，真才者不自矜，实学者不自伐。以学历取人，如以貌取人，失之子羽。古之善用人者，观其志、察其行、试其能，不以一纸定终身。道法自然，人各有才，不可以一器量万用。器有方圆，才有多寡，量才而用，方为善治。今人以学历为器，量天下之才，岂不谬哉。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #B22222">尼</div>
+          <div class="stance-body">
+            <div class="stance-speaker">尼采</div>
+            <div class="stance-text">企业的学历崇拜是一种&#x27;畜群道德&#x27;的体现——它奖励的是顺从者，惩罚的是异类。一个能够通过层层考试拿到名校文凭的人，往往是一个善于在既定规则中表现优异的人。但企业真正需要的，是那些能够打破规则、创造新规则的人。这两种人往往不是同一种人。乔布斯没有大学学位，但他创造了苹果。扎克伯格辍学了，但他建造了Meta。我不是说学历没有价值，而是说用学历作为筛选的首要标准，会系统性地排除掉那些最具创造力和破坏性思维的人。企业需要的不是绵羊，而是狼。但学历系统培养的恰恰是绵羊。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF8C00">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">企业说&#x27;我们看重能力不看重学历&#x27;，就跟相亲时说&#x27;我不看外表只看内在&#x27;一样——听听就好，别当真。真到了筛简历的时候，HR第一眼看的还是学校和学历，因为这是最不费脑子的方式。你让一个HR每天看500份简历，他哪有时间去了解每个人&#x27;独特的能力&#x27;？用学历筛选，就像用身高筛选篮球运动员——不是说矮个子一定打不好篮球，但你总得有个筛选标准吧。所以问题不是企业应不应该看学历，而是除了学历之外，有没有更好的筛选方式。如果有，企业自然会用；如果没有，学历就是最不坏的选择。说到底，企业要的是能干活的人，学历只是判断&#x27;这个人可能能干活&#x27;的一个粗糙指标。但粗糙归粗糙，它至少有个好处：便宜。评估能力很贵，看一眼学历很便宜。经济学嘛。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #2E8B57">芒格 → 李诞</div>
+            <div class="clash-text">李诞，你说评估能力很贵、看学历很便宜，这在短期内是对的。但从长期来看，这种便宜的筛选方式会让企业付出巨大的代价。我投资的那些优秀公司，没有一家是靠学历筛选建立团队的。它们花更多时间在面试和评估上，但换来的是一支真正能打仗的队伍。短期的便宜，换来的是长期的平庸。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #FF8C00">李诞</div>
+              <div class="clash-text">芒格先生，您说的那些公司，是已经成功的公司。它们有资源、有品牌、有时间去精挑细选。但一个创业公司、一个中小企业，每天面对几百份简历，它真的有能力去深度评估每个人吗？您用苹果和伯克希尔的例子来反驳，但苹果和伯克希尔本身就是幸存者。大多数花大量时间评估能力的公司，可能早就倒闭了。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #4A90D9">项飙 → 韩炳哲</div>
+            <div class="clash-text">韩炳哲教授，你把企业对学历的依赖归结为&#x27;透明社会&#x27;的症状，这个分析很漂亮，但过于抽象。企业HR不是在追求哲学意义上的&#x27;透明&#x27;，他们是在一个信息不对称的环境中做理性决策。他们没有能力、也没有时间去深入了解每个候选人的真实能力，所以用学历作为代理指标。这不是&#x27;不信任&#x27;，这是信息经济学的基本逻辑。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #7B68EE">韩炳哲</div>
+              <div class="clash-text">项飙教授，你把系统性的文化问题简化为&#x27;信息不对称&#x27;的经济问题，这恰恰是一种还原论。信息不对称是永恒存在的，但如何处理信息不对称，取决于一个社会的价值观和制度设计。当一个社会过度依赖学历来处理信息不对称时，它实际上是在说：&#x27;我们不关心你是谁，我们只关心你的标签。&#x27;这不仅仅是效率问题，这是价值取向问题。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">Google取消学历要求</div>
+            <div class="case-source">Google官方招聘政策调整及Laszlo Bock访谈（纽约时报，2013年）</div>
+          </div>
+          <div class="case-content">Google前人力副总裁Laszlo Bock在2013年接受纽约时报采访时透露，Google发现GPA和考试成绩作为预测工作表现的指标&#x27;毫无价值&#x27;（worthless as a criteria）。此后，Google逐步放宽了对学历的要求，开始更多关注候选人的实际能力、解决问题的思维方式和团队协作能力。Google的面试流程开始更多采用结构化的行为面试和实际问题解决测试。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> Google的人才质量并未因降低学历要求而下降，反而在多元化方面取得了显著进展。然而，值得注意的是，Google的品牌效应使其能够吸引大量自荐的优秀人才，这是大多数企业不具备的优势。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 即使是最顶级的科技公司也承认，学历不是预测工作表现的好指标。但改变筛选机制需要企业有足够的资源和品牌吸引力。对于大多数中小企业来说，学历筛选仍然是最现实的选择——这揭示了一个深层矛盾：我们知道更好的方式存在，但不是所有人都有能力采用它。
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">华为&#x27;天才少年&#x27;计划</div>
+            <div class="case-source">华为官方招聘信息及媒体公开报道</div>
+          </div>
+          <div class="case-content">华为从2019年开始推出&#x27;天才少年&#x27;计划，以年薪百万至两百万的待遇招收顶尖技术人才。入选者大多是博士学历，但华为的筛选标准并非学历本身，而是实际的技术能力和科研成果。任正非多次强调，华为要的是&#x27;能解决问题的人&#x27;，不是&#x27;有文凭的人&#x27;。然而，最终入选者几乎清一色来自顶尖高校，这引发了一个悖论：当你说不看学历时，为什么结果还是学历优秀的人胜出？</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 该计划已招收数百名&#x27;天才少年&#x27;，其中部分人在华为的关键技术攻关中发挥了重要作用。但也有少数入选者因无法适应华为的工作节奏而离职。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 这个案例揭示了一个深层悖论：当企业真正用能力而非学历来筛选时，最终胜出的往往还是名校毕业生——不是因为学历本身有价值，而是因为获得顶尖学历的过程确实培养了某些能力。但这并不意味着学历是必要条件，而是说能力和学历之间存在相关性，只是相关性在减弱。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">一家中小企业面临招聘困境：用学历筛选效率高但可能错过人才，深度评估每个人能力成本太高。</span>
+        </div>
+        <div class="cost-analysis">
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">最糟糕的情况是：企业过度依赖学历筛选，招到了一群&#x27;会考试但不会干活&#x27;的人，而那些真正有能力但学历不够亮眼的人才被竞争对手抢走。更坏的是，这种筛选机制会让企业内部形成一种&#x27;唯学历论&#x27;的文化，真正有能力的非名校员工即使进入公司，也会因为&#x27;出身不好&#x27;而得不到晋升机会，最终选择离开。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">我们看到Google放宽学历要求后依然成功，但忽略了Google本身就拥有全球顶级的雇主品牌，它不需要主动筛人，人才会主动涌来。同样，华为的&#x27;天才少年&#x27;几乎都是名校博士，这看似证明了&#x27;能力筛选最终还是选了高学历者&#x27;，但实际上这是一种选择偏差——华为的筛选标准虽然不以学历为唯一指标，但其吸引力本身就限制了申请者的范围。真正公平的能力评估，应该在更广泛的人群中进行。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">为什么企业明知学历不完全代表能力，却仍然坚持用学历筛选？</div>
+        <div class="hn-analysis">这背后有三重心理机制。第一是责任规避：如果一个HR招了一个名校毕业生但表现不好，他可以说&#x27;我招的是名校的，谁想到会这样&#x27;；但如果招了一个非名校的人表现不好，他就需要承担更大的责任。学历在这里充当了&#x27;免责声明&#x27;的角色。第二是确认偏误：人们倾向于寻找支持自己已有信念的证据。一个相信学历重要的管理者，会不自觉地关注那些&#x27;名校毕业且优秀&#x27;的案例，而忽略&#x27;名校毕业但平庸&#x27;或&#x27;非名校但优秀&#x27;的案例。第三是社会认同：在企业内部，&#x27;我们公司都是名校毕业生&#x27;是一种社会资本，它可以增强员工的自我认同感和企业的外部形象。即使这种筛选方式在效率上不是最优的，它在心理上给了管理者一种安全感。</div>
+        <div class="hn-examples">
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">企业对学历的执着，本质上是一种风险管理策略——它不是为了找到最好的人，而是为了避免选到&#x27;明显不行&#x27;的人。这种策略在短期内是理性的，但在长期来看是有害的。它系统性地排除了那些有潜力但没有&#x27;漂亮标签&#x27;的人才，让企业陷入一种&#x27;看起来很好，实际上平庸&#x27;的陷阱。打破这个循环，需要企业有足够的勇气和资源去建立更公平、更准确的人才评估体系。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">学历是能力的可靠证明，企业应该优先考虑学历高的候选人。</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">学历是能力的众多信号之一，而且其信号价值正在衰减。真正有远见的企业会建立多维度的能力评估体系——项目经历、解决问题的案例、团队协作能力、学习速度——而不是简单地依赖学历这一单一指标。同时，求职者也应该意识到：学历只是敲门砖，进门之后，决定你走多远的是你创造的实际价值。</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">能力与学历的关系不是简单的&#x27;有学历无能力&#x27;或&#x27;有能力无学历&#x27;的二元对立。真实情况是：学历和能力之间存在正相关，但相关性在减弱；不同行业、不同岗位对学历的依赖程度不同；企业文化和社会环境共同塑造了对学历的态度。解决这个问题需要的不是&#x27;取消学历&#x27;或&#x27;唯学历论&#x27;，而是建立更精准、更多元的人才评估机制。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">对企业：一、建立结构化的能力评估体系，用实际案例和问题解决测试替代简单的学历筛选。二、为非学历渠道的人才提供公平的竞争机会，比如技能竞赛、项目制合作、实习转正等。三、在内部建立&#x27;能力导向&#x27;而非&#x27;学历导向&#x27;的晋升文化。对个人：一、在拥有学历的同时，积累可证明的实际成果——作品集、项目经验、可量化的业绩。二、建立个人品牌，让能力可见化——通过作品、演讲、社交网络展示你的专业能力。三、选择那些真正看重能力的企业，而不是只看学历的企业。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 3</span>
+        <h2 class="question-topic">教育的重构：如果重来一次，你会怎么学？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">如果可以重新设计教育路径，什么样的学习方式才是适应未来世界的？教育的终极目的是什么——是就业、是成长、还是别的什么？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4A90D9">项</div>
+          <div class="stance-body">
+            <div class="stance-speaker">项飙</div>
+            <div class="stance-text">如果重来，我会建议一种&#x27;社区嵌入式&#x27;的教育路径。与其在象牙塔里读18年书，不如把学习和实践交织在一起。16岁开始，用两年时间在不同的社区、不同的行业里做&#x27;人类学式&#x27;的观察和参与——不是实习，是真正的观察和思考。然后带着问题回到学校，学两年理论。再出去，再回来。这种&#x27;走出去-走回来&#x27;的节奏，比18年不间断的课堂学习更有价值。教育的目的不是灌输知识，而是培养一种&#x27;看见&#x27;的能力——看见社会的运作方式，看见人与人之间的连接，看见自己在这个世界中的位置。一个能够&#x27;看见&#x27;的人，无论身处什么环境，都能找到自己的路。学历只是一个阶段性的标签，但&#x27;看见&#x27;的能力是终身的资产。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #7B68EE">韩</div>
+          <div class="stance-body">
+            <div class="stance-speaker">韩炳哲</div>
+            <div class="stance-text">我理想中的教育，首先要教会人&#x27;无聊&#x27;的能力。这听起来矛盾，但在一个注意力被无限碎片化的时代，能够独处、能够沉思、能够在没有外部刺激的情况下与自己相处，是一种极其珍贵的能力。现代教育的问题在于，它把每一分钟都填满了——课程、作业、考试、活动——让人没有时间去思考&#x27;我为什么要学这些&#x27;。如果重来，我会把教育的一半时间留给&#x27;空白&#x27;——没有课程、没有考核、没有任何目的的时间。让学生在无聊中学会与自己对话，在沉思中找到真正的兴趣，在无目的中发现有意义的方向。教育的终极目的不是培养&#x27;有竞争力的个体&#x27;，而是培养&#x27;完整的个人&#x27;。一个完整的人，知道自己是谁、想要什么、以及为什么而活。这些答案，没有任何考试能给出。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #2E8B57">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">如果重来，我会做三件事。第一，在20岁之前建立一个&#x27;多元思维模型&#x27;的框架——不是学一个专业，而是跨学科地学习最基本的思维工具。数学的统计思维、生物学的进化思维、物理学的系统思维、心理学的认知偏误——这些是解决任何问题的基础工具箱。第二，尽早开始&#x27;赚钱&#x27;的实践——不是为了钱本身，而是为了理解价值创造的逻辑。一个从未创造过经济价值的人，很难理解这个世界的真实运作方式。第三，找到一个值得追随的导师——不是学校里的教授，而是已经在真实世界中取得成就的人。跟着他做事，比读100本书更有价值。教育的目的是培养&#x27;理性&#x27;——在复杂的世界中做出合理决策的能力。而理性不是在课堂上学到的，是在实践中锻造的。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8B6914">老</div>
+          <div class="stance-body">
+            <div class="stance-speaker">老子</div>
+            <div class="stance-text">为学日益，为道日损。损之又损，以至于无为，无为而无不为。教人之道，非以填其腹，乃以空其心。心空则灵，灵则通，通则化，化则无所不适。今之教者，日增其所学，而不知日损其所执。所学愈多，所执愈固；所执愈固，离道愈远。善教者，教人以不教；善学者，学人以不学。不教之教，乃为大教；不学之学，乃为大学。若重习学道，当先知止。知止而后有定，定而后能静，静而后能安，安而后能虑，虑而后能得。物有本末，事有终始，知所先后，则近道矣。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #B22222">尼</div>
+          <div class="stance-body">
+            <div class="stance-speaker">尼采</div>
+            <div class="stance-text">如果重来，我会把教育从&#x27;服从的训练&#x27;变成&#x27;意志的锻造&#x27;。当代教育最大的罪过，不是教了错误的知识，而是摧毁了年轻人的意志——它教他们服从标准答案、服从权威、服从集体，最终丧失了独立判断和自我超越的能力。我的教育方案是：在15岁之前，让年轻人尽可能广泛地接触世界——不是通过课本，而是通过旅行、劳动、艺术创作、与不同的人对话。在15岁之后，让他们选择一个真正点燃自己灵魂的方向，然后用全部的热情和意志去追求它。不要问&#x27;这个专业有没有前途&#x27;，要问&#x27;我的灵魂是否为之燃烧&#x27;。教育的终极目的，是培养一个&#x27;自我立法者&#x27;——不依赖外部权威来决定自己该怎么活，而是有勇气为自己的人生制定法则。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF8C00">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">如果重来？说实话，我觉得大多数人不会做出不同的选择，因为问题不在于个人的选择，而在于整个系统的设置。你让一个16岁的孩子在&#x27;好好学习考个好大学&#x27;和&#x27;跟随内心追求热爱&#x27;之间选择，他当然选前者，因为前者有明确的路径和回报预期，后者是薛定谔的猫——你不知道打开盒子是死是活。所以如果真要重来，不是重来一次个人的选择，而是重来一次整个系统。比如说，能不能有一种教育模式，让你一边学一门手艺一边上大学？能不能有一种社会安全网，让你在20多岁试错的时候不至于饿死？能不能有一种评价体系，不把人生简化成一张成绩单？但这些都太大了，说了也没用。所以如果重来一次，我可能会早点学会做饭、学会跟人聊天、学会在失败的时候不崩溃。这些技能比任何学位都管用。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #2E8B57">芒格 → 老子</div>
+            <div class="clash-text">老子先生，您的&#x27;无为&#x27;哲学很深刻，但它有一个前提：基本的生存问题已经解决。在一个竞争激烈的社会中，一个年轻人如果真的&#x27;无为&#x27;，他可能连饭都吃不上。您的智慧适用于已经有了一定基础的人，但对于一个正在为生存挣扎的年轻人来说，&#x27;无为&#x27;是一种奢侈品。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #8B6914">老子</div>
+              <div class="clash-text">芒格先生，&#x27;无为&#x27;非&#x27;不为&#x27;也。无为者，不妄为也。水善利万物而不争，非不流也，乃顺其势而流也。人之求学亦然，非不学也，乃不强学也。强学者，逆其性而学，虽劳而少成；顺性而学者，如水之就下，自然而得。生存之事，固不可废；然为生存而弃其性，则生不如死。圣人之道，为而不恃，功成而弗居。此非奢侈，乃常理也。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #7B68EE">韩炳哲 → 尼采</div>
+            <div class="clash-text">尼采先生，你呼唤&#x27;自我立法者&#x27;，但你忽略了一个基本事实：大多数人并不想成为超人，他们只想过上安稳的生活。你的教育方案——让年轻人&#x27;跟随灵魂的燃烧&#x27;——对于少数天才来说是可行的，但对于大多数人来说，这是一种不切实际的浪漫主义。大多数人需要的不是&#x27;灵魂的燃烧&#x27;，而是&#x27;稳定的收入&#x27;。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #B22222">尼采</div>
+              <div class="clash-text">韩炳哲教授，你说大多数人&#x27;只想过安稳的生活&#x27;，但你有没有想过，这本身就是被规训出来的结果？一个人在十八年的服从训练之后，当然只想要安稳——因为他的意志已经被磨平了。我说的不是让每个人都成为艺术家或革命家，而是让每个人都有机会发现自己的独特性，而不是被塞进同一个模具里。你说这是&#x27;浪漫主义&#x27;，但把所有人塑造成同一种样子，难道不是更大的暴力吗？</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">芬兰教育改革：取消学科分界</div>
+            <div class="case-source">芬兰国家教育委员会2016年改革方案及后续追踪报道</div>
+          </div>
+          <div class="case-content">芬兰从2016年开始在部分学校试行&#x27;现象式教学&#x27;（Phenomenon-based Learning），打破传统学科界限，让学生围绕真实世界的&#x27;现象&#x27;（如气候变化、社区问题）进行跨学科的学习。学生不再按数学、语文、物理分科学习，而是围绕一个主题，综合运用多学科知识来解决问题。教师的角色从&#x27;知识传授者&#x27;变为&#x27;学习引导者&#x27;。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 试点学校的学生在标准化考试中的成绩与传统学校持平或略优，但在创造性思维、团队协作和问题解决能力方面表现显著更好。然而，这种模式对教师的要求极高，推广速度较慢。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 教育可以有不同的形态，而且效果可能更好。芬兰的经验证明，打破学科界限、围绕真实问题组织学习，可以培养更全面的能力。但这种改革需要强大的教师培训体系和社会共识，不是一朝一夕能完成的。
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">Minerva大学：全球游学式教育</div>
+            <div class="case-source">Minerva University官方介绍及《纽约时报》等媒体报道</div>
+          </div>
+          <div class="case-content">Minerva大学成立于2012年，采用一种全新的教育模式：学生在全球七个城市（旧金山、首尔、海德拉巴、柏林、布宜诺斯艾利斯、伦敦、台北）轮转学习，每学期换一个城市。课程全部在线上进行，但学生需要在每个城市完成&#x27;沉浸式&#x27;的实践项目。学费仅为传统精英大学的一半左右。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> Minerva的录取率低于哈佛，但其毕业生的就业去向和薪资水平与传统精英大学相当。学生的跨文化能力和适应能力被雇主高度评价。但这种模式的可复制性受到质疑——它依赖于创始团队的资源和网络。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 教育的形态可以被根本性地重新设计。Minerva证明了：学生不需要在一个固定的地方待四年才能获得优质的教育。全球化的学习体验、实践导向的课程设计、以及对&#x27;适应力&#x27;的刻意培养，可能比传统的校园教育更适合21世纪的需求。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">一个家庭考虑是否让孩子走非传统教育路径（如gap year、职业技能培训、创业尝试等），放弃传统的18年学历路线。</span>
+        </div>
+        <div class="cost-analysis">
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">最糟糕的情况是：一个年轻人受&#x27;读书无用论&#x27;的影响，在18岁时放弃高考去创业或追求&#x27;热爱&#x27;，结果几年后发现自己的热爱并不足以养活自己，想要回到传统路径时，已经错过了最佳时机。他既没有学历，也没有成功的事业，还背负了&#x27;浪费时间&#x27;的心理负担。这种情况比&#x27;读了18年书找不到工作&#x27;更危险，因为它可能让人彻底丧失对未来的信心。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">我们看到比尔·盖茨、乔布斯辍学后成功的故事，但忽略了他们辍学的是哈佛，而且他们已经有了明确的创业方向和初始资源。我们看到有人靠短视频暴富，但忽略了数以百万计的短视频创作者中只有极少数能够成功。走非传统路径的成功者会被反复讲述，而失败者的沉默让这条路看起来比实际更安全。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">为什么大多数人即使对现状不满，也不会选择非传统的教育/职业路径？</div>
+        <div class="hn-analysis">这背后是&#x27;现状偏见&#x27;和&#x27;损失厌恶&#x27;的共同作用。人们对已经拥有的东西（即使是不满意的现状）赋予更高的价值，而对未知的可能性赋予更低的价值。放弃已有的确定性（学历、稳定工作）去追求不确定性（创业、自由职业），在心理上相当于&#x27;损失&#x27;，而人类对损失的敏感度是对收益的两倍。此外，社会比较也是一个重要因素——当你看到同龄人按部就班地升学、就业、买房时，你很难心安理得地走一条&#x27;不确定&#x27;的路。从众不是因为缺乏勇气，而是因为人类的大脑被进化设计为通过群体来降低风险。</div>
+        <div class="hn-examples">
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">人类对确定性的偏好，是一种进化遗产——在远古时代，不确定性意味着危险。但在现代社会，过度追求确定性反而可能成为最大的风险——因为世界变化太快，昨天的确定性可能变成明天的陷阱。真正的智慧不是在确定和不确定之间做选择，而是学会在不确定性中保持行动的能力。这需要一种&#x27;反脆弱&#x27;的心态——不是追求避免风险，而是学会从风险中获益。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">教育是一条线性路径：上学-考试-升学-就业。偏离这条路径就是冒险，是不安全的。</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">教育是一个终身的、非线性的、多维度的过程。它可以发生在学校里，也可以发生在旅行中、在工作里、在失败中、在与他人的对话中。最重要的不是走了哪条路，而是在走路的过程中是否在成长、在思考、在发现自己的独特性。教育的终极目的不是找到一份工作，而是成为一个完整的、有能力面对未知世界的人。</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">教育的重构不是一个简单的&#x27;选A还是选B&#x27;的问题。它涉及个人特质、家庭条件、社会环境、经济周期等多重因素的交织。对有些人来说，传统路径是最优解；对另一些人来说，非传统路径可能更好。关键不是选择哪条路，而是是否真正理解自己为什么选择这条路。盲目地走传统路径和盲目地走非传统路径，都是不明智的。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">五个具体建议：一、在做教育选择之前，先花足够的时间了解自己——你的兴趣、你的优势、你的价值观。这不是浪费时间，这是最重要的投资。二、建立&#x27;技能组合&#x27;而非&#x27;学历组合&#x27;——学会一门可以谋生的技能，同时保持对广泛领域的兴趣和学习。三、在20-30岁之间，允许自己有多次&#x27;小规模试错&#x27;的机会——不要把所有鸡蛋放在一个篮子里。四、建立&#x27;反脆弱&#x27;的心理素质——不是追求避免失败，而是学会从失败中学习和成长。五、保持对世界的好奇心和开放性——最有价值的教育往往发生在你意想不到的地方。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide insight-slide">
+      <div class="insight-glow"></div>
+      <div class="insight-content">
+        <span class="slide-tag">FINAL INSIGHT</span>
+        <h2 class="insight-title">最终洞见</h2>
+        <div class="insight-divider"></div>
+        <p class="insight-text">教育内卷与学历贬值的本质，不是教育的问题，而是社会流动通道收窄后，所有人被迫在同一条赛道上进行军备竞赛的结果。真正的出路不在于&#x27;读更多书&#x27;或&#x27;不读书&#x27;，而在于重新理解教育的本质——它不是一张通往确定未来的门票，而是一种面对不确定世界的能力。当社会不再能为每个人提供一个确定的位置时，教育的真正价值就在于：让你有能力在没有路标的大地上，找到属于自己的方向。这不是学历能给你的，也不是任何体制能保证的——它只能来自你对自我的深刻理解、对世界的真实观察、以及面对未知时的勇气。</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">OPEN QUESTIONS</span>
+        <h2 class="slide-title">开放问题</h2>
+      </div>
+      <div class="oq-container">
+        <div class="oq-item">
+          <div class="oq-num">1</div>
+          <div class="oq-text">如果AI能够替代大部分知识性工作，18年教育中应该重点培养人类独有的哪些能力？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">2</div>
+          <div class="oq-text">在学历持续贬值的趋势下，社会是否需要建立一套新的&#x27;能力认证&#x27;体系来替代学历？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">3</div>
+          <div class="oq-text">当&#x27;终身学习&#x27;成为必须而非选择时，现有的教育体制应该如何从根本上重构？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">4</div>
+          <div class="oq-text">在教育军备竞赛中，如何保护那些&#x27;不擅长考试但有其他天赋&#x27;的年轻人？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">5</div>
+          <div class="oq-text">如果教育的终极目的是&#x27;成为完整的人&#x27;，那么一个社会应该如何平衡&#x27;人的发展&#x27;与&#x27;经济效率&#x27;之间的矛盾？</div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="nav-dots">
+      <button class="nav-dot active" data-idx="0"></button>
+      <button class="nav-dot" data-idx="1"></button>
+      <button class="nav-dot" data-idx="2"></button>
+      <button class="nav-dot" data-idx="3"></button>
+      <button class="nav-dot" data-idx="4"></button>
+      <button class="nav-dot" data-idx="5"></button>
+      <button class="nav-dot" data-idx="6"></button>
+      <button class="nav-dot" data-idx="7"></button>
+      <button class="nav-dot" data-idx="8"></button>
+      <button class="nav-dot" data-idx="9"></button>
+      <button class="nav-dot" data-idx="10"></button>
+      <button class="nav-dot" data-idx="11"></button>
+      <button class="nav-dot" data-idx="12"></button>
+      <button class="nav-dot" data-idx="13"></button>
+      <button class="nav-dot" data-idx="14"></button>
+      <button class="nav-dot" data-idx="15"></button>
+      <button class="nav-dot" data-idx="16"></button>
+      <button class="nav-dot" data-idx="17"></button>
+      <button class="nav-dot" data-idx="18"></button>
+      <button class="nav-dot" data-idx="19"></button>
+      <button class="nav-dot" data-idx="20"></button>
+      <button class="nav-dot" data-idx="21"></button>
+      <button class="nav-dot" data-idx="22"></button>
+      <button class="nav-dot" data-idx="23"></button>
+      <button class="nav-dot" data-idx="24"></button>
+      <button class="nav-dot" data-idx="25"></button>
+      <button class="nav-dot" data-idx="26"></button>
+      <button class="nav-dot" data-idx="27"></button>
+</div>
+
+<script>
+
+    (function() {
+      const slideshow = document.getElementById('slideshow');
+      const progressBar = document.getElementById('progressBar');
+      const pageCounter = document.getElementById('pageCounter');
+      const dots = document.querySelectorAll('.nav-dot');
+      const total = 28;
+      let current = 0;
+      let wheelTimer = null;
+      let isScrolling = false;
+
+      function updateUI() {
+        const scrollLeft = slideshow.scrollLeft;
+        const slideWidth = slideshow.clientWidth;
+        current = Math.round(scrollLeft / slideWidth);
+        if (current < 0) current = 0;
+        if (current >= total) current = total - 1;
+
+        // Progress bar
+        const pct = ((current + 1) / total) * 100;
+        progressBar.style.width = pct + '%';
+
+        // Page counter
+        pageCounter.textContent = (current + 1) + ' / ' + total;
+
+        // Dots
+        dots.forEach(function(d, i) {
+          d.classList.toggle('active', i === current);
+        });
+      }
+
+      function goTo(idx) {
+        if (idx < 0) idx = 0;
+        if (idx >= total) idx = total - 1;
+        slideshow.scrollTo({ left: idx * slideshow.clientWidth, behavior: 'smooth' });
+        current = idx;
+        setTimeout(updateUI, 400);
+      }
+
+      // Keyboard
+      document.addEventListener('keydown', function(e) {
+        switch(e.key) {
+          case 'ArrowRight': case ' ': case 'PageDown':
+            e.preventDefault(); goTo(current + 1); break;
+          case 'ArrowLeft': case 'PageUp':
+            e.preventDefault(); goTo(current - 1); break;
+          case 'Home':
+            e.preventDefault(); goTo(0); break;
+          case 'End':
+            e.preventDefault(); goTo(total - 1); break;
+        }
+      });
+
+      // Mouse wheel with debounce
+      slideshow.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        if (wheelTimer) return;
+        wheelTimer = setTimeout(function() { wheelTimer = null; }, 600);
+        if (e.deltaY > 0 || e.deltaX > 0) {
+          goTo(current + 1);
+        } else {
+          goTo(current - 1);
+        }
+      }, { passive: false });
+
+      // Nav dots
+      dots.forEach(function(dot, i) {
+        dot.addEventListener('click', function() { goTo(i); });
+      });
+
+      // Scroll event
+      slideshow.addEventListener('scroll', function() {
+        if (!isScrolling) {
+          isScrolling = true;
+          requestAnimationFrame(function() {
+            updateUI();
+            isScrolling = false;
+          });
+        }
+      });
+
+      // Resize
+      window.addEventListener('resize', function() { goTo(current); });
+
+      // Init
+      updateUI();
+    })();
+    
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1765 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>极简主义vs消费主义：少即是多还是另一种特权</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0A0A0A;
+      --bg2: #111111;
+      --bg3: #1A1A1A;
+      --text: #F5F5F5;
+      --text2: #A0A0A0;
+      --text3: #606060;
+      --accent: #D4A04A;
+      --accent-light: #E8C47A;
+      --accent-dark: #B8862D;
+      --clash: #ff4757;
+      --insight: #00d4aa;
+      --card-bg: rgba(212,160,74,0.08);
+      --card-border: rgba(212,160,74,0.2);
+      --glow: rgba(212,160,74,0.3);
+      --slide-w: 100vw;
+      --slide-h: 100vh;
+      --font-display: 'Noto Serif SC', serif;
+      --font-body: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    html { font-size: 16px; scroll-behavior: auto; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      overflow-y: hidden;
+      height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Slideshow container ─── */
+    .slideshow {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+    .slideshow::-webkit-scrollbar { display: none; }
+    .slideshow { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* ─── Slide ─── */
+    .slide {
+      flex: 0 0 var(--slide-w);
+      width: var(--slide-w);
+      height: var(--slide-h);
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 4rem 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ─── Progress bar ─── */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      z-index: 1000;
+      transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      box-shadow: 0 0 10px var(--glow);
+    }
+
+    /* ─── Page counter ─── */
+    .page-counter {
+      position: fixed;
+      top: 1.5rem;
+      right: 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text3);
+      z-index: 1000;
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Nav dots ─── */
+    .nav-dots {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 1000;
+      padding: 8px 16px;
+      background: rgba(10,10,10,0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      outline: none;
+    }
+    .nav-dot:hover { background: var(--text2); transform: scale(1.3); }
+    .nav-dot.active {
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--glow);
+      transform: scale(1.2);
+    }
+
+    /* ─── Slide header ─── */
+    .slide-header {
+      width: 100%;
+      max-width: 1000px;
+      margin-bottom: 2.5rem;
+    }
+    .slide-tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+    .slide-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    /* ─── Cover slide ─── */
+    .cover-slide {
+      background: radial-gradient(ellipse at 30% 50%, rgba(20,20,20,1) 0%, var(--bg) 70%);
+    }
+    .cover-glow {
+      position: absolute;
+      top: 50%;
+      left: 30%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .cover-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .cover-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      margin-bottom: 2rem;
+    }
+    .cover-title {
+      font-family: var(--font-display);
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 1rem;
+      max-width: 700px;
+    }
+    .cover-subtitle {
+      font-size: 1.1rem;
+      color: var(--text2);
+      margin-bottom: 1.5rem;
+    }
+    .cover-books {
+      font-size: 0.9rem;
+      color: var(--text3);
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+    .cover-stats {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .cover-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .cover-stat-num {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .cover-stat-label {
+      font-size: 0.85rem;
+      color: var(--text3);
+      margin-top: 0.25rem;
+    }
+    .cover-stat-divider {
+      width: 1px;
+      height: 40px;
+      background: var(--text3);
+      opacity: 0.3;
+    }
+    .cover-experts {
+      font-size: 0.9rem;
+      color: var(--text2);
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Expert grid ─── */
+    .expert-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 1000px;
+    }
+    .expert-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      transition: all 0.3s ease;
+    }
+    .expert-card:hover {
+      border-color: var(--card-color, var(--accent));
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      transform: translateY(-2px);
+    }
+    .expert-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0A0A0A;
+      flex-shrink: 0;
+    }
+    .expert-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .expert-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+    .expert-title {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-bottom: 0.5rem;
+    }
+    .expert-stance {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 8px;
+      border-radius: 3px;
+      margin-bottom: 0.5rem;
+    }
+    .expert-belief {
+      font-size: 0.8rem;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+
+    /* ─── Question slide ─── */
+    .question-slide {
+      background: radial-gradient(ellipse at 50% 50%, rgba(20,20,20,1) 0%, var(--bg) 70%);
+    }
+    .question-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    .question-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .question-topic {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 1.5rem 0;
+      line-height: 1.3;
+    }
+    .question-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--accent);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .question-text {
+      font-size: 1.15rem;
+      color: var(--text2);
+      line-height: 1.8;
+    }
+
+    /* ─── Stances ─── */
+    .stances-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .stance-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .stance-item:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .stance-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0A0A0A;
+      flex-shrink: 0;
+    }
+    .stance-body {
+      flex: 1;
+    }
+    .stance-speaker {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .stance-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Clash ─── */
+    .clash-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .clash-block {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+    }
+    .clash-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clash);
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .clash-item {
+      margin-bottom: 1rem;
+    }
+    .clash-item:last-child { margin-bottom: 0; }
+    .clash-speaker {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .clash-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      padding-left: 1rem;
+      border-left: 2px solid var(--card-border);
+    }
+    .clash-attack .clash-text {
+      border-left-color: var(--clash);
+    }
+    .clash-counter .clash-text {
+      border-left-color: var(--insight);
+    }
+
+    /* ─── Reality cases ─── */
+    .cases-container {
+      width: 100%;
+      max-width: 1000px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .case-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .case-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .case-header {
+      margin-bottom: 1rem;
+    }
+    .case-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .case-source {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-top: 0.25rem;
+    }
+    .case-content {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .case-outcome, .case-lesson {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+    .case-label {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-right: 0.5rem;
+    }
+
+    /* ─── Cost discussion ─── */
+    .cost-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .cost-scenario {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-scenario-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-scenario-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .cost-analysis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .cost-dimension {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .cost-value {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .cost-worst {
+      background: rgba(255,71,87,0.08);
+      border: 1px solid rgba(255,71,87,0.2);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-worst-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clash);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-worst-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .cost-survivor {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .cost-survivor-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-survivor-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Human nature ─── */
+    .hn-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .hn-question {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .hn-analysis {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+    }
+    .hn-examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .hn-example {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .hn-conclusion {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .hn-conclusion-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .hn-conclusion-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Cognitive upgrade ─── */
+    .upgrade-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .upgrade-block {
+      display: flex;
+      gap: 1.5rem;
+      align-items: stretch;
+      margin-bottom: 1.5rem;
+    }
+    .upgrade-before, .upgrade-after {
+      flex: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .upgrade-before {
+      border-color: rgba(255,71,87,0.2);
+      background: rgba(255,71,87,0.05);
+    }
+    .upgrade-after {
+      border-color: rgba(0,212,170,0.2);
+      background: rgba(0,212,170,0.05);
+    }
+    .upgrade-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+    .upgrade-before .upgrade-label { color: var(--clash); }
+    .upgrade-after .upgrade-label { color: var(--insight); }
+    .upgrade-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .upgrade-arrow {
+      display: flex;
+      align-items: center;
+      font-size: 2rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .upgrade-complexity, .upgrade-actionable {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .upgrade-complexity-label, .upgrade-actionable-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .upgrade-complexity-text, .upgrade-actionable-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Final insight ─── */
+    .insight-slide {
+      background: radial-gradient(ellipse at 50% 50%, rgba(0,212,170,0.05) 0%, var(--bg) 60%);
+    }
+    .insight-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0,212,170,0.15) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .insight-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .insight-title {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--insight);
+      margin: 1.5rem 0;
+    }
+    .insight-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--insight);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .insight-text {
+      font-size: 1.1rem;
+      color: var(--text2);
+      line-height: 1.9;
+    }
+
+    /* ─── Open questions ─── */
+    .oq-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .oq-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .oq-item:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+    .oq-num {
+      font-family: var(--font-mono);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+      width: 32px;
+      text-align: center;
+    }
+    .oq-text {
+      font-size: 1rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      .slide { padding: 2rem 1.5rem; }
+      .cover-title { font-size: 2rem; }
+      .question-topic { font-size: 1.8rem; }
+      .slide-title { font-size: 1.6rem; }
+      .expert-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+      .upgrade-block { flex-direction: column; }
+      .upgrade-arrow { transform: rotate(90deg); justify-content: center; }
+      .cases-container { grid-template-columns: 1fr; }
+      .cost-analysis { grid-template-columns: 1fr; }
+      .hn-examples { grid-template-columns: 1fr; }
+      .nav-dots { display: none; }
+    }
+    @media (max-width: 480px) {
+      .expert-grid { grid-template-columns: 1fr; }
+      .cover-stats { gap: 1rem; }
+      .cover-stat-num { font-size: 2rem; }
+    }
+    
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<div class="page-counter" id="pageCounter">1 / 28</div>
+
+<div class="slideshow" id="slideshow">
+
+    <div class="slide cover-slide">
+      <div class="cover-glow"></div>
+      <div class="cover-content">
+        <div class="cover-badge">ROUNDTABLE DISCUSSION</div>
+        <h1 class="cover-title">极简主义vs消费主义：少即是多还是另一种特权</h1>
+        
+        
+        <div class="cover-stats">
+          <div class="cover-stat">
+            <span class="cover-stat-num">6</span>
+            <span class="cover-stat-label">位专家</span>
+          </div>
+          <div class="cover-stat-divider"></div>
+          <div class="cover-stat">
+            <span class="cover-stat-num">3</span>
+            <span class="cover-stat-label">轮讨论</span>
+          </div>
+        </div>
+        <div class="cover-experts">老子 · 芒格 · 韩炳哲 · 尼采 · 项飙 · 李诞</div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">EXPERTS</span>
+        <h2 class="slide-title">专家阵营</h2>
+      </div>
+      <div class="expert-grid">
+        <div class="expert-card" style="--card-color: #8B6914">
+          <div class="expert-avatar" style="background: #8B6914">老</div>
+          <div class="expert-info">
+            <div class="expert-name">老子</div>
+            <div class="expert-title">道家创始人，春秋时期思想家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #2E8B57">
+          <div class="expert-avatar" style="background: #2E8B57">芒</div>
+          <div class="expert-info">
+            <div class="expert-name">芒格</div>
+            <div class="expert-title">投资家，伯克希尔·哈撒韦副董事长</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #4A4A8A">
+          <div class="expert-avatar" style="background: #4A4A8A">韩</div>
+          <div class="expert-info">
+            <div class="expert-name">韩炳哲</div>
+            <div class="expert-title">韩裔德国哲学家，倦怠社会批判者</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #8B0000">
+          <div class="expert-avatar" style="background: #8B0000">尼</div>
+          <div class="expert-info">
+            <div class="expert-name">尼采</div>
+            <div class="expert-title">哲学家，19世纪德国思想巨擘</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #D2691E">
+          <div class="expert-avatar" style="background: #D2691E">项</div>
+          <div class="expert-info">
+            <div class="expert-name">项飙</div>
+            <div class="expert-title">人类学家，牛津大学教授</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #FF6347">
+          <div class="expert-avatar" style="background: #FF6347">李</div>
+          <div class="expert-info">
+            <div class="expert-name">李诞</div>
+            <div class="expert-title">脱口秀演员，作家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 1</span>
+        <h2 class="question-topic">极简主义的本质：是精神自由还是消费降级的体面说法？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">极简主义到底是一种精神觉醒，还是中产阶级为自己的消费降级找的遮羞布？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8B6914">老</div>
+          <div class="stance-body">
+            <div class="stance-speaker">老子</div>
+            <div class="stance-text">少则得，多则惑。五色令人目盲，五音令人耳聋，五味令人口爽。驰骋畋猎令人心发狂，难得之货令人行妨。是以圣人为腹不为目，故去彼取此。天下万物生于有，有生于无。大道至简，人若能守虚处静，自与天地同流。世人不知，以为拥有即存在，殊不知执有者反为有所累。朴散则为器，圣人用之则为官长，故大制不割。吾所言之简，非弃物也，乃归真也。归真者，不为外物所役，心游于无穷。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #2E8B57">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">极简主义作为一种投资哲学，我完全赞同——集中精力于少数真正重要的事物，避免分散注意力。但我要指出一个关键区别：真正的极简是主动选择的结果，而不是被迫的妥协。一个亿万富翁选择住小房子，和一个月光族被迫蜗居，虽然外表相似，本质完全不同。我认识的很多真正富有的人，他们的生活方式确实简朴，但那是建立在充足的安全边际之上的。没有财务安全垫的极简，不过是贫困的美化。投资中我们说，要先有足够的冗余，才能做减法。生活也一样。你得先有能力买下整个超市，才能真正从容地说&#x27;我只需要一个苹果&#x27;。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4A4A8A">韩</div>
+          <div class="stance-body">
+            <div class="stance-speaker">韩炳哲</div>
+            <div class="stance-text">当代极简主义最狡猾之处在于，它把一种结构性的压迫包装成了个人选择。在功绩社会中，极简不再是老子式的无为，而变成了另一种自我优化的手段。你断舍离，你冥想，你整理衣柜，你以为你在解放自己，实际上你在更深层次地服从——服从一种效率至上的逻辑。极简主义成为了一种新的精神技术，让人在剥削中感到自由。乔布斯的黑色高领毛衣不是无欲无求，而是极致的权力展演。真正的问题不是你拥有多少，而是你为什么必须不断证明自己的存在方式是合理的。极简主义的狂热本身就暴露了晚期资本主义的倦怠症候。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8B0000">尼</div>
+          <div class="stance-body">
+            <div class="stance-speaker">尼采</div>
+            <div class="stance-text">我对那些自称极简的灵魂深感怀疑。减法哲学往往不是力量的象征，而是生命意志衰退的症候。真正的强者从不畏惧丰盈——希腊人热爱竞技、盛宴与华美的悲剧，他们从不以匮乏自矜。查拉图斯特拉如是说：人是一根绳索，系于禽兽与超人之间。这根绳索不是用来缩减的，而是用来跨越的。那些热衷于断舍离的人，往往是不敢直面生命之丰饶与混沌的懦夫。他们用秩序来抵御深渊，用空荡的房间来掩饰空洞的灵魂。真正的精神自由不在于拥有多少或拥有多少，而在于你是否敢于创造。创造者是坚硬的，极简者是退缩的。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #D2691E">项</div>
+          <div class="stance-body">
+            <div class="stance-speaker">项飙</div>
+            <div class="stance-text">从人类学角度看，极简主义在中国语境下有一个非常特殊的阶层含义。它几乎是一种中产阶级的专属话语。城中村的租客、工厂的工人、农村的留守老人——他们从不需要学习&#x27;极简&#x27;，因为他们的生活本身就是极简的。极简主义作为一种潮流，本质上是消费社会内部的一种自我调节机制。它让已经完成物质积累的人获得一种道德优越感，同时回避了一个根本问题：为什么有些人可以极简而有些人不得不极简？更值得注意的是，中国的极简主义运动照搬了日本的整理术，但中国社会的关系网络、代际记忆、物质焦虑有着完全不同的结构。用近藤麻理惠的方法来整理中国家庭的旧物，可能整理掉的不是杂物，而是一整个代际的情感记忆。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6347">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">我特别想问问那些极简主义博主：你们那个空无一物的白墙上挂着的那一幅画，多少钱？你那个纯手工打造的橡木桌子，多少钱？你那个日式枯山水盆景，多少钱？极简主义最搞笑的地方在于，它可能是最贵的一种生活方式。少即是多，但&#x27;少&#x27;的那个东西可不便宜。你看人家宜家搞极简，一套极简家具下来比你家满满当当的还贵。我认识一个朋友，践行极简主义，最后发现他把东西扔完了又买了一套&#x27;极简风格&#x27;的东西。这不叫极简，这叫消费主义换了个马甲又杀回来了。说白了，极简主义就是中产阶级的新型凡尔赛——&#x27;你看我什么都不需要&#x27;，这话只有有钱人才说得出口。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #8B0000">尼采 → 老子</div>
+            <div class="clash-text">你的&#x27;少则得&#x27;不过是东方的虚无主义罢了。生命是权力意志的展现，是不断超越自身的冲动。你劝人守虚处静，本质上是劝人放弃生命最本真的创造力。万物归于无，那活着还有什么意义？你的道，是一条通往寂静的路，而我要的是通往星辰的路。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #8B6914">老子</div>
+              <div class="clash-text">天地不仁，以万物为刍狗。你所言之权力意志，不过是另一种执念。星辰虽远，亦在道中。水善利万物而不争，处众人之所恶，故几于道。你以为创造力在于不断地索取与扩张，殊不知真正的大创造是无为而无不为。你追逐星辰，却不知脚下之土亦是星辰所化。归根曰静，静曰复命，这才是生命最深的力量。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #4A4A8A">韩炳哲 → 李诞</div>
+            <div class="clash-text">你用讽刺来解构一切，这本身就是功绩社会最欢迎的态度。你把严肃的问题变成段子，让人们在笑声中放弃了思考。你的讽刺看似尖锐，实则是另一种精神倦怠——当批判沦为笑料，批判就失去了力量。你嘲笑极简主义博主，但你自己又何尝不是在用&#x27;丧&#x27;来逃避真正的对抗？</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #FF6347">李诞</div>
+              <div class="clash-text">你说的可能对，但有个问题：如果批判不能变成笑料，那批判只能变成学院论文，最后只有五百个人读。我宁愿让五千人笑完之后想三秒钟，也不愿让五个人读完我的论文之后引用三次。丧当然是一种逃避，但至少丧是诚实的逃避。比起那些假装积极、假装觉醒、假装极简然后偷偷焦虑的人，我宁愿坦坦荡荡地丧。而且你有没有想过，笑本身可能就是一种最原始的对抗？人只有在还有力气笑的时候，才还没有完全被系统吞掉。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #2E8B57">芒格 → 韩炳哲</div>
+            <div class="clash-text">你的分析很精彩，但恕我直言，它没有任何可操作性。你说极简主义是功绩社会的工具，那你的替代方案是什么？让人们继续无节制地消费？还是回到某种前现代的田园生活？在投资领域，我学到的最重要的一课是：批评容易，建设困难。如果你不能提供一个可行的替代路径，那你不过是在贩卖焦虑。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #4A4A8A">韩炳哲</div>
+              <div class="clash-text">你说得对，我确实没有一个简单的替代方案。但哲学的价值恰恰在于提出正确的问题，而非急于给出答案。你作为投资者应该明白——识别泡沫本身就是一种行动。我不需要告诉你该买什么，但告诉你现在这个东西是泡沫，这难道没有价值吗？极简主义的问题不是它的实践，而是它的意识形态前提。认识到这一点，本身就是改变的开始。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #4</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #D2691E">项飙 → 芒格</div>
+            <div class="clash-text">你所说的&#x27;先有能力买下整个超市才能从容地只买一个苹果&#x27;，这个比喻非常精准地暴露了极简主义的阶级前提。但问题是：在你这个框架下，极简变成了一种只属于富人的美德，而穷人的匮乏则成了缺乏能力的证明。这种逻辑难道不是在为不平等辩护吗？真正的自由，是否应该是一种不以财富为前提的自由？</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #2E8B57">芒格</div>
+              <div class="clash-text">我不认为承认现实就是在为不平等辩护。一个事实是：选择的能力确实与资源相关。否认这一点是不诚实的。我的观点不是说穷人不配极简，而是说我们应该先确保每个人都有基本的安全边际，然后才能自由地选择简朴。在那之前，强行推广极简主义，对挣扎在生存线上的人来说是一种残忍的说教。财富不是美德的前提，但诚实是。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">近藤麻理惠现象</div>
+            <div class="case-source">日本整理咨询师，《怦然心动的人生整理魔法》</div>
+          </div>
+          <div class="case-content">近藤麻理惠的整理术在全球掀起极简风潮，要求人们只保留&#x27;怦然心动&#x27;的物品。她的方法催生了价值数十亿美元的整理产业——收纳盒、整理课程、咨询费用。2023年，她本人也承认家里变乱了，因为有了三个孩子后无法维持极简状态。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 极简主义的商业化悖论：一种反对消费的哲学，本身成为了巨大的消费引擎。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 极简主义难以逃脱商品化的命运，因为它提供的是一种可复制的消费体验，而非根本性的观念变革。
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">Steve Jobs的黑色高领毛衣</div>
+            <div class="case-source">硅谷文化符号</div>
+          </div>
+          <div class="case-content">乔布斯以每天穿同样的黑色高领毛衣和牛仔裤闻名，被视为极简主义的代表。但这件毛衣是三宅一生专门设计定制的，每件价值数百美元。苹果公司本身是全球最成功的消费电子公司，通过不断的产品迭代和营销刺激消费者的购买欲望。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 个人极简与商业消费主义的完美共存——CEO的简朴生活方式成为了品牌叙事的一部分。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 极简主义可以是一种权力符号，而不是权力的放弃。
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">中国城中村的物质生活</div>
+            <div class="case-source">项飙人类学田野调查</div>
+          </div>
+          <div class="case-content">在珠三角的城中村里，外来务工者的居住空间往往只有几平方米，个人物品极少。他们的生活状态在物质层面是&#x27;极简&#x27;的，但没有人会把他们的生活方式称为极简主义——因为极简主义暗示着选择权，而他们的简约是被城市化进程和经济结构所强加的。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 最彻底的极简主义实践者，恰恰是那些没有话语权的人。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 极简主义话语的流行，掩盖了物质匮乏的真实存在，将其转化为一种可被消费的生活美学。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">一个30岁城市白领决定全面践行极简主义：清空80%的个人物品，只保留必需品，减少社交开支，拒绝非必要的消费</span>
+        </div>
+        <div class="cost-analysis">
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">过度极简导致社交孤立、家庭矛盾、消费反弹（报复性购物），最终既失去了物质的舒适，也没有获得精神的自由，陷入&#x27;什么都没有，但也不觉得轻松&#x27;的双重匮乏状态。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">极简主义成功案例大多来自经济基础稳固、社交圈层高端、个人心理调适能力强的群体。大量失败案例——那些断舍离后后悔、社交关系受损、消费反弹的人——很少被媒体关注，因为&#x27;我又把东西买回来了&#x27;不是一个值得分享的故事。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">人类对物质的执念，究竟是生存本能还是文化建构？如果是本能，极简主义是否在对抗人性？</div>
+        <div class="hn-analysis">从进化心理学角度看，人类的囤积倾向是数百万年资源匮乏环境下的适应性行为。在不确定的环境中，拥有更多资源意味着更高的生存概率。这种本能不会因为我们生活在超市旁边就消失。同时，社会比较心理让物质拥有成为地位信号——拥有稀缺物品意味着你在社会竞争中的优势。极简主义试图同时对抗这两种深层心理机制：囤积本能和社会比较。它之所以困难，正是因为它是逆人性的。但人类文明的很多成就——道德、法律、艺术——都是逆本能的产物。关键在于：对抗本能需要持续的认知努力，而这种努力本身消耗意志力资源。极简主义的可持续性，取决于它能否从&#x27;对抗&#x27;转化为&#x27;替代&#x27;——找到一种比囤积更能满足深层心理需求的行为模式。</div>
+        <div class="hn-examples">
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">人类对物质的执念既有生物本能的基础，也有文化建构的放大。极简主义不是在对抗人性，而是在选择人性中的哪一部分来回应。问题不在于我们是否能成为极简的人，而在于我们是否能成为自知的人——知道自己为什么想要，比决定要不要更重要。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">极简主义等于少买东西，是一种生活方式的选择，好与坏取决于个人偏好。</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">极简主义是一种权力关系的再生产——它既可能是解放，也可能是更精致的规训。关键不在于拥有多少，而在于谁定义了&#x27;足够&#x27;，以及这个定义服务于谁的利益。</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">极简主义至少涉及四个交叉维度：阶层（谁有资格选择极简）、代际（不同世代的物质记忆差异）、性别（女性在家庭中承担的物品管理责任）、全球化（发展中国家的生产vs发达国家的极简消费）。任何单一维度的分析都是不完整的。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">在实践极简主义之前，先回答三个问题：1）我减少物品是因为不再需要，还是因为想证明自己能做到？2）我的极简是否依赖于他人的不极简（外卖、快递、家政）？3）如果没有人看到我的极简生活方式，我还会这样做吗？如果三个答案都是积极的，极简才可能是真正的自由选择。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 2</span>
+        <h2 class="question-topic">断舍离的悖论：扔东西能解决问题吗？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">当我们扔掉旧物时，我们扔掉的究竟是物品本身，还是附着在物品上的情感、记忆和焦虑？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8B6914">老</div>
+          <div class="stance-body">
+            <div class="stance-speaker">老子</div>
+            <div class="stance-text">为学日益，为道日损。损之又损，以至于无为。无为而无不为。然吾所言之损，非弃物也，乃去执也。执于有者，为有累；执于无者，亦为无累。世人学断舍离，舍物而不舍执，是换汤不换药也。真正的减法，不在物之多寡，在心之清浊。心浊者，居空室亦满；心清者，处闹市亦静。故善损者，不在于扔，而在于不生执念。物来则应，物去则静，如水之就下，自然而然。强行断舍，本身已是一种执着，是与自然相悖的。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #2E8B57">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">从决策科学的角度看，断舍离解决的是&#x27;决策疲劳&#x27;问题，这我完全认同。一个充满杂物的环境确实在消耗认知资源。但扔东西本身也是一种决策，而且往往是不可逆的。我见过太多人在情绪低落时大举断舍离，事后后悔不已。好的决策需要冷静的时间窗口和充分的信息。我建议的原则是：在你不确定要不要扔的时候，就不要扔。把它放进一个箱子里，六个月后再看。如果你从未打开那个箱子，那说明你确实不需要它。这个方法不性感，但有效。投资也是一样——不要在情绪激动时做重大决定。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4A4A8A">韩</div>
+          <div class="stance-body">
+            <div class="stance-speaker">韩炳哲</div>
+            <div class="stance-text">断舍离的真正悖论在于：它让你在丢弃物品的过程中获得一种虚假的控制感。你以为你在掌控自己的生活，实际上你只是在执行一套外部给定的程序——来自畅销书、社交媒体、极简主义KOL的指令。这不是自由，这是更隐蔽的服从。真正的深度无聊——那种没有刺激、没有整理、没有优化的纯粹空虚——现代人是无法忍受的。断舍离恰好填充了这个空隙：它给你一种&#x27;我在做有意义的事情&#x27;的幻觉，避免你直面真正的虚无。这是一种精心设计的精神消费品，让人在整理衣柜的同时整理掉对真实问题的思考。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8B0000">尼</div>
+          <div class="stance-body">
+            <div class="stance-speaker">尼采</div>
+            <div class="stance-text">我厌恶那些精心策划的丢弃。真正的超越不是减法，而是炼金术——将低贱之物转化为高贵之物。查拉图斯特拉说，人必须在自身中容纳混沌，才能诞生一颗舞蹈的星。你的旧物、你的记忆、你的伤痕——为什么要扔掉它们？它们是你的原材料，是你的混沌。超人不是空无一物的圣人，而是在满身伤痕中依然起舞的勇者。断舍离者害怕混沌，害怕无序，害怕那些唤起痛苦记忆的旧物。但正是这些痛苦塑造了你。扔掉它们，你不是更自由了，你是更苍白了。精神的三种变形——骆驼、狮子、孩子——没有一个是通过扔东西完成的。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #D2691E">项</div>
+          <div class="stance-body">
+            <div class="stance-speaker">项飙</div>
+            <div class="stance-text">从人类学的角度看，物品从来不只是物品。它们是关系的物质载体。一个母亲织的毛衣，不仅仅是毛衣，它是母爱的物化。一本旧课本，不仅仅是纸张，它是一段求学记忆的锚点。中国家庭中的旧物特别密集，因为中国社会的代际关系特别紧密。断舍离运动鼓励人们&#x27;只保留让你心动的物品&#x27;，但这个标准是高度个人主义的——它假设每个人都是一个独立的决策单元，不受家庭、社区、历史的影响。在中国的家庭结构中，你的物品不完全属于你，它们属于一个关系网络。扔掉父亲的旧收音机，你扔掉的不只是收音机，而是父亲那个时代的生活方式和价值记忆。这不是怀旧，而是尊重关系的完整性。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6347">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">断舍离最让我困惑的是：你扔了三个小时的东西，然后累得不行，点了个外卖，外卖来了发现筷子是一次性的，你又纠结要不要留着备用。你看，扔东西解决不了问题，因为问题根本不在东西身上。我有个朋友，践行断舍离，每天晚上花一小时整理家。我说你这不叫极简，你这叫整理癖。真正的极简是什么都不做。你看老子，他就不整理，他就是&#x27;道法自然&#x27;，爱乱不乱。说到底，断舍离是一种仪式感，人需要仪式来觉得自己在掌控生活。和烧香拜佛没什么本质区别。但你要是告诉我扔东西能让我开心，我扔，反正我也没什么好东西。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #8B0000">尼采 → 项飙</div>
+            <div class="clash-text">你说物品属于关系网络而非个人，这是最令人窒息的集体主义。人不是关系的附庸！一个人必须首先成为自己，然后才能成为关系中的一环。如果每一件旧物都承载着不可触碰的代际记忆，那这个人就永远无法从过去中走出来。你是在用温情的枷锁绑住自由的灵魂。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #D2691E">项飙</div>
+              <div class="clash-text">你把个体和关系对立起来了，但人类学的经验告诉我们：不存在脱离关系的&#x27;纯粹个体&#x27;。你所说的&#x27;成为自己&#x27;，本身就是一种特定文化——西方个人主义文化——的产物。在世界大多数文化中，&#x27;自己&#x27;本来就是关系性的。不是说人不能断舍离，而是说断舍离的标准不应该只来自个体的&#x27;怦然心动&#x27;，还要考虑这个物品在关系网络中的位置。自由不是孤独，自由是在关系中保持能动性。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #FF6347">李诞 → 韩炳哲</div>
+            <div class="clash-text">韩老师，你说断舍离是&#x27;精神消费品&#x27;，那你的书不也是精神消费品吗？你的读者买了你的书，获得了&#x27;看穿极简主义&#x27;的优越感，然后继续消费你的下一本。你批判的逻辑无限循环下去，最后连批判本身都要被批判。我们到底应该怎么办？总得有个停下来的地方吧？</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #4A4A8A">韩炳哲</div>
+              <div class="clash-text">你说得对，我确实无法逃脱被消费的命运。但这里有一个关键区别：我不是在给你答案，我是在给你一面镜子。你可以消费我的批判，但你无法消费镜子给你的照见。真正的问题不是&#x27;怎么办&#x27;，而是你是否愿意继续提问。停下来的地方恰恰就是不舒服的地方——不是答案，而是持续的追问本身。你用笑来消解严肃，我用问题来消解答案。我们殊途同归。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #8B6914">老子 → 尼采</div>
+            <div class="clash-text">汝言将混沌化为星辰，然混沌本自具足，何须汝之炼化？汝之权力意志，不过是强为也。天下神器，不可为也，不可执也。为者败之，执者失之。汝之超人，不过是更大的执念。执于超越，与执于物，有何分别？皆是役于外也。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #8B0000">尼采</div>
+              <div class="clash-text">你的无为听起来像是一种高级的懒惰。如果万物自足，那人类的一切创造——艺术、科学、制度——都是多余的。但我看见的是：正是因为人不甘于自然的安排，才有了文明。你的道让我想到一片死水——平静，但没有生命力。我要的是激流，是瀑布，是生命最猛烈的奔涌。你说为者败之，但不为者，连失败的机会都没有。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">KonMari的中国市场冲击</div>
+            <div class="case-source">Netflix纪录片《Tidying Up with Marie Kondo》</div>
+          </div>
+          <div class="case-content">近藤麻理惠的节目在全球引发断舍离热潮，但在中国引发了独特的代际冲突。很多年轻人在践行断舍离时，遭到父母的激烈反对。一位网友分享：她扔掉了母亲保存了三十年的一套旧碗碟，母亲大哭一场，此后三个月没有和她说话。那些碗碟是母亲结婚时的嫁妆。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 断舍离在代际之间制造了情感裂痕，暴露了不同世代对物质记忆的根本分歧。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 扔东西的标准不能只考虑物品的使用价值，还要考虑它在家庭关系网络中的情感价值。
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">断舍离后的报复性消费</div>
+            <div class="case-source">消费心理学研究</div>
+          </div>
+          <div class="case-content">多项研究表明，大规模断舍离后的3-6个月内，约60%的实践者会出现&#x27;报复性消费&#x27;——购买比之前更多的物品。心理学解释是：断舍离消耗了大量意志力资源，而意志力是有限的。当意志力耗尽后，消费欲望会以更猛烈的方式反弹。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 极简主义的意志力悖论：靠意志力维持的极简，最终会被意志力的耗竭所摧毁。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 可持续的物质关系不能建立在持续的自我克制之上，而需要找到一种不需要克制也能保持平衡的状态。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">一个家庭决定进行大规模断舍离，清理掉70%的旧物品，包括传家物件、旧衣物、书籍、孩子的旧玩具等</span>
+        </div>
+        <div class="cost-analysis">
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">断舍离导致家庭关系紧张（尤其是代际冲突）、物品丢弃后后悔、报复性消费导致更大的经济压力、环保效果适得其反，最终陷入&#x27;扔了后悔，买了更后悔&#x27;的恶性循环。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">社交媒体上展示的断舍离成功案例，大多是独居、年轻、高收入、非传统家庭结构的群体。三代同堂的家庭、有幼儿的家庭、经济条件有限的家庭——他们的断舍离故事很少被讲述，因为复杂的关系网络和有限的经济缓冲使得极简主义的实践困难重重。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">为什么人类明知囤积无益，却仍然无法停止对物品的依恋？物品对人类心理的意义是什么？</div>
+        <div class="hn-analysis">依恋理论（Attachment Theory）可以解释人类对物品的情感依恋。物品是&#x27;过渡性客体&#x27;（Winnicott的概念）——它们帮助我们在不确定的世界中维持安全感。一个毛绒玩具对孩子来说不仅是玩具，它是母亲缺席时的替代性安慰。成人对物品的依恋遵循同样的心理机制：旧物是过去的自己与现在的自己之间的桥梁。丢弃旧物，在心理层面上意味着与过去的自己告别——这对很多人来说是不可承受的。此外，&#x27;禀赋效应&#x27;（Endowment Effect）让人们对自己拥有的物品赋予高于市场价值的情感价值。这不是非理性，而是心理现实。断舍离之所以困难，正是因为它要求人们克服数百万年进化形成的心理机制。</div>
+        <div class="hn-examples">
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">物品是人类心理的外延。对物品的执念不是一种需要被克服的缺陷，而是人类情感结构的自然表现。关键不在于断绝依恋，而在于理解依恋——知道自己为什么在意这件东西，比决定要不要扔掉它更重要。带着理解的保留，和带着无知的丢弃，前者可能更接近自由。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">断舍离是一种积极的生活态度，扔掉不需要的东西能让生活更轻松、更自由。</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">断舍离是一种需要审视的行为——它可能解放你，也可能让你失去有意义的连接。物品不是中性的，它们是关系的载体、记忆的锚点、身份的组成部分。扔掉物品的同时，你也在重塑自己的叙事。</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">断舍离涉及至少五重张力：个人自由vs代际传承、即时轻松vs长期后悔、物质减法vs消费反弹、个人选择vs关系影响、环保理想vs实际浪费。简单地&#x27;扔&#x27;或&#x27;不扔&#x27;都无法回应这些张力。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">断舍离前的三个自我追问：1）这件物品连接着我与谁的关系？如果断掉这个连接，我准备好面对随之而来的情感后果了吗？2）我是因为真的不需要，还是因为这件物品代表了一个我想忘记的自己？3）如果没有社交媒体可以分享，我还会做同样的决定吗？断舍离应该是慢的、审慎的、有觉知的，而不是一场运动式的清理风暴。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 3</span>
+        <h2 class="question-topic">超越多与少：什么样的物质关系是健康的？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">如果极简主义和消费主义都是陷阱，那人类与物质的理想关系应该是什么样的？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8B6914">老</div>
+          <div class="stance-body">
+            <div class="stance-speaker">老子</div>
+            <div class="stance-text">天之道，损有余而补不足。人之道则不然，损不足以奉有余。孰能有余以奉天下？唯有道者。圣人不积，既以为人己愈有，既以与人己愈多。天之道，利而不害；圣人之道，为而不争。健康者，非多亦非少，乃顺其自然也。饥则食，渴则饮，寒则衣，此为天性，何须刻意多之或少之？刻意求少，与刻意求多，皆是人伪，非天道也。善摄生者，如水之行，遇方则方，遇圆则圆，不执一端，不滞一处。如此则物来顺应，物去不留，自在无碍矣。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #2E8B57">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">健康的物质关系就像好的投资组合：基于理性分析，而非情绪冲动。我的原则很简单：第一，区分需要和想要；第二，确保基本安全边际（储蓄、保险、应急资金）；第三，在安全边际之上，享受你真正看重的东西，但不要为展示给别人看而消费。我认识很多富人，他们的共同特点是：在自己真正在意的事情上慷慨，在不重要的事情上节俭。巴菲特住着几十年前买的房子，但他有私人飞机。不是因为他奢侈，而是因为他计算过时间的价值。健康的物质关系不是关于多或少，而是关于你是否清楚每一块钱花出去的回报——包括心理回报。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4A4A8A">韩</div>
+          <div class="stance-body">
+            <div class="stance-speaker">韩炳哲</div>
+            <div class="stance-text">超越极简与消费的对立，需要一种全新的&#x27;物的伦理学&#x27;。问题不在于你拥有多少，而在于你与物的关系是否具有&#x27;否定性&#x27;——你是否能够对物说&#x27;不&#x27;，是否能够在拥有中保持距离。当代消费主义的可怕之处在于它消除了所有否定性：你不能说不，因为广告、算法、社交压力无时无刻不在推动你消费。而极简主义的危险在于它把否定变成了新的肯定——&#x27;不拥有&#x27;本身成为了一种需要维持的状态，一种新的绩效。理想的物质关系应该是&#x27;游牧式&#x27;的：与物保持一种灵活的、非占有的、随时可以放手的关系。不是拥有，也不是不拥有，而是&#x27;经由&#x27;。物品像河流一样流过你的生命，你可以暂时掬一捧水，但你不需要拥有整条河流。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8B0000">尼</div>
+          <div class="stance-body">
+            <div class="stance-speaker">尼采</div>
+            <div class="stance-text">健康的物质关系？这个问题本身就暴露了提问者的病态。健康的人从不问自己是否健康——只有病人才时刻关注自己的身体状况。与物质的关系也是如此：一个创造力充沛的人，他的物质使用自然而然地是恰当的——他需要工具来创造，需要住所来休息，需要食物来滋养他那无穷的精力。他不会纠结于&#x27;多还是少&#x27;，因为他根本不在乎。他唯一在乎的是：我今天创造了什么？一个伟大的艺术家可能拥有一屋子的画布和颜料，但你不会说他是消费主义者，因为他的每一件物品都在服务于他的创造力。真正的问题不是&#x27;我应该拥有多少&#x27;，而是&#x27;我正在创造什么&#x27;。把注意力从拥有转向创造，一切关于物质的焦虑都会烟消云散。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #D2691E">项</div>
+          <div class="stance-body">
+            <div class="stance-speaker">项飙</div>
+            <div class="stance-text">要建立健康的物质关系，首先需要重建物与人之间的&#x27;附近&#x27;。当代消费主义的根源问题不是购买太多，而是我们与物品的生产过程完全脱节了。你不知道你的衣服是谁做的，你的食物是谁种的，你的手机是谁组装的。这种脱节让物品变得廉价——不仅是价格上的廉价，更是意义上的廉价。如果每件物品都承载着一个真实的人的劳动和生命时间，你还会轻易地购买和丢弃它吗？健康的物质关系，不是少买或多买的问题，而是重建人与物、人与人的具体连接。当你认识给你做鞋的工匠，你就不会三个月扔一双鞋。当你知道你吃的食物来自哪块地，你就不会浪费一粒米。这不是怀旧，这是重建意义的基础设施。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6347">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">我发现一个规律：穷人在聊&#x27;怎么花钱&#x27;，富人在聊&#x27;怎么不花钱&#x27;。这中间差的不只是钱，差的是选择权。没有选择权的时候谈什么物质关系都是扯淡。你一个月挣五千，你只能消费主义，因为你的每一次消费都是刚需。你一个月挣五十万，你才有资格极简，因为你可以选择只要最好的。所以我觉得最健康的物质关系就是：承认自己在哪个阶段，然后别装。买不起的别硬极简，买得起的别装消费。我自己的物质关系是什么？能省则省，该花就花，实在纠结就扔硬币。人生苦短，花个钱还搞哲学，累不累？当然了，要是有钱的话，我想我还是会选择少买点东西，多买点时间。时间这东西，目前还没有极简主义者说要断舍离的。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #D2691E">项飙 → 李诞</div>
+            <div class="clash-text">你总是用幽默来回避真正的立场。&#x27;扔硬币&#x27;听起来洒脱，但实际上是一种责任的推卸。物质关系不是个人趣味问题，它关系到全球劳动分工、环境正义、代际公平。你的&#x27;人生苦短&#x27;哲学，在享受廉价商品的同时，忽略了制造这些商品的人的&#x27;人生&#x27;也苦短——他们可能正在某个工厂里每天工作十二小时。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #FF6347">李诞</div>
+              <div class="clash-text">你说得对，我确实在逃避。但项老师，我逃避是因为我已经认清楚了：在这个系统里，我作为一个个体，能做的非常有限。我能不买快时尚吗？能。但我能改变快时尚的产业链吗？不能。我能做的就是在自己能力范围内少造点孽，然后用我的方式——笑声——让更多人意识到这个系统有问题。你用学术论文让人思考，我用脱口秀让人发笑。效果可能差不多，但至少笑完之后人不会得抑郁症。我承认这是逃避，但这是清醒的逃避。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #2E8B57">芒格 → 韩炳哲</div>
+            <div class="clash-text">&#x27;游牧式的物质关系&#x27;——这个表述很美，但它到底意味着什么？你让我与物品保持&#x27;灵活的、非占有的、随时可以放手的关系&#x27;？我买了一台冰箱，我需要它制冷十年，我为什么要和它保持&#x27;游牧式关系&#x27;？哲学不应该脱离生活的常识。你的批判很有力，但你的替代方案过于抽象。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #4A4A8A">韩炳哲</div>
+              <div class="clash-text">你说得有道理，冰箱确实需要稳定地制冷。但我要说的不是你和冰箱的关系，而是你和&#x27;想要一台新冰箱&#x27;这个欲望的关系。游牧式关系指的是心理层面的——你可以在使用冰箱的同时不被冰箱定义。当你觉得&#x27;没有最新款的智能冰箱我就不够好&#x27;的时候，你已经不是在使用冰箱，而是在被冰箱使用。我的替代方案不是关于物的，而是关于欲望的——学会与自己的欲望保持距离。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #8B0000">尼采 → 老子</div>
+            <div class="clash-text">你说&#x27;不积&#x27;、&#x27;无为&#x27;、&#x27;顺其自然&#x27;。但自然本身不是静态的！火山爆发是自然，物种灭绝是自然，宇宙膨胀是自然。自然的本质不是宁静，而是永恒的创造与毁灭。你的&#x27;道&#x27;滤掉了自然中所有剧烈的部分，只留下了安静的表象。这是一种对自然的阉割。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #8B6914">老子</div>
+              <div class="clash-text">天地之间，其犹橐龠乎？虚而不屈，动而愈出。吾从未言自然是静止的。水之就下，火之炎上，皆是动也。然动中有静，静中有动，此为玄妙。汝只看到火山之爆发，却看不到爆发之后的沉寂；只看到物种之灭绝，却看不到灭绝之后的新生。创造与毁灭皆在道中，非汝之权力意志所能穷尽。汝之激情虽烈，终归是一偏之见。道无所不包，汝之意志只是道之一隅。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">日本侘寂美学</div>
+            <div class="case-source">日本传统文化</div>
+          </div>
+          <div class="case-content">侘寂（Wabi-sabi）是日本美学的核心概念：在不完美、不永恒、不完整中发现美。一个有裂痕的茶碗不是残次品，而是时间的见证。这种美学既不是消费主义（不是追求最新最好），也不是极简主义（不是追求最少），而是一种与物品建立深层关系的方式——接受物品的缺陷，欣赏它们的衰老，与它们一起变老。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 提供了一种既非消费主义也非极简主义的第三种物质关系模型。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 健康的物质关系可能不在于拥有多少，而在于你是否愿意与物品建立长期的、接受缺陷的关系。
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">慢时尚运动</div>
+            <div class="case-source">全球可持续时尚倡议</div>
+          </div>
+          <div class="case-content">慢时尚（Slow Fashion）主张购买更少但更好的衣物，支持本地工匠，了解衣物的生产过程，延长衣物使用寿命。与快时尚（每年52个&#x27;微季&#x27;）相对，慢时尚鼓励消费者与衣物建立长期关系。一些品牌开始提供终身维修服务，消费者可以随时送回旧衣物进行修补。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 慢时尚运动正在改变一部分消费者的购买行为，但在快时尚巨头的价格优势面前仍处于边缘地位。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 健康的物质关系需要产业链的支持——如果市场只提供廉价易坏的商品，消费者的良好意愿很难转化为实际行为。
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">工具图书馆</div>
+            <div class="case-source">欧美社区共享经济实践</div>
+          </div>
+          <div class="case-content">工具图书馆（Tool Library）是一种社区共享模式：居民可以像借书一样借用各种工具——电钻、梯子、缝纫机等。这种模式的哲学基础是：你不需要拥有一个电钻，你只需要拥有使用电钻的能力。通过共享，每个家庭的物品数量减少，但可用物品的种类增加。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 参与工具图书馆的家庭平均减少了30%的物品拥有量，同时满意度不降反升。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 健康物质关系的一种可能路径：从&#x27;拥有&#x27;转向&#x27;使用&#x27;，从私人占有转向社区共享。这既不是消费主义也不是极简主义，而是一种新的物质组织方式。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">一个城市社区尝试建立共享物质系统：共享工具、共享厨房设备、共享儿童玩具、共享图书，目标是将每个家庭的物品拥有量减少40%，同时维持或提升生活质量</span>
+        </div>
+        <div class="cost-analysis">
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">共享系统因信任缺失而崩溃（物品损坏无人负责、使用冲突无法调解），参与家庭在退出共享后反而增加了补偿性购买，社区关系因共享纠纷而恶化，最终共享空间闲置，投入资金无法收回。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">成功的共享社区案例往往建立在本已较高的社区信任度和文化同质性之上（如北欧国家、大学社区、高收入同质社区）。在信任度较低、文化多元、经济差异大的社区中，共享模式的失败率显著更高，但这些失败案例很少被报道。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">如果人与物的理想关系既非拥有也非抛弃，那它应该是什么？人类能否发展出一种全新的物质关系？</div>
+        <div class="hn-analysis">人类与物质的关系根植于三个深层心理需求：安全感（拥有=控制）、身份感（我的物品=我是谁）、连接感（共享物品=关系纽带）。消费主义满足了前两个需求但损害了第三个，极简主义试图超越前两个但可能忽视了它们的正当性。一种更健康的关系可能需要同时满足这三个需求，而非压制任何一个。&#x27;使用而非拥有&#x27;的模式（共享经济）在理论上可行，但它需要足够高的社会信任度作为基础设施。从发展心理学的角度看，人类从&#x27;占有型&#x27;（幼儿期的&#x27;这是我的&#x27;）到&#x27;关系型&#x27;（成人期的&#x27;这是我们的&#x27;）的转变是可能的，但需要支持性的社会环境和持续的文化引导。</div>
+        <div class="hn-examples">
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">人类与物质的理想关系不是一个固定的答案，而是一个持续的实践过程。它需要：1）对自身欲望的觉知（知道自己为什么想要）；2）对物品生产链的了解（知道这件物品从哪里来）；3）对关系网络的敏感（知道这件物品影响着谁）；4）对自身局限的接纳（知道自己不可能完美）。这种关系不追求绝对的少或绝对的多，而追求一种有意识的、有温度的、可持续的平衡。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">健康物质关系的标准是&#x27;适度&#x27;——既不过多也不过少，找到一个平衡点。</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">健康物质关系的核心不是数量的平衡，而是关系的质量——你与物品的关系是否是有意识的、有连接的、有弹性的。一个拥有一万本书但每本都读过并热爱的人，可能比一个只有十本书但从不读的人拥有更健康的物质关系。</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">物质关系的健康度至少取决于五个变量：意识度（是否知道自己为什么拥有）、连接度（是否了解物品的来源和去向）、灵活度（是否能够在需要时放手）、关系度（物品是否服务于有意义的人际关系）、可持续度（这种关系模式是否长期可行）。任何单一标准都无法衡量健康与否。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">建立健康物质关系的三个日常练习：1）购买前问&#x27;这件物品将如何服务于我真正看重的事情？&#x27;（不是&#x27;我想要吗&#x27;）；2）每季度对拥有的物品进行一次&#x27;关系回顾&#x27;——不是断舍离，而是重新理解你和每件重要物品之间的故事；3）每年至少了解一件你常用物品的完整生产链——从原材料到你的手中，它经历了什么。这三个练习不会让你变成极简主义者或消费主义者，但会让你成为一个与物质世界有真实连接的人。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide insight-slide">
+      <div class="insight-glow"></div>
+      <div class="insight-content">
+        <span class="slide-tag">FINAL INSIGHT</span>
+        <h2 class="insight-title">最终洞见</h2>
+        <div class="insight-divider"></div>
+        <p class="insight-text">极简主义与消费主义的对立是一个伪命题。真正的议题不是&#x27;多还是少&#x27;，而是&#x27;有意识还是无意识&#x27;。老子的自然、芒格的理性、韩炳哲的批判、尼采的创造、项飙的连接、李诞的坦诚——六种视角共同指向一个核心洞见：健康的物质关系不在于你拥有多少件物品，而在于你是否清楚自己为什么拥有它们，它们从何而来，它们连接着谁，以及当你不再需要它们时，你是否能带着感恩而非焦虑放手。少即是多，但前提是你知道什么对你来说是&#x27;多&#x27;。消费不是罪恶，但前提是你知道自己真正在消费什么——是物品，还是他人的目光？断舍离不是答案，但持续追问&#x27;我与物的关系是什么&#x27;本身，就是通向自由的开始。</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">OPEN QUESTIONS</span>
+        <h2 class="slide-title">开放问题</h2>
+      </div>
+      <div class="oq-container">
+        <div class="oq-item">
+          <div class="oq-num">1</div>
+          <div class="oq-text">在算法推荐和精准营销无处不在的时代，个人的&#x27;有意识选择&#x27;是否只是一种幻觉？当你的欲望本身是被设计出来的，自由意志还存在吗？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">2</div>
+          <div class="oq-text">如果健康的物质关系需要了解物品的生产链，那是否意味着越富裕的人越有义务承担这种认知成本？这种&#x27;道德消费者&#x27;的身份是否本身又是一种阶层特权？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">3</div>
+          <div class="oq-text">在AI和自动化可能大幅减少人类劳动的未来，物质的丰裕将成为常态而非例外。当&#x27;拥有&#x27;变得轻而易举，&#x27;不拥有&#x27;是否还能被视为一种美德？或者说，美德这个概念本身会过时吗？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">4</div>
+          <div class="oq-text">中国传统文化中的&#x27;惜物&#x27;观念（爱惜物品、物尽其用）与西方传入的&#x27;极简主义&#x27;之间有什么本质区别？是否存在一种根植于中国文化的、独特的健康物质关系范式？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">5</div>
+          <div class="oq-text">代际之间对物质的不同态度（老一代的囤积vs年轻一代的断舍离）是否可能在第三代身上找到某种综合？还是说每一代人都必须重新经历同样的物质焦虑？</div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="nav-dots">
+      <button class="nav-dot active" data-idx="0"></button>
+      <button class="nav-dot" data-idx="1"></button>
+      <button class="nav-dot" data-idx="2"></button>
+      <button class="nav-dot" data-idx="3"></button>
+      <button class="nav-dot" data-idx="4"></button>
+      <button class="nav-dot" data-idx="5"></button>
+      <button class="nav-dot" data-idx="6"></button>
+      <button class="nav-dot" data-idx="7"></button>
+      <button class="nav-dot" data-idx="8"></button>
+      <button class="nav-dot" data-idx="9"></button>
+      <button class="nav-dot" data-idx="10"></button>
+      <button class="nav-dot" data-idx="11"></button>
+      <button class="nav-dot" data-idx="12"></button>
+      <button class="nav-dot" data-idx="13"></button>
+      <button class="nav-dot" data-idx="14"></button>
+      <button class="nav-dot" data-idx="15"></button>
+      <button class="nav-dot" data-idx="16"></button>
+      <button class="nav-dot" data-idx="17"></button>
+      <button class="nav-dot" data-idx="18"></button>
+      <button class="nav-dot" data-idx="19"></button>
+      <button class="nav-dot" data-idx="20"></button>
+      <button class="nav-dot" data-idx="21"></button>
+      <button class="nav-dot" data-idx="22"></button>
+      <button class="nav-dot" data-idx="23"></button>
+      <button class="nav-dot" data-idx="24"></button>
+      <button class="nav-dot" data-idx="25"></button>
+      <button class="nav-dot" data-idx="26"></button>
+      <button class="nav-dot" data-idx="27"></button>
+</div>
+
+<script>
+
+    (function() {
+      const slideshow = document.getElementById('slideshow');
+      const progressBar = document.getElementById('progressBar');
+      const pageCounter = document.getElementById('pageCounter');
+      const dots = document.querySelectorAll('.nav-dot');
+      const total = 28;
+      let current = 0;
+      let wheelTimer = null;
+      let isScrolling = false;
+
+      function updateUI() {
+        const scrollLeft = slideshow.scrollLeft;
+        const slideWidth = slideshow.clientWidth;
+        current = Math.round(scrollLeft / slideWidth);
+        if (current < 0) current = 0;
+        if (current >= total) current = total - 1;
+
+        // Progress bar
+        const pct = ((current + 1) / total) * 100;
+        progressBar.style.width = pct + '%';
+
+        // Page counter
+        pageCounter.textContent = (current + 1) + ' / ' + total;
+
+        // Dots
+        dots.forEach(function(d, i) {
+          d.classList.toggle('active', i === current);
+        });
+      }
+
+      function goTo(idx) {
+        if (idx < 0) idx = 0;
+        if (idx >= total) idx = total - 1;
+        slideshow.scrollTo({ left: idx * slideshow.clientWidth, behavior: 'smooth' });
+        current = idx;
+        setTimeout(updateUI, 400);
+      }
+
+      // Keyboard
+      document.addEventListener('keydown', function(e) {
+        switch(e.key) {
+          case 'ArrowRight': case ' ': case 'PageDown':
+            e.preventDefault(); goTo(current + 1); break;
+          case 'ArrowLeft': case 'PageUp':
+            e.preventDefault(); goTo(current - 1); break;
+          case 'Home':
+            e.preventDefault(); goTo(0); break;
+          case 'End':
+            e.preventDefault(); goTo(total - 1); break;
+        }
+      });
+
+      // Mouse wheel with debounce
+      slideshow.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        if (wheelTimer) return;
+        wheelTimer = setTimeout(function() { wheelTimer = null; }, 600);
+        if (e.deltaY > 0 || e.deltaX > 0) {
+          goTo(current + 1);
+        } else {
+          goTo(current - 1);
+        }
+      }, { passive: false });
+
+      // Nav dots
+      dots.forEach(function(dot, i) {
+        dot.addEventListener('click', function() { goTo(i); });
+      });
+
+      // Scroll event
+      slideshow.addEventListener('scroll', function() {
+        if (!isScrolling) {
+          isScrolling = true;
+          requestAnimationFrame(function() {
+            updateUI();
+            isScrolling = false;
+          });
+        }
+      });
+
+      // Resize
+      window.addEventListener('resize', function() { goTo(current); });
+
+      // Init
+      updateUI();
+    })();
+    
+</script>
+
+</body>
+</html>

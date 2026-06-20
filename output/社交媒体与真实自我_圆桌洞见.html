@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>社交媒体与真实自我：我们在网上展示的是自己还是人设</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0A0A0A;
+      --bg2: #111111;
+      --bg3: #1A1A1A;
+      --text: #F5F5F5;
+      --text2: #A0A0A0;
+      --text3: #606060;
+      --accent: #FF6B9D;
+      --accent-light: #FF8AB5;
+      --accent-dark: #E5537A;
+      --clash: #FF4081;
+      --insight: #FF80AB;
+      --card-bg: rgba(255,107,157,0.08);
+      --card-border: rgba(255,107,157,0.2);
+      --glow: rgba(255,107,157,0.3);
+      --slide-w: 100vw;
+      --slide-h: 100vh;
+      --font-display: 'Noto Serif SC', serif;
+      --font-body: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    html { font-size: 16px; scroll-behavior: auto; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      overflow-y: hidden;
+      height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Slideshow container ─── */
+    .slideshow {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+    .slideshow::-webkit-scrollbar { display: none; }
+    .slideshow { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* ─── Slide ─── */
+    .slide {
+      flex: 0 0 var(--slide-w);
+      width: var(--slide-w);
+      height: var(--slide-h);
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 4rem 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ─── Progress bar ─── */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      z-index: 1000;
+      transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      box-shadow: 0 0 10px var(--glow);
+    }
+
+    /* ─── Page counter ─── */
+    .page-counter {
+      position: fixed;
+      top: 1.5rem;
+      right: 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text3);
+      z-index: 1000;
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Nav dots ─── */
+    .nav-dots {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 1000;
+      padding: 8px 16px;
+      background: rgba(10,10,10,0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      outline: none;
+    }
+    .nav-dot:hover { background: var(--text2); transform: scale(1.3); }
+    .nav-dot.active {
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--glow);
+      transform: scale(1.2);
+    }
+
+    /* ─── Slide header ─── */
+    .slide-header {
+      width: 100%;
+      max-width: 1000px;
+      margin-bottom: 2.5rem;
+    }
+    .slide-tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+    .slide-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    /* ─── Cover slide ─── */
+    .cover-slide {
+      background: radial-gradient(ellipse at 30% 50%, rgba(20,20,20,1) 0%, var(--bg) 70%);
+    }
+    .cover-glow {
+      position: absolute;
+      top: 50%;
+      left: 30%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .cover-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .cover-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      margin-bottom: 2rem;
+    }
+    .cover-title {
+      font-family: var(--font-display);
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 1rem;
+      max-width: 700px;
+    }
+    .cover-subtitle {
+      font-size: 1.1rem;
+      color: var(--text2);
+      margin-bottom: 1.5rem;
+    }
+    .cover-books {
+      font-size: 0.9rem;
+      color: var(--text3);
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+    .cover-stats {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .cover-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .cover-stat-num {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .cover-stat-label {
+      font-size: 0.85rem;
+      color: var(--text3);
+      margin-top: 0.25rem;
+    }
+    .cover-stat-divider {
+      width: 1px;
+      height: 40px;
+      background: var(--text3);
+      opacity: 0.3;
+    }
+    .cover-experts {
+      font-size: 0.9rem;
+      color: var(--text2);
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Expert grid ─── */
+    .expert-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 1000px;
+    }
+    .expert-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      transition: all 0.3s ease;
+    }
+    .expert-card:hover {
+      border-color: var(--card-color, var(--accent));
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      transform: translateY(-2px);
+    }
+    .expert-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0A0A0A;
+      flex-shrink: 0;
+    }
+    .expert-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .expert-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+    .expert-title {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-bottom: 0.5rem;
+    }
+    .expert-stance {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 8px;
+      border-radius: 3px;
+      margin-bottom: 0.5rem;
+    }
+    .expert-belief {
+      font-size: 0.8rem;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+
+    /* ─── Question slide ─── */
+    .question-slide {
+      background: radial-gradient(ellipse at 50% 50%, rgba(20,20,20,1) 0%, var(--bg) 70%);
+    }
+    .question-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    .question-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .question-topic {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 1.5rem 0;
+      line-height: 1.3;
+    }
+    .question-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--accent);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .question-text {
+      font-size: 1.15rem;
+      color: var(--text2);
+      line-height: 1.8;
+    }
+
+    /* ─── Stances ─── */
+    .stances-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .stance-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .stance-item:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .stance-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0A0A0A;
+      flex-shrink: 0;
+    }
+    .stance-body {
+      flex: 1;
+    }
+    .stance-speaker {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .stance-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Clash ─── */
+    .clash-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .clash-block {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+    }
+    .clash-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clash);
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .clash-item {
+      margin-bottom: 1rem;
+    }
+    .clash-item:last-child { margin-bottom: 0; }
+    .clash-speaker {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .clash-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      padding-left: 1rem;
+      border-left: 2px solid var(--card-border);
+    }
+    .clash-attack .clash-text {
+      border-left-color: var(--clash);
+    }
+    .clash-counter .clash-text {
+      border-left-color: var(--insight);
+    }
+
+    /* ─── Reality cases ─── */
+    .cases-container {
+      width: 100%;
+      max-width: 1000px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .case-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .case-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .case-header {
+      margin-bottom: 1rem;
+    }
+    .case-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .case-source {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-top: 0.25rem;
+    }
+    .case-content {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .case-outcome, .case-lesson {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+    .case-label {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-right: 0.5rem;
+    }
+
+    /* ─── Cost discussion ─── */
+    .cost-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .cost-scenario {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-scenario-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-scenario-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .cost-analysis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .cost-dimension {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .cost-value {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .cost-worst {
+      background: rgba(255,71,87,0.08);
+      border: 1px solid rgba(255,71,87,0.2);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-worst-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clash);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-worst-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .cost-survivor {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .cost-survivor-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-survivor-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Human nature ─── */
+    .hn-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .hn-question {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .hn-analysis {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+    }
+    .hn-examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .hn-example {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .hn-conclusion {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .hn-conclusion-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .hn-conclusion-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Cognitive upgrade ─── */
+    .upgrade-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .upgrade-block {
+      display: flex;
+      gap: 1.5rem;
+      align-items: stretch;
+      margin-bottom: 1.5rem;
+    }
+    .upgrade-before, .upgrade-after {
+      flex: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .upgrade-before {
+      border-color: rgba(255,71,87,0.2);
+      background: rgba(255,71,87,0.05);
+    }
+    .upgrade-after {
+      border-color: rgba(0,212,170,0.2);
+      background: rgba(0,212,170,0.05);
+    }
+    .upgrade-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+    .upgrade-before .upgrade-label { color: var(--clash); }
+    .upgrade-after .upgrade-label { color: var(--insight); }
+    .upgrade-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .upgrade-arrow {
+      display: flex;
+      align-items: center;
+      font-size: 2rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .upgrade-complexity, .upgrade-actionable {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .upgrade-complexity-label, .upgrade-actionable-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .upgrade-complexity-text, .upgrade-actionable-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Final insight ─── */
+    .insight-slide {
+      background: radial-gradient(ellipse at 50% 50%, rgba(0,212,170,0.05) 0%, var(--bg) 60%);
+    }
+    .insight-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0,212,170,0.15) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .insight-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .insight-title {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--insight);
+      margin: 1.5rem 0;
+    }
+    .insight-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--insight);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .insight-text {
+      font-size: 1.1rem;
+      color: var(--text2);
+      line-height: 1.9;
+    }
+
+    /* ─── Open questions ─── */
+    .oq-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .oq-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .oq-item:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+    .oq-num {
+      font-family: var(--font-mono);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+      width: 32px;
+      text-align: center;
+    }
+    .oq-text {
+      font-size: 1rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      .slide { padding: 2rem 1.5rem; }
+      .cover-title { font-size: 2rem; }
+      .question-topic { font-size: 1.8rem; }
+      .slide-title { font-size: 1.6rem; }
+      .expert-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+      .upgrade-block { flex-direction: column; }
+      .upgrade-arrow { transform: rotate(90deg); justify-content: center; }
+      .cases-container { grid-template-columns: 1fr; }
+      .cost-analysis { grid-template-columns: 1fr; }
+      .hn-examples { grid-template-columns: 1fr; }
+      .nav-dots { display: none; }
+    }
+    @media (max-width: 480px) {
+      .expert-grid { grid-template-columns: 1fr; }
+      .cover-stats { gap: 1rem; }
+      .cover-stat-num { font-size: 2rem; }
+    }
+    
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<div class="page-counter" id="pageCounter">1 / 28</div>
+
+<div class="slideshow" id="slideshow">
+
+    <div class="slide cover-slide">
+      <div class="cover-glow"></div>
+      <div class="cover-content">
+        <div class="cover-badge">ROUNDTABLE DISCUSSION</div>
+        <h1 class="cover-title">社交媒体与真实自我：我们在网上展示的是自己还是人设</h1>
+        
+        
+        <div class="cover-stats">
+          <div class="cover-stat">
+            <span class="cover-stat-num">6</span>
+            <span class="cover-stat-label">位专家</span>
+          </div>
+          <div class="cover-stat-divider"></div>
+          <div class="cover-stat">
+            <span class="cover-stat-num">3</span>
+            <span class="cover-stat-label">轮讨论</span>
+          </div>
+        </div>
+        <div class="cover-experts">韩炳哲 · 弗洛姆 · 项飙 · 丹尼尔·卡尼曼 · 尤瓦尔·赫拉利 · 李诞</div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">EXPERTS</span>
+        <h2 class="slide-title">专家阵营</h2>
+      </div>
+      <div class="expert-grid">
+        <div class="expert-card" style="--card-color: #8a2a4a">
+          <div class="expert-avatar" style="background: #8a2a4a">韩</div>
+          <div class="expert-info">
+            <div class="expert-name">韩炳哲</div>
+            <div class="expert-title">哲学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #2a5a6a">
+          <div class="expert-avatar" style="background: #2a5a6a">弗</div>
+          <div class="expert-info">
+            <div class="expert-name">弗洛姆</div>
+            <div class="expert-title">心理学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #1a5f2a">
+          <div class="expert-avatar" style="background: #1a5f2a">项</div>
+          <div class="expert-info">
+            <div class="expert-name">项飙</div>
+            <div class="expert-title">人类学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #333333">
+          <div class="expert-avatar" style="background: #333333">丹</div>
+          <div class="expert-info">
+            <div class="expert-name">丹尼尔·卡尼曼</div>
+            <div class="expert-title">认知心理学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #6a4a8a">
+          <div class="expert-avatar" style="background: #6a4a8a">尤</div>
+          <div class="expert-info">
+            <div class="expert-name">尤瓦尔·赫拉利</div>
+            <div class="expert-title">历史学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #e65100">
+          <div class="expert-avatar" style="background: #e65100">李</div>
+          <div class="expert-info">
+            <div class="expert-name">李诞</div>
+            <div class="expert-title">脱口秀演员</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 1</span>
+        <h2 class="question-topic">人设的本质：是自我表达还是自我异化？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">我们在社交媒体上精心经营的&#x27;人设&#x27;，究竟是自我的延伸还是对自我的背叛？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8a2a4a">韩</div>
+          <div class="stance-body">
+            <div class="stance-speaker">韩炳哲</div>
+            <div class="stance-text">社交媒体上的&#x27;人设&#x27;是一种新形式的&#x27;自我剥削&#x27;。传统社会的规训来自外部——你被告知应该成为什么样的人；而社交媒体时代的规训来自内部——你主动把自己变成一个&#x27;可展示的商品&#x27;。你不是在&#x27;表达自我&#x27;，你是在&#x27;生产自我&#x27;。你精心挑选照片、修饰文字、管理形象——这不是自由，这是&#x27;绩效主体&#x27;的自我优化。你既是老板也是工人，既是商品也是推销员。这种&#x27;自由&#x27;比任何外在压迫都更彻底——因为你无法反抗自己。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #2a5a6a">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛姆</div>
+            <div class="stance-text">社交媒体人设的核心问题是&#x27;市场化人格&#x27;的极端化。在《占有还是存在》中，我描述了现代人如何将自己的人格变成一种&#x27;商品&#x27;来出售——你的人格特质变成了你的&#x27;卖点&#x27;，你的社交能力变成了你的&#x27;技能&#x27;。社交媒体把这个过程推向极致：你的整个人格都可以被量化——粉丝数、点赞数、评论数。人设不是&#x27;真实的你&#x27;，它是你认为&#x27;市场需要的你&#x27;。这不是自我表达，这是一种深层次的&#x27;自我异化&#x27;——你和真实的自己之间隔着一个&#x27;品牌经理&#x27;。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #1a5f2a">项</div>
+          <div class="stance-body">
+            <div class="stance-speaker">项飙</div>
+            <div class="stance-text">人设问题需要在&#x27;附近消失&#x27;的背景下理解。传统社会中，你的身份由&#x27;附近&#x27;定义——你的邻居、同事、社区对你有具体的、持续的、多维的认知。你不需要&#x27;人设&#x27;，因为你是一个&#x27;完整的人&#x27;被看到。但在社交媒体上，你的观众是陌生人，他们的注意力是碎片化的——你必须用最简短、最鲜明的方式传递&#x27;你是谁&#x27;。人设不是虚伪，它是&#x27;远距离社交&#x27;的必要工具。问题不在于人设本身，而在于&#x27;附近&#x27;的消失让所有人都变成了&#x27;远距离的表演者&#x27;。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #333333">丹</div>
+          <div class="stance-body">
+            <div class="stance-speaker">丹尼尔·卡尼曼</div>
+            <div class="stance-text">从认知心理学看，人设经营利用了人类的&#x27;自我呈现偏见&#x27;——我们天生倾向于展示自己的正面形象，这是进化中形成的社交策略。社交媒体没有创造这个倾向，但它创造了一个&#x27;前所未有的放大器&#x27;。在物理世界，你的自我呈现受到身体、环境、时间的限制——你不可能24小时都在&#x27;表演&#x27;。但在社交媒体上，你可以：每一条帖子都经过编辑，每一张照片都经过筛选，每一段文字都经过斟酌。结果是：&#x27;系统1&#x27;的自发反应被压制，&#x27;系统2&#x27;的策略性思考主导了你的在线行为。你不是在&#x27;做自己&#x27;，你是在&#x27;运营一个品牌&#x27;。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6B9D">赫</div>
+          <div class="stance-body">
+            <div class="stance-speaker">赫拉利</div>
+            <div class="stance-text">人设的本质是一个&#x27;虚构叙事&#x27;——人类最独特的能力就是创造和相信虚构故事。从宗教到国家，从货币到公司，人类文明建立在共同的虚构之上。社交媒体人设只是这种能力的个人化应用：你为自己创造了一个&#x27;故事&#x27;——一个更有趣、更成功、更快乐的版本。这不是新事物——人类一直在&#x27;讲故事&#x27;给自己和别人听。新的只是：社交媒体让每个人的&#x27;个人神话&#x27;都有了公共舞台，而且你随时可以看到别人的&#x27;神话&#x27;并进行比较。人设不是&#x27;假的&#x27;——它是人类叙事本能的数字化表达。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #e65100">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">你们讨论人设讨论得太沉重了。人设就是一个&#x27;社交面具&#x27;——古代人上朝要穿朝服，现代人发朋友圈要修图。谁还没有个&#x27;人设&#x27;？你在老板面前是一个人，在朋友面前是另一个人，在父母面前又是另一个人。社交媒体只是把这种&#x27;角色切换&#x27;变得可见了。问题是：有些人入戏太深，把自己的人设当成了真实的自己——这才是危险的。我做脱口秀，我的台上人设就是&#x27;废柴&#x27;——但我知道那是表演。分不清&#x27;表演&#x27;和&#x27;现实&#x27;的人，不管有没有社交媒体都会出问题。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #8a2a4a">韩炳哲 → 赫拉利</div>
+            <div class="clash-text">你说人设是&#x27;人类叙事本能的数字化表达&#x27;——这个类比太轻巧了。宗教叙事、国家叙事是&#x27;集体虚构&#x27;，它们有稳定性和持久性；但社交媒体人设是&#x27;即时反馈驱动的个人虚构&#x27;——它每时每刻都在被点赞数、评论数、粉丝数校准。这种&#x27;实时校准&#x27;意味着人设不是你主动选择的叙事，而是算法和观众共同塑造的产物。把两者等同，是在为数字时代的自我异化辩护。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #FF6B9D">赫拉利</div>
+              <div class="clash-text">你说社交媒体人设是&#x27;算法驱动的&#x27;——但传统叙事难道不是&#x27;社会驱动的&#x27;吗？中世纪的农民相信上帝，是因为&#x27;社会环境&#x27;告诉他们应该相信；现代人经营人设，是因为&#x27;社交环境&#x27;告诉他们需要被看见。驱动因素不同，但&#x27;被外部力量塑造&#x27;这一点是一样的。你的批评预设了存在某种&#x27;未被塑造的真实自我&#x27;——但这个&#x27;真实自我&#x27;本身就是一个浪漫主义的虚构。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #2a5a6a">弗洛姆 → 李诞</div>
+            <div class="clash-text">你说&#x27;谁还没有个人设&#x27;——但你忽略了一个关键区别：传统社会的&#x27;角色切换&#x27;是有限的、有边界的，而社交媒体的人设是&#x27;全天候的、可量化的&#x27;。你在老板面前的角色不会被&#x27;点赞&#x27;，你和父母的关系不会被&#x27;粉丝数&#x27;衡量。社交媒体把所有社交关系都变成了&#x27;表演&#x27;，而且这个表演有实时的观众反馈。这不是&#x27;正常的社交面具&#x27;，这是一种新型的&#x27;人格商品化&#x27;——你把自己变成了一个需要持续维护的&#x27;品牌&#x27;。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #e65100">李诞</div>
+              <div class="clash-text">你的&#x27;人格商品化&#x27;诊断很有洞察力——但你忽略了一点：有些人从人设经营中获得了真实的满足感和自我认同。一个内向的人通过经营&#x27;读书博主&#x27;的人设，可能真的找到了自己的表达方式和社交圈层。你把人设一概定义为&#x27;异化&#x27;，但对某些人来说，人设可能是&#x27;自我发现&#x27;的路径。你不能用你的理论框架来否定别人的真实体验。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #1a5f2a">项飙 → 丹尼尔·卡尼曼</div>
+            <div class="clash-text">你用&#x27;系统1和系统2&#x27;来分析人设经营——但你的框架假设了一个&#x27;真实自我&#x27;在系统1里，被系统2的策略性思考所掩盖。这个假设在跨文化语境下是有问题的。中国传统文化中，&#x27;做人&#x27;本身就是一种刻意的实践——儒家的&#x27;修身&#x27;、道家的&#x27;养性&#x27;，都是有意识的自我塑造。你把&#x27;自发性&#x27;等同于&#x27;真实性&#x27;，把&#x27;策略性&#x27;等同于&#x27;虚假性&#x27;——但在中国文化语境里，&#x27;刻意做人&#x27;恰恰是&#x27;做人&#x27;的核心。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #333333">丹尼尔·卡尼曼</div>
+              <div class="clash-text">你的文化批评有一定道理——不同文化对&#x27;真实自我&#x27;的定义确实不同。但认知科学的发现是跨文化的：当人们感到自己的在线表现与内心状态不一致时，他们都会报告更高的焦虑和更低的幸福感。这个&#x27;一致性需求&#x27;不是西方独有的——它是人类心理的基本特征。你的文化相对主义可能低估了人类共同的心理需求。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">Instagram对青少年身体形象的影响</div>
+            <div class="case-source">Facebook内部研究 2021</div>
+          </div>
+          <div class="case-content">Facebook内部研究泄露显示：Instagram使32%的青少年女性在&#x27;身体形象&#x27;方面感觉更差。青少年在Instagram上看到经过美颜和修图的照片后，会对自己真实的身体产生不满。更严重的是，这种不满会驱动他们更努力地经营自己的人设——修更多的图、花更多的时间挑选照片——形成恶性循环。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 引发全球对社交媒体与青少年心理健康关系的关注
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 人设经营不是&#x27;中性的自我表达&#x27;——它有真实的心理代价，尤其对脆弱群体
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">朋友圈&#x27;三天可见&#x27;现象</div>
+            <div class="case-source">微信用户行为分析 2018-2023</div>
+          </div>
+          <div class="case-content">微信&#x27;朋友圈三天可见&#x27;功能推出后，超过1亿用户启用了该功能。这个功能的流行反映了一个深层矛盾：人们既想在社交媒体上&#x27;展示自己&#x27;，又害怕被&#x27;固定定义&#x27;。&#x27;三天可见&#x27;是一种折中——你可以在当下展示你想要展示的自己，但你过去的自己可以被&#x27;删除&#x27;。这是一种&#x27;可编辑的人设&#x27;——你永远只展示最新的、最精心策划的版本。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 成为中国社交媒体的独特现象，引发对&#x27;数字记忆与身份&#x27;的讨论
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 人们在潜意识里知道自己的在线形象与真实自我存在差距——&#x27;三天可见&#x27;是对这种焦虑的本能反应
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">社交媒体人设成为所有人获取社会认同的主要渠道</span>
+        </div>
+        <div class="cost-analysis">
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">当你的大部分社交精力都用于&#x27;经营人设&#x27;，你花在&#x27;探索真实自我&#x27;上的时间和精力就会减少。你不再问&#x27;我真正想要什么&#x27;，而是问&#x27;什么能获得更多点赞&#x27;。长期来看，你可能真的不知道自己是谁了——你的&#x27;真实自我&#x27;因为长期被忽视而萎缩。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">当你的社交关系都通过&#x27;人设&#x27;建立，你获得的认同是针对你的&#x27;人设&#x27;，而不是针对&#x27;你&#x27;。你的粉丝喜欢的是&#x27;你的品牌&#x27;，不是&#x27;你这个人&#x27;。这种认同是脆弱的——一旦你的&#x27;人设崩塌&#x27;，你的社交关系也会随之瓦解。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">持续的&#x27;人设维护&#x27;需要巨大的心理能量——你必须时刻监控自己的表现、评估他人的反馈、调整自己的策略。这种&#x27;持续监控状态&#x27;会导致焦虑、倦怠、和自我怀疑。更重要的是，当你习惯了&#x27;被点赞&#x27;的感觉，失去点赞的恐惧会成为一种持续的背景焦虑。</div>
+        </div>
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">2040年，&#x27;真实自我&#x27;成为一个历史概念——所有人的身份都是由算法和社交反馈共同塑造的&#x27;数字人格&#x27;。人们不再有&#x27;私下&#x27;和&#x27;公开&#x27;的区别——你的所有行为都被记录、量化、展示。&#x27;做自己&#x27;意味着&#x27;优化自己的在线形象&#x27;，而不是&#x27;了解自己的内心&#x27;。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">我们只看到那些&#x27;成功经营人设&#x27;的人——网红、KOL、意见领袖。但我们没有看到的是：那些因为人设经营而焦虑的年轻人，那些因为&#x27;人设崩塌&#x27;而抑郁的当事人，那些因为在社交媒体上&#x27;表演&#x27;太久而不知道自己是谁的普通人。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">人类是否有一个&#x27;真实的自我&#x27;，还是所有自我都是社会建构的？</div>
+        <div class="hn-analysis">心理学对此没有定论。一方面，&#x27;人本主义心理学&#x27;认为存在一个&#x27;真实自我&#x27;——它被社会期待所掩盖，需要被&#x27;发现&#x27;和&#x27;实现&#x27;。另一方面，&#x27;社会建构主义&#x27;认为所有自我都是社会互动的产物——不存在&#x27;未被建构的真实自我&#x27;。社交媒体人设的问题不在于&#x27;哪个理论正确&#x27;，而在于：无论你持哪种观点，社交媒体都在缩小你的&#x27;自我探索空间&#x27;——你花在&#x27;表演&#x27;上的时间越多，花在&#x27;反思&#x27;上的时间就越少。</div>
+        <div class="hn-examples"><div class="hn-example">&#x27;存在主义危机&#x27;在年轻一代中增加——越来越多的人不知道自己&#x27;真正想要什么&#x27;</div><div class="hn-example">&#x27;数字排毒&#x27;运动的兴起——人们试图通过暂时远离社交媒体来&#x27;重新找到自己&#x27;</div>
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">无论&#x27;真实自我&#x27;是否客观存在，&#x27;自我反思&#x27;的能力是真实的。社交媒体人设经营的最大风险不是它创造了&#x27;虚假的你&#x27;，而是它剥夺了你&#x27;反思自己是谁&#x27;的时间和空间。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">人设只是社交媒体上的一种表达方式，不必太当真</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">人设经营是一种深层的自我异化——它把&#x27;自我&#x27;变成&#x27;商品&#x27;，把&#x27;社交&#x27;变成&#x27;营销&#x27;</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">人设问题不是简单的&#x27;真vs假&#x27;——它涉及自我的本质、社交的功能、技术的塑造力。人设可能是&#x27;自我发现&#x27;的路径，也可能是&#x27;自我迷失&#x27;的陷阱——关键在于你是否有意识地使用它，还是被它无意识地塑造。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">作为个人：定期进行&#x27;数字断食&#x27;——给自己留出不被社交媒体监控的&#x27;私人时间&#x27;和&#x27;私人空间&#x27;。作为平台：减少&#x27;量化指标&#x27;的可见性——让人们更少地看到点赞数、粉丝数、浏览量。作为教育者：帮助年轻人区分&#x27;表演的自我&#x27;和&#x27;反思的自我&#x27;——两者都是必要的，但不能互相替代。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 2</span>
+        <h2 class="question-topic">社交媒体的代价：点赞经济对心理健康的影响</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">当我们的自我价值被量化为点赞数和粉丝数，我们的心理健康正在付出什么代价？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8a2a4a">韩</div>
+          <div class="stance-body">
+            <div class="stance-speaker">韩炳哲</div>
+            <div class="stance-text">点赞经济的本质是&#x27;数字全景监狱&#x27;——但这个监狱的特别之处在于，囚犯是自愿的，而且他们自己就是监控者。你在社交媒体上发布内容，然后不断查看有多少人点赞——这是一种&#x27;自我监控&#x27;。传统全景监狱中，你因为&#x27;被监视&#x27;而改变行为；在点赞经济中，你因为&#x27;希望被看见&#x27;而改变行为。更深刻的是：点赞创造了一种&#x27;数字化的自我价值&#x27;——你的价值不再由你的内在品质决定，而是由外部数据决定。这是一种&#x27;新型的奴隶制&#x27;——你被数据所奴役，而且你心甘情愿。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #2a5a6a">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛姆</div>
+            <div class="stance-text">点赞经济直接攻击了人类最基本的心理需求——&#x27;归属感&#x27;和&#x27;价值感&#x27;。在传统社会，这些需求通过&#x27;有意义的人际关系&#x27;来满足——家庭、友谊、社区。但在社交媒体时代，这些需求被&#x27;简化&#x27;为数字：你的价值等于你的粉丝数，你的社交连接等于你的互动率。这种&#x27;简化&#x27;是危险的——因为它把&#x27;内在价值&#x27;（你是谁）替換成了&#x27;外在指标&#x27;（你有多少粉丝）。当一个人的自我价值完全依赖外部数据，他就处于一种&#x27;持续的不安全状态&#x27;——因为数据是波动的，而人的自我价值需要稳定性。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #1a5f2a">项</div>
+          <div class="stance-body">
+            <div class="stance-speaker">项飙</div>
+            <div class="stance-text">点赞经济在中国的语境下有一个特别的问题——它与&#x27;面子文化&#x27;的叠加。传统中国社会已经有一种&#x27;量化社交资本&#x27;的倾向——你的&#x27;面子&#x27;与你的社会地位、财富、关系网络相关。社交媒体的点赞数只是把这种&#x27;量化&#x27;从线下搬到了线上，而且变得更透明、更即时、更残酷。过去你的&#x27;面子&#x27;是模糊的、不可比较的；现在你的&#x27;面子&#x27;是精确的、可比较的——你随时可以看到你和别人的差距。这种&#x27;精确比较&#x27;放大了社交焦虑。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #333333">丹</div>
+          <div class="stance-body">
+            <div class="stance-speaker">丹尼尔·卡尼曼</div>
+            <div class="stance-text">点赞经济利用了人类的&#x27;可变比率强化&#x27;——这是最强大的行为塑造机制之一。赌博机之所以让人上瘾，就是因为奖励是&#x27;不确定的&#x27;——你不知道哪一次会中奖。点赞的工作原理完全一样：你不知道哪一条帖子会&#x27;火&#x27;，所以你会不断发帖、不断查看——每一次刷新都是一次&#x27;赌博&#x27;。更关键的是：点赞数的&#x27;参照点效应&#x27;——你不是用&#x27;绝对数字&#x27;来评估自己的帖子，而是用&#x27;相对数字&#x27;（和你之前的帖子比、和别人比）。这意味着：即使你的帖子获得了100个点赞，如果你上次获得了200个，你仍然会感到&#x27;失败&#x27;。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6B9D">赫</div>
+          <div class="stance-body">
+            <div class="stance-speaker">赫拉利</div>
+            <div class="stance-text">点赞经济正在创造一种&#x27;数据主义&#x27;的宗教——在这个宗教中，&#x27;数据&#x27;取代了&#x27;上帝&#x27;成为价值的终极裁判。传统宗教告诉你：你的价值由上帝决定。数据主义告诉你：你的价值由数据决定——你的点击率、转化率、影响力。这种&#x27;数据主义&#x27;是危险的，因为它把&#x27;人的价值&#x27;完全外部化了。一个不被点赞的人，在数据主义的框架下，就是一个&#x27;没有价值&#x27;的人。我们正在用数据重建一种新的&#x27;种姓制度&#x27;——高数据者是&#x27;有价值的&#x27;，低数据者是&#x27;无价值的&#x27;。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #e65100">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">你们把点赞说得好像是什么新型毒品。我每天发微博，有时候点赞多，有时候点赞少——点赞多了高兴一会儿，点赞少了也就那样。你非要说我的自我价值被&#x27;数据绑架&#x27;了，那我只能说：你的自我价值也挺脆弱的。真正的问题不是&#x27;点赞&#x27;，而是&#x27;你有没有其他东西来定义自己的价值&#x27;——如果你的生活中只有社交媒体，那点赞当然是你的全部；但如果你有工作、有爱好、有真实的人际关系，点赞就只是一个数字而已。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #2a5a6a">弗洛姆 → 李诞</div>
+            <div class="clash-text">你说&#x27;如果你有其他东西来定义自己的价值，点赞就只是一个数字&#x27;——但你忽略了一个事实：对很多年轻人来说，社交媒体就是他们的&#x27;主要社交空间&#x27;。你有工作、有舞台、有线下观众——你的自我价值不依赖社交媒体。但一个16岁的高中生呢？他的同学都在Instagram上，他的社交地位取决于他在社交媒体上的存在感。你不能用一个成年人的&#x27;丰富生活&#x27;来要求一个&#x27;数字原住民&#x27;。你把结构性问题个人化了。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #e65100">李诞</div>
+              <div class="clash-text">你的批评是对的——年轻人确实更容易受到点赞经济的影响。但你的&#x27;结构性批判&#x27;也在某种程度上&#x27;剥夺了个人的能动性&#x27;。你好像在说：点赞经济是&#x27;系统性压迫&#x27;，个人无法抵抗。但事实上，有些人确实学会了&#x27;健康地使用社交媒体&#x27;——他们有意识地限制使用时间、不把点赞数当回事、专注于内容而非反馈。你的理论框架可能低估了个人&#x27;自主选择&#x27;的能力。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #333333">丹尼尔·卡尼曼 → 韩炳哲</div>
+            <div class="clash-text">你说点赞是&#x27;新型奴隶制&#x27;——这个类比过于极端。奴隶制是&#x27;被迫的、不可退出的&#x27;，而社交媒体使用是&#x27;自愿的、可退出的&#x27;。你可以说社交媒体&#x27;利用了人性弱点&#x27;，但你不能说它是&#x27;奴役&#x27;——因为用户随时可以删除账号、关闭通知、退出平台。你的&#x27;数字全景监狱&#x27;隐喻忽略了一个关键事实：监狱的门是开着的。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #8a2a4a">韩炳哲</div>
+              <div class="clash-text">你说&#x27;门是开着的&#x27;——但你有没有注意到，社交媒体的设计就是让你&#x27;不想离开&#x27;？无限滚动、推送通知、社交压力、FOMO（错失恐惧）——这些都不是&#x27;自由选择&#x27;的环境。行为经济学的核心发现就是：人的选择受到&#x27;选择架构&#x27;的深刻影响。你说&#x27;用户可以退出&#x27;，就像说&#x27;赌博者可以不赌&#x27;——理论上正确，实践上忽略了成瘾机制。&#x27;自由&#x27;不是&#x27;理论上可以退出&#x27;，而是&#x27;有能力退出&#x27;。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #1a5f2a">项飙 → 赫拉利</div>
+            <div class="clash-text">你说点赞经济创造了&#x27;数据主义宗教&#x27;——但宗教的核心特征是&#x27;超越性&#x27;——它指向某种高于人类的力量。点赞数不具有&#x27;超越性&#x27;——它就是赤裸裸的&#x27;社会认可&#x27;。你把&#x27;虚荣&#x27;包装成&#x27;宗教&#x27;，但两者有本质区别。宗教至少提供了意义框架、道德指引、社群归属；而点赞经济什么也不提供——它只是放大了人类&#x27;渴望被认可&#x27;的本能。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #FF6B9D">赫拉利</div>
+              <div class="clash-text">你说宗教提供&#x27;意义框架&#x27;——但数据主义也在提供意义框架：&#x27;你的影响力定义了你的价值&#x27;。这难道不是一种意义框架吗？而且这种框架比传统宗教更&#x27;科学&#x27;——它有数据支持、有算法验证、有可量化的指标。我不是说数据主义是&#x27;好的&#x27;宗教，我说的是：它正在填补传统宗教退场后的&#x27;意义真空&#x27;。你可以批判它的价值，但你不能否认它的社会功能。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">社交媒体与青少年抑郁的相关性研究</div>
+            <div class="case-source">Jean Twenge 2017-2023</div>
+          </div>
+          <div class="case-content">心理学家Jean Twenge的研究发现：2012年之后（智能手机普及的时间点），美国青少年的抑郁率、焦虑率、自杀率都出现了显著上升。时间上的高度吻合暗示了因果关系——虽然不是直接证明。她的研究还发现：每天使用社交媒体超过3小时的青少年，出现心理健康问题的风险是普通青少年的两倍。这些发现引发了全球性的讨论。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 多个国家开始讨论限制青少年社交媒体使用的立法
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 点赞经济对心理健康的&#x27;剂量效应&#x27;——使用越多，风险越高
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">韩国网红&#x27;退网潮&#x27;</div>
+            <div class="case-source">韩国社交媒体观察 2022-2023</div>
+          </div>
+          <div class="case-content">2022年以来，韩国出现了一波网红&#x27;退网潮&#x27;——多位百万粉丝级别的网红宣布停止更新，原因包括：持续焦虑、身份迷失、无法区分&#x27;真实的自己&#x27;和&#x27;网上的自己&#x27;。一位网红在退网声明中说：&#x27;我已经不知道没有镜头的时候，我是谁了。&#x27;这些案例表明：点赞经济的代价不仅限于普通用户——连&#x27;成功者&#x27;也承受着巨大的心理压力。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 韩国社交媒体上出现了&#x27;退网支持&#x27;社区
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 点赞经济的代价是系统性的——&#x27;成功&#x27;不等于&#x27;健康&#x27;
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">点赞经济成为所有人获取社会认可的主要方式</span>
+        </div>
+        <div class="cost-analysis">
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">当人们习惯于用点赞数来衡量自己的价值，他们会逐渐失去&#x27;内在价值感&#x27;——那种不依赖外部认可的、稳定的自我认同。这会导致一种&#x27;持续的不安全感&#x27;——因为你无法控制算法如何展示你的内容，也无法控制别人是否点赞。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">点赞经济把社交关系变成了一种&#x27;交易&#x27;——我给你点赞，你给我点赞；我关注你，你关注我。这种&#x27;互惠性&#x27;看起来像社交，但实际上是一种&#x27;策略性行为&#x27;——你不是在&#x27;交朋友&#x27;，你是在&#x27;建立人脉&#x27;。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">当你的情绪状态取决于点赞数，你的情绪就被&#x27;算法&#x27;所控制——算法决定了谁看到你的内容，谁给你点赞，你的帖子是否&#x27;火&#x27;。你的情绪不再是&#x27;你自己的&#x27;，而是&#x27;算法的产物&#x27;。</div>
+        </div>
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">2045年，人类的自我价值完全依赖数字指标——从点赞数到信用评分，从社交媒体影响力到消费数据画像。&#x27;不被数据认可&#x27;的人被系统性地边缘化——他们无法获得好的工作、好的住房、好的社交圈。&#x27;数据穷人&#x27;成为新的&#x27;社会底层&#x27;。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">我们只看到那些&#x27;从点赞经济中获益&#x27;的人——网红、KOL、意见领袖。但我们没有看到的是：那些因为点赞数低而感到自卑的普通人，那些因为&#x27;不够红&#x27;而放弃创作的年轻人，那些因为在社交媒体上被忽视而感到&#x27;不存在&#x27;的孤独者。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">人类的自我价值感是否能够完全独立于社会认可？</div>
+        <div class="hn-analysis">心理学研究给出了复杂的答案。一方面，&#x27;自尊理论&#x27;认为：健康的自尊应该建立在&#x27;内在价值&#x27;（自我接纳、自我效能）之上，而不是&#x27;外在价值&#x27;（他人的认可）。另一方面，&#x27;社会认同理论&#x27;认为：人类的自我认同在很大程度上是&#x27;社会性的&#x27;——我们通过&#x27;他人的反馈&#x27;来了解自己。社交媒体的问题不在于它满足了&#x27;社会认可&#x27;的需求——这是正常的、健康的。问题在于它把&#x27;社会认可&#x27;变成了一个&#x27;实时的、量化的、无处不在的&#x27;系统——你无法逃离它，也无法控制它。</div>
+        <div class="hn-examples"><div class="hn-example">&#x27;社交媒体倦怠&#x27;现象——越来越多的人报告对社交媒体感到&#x27;疲惫&#x27;但&#x27;无法停止&#x27;</div><div class="hn-example">&#x27;正念运动&#x27;的兴起——人们试图通过冥想和内省来重建&#x27;内在价值感&#x27;</div>
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">人类的自我价值感不能完全独立于社会认可——这是不可能的，也是不必要的。但健康的心理需要&#x27;平衡&#x27;——既需要外部认可，也需要内在支撑。点赞经济的问题不在于它提供了&#x27;外部认可&#x27;，而在于它挤压了&#x27;内在支撑&#x27;的空间。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">点赞只是一个数字，不必太在意</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">点赞经济是一个精密的心理操控系统——它利用人类的认知弱点来劫持注意力和自我价值感</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">点赞经济的问题不是简单的&#x27;好vs坏&#x27;——它确实满足了人类&#x27;被认可&#x27;的需求，但同时也在系统性地扭曲这种需求。问题不在于&#x27;点赞&#x27;本身，而在于&#x27;点赞&#x27;成为衡量一切的尺度——从个人价值到商业价值，从社会地位到人生意义。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">作为个人：建立&#x27;离线价值感&#x27;——在社交媒体之外找到定义自己价值的方式（工作、爱好、深度关系）。作为平台：提供&#x27;点赞数隐藏&#x27;选项，让用户可以选择不看到点赞数据。作为社会：反思&#x27;量化一切&#x27;的文化——不是所有有价值的东西都可以被量化。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 3</span>
+        <h2 class="question-topic">真实的回归：在这个时代如何做自己？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">在一个人人都在经营人设的时代，&#x27;做自己&#x27;意味着什么？它还可能吗？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8a2a4a">韩</div>
+          <div class="stance-body">
+            <div class="stance-speaker">韩炳哲</div>
+            <div class="stance-text">&#x27;做自己&#x27;在社交媒体时代变成了一种悖论——你越是&#x27;努力做自己&#x27;，你就越是在&#x27;表演真实&#x27;。&#x27;真实&#x27;本身已经成为一种&#x27;人设&#x27;——&#x27;我没有滤镜&#x27;、&#x27;我不修图&#x27;、&#x27;我展示真实的自己&#x27;——这些宣言本身就是一种精心策划的&#x27;真实性表演&#x27;。解决方案不在于&#x27;更努力地做自己&#x27;，而在于&#x27;停止表演&#x27;。但&#x27;停止表演&#x27;在社交媒体时代几乎是不可能的——因为社交媒体的逻辑就是&#x27;展示&#x27;。也许真正的解放不是&#x27;做自己&#x27;，而是&#x27;允许自己不被看见&#x27;——有权利成为&#x27;没有观众的自己&#x27;。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #2a5a6a">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛姆</div>
+            <div class="stance-text">&#x27;做自己&#x27;需要区分&#x27;存在模式&#x27;和&#x27;占有模式&#x27;。在&#x27;占有模式&#x27;下，你把&#x27;自己&#x27;当成一种&#x27;资产&#x27;来经营——我的人设、我的品牌、我的形象。在&#x27;存在模式&#x27;下，你把&#x27;自己&#x27;当成一种&#x27;过程&#x27;来体验——我在感受、我在思考、我在成长。社交媒体鼓励&#x27;占有模式&#x27;——你的帖子是你的&#x27;资产&#x27;，你的粉丝是你的&#x27;资本&#x27;。要&#x27;做自己&#x27;，你需要有意识地切换到&#x27;存在模式&#x27;——不是&#x27;展示自己&#x27;，而是&#x27;体验自己&#x27;。这意味着：减少对社交媒体的依赖，增加独处、反思、和深度关系的时间。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #1a5f2a">项</div>
+          <div class="stance-body">
+            <div class="stance-speaker">项飙</div>
+            <div class="stance-text">&#x27;做自己&#x27;需要&#x27;附近&#x27;的回归。在社交媒体时代，我们的&#x27;自我认知&#x27;被&#x27;远方的观众&#x27;所塑造——你的帖子是写给陌生人看的，你的形象是为算法优化的。但&#x27;真实的自我&#x27;只能在&#x27;附近&#x27;被发现——在与家人、朋友、邻居的日常互动中，在与具体的人建立具体的关系中。要&#x27;做自己&#x27;，你需要&#x27;重新扎根&#x27;——回到你所在的社区、你所在的城市、你所在的社群。不是在社交媒体上&#x27;展示你的生活&#x27;，而是&#x27;过你的生活&#x27;。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #333333">丹</div>
+          <div class="stance-body">
+            <div class="stance-speaker">丹尼尔·卡尼曼</div>
+            <div class="stance-text">&#x27;做自己&#x27;需要认知上的&#x27;元能力&#x27;——意识到自己正在被什么力量塑造，并有意识地选择如何回应。这种&#x27;元认知&#x27;能力可以通过训练来提高。具体来说：1）识别你的&#x27;认知偏见&#x27;——你是否在追求点赞？你是否在和别人比较？2）建立&#x27;决策缓冲&#x27;——在发布内容之前停下来问自己：我为什么发这个？是为了表达自己，还是为了获得认可？3）培养&#x27;认知多样性&#x27;——不要让社交媒体成为你唯一的社交和信息来源。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6B9D">赫</div>
+          <div class="stance-body">
+            <div class="stance-speaker">赫拉利</div>
+            <div class="stance-text">&#x27;做自己&#x27;可能是人类历史上最困难的事情之一——因为它要求你识破&#x27;所有的虚构&#x27;，包括&#x27;做自己&#x27;这个虚构本身。&#x27;做自己&#x27;是一个现代概念——它假设存在一个&#x27;真实的、独特的、等待被发现的自我&#x27;。但如果你接受我的历史观——人类的所有身份都是&#x27;叙事建构&#x27;——那么&#x27;做自己&#x27;就不是&#x27;发现&#x27;一个预先存在的自我，而是&#x27;创造&#x27;一个你愿意成为的自我。这种&#x27;创造&#x27;需要你有意识地选择你的&#x27;叙事&#x27;——不是被算法选择，不是被社交压力选择，而是你自己选择。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #e65100">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">你们讨论&#x27;做自己&#x27;讨论得好认真。我的经验是：&#x27;做自己&#x27;不是一个&#x27;成就&#x27;，而是一个&#x27;过程&#x27;——你不需要&#x27;找到&#x27;自己，你只需要&#x27;活着&#x27;。你今天想发朋友圈就发，不想发就不发；你今天想修图就修，不想修就不修。你不需要&#x27;做自己&#x27;的理论框架——你只需要&#x27;不那么在意别人怎么看你&#x27;。这听起来很简单，但可能是最难的事情。我的建议是：少刷社交媒体，多做点无聊的事——发呆、散步、和朋友吃饭。&#x27;做自己&#x27;不是在社交媒体上&#x27;展示&#x27;出来的，而是在日常生活中&#x27;活&#x27;出来的。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #8a2a4a">韩炳哲 → 赫拉利</div>
+            <div class="clash-text">你说&#x27;做自己&#x27;是&#x27;创造一个你愿意成为的自我&#x27;——但这个&#x27;创造&#x27;在社交媒体时代是有问题的。你&#x27;创造&#x27;自我的素材从哪里来？从社交媒体上的&#x27;成功人设&#x27;、从算法推荐的&#x27;理想生活方式&#x27;、从你关注的网红和KOL。你以为你在&#x27;自主选择&#x27;，但你的选择空间是被算法预设的。你的&#x27;创造性自我&#x27;不过是&#x27;算法喂养的自我&#x27;——你用别人的故事来组装自己的故事，还以为这是&#x27;自主选择&#x27;。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #FF6B9D">赫拉利</div>
+              <div class="clash-text">你说&#x27;算法预设了选择空间&#x27;——但这个批评可以适用于任何时代。中世纪的农民&#x27;选择&#x27;信仰基督教，是因为&#x27;社会环境预设了他的选择空间&#x27;。文艺复兴的艺术家&#x27;选择&#x27;创作，是因为&#x27;赞助人预设了他的选择空间&#x27;。每一个时代的人都是在&#x27;有限的选择空间&#x27;中做选择——算法只是这个时代的&#x27;选择限制器&#x27;。你的批评预设了存在某种&#x27;完全自由的选择&#x27;——但这种选择从未存在过。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #1a5f2a">项飙 → 李诞</div>
+            <div class="clash-text">你说&#x27;少刷社交媒体，多做无聊的事&#x27;——但你忽略了&#x27;无聊的事&#x27;正在被社交媒体&#x27;殖民&#x27;。你和朋友吃饭，朋友在拍照发朋友圈；你去散步，看到美景忍不住拍照发社交媒体；你发呆，手机推送通知打断你。&#x27;无聊的事&#x27;不再&#x27;无聊&#x27;了——它们都被社交媒体的逻辑所渗透。你的建议预设了存在一个&#x27;不受社交媒体影响的日常生活&#x27;——但这个日常正在快速消失。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #e65100">李诞</div>
+              <div class="clash-text">你说&#x27;日常正在被社交媒体殖民&#x27;——但你的描述忽略了一个事实：有些人确实能做到&#x27;有意识地不使用手机&#x27;。我的一些朋友出门不带手机，有些人在家里设定&#x27;无手机区域&#x27;。你把&#x27;社交媒体的渗透&#x27;描述得像是一种&#x27;不可避免的命运&#x27;——但事实上，人们仍然有选择。你不能用&#x27;趋势&#x27;来否定&#x27;可能性&#x27;。日常确实在被殖民，但殖民是可以抵抗的。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #333333">丹尼尔·卡尼曼 → 弗洛姆</div>
+            <div class="clash-text">你的&#x27;存在模式vs占有模式&#x27;框架很有启发性——但你的解决方案（减少社交媒体使用，增加独处和反思）对很多人来说是&#x27;奢侈的&#x27;。一个每天工作12小时的外卖骑手，有时间&#x27;切换到存在模式&#x27;吗？一个需要在社交媒体上维护客户关系的自由职业者，有权利&#x27;减少社交媒体使用&#x27;吗？你的解决方案是为&#x27;有闲阶级&#x27;设计的——它忽略了社会经济结构对个人选择的约束。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #2a5a6a">弗洛姆</div>
+              <div class="clash-text">你的&#x27;社会经济约束&#x27;批评是有道理的——我的解决方案确实更适用于有&#x27;自由时间&#x27;的人。但你忽略了一个事实：即使是最忙碌的人，也有&#x27;选择的缝隙&#x27;——午休的15分钟、睡前的30分钟、周末的几个小时。&#x27;存在模式&#x27;不是一个&#x27;全有或全无&#x27;的状态——它可以在日常生活中&#x27;碎片化地&#x27;实践。你不能用&#x27;结构性约束&#x27;来否定&#x27;个人实践&#x27;的可能性。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">BeReal应用的兴起与衰落</div>
+            <div class="case-source">BeReal 2022-2023</div>
+          </div>
+          <div class="case-content">BeReal应用的核心理念是&#x27;真实&#x27;——每天随机时间通知用户拍照，没有滤镜、没有编辑、没有精心策划。2022年，BeReal一度成为全球最热门的社交媒体应用。但有趣的是：用户很快学会了&#x27;等通知再准备好&#x27;——他们会在收到通知后整理好环境、摆好姿势再拍照。&#x27;真实&#x27;本身变成了新的&#x27;表演&#x27;。这个案例证明：在社交媒体的逻辑下，&#x27;做自己&#x27;几乎不可能——因为任何&#x27;真实&#x27;都会被迅速商品化。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> BeReal热度迅速下降，用户流失
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 在社交媒体平台上追求&#x27;真实&#x27;是一个悖论——平台的逻辑会把任何&#x27;真实&#x27;变成新的&#x27;表演&#x27;
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">日本&#x27;低欲望社会&#x27;与社交媒体断联</div>
+            <div class="case-source">日本社会观察 2020-2023</div>
+          </div>
+          <div class="case-content">日本出现了越来越多的年轻人选择&#x27;低欲望生活&#x27;——不追求社交媒体上的&#x27;成功展示&#x27;，不经营人设，不追求点赞和粉丝。他们选择&#x27;安静地生活&#x27;——读书、散步、做手工、和少数朋友保持深度关系。这种生活方式被称为&#x27;安静的退出&#x27;（Quiet Quitting的日本版本）。这不完全是&#x27;被迫的&#x27;——很多人报告说他们感到&#x27;前所未有的自由&#x27;和&#x27;前所未有的平静&#x27;。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 引发了关于&#x27;什么是好的生活&#x27;的广泛讨论
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 有些人确实找到了&#x27;做自己&#x27;的路径——但代价是退出&#x27;主流的社交游戏&#x27;
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">大规模&#x27;做自己&#x27;运动兴起——人们有意识地退出社交媒体人设竞争</span>
+        </div>
+        <div class="cost-analysis">
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">在当前的社会结构中，社交媒体影响力已经成为一种&#x27;社会资本&#x27;——它影响你的职业机会、社交圈层、甚至恋爱市场。退出社交媒体人设竞争意味着放弃这种&#x27;社会资本&#x27;——这对很多人来说是不可承受的代价。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">如果越来越多的人退出社交媒体，那些留下来的人可能会感到&#x27;更孤独&#x27;——因为他们的社交网络在缩小。社交媒体的问题之一是：它是&#x27;唯一的社交基础设施&#x27;——退出它意味着退出&#x27;主流社交&#x27;。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">&#x27;做自己&#x27;可能成为一种新的&#x27;阶级特权&#x27;——只有那些&#x27;不需要社交媒体来谋生&#x27;的人才能真正退出。对网红、自媒体人、自由职业者来说，退出社交媒体意味着失去收入来源。&#x27;做自己&#x27;的自由可能只属于&#x27;有其他选择&#x27;的人。</div>
+        </div>
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">2050年，社会分裂为两个阶层：&#x27;数字表演者&#x27;（通过社交媒体谋生，永远无法退出）和&#x27;数字隐士&#x27;（有能力退出，享受&#x27;真实生活&#x27;的特权）。&#x27;做自己&#x27;成为一种新的阶级标志——只有富人才能负担得起&#x27;不被看见&#x27;的奢侈。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">我们只看到那些&#x27;成功做自己&#x27;的人——他们找到了退出社交媒体的勇气和条件。但我们没有看到的是：那些因为退出社交媒体而失去职业机会的人，那些因为&#x27;不在网上&#x27;而被社交圈遗忘的人，那些因为&#x27;做自己&#x27;而被社会边缘化的人。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">人类是否需要&#x27;被看见&#x27;才能确认自己的存在？</div>
+        <div class="hn-analysis">心理学研究表明：&#x27;被看见&#x27;确实是人类的基本心理需求之一——它与&#x27;归属感&#x27;和&#x27;价值感&#x27;密切相关。发展心理学发现：婴儿通过&#x27;母亲的注视&#x27;来确认自己的存在；成人通过&#x27;他人的回应&#x27;来确认自己的价值。社交媒体把这种&#x27;被看见的需求&#x27;推向了极端——你不仅需要&#x27;被看见&#x27;，还需要&#x27;被量化地认可&#x27;（点赞、评论、转发）。但这种&#x27;极端化&#x27;不是不可逆的——人们可以通过&#x27;高质量的社交关系&#x27;来替代&#x27;大面积的社交展示&#x27;——几个真正了解你的人，比一千个点赞你的陌生人更能确认你的存在。</div>
+        <div class="hn-examples"><div class="hn-example">&#x27;深度社交&#x27;运动——人们有意识地减少社交媒体使用，增加面对面交流</div><div class="hn-example">&#x27;数字游民&#x27;的反思——一些长期远程工作者开始重新评估社交媒体对心理健康的影响</div>
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">人类确实需要&#x27;被看见&#x27;——但&#x27;被看见&#x27;不等于&#x27;被点赞&#x27;。健康的&#x27;被看见&#x27;需要&#x27;深度&#x27;——被真正了解你的人看见，而不是被算法推荐给陌生人。&#x27;做自己&#x27;的关键不在于&#x27;退出社交媒体&#x27;，而在于&#x27;重建深度社交&#x27;——用&#x27;少数人真正了解你&#x27;替代&#x27;多数人表面认可你&#x27;。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">做自己就是&#x27;展示真实的自己&#x27;，在社交媒体上也是如此</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">在社交媒体上&#x27;展示真实&#x27;是一个悖论——任何&#x27;真实&#x27;都会被平台逻辑商品化为新的&#x27;表演&#x27;</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">&#x27;做自己&#x27;不是一个简单的&#x27;个人选择&#x27;——它涉及技术结构（社交媒体的设计逻辑）、社会结构（社交媒体影响力作为社会资本）、心理结构（&#x27;被看见&#x27;作为基本需求）。真正&#x27;做自己&#x27;需要在所有这三个层面上进行改变——不仅是个人的有意识选择，也需要平台设计的改变和社会文化的转变。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">作为个人：建立&#x27;离线深度关系&#x27;——找到几个真正了解你、接受你的人，而不是追求一千个点赞你的陌生人。作为平台：设计&#x27;反表演&#x27;的功能——鼓励自发性、减少策划性、保护隐私。作为社会：重新定义&#x27;成功&#x27;——不是&#x27;被多少人看见&#x27;，而是&#x27;过什么样的生活&#x27;。作为文化：重新发现&#x27;无聊&#x27;的价值——在&#x27;无聊&#x27;中，你才有空间&#x27;遇见自己&#x27;。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide insight-slide">
+      <div class="insight-glow"></div>
+      <div class="insight-content">
+        <span class="slide-tag">FINAL INSIGHT</span>
+        <h2 class="insight-title">最终洞见</h2>
+        <div class="insight-divider"></div>
+        <p class="insight-text">社交媒体上的&#x27;人设经营&#x27;不是简单的&#x27;真假&#x27;问题——它揭示了人类在数字时代面临的深层困境：我们既渴望&#x27;被看见&#x27;，又害怕&#x27;被定义&#x27;；我们既想&#x27;做自己&#x27;，又不知道&#x27;自己是谁&#x27;。人设是一种&#x27;适应策略&#x27;——它帮助我们在数字社交中生存，但代价是我们的&#x27;真实自我&#x27;被逐渐边缘化。点赞经济则把这个困境推向极端——它把&#x27;自我价值&#x27;完全外部化，把&#x27;社交关系&#x27;完全商品化。真正的出路不在于&#x27;做自己&#x27;或&#x27;不做自己&#x27;的二元选择，而在于重建&#x27;深度&#x27;——深度的自我反思、深度的人际关系、深度的生活体验。在一个一切都变得&#x27;浅层&#x27;和&#x27;即时&#x27;的时代，&#x27;深度&#x27;本身就是一种革命性的选择。</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">OPEN QUESTIONS</span>
+        <h2 class="slide-title">开放问题</h2>
+      </div>
+      <div class="oq-container">
+        <div class="oq-item">
+          <div class="oq-num">1</div>
+          <div class="oq-text">在社交媒体时代，&#x27;真实自我&#x27;是否还是一个有意义的概念？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">2</div>
+          <div class="oq-text">点赞经济的&#x27;成瘾机制&#x27;是否应该被法律监管，就像赌博和烟草一样？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">3</div>
+          <div class="oq-text">如果&#x27;做自己&#x27;在社交媒体上是不可能的，我们应该设计什么样的&#x27;新社交基础设施&#x27;来支持&#x27;真实的人际连接&#x27;？</div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="nav-dots">
+      <button class="nav-dot active" data-idx="0"></button>
+      <button class="nav-dot" data-idx="1"></button>
+      <button class="nav-dot" data-idx="2"></button>
+      <button class="nav-dot" data-idx="3"></button>
+      <button class="nav-dot" data-idx="4"></button>
+      <button class="nav-dot" data-idx="5"></button>
+      <button class="nav-dot" data-idx="6"></button>
+      <button class="nav-dot" data-idx="7"></button>
+      <button class="nav-dot" data-idx="8"></button>
+      <button class="nav-dot" data-idx="9"></button>
+      <button class="nav-dot" data-idx="10"></button>
+      <button class="nav-dot" data-idx="11"></button>
+      <button class="nav-dot" data-idx="12"></button>
+      <button class="nav-dot" data-idx="13"></button>
+      <button class="nav-dot" data-idx="14"></button>
+      <button class="nav-dot" data-idx="15"></button>
+      <button class="nav-dot" data-idx="16"></button>
+      <button class="nav-dot" data-idx="17"></button>
+      <button class="nav-dot" data-idx="18"></button>
+      <button class="nav-dot" data-idx="19"></button>
+      <button class="nav-dot" data-idx="20"></button>
+      <button class="nav-dot" data-idx="21"></button>
+      <button class="nav-dot" data-idx="22"></button>
+      <button class="nav-dot" data-idx="23"></button>
+      <button class="nav-dot" data-idx="24"></button>
+      <button class="nav-dot" data-idx="25"></button>
+      <button class="nav-dot" data-idx="26"></button>
+      <button class="nav-dot" data-idx="27"></button>
+</div>
+
+<script>
+
+    (function() {
+      const slideshow = document.getElementById('slideshow');
+      const progressBar = document.getElementById('progressBar');
+      const pageCounter = document.getElementById('pageCounter');
+      const dots = document.querySelectorAll('.nav-dot');
+      const total = 28;
+      let current = 0;
+      let wheelTimer = null;
+      let isScrolling = false;
+
+      function updateUI() {
+        const scrollLeft = slideshow.scrollLeft;
+        const slideWidth = slideshow.clientWidth;
+        current = Math.round(scrollLeft / slideWidth);
+        if (current < 0) current = 0;
+        if (current >= total) current = total - 1;
+
+        // Progress bar
+        const pct = ((current + 1) / total) * 100;
+        progressBar.style.width = pct + '%';
+
+        // Page counter
+        pageCounter.textContent = (current + 1) + ' / ' + total;
+
+        // Dots
+        dots.forEach(function(d, i) {
+          d.classList.toggle('active', i === current);
+        });
+      }
+
+      function goTo(idx) {
+        if (idx < 0) idx = 0;
+        if (idx >= total) idx = total - 1;
+        slideshow.scrollTo({ left: idx * slideshow.clientWidth, behavior: 'smooth' });
+        current = idx;
+        setTimeout(updateUI, 400);
+      }
+
+      // Keyboard
+      document.addEventListener('keydown', function(e) {
+        switch(e.key) {
+          case 'ArrowRight': case ' ': case 'PageDown':
+            e.preventDefault(); goTo(current + 1); break;
+          case 'ArrowLeft': case 'PageUp':
+            e.preventDefault(); goTo(current - 1); break;
+          case 'Home':
+            e.preventDefault(); goTo(0); break;
+          case 'End':
+            e.preventDefault(); goTo(total - 1); break;
+        }
+      });
+
+      // Mouse wheel with debounce
+      slideshow.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        if (wheelTimer) return;
+        wheelTimer = setTimeout(function() { wheelTimer = null; }, 600);
+        if (e.deltaY > 0 || e.deltaX > 0) {
+          goTo(current + 1);
+        } else {
+          goTo(current - 1);
+        }
+      }, { passive: false });
+
+      // Nav dots
+      dots.forEach(function(dot, i) {
+        dot.addEventListener('click', function() { goTo(i); });
+      });
+
+      // Scroll event
+      slideshow.addEventListener('scroll', function() {
+        if (!isScrolling) {
+          isScrolling = true;
+          requestAnimationFrame(function() {
+            updateUI();
+            isScrolling = false;
+          });
+        }
+      });
+
+      // Resize
+      window.addEventListener('resize', function() { goTo(current); });
+
+      // Init
+      updateUI();
+    })();
+    
+</script>
+
+</body>
+</html>

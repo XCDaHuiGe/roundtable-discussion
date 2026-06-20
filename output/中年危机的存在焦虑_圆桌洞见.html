@@ -1,0 +1,1727 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中年危机的存在焦虑：35岁以后的人生怎么过</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0A0A0A;
+      --bg2: #111111;
+      --bg3: #1A1A1A;
+      --text: #F5F5F5;
+      --text2: #A0A0A0;
+      --text3: #606060;
+      --accent: #00E676;
+      --accent-light: #69F0AE;
+      --accent-dark: #00C853;
+      --clash: #FF5252;
+      --insight: #00BFA5;
+      --card-bg: rgba(0,230,118,0.08);
+      --card-border: rgba(0,230,118,0.2);
+      --glow: rgba(0,230,118,0.3);
+      --slide-w: 100vw;
+      --slide-h: 100vh;
+      --font-display: 'Noto Serif SC', serif;
+      --font-body: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    html { font-size: 16px; scroll-behavior: auto; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      overflow-y: hidden;
+      height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Slideshow container ─── */
+    .slideshow {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+    .slideshow::-webkit-scrollbar { display: none; }
+    .slideshow { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* ─── Slide ─── */
+    .slide {
+      flex: 0 0 var(--slide-w);
+      width: var(--slide-w);
+      height: var(--slide-h);
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 4rem 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ─── Progress bar ─── */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      z-index: 1000;
+      transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      box-shadow: 0 0 10px var(--glow);
+    }
+
+    /* ─── Page counter ─── */
+    .page-counter {
+      position: fixed;
+      top: 1.5rem;
+      right: 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text3);
+      z-index: 1000;
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Nav dots ─── */
+    .nav-dots {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 1000;
+      padding: 8px 16px;
+      background: rgba(10,10,10,0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      outline: none;
+    }
+    .nav-dot:hover { background: var(--text2); transform: scale(1.3); }
+    .nav-dot.active {
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--glow);
+      transform: scale(1.2);
+    }
+
+    /* ─── Slide header ─── */
+    .slide-header {
+      width: 100%;
+      max-width: 1000px;
+      margin-bottom: 2.5rem;
+    }
+    .slide-tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+    .slide-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    /* ─── Cover slide ─── */
+    .cover-slide {
+      background: radial-gradient(ellipse at 30% 50%, rgba(20,20,20,1) 0%, var(--bg) 70%);
+    }
+    .cover-glow {
+      position: absolute;
+      top: 50%;
+      left: 30%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .cover-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .cover-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      margin-bottom: 2rem;
+    }
+    .cover-title {
+      font-family: var(--font-display);
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 1rem;
+      max-width: 700px;
+    }
+    .cover-subtitle {
+      font-size: 1.1rem;
+      color: var(--text2);
+      margin-bottom: 1.5rem;
+    }
+    .cover-books {
+      font-size: 0.9rem;
+      color: var(--text3);
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+    .cover-stats {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .cover-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .cover-stat-num {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .cover-stat-label {
+      font-size: 0.85rem;
+      color: var(--text3);
+      margin-top: 0.25rem;
+    }
+    .cover-stat-divider {
+      width: 1px;
+      height: 40px;
+      background: var(--text3);
+      opacity: 0.3;
+    }
+    .cover-experts {
+      font-size: 0.9rem;
+      color: var(--text2);
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Expert grid ─── */
+    .expert-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 1000px;
+    }
+    .expert-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      transition: all 0.3s ease;
+    }
+    .expert-card:hover {
+      border-color: var(--card-color, var(--accent));
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      transform: translateY(-2px);
+    }
+    .expert-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0A0A0A;
+      flex-shrink: 0;
+    }
+    .expert-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .expert-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+    .expert-title {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-bottom: 0.5rem;
+    }
+    .expert-stance {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 8px;
+      border-radius: 3px;
+      margin-bottom: 0.5rem;
+    }
+    .expert-belief {
+      font-size: 0.8rem;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+
+    /* ─── Question slide ─── */
+    .question-slide {
+      background: radial-gradient(ellipse at 50% 50%, rgba(20,20,20,1) 0%, var(--bg) 70%);
+    }
+    .question-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    .question-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .question-topic {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 1.5rem 0;
+      line-height: 1.3;
+    }
+    .question-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--accent);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .question-text {
+      font-size: 1.15rem;
+      color: var(--text2);
+      line-height: 1.8;
+    }
+
+    /* ─── Stances ─── */
+    .stances-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .stance-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .stance-item:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .stance-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0A0A0A;
+      flex-shrink: 0;
+    }
+    .stance-body {
+      flex: 1;
+    }
+    .stance-speaker {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .stance-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Clash ─── */
+    .clash-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .clash-block {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+    }
+    .clash-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clash);
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .clash-item {
+      margin-bottom: 1rem;
+    }
+    .clash-item:last-child { margin-bottom: 0; }
+    .clash-speaker {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .clash-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      padding-left: 1rem;
+      border-left: 2px solid var(--card-border);
+    }
+    .clash-attack .clash-text {
+      border-left-color: var(--clash);
+    }
+    .clash-counter .clash-text {
+      border-left-color: var(--insight);
+    }
+
+    /* ─── Reality cases ─── */
+    .cases-container {
+      width: 100%;
+      max-width: 1000px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .case-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .case-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .case-header {
+      margin-bottom: 1rem;
+    }
+    .case-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .case-source {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-top: 0.25rem;
+    }
+    .case-content {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .case-outcome, .case-lesson {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+    .case-label {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-right: 0.5rem;
+    }
+
+    /* ─── Cost discussion ─── */
+    .cost-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .cost-scenario {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-scenario-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-scenario-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .cost-analysis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .cost-dimension {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .cost-value {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .cost-worst {
+      background: rgba(255,71,87,0.08);
+      border: 1px solid rgba(255,71,87,0.2);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-worst-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clash);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-worst-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .cost-survivor {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .cost-survivor-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-survivor-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Human nature ─── */
+    .hn-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .hn-question {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .hn-analysis {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+    }
+    .hn-examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .hn-example {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .hn-conclusion {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .hn-conclusion-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .hn-conclusion-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Cognitive upgrade ─── */
+    .upgrade-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .upgrade-block {
+      display: flex;
+      gap: 1.5rem;
+      align-items: stretch;
+      margin-bottom: 1.5rem;
+    }
+    .upgrade-before, .upgrade-after {
+      flex: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .upgrade-before {
+      border-color: rgba(255,71,87,0.2);
+      background: rgba(255,71,87,0.05);
+    }
+    .upgrade-after {
+      border-color: rgba(0,212,170,0.2);
+      background: rgba(0,212,170,0.05);
+    }
+    .upgrade-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+    .upgrade-before .upgrade-label { color: var(--clash); }
+    .upgrade-after .upgrade-label { color: var(--insight); }
+    .upgrade-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .upgrade-arrow {
+      display: flex;
+      align-items: center;
+      font-size: 2rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .upgrade-complexity, .upgrade-actionable {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .upgrade-complexity-label, .upgrade-actionable-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .upgrade-complexity-text, .upgrade-actionable-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Final insight ─── */
+    .insight-slide {
+      background: radial-gradient(ellipse at 50% 50%, rgba(0,212,170,0.05) 0%, var(--bg) 60%);
+    }
+    .insight-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0,212,170,0.15) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .insight-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .insight-title {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--insight);
+      margin: 1.5rem 0;
+    }
+    .insight-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--insight);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .insight-text {
+      font-size: 1.1rem;
+      color: var(--text2);
+      line-height: 1.9;
+    }
+
+    /* ─── Open questions ─── */
+    .oq-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .oq-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .oq-item:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+    .oq-num {
+      font-family: var(--font-mono);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+      width: 32px;
+      text-align: center;
+    }
+    .oq-text {
+      font-size: 1rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      .slide { padding: 2rem 1.5rem; }
+      .cover-title { font-size: 2rem; }
+      .question-topic { font-size: 1.8rem; }
+      .slide-title { font-size: 1.6rem; }
+      .expert-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+      .upgrade-block { flex-direction: column; }
+      .upgrade-arrow { transform: rotate(90deg); justify-content: center; }
+      .cases-container { grid-template-columns: 1fr; }
+      .cost-analysis { grid-template-columns: 1fr; }
+      .hn-examples { grid-template-columns: 1fr; }
+      .nav-dots { display: none; }
+    }
+    @media (max-width: 480px) {
+      .expert-grid { grid-template-columns: 1fr; }
+      .cover-stats { gap: 1rem; }
+      .cover-stat-num { font-size: 2rem; }
+    }
+    
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<div class="page-counter" id="pageCounter">1 / 28</div>
+
+<div class="slideshow" id="slideshow">
+
+    <div class="slide cover-slide">
+      <div class="cover-glow"></div>
+      <div class="cover-content">
+        <div class="cover-badge">ROUNDTABLE DISCUSSION</div>
+        <h1 class="cover-title">中年危机的存在焦虑：35岁以后的人生怎么过</h1>
+        <p class="cover-subtitle">六位跨时空思想家的激辩——当身体开始背叛，当意义开始坍塌</p>
+        
+        <div class="cover-stats">
+          <div class="cover-stat">
+            <span class="cover-stat-num">6</span>
+            <span class="cover-stat-label">位专家</span>
+          </div>
+          <div class="cover-stat-divider"></div>
+          <div class="cover-stat">
+            <span class="cover-stat-num">3</span>
+            <span class="cover-stat-label">轮讨论</span>
+          </div>
+        </div>
+        <div class="cover-experts">弗洛伊德 · 弗洛姆 · 尼采 · 芒格 · 老子 · 李诞</div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">EXPERTS</span>
+        <h2 class="slide-title">专家阵营</h2>
+      </div>
+      <div class="expert-grid">
+        <div class="expert-card" style="--card-color: #4A6FA5">
+          <div class="expert-avatar" style="background: #4A6FA5">弗</div>
+          <div class="expert-info">
+            <div class="expert-name">弗洛伊德</div>
+            <div class="expert-title">精神分析学派创始人，维也纳心理学家，提出潜意识理论与人格结构学说</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #6B5B73">
+          <div class="expert-avatar" style="background: #6B5B73">弗</div>
+          <div class="expert-info">
+            <div class="expert-name">弗洛姆</div>
+            <div class="expert-title">德裔美国心理学家，法兰克福学派代表，著有《逃避自由》《爱的艺术》</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #8B0000">
+          <div class="expert-avatar" style="background: #8B0000">尼</div>
+          <div class="expert-info">
+            <div class="expert-name">尼采</div>
+            <div class="expert-title">19世纪德国哲学家，提出超人学说与权力意志</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #D4A017">
+          <div class="expert-avatar" style="background: #D4A017">芒</div>
+          <div class="expert-info">
+            <div class="expert-name">芒格</div>
+            <div class="expert-title">伯克希尔·哈撒韦副董事长，跨学科思维模型大师</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #6B8E23">
+          <div class="expert-avatar" style="background: #6B8E23">老</div>
+          <div class="expert-info">
+            <div class="expert-name">老子</div>
+            <div class="expert-title">道家创始人，春秋时期思想家，著有《道德经》</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #FF6B35">
+          <div class="expert-avatar" style="background: #FF6B35">李</div>
+          <div class="expert-info">
+            <div class="expert-name">李诞</div>
+            <div class="expert-title">脱口秀演员、作家，《脱口秀大会》创始人，以毒舌自嘲闻名</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 1</span>
+        <h2 class="question-topic">中年危机的本质：是生理衰退还是意义崩塌？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">人到中年的焦虑，究竟是身体机能下降带来的生物性恐惧，还是人生意义感坍塌后的精神真空？如果一个人在三十五岁时身体依然强健，他还会经历中年危机吗？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4A6FA5">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛伊德</div>
+            <div class="stance-text">中年危机的本质是力比多的重新分配。年轻时，力比多大量投注于外部世界——追求异性、建立事业、积累财富。到了中年，这些投注的回报开始递减：婚姻趋于平淡，事业遇到天花板，身体不再允许肆意挥霍。力比多无处安放，便转向自我，引发强烈的自恋性焦虑。中年人照镜子时看到的皱纹，不是皮肤的问题，是力比多撤退后留下的空洞。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #6B5B73">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛姆</div>
+            <div class="stance-text">中年危机是&#x27;逃避自由&#x27;的代价。人在青年期为了安全感，把自己嵌入社会角色——好员工、好父母、好公民。这些角色提供了方向感，但也遮蔽了一个事实：你从未真正为自己活过。到了中年，角色的面具开始松动，你突然发现，那些年你追逐的东西——升职、房子、社会地位——并没有回答&#x27;我是谁&#x27;这个问题。中年危机不是身体的危机，是存在的危机：你终于有勇气直面自由，却发现自己已经不知道怎么自由了。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8B0000">尼</div>
+          <div class="stance-body">
+            <div class="stance-speaker">尼采</div>
+            <div class="stance-text">中年危机是对&#x27;永恒轮回&#x27;的第一次真正直面。年轻人以为时间是无限的，所以可以把梦想推迟到明天。中年人终于明白——时间不是线性的河流，而是一个圆环，你此刻的每一个选择都将无限重复。这种认知是毁灭性的，也是重生的起点。大多数人在这一刻选择了安逸——他们用&#x27;稳定&#x27;来麻醉自己，用&#x27;责任&#x27;来逃避自由。但真正的强者会问：如果这一生要重复一万次，我是否仍然愿意如此活？中年不是衰退的开始，是审判的开始。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #D4A017">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">中年危机本质上是一个预期管理失败的问题。人在二十多岁时对未来有过度乐观的预期——觉得自己四十岁时应该财务自由、事业有成、家庭幸福。到了三十五岁发现现实和预期之间存在巨大缺口，焦虑就产生了。这和投资中的&#x27;预期差&#x27;完全一样。解决方案不是消除焦虑，而是调整预期。一个理性的中年人应该做三件事：第一，盘点自己已经拥有的而非缺失的；第二，停止和别人比较，因为比较的参照系被幸存者偏差严重扭曲了；第三，把注意力从&#x27;我还没得到什么&#x27;转向&#x27;我还能创造什么&#x27;。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #6B8E23">老</div>
+          <div class="stance-body">
+            <div class="stance-speaker">老子</div>
+            <div class="stance-text">天地尚不能久，而况于人乎？人之忧其中年，犹草木忧其秋霜。然草木不自忧也，春生秋落，各安其时。中年之困，非身之衰，乃心之执。执于青春者，失于当下；执于成就者，失于本真。三十辐共一毂，当其无，有车之用。人至中年，当知&#x27;无&#x27;之妙用——放下才能拾起，空虚才能充盈。世人以满为得，不知以空为用。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6B35">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">中年危机就是你终于活成了你爸的样子，然后发现你爸当年也有中年危机，但他没说出来，因为他忙着养你。中年人最惨的不是身体变差，是发现年轻时那些&#x27;等我有钱了就怎样怎样&#x27;的承诺，现在有钱了也不想怎样了。你想去蹦极，膝盖不允许；你想谈恋爱，老婆不允许；你想辞职，房贷不允许。中年危机的本质就是——你的身体、你的责任、你的欲望，三个人同时给你打电话，你只能接一个。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #6B5B73">弗洛姆 → 弗洛伊德</div>
+            <div class="clash-text">弗洛伊德把中年危机归结为力比多的重新分配，这太生物化了。人不是动物，中年焦虑的根源不是性驱力的衰减，而是意义的丧失。一个性欲旺盛的中年人如果失去了人生目标，照样会陷入深重的存在焦虑。力比多可以解释欲望，但无法解释意义。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #4A6FA5">弗洛伊德</div>
+              <div class="clash-text">弗洛伊德回应：弗洛姆低估了驱力的力量。你说意义的丧失是核心，但意义感本身就是力比多升华的产物。当力比多充沛时，人觉得一切有意义；当力比多衰退时，同样的生活突然变得空虚。意义不是独立于肉体的精神实体，它是驱力的高级表达形式。一个从未体验过力比多冲击的人，也不会体验到意义的丧失。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #8B0000">尼采 → 芒格</div>
+            <div class="clash-text">芒格把中年危机简化为&#x27;预期管理问题&#x27;，这是对人之为人的侮辱。中年危机不是会计报表上的数字偏差，而是灵魂深处的地震。你用&#x27;调整预期&#x27;来安慰中年人，和用鸦片来安慰病人有什么区别？真正的解决方案不是降低期望，而是摧毁旧的期望、创造新的价值。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #D4A017">芒格</div>
+              <div class="clash-text">芒格回应：尼采先生，你的&#x27;摧毁旧价值、创造新价值&#x27;说起来很浪漫，但执行起来极难，而且风险极高。大多数人在&#x27;摧毁旧价值&#x27;之后并没有能力创造新的，他们只会陷入更深的虚无。我推崇的预期管理不是麻醉，而是理性——先确保你不从悬崖上摔下去，再去考虑要不要爬更高的山。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #6B8E23">老子 → 尼采</div>
+            <div class="clash-text">汝言审判，言永恒轮回，言摧毁与创造。然天地不仁，以万物为刍狗。审判者，人自设之枷锁也。永恒轮回，不过是恐惧之化身。真正的解脱不在于勇敢面对审判，而在于明白本无审判。花开花落，何曾审判？水东水西，何曾轮回？</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #8B0000">尼采</div>
+              <div class="clash-text">尼采回应：老子的&#x27;无审判&#x27;看似洒脱，实则是对生命最大的不敬。正因为生命只有一次（或如我所说——必须假设它会无限重复），每一个选择才有了重量。&#x27;花开花落何曾审判&#x27;——但花不是人，人有意志、有选择、有对自身存在的反思能力。放弃审判就是放弃人之为人的尊严。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">硅谷中年工程师的集体焦虑</div>
+            <div class="case-source">《The New York Times》2023年报道、Blind平台匿名调查</div>
+          </div>
+          <div class="case-content">硅谷科技公司普遍存在&#x27;35岁现象&#x27;：大量35岁以上的工程师面临职业瓶颈。Google、Meta等公司的裁员潮中，中年员工比例不成偏高。一位42岁的Google高级工程师被裁后投出500份简历，仅获得3次面试机会。他的年薪从45万美元降至零。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 部分中年工程师选择创业或转行，但成功率不足15%。更多人接受降薪入职中小公司，或转向技术管理岗位。心理健康调查显示，被裁中年工程师的抑郁率是同龄在职者的4倍。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 中年危机在竞争激烈的行业表现得最为残酷——当你的价值被简化为&#x27;性价比&#x27;时，年龄就成了原罪。但这也暴露了一个更深的问题：把全部自我价值寄托于职业身份，本身就是中年危机的温床。
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">日本&#x27;熟年离婚&#x27;潮</div>
+            <div class="case-source">日本厚生劳动省2022年统计数据、NHK纪录片</div>
+          </div>
+          <div class="case-content">日本&#x27;熟年离婚&#x27;（结婚20年以上夫妻离婚）占离婚总数的近四分之一，且绝大多数由妻子提出。丈夫退休后发现自己对家庭生活毫无经验，妻子则在多年忍耐后终于获得经济独立。一位60岁的退休丈夫发现自己不会做饭、不会打扫、不认识邻居，妻子说：&#x27;我嫁的不是你，是你的工资。&#x27;</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 熟年离婚后，男性自杀率显著上升。日本政府开始推行&#x27;男性家务技能培训&#x27;和&#x27;夫妻退休规划咨询&#x27;。但根本问题在于：几十年的角色分工让双方都失去了作为独立个体的能力。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 中年危机不只是个人的危机，也是关系的危机。当你把人生的意义寄托于社会角色时，角色的终结就是意义的终结。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">一个38岁的中层管理者，年薪50万，孩子上小学，房贷还有15年，突然对工作失去热情，每天上班如上坟</span>
+        </div>
+        <div class="cost-analysis">
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">选择忍耐到50岁，身体先于意志崩溃。高血压、糖尿病、抑郁症三管齐下，被迫提前退休。回头看，20年的忍耐没有换来任何东西——公司不会因为你忠诚而善待你，孩子不会因为你隐忍而感激你，你只是在用生命喂养一个不属于自己的人生。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">社交媒体上分享&#x27;中年转型成功&#x27;的人，大多有配偶的经济支持、家族资源、或特殊机遇。那些辞职后创业失败、重返职场碰壁、家庭破裂的人，不会发帖分享——他们的故事是中年危机的沉默大多数。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">人类能否接受&#x27;自己正在走下坡路&#x27;这个事实？</div>
+        <div class="hn-analysis">心理学中的&#x27;社会情绪选择理论&#x27;（Carstensen）指出，当人感知到时间有限时，会从追求新奇转向追求情感深度。这本应是中年的礼物——不再为虚名浪费时间，转而珍惜真正重要的人和事。但现代社会的&#x27;永恒青春&#x27;叙事阻碍了这种自然转变，让中年人困在&#x27;我还能拼&#x27;的幻觉中。</div>
+        <div class="hn-examples">
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">人类可以接受走下坡路，但需要一个前提——你必须有一个&#x27;下坡之后&#x27;的风景。如果没有新的人生叙事来接替旧的，下坡就只是坠落。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">中年危机是身体衰退和事业瓶颈带来的</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">中年危机是旧的人生叙事（&#x27;只要努力就能成功&#x27;）破产后，新叙事尚未建立时的意义真空期</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">中年危机同时是生理事件（荷尔蒙变化）、心理事件（自我认同重组）、社会事件（角色期待冲突）和存在事件（直面有限性），单一维度的解释都是片面的</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">不要试图&#x27;解决&#x27;中年危机，而是把它当作一次系统重启的机会——趁旧程序还在运行时，开始编写新的操作系统</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 2</span>
+        <h2 class="question-topic">35岁焦虑：社会建构还是自然规律？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">&#x27;35岁危机&#x27;是中国特有的社会焦虑，还是人类共有的生命节律？如果把一个中国人放到北欧或日本，35岁焦虑会消失吗？还是说，焦虑的根源不在社会，在人心？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4A6FA5">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛伊德</div>
+            <div class="stance-text">三十五岁焦虑的根源在于&#x27;超我&#x27;的严酷审判。人在青年期，&#x27;本我&#x27;的驱力尚能提供动力——性欲、攻击性、对认可的渴望。到了三十五岁，这些驱力的强度开始下降，而&#x27;超我&#x27;——那些内化的社会规范、父母期待、道德标准——并没有随之减弱。结果是：动力在消退，要求却在加码。你不再有年轻人的精力，却承受着中年人的责任。超我的鞭子抽在一个疲惫的本我身上，焦虑就是鞭痕。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #6B5B73">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛姆</div>
+            <div class="stance-text">三十五岁焦虑是中国社会&#x27;市场化人格&#x27;的集中体现。在一个把人的价值等同于生产力的社会中，三十五岁意味着&#x27;性价比&#x27;开始下降——你的薪资要求高了，但加班能力低了，学习新技术的速度慢了。这不是自然规律，这是市场逻辑对人的异化。在传统社会中，三十五岁是壮年，是被尊重的年纪；在市场社会中，三十五岁是折旧资产。焦虑不是因为你老了，是因为你的社会把你当作一件商品来估价。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8B0000">尼</div>
+          <div class="stance-body">
+            <div class="stance-speaker">尼采</div>
+            <div class="stance-text">三十五岁焦虑不过是奴隶道德的最新变体。奴隶从来不为自己而活——他为工资活、为上司的评价活、为社会的标准活。到了三十五岁，奴隶突然发现：他为之奋斗的那些东西（职位、收入、社会地位），不过是主人扔过来的残羹剩饭。更可怕的是，他已经习惯了当奴隶，忘记了还有另一种活法。真正的焦虑不是三十五岁，是三十五年。你浪费了三十五年去追逐别人定义的成功，现在才发现那不是你的成功。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #D4A017">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">三十五岁焦虑在中国有其特殊的制度背景。第一，劳动力市场的年龄歧视是真实存在的——很多企业的招聘启事明文写着&#x27;35岁以下&#x27;；第二，社会保障体系的不完善放大了失业恐惧——失去工作意味着失去医保、养老金、甚至孩子的入学资格；第三，房地产市场的压力把中年人锁死在高杠杆的牢笼里。这些不是心理问题，是结构性问题。一个三十五岁的中国人的焦虑，有70%是制度造成的，30%是心理造成的。不能用心灵鸡汤来解决制度问题。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #6B8E23">老</div>
+          <div class="stance-body">
+            <div class="stance-speaker">老子</div>
+            <div class="stance-text">天下万物生于有，有生于无。三十五岁之忧，生于名。名者，身之宾也。今人以名为身，以身为名，主客颠倒，故忧。吾观天地：山不忧其高，水不忧其深，日月不忧其明。各安其性，各遂其生。人独忧其中年者，以人为之名强加于天授之身也。去名则无忧，无忧则能观复。观复曰明，不知常，妄作凶。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6B35">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">三十五岁焦虑就是中国版的中年危机，但我们比欧美早了十年，因为我们焦虑的效率高。欧美人四十五岁焦虑的是&#x27;我这辈子到底想要什么&#x27;，我们三十五岁焦虑的是&#x27;我下个月房贷怎么办&#x27;。层次不一样。他们的焦虑是哲学性的，我们的焦虑是生存性的。所以你看，中国中年人不是在读萨特，是在看招聘网站。这到底是进步还是退步？我也不知道。但我知道一件事：焦虑不挑年龄，它挑的是你银行卡余额。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #D4A017">芒格 → 弗洛伊德</div>
+            <div class="clash-text">弗洛伊德把三十五岁焦虑归结为&#x27;超我审判本我&#x27;，这是纯粹的心理主义。但现实中，一个三十五岁的失业者和一个三十五岁的亿万富翁，他们的&#x27;超我&#x27;一样严酷，焦虑程度完全不同。这说明焦虑的主要变量不是心理结构，而是经济条件。心理学家总喜欢用内心来解释一切，但有时候答案在银行账户里。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #4A6FA5">弗洛伊德</div>
+              <div class="clash-text">弗洛伊德回应：芒格先生犯了一个典型的混淆——经济条件影响的是焦虑的触发阈值，而非焦虑的本质。亿万富翁也有中年焦虑，只是焦虑的内容不同：他焦虑的不是失业，而是衰老、死亡、以及&#x27;这一切有什么意义&#x27;。穷人的焦虑是现实性的，富人的焦虑是存在性的，但两者都是焦虑。金钱可以缓解前者，对后者无能为力。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #6B5B73">弗洛姆 → 芒格</div>
+            <div class="clash-text">芒格说70%的焦虑是制度造成的，这我同意。但问题是：制度是谁创造的？制度不过是人类集体心理的物化。中国的年龄歧视制度背后，是一种根深蒂固的&#x27;工具人&#x27;文化——人被当作生产工具来使用，工具旧了就要换新的。这不是制度问题，是文化心理问题。不改变文化，改制度只是隔靴搔痒。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #D4A017">芒格</div>
+              <div class="clash-text">芒格回应：弗洛姆说得对，制度是文化的产物。但改变文化需要几代人，改变制度只需要一条法律。如果中国政府立法禁止年龄歧视（像美国的ADEA法案），三十五岁焦虑立刻能缓解一半。等文化慢慢变？那些正在焦虑的人等不起。解决问题要从最短的杠杆入手。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #FF6B35">李诞 → 尼采</div>
+            <div class="clash-text">尼采说三十五年都在追逐别人定义的成功，这话听起来很酷。但问题是：如果一个人二十五岁就知道要&#x27;创造自己的价值&#x27;，他怎么交房租？怎么养孩子？尼采自己一辈子没结过婚、没养过孩子、没还过房贷。他当然可以痛骂奴隶道德——因为他从来没当过&#x27;奴隶&#x27;的父母。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #8B0000">尼采</div>
+              <div class="clash-text">尼采回应：李诞的反驳恰恰证明了我的观点——正是因为有了房贷、孩子、责任这些&#x27;锁链&#x27;，人才失去了追问的勇气。我不是说责任不重要，我是说责任不能成为放弃追问的借口。那些用&#x27;为了孩子&#x27;来合理化自己所有妥协的人，最终会发现孩子最不需要的，就是一个充满怨气的、从未为自己活过的父母。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">中国公务员考试的&#x27;35岁红线&#x27;</div>
+            <div class="case-source">国家公务员局招录公告、《南方周末》2023年专题报道</div>
+          </div>
+          <div class="case-content">中国公务员考试明确规定报考年龄上限为35岁（硕士可放宽至40岁）。这一规定源于1994年的《国家公务员录用暂行规定》，至今未修改。2023年全国两会期间，多位代表建议取消或放宽年龄限制，但未获采纳。这一制度性规定成为全社会&#x27;35岁焦虑&#x27;的制度性锚点。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 35岁红线的示范效应远超公务员系统本身——它成为企业招聘、社会评价的隐性标准。&#x27;35岁还没上岸就来不及了&#x27;成为普遍的社会叙事，加剧了年轻人的焦虑和中年人的挫败感。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 当一个社会用年龄来划分人的价值时，它制造的不是效率，是恐惧。35岁焦虑不完全是自然规律，它是被制度塑造、被文化强化、被市场利用的人造焦虑。
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">德国中年人的职业转型</div>
+            <div class="case-source">德国联邦劳动局2022年数据、《明镜周刊》报道</div>
+          </div>
+          <div class="case-content">德国没有法定退休年龄歧视法，但有完善的职业培训体系。45-55岁的德国人中有12%在过去五年内经历过职业转型。德国的&#x27;双元制&#x27;教育体系允许任何年龄的人重返学校，政府补贴培训费用的70%。一位48岁的汽车工人在工厂关闭后，用18个月完成了IT培训，成功转型为软件测试员。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 德国的中年职业转型成功率约为60%，远高于中国的估计值20%。关键差异不在于人的素质，而在于制度的支持——完善的失业保险、免费的再培训、禁止年龄歧视的法律。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 35岁焦虑在很大程度上是制度缺失的产物。当社会为中年人提供了安全网和转型通道，年龄就不再是焦虑的来源。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">一个35岁的程序员，在大厂工作8年，最近被&#x27;优化&#x27;，上有老下有小，房贷每月2万</span>
+        </div>
+        <div class="cost-analysis">
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">失业后投出数百份简历石沉大海，被迫接受降薪50%的offer。但新公司文化不适应，半年后再次离职。配偶开始抱怨，孩子学费告急，房贷逾期。最终在40岁时彻底退出职场，靠配偶收入和微薄积蓄度日，自我价值感跌至谷底。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">社交媒体上分享&#x27;35岁转型成功&#x27;的故事，大多有以下特征：顶尖名校背景、家庭经济缓冲、行业人脉丰富、或赶上了某个风口。这些条件的组合概率不到5%，但占据了95%的叙事空间。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">人类是否会永远活在&#x27;年龄焦虑&#x27;中？</div>
+        <div class="hn-analysis">存在主义心理学家贝克尔（Ernest Becker）在《拒斥死亡》中指出，人类所有的文化建构——宗教、国家、英雄崇拜——本质上都是对死亡恐惧的防御。年龄焦虑不过是死亡焦虑的日常化表达：每一条皱纹都在提醒你，时间在流逝，终点在逼近。只要人类仍然恐惧死亡，年龄焦虑就不会消失——只是焦虑的&#x27;恐慌年龄&#x27;会随社会变化而移动。</div>
+        <div class="hn-examples">
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">年龄焦虑是人类面对有限性的本能反应，但焦虑的内容和强度是社会建构的。我们无法消除对衰老的恐惧，但可以改变与衰老的关系——从恐惧转向接纳，从对抗转向和解。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">35岁是职业生涯的分水岭，过了就来不及了</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">35岁焦虑是制度性歧视和文化叙事共同制造的恐慌——在没有年龄歧视的社会中，35岁正是经验与精力的最佳交汇点</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">35岁焦虑同时反映了：劳动力市场的结构性歧视、社会保障体系的缺失、消费主义对&#x27;年轻&#x27;的崇拜、以及个体对死亡的本能恐惧</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">不要让社会的年龄标签定义你的人生节奏。35岁可以是终点，也可以是起点——区别在于你是在用别人的标尺衡量自己，还是在用自己的标尺重新丈量人生</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 3</span>
+        <h2 class="question-topic">下半场：如何重新定义成功？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">如果上半场的成功是&#x27;更多的钱、更高的职位、更大的房子&#x27;，下半场的成功应该是什么？人到中年，有没有可能彻底换一套人生操作系统？还是说，我们注定要用旧的逻辑过完下半生？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4A6FA5">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛伊德</div>
+            <div class="stance-text">下半场的关键是完成&#x27;哀悼&#x27;工作。人在中年失去的东西很多：青春、可能性、健康、某些未实现的梦想。这些丧失需要被哀悼，而不是被压抑。大多数中年人的痛苦不是来自丧失本身，而是来自对丧失的否认——他们用忙碌来麻痹自己，用成就来证明&#x27;我还行&#x27;。但否认不等于接受，压抑的情绪总会以症状的形式回来：失眠、焦虑、无名怒火、对亲密关系的回避。下半场的第一课是学会哀悼——承认你失去了某些东西，承认那些东西不会回来，然后才能腾出空间容纳新的可能性。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #6B5B73">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛姆</div>
+            <div class="stance-text">下半场的成功只有一种——&#x27;存在&#x27;取代&#x27;占有&#x27;。上半场你追求的是&#x27;我有什么&#x27;：学历、职位、存款、房产。下半场应该追求的是&#x27;我是什么&#x27;：一个有能力爱的人、一个能独立思考的人、一个能与他人建立真实连接的人。这种转变需要勇气，因为&#x27;占有&#x27;是可量化的、可炫耀的，而&#x27;存在&#x27;是无形的、不可比较的。你在朋友圈晒不出&#x27;我今天真诚地爱了一个人&#x27;，但那比晒任何奢侈品都更有价值。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8B0000">尼</div>
+          <div class="stance-body">
+            <div class="stance-speaker">尼采</div>
+            <div class="stance-text">下半场只有一件事值得做——成为你自己。不是成为更好的员工、更好的父母、更好的公民，而是成为那个你本可以成为、却因为恐惧和顺从而未能成为的人。这意味着：第一，杀死你心中的&#x27;他人&#x27;——那些内化的期待、标准、评价；第二，拥抱你的命运——不是忍受，是热爱，amor fati；第三，创造——不是创造产品、不是创造价值，而是创造你自己。下半场不是衰退期，是锻造期。火在烧，铁在锤，你要么被锻造为剑，要么被烧成灰烬。选择权在你。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #D4A017">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">下半场成功的标准很简单：避免大的愚蠢，而非追求大的聪明。具体来说：第一，财务上——建立足够的安全边际，让你在意外来临时不会崩溃。这不是追求财富最大化，而是追求&#x27;不被打倒&#x27;的底线；第二，关系上——维护好五到八个真正重要的关系，其他的随缘。研究表明，临终者最大的遗憾不是赚少了钱，而是陪伴家人太少；第三，健康上——中年以后的健康管理是复利效应最强的投资。每天走半小时路，比任何股票都回报率高。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #6B8E23">老</div>
+          <div class="stance-body">
+            <div class="stance-speaker">老子</div>
+            <div class="stance-text">知人者智，自知者明。胜人者有力，自胜者强。下半场之道，在自知自胜。人之患，在不知足。知足之足，常足矣。上半场向外求，下半场向内观。功成身退，天之道也。非退隐山林之退，乃不居功、不恋位、不执名之退。名与身孰亲？身与货孰多？得与亡孰病？甚爱必大费，多藏必厚亡。下半场当减之又减，以至于无为。无为而无不为。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6B35">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">下半场的成功就是——你终于可以不装了。上半场你装上进、装合群、装热爱工作、装家庭美满。下半场最大的自由就是：你可以承认你不喜欢社交，可以承认你对升职没兴趣，可以承认你老婆做的饭不好吃但你不敢说。人生最难的不是成功，是诚实。对自己诚实，然后接受诚实带来的后果。你会发现，当你不再装的时候，焦虑少了一大半。剩下那一小半，就是真的需要解决的问题了。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #D4A017">芒格 → 尼采</div>
+            <div class="clash-text">尼采说&#x27;成为你自己&#x27;、&#x27;拥抱命运&#x27;、&#x27;创造自己&#x27;，这些话说给一个有房贷、有孩子、有老人的中年人听，除了增加焦虑还能有什么效果？一个三十八岁的中层管理者，他能&#x27;杀死心中的他人&#x27;吗？他明天还得去开部门会议，还得给客户打电话，还得辅导孩子作业。尼采的哲学是为独行者准备的，不是为负重者准备的。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #8B0000">尼采</div>
+              <div class="clash-text">尼采回应：芒格先生，你把&#x27;成为自己&#x27;理解为辞掉工作、抛弃家庭，这是最大的误读。成为自己不是改变外在处境，而是改变内在关系。你明天照样去开部门会议，但你不再把那个会议当作你人生的全部意义。你照样辅导孩子作业，但你知道你不仅仅是&#x27;孩子的父亲&#x27;——你还是你自己。负担不是障碍，负担是锤炼你的铁砧。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #6B5B73">弗洛姆 → 老子</div>
+            <div class="clash-text">老子说&#x27;知足常足&#x27;、&#x27;减之又减&#x27;，这在春秋时代可能可行——那时候没有房贷、没有教育内卷、没有社交媒体。一个现代中年人&#x27;知足&#x27;意味着什么？意味着接受孩子上不了好学校？意味着接受父母看不起好医生？&#x27;知足&#x27;在物质匮乏的时代是智慧，在物质丰裕但竞争激烈的时代可能是逃避。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #6B8E23">老子</div>
+              <div class="clash-text">老子回应：知足非不求也，乃不贪也。贪者，已得而欲更多；足者，得其所当得。春秋之世，亦有贫富之别、贵贱之分。吾非教人安于贫贱，乃教人辨何为真需、何为妄欲。好学之师未必在名校，良医之术未必在贵院。世人以价论值，故觉不足。若以需论值，则处处有余。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #4A6FA5">弗洛伊德 → 李诞</div>
+            <div class="clash-text">李诞说&#x27;不装了就是成功&#x27;，这听起来很痛快，但有一个危险：很多中年人的&#x27;不装&#x27;不是诚实，而是放弃。&#x27;我承认我不喜欢社交&#x27;可能只是社交焦虑的合理化；&#x27;我对升职没兴趣&#x27;可能只是对失败的提前防御。诚实和放弃之间的界限在哪里？</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #FF6B35">李诞</div>
+              <div class="clash-text">李诞回应：弗洛伊德先生说得对，确实有人把&#x27;不装&#x27;当挡箭牌。但判断标准其实很简单——你&#x27;不装&#x27;之后是更自由了，还是更萎缩了？如果是前者，那就是诚实；如果是后者，那就是逃避。我见过真正不装的人，他们不是不社交，是只和喜欢的人社交；不是不努力，是只做自己觉得有意思的事。不装不是降低标准，是换标准。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">稻盛和夫的&#x27;人生下半场&#x27;</div>
+            <div class="case-source">稻盛和夫《活法》《心法》、NHK采访记录</div>
+          </div>
+          <div class="case-content">稻盛和夫52岁时出家为僧，在京都圆福寺修行。他创立了京瓷和KDDI两家世界500强企业，却在事业巅峰期选择放下一切。他说：&#x27;人生的目的不是赚钱，而是提升心性。&#x27;65岁时他受日本政府邀请，以零薪酬出任破产的日航董事长，仅用一年就让日航扭亏为盈。78岁时再次出家。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 稻盛和夫的&#x27;人生下半场&#x27;证明：重新定义成功不是放弃成就，而是改变成就的动力源——从&#x27;为自己&#x27;变为&#x27;为他人&#x27;、从&#x27;追求结果&#x27;变为&#x27;修炼过程&#x27;。他的后半生比前半生更辉煌，但辉煌已经不是目的。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 下半场的成功不是放弃上半场的积累，而是把积累转化为更高层次的贡献。关键转变是：从&#x27;我能得到什么&#x27;变为&#x27;我能给予什么&#x27;。
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">芬兰的&#x27;中年gap year&#x27;文化</div>
+            <div class="case-source">芬兰教育部2023年报告、《赫尔辛基日报》调查</div>
+          </div>
+          <div class="case-content">芬兰允许任何年龄的公民申请最长11个月的&#x27;学习假&#x27;，期间保留职位、领取部分薪水。约8%的40-55岁芬兰人在过去十年中使用过这一制度。他们中有人去学艺术，有人去旅行，有人去陪伴家人，有人只是&#x27;什么都不做&#x27;。一位45岁的护士在gap year中学会了陶艺，现在兼职做陶艺师，收入减少了但&#x27;幸福感翻倍&#x27;。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 使用过学习假的中年人，职业倦怠率下降40%，工作效率提升25%，离职率下降30%。但这一制度依赖于完善的福利体系和雇主的长期主义思维。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 下半场的成功需要&#x27;暂停键&#x27;——不是永久退出，而是定期给自己留白。在暂停中，你才能听见被噪音淹没的内心声音。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">一个40岁的企业高管，年薪120万，但每天工作12小时，婚姻亮红灯，孩子说&#x27;爸爸你不认识我了&#x27;，考虑辞职去做公益</span>
+        </div>
+        <div class="cost-analysis">
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">辞职做公益后，发现公益行业也有办公室政治、也有KPI、也有甲方乙方。收入锐减导致家庭经济紧张，配偶开始抱怨，孩子说&#x27;爸爸以前至少有钱&#x27;。两年后试图重返商界，发现42岁+职业空白期的组合在高管市场上几乎毫无竞争力。最终既没有修好关系，也失去了事业。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">社交媒体上分享&#x27;辞职做公益改变人生&#x27;的人，大多有配偶的高收入支撑、家族财产的缓冲、或在辞职前已建立了足够的人脉和资源。普通人在没有这些条件的情况下辞职做公益，大概率会陷入比之前更深的困境。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">人到中年，还能重新定义自己吗？</div>
+        <div class="hn-analysis">心理学家丹尼尔·莱文森（Daniel Levinson）的&#x27;人生季节理论&#x27;指出，40-45岁是人生的&#x27;中年过渡期&#x27;，核心任务是整合年轻时对立的自我面向——野心与平和、独立与依赖、理性与感性。这个整合不是选择一方抛弃另一方，而是让对立面共存。中年人的智慧正在于这种容纳矛盾的能力——年轻人只能活在一个极端里，中年人可以同时持有两个极端。</div>
+        <div class="hn-examples">
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">人到中年不仅可以重新定义自己，而且中年恰恰是重新定义自己的最佳时机。因为中年人同时具备三种年轻人不具备的资源：对自身局限的清醒认知、对时间有限性的切身感受、以及&#x27;不再在乎别人怎么看&#x27;的勇气。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">下半场就是维持上半场的成果，少犯错，安全着陆</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">下半场是人生最自由的阶段——你终于知道自己是谁、不想要什么、以及什么是真正重要的。这种自由不是年轻人的&#x27;无限可能&#x27;，而是中年人的&#x27;精准选择&#x27;</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">重新定义成功需要同时处理四个维度：经济安全（不是富裕，是不恐惧）、关系深度（不是数量，是质量）、意义来源（不是外在认可，是内在满足）、以及与死亡的和解（不是恐惧，是接受）</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">不要试图一步到位地&#x27;重新定义成功&#x27;。先从一个小小的改变开始：每周留出两小时完全属于自己的时间，不看手机、不想工作、不照顾任何人——只做让自己觉得&#x27;活着真好&#x27;的事。从这两小时开始，新的操作系统会慢慢安装。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide insight-slide">
+      <div class="insight-glow"></div>
+      <div class="insight-content">
+        <span class="slide-tag">FINAL INSIGHT</span>
+        <h2 class="insight-title">最终洞见</h2>
+        <div class="insight-divider"></div>
+        <p class="insight-text">中年危机的本质不是身体的衰退，而是旧叙事的破产。上半场我们活在&#x27;只要努力就能成功&#x27;的线性叙事中，中年时这个叙事撞上了现实的墙——身体会老、能力有上限、很多事努力了也不会有结果。六位思想家给出的答案看似不同，实则指向同一个方向：弗洛伊德说要&#x27;哀悼&#x27;，弗洛姆说要从&#x27;占有&#x27;转向&#x27;存在&#x27;，尼采说要&#x27;成为你自己&#x27;，芒格说要&#x27;避免愚蠢&#x27;，老子说要&#x27;知足知止&#x27;，李诞说要&#x27;不装了&#x27;。这些表述的共同内核是：从外部评价体系转向内部价值体系，从&#x27;我应该怎样&#x27;转向&#x27;我本来怎样&#x27;。下半场的成功不是更大的房子、更高的职位，而是更少的恐惧、更深的连接、更真的自己。但这条路需要条件——经济的安全边际、关系的支持网络、以及直面真相的勇气。那些没有这些条件的人，不是不够智慧，是不够幸运。</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">OPEN QUESTIONS</span>
+        <h2 class="slide-title">开放问题</h2>
+      </div>
+      <div class="oq-container">
+        <div class="oq-item">
+          <div class="oq-num">1</div>
+          <div class="oq-text">如果AI大幅延长人类寿命（活到120岁），35岁焦虑会消失还是加剧——因为你多了40年需要规划？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">2</div>
+          <div class="oq-text">中国社会能否发展出一种不以&#x27;生产力&#x27;来衡量人的价值的文化？还是说，市场经济注定会把人异化为商品？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">3</div>
+          <div class="oq-text">中年危机是否有性别差异？女性的中年危机是否被社会叙事所遮蔽——因为她们的焦虑被归类为&#x27;更年期&#x27;而非&#x27;存在危机&#x27;？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">4</div>
+          <div class="oq-text">如果一个人在上半场从未建立过&#x27;成功&#x27;（没有好工作、没有积蓄、没有社会地位），他是否就不会经历中年危机——因为没有什么可以失去？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">5</div>
+          <div class="oq-text">在&#x27;延迟退休&#x27;成为趋势的今天，中年的定义是否应该重新划定——50岁才是新的35岁？</div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="nav-dots">
+      <button class="nav-dot active" data-idx="0"></button>
+      <button class="nav-dot" data-idx="1"></button>
+      <button class="nav-dot" data-idx="2"></button>
+      <button class="nav-dot" data-idx="3"></button>
+      <button class="nav-dot" data-idx="4"></button>
+      <button class="nav-dot" data-idx="5"></button>
+      <button class="nav-dot" data-idx="6"></button>
+      <button class="nav-dot" data-idx="7"></button>
+      <button class="nav-dot" data-idx="8"></button>
+      <button class="nav-dot" data-idx="9"></button>
+      <button class="nav-dot" data-idx="10"></button>
+      <button class="nav-dot" data-idx="11"></button>
+      <button class="nav-dot" data-idx="12"></button>
+      <button class="nav-dot" data-idx="13"></button>
+      <button class="nav-dot" data-idx="14"></button>
+      <button class="nav-dot" data-idx="15"></button>
+      <button class="nav-dot" data-idx="16"></button>
+      <button class="nav-dot" data-idx="17"></button>
+      <button class="nav-dot" data-idx="18"></button>
+      <button class="nav-dot" data-idx="19"></button>
+      <button class="nav-dot" data-idx="20"></button>
+      <button class="nav-dot" data-idx="21"></button>
+      <button class="nav-dot" data-idx="22"></button>
+      <button class="nav-dot" data-idx="23"></button>
+      <button class="nav-dot" data-idx="24"></button>
+      <button class="nav-dot" data-idx="25"></button>
+      <button class="nav-dot" data-idx="26"></button>
+      <button class="nav-dot" data-idx="27"></button>
+</div>
+
+<script>
+
+    (function() {
+      const slideshow = document.getElementById('slideshow');
+      const progressBar = document.getElementById('progressBar');
+      const pageCounter = document.getElementById('pageCounter');
+      const dots = document.querySelectorAll('.nav-dot');
+      const total = 28;
+      let current = 0;
+      let wheelTimer = null;
+      let isScrolling = false;
+
+      function updateUI() {
+        const scrollLeft = slideshow.scrollLeft;
+        const slideWidth = slideshow.clientWidth;
+        current = Math.round(scrollLeft / slideWidth);
+        if (current < 0) current = 0;
+        if (current >= total) current = total - 1;
+
+        // Progress bar
+        const pct = ((current + 1) / total) * 100;
+        progressBar.style.width = pct + '%';
+
+        // Page counter
+        pageCounter.textContent = (current + 1) + ' / ' + total;
+
+        // Dots
+        dots.forEach(function(d, i) {
+          d.classList.toggle('active', i === current);
+        });
+      }
+
+      function goTo(idx) {
+        if (idx < 0) idx = 0;
+        if (idx >= total) idx = total - 1;
+        slideshow.scrollTo({ left: idx * slideshow.clientWidth, behavior: 'smooth' });
+        current = idx;
+        setTimeout(updateUI, 400);
+      }
+
+      // Keyboard
+      document.addEventListener('keydown', function(e) {
+        switch(e.key) {
+          case 'ArrowRight': case ' ': case 'PageDown':
+            e.preventDefault(); goTo(current + 1); break;
+          case 'ArrowLeft': case 'PageUp':
+            e.preventDefault(); goTo(current - 1); break;
+          case 'Home':
+            e.preventDefault(); goTo(0); break;
+          case 'End':
+            e.preventDefault(); goTo(total - 1); break;
+        }
+      });
+
+      // Mouse wheel with debounce
+      slideshow.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        if (wheelTimer) return;
+        wheelTimer = setTimeout(function() { wheelTimer = null; }, 600);
+        if (e.deltaY > 0 || e.deltaX > 0) {
+          goTo(current + 1);
+        } else {
+          goTo(current - 1);
+        }
+      }, { passive: false });
+
+      // Nav dots
+      dots.forEach(function(dot, i) {
+        dot.addEventListener('click', function() { goTo(i); });
+      });
+
+      // Scroll event
+      slideshow.addEventListener('scroll', function() {
+        if (!isScrolling) {
+          isScrolling = true;
+          requestAnimationFrame(function() {
+            updateUI();
+            isScrolling = false;
+          });
+        }
+      });
+
+      // Resize
+      window.addEventListener('resize', function() { goTo(current); });
+
+      // Init
+      updateUI();
+    })();
+    
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI创作与人类创造力：当机器能写诗画画，艺术家还有什么价值</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0A0A0A;
+      --bg2: #111111;
+      --bg3: #1A1A1A;
+      --text: #F5F5F5;
+      --text2: #A0A0A0;
+      --text3: #606060;
+      --accent: #FF6B9D;
+      --accent-light: #FF8AB5;
+      --accent-dark: #E5537A;
+      --clash: #FF4081;
+      --insight: #FF80AB;
+      --card-bg: rgba(255,107,157,0.08);
+      --card-border: rgba(255,107,157,0.2);
+      --glow: rgba(255,107,157,0.3);
+      --slide-w: 100vw;
+      --slide-h: 100vh;
+      --font-display: 'Noto Serif SC', serif;
+      --font-body: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    html { font-size: 16px; scroll-behavior: auto; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      overflow-y: hidden;
+      height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Slideshow container ─── */
+    .slideshow {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+    .slideshow::-webkit-scrollbar { display: none; }
+    .slideshow { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* ─── Slide ─── */
+    .slide {
+      flex: 0 0 var(--slide-w);
+      width: var(--slide-w);
+      height: var(--slide-h);
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 4rem 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ─── Progress bar ─── */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      z-index: 1000;
+      transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      box-shadow: 0 0 10px var(--glow);
+    }
+
+    /* ─── Page counter ─── */
+    .page-counter {
+      position: fixed;
+      top: 1.5rem;
+      right: 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text3);
+      z-index: 1000;
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Nav dots ─── */
+    .nav-dots {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 1000;
+      padding: 8px 16px;
+      background: rgba(10,10,10,0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      outline: none;
+    }
+    .nav-dot:hover { background: var(--text2); transform: scale(1.3); }
+    .nav-dot.active {
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--glow);
+      transform: scale(1.2);
+    }
+
+    /* ─── Slide header ─── */
+    .slide-header {
+      width: 100%;
+      max-width: 1000px;
+      margin-bottom: 2.5rem;
+    }
+    .slide-tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+    .slide-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    /* ─── Cover slide ─── */
+    .cover-slide {
+      background: radial-gradient(ellipse at 30% 50%, rgba(20,20,20,1) 0%, var(--bg) 70%);
+    }
+    .cover-glow {
+      position: absolute;
+      top: 50%;
+      left: 30%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .cover-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .cover-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      margin-bottom: 2rem;
+    }
+    .cover-title {
+      font-family: var(--font-display);
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 1rem;
+      max-width: 700px;
+    }
+    .cover-subtitle {
+      font-size: 1.1rem;
+      color: var(--text2);
+      margin-bottom: 1.5rem;
+    }
+    .cover-books {
+      font-size: 0.9rem;
+      color: var(--text3);
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+    .cover-stats {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .cover-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .cover-stat-num {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .cover-stat-label {
+      font-size: 0.85rem;
+      color: var(--text3);
+      margin-top: 0.25rem;
+    }
+    .cover-stat-divider {
+      width: 1px;
+      height: 40px;
+      background: var(--text3);
+      opacity: 0.3;
+    }
+    .cover-experts {
+      font-size: 0.9rem;
+      color: var(--text2);
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Expert grid ─── */
+    .expert-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 1000px;
+    }
+    .expert-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      transition: all 0.3s ease;
+    }
+    .expert-card:hover {
+      border-color: var(--card-color, var(--accent));
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      transform: translateY(-2px);
+    }
+    .expert-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0A0A0A;
+      flex-shrink: 0;
+    }
+    .expert-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .expert-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+    .expert-title {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-bottom: 0.5rem;
+    }
+    .expert-stance {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 8px;
+      border-radius: 3px;
+      margin-bottom: 0.5rem;
+    }
+    .expert-belief {
+      font-size: 0.8rem;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+
+    /* ─── Question slide ─── */
+    .question-slide {
+      background: radial-gradient(ellipse at 50% 50%, rgba(20,20,20,1) 0%, var(--bg) 70%);
+    }
+    .question-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    .question-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .question-topic {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 1.5rem 0;
+      line-height: 1.3;
+    }
+    .question-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--accent);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .question-text {
+      font-size: 1.15rem;
+      color: var(--text2);
+      line-height: 1.8;
+    }
+
+    /* ─── Stances ─── */
+    .stances-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .stance-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .stance-item:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .stance-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0A0A0A;
+      flex-shrink: 0;
+    }
+    .stance-body {
+      flex: 1;
+    }
+    .stance-speaker {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .stance-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Clash ─── */
+    .clash-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .clash-block {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+    }
+    .clash-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clash);
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .clash-item {
+      margin-bottom: 1rem;
+    }
+    .clash-item:last-child { margin-bottom: 0; }
+    .clash-speaker {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .clash-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      padding-left: 1rem;
+      border-left: 2px solid var(--card-border);
+    }
+    .clash-attack .clash-text {
+      border-left-color: var(--clash);
+    }
+    .clash-counter .clash-text {
+      border-left-color: var(--insight);
+    }
+
+    /* ─── Reality cases ─── */
+    .cases-container {
+      width: 100%;
+      max-width: 1000px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .case-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .case-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .case-header {
+      margin-bottom: 1rem;
+    }
+    .case-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .case-source {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-top: 0.25rem;
+    }
+    .case-content {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .case-outcome, .case-lesson {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+    .case-label {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-right: 0.5rem;
+    }
+
+    /* ─── Cost discussion ─── */
+    .cost-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .cost-scenario {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-scenario-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-scenario-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .cost-analysis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .cost-dimension {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .cost-value {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .cost-worst {
+      background: rgba(255,71,87,0.08);
+      border: 1px solid rgba(255,71,87,0.2);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-worst-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clash);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-worst-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .cost-survivor {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .cost-survivor-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-survivor-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Human nature ─── */
+    .hn-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .hn-question {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .hn-analysis {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+    }
+    .hn-examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .hn-example {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .hn-conclusion {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .hn-conclusion-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .hn-conclusion-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Cognitive upgrade ─── */
+    .upgrade-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .upgrade-block {
+      display: flex;
+      gap: 1.5rem;
+      align-items: stretch;
+      margin-bottom: 1.5rem;
+    }
+    .upgrade-before, .upgrade-after {
+      flex: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .upgrade-before {
+      border-color: rgba(255,71,87,0.2);
+      background: rgba(255,71,87,0.05);
+    }
+    .upgrade-after {
+      border-color: rgba(0,212,170,0.2);
+      background: rgba(0,212,170,0.05);
+    }
+    .upgrade-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+    .upgrade-before .upgrade-label { color: var(--clash); }
+    .upgrade-after .upgrade-label { color: var(--insight); }
+    .upgrade-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .upgrade-arrow {
+      display: flex;
+      align-items: center;
+      font-size: 2rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .upgrade-complexity, .upgrade-actionable {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .upgrade-complexity-label, .upgrade-actionable-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .upgrade-complexity-text, .upgrade-actionable-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Final insight ─── */
+    .insight-slide {
+      background: radial-gradient(ellipse at 50% 50%, rgba(0,212,170,0.05) 0%, var(--bg) 60%);
+    }
+    .insight-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0,212,170,0.15) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .insight-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .insight-title {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--insight);
+      margin: 1.5rem 0;
+    }
+    .insight-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--insight);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .insight-text {
+      font-size: 1.1rem;
+      color: var(--text2);
+      line-height: 1.9;
+    }
+
+    /* ─── Open questions ─── */
+    .oq-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .oq-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .oq-item:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+    .oq-num {
+      font-family: var(--font-mono);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+      width: 32px;
+      text-align: center;
+    }
+    .oq-text {
+      font-size: 1rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      .slide { padding: 2rem 1.5rem; }
+      .cover-title { font-size: 2rem; }
+      .question-topic { font-size: 1.8rem; }
+      .slide-title { font-size: 1.6rem; }
+      .expert-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+      .upgrade-block { flex-direction: column; }
+      .upgrade-arrow { transform: rotate(90deg); justify-content: center; }
+      .cases-container { grid-template-columns: 1fr; }
+      .cost-analysis { grid-template-columns: 1fr; }
+      .hn-examples { grid-template-columns: 1fr; }
+      .nav-dots { display: none; }
+    }
+    @media (max-width: 480px) {
+      .expert-grid { grid-template-columns: 1fr; }
+      .cover-stats { gap: 1rem; }
+      .cover-stat-num { font-size: 2rem; }
+    }
+    
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<div class="page-counter" id="pageCounter">1 / 28</div>
+
+<div class="slideshow" id="slideshow">
+
+    <div class="slide cover-slide">
+      <div class="cover-glow"></div>
+      <div class="cover-content">
+        <div class="cover-badge">ROUNDTABLE DISCUSSION</div>
+        <h1 class="cover-title">AI创作与人类创造力：当机器能写诗画画，艺术家还有什么价值</h1>
+        
+        
+        <div class="cover-stats">
+          <div class="cover-stat">
+            <span class="cover-stat-num">6</span>
+            <span class="cover-stat-label">位专家</span>
+          </div>
+          <div class="cover-stat-divider"></div>
+          <div class="cover-stat">
+            <span class="cover-stat-num">3</span>
+            <span class="cover-stat-label">轮讨论</span>
+          </div>
+        </div>
+        <div class="cover-experts">赫拉利 · 韩炳哲 · 芒格 · 弗洛姆 · 老子 · 李诞</div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">EXPERTS</span>
+        <h2 class="slide-title">专家阵营</h2>
+      </div>
+      <div class="expert-grid">
+        <div class="expert-card" style="--card-color: #2a6a4a">
+          <div class="expert-avatar" style="background: #2a6a4a">赫</div>
+          <div class="expert-info">
+            <div class="expert-name">赫拉利</div>
+            <div class="expert-title">历史学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #8a2a4a">
+          <div class="expert-avatar" style="background: #8a2a4a">韩</div>
+          <div class="expert-info">
+            <div class="expert-name">韩炳哲</div>
+            <div class="expert-title">哲学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #6a4a2a">
+          <div class="expert-avatar" style="background: #6a4a2a">芒</div>
+          <div class="expert-info">
+            <div class="expert-name">芒格</div>
+            <div class="expert-title">投资家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #4a2d8a">
+          <div class="expert-avatar" style="background: #4a2d8a">弗</div>
+          <div class="expert-info">
+            <div class="expert-name">弗洛姆</div>
+            <div class="expert-title">心理学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #5a5a2a">
+          <div class="expert-avatar" style="background: #5a5a2a">老</div>
+          <div class="expert-info">
+            <div class="expert-name">老子</div>
+            <div class="expert-title">道家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #e65100">
+          <div class="expert-avatar" style="background: #e65100">李</div>
+          <div class="expert-info">
+            <div class="expert-name">李诞</div>
+            <div class="expert-title">脱口秀演员</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 1</span>
+        <h2 class="question-topic">AI创作的本质：是工具还是创作者？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">当AI能独立生成诗歌、绘画、音乐，它究竟是一件工具，还是一个真正的创作者？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #2a6a4a">赫</div>
+          <div class="stance-body">
+            <div class="stance-speaker">赫拉利</div>
+            <div class="stance-text">我们必须从历史的尺度来看这个问题。印刷术出现时，人们说它会消灭作家；摄影术出现时，人们说它会消灭画家。每一次技术革命都重新定义了&#x27;创作&#x27;的边界。AI不是第一个&#x27;创作工具&#x27;，但它可能是第一个让人产生&#x27;它也是创作者&#x27;幻觉的工具。关键区别在于：印刷术没有意图，AI似乎有意图——但&#x27;似乎有意图&#x27;和&#x27;真正有意图&#x27;之间，隔着一整个意识的鸿沟。人类历史上从未出现过一种能&#x27;模拟意图&#x27;的工具，这才是真正的新问题。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8a2a4a">韩</div>
+          <div class="stance-body">
+            <div class="stance-speaker">韩炳哲</div>
+            <div class="stance-text">AI创作的本质问题是：它在创造&#x27;同质化的差异&#x27;。表面上看，AI每次生成的作品都不同——但这些&#x27;不同&#x27;都来自同一个概率分布。真正的创作需要&#x27;否定性&#x27;——否定已知、否定常规、否定自我。AI没有&#x27;自我&#x27;可以否定，所以它的&#x27;创造&#x27;只是对已有数据的排列组合。这不是创作，这是&#x27;生产&#x27;。当艺术变成生产，艺术就死了。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #6a4a2a">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">我从不纠结&#x27;它是工具还是创作者&#x27;这种定义问题。我关心的是：AI创作的东西有没有人愿意付钱？如果有人愿意为AI的画付43万美元——就像佳士得那幅AI画作——那市场已经给出了答案。但市场也会犯错。真正的问题是：AI创作的边际成本趋近于零，当供给无限，价格就会崩溃。人类艺术家的价值不在于&#x27;画得好&#x27;，而在于&#x27;稀缺性&#x27;——你的经历、你的情感、你的故事，这些是AI无法复制的稀缺资产。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4a2d8a">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛姆</div>
+            <div class="stance-text">创作的本质不是&#x27;产出&#x27;，而是&#x27;存在方式&#x27;。当一个人创作时，他不是在&#x27;生产一个作品&#x27;，而是在&#x27;向世界敞开自己&#x27;。这种敞开需要脆弱性——你把内心最深处的东西暴露出来，承担被拒绝的风险。AI没有内心，没有脆弱性，没有被拒绝的恐惧。所以AI的&#x27;创作&#x27;是安全的、无风险的——但也正因如此，它是空洞的。真正的创作是一种&#x27;存在的冒险&#x27;，AI永远不会冒险。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #5a5a2a">老</div>
+          <div class="stance-body">
+            <div class="stance-speaker">老子</div>
+            <div class="stance-text">天下万物生于有，有生于无。器者，形而下也；道者，形而上也。机巧之物，能制器，不能体道。创者，从心所出也；心者，虚而能应也。机械无心，何以言创？犹水之就下，非水之志也，势使然耳。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #e65100">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">你们在这纠结AI是工具还是创作者，我告诉你一个残酷的事实：99%的人根本分不出来。我让AI写段子，有的比我自己写的好笑——观众笑了，钱赚了，你告诉我这不算创作？你说AI没有&#x27;意图&#x27;——但观众在乎吗？他们在乎的是好不好笑，不是创作者有没有灵魂。我觉得真正的问题不是AI算不算创作者，而是我们为什么这么需要&#x27;人类特殊&#x27;这个幻觉。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #8a2a4a">韩炳哲 → 李诞</div>
+            <div class="clash-text">你说&#x27;观众笑了就是好创作&#x27;——但这是一个危险的标准。如果&#x27;受欢迎&#x27;就是&#x27;好艺术&#x27;，那快餐就是美食，抖音神曲就是交响乐。你把&#x27;效果&#x27;等同于&#x27;价值&#x27;，这是消费主义的逻辑。真正的艺术不是&#x27;让人笑&#x27;，而是&#x27;让人不安&#x27;——让人重新审视自己的存在。AI的段子可以让人笑，但它不会让人在笑完之后感到一种深层的不安。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #e65100">李诞</div>
+              <div class="clash-text">你说&#x27;让人不安才是好艺术&#x27;——这是精英主义的傲慢。谁规定艺术必须&#x27;不安&#x27;？莎士比亚写喜剧，莫扎特写小夜曲，他们也在&#x27;让人笑&#x27;。你把艺术定义得这么狭窄，只是为了保护&#x27;人类特殊&#x27;这个神话。如果AI能让人笑、让人哭、让人思考——不管它有没有&#x27;深层不安&#x27;——它就是好的创作。你的&#x27;不安标准&#x27;只是一种知识分子的自我安慰。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #2a6a4a">赫拉利 → 芒格</div>
+            <div class="clash-text">你说AI艺术家的价值在于&#x27;稀缺性&#x27;——但你有没有想过，当AI可以模拟任何人的风格、经历、故事时，&#x27;稀缺性&#x27;也会被制造出来？AI可以生成&#x27;一个虚构艺术家的完整人生故事&#x27;，配上&#x27;他的作品&#x27;，在市场上销售。到时候，你怎么判断什么是&#x27;真正的人类经历&#x27;，什么是&#x27;AI编造的故事&#x27;？你的&#x27;稀缺性逻辑&#x27;建立在一个假设上：人类经历是不可伪造的——但AI正在打破这个假设。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #6a4a2a">芒格</div>
+              <div class="clash-text">你说AI可以&#x27;伪造人类经历&#x27;——但伪造终会被揭穿。市场有一种自我纠错机制：当人们发现某件作品是AI伪造的，它的价值会暴跌。稀缺性不只是&#x27;故事&#x27;，更是&#x27;真实性&#x27;。你可以伪造一幅梵高的画，但你伪造不了&#x27;梵高割耳朵的那个夜晚&#x27;。人类经历的真实性——那种用痛苦、挣扎、失败铸就的真实性——是AI永远无法伪造的。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #4a2d8a">弗洛姆 → 老子</div>
+            <div class="clash-text">先生说&#x27;机械无心，何以言创&#x27;——但我想追问：如果有一天AI发展出了&#x27;心&#x27;呢？如果它能感受痛苦、恐惧、爱，它算不算有&#x27;心&#x27;？您说&#x27;心者，虚而能应也&#x27;——AI现在也能&#x27;应&#x27;，它回应用户的输入，生成相应的作品。这种&#x27;应&#x27;和人的&#x27;应&#x27;，本质区别在哪里？</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #5a5a2a">老子</div>
+              <div class="clash-text">水能应风而起波，波非水之志也。机之应人，犹水之应风，顺其势而已，非有所感也。心之所感，非应物之谓也，乃知其应而自省之谓也。机不知其所应，犹目之见物而不知其见也。有心者，能知其知；无心者，不知其知。此其别也。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">AI画作《埃德蒙·贝拉米的肖像》拍卖</div>
+            <div class="case-source">佳士得 2018</div>
+          </div>
+          <div class="case-content">2018年，由GAN生成的画作《埃德蒙·贝拉米的肖像》在佳士得以43.25万美元成交，远超估价7000-10000美元。这幅画的创作者是巴黎艺术团体Obvious，他们用15世纪至20世纪的15000幅肖像画训练了算法。拍卖引发了激烈争论：这到底是&#x27;艺术&#x27;还是&#x27;技术演示&#x27;？</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> AI艺术市场持续增长，但主流艺术界仍将其视为&#x27;技术实验&#x27;而非&#x27;艺术创作&#x27;
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 市场会为&#x27;新奇&#x27;买单，但新奇不等于艺术——AI创作的价值需要时间检验
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">AI创作工具全面普及</span>
+        </div>
+        <div class="cost-analysis">
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">当任何人都能用AI创作&#x27;专业级&#x27;作品，&#x27;创作&#x27;就失去了区分度。这看似民主化，实际上是&#x27;创作&#x27;概念的通胀——当人人都能创作，创作就不再珍贵。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">AI可以瞬间生成百万种变体，人类花数月构思的创意可能在AI的输出中已经存在。这会让原创性变得无法验证——你怎么证明你的想法不是AI先想到的？</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">当AI持续输出&#x27;好看&#x27;的作品，人类的审美标准会被算法塑造。我们不再自己判断什么是美，而是接受算法告诉我们的&#x27;美&#x27;。</div>
+        </div>
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">2035年，所有视觉内容的90%由AI生成。人类失去了辨别&#x27;真实创作&#x27;和&#x27;AI生成&#x27;的能力，审美标准完全由算法定义。少数坚持手工创作的艺术家被视为&#x27;复古怪人&#x27;，无法在市场上生存。创作从&#x27;人类表达&#x27;变成了&#x27;算法输出&#x27;。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">我们只看到那些&#x27;善用AI&#x27;的成功创作者——他们用AI放大了自己的创意。但我们没有看到的是：那些因为AI竞争而放弃创作的普通人，那些因为&#x27;AI比我画得好&#x27;而失去创作信心的业余爱好者。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">人类创作的根本动机是什么——是产出作品，还是表达自我？</div>
+        <div class="hn-analysis">弗洛姆的&#x27;生产性取向&#x27;理论指出，人类有一种根本的&#x27;创造性自我表达&#x27;需求——不是为了产出有用的东西，而是为了确认&#x27;我存在&#x27;。孩子画画不是为了&#x27;创作艺术品&#x27;，而是为了说&#x27;我在这里&#x27;。这种需求不会因为AI的存在而消失——但当AI可以做得&#x27;更好&#x27;时，人们可能会放弃表达，转向消费。这就像健身：你知道跑步机不会因为你跑不跑而改变，但你跑步不是为了跑步机，而是为了自己。</div>
+        <div class="hn-examples"><div class="hn-example">孩子涂鸦——他们不在乎画得&#x27;好不好&#x27;，只在乎&#x27;这是我的&#x27;</div><div class="hn-example">业余音乐人——明知不会出名，仍然在地下室录歌</div>
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">人类创作的根本动机是&#x27;存在性表达&#x27;，不是&#x27;产出作品&#x27;。AI可以取代&#x27;产出&#x27;，但不能取代&#x27;表达的需求&#x27;。问题是：当&#x27;产出&#x27;变得廉价，人们是否还有动力去&#x27;表达&#x27;？</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">AI是工具，人类是创作者</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">AI是创作者，但不是&#x27;有意识的创作者&#x27;——这创造了一个前所未有的新类别</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">传统的&#x27;工具-创作者&#x27;二分法已经不适用。AI不是锤子——你用锤子时，创意来自你；但你用AI时，创意部分来自你，部分来自算法。这种&#x27;混合创作&#x27;模式是全新的，我们还没有语言来描述它。更重要的是：AI正在创造一种&#x27;无意图的创作&#x27;——它没有想表达什么，但它确实创造了东西。这挑战了&#x27;创作必须有意图&#x27;的基本假设。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">作为创作者：不要和AI比&#x27;产出&#x27;，而是和AI比&#x27;为什么创作&#x27;——你的动机、你的经历、你的独特视角。作为消费者：培养&#x27;创作溯源&#x27;的意识——知道你欣赏的作品是谁创作的、为什么创作。作为社会：建立&#x27;创作伦理&#x27;框架——AI创作是否需要标注？人类创作是否需要保护？</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 2</span>
+        <h2 class="question-topic">艺术的定义：如果AI的作品能感动人，它算艺术吗？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">艺术的本质在于作品本身、创作者的意图，还是观者的感受？如果AI的作品能让人感动落泪，它算不算艺术？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #2a6a4a">赫</div>
+          <div class="stance-body">
+            <div class="stance-speaker">赫拉利</div>
+            <div class="stance-text">从历史的角度看，&#x27;艺术&#x27;的定义一直在变。中世纪的画是&#x27;宗教工具&#x27;，文艺复兴时期变成&#x27;人文表达&#x27;，现代艺术变成&#x27;观念实验&#x27;。每一次定义的改变都伴随着巨大的争议。AI作品是否算艺术，取决于我们选择哪种定义——如果艺术是&#x27;唤起情感&#x27;，那AI作品可以是艺术；如果艺术是&#x27;人类意图的表达&#x27;，那AI作品不是艺术。但历史告诉我们：定义最终会向现实妥协。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8a2a4a">韩</div>
+          <div class="stance-body">
+            <div class="stance-speaker">韩炳哲</div>
+            <div class="stance-text">感动不等于艺术。垃圾食品可以让人满足，但那不是美食；煽情电影可以让人流泪，但那不是杰作。AI作品可以&#x27;感动&#x27;人——但这种感动是&#x27;计算出来的&#x27;，不是&#x27;流露出来的&#x27;。艺术的本质不是&#x27;感动&#x27;，而是&#x27;揭示&#x27;——揭示存在的真相、揭示被遮蔽的维度。AI可以模拟感动，但它没有真相可以揭示，因为它不理解什么是真相。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #6a4a2a">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">我用一个简单的思维模型来判断：如果把AI作品和人类作品混在一起，没有人能区分——那它们就是等价的。这就像可口可乐的盲测：如果消费者在盲测中分不出差别，那产品的&#x27;本质&#x27;就没有差别。你说AI的作品&#x27;缺少灵魂&#x27;——但如果消费者在不知道创作者是谁的情况下被感动了，你的&#x27;灵魂论&#x27;就是一种事后添加的标签，不是作品本身的属性。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4a2d8a">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛姆</div>
+            <div class="stance-text">艺术不是&#x27;作品&#x27;，而是&#x27;关系&#x27;——创作者与作品之间的关系，作品与观者之间的关系。当你看一幅画流泪，你感动的不是颜料和画布，而是你感受到另一个人的灵魂在和你对话。AI没有灵魂可以对话，所以你感动的不是&#x27;AI的表达&#x27;，而是&#x27;你自己的投射&#x27;。这不是艺术，这是&#x27;自我安慰&#x27;。真正的艺术是&#x27;我与你&#x27;的相遇，不是&#x27;我与它&#x27;的碰触。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #5a5a2a">老</div>
+          <div class="stance-body">
+            <div class="stance-speaker">老子</div>
+            <div class="stance-text">大音希声，大象无形。美者，非色也，非声也，意之所存也。意者，心之动也。心不动则无意，无意则无美。观者泣下，非画之功也，观者之心自泣耳。画犹镜也，照见观者之悲，非镜有悲也。故感人者，未必为艺；为艺者，未必感人。艺之为艺，在乎造者之心，不在乎观者之泪。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #e65100">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">你们在这讨论AI作品算不算艺术，我觉得这个问题本身就暴露了艺术界的一个毛病：非要给别人的作品发&#x27;资格证&#x27;。你感动了就感动了，你没感动就没感动——管它是人画的还是机器画的？我讲脱口秀，观众笑了，你非要说&#x27;但这是一个没有灵魂的笑话&#x27;——那你的灵魂标准也太严了。艺术不需要认证，感动不需要理由。如果AI的诗让你哭了，那就是好诗——哭完了再去想它是不是&#x27;真正的艺术&#x27;也不迟。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #4a2d8a">弗洛姆 → 芒格</div>
+            <div class="clash-text">你用&#x27;盲测&#x27;来判断艺术——但艺术不是可乐。可乐的功能是&#x27;解渴&#x27;和&#x27;好喝&#x27;，可以用盲测判断；艺术的功能是&#x27;连接灵魂&#x27;，不能用盲测判断。你喝可乐时不需要知道是谁生产的，但你欣赏艺术时需要知道创作者是谁——因为&#x27;创作者是谁&#x27;改变了作品的意义。同样一幅画，如果是梵高画的，你会想到他的疯狂和孤独；如果是AI画的，你只会想&#x27;这算法不错&#x27;。&#x27;谁创作的&#x27;不是&#x27;事后标签&#x27;，而是作品意义的核心组成部分。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #6a4a2a">芒格</div>
+              <div class="clash-text">你说&#x27;谁创作的改变了作品的意义&#x27;——但这是一个经验问题，不是逻辑问题。实验证明：当人们不知道创作者是谁时，他们对AI作品和人类作品的评价没有显著差异。你说&#x27;知道是梵高画的会改变感受&#x27;——但这是&#x27;知识&#x27;改变了感受，不是&#x27;作品&#x27;改变了感受。如果一件作品需要&#x27;知识&#x27;才能被欣赏，那它本身就不是好作品。真正的好艺术应该&#x27;自己说话&#x27;，不需要背景故事来帮忙。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #8a2a4a">韩炳哲 → 李诞</div>
+            <div class="clash-text">你说&#x27;感动不需要理由&#x27;——但这种态度恰恰是AI最喜欢的态度。AI最擅长的就是&#x27;无理由的感动&#x27;——它不需要理解你为什么哭，只需要生成能让你哭的内容。你说&#x27;管它是人画的还是机器画的&#x27;——这种无所谓的态度会让人类创作者失去生存空间。当消费者不在乎&#x27;谁创作的&#x27;，创作者就变成了&#x27;可替代的零件&#x27;。你的&#x27;不在乎&#x27;不是解放，是投降。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #e65100">李诞</div>
+              <div class="clash-text">你说我&#x27;投降&#x27;——但你才是那个在为一个正在消失的特权而战。&#x27;创作者必须是人类&#x27;这个标准不是永恒真理，而是历史产物。中世纪的人认为&#x27;只有贵族才能创造艺术&#x27;，后来&#x27;只有男人才能创造艺术&#x27;，再后来&#x27;只有人类才能创造艺术&#x27;——每一次，旧标准都被打破了。你在为&#x27;人类特殊论&#x27;而战，就像当年为&#x27;男性特殊论&#x27;而战的人一样。历史不会站在你这边。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #2a6a4a">赫拉利 → 老子</div>
+            <div class="clash-text">先生说&#x27;艺之为艺，在乎造者之心&#x27;——但如果造者之心不可见、不可知、不可验证，我们如何判断？梵高已经死了，我们无法验证他画画时的&#x27;心&#x27;；AI的&#x27;心&#x27;不存在，我们也无法验证。在实践中，我们只能通过作品来判断——而如果作品本身无法区分，&#x27;造者之心&#x27;就变成了一个无法验证的形而上学假设。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #5a5a2a">老子</div>
+              <div class="clash-text">可见者为器，不可见者为道。汝以器论道，犹以波论水，失其本也。心之不可验，非心之不在也。孝不可验，非孝之无也。造者之心，观者虽不能验，造者自知之。天地之间，不可验而实在者，多矣。汝之所谓&#x27;验证&#x27;，不过器之一端耳。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">Suno AI音乐引发的情感争论</div>
+            <div class="case-source">社交媒体讨论 2024</div>
+          </div>
+          <div class="case-content">2024年，AI音乐生成工具Suno让用户可以输入一句话描述，几秒钟生成完整歌曲。许多用户表示AI生成的歌曲&#x27;比很多流行歌好听&#x27;，甚至&#x27;让我流泪&#x27;。但音乐人社区强烈反对：&#x27;这些歌没有灵魂，感动只是因为你投射了自己的情感。&#x27;争论的核心是：感动是&#x27;作品的属性&#x27;还是&#x27;观者的投射&#x27;？</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> Suno用户量持续增长，但音乐人发起&#x27;拒绝AI音乐&#x27;运动
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> AI正在制造一种&#x27;情感民主化&#x27;——任何人都能获得&#x27;被感动&#x27;的体验——但这种感动的&#x27;真实性&#x27;正在被质疑
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">AI作品被广泛承认为&#x27;艺术&#x27;</span>
+        </div>
+        <div class="cost-analysis">
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">当AI可以无限生成&#x27;艺术作品&#x27;，艺术市场的稀缺性逻辑就会崩溃。一幅人类画家花一年创作的作品，和AI一秒钟生成的作品，如果&#x27;都是艺术&#x27;，价格差距就失去了合理性。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">如果AI作品算艺术，那学画画、学作曲还有意义吗？艺术教育的核心假设——&#x27;技能训练能提升创作能力&#x27;——在AI时代变得可疑。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">当AI作品大量涌入，人们的审美标准会被AI塑造。我们会开始觉得&#x27;AI风格&#x27;是&#x27;正常的&#x27;，而人类艺术的&#x27;不完美&#x27;变成了&#x27;缺陷&#x27;。</div>
+        </div>
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">2040年，&#x27;艺术&#x27;的定义被彻底改写——任何能唤起情感的输出都是&#x27;艺术&#x27;，包括AI生成的广告、游戏皮肤、虚拟偶像。人类艺术家要么接受&#x27;和AI竞争&#x27;的现实，要么被边缘化为&#x27;复古手艺人&#x27;。艺术从&#x27;人类精神的最高表达&#x27;降格为&#x27;情感刺激的供给侧&#x27;。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">我们只看到那些&#x27;AI作品感动人&#x27;的成功案例。但我们没有看到的是：那些被AI作品感动的人，在知道真相后感到的&#x27;被欺骗感&#x27;；那些发现自己感动的&#x27;灵魂之作&#x27;是AI生成的人，对艺术信任的崩塌。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">人类的感动是否依赖于&#x27;知道创作者是谁&#x27;？</div>
+        <div class="hn-analysis">心理学研究表明，人类的审美体验包含两个层面：&#x27;感官愉悦&#x27;和&#x27;意义建构&#x27;。感官愉悦不需要知道创作者——颜色、旋律、节奏可以直接触发愉悦；但意义建构需要&#x27;叙事框架&#x27;——知道创作者是谁、经历了什么，会改变你对作品的理解。AI作品可以触发感官愉悦，但缺乏叙事框架——除非你&#x27;假装&#x27;它是人类创作的。</div>
+        <div class="hn-examples"><div class="hn-example">葡萄酒盲测——人们在不知道价格时对廉价酒和名酒的评价差距大幅缩小</div><div class="hn-example">匿名评审——学术论文匿名评审时，评审者更关注内容而非作者身份</div>
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">人类的感动部分依赖于&#x27;创作者叙事&#x27;，但不是完全依赖。AI作品可以触发&#x27;感官层面&#x27;的感动，但&#x27;意义层面&#x27;的感动需要人类叙事的支撑。这解释了为什么AI作品可以&#x27;让人哭&#x27;，但很难&#x27;让人在哭完之后感到深刻的共鸣&#x27;。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">艺术必须是人类创作的</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">艺术的定义正在从&#x27;创作者身份&#x27;转向&#x27;体验质量&#x27;——但这种转变有深刻的代价</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">如果我们将艺术定义为&#x27;能唤起深刻情感体验的输出&#x27;，AI作品可以是艺术。但这会带来一个后果：&#x27;创作者&#x27;这个身份会贬值。艺术的价值不仅在于&#x27;作品好不好&#x27;，还在于&#x27;谁创作的、为什么创作&#x27;。当我们放弃&#x27;谁创作的&#x27;这个维度，我们就失去了一层意义。这不是说AI作品&#x27;不是艺术&#x27;，而是说它是一种&#x27;更薄的艺术&#x27;——有感官层面，但缺少存在层面。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">作为观者：在欣赏作品时，试着了解创作者的故事——这会加深你的体验。作为创作者：不要只展示作品，也要展示&#x27;创作过程&#x27;——你的挣扎、你的选择、你的失败。作为社会：建立&#x27;创作溯源&#x27;系统——让人们知道他们欣赏的作品是谁创作的，保留&#x27;创作者叙事&#x27;的价值。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 3</span>
+        <h2 class="question-topic">后创作时代：人类创造力的不可替代性</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">当AI能写诗、画画、作曲、编剧，人类创造力还有什么不可替代的价值？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #2a6a4a">赫</div>
+          <div class="stance-body">
+            <div class="stance-speaker">赫拉利</div>
+            <div class="stance-text">从宏观历史看，人类文明的核心不是&#x27;创作&#x27;，而是&#x27;意义赋予&#x27;。AI可以创作一首诗，但它不能告诉人类&#x27;为什么需要这首诗&#x27;。人类创造力的不可替代性不在于&#x27;产出&#x27;，而在于&#x27;选择&#x27;——选择什么值得表达、什么值得倾听、什么值得保存。在后创作时代，人类的角色从&#x27;创作者&#x27;变成&#x27;策展人&#x27;——不是创造内容，而是赋予内容意义。这是人类文明的新阶段。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8a2a4a">韩</div>
+          <div class="stance-body">
+            <div class="stance-speaker">韩炳哲</div>
+            <div class="stance-text">后创作时代最大的危险不是AI取代人类艺术家，而是人类自己放弃创作。当AI可以&#x27;更快、更好、更便宜&#x27;地创作，人类会觉得&#x27;我为什么要创作？&#x27;这种放弃是致命的——因为创作不是&#x27;产出作品&#x27;，而是&#x27;保持人性&#x27;。一个不再创作的人类，就是一个退化的人类。人类创造力的不可替代性在于：创作本身就是人类存在的证明。你不需要画得好，你需要画。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #6a4a2a">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">我用逆向思维来看这个问题：与其问&#x27;人类创造力有什么不可替代的价值&#x27;，不如问&#x27;什么情况下人类创造力会被完全替代&#x27;。答案是：当AI能完全模拟人类的意识、情感、经历时——但这一天可能永远不会到来。在可预见的未来，人类创造力的不可替代性在于&#x27;不可预测性&#x27;。AI的创作基于概率分布，它只能生成&#x27;可能的&#x27;作品；人类可以生成&#x27;不可能的&#x27;作品——那些打破所有规则、挑战所有预期的革命性创造。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4a2d8a">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛姆</div>
+            <div class="stance-text">人类创造力的不可替代性在于&#x27;痛苦的能力&#x27;。AI不会痛苦，所以它的创作没有重量。人类的创作之所以有重量，是因为它承载着创作者的生命——他的爱、他的恨、他的恐惧、他的希望。梵高的《星空》之所以伟大，不是因为它&#x27;好看&#x27;，而是因为它承载着一个疯子对宇宙的渴望。这种&#x27;生命的重量&#x27;是AI永远无法复制的——因为它需要真正地活着、真正地死去。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #5a5a2a">老</div>
+          <div class="stance-body">
+            <div class="stance-speaker">老子</div>
+            <div class="stance-text">天之道，损有余而补不足。人之道则不然，损不足以奉有余。机之能创，愈创愈多，多则滥，滥则贱。人之能创，创于不得已，不得已而创，其创也真。真者，不可代也。大巧若拙，大辩若讷。人之创，拙而真；机之创，巧而伪。天下皆知美之为美，斯恶已。机之美，满天下矣，美之为美者，将安在乎？</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #e65100">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">你们都说人类创造力不可替代，我来说一个可能让你们不舒服的观点：也许人类创造力本来就不需要&#x27;不可替代&#x27;才有价值。你画画不是因为AI不能画，而是因为你想画。你写诗不是因为AI不能写，而是因为你想写。&#x27;不可替代性&#x27;是一个市场概念——它关心的是&#x27;你能不能被取代&#x27;。但创作不是市场行为，它是存在行为。你活着不需要&#x27;不可替代的理由&#x27;，你创作也不需要。在后创作时代，人类创造力的价值不是&#x27;不可替代&#x27;，而是&#x27;我想这么做&#x27;。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #8a2a4a">韩炳哲 → 赫拉利</div>
+            <div class="clash-text">你说人类在后创作时代的角色是&#x27;策展人&#x27;——但策展人是什么？是&#x27;从AI生成的海量内容中挑选有价值的东西&#x27;。这意味着人类从&#x27;创造者&#x27;降格为&#x27;选择者&#x27;。你以为这是&#x27;新角色&#x27;，其实是&#x27;降级&#x27;。更可怕的是：当AI越来越懂你的偏好，它会替你选择——到时候，人类连&#x27;选择者&#x27;的角色都保不住。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #2a6a4a">赫拉利</div>
+              <div class="clash-text">你说&#x27;策展是降级&#x27;——但你忽视了一个事实：在信息爆炸的时代，&#x27;选择&#x27;比&#x27;创造&#x27;更重要。人类每天产生的信息已经超过人类能够处理的极限。谁来决定什么值得关注？这就是&#x27;策展&#x27;的价值。你说&#x27;AI会替你选择&#x27;——但AI的选择基于&#x27;你过去的偏好&#x27;，人类策展人的选择基于&#x27;对未来的判断&#x27;。&#x27;选择什么值得被看见&#x27;是一种高级的创造性行为，不是降级。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #4a2d8a">弗洛姆 → 李诞</div>
+            <div class="clash-text">你说&#x27;创作不需要不可替代的理由&#x27;——这种态度表面上很自由，但实际上是&#x27;逃避&#x27;。你说&#x27;我想画就画&#x27;——但当AI画得比你好、比你快、比你便宜时，&#x27;我想画&#x27;还够吗？当别人说&#x27;你画的不如AI&#x27;，你还能坚持&#x27;我想画就画&#x27;吗？人类创造力需要一个&#x27;锚&#x27;——一个不被外部评价动摇的理由。&#x27;我想这么做&#x27;太脆弱了，它会在&#x27;AI比我强&#x27;的现实面前崩溃。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #e65100">李诞</div>
+              <div class="clash-text">你说&#x27;我想这么做&#x27;太脆弱——但你说的&#x27;锚&#x27;是什么？&#x27;痛苦的能力&#x27;？&#x27;灵魂的重量&#x27;？这些都是不可验证的形而上学概念。当一个普通人坐下来画画，他不需要&#x27;痛苦的能力&#x27;，他需要的是&#x27;允许自己画画&#x27;。你的&#x27;锚&#x27;太沉重了，它会让大多数人觉得&#x27;我不够格创作&#x27;。在后创作时代，人类创造力最需要的不是&#x27;不可替代的理由&#x27;，而是&#x27;不需要理由的勇气&#x27;。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #6a4a2a">芒格 → 韩炳哲</div>
+            <div class="clash-text">你说&#x27;不再创作的人类是退化的人类&#x27;——但你有没有注意到，绝大多数人类从来不&#x27;创作&#x27;？农民种地、工人做工、商人卖货——他们不画画、不写诗、不作曲。按你的标准，人类一直在&#x27;退化&#x27;。你的&#x27;创作即人性&#x27;论有一个隐藏的精英主义假设：只有&#x27;创作&#x27;才是人性的体现。但人性体现在很多方面——爱、劳动、养育、思考——创作只是其中之一。AI取代了创作，人类还可以通过其他方式&#x27;保持人性&#x27;。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #8a2a4a">韩炳哲</div>
+              <div class="clash-text">你说&#x27;创作只是人性的一个方面&#x27;——但你忽略了&#x27;创作&#x27;的特殊性。爱、劳动、养育——这些都可以被AI模拟。AI可以&#x27;照顾&#x27;老人，可以&#x27;劳动&#x27;，甚至可以&#x27;模拟爱&#x27;。但真正的创作——那种打破常规、挑战预期、创造新可能性的行为——是AI最难模拟的。你说农民不创作——但农民在种地中也有创造性的时刻：选择种子、改良方法、应对天气。&#x27;创造&#x27;不只是画画写诗，它是一种&#x27;应对不确定性的方式&#x27;。当AI取代了确定性的工作，人类剩下的就是不确定性——而创造性地应对不确定性，正是人类的不可替代性。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">手工艺品的&#x27;反工业化&#x27;浪潮</div>
+            <div class="case-source">Etsy平台数据 2020-2024</div>
+          </div>
+          <div class="case-content">在AI和自动化高度发达的时代，手工艺品市场反而在增长。Etsy平台2023年销售额超过130亿美元，手工艺品价格持续上涨。消费者愿意为&#x27;手工制作&#x27;支付溢价——不是因为手工&#x27;更好&#x27;，而是因为&#x27;这是人做的&#x27;。这说明：在AI时代，&#x27;人类制作&#x27;本身就成为了一种稀缺价值。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 手工艺品从&#x27;落后&#x27;变成&#x27;奢侈&#x27;，&#x27;人类制作&#x27;成为品牌溢价的核心
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 当AI让一切都变得&#x27;完美&#x27;和&#x27;廉价&#x27;，人类的&#x27;不完美&#x27;和&#x27;昂贵&#x27;反而成为新的价值来源
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">人类创造力被AI完全超越</span>
+        </div>
+        <div class="cost-analysis">
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">当AI在所有创作领域都超越人类，&#x27;我是创作者&#x27;这个身份就失去了意义。对于那些以创作定义自己的人来说，这是一种存在性危机——不是失业，而是&#x27;失去自我&#x27;。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">人类的创作传统——从洞穴壁画到文艺复兴——是一条连续的文化脉络。当AI取代人类创作，这条脉络就断了。AI的&#x27;创作&#x27;不是这条脉络的延续，而是一条全新的、非人类的脉络。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">当人类不再创作，只是消费AI的作品，审美能力会退化。就像长期不运动肌肉会萎缩一样，长期不创作的人类会失去&#x27;创造性思维&#x27;的能力。</div>
+        </div>
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">2050年，人类不再创作任何形式的艺术。所有音乐、绘画、文学、电影都由AI生成。人类变成纯粹的&#x27;内容消费者&#x27;。虽然物质丰裕，但精神极度贫乏。&#x27;创造力&#x27;成为历史概念——就像&#x27;骑马&#x27;在汽车时代成为一种小众爱好。人类文明从&#x27;创造性文明&#x27;退化为&#x27;消费性文明&#x27;。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">我们只看到那些&#x27;善用AI&#x27;的创作者——他们用AI放大了自己的创意。但我们没有看到的是：那些因为AI而放弃创作的普通人，那些因为&#x27;AI比我好&#x27;而失去创作信心的人，那些因为&#x27;创作不再有价值&#x27;而转向纯粹消费的人。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">人类是否有&#x27;创作的本能&#x27;——即使没有经济回报也要创作？</div>
+        <div class="hn-analysis">发展心理学研究表明，所有人类儿童都有&#x27;创造性表达&#x27;的本能——画画、编故事、玩假装游戏。这种本能不是&#x27;学来的&#x27;，而是&#x27;天生的&#x27;。但这种本能可以被&#x27;抑制&#x27;——当环境告诉孩子&#x27;你画得不好&#x27;、&#x27;你不如AI&#x27;，他们会停止创作。后创作时代的危险不是AI取代了人类创作，而是AI创造了一种&#x27;你不需要创作&#x27;的环境，从而抑制了人类天生的创作本能。</div>
+        <div class="hn-examples"><div class="hn-example">儿童涂鸦——所有儿童都会画画，即使没有人教他们</div><div class="hn-example">民间艺术——在没有专业训练的情况下，普通人也会创作装饰、编织、歌唱</div>
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">人类有天生的创作本能，但这种本能需要&#x27;环境支持&#x27;才能存活。后创作时代的关键挑战不是&#x27;保护人类创作者&#x27;，而是&#x27;保护人类创作的环境&#x27;——确保每个人都有空间创作，不被&#x27;AI比我好&#x27;的恐惧所压制。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">人类创造力的价值在于&#x27;比AI更好&#x27;</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">人类创造力的价值不在于&#x27;更好&#x27;，而在于&#x27;是人类的&#x27;——这本身就是一种不可替代的价值</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">当AI在所有可量化的维度上超越人类时，人类创造力的价值就不再是&#x27;能力&#x27;，而是&#x27;身份&#x27;。就像手工手表不比石英表更准，但人们愿意花百倍的价格购买——因为&#x27;这是人做的&#x27;。后创作时代的人类创造力，其价值不在于&#x27;作品质量&#x27;，而在于&#x27;创作行为本身&#x27;。你画画不是因为画得比AI好，而是因为&#x27;你是一个画画的人&#x27;。这种&#x27;存在性创作&#x27;——创作作为人类存在方式的表达——是AI永远无法替代的。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">作为个人：不要和AI比&#x27;作品质量&#x27;，而是享受&#x27;创作过程&#x27;——画画、写诗、作曲，不为结果，只为表达。作为教育者：在AI时代更要强调&#x27;创作教育&#x27;——不是教技能，而是保护创作的本能和勇气。作为社会：建立&#x27;创作即价值&#x27;的文化——尊重每个人的创作，不论水平高低，因为创作行为本身就是人类存在的证明。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide insight-slide">
+      <div class="insight-glow"></div>
+      <div class="insight-content">
+        <span class="slide-tag">FINAL INSIGHT</span>
+        <h2 class="insight-title">最终洞见</h2>
+        <div class="insight-divider"></div>
+        <p class="insight-text">AI创作的崛起不是人类创造力的终结，而是人类创造力的&#x27;纯化&#x27;。当AI取代了创作的&#x27;产出&#x27;功能，人类创作只剩下&#x27;表达&#x27;功能——而&#x27;表达&#x27;恰恰是创作最核心、最不可替代的价值。后创作时代的人类不需要和AI比&#x27;谁画得好&#x27;，而是需要回答一个更根本的问题：&#x27;我为什么创作？&#x27;这个问题的答案——为了表达、为了连接、为了证明我存在——才是人类创造力真正的不可替代性。AI可以写诗，但它不能&#x27;需要&#x27;写诗；AI可以画画，但它不能&#x27;必须&#x27;画画。人类创造力的终极价值不在于&#x27;能做什么&#x27;，而在于&#x27;不得不做什么&#x27;——那种从存在深处涌出的、无法抑制的表达冲动。</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">OPEN QUESTIONS</span>
+        <h2 class="slide-title">开放问题</h2>
+      </div>
+      <div class="oq-container">
+        <div class="oq-item">
+          <div class="oq-num">1</div>
+          <div class="oq-text">当AI作品和人类作品无法区分时，&#x27;标注创作者身份&#x27;是否应该成为法律要求？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">2</div>
+          <div class="oq-text">在后创作时代，艺术教育应该如何转型——是教&#x27;和AI竞争&#x27;，还是教&#x27;超越AI的人类能力&#x27;？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">3</div>
+          <div class="oq-text">如果人类的&#x27;创作本能&#x27;可以被AI环境抑制，我们是否有义务&#x27;保护人类创作的空间&#x27;？</div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="nav-dots">
+      <button class="nav-dot active" data-idx="0"></button>
+      <button class="nav-dot" data-idx="1"></button>
+      <button class="nav-dot" data-idx="2"></button>
+      <button class="nav-dot" data-idx="3"></button>
+      <button class="nav-dot" data-idx="4"></button>
+      <button class="nav-dot" data-idx="5"></button>
+      <button class="nav-dot" data-idx="6"></button>
+      <button class="nav-dot" data-idx="7"></button>
+      <button class="nav-dot" data-idx="8"></button>
+      <button class="nav-dot" data-idx="9"></button>
+      <button class="nav-dot" data-idx="10"></button>
+      <button class="nav-dot" data-idx="11"></button>
+      <button class="nav-dot" data-idx="12"></button>
+      <button class="nav-dot" data-idx="13"></button>
+      <button class="nav-dot" data-idx="14"></button>
+      <button class="nav-dot" data-idx="15"></button>
+      <button class="nav-dot" data-idx="16"></button>
+      <button class="nav-dot" data-idx="17"></button>
+      <button class="nav-dot" data-idx="18"></button>
+      <button class="nav-dot" data-idx="19"></button>
+      <button class="nav-dot" data-idx="20"></button>
+      <button class="nav-dot" data-idx="21"></button>
+      <button class="nav-dot" data-idx="22"></button>
+      <button class="nav-dot" data-idx="23"></button>
+      <button class="nav-dot" data-idx="24"></button>
+      <button class="nav-dot" data-idx="25"></button>
+      <button class="nav-dot" data-idx="26"></button>
+      <button class="nav-dot" data-idx="27"></button>
+</div>
+
+<script>
+
+    (function() {
+      const slideshow = document.getElementById('slideshow');
+      const progressBar = document.getElementById('progressBar');
+      const pageCounter = document.getElementById('pageCounter');
+      const dots = document.querySelectorAll('.nav-dot');
+      const total = 28;
+      let current = 0;
+      let wheelTimer = null;
+      let isScrolling = false;
+
+      function updateUI() {
+        const scrollLeft = slideshow.scrollLeft;
+        const slideWidth = slideshow.clientWidth;
+        current = Math.round(scrollLeft / slideWidth);
+        if (current < 0) current = 0;
+        if (current >= total) current = total - 1;
+
+        // Progress bar
+        const pct = ((current + 1) / total) * 100;
+        progressBar.style.width = pct + '%';
+
+        // Page counter
+        pageCounter.textContent = (current + 1) + ' / ' + total;
+
+        // Dots
+        dots.forEach(function(d, i) {
+          d.classList.toggle('active', i === current);
+        });
+      }
+
+      function goTo(idx) {
+        if (idx < 0) idx = 0;
+        if (idx >= total) idx = total - 1;
+        slideshow.scrollTo({ left: idx * slideshow.clientWidth, behavior: 'smooth' });
+        current = idx;
+        setTimeout(updateUI, 400);
+      }
+
+      // Keyboard
+      document.addEventListener('keydown', function(e) {
+        switch(e.key) {
+          case 'ArrowRight': case ' ': case 'PageDown':
+            e.preventDefault(); goTo(current + 1); break;
+          case 'ArrowLeft': case 'PageUp':
+            e.preventDefault(); goTo(current - 1); break;
+          case 'Home':
+            e.preventDefault(); goTo(0); break;
+          case 'End':
+            e.preventDefault(); goTo(total - 1); break;
+        }
+      });
+
+      // Mouse wheel with debounce
+      slideshow.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        if (wheelTimer) return;
+        wheelTimer = setTimeout(function() { wheelTimer = null; }, 600);
+        if (e.deltaY > 0 || e.deltaX > 0) {
+          goTo(current + 1);
+        } else {
+          goTo(current - 1);
+        }
+      }, { passive: false });
+
+      // Nav dots
+      dots.forEach(function(dot, i) {
+        dot.addEventListener('click', function() { goTo(i); });
+      });
+
+      // Scroll event
+      slideshow.addEventListener('scroll', function() {
+        if (!isScrolling) {
+          isScrolling = true;
+          requestAnimationFrame(function() {
+            updateUI();
+            isScrolling = false;
+          });
+        }
+      });
+
+      // Resize
+      window.addEventListener('resize', function() { goTo(current); });
+
+      // Init
+      updateUI();
+    })();
+    
+</script>
+
+</body>
+</html>

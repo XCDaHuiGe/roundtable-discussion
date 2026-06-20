@@ -9,7 +9,7 @@
 :root{--bg:#fff;--text:#1a1a1a;--dim:#666;--light:#999;--accent:#c41e3a;--accent-bg:rgba(196,30,58,.06);--gold:#b8860b;--gold-bg:rgba(184,134,11,.06);--serif:'Noto Serif SC',Georgia,serif;--sans:'Noto Sans SC','Microsoft YaHei',sans-serif;--mono:'IBM Plex Mono',Consolas,monospace}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;height:100%;overflow:hidden;font-family:var(--sans);color:var(--text);background:var(--bg)}
-.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;align-items:center;padding:40px 40px 40px 280px;z-index:1;opacity:0;transform:translateY(20px);transition:all .6s cubic-bezier(.25,.46,.45,.94);overflow:hidden}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;align-items:center;padding:40px 40px;z-index:1;opacity:0;transform:translateY(20px);transition:all .6s cubic-bezier(.25,.46,.45,.94);overflow:hidden}
 .slide.active{display:flex;opacity:1;transform:translateY(0)}
 .progress{position:fixed;top:0;left:0;height:2px;background:var(--accent);z-index:100;transition:width .4s}
 .nav{position:fixed;right:24px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:6px;z-index:100}
@@ -62,71 +62,20 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:var(--sans);color:v
 .slide.active [data-anim]:nth-child(4){transition-delay:.16s}
 .slide.active [data-anim]:nth-child(5){transition-delay:.2s}
 .divider{width:40px;height:1px;background:var(--accent);margin:12px 0}
-.toc-sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:#f8f8f8;border-right:1px solid rgba(26,26,26,.08);z-index:50;overflow-y:auto;padding:20px 0;scrollbar-width:thin;scrollbar-color:rgba(26,26,26,.1) transparent}
-.toc-header{padding:0 20px 16px;border-bottom:1px solid rgba(26,26,26,.08)}
-.toc-title{font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--light)}
-.toc-list{padding:4px 0}
-.toc-item{display:block;padding:6px 20px;font-size:12px;color:var(--dim);cursor:pointer;transition:all .15s;border-left:3px solid transparent}
-.toc-item:hover{color:var(--text);background:rgba(26,26,26,.03)}
-.toc-item.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-bg);font-weight:600}
-.toc-item .toc-num{font-family:var(--mono);font-size:9px;color:var(--light);margin-right:6px}
-@media(max-width:1024px){.slide{padding:60px 24px}.toc-sidebar{display:none}.chrome{left:24px}}
+
+
+
+
+
+
+
+
+@media(max-width:1024px){.slide{padding:60px 24px}.chrome{left:24px}}
 </style>
 </head>
 <body>
 
-<div class="toc-sidebar" id="tocSidebar">
-<div class="toc-header"><div class="toc-title">目录</div></div>
-<div class="toc-list" id="tocList"></div>
-</div>
-
-<div class="progress" id="progress"></div>
-<div class="nav" id="nav"></div>
-<div class="num" id="num"></div>
-<div class="chrome"><span>遥远的救世主 · 圆桌洞见</span><span id="title"></span></div>
-
-<section class="slide active" data-title="封面">
-<div class="content" style="text-align:center;">
-<div class="kicker" data-anim>圆桌洞见 · 50页深度分析</div>
-<h1 class="h1" data-anim>遥远的救世主</h1>
-<p class="lead" data-anim style="text-align:center;margin:0 auto;">神即道·道法自然·如来<br>文化属性决定命运，这是规律，也是天道。</p>
-<div class="divider" data-anim style="margin:16px auto;"></div>
-<div data-anim style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
-<span class="tag tag-accent">6位专家</span><span class="tag tag-accent">10轮交锋</span><span class="tag tag-accent">5个洞见</span><span class="tag tag-accent">50页</span>
-</div></div></section>
-<section class="slide" data-title="书名释义">
-<div class="content" style="text-align:center;">
-<div class="kicker" data-anim>TITLE</div>
-<h2 class="h2" data-anim>救世主之所以遥远</h2>
-<div class="divider" data-anim style="margin:16px auto;"></div>
-<p class="lead" data-anim style="text-align:center;margin:0 auto;font-size:18px;">
-"是因为他根本不存在；<br>或者说，<span class="accent">救世主就是那个遵循事物规律的自己</span>"
-</p>
-<p class="lead" data-anim style="text-align:center;margin:12px auto 0;">
-书名本身就是一个悖论的解：遥远 = 不存在 / 存在于自身 = 不遥远
-</p></div></section>
-<section class="slide" data-title="核心命题">
-<div class="content" style="text-align:center;">
-<div class="kicker" data-anim>PHILOSOPHY</div>
-<blockquote class="h2" data-anim style="font-style:italic;max-width:500px;margin:0 auto;">
-"世上没有救世主，能救你的只有你自己——这就是天道。"
-</blockquote>
-<div class="divider" data-anim style="margin:16px auto;"></div>
-<p class="lead" data-anim style="text-align:center;margin:0 auto;">
-丁元英用"杀富济贫"的商业实验，把这句话拍进了每一个读过它的人的骨头里。
-</p></div></section>
-<section class="slide" data-title="文化属性">
-<div class="content">
-<div class="kicker" data-anim>CONCEPT</div>
-<h2 class="h2" data-anim>文化属性</h2>
-<div class="card" data-anim style="margin-bottom:12px;">
-<p style="text-align:center;font-size:15px;line-height:1.8;">
-透视社会依次有三个层面：技术、制度和文化。<br>任何一种命运归根到底都是<span class="accent" style="font-weight:700;">文化属性的产物</span>。
-</p></div>
-<div class="grid-2" data-anim>
-<div class="card" style="border-left:3px solid var(--gold);"><div class="h4" style="color:var(--gold);">强势文化</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">遵循事物规律，自强不息，创造价值，不依赖他人</p></div>
-<div class="card" style="border-left:3px solid var(--accent);"><div class="h4" style="color:var(--accent);">弱势文化</div><p style="font-size:12px;line-height:1.6;color:var(--dim);">期待救世主，依赖强者，等待被拯救，缺乏自主性</p></div>
-</div></div></section>
+</section>
 <section class="slide" data-title="故事脉络">
 <div class="content">
 <div class="kicker" data-anim>PLOT</div>

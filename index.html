@@ -302,6 +302,14 @@ section { position: relative; z-index: 1; }
   background: rgba(108,92,231,0.1); color: var(--accent-light);
   border-color: rgba(108,92,231,0.15);
 }
+.cap-card:nth-child(7) .cap-icon {
+  background: rgba(253,121,168,0.1); color: var(--accent-warm);
+  border-color: rgba(253,121,168,0.15);
+}
+.cap-card:nth-child(8) .cap-icon {
+  background: rgba(0,206,201,0.1); color: var(--accent-secondary);
+  border-color: rgba(0,206,201,0.15);
+}
 
 .cap-title {
   font-size: 17px; font-weight: 700; margin-bottom: 10px;
@@ -309,6 +317,254 @@ section { position: relative; z-index: 1; }
 }
 .cap-desc {
   font-size: 14px; color: var(--text-secondary); line-height: 1.7;
+}
+
+/* ===== ARCHITECTURE ===== */
+.architecture { padding: 120px 0; position: relative; }
+.architecture-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, var(--bg-primary) 0%, rgba(8,16,32,0.6) 50%, var(--bg-primary) 100%);
+  z-index: -1;
+}
+
+.arch-diagram {
+  margin-top: 56px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 48px 40px;
+  position: relative;
+  overflow: hidden;
+}
+.arch-diagram::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 2px; background: var(--gradient-1);
+}
+
+.arch-pipeline-pre {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  line-height: 2.2;
+  color: var(--text-secondary);
+  white-space: pre;
+  overflow-x: auto;
+  padding: 24px 0;
+}
+.arch-pipeline-pre .step {
+  color: var(--accent-light);
+  font-weight: 600;
+}
+.arch-pipeline-pre .arrow {
+  color: var(--text-tertiary);
+  margin: 0 4px;
+}
+
+.arch-divider {
+  width: 100%; height: 1px;
+  background: var(--border);
+  margin: 32px 0;
+  position: relative;
+}
+.arch-divider::after {
+  content: '三层专家架构';
+  position: absolute; left: 50%; top: -10px;
+  transform: translateX(-50%);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+  background: var(--bg-secondary);
+  padding: 0 16px;
+}
+
+.arch-layers-pre {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  line-height: 2.4;
+  color: var(--text-secondary);
+  white-space: pre;
+  overflow-x: auto;
+  padding: 24px 0;
+}
+.arch-layers-pre .layer-soul { color: var(--accent-warm); font-weight: 600; }
+.arch-layers-pre .layer-strategy { color: var(--accent-light); font-weight: 600; }
+.arch-layers-pre .layer-material { color: var(--accent-secondary); font-weight: 600; }
+.arch-layers-pre .desc { color: var(--text-tertiary); }
+.arch-layers-pre .arrow { color: var(--text-tertiary); margin: 0 4px; }
+
+.arch-labels {
+  display: flex; justify-content: center; gap: 32px;
+  margin-top: 32px; flex-wrap: wrap;
+}
+.arch-label {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--text-tertiary);
+}
+.arch-label-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+}
+.arch-label-dot.soul { background: var(--accent-warm); }
+.arch-label-dot.strategy { background: var(--accent-light); }
+.arch-label-dot.material { background: var(--accent-secondary); }
+.arch-label-dot.step { background: var(--accent-light); }
+
+/* ===== KNOWLEDGE BOUNDARY ===== */
+.boundary { padding: 120px 0; position: relative; }
+
+.boundary-grid {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+}
+@media(max-width:768px){ .boundary-grid { grid-template-columns: 1fr; } }
+
+.boundary-case {
+  background: var(--bg-secondary);
+  padding: 32px 28px;
+  display: flex; align-items: flex-start; gap: 16px;
+  transition: background 0.3s;
+}
+.boundary-case:hover { background: var(--bg-card-hover); }
+
+.boundary-icon {
+  font-size: 20px; flex-shrink: 0; margin-top: 2px;
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 8px;
+}
+.boundary-case.fail .boundary-icon {
+  background: rgba(253,121,168,0.1);
+}
+.boundary-case.pass .boundary-icon {
+  background: rgba(0,206,201,0.1);
+}
+
+.boundary-text { flex: 1; }
+.boundary-quote {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 16px; font-weight: 600;
+  line-height: 1.6; margin-bottom: 8px;
+}
+.boundary-reason {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  padding: 4px 10px; border-radius: 6px;
+  display: inline-block;
+}
+.boundary-case.fail .boundary-reason {
+  background: rgba(253,121,168,0.1);
+  color: var(--accent-warm);
+}
+.boundary-case.pass .boundary-reason {
+  background: rgba(0,206,201,0.1);
+  color: var(--accent-secondary);
+}
+
+/* ===== RESULTS SHOWCASE ===== */
+.results { padding: 120px 0; position: relative; }
+.results-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, var(--bg-primary) 0%, rgba(16,8,32,0.5) 50%, var(--bg-primary) 100%);
+  z-index: -1;
+}
+
+.results-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 56px;
+}
+@media(max-width:768px){ .results-stats { grid-template-columns: repeat(2, 1fr); } }
+
+.results-stat-card {
+  background: var(--bg-secondary);
+  padding: 36px 24px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.results-stat-card:hover { background: var(--bg-card-hover); }
+
+.results-stat-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 40px; font-weight: 800;
+  background: var(--gradient-1);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+.results-stat-label {
+  font-size: 13px; color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.results-featured {
+  margin-top: 48px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+@media(max-width:768px){ .results-featured { grid-template-columns: 1fr; } }
+
+.results-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+  display: flex; align-items: center; gap: 20px;
+  position: relative; overflow: hidden;
+}
+.results-card:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+.results-card::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; background: var(--gradient-1); opacity: 0;
+  transition: opacity 0.3s;
+}
+.results-card:hover::before { opacity: 1; }
+
+.results-card-icon {
+  width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(108,92,231,0.1); color: var(--accent-light);
+  font-size: 20px;
+}
+.results-card:nth-child(2) .results-card-icon {
+  background: rgba(0,206,201,0.1); color: var(--accent-secondary);
+}
+.results-card:nth-child(3) .results-card-icon {
+  background: rgba(253,121,168,0.1); color: var(--accent-warm);
+}
+.results-card:nth-child(4) .results-card-icon {
+  background: rgba(0,206,201,0.1); color: var(--accent-secondary);
+}
+
+.results-card-title {
+  font-size: 15px; font-weight: 600; margin-bottom: 4px;
+}
+.results-card-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--text-tertiary);
+}
+.results-card-arrow {
+  margin-left: auto; color: var(--text-tertiary);
+  transition: all 0.3s; flex-shrink: 0;
+}
+.results-card:hover .results-card-arrow {
+  color: var(--accent-light); transform: translateX(4px);
 }
 
 /* ===== TOPIC LIBRARY ===== */
@@ -441,20 +697,20 @@ section { position: relative; z-index: 1; }
 
 .process-flow {
   margin-top: 56px; display: grid;
-  grid-template-columns: repeat(4, 1fr); gap: 0;
+  grid-template-columns: repeat(6, 1fr); gap: 0;
   position: relative;
 }
 @media(max-width:768px){ .process-flow { grid-template-columns: 1fr; gap: 24px; } }
 
 .process-step {
-  text-align: center; padding: 32px 24px;
+  text-align: center; padding: 32px 16px;
   position: relative;
 }
 .process-step:not(:last-child)::after {
   content: ''; position: absolute; top: 48px; right: -1px;
-  width: calc(100% - 96px); height: 1px;
+  width: calc(100% - 32px); height: 1px;
   background: linear-gradient(to right, var(--accent), transparent);
-  left: calc(50% + 48px); opacity: 0.3;
+  left: calc(50% + 16px); opacity: 0.3;
 }
 @media(max-width:768px){
   .process-step:not(:last-child)::after { display: none; }
@@ -549,6 +805,9 @@ footer {
   .expert-domains { grid-template-columns: repeat(2, 1fr); }
   .expert-names { padding: 24px; }
   .footer-inner { flex-direction: column; text-align: center; align-items: center; }
+  .arch-diagram { padding: 24px 16px; }
+  .arch-pipeline-pre { font-size: 11px; }
+  .arch-layers-pre { font-size: 12px; }
 }
 </style>
 </head>
@@ -565,11 +824,14 @@ footer {
   </div>
   <div class="nav-links">
     <a href="#capabilities">核心能力</a>
+    <a href="#architecture">系统架构</a>
+    <a href="#boundary">知识边界</a>
+    <a href="#results">成果</a>
     <a href="#topics">话题库</a>
     <a href="#experts">专家库</a>
     <a href="#process">流程</a>
   </div>
-  <div class="nav-badge">ROUND OS</div>
+  <div class="nav-badge">ROUND OS V11</div>
 </nav>
 
 <!-- HERO -->
@@ -582,14 +844,13 @@ footer {
   <div class="hero-content">
     <div class="hero-version">
       <span class="dot"></span>
-      ROUND OS · 2026
+      ROUND OS V11 · 2026
     </div>
 
     <h1>圆桌洞见</h1>
 
     <p class="hero-subtitle">
-      给一个话题，系统自动从互联网挖掘真实素材，<br>
-      <strong>6位跨领域专家</strong>展开<strong>10轮深度交锋</strong>，榨干认知增量。
+      <strong>32位跨领域专家</strong> × <strong>深度辩论</strong> × <strong>自我进化训练系统</strong>
     </p>
 
     <div class="hero-stats">
@@ -598,20 +859,20 @@ footer {
         <div class="hero-stat-label">专家库</div>
       </div>
       <div class="hero-stat">
-        <div class="hero-stat-num">5</div>
-        <div class="hero-stat-label">领域</div>
+        <div class="hero-stat-num">37</div>
+        <div class="hero-stat-label">知识边界</div>
       </div>
       <div class="hero-stat">
-        <div class="hero-stat-num">3</div>
-        <div class="hero-stat-label">轮交锋</div>
+        <div class="hero-stat-num">V11</div>
+        <div class="hero-stat-label">系统版本</div>
       </div>
       <div class="hero-stat">
-        <div class="hero-stat-num">∞</div>
-        <div class="hero-stat-label">互联网学习</div>
+        <div class="hero-stat-num">35+</div>
+        <div class="hero-stat-label">圆桌洞见</div>
       </div>
     </div>
 
-    <a href="#topics" class="hero-cta">
+    <a href="#results" class="hero-cta">
       <span class="iconify" data-icon="lucide:arrow-down" data-width="16"></span>
       探索全部洞见
     </a>
@@ -634,7 +895,7 @@ footer {
     <div class="reveal">
       <div class="section-tag">Core System</div>
       <h2 class="section-title">圆桌洞见核心能力</h2>
-      <p class="section-desc">从话题到洞见，全自动认知榨取引擎 + 深度训练系统。</p>
+      <p class="section-desc">从话题到洞见，V11 全自动认知榨取引擎 + 深度训练系统。</p>
     </div>
 
     <div class="cap-grid reveal">
@@ -642,58 +903,209 @@ footer {
         <div class="cap-icon">
           <span class="iconify" data-icon="lucide:globe" data-width="22"></span>
         </div>
-        <div class="cap-title">话题 → 互联网素材</div>
-        <div class="cap-desc">用户给一个话题，系统自动从知乎+全网挖掘真实讨论素材，不再依赖用户提供内容。</div>
+        <div class="cap-title">话题→素材挖掘</div>
+        <div class="cap-desc">WebSearch + 知乎MCP 自动挖掘真实讨论素材，不再依赖用户提供内容。</div>
       </div>
       <div class="cap-card">
         <div class="cap-icon">
           <span class="iconify" data-icon="lucide:swords" data-width="22"></span>
         </div>
         <div class="cap-title">10轮深度交锋</div>
-        <div class="cap-desc">立场表达 → 互相攻击 → 认知整合。每轮必须有专家间的直接反驳，禁止各说各话。</div>
+        <div class="cap-desc">立场→攻击→整合，每轮必须有直接反驳，禁止各说各话。</div>
       </div>
       <div class="cap-card">
         <div class="cap-icon">
           <span class="iconify" data-icon="lucide:users" data-width="22"></span>
         </div>
         <div class="cap-title">32位专家库</div>
-        <div class="cap-desc">5大领域：哲学、经济、心理、科技、文学。每位专家可持续学习升级。</div>
+        <div class="cap-desc">5大领域，跨学科交锋产生认知化学反应。</div>
       </div>
       <div class="cap-card">
         <div class="cap-icon">
-          <span class="iconify" data-icon="lucide:brain-circuit" data-width="22"></span>
+          <span class="iconify" data-icon="lucide:bar-chart-3" data-width="22"></span>
         </div>
-        <div class="cap-title">深度训练引擎</div>
-        <div class="cap-desc">WebSearch + 知乎MCP + LLM辩论驱动专家升级，融合增强式学习，策略持续进化。</div>
+        <div class="cap-title">自动评分器</div>
+        <div class="cap-desc">6维度客观信号评分，零LLM依赖，纯规则引擎。</div>
       </div>
       <div class="cap-card">
         <div class="cap-icon">
-          <span class="iconify" data-icon="lucide:presentation" data-width="22"></span>
+          <span class="iconify" data-icon="lucide:eye" data-width="22"></span>
         </div>
-        <div class="cap-title">多格式输出</div>
-        <div class="cap-desc">每份洞见为独立HTML幻灯片，支持键盘/触摸导航，零外部依赖。</div>
+        <div class="cap-title">Coach审阅</div>
+        <div class="cap-desc">结构化反馈 + Edit Budget，Coach 审阅辩论质量并给出改进建议。</div>
       </div>
       <div class="cap-card">
         <div class="cap-icon">
           <span class="iconify" data-icon="lucide:shield-check" data-width="22"></span>
         </div>
-        <div class="cap-title">专家灵魂升级</div>
-        <div class="cap-desc">知识边界检查 + Prompt V3 (Bloom 5-6) + 金句页渲染 + 交锋约束。确保专家不乱引用理论，每个发言有反直觉开场+判断性结论+可截图金句。</div>
+        <div class="cap-title">门控验证</div>
+        <div class="cap-desc">新分 > 历史平均才升级，支持快照/回退，确保质量只升不降。</div>
       </div>
       <div class="cap-card">
         <div class="cap-icon">
-          <span class="iconify" data-icon="lucide:link" data-width="22"></span>
+          <span class="iconify" data-icon="lucide:book-lock" data-width="22"></span>
         </div>
-        <div class="cap-title">来源可追溯</div>
-        <div class="cap-desc">所有观点必须标注互联网来源，每个矛盾点来自真实争议，每个案例引用真实数据。</div>
+        <div class="cap-title">知识边界</div>
+        <div class="cap-desc">37位专家.md自动加载，禁用词检查 + 时代约束，防止乱引用理论。</div>
       </div>
       <div class="cap-card">
         <div class="cap-icon">
-          <span class="iconify" data-icon="lucide:book-open" data-width="22"></span>
+          <span class="iconify" data-icon="lucide:layers" data-width="22"></span>
         </div>
-        <div class="cap-title">深度书籍分析</div>
-        <div class="cap-desc">6 Agent并行分析 + 能量评分筛选 + 语料汇总。目标50页+，10轮专家对话，8个场景还原，16句金句。每次设计从内容中"生长"。</div>
+        <div class="cap-title">专家进化</div>
+        <div class="cap-desc">三层架构：灵魂层（不可变）/ 策略层（可进化）/ 素材层（可替换）。</div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section class="architecture" id="architecture">
+  <div class="architecture-bg"></div>
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">System Architecture</div>
+      <h2 class="section-title">系统架构</h2>
+      <p class="section-desc">V11 全链路管道 + 三层专家架构。</p>
+    </div>
+
+    <div class="arch-diagram reveal">
+      <pre class="arch-pipeline-pre"><span class="step">话题生成</span><span class="arrow"> → </span><span class="step">素材挖掘</span><span class="arrow"> → </span><span class="step">辩论生成</span><span class="arrow"> → </span><span class="step">自动评分</span><span class="arrow"> → </span><span class="step">Coach审阅</span><span class="arrow"> → </span><span class="step">门控验证</span><span class="arrow"> → </span><span class="step">融合升级</span><span class="arrow"> → </span><span class="step">追踪记录</span></pre>
+
+      <div class="arch-divider"></div>
+
+      <pre class="arch-layers-pre"><span class="layer-soul">灵魂层</span><span class="desc">(不可变)</span><span class="arrow"> ← </span><span class="layer-strategy">策略层</span><span class="desc">(可进化)</span><span class="arrow"> ← </span><span class="layer-material">素材层</span><span class="desc">(可替换)</span></pre>
+
+      <div class="arch-labels">
+        <div class="arch-label"><span class="arch-label-dot step"></span> V11 管道</div>
+        <div class="arch-label"><span class="arch-label-dot soul"></span> 灵魂层</div>
+        <div class="arch-label"><span class="arch-label-dot strategy"></span> 策略层</div>
+        <div class="arch-label"><span class="arch-label-dot material"></span> 素材层</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KNOWLEDGE BOUNDARY -->
+<section class="boundary" id="boundary">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Knowledge Boundary</div>
+      <h2 class="section-title">知识边界系统</h2>
+      <p class="section-desc">37位专家各自拥有独立知识边界文件，自动检测禁用词与时代约束。</p>
+    </div>
+
+    <div class="boundary-grid reveal">
+      <div class="boundary-case fail">
+        <div class="boundary-icon">❌</div>
+        <div class="boundary-text">
+          <div class="boundary-quote">"AI是道的自我展开"</div>
+          <div class="boundary-reason">禁用词: AI, 算法</div>
+        </div>
+      </div>
+      <div class="boundary-case pass">
+        <div class="boundary-icon">✅</div>
+        <div class="boundary-text">
+          <div class="boundary-quote">"巧器虽精，不如拙朴"</div>
+          <div class="boundary-reason">通过（跨时代翻译）</div>
+        </div>
+      </div>
+      <div class="boundary-case fail">
+        <div class="boundary-icon">❌</div>
+        <div class="boundary-text">
+          <div class="boundary-quote">"量子力学证明了永恒轮回"</div>
+          <div class="boundary-reason">禁用词: 量子</div>
+        </div>
+      </div>
+      <div class="boundary-case pass">
+        <div class="boundary-icon">✅</div>
+        <div class="boundary-text">
+          <div class="boundary-quote">"重估一切价值"</div>
+          <div class="boundary-reason">通过（核心知识）</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS SHOWCASE -->
+<section class="results" id="results">
+  <div class="results-bg"></div>
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Results</div>
+      <h2 class="section-title">已有成果</h2>
+      <p class="section-desc">系统已完成的深度分析与洞见产出。</p>
+    </div>
+
+    <div class="results-stats reveal">
+      <div class="results-stat-card">
+        <div class="results-stat-num">8</div>
+        <div class="results-stat-label">书籍深度分析 (50页+)</div>
+      </div>
+      <div class="results-stat-card">
+        <div class="results-stat-num">12</div>
+        <div class="results-stat-label">前沿话题讨论</div>
+      </div>
+      <div class="results-stat-card">
+        <div class="results-stat-num">15</div>
+        <div class="results-stat-label">原创话题洞见</div>
+      </div>
+      <div class="results-stat-card">
+        <div class="results-stat-num">1480+</div>
+        <div class="results-stat-label">次专家训练</div>
+      </div>
+    </div>
+
+    <div class="results-featured reveal">
+      <a class="results-card" href="output/遥远的救世主_圆桌洞见_V13.html">
+        <div class="results-card-icon">
+          <span class="iconify" data-icon="lucide:book-open" data-width="20"></span>
+        </div>
+        <div>
+          <div class="results-card-title">《遥远的救世主》50页</div>
+          <div class="results-card-meta">文化属性 · 强势文化 · 杀富济贫</div>
+        </div>
+        <div class="results-card-arrow">
+          <span class="iconify" data-icon="lucide:arrow-right" data-width="18"></span>
+        </div>
+      </a>
+      <a class="results-card" href="output/穷查理宝典_圆桌洞见.html">
+        <div class="results-card-icon">
+          <span class="iconify" data-icon="lucide:book-open" data-width="20"></span>
+        </div>
+        <div>
+          <div class="results-card-title">《穷查理宝典》50页</div>
+          <div class="results-card-meta">多元思维模型 · 格栅理论</div>
+        </div>
+        <div class="results-card-arrow">
+          <span class="iconify" data-icon="lucide:arrow-right" data-width="18"></span>
+        </div>
+      </a>
+      <a class="results-card" href="output/深度工作_圆桌洞见.html">
+        <div class="results-card-icon">
+          <span class="iconify" data-icon="lucide:book-open" data-width="20"></span>
+        </div>
+        <div>
+          <div class="results-card-title">《深度工作》50页</div>
+          <div class="results-card-meta">注意力 · 脑力管理 · 专注力</div>
+        </div>
+        <div class="results-card-arrow">
+          <span class="iconify" data-icon="lucide:arrow-right" data-width="18"></span>
+        </div>
+      </a>
+      <a class="results-card" href="output/AI时代的意义危机_圆桌洞见.html">
+        <div class="results-card-icon">
+          <span class="iconify" data-icon="lucide:zap" data-width="20"></span>
+        </div>
+        <div>
+          <div class="results-card-title">AI时代的意义危机</div>
+          <div class="results-card-meta">原创话题 · 前沿讨论</div>
+        </div>
+        <div class="results-card-arrow">
+          <span class="iconify" data-icon="lucide:arrow-right" data-width="18"></span>
+        </div>
+      </a>
     </div>
   </div>
 </section>
@@ -726,9 +1138,9 @@ footer {
         <span class="topic-tag tag-book">张宏杰 · 2018</span>
       </a>
 
-      <a class="topic-item" href="output/大脑是如何工作的_圆桌洞见_V2.html">
+      <a class="topic-item" href="output/大脑是如何工作的_圆桌洞见.html">
         <div class="topic-meta">
-          <span class="topic-pages">35 pages</span>
+          <span class="topic-pages">20 pages</span>
         </div>
         <div class="topic-title">大脑是如何工作的：从脑区知识到用脑真本事</div>
         <span class="topic-tag tag-book">木村泰子 · 2018</span>
@@ -741,20 +1153,13 @@ footer {
         <div class="topic-title">遥远的救世主：文化属性、强势文化与杀富济贫的终极困境</div>
         <span class="topic-tag tag-book">豆豆 · 2005</span>
       </a>
+
       <a class="topic-item" href="output/穷查理宝典_圆桌洞见.html">
         <div class="topic-meta">
           <span class="topic-pages">50 pages</span>
         </div>
         <div class="topic-title">穷查理宝典：多元思维模型的格栅</div>
         <span class="topic-tag tag-book">查理·芒格 · 2005</span>
-      </a>
-
-      <a class="topic-item" href="output/曾国藩传_圆桌洞见.html">
-        <div class="topic-meta">
-          <span class="topic-pages">50 pages</span>
-        </div>
-        <div class="topic-title">曾国藩传：笨功夫、自我改造与道德代价</div>
-        <span class="topic-tag tag-book">张宏杰 · 2018</span>
       </a>
 
       <a class="topic-item" href="output/深度工作_圆桌洞见.html">
@@ -781,9 +1186,9 @@ footer {
         <span class="topic-tag tag-book">芭芭拉·明托 · 1973</span>
       </a>
 
-      <a class="topic-item" href="output/赛博亲密关系的经济学_圆桌洞见_V2.html">
+      <a class="topic-item" href="output/赛博亲密关系的经济学_圆桌洞见.html">
         <div class="topic-meta">
-          <span class="topic-pages">30 pages</span>
+          <span class="topic-pages">10 pages</span>
         </div>
         <div class="topic-title">赛博亲密关系的经济学：AI情感伴侣的普及是孤独生活的解药，还是社交退行催生的情感消费新金融洼地？</div>
         <span class="topic-tag tag-frontier">前沿话题</span>
@@ -1005,30 +1410,6 @@ footer {
         <span class="topic-tag tag-frontier">前沿话题</span>
       </a>
 
-      <a class="topic-item" href="output/段永平投资问答语录_圆桌洞见.html">
-        <div class="topic-meta">
-          <span class="topic-pages">51 pages</span>
-        </div>
-        <div class="topic-title">段永平投资问答语录</div>
-        <span class="topic-tag tag-book">书籍 · 2006-2025</span>
-      </a>
-
-      <a class="topic-item" href="output/儒释道批判性分析_圆桌洞见.html">
-        <div class="topic-meta">
-          <span class="topic-pages">16 pages</span>
-        </div>
-        <div class="topic-title">儒释道批判性分析</div>
-        <span class="topic-tag tag-original">原创话题</span>
-      </a>
-
-      <a class="topic-item" href="output/穷查理宝典_圆桌洞见.html">
-        <div class="topic-meta">
-          <span class="topic-pages">36 pages</span>
-        </div>
-        <div class="topic-title">穷查理宝典</div>
-        <span class="topic-tag tag-book">查理·芒格</span>
-      </a>
-
       <a class="topic-item" href="output/布鲁克林有棵树_圆桌洞见.html">
         <div class="topic-meta">
           <span class="topic-pages">35 pages</span>
@@ -1056,42 +1437,42 @@ footer {
           <span class="iconify" data-icon="lucide:sparkles" data-width="20"></span>
         </div>
         <div class="domain-name">哲学</div>
-        <div class="domain-count">6 experts</div>
+        <div class="domain-count">11 experts</div>
       </div>
       <div class="domain-card">
         <div class="domain-icon">
           <span class="iconify" data-icon="lucide:trending-up" data-width="20"></span>
         </div>
         <div class="domain-name">经济</div>
-        <div class="domain-count">5 experts</div>
+        <div class="domain-count">10 experts</div>
       </div>
       <div class="domain-card">
         <div class="domain-icon">
           <span class="iconify" data-icon="lucide:brain" data-width="20"></span>
         </div>
         <div class="domain-name">心理</div>
-        <div class="domain-count">4 experts</div>
+        <div class="domain-count">5 experts</div>
       </div>
       <div class="domain-card">
         <div class="domain-icon">
           <span class="iconify" data-icon="lucide:cpu" data-width="20"></span>
         </div>
         <div class="domain-name">科技</div>
-        <div class="domain-count">4 experts</div>
+        <div class="domain-count">3 experts</div>
       </div>
       <div class="domain-card">
         <div class="domain-icon">
           <span class="iconify" data-icon="lucide:book-open" data-width="20"></span>
         </div>
         <div class="domain-name">文学</div>
-        <div class="domain-count">4 experts</div>
+        <div class="domain-count">8 experts</div>
       </div>
       <div class="domain-card">
         <div class="domain-icon">
           <span class="iconify" data-icon="lucide:network" data-width="20"></span>
         </div>
         <div class="domain-name">社会</div>
-        <div class="domain-count">3 experts</div>
+        <div class="domain-count">1 expert</div>
       </div>
     </div>
 
@@ -1135,29 +1516,39 @@ footer {
     <div class="reveal">
       <div class="section-tag">How It Works</div>
       <h2 class="section-title">从话题到洞见</h2>
-      <p class="section-desc">四步完成认知榨取，每一步都有强制对抗机制。</p>
+      <p class="section-desc">六步完成认知榨取，每一步都有强制质量门控。</p>
     </div>
 
     <div class="process-flow reveal">
       <div class="process-step">
         <div class="process-num">01</div>
-        <div class="process-label">输入话题</div>
+        <div class="process-label">话题生成</div>
         <div class="process-detail">任意话题或书籍，系统自动启动互联网素材挖掘</div>
       </div>
       <div class="process-step">
         <div class="process-num">02</div>
-        <div class="process-label">6位专家就位</div>
-        <div class="process-detail">从32位专家库中智能匹配最相关的跨领域阵容</div>
+        <div class="process-label">自动评分</div>
+        <div class="process-detail">6维度客观信号评分，零LLM依赖</div>
       </div>
       <div class="process-step">
         <div class="process-num">03</div>
-        <div class="process-label">10轮深度交锋</div>
-        <div class="process-detail">立场表达→互相攻击→认知整合，禁止各说各话</div>
+        <div class="process-label">Coach审阅</div>
+        <div class="process-detail">结构化反馈 + Edit Budget 约束</div>
       </div>
       <div class="process-step">
         <div class="process-num">04</div>
+        <div class="process-label">门控升级</div>
+        <div class="process-detail">新分>历史平均才升级，快照/回退保障</div>
+      </div>
+      <div class="process-step">
+        <div class="process-num">05</div>
+        <div class="process-label">追踪记录</div>
+        <div class="process-detail">全流程追踪，知识自动回流专家库</div>
+      </div>
+      <div class="process-step">
+        <div class="process-num">06</div>
         <div class="process-label">洞见输出</div>
-        <div class="process-detail">独立HTML幻灯片，来源可追溯，知识自动回流</div>
+        <div class="process-detail">独立HTML幻灯片，来源可追溯</div>
       </div>
     </div>
   </div>
@@ -1170,7 +1561,7 @@ footer {
       <div class="footer-left">
         <div class="footer-brand">圆桌洞见</div>
         <div class="footer-copy">© 2026 圆桌洞见 · Roundtable Insight</div>
-        <div class="footer-tech">ROUND OS · 32专家 · 5领域 · 深度训练引擎</div>
+        <div class="footer-tech">V11.0 · 32专家 · 37知识边界 · Coach + 门控 + 自动评分</div>
       </div>
       <div class="footer-right">
         <a href="https://github.com/XCDaHuiGe/roundtable-discussion" target="_blank" class="footer-link">
@@ -1212,4 +1603,3 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 
 </body>
 </html>
-

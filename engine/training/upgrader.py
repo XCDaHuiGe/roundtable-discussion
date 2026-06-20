@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 """
+⚠️ DEPRECATED (V11.0 起废弃) — 替换式升级器
+
+此模块已被 FusionEngine (fusion_engine.py) 取代。
+auto_train.py V11.0 只使用 FusionEngine + Coach Review 闭环。
+保留此文件仅供历史参考，不要在新代码中导入。
+
 替换式升级器：用提取的策略数据升级专家 .md 文件。
 
 核心原则：

@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 """
+⚠️ DEPRECATED (V11.0 起废弃) — 进化式升级引擎 V3.1
+
+此模块已被 FusionEngine (fusion_engine.py V5.0) 取代。
+auto_train.py V11.0 只使用 FusionEngine + Coach Review 闭环。
+保留此文件仅供历史参考，不要在新代码中导入。
+
 进化式升级引擎 V3.1
 
 核心原则：

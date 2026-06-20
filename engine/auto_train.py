@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-深度训练引擎 V10.0 — Agent=LLM，Python=机械操作 + 门控验证
+深度训练引擎 V11.0 — Agent=LLM，Python=机械操作 + Coach审阅 + 门控验证
 
 核心设计：
   - Agent（你）本身就是LLM，负责搜索、阅读、生成辩论、反思
-  - Python模块只做机械操作：评分、提取、门控验证、升级、保存
+  - Python模块只做机械操作：评分、提取、Coach审阅、门控验证、升级、保存
   - 不依赖任何外部LLM API
 
 进化闭环（借鉴 SkillOpt）：
@@ -13,19 +13,19 @@
   3. Agent自己阅读专家档案 → 理解专家风格
   4. Agent自己生成辩论JSON → 传入step4评分
   5. Agent调用 step4_score_and_extract() → 机械评分+提取
-  6. Agent生成 reflection.json → 结构化反思（教师角色）
-  7. Agent调用 step5_upgrade_experts() → 门控验证 + 升级
+  6. Agent生成 coach_review.json → Coach审阅（监督角色）
+  7. Agent调用 step5_upgrade_experts() → 门控验证 + 快照 + 升级/回退
+     - Coach: 结构化审阅，决定哪些升级值得执行
      - Gate: 新分 > 历史平均？通过才升级
-     - Edit Budget: 每轮最多 3 条升级
      - Snapshot: 升级前保存快照
      - Rollback: 门控拒绝时回退
-  8. Agent调用 save_training_result() → 机械保存
+  8. Agent调用 step6_record_tracking() → 记录训练数据到追踪系统
+  9. Agent调用 save_training_result() → 机械保存
 
 CLI模式（调试用）：
   python auto_train.py --check           # 检查同质化
   python auto_train.py --step1 --rounds 3 # 只生成话题
 """
-
 import argparse
 import json
 import os
@@ -47,6 +47,13 @@ from training.reflection_schema import (
     save_to_history, snapshot_expert, rollback_expert, cleanup_snapshots,
     REFLECTION_PROMPT,
 )
+from training.coach import (
+    validate_coach_review, load_coach_review, coach_review_to_dict,
+    extract_strategies_from_coach_review, CoachReview,
+    COACH_REVIEW_PROMPT,
+)
+from training.tracker import TrainingTracker
+from auto_scorer import auto_score_debate, blend_scores
 
 EXPERT_LIBRARY = os.path.join(os.path.dirname(__file__), '..', 'expert-library')
 MEMORY_DIR = os.path.join(os.path.dirname(__file__), '..', 'memory')
@@ -199,12 +206,16 @@ def get_expert_profile(expert_name: str) -> Optional[Dict]:
 #  Phase 4: 评分 + 提取（机械操作）
 # ═══════════════════════════════════════════════════════════════
 
-def step4_score_and_extract(debate_json: Dict, scores: Dict = None) -> Dict:
+def step4_score_and_extract(debate_json: Dict, scores: Dict = None,
+                             expert_names: List[str] = None) -> Dict:
     """评分和策略提取（机械操作）
+
+    自动评分 + Agent评分混合，消除主观偏差。
 
     Args:
         debate_json: 辩论JSON
-        scores: Agent传入的6维度分数（可选，未传入时使用默认分数）
+        scores: Agent传入的6维度分数（可选）
+        expert_names: 参与辩论的专家名列表（用于自动评分）
 
     Returns:
         {"score": {"total": 68.5, "grade": "C"}, "extraction": {...}}
@@ -217,8 +228,18 @@ def step4_score_and_extract(debate_json: Dict, scores: Dict = None) -> Dict:
         json.dump(debate_json, f, ensure_ascii=False, indent=2)
 
     try:
-        scores_input = scores or default_scores()
-        result['score'] = score_discussion(scores_input)
+        # 自动评分（零LLM依赖）
+        auto_scores = auto_score_debate(debate_json, expert_names=expert_names)
+
+        if scores and any(v != 50 for v in scores.values()):
+            # Agent提供了有效评分 → 混合（自动60% + Agent40%）
+            final_scores = blend_scores(auto_scores, scores, auto_weight=0.6)
+        else:
+            # Agent未评分 → 纯自动评分
+            final_scores = auto_scores
+
+        result['score'] = score_discussion(final_scores)
+        result['score']['auto_scores'] = auto_scores  # 保留自动评分细节
     except Exception as e:
         result['score'] = {'total': 0, 'grade': 'F', 'error': str(e)}
 
@@ -235,32 +256,161 @@ def step4_score_and_extract(debate_json: Dict, scores: Dict = None) -> Dict:
 
 
 # ═══════════════════════════════════════════════════════════════
-#  Phase 5: 升级专家（机械操作）
+#  Phase 4b: Coach 审阅（机械操作）
 # ═══════════════════════════════════════════════════════════════
 
-def step5_upgrade_experts(extraction: Dict, score_total: float) -> Dict:
-    """融合增强式升级专家档案（机械操作）"""
+def step4b_coach_review(coach_review_json: Dict = None,
+                        coach_review_path: str = None) -> CoachReview:
+    """加载并验证 Coach 审阅结果（机械操作）
+
+    Agent 生成 coach_review.json 后传入此函数。
+    Python 做验证、过滤低信心、应用 Edit Budget。
+
+    Args:
+        coach_review_json: Agent 传入的 Coach Review JSON dict
+        coach_review_path: 或者从文件路径加载
+
+    Returns:
+        验证后的 CoachReview 对象
+    """
+    if coach_review_json:
+        return validate_coach_review(coach_review_json)
+    elif coach_review_path:
+        review = load_coach_review(coach_review_path)
+        if review:
+            return review
+
+    # 无 Coach Review 时返回空对象（不影响流程，但跳过 Coach 优化）
+    return CoachReview()
+
+
+# ═══════════════════════════════════════════════════════════════
+#  Phase 5: 门控验证 + 快照 + 升级/回退（机械操作）
+# ═══════════════════════════════════════════════════════════════
+
+def step5_upgrade_experts(
+    extraction: Dict,
+    score_total: float,
+    coach_review: CoachReview = None,
+    topic: Dict = None,
+) -> Dict:
+    """门控验证 + 快照 + 融合升级 + 回退（机械操作）
+
+    流程：
+    1. 门控验证：新分 > 历史平均？拒绝则跳过
+    2. 快照：升级前保存专家档案快照
+    3. 融合升级：使用 FusionEngine
+    4. 记录：保存分数到历史
+
+    Args:
+        extraction: step4 的策略提取结果
+        score_total: 本轮辩论总分
+        coach_review: Coach 审阅结果（可选，提供更精准的升级策略）
+        topic: 话题信息（用于追踪）
+    """
+    # ── 门控验证 ──
+    gate_result = gate_upgrade(
+        {"debate_quality": score_total, "expert_upgrades": []},
+        history_path=None,
+    )
+    if not gate_result["passed"]:
+        return {
+            "upgrades": {},
+            "gate": gate_result,
+            "reason": f"门控拒绝: {gate_result['reason']}",
+        }
+
+    # ── 确定升级策略来源：Coach > 原始 extraction ──
+    if coach_review and coach_review.upgrade_recommendations:
+        expert_strategies = extract_strategies_from_coach_review(coach_review)
+    else:
+        expert_strategies = {}
+        for expert_name, expert_data in extraction.get("experts", {}).items():
+            expert_strategies[expert_name] = {
+                "attack_strategy": expert_data.get("attack_strategy", {}),
+                "defense_weakness": expert_data.get("defense_weakness", {}),
+                "style_fingerprint": expert_data.get("style_fingerprint", {}),
+                "evidence_preference": expert_data.get("evidence_preference", {}),
+                "interaction_pattern": expert_data.get("interaction_pattern", {}),
+            }
+
+    # ── 快照 + 融合升级 ──
     engine = FusionEngine(EXPERT_LIBRARY)
     upgrades = {}
+    snapshots = {}
 
-    for expert_name, expert_data in extraction.get('experts', {}).items():
-        strategy = {
-            'attack_strategy': expert_data.get('attack_strategy', {}),
-            'defense_weakness': expert_data.get('defense_weakness', {}),
-            'style_fingerprint': expert_data.get('style_fingerprint', {}),
-            'evidence_preference': expert_data.get('evidence_preference', {}),
-            'interaction_pattern': expert_data.get('interaction_pattern', {}),
-        }
+    for expert_name, strategy in expert_strategies.items():
         md_path = engine.find_expert_md(expert_name)
         if not md_path:
             continue
         try:
+            # 快照（升级前）
+            snap_path = snapshot_expert(md_path)
+            snapshots[expert_name] = snap_path
+
+            # 融合升级
             engine.upgrade_expert(md_path, strategy, score_total)
             upgrades[expert_name] = True
-        except Exception:
-            pass
 
-    return upgrades
+            # 清理旧快照（保留最近3个）
+            cleanup_snapshots(md_path, keep_latest=3)
+        except Exception as e:
+            # 升级失败，回退到快照
+            if expert_name in snapshots and snapshots[expert_name]:
+                rollback_expert(md_path, snapshots[expert_name])
+            upgrades[expert_name] = False
+
+    # ── 保存分数到历史（供下次门控对比） ──
+    reflection_data = coach_review_to_dict(coach_review) if coach_review else {}
+    save_to_history(score_total, reflection_data)
+
+    return {
+        "upgrades": upgrades,
+        "gate": gate_result,
+        "snapshots": snapshots,
+        "coach_used": coach_review is not None and len(coach_review.upgrade_recommendations) > 0,
+    }
+
+
+# ═══════════════════════════════════════════════════════════════
+#  Phase 6: 记录追踪（机械操作）
+# ═══════════════════════════════════════════════════════════════
+
+def step6_record_tracking(
+    topic: Dict,
+    score_total: float,
+    extraction: Dict,
+    upgrade_result: Dict,
+    coach_review: CoachReview = None,
+) -> None:
+    """记录训练数据到追踪系统（机械操作）
+
+    数据写入：
+    - memory/training_history.jsonl （全局追加日志）
+    - memory/expert_evolution/{专家名}.json （每位专家的进化数据）
+    """
+    tracker = TrainingTracker(EXPERT_LIBRARY, MEMORY_DIR)
+
+    experts_data = {}
+    for expert_name in extraction.get("experts", {}):
+        expert_extraction = extraction["experts"][expert_name]
+        experts_data[expert_name] = {
+            "old_version": expert_extraction.get("version", 1),
+            "new_version": expert_extraction.get("version", 1) + (1 if upgrade_result.get("upgrades", {}).get(expert_name) else 0),
+            "score": score_total,
+            "attack_eff": 0.0,
+            "defense_rate": 0.0,
+            "operations": [],
+            "capability_delta": {},
+            "quality_matrix": coach_review.dimensions if coach_review else {},
+        }
+
+    session_data = {
+        "book_title": topic.get("topic", "未知话题"),
+        "timestamp": __import__("datetime").datetime.now().isoformat(),
+        "experts": experts_data,
+    }
+    tracker.record_training(session_data)
 
 
 # ═══════════════════════════════════════════════════════════════

@@ -6,10 +6,14 @@
 from __future__ import annotations
 
 import json
+import os
+import re
 from pathlib import Path
 from typing import Dict, List, Set
 from dataclasses import dataclass
 
+
+EXPERT_LIBRARY = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'expert-library')
 
 @dataclass
 class KnowledgeBoundary:
@@ -25,7 +29,111 @@ class KnowledgeBoundary:
     metaphor_sources: List[str]
 
 
-# 核心专家知识边界定义
+def _parse_boundary_md(md_text: str, expert_name: str) -> KnowledgeBoundary:
+    """从 _知识边界.md 文件解析出 KnowledgeBoundary
+
+    解析逻辑：按 ## 分节，按 - 提取列表项。
+    """
+    def _extract_list(section_text: str, heading: str) -> List[str]:
+        """从某节中提取 - 开头的列表项"""
+        items = []
+        in_section = False
+        for line in section_text.split('\n'):
+            line = line.strip()
+            if line.startswith('###') and heading in line:
+                in_section = True
+                continue
+            if in_section and line.startswith('###'):
+                break  # 到了下一个子节
+            if in_section and line.startswith('- '):
+                # 去掉括号里的解释，只保留主词
+                item = line[2:].strip()
+                # "道（万物本源、自然规律）" → "道"
+                item = re.split(r'[（(]', item)[0].strip()
+                if item:
+                    # "AI、人工智能" → ["AI", "人工智能"]
+                    for part in re.split(r'[、,，]', item):
+                        part = part.strip()
+                        if part:
+                            items.append(part)
+        return items
+
+    def _extract_section(md: str, heading: str) -> str:
+        """提取 ## 某节的全部内容"""
+        pattern = rf'## {re.escape(heading)}\s*\n(.*?)(?=\n## |\Z)'
+        m = re.search(pattern, md, re.DOTALL)
+        return m.group(1) if m else ""
+
+    # 提取时代
+    era_section = _extract_section(md_text, "时代背景")
+    era = "当代"
+    for line in era_section.split('\n'):
+        if '活跃时期' in line:
+            if '春秋' in line or '战国' in line:
+                era = "春秋时期"
+            elif '19世纪' in line or '18' in line:
+                era = "19世纪"
+            else:
+                era = "当代"
+            break
+
+    # 提取知识图谱
+    knowledge_section = _extract_section(md_text, "知识图谱")
+    core = _extract_list(knowledge_section, "核心知识")
+    associated = _extract_list(knowledge_section, "关联知识")
+    edge = _extract_list(knowledge_section, "边缘知识")
+    forbidden = _extract_list(knowledge_section, "禁区知识")
+
+    # 提取表达词汇库
+    vocab_section = _extract_section(md_text, "表达词汇库")
+    high_freq = _extract_list(vocab_section, "高频词")
+    metaphor = _extract_list(vocab_section, "比喻来源")
+    forbidden_words = _extract_list(vocab_section, "禁用词")
+
+    return KnowledgeBoundary(
+        name=expert_name,
+        era=era,
+        core_knowledge=core,
+        associated_knowledge=associated,
+        edge_knowledge=edge,
+        forbidden_knowledge=forbidden,
+        forbidden_words=forbidden_words,
+        high_freq_words=high_freq,
+        metaphor_sources=metaphor,
+    )
+
+
+def _load_boundaries_from_md() -> Dict[str, KnowledgeBoundary]:
+    """扫描 expert-library/experts/ 下所有 _知识边界.md 文件"""
+    boundaries = {}
+    experts_dir = os.path.join(EXPERT_LIBRARY, 'experts')
+    if not os.path.isdir(experts_dir):
+        return boundaries
+
+    for category in os.listdir(experts_dir):
+        cat_dir = os.path.join(experts_dir, category)
+        if not os.path.isdir(cat_dir):
+            continue
+        for fname in os.listdir(cat_dir):
+            if not fname.endswith('_知识边界.md'):
+                continue
+            expert_name = fname.replace('_知识边界.md', '')
+            md_path = os.path.join(cat_dir, fname)
+            try:
+                with open(md_path, 'r', encoding='utf-8') as f:
+                    md_text = f.read()
+                boundaries[expert_name] = _parse_boundary_md(md_text, expert_name)
+            except Exception:
+                pass  # 解析失败跳过，使用硬编码 fallback
+
+    return boundaries
+
+
+# 启动时加载 md 文件中的边界定义
+_MD_BOUNDARIES = _load_boundaries_from_md()
+
+
+# 核心专家知识边界定义（硬编码 fallback，md 文件优先）
 EXPERT_BOUNDARIES: Dict[str, KnowledgeBoundary] = {
     "芒格": KnowledgeBoundary(
         name="芒格",
@@ -108,7 +216,9 @@ EXPERT_BOUNDARIES: Dict[str, KnowledgeBoundary] = {
 
 
 def get_boundary(expert_name: str) -> KnowledgeBoundary | None:
-    """获取专家知识边界"""
+    """获取专家知识边界（md 文件优先，硬编码 fallback）"""
+    if expert_name in _MD_BOUNDARIES:
+        return _MD_BOUNDARIES[expert_name]
     return EXPERT_BOUNDARIES.get(expert_name)
 
 
@@ -153,7 +263,8 @@ def check_knowledge_boundary(text: str, expert_name: str) -> Dict[str, any]:
     suggestions = []
     
     # 检查是否使用了其他专家的核心概念
-    other_experts = {name: b for name, b in EXPERT_BOUNDARIES.items() if name != expert_name}
+    all_boundaries = {**EXPERT_BOUNDARIES, **_MD_BOUNDARIES}
+    other_experts = {name: b for name, b in all_boundaries.items() if name != expert_name}
     for other_name, other_boundary in other_experts.items():
         for word in other_boundary.core_knowledge:
             if word in text and word not in boundary.core_knowledge:

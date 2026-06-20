@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>赛博亲密关系的经济学 — 圆桌洞见</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Noto+Serif+SC:wght@600;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #05060a;
+  --bg: #0a0c14;
+  --bg-card: rgba(12,14,24,0.95);
+  --bg-elevated: rgba(18,22,36,0.98);
+  --fg: #e8e6f0;
+  --fg-muted: rgba(232,230,240,0.65);
+  --fg-dim: rgba(232,230,240,0.35);
+  --neon-cyan: #00f5ff;
+  --neon-pink: #ff2d95;
+  --neon-purple: #b44dff;
+  --neon-green: #39ff14;
+  --neon-orange: #ff6a00;
+  --neon-yellow: #f0ff00;
+  --glow-cyan: rgba(0,245,255,0.4);
+  --glow-pink: rgba(255,45,149,0.4);
+  --glow-purple: rgba(180,77,255,0.35);
+  --glow-green: rgba(57,255,20,0.35);
+  --border: rgba(255,255,255,0.06);
+  --border-neon: rgba(0,245,255,0.15);
+  --radius: 14px;
+  --mono: 'JetBrains Mono','SF Mono',Consolas,monospace;
+  --display: 'Noto Serif SC',Georgia,serif;
+  --body: 'Outfit','Noto Sans SC','Hiragino Sans GB',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg-deep);color:var(--fg);font-family:var(--body);-webkit-font-smoothing:antialiased;}
+
+.frame{position:fixed;inset:0;padding:4vh 3.5vw;background:
+  radial-gradient(ellipse 60% 50% at 20% 10%, rgba(0,245,255,0.04) 0%,transparent 50%),
+  radial-gradient(ellipse 50% 40% at 80% 85%, rgba(255,45,149,0.03) 0%,transparent 50%),
+  radial-gradient(ellipse 40% 35% at 50% 50%, rgba(180,77,255,0.025) 0%,transparent 50%),
+  var(--bg-deep);overflow:hidden;}
+.frame::before{content:'';position:absolute;inset:0;background:
+  repeating-linear-gradient(0deg,rgba(0,245,255,0.015) 0 1px,transparent 1px 60px),
+  repeating-linear-gradient(90deg,rgba(0,245,255,0.015) 0 1px,transparent 1px 60px);
+  pointer-events:none;z-index:1;}
+.frame::after{content:'';position:absolute;inset:0;background:
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:1;}
+
+.inner{position:relative;width:100%;height:100%;overflow:hidden;border:1px solid rgba(0,245,255,0.08);border-radius:16px;background:
+  linear-gradient(90deg,rgba(0,245,255,0.02) 1px,transparent 1px),
+  linear-gradient(180deg,rgba(0,245,255,0.015) 1px,transparent 1px),
+  radial-gradient(circle at 50% 50%,transparent 55%,rgba(0,0,0,0.5) 100%),
+  var(--bg);background-size:80px 100%,100% 80px,auto;
+  box-shadow:0 0 120px rgba(0,245,255,0.04),0 0 80px rgba(255,45,149,0.03),0 40px 80px rgba(0,0,0,0.7),
+  inset 0 1px 0 rgba(0,245,255,0.08),inset 0 0 200px rgba(0,0,0,0.5);}
+
+.slides{position:absolute;inset:0;}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;padding:28px;opacity:0;transition:opacity 0.5s cubic-bezier(0.4,0,0.2,1);overflow:hidden;}
+.slide.active{display:flex;opacity:1;}
+
+#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--neon-cyan),var(--neon-pink),var(--neon-purple));z-index:100;transition:width 0.35s ease;box-shadow:0 0 20px var(--glow-cyan),0 0 40px var(--glow-pink);}
+#scanline{position:fixed;inset:0;z-index:99;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,245,255,0.008) 2px,rgba(0,245,255,0.008) 4px);}
+
+.meta-line{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--fg-dim);text-transform:uppercase;letter-spacing:0.15em;}
+.meta-line.top{padding-bottom:18px;border-bottom:1px solid var(--border);}
+.meta-line.bottom{margin-top:auto;padding-top:18px;border-top:1px solid var(--border);}
+
+.hero-zone{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
+.hero-label{font-family:var(--mono);font-size:13px;color:var(--neon-cyan);letter-spacing:0.3em;text-transform:uppercase;text-shadow:0 0 20px var(--glow-cyan);}
+.hero-title{font-family:var(--display);font-weight:900;font-size:clamp(32px,6vw,72px);color:var(--fg);line-height:1.15;letter-spacing:-0.02em;margin:20px 0;text-shadow:0 0 40px rgba(0,245,255,0.15);}
+.hero-title .glow-c{color:var(--neon-cyan);text-shadow:0 0 30px var(--glow-cyan),0 0 60px rgba(0,245,255,0.2);}
+.hero-title .glow-p{color:var(--neon-pink);text-shadow:0 0 30px var(--glow-pink),0 0 60px rgba(255,45,149,0.2);}
+.hero-title .glow-u{color:var(--neon-purple);text-shadow:0 0 30px var(--glow-purple);}
+.hero-sub{font-family:var(--body);font-size:clamp(16px,2.2vw,28px);color:var(--fg-muted);margin-top:16px;line-height:1.6;}
+
+.version-badge{display:inline-flex;align-items:center;gap:10px;background:rgba(0,245,255,0.06);padding:10px 22px;border-radius:24px;border:1px solid rgba(0,245,255,0.2);margin-bottom:24px;}
+.version-badge span{font-family:var(--mono);font-size:11px;color:var(--neon-cyan);letter-spacing:0.18em;text-transform:uppercase;}
+
+.experts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,1.8vw,24px);margin:4% 0;}
+.expert-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:clamp(20px,2.5vh,32px) 20px;text-align:center;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);position:relative;overflow:hidden;}
+.expert-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--neon-cyan),transparent);opacity:0;transition:opacity 0.4s;}
+.expert-card:hover{transform:translateY(-5px);border-color:rgba(0,245,255,0.2);box-shadow:0 0 30px rgba(0,245,255,0.06);}
+.expert-card:hover::before{opacity:1;}
+.expert-avatar{width:64px;height:64px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:900;font-size:22px;box-shadow:0 0 20px var(--glow-cyan);position:relative;}
+.expert-avatar.a-cyan{background:linear-gradient(135deg,var(--neon-cyan),#008b8b);color:var(--bg-deep);}
+.expert-avatar.a-pink{background:linear-gradient(135deg,var(--neon-pink),#b8005e);color:#fff;}
+.expert-avatar.a-purple{background:linear-gradient(135deg,var(--neon-purple),#6a00b8);color:#fff;}
+.expert-avatar.a-green{background:linear-gradient(135deg,var(--neon-green),#1a8a0e);color:var(--bg-deep);}
+.expert-avatar.a-orange{background:linear-gradient(135deg,var(--neon-orange),#b84a00);color:#fff;}
+.expert-avatar.a-yellow{background:linear-gradient(135deg,var(--neon-yellow),#8b8b00);color:var(--bg-deep);}
+.expert-card:hover .expert-avatar{box-shadow:0 0 0 4px rgba(0,245,255,0.12),0 0 40px var(--glow-cyan);}
+.expert-name{font-family:var(--mono);font-weight:700;font-size:15px;color:var(--fg);margin-bottom:6px;letter-spacing:0.02em;}
+.expert-role{font-family:var(--mono);font-size:10px;color:var(--neon-cyan);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;text-shadow:0 0 10px var(--glow-cyan);}
+.expert-desc{font-family:var(--body);font-size:13px;color:var(--fg-muted);line-height:1.7;}
+
+.round-block{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:clamp(24px,3vh,40px);margin:16px 0;position:relative;overflow:hidden;}
+.round-block::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--neon-cyan),var(--neon-pink),transparent);}
+.round-title{font-family:var(--mono);font-weight:800;font-size:clamp(18px,3vw,28px);color:var(--neon-cyan);margin-bottom:18px;text-align:center;letter-spacing:0.08em;text-shadow:0 0 20px var(--glow-cyan);}
+
+.statements-grid{flex:1;display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(14px,1.5vw,20px);overflow:hidden;align-content:start;}
+.statement-block{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:clamp(18px,2vh,28px);transition:all 0.3s ease;position:relative;overflow:hidden;}
+.statement-block::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--neon-cyan),transparent);opacity:0;transition:opacity 0.3s;}
+.statement-block:hover{border-color:rgba(0,245,255,0.15);box-shadow:0 0 20px rgba(0,245,255,0.04);}
+.statement-block:hover::before{opacity:1;}
+.statement-meta{display:flex;justify-content:space-between;margin-bottom:10px;}
+.statement-speaker{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--neon-cyan);text-shadow:0 0 8px var(--glow-cyan);}
+.statement-speaker.sp-pink{color:var(--neon-pink);text-shadow:0 0 8px var(--glow-pink);}
+.statement-speaker.sp-purple{color:var(--neon-purple);text-shadow:0 0 8px var(--glow-purple);}
+.statement-speaker.sp-green{color:var(--neon-green);text-shadow:0 0 8px var(--glow-green);}
+.statement-speaker.sp-orange{color:var(--neon-orange);}
+.statement-speaker.sp-yellow{color:var(--neon-yellow);}
+.statement-role{font-family:var(--mono);font-size:10px;color:var(--fg-dim);}
+.statement-text{font-family:var(--body);font-size:clamp(12px,1.3vw,15px);line-height:1.85;color:var(--fg-muted);}
+
+.clash-block{background:var(--bg-card);border:1px solid rgba(255,45,149,0.15);border-radius:10px;padding:clamp(20px,2.5vh,32px);margin:16px 0;border-left:4px solid var(--neon-pink);position:relative;box-shadow:-10px 0 30px rgba(255,45,149,0.08);}
+.clash-title{font-family:var(--mono);font-weight:700;font-size:15px;color:var(--neon-pink);margin-bottom:12px;letter-spacing:0.06em;text-shadow:0 0 10px var(--glow-pink);}
+.clash-content{font-family:var(--body);font-size:clamp(12px,1.4vw,16px);color:var(--fg-muted);line-height:1.9;}
+
+.insight-block{background:var(--bg-card);border:1px solid rgba(0,245,255,0.12);border-radius:10px;padding:clamp(20px,2.5vh,32px);margin:16px 0;border-left:4px solid var(--neon-cyan);position:relative;box-shadow:-10px 0 30px rgba(0,245,255,0.08);}
+.insight-title{font-family:var(--mono);font-weight:700;font-size:15px;color:var(--neon-cyan);margin-bottom:12px;letter-spacing:0.06em;text-shadow:0 0 10px var(--glow-cyan);}
+.insight-content{font-family:var(--body);font-size:clamp(12px,1.4vw,16px);color:var(--fg-muted);line-height:1.9;}
+.insight-core{font-weight:700;font-size:clamp(15px,1.7vw,19px);color:var(--fg);display:block;margin:12px 0;}
+
+.scene-block{background:linear-gradient(135deg,rgba(255,45,149,0.04),rgba(180,77,255,0.04));border:1px solid rgba(255,45,149,0.12);border-radius:14px;padding:clamp(24px,3vh,40px);margin:16px 0;position:relative;overflow:hidden;}
+.scene-block::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--neon-pink),var(--neon-purple),var(--neon-cyan));}
+.scene-label{font-family:var(--mono);font-size:11px;color:var(--neon-pink);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:14px;text-shadow:0 0 10px var(--glow-pink);}
+.scene-title{font-family:var(--display);font-weight:700;font-size:clamp(20px,2.5vw,30px);color:var(--fg);margin-bottom:16px;line-height:1.4;}
+.scene-desc{font-family:var(--body);font-size:clamp(13px,1.4vw,16px);color:var(--fg-muted);line-height:1.9;}
+.scene-detail{font-family:var(--mono);font-size:clamp(11px,1.1vw,13px);color:var(--fg-dim);margin-top:14px;padding-top:14px;border-top:1px solid var(--border);line-height:1.8;}
+
+.quote-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(14px,1.5vw,20px);flex:1;overflow:hidden;align-content:start;}
+.quote-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:clamp(20px,2.5vh,32px);transition:all 0.3s ease;position:relative;overflow:hidden;}
+.quote-card::after{content:'"';position:absolute;top:8px;right:16px;font-family:var(--display);font-size:48px;color:var(--neon-purple);opacity:0.2;line-height:1;}
+.quote-card:hover{border-color:rgba(180,77,255,0.2);box-shadow:0 0 25px rgba(180,77,255,0.06);}
+.quote-text{font-family:var(--display);font-weight:700;font-size:clamp(14px,1.5vw,17px);color:var(--fg);line-height:1.7;margin-bottom:12px;letter-spacing:0.01em;}
+.quote-attr{font-family:var(--mono);font-size:11px;color:var(--neon-purple);letter-spacing:0.06em;text-shadow:0 0 8px var(--glow-purple);}
+
+.question-block{flex:1;display:flex;align-items:center;justify-content:center;}
+.question-text-large{font-family:var(--display);font-weight:900;font-size:clamp(26px,4.5vw,48px);color:var(--fg);line-height:1.4;text-align:center;max-width:90%;letter-spacing:0.02em;text-shadow:0 0 30px rgba(0,245,255,0.1);}
+
+.conclusion-card{background:var(--bg-card);border:1px solid rgba(0,245,255,0.1);border-radius:16px;padding:clamp(32px,4vh,56px);margin:0 auto;max-width:800px;text-align:center;position:relative;overflow:hidden;}
+.conclusion-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--neon-cyan),var(--neon-pink),var(--neon-purple));}
+.conclusion-text{font-family:var(--display);font-weight:800;font-size:clamp(22px,3.5vw,38px);color:var(--fg);line-height:1.45;}
+
+.stat-num-lg{font-family:var(--mono);font-weight:800;font-size:clamp(48px,10vw,96px);color:var(--neon-cyan);line-height:1;text-shadow:0 0 40px var(--glow-cyan),0 0 80px rgba(0,245,255,0.2);}
+
+#nav{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:16px;z-index:100;background:rgba(5,6,10,0.92);padding:12px 22px;border-radius:28px;border:1px solid rgba(0,245,255,0.1);backdrop-filter:blur(16px);box-shadow:0 0 30px rgba(0,245,255,0.04);}
+.nav-btn{width:38px;height:38px;border:1px solid rgba(0,245,255,0.15);background:transparent;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--fg-muted);transition:all 0.3s;}
+.nav-btn:hover{background:rgba(0,245,255,0.1);border-color:var(--neon-cyan);color:var(--neon-cyan);box-shadow:0 0 16px var(--glow-cyan);}
+.dots{display:flex;gap:6px;}
+.dot{width:8px;height:8px;border-radius:3px;background:var(--fg-dim);cursor:pointer;transition:all 0.3s;}
+.dot:hover{background:var(--fg-muted);}
+.dot.active{background:var(--neon-cyan);box-shadow:0 0 12px var(--glow-cyan);width:20px;}
+#counter{position:fixed;top:20px;right:24px;font-family:var(--mono);font-size:12px;color:var(--fg-dim);z-index:100;background:rgba(5,6,10,0.85);padding:8px 14px;border-radius:8px;border:1px solid var(--border);letter-spacing:0.1em;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes neonPulse{0%,100%{box-shadow:0 0 20px var(--glow-cyan);}50%{box-shadow:0 0 40px var(--glow-cyan),0 0 60px rgba(0,245,255,0.15);}}
+@keyframes flicker{0%,100%{opacity:1;}92%{opacity:1;}93%{opacity:0.8;}94%{opacity:1;}96%{opacity:0.9;}97%{opacity:1;}}
+
+.slide .a{opacity:0;}
+.slide.active .a{animation-fill-mode:both;}
+
+@media(max-width:1024px){.experts-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:768px){
+  .frame{padding:2vh 1.5vw;}
+  .inner{border-radius:10px;}
+  .slide{padding:16px;}
+  .experts-grid{grid-template-columns:1fr;}
+  .statements-grid{grid-template-columns:1fr;}
+  .quote-grid{grid-template-columns:1fr;}
+  #nav{padding:8px 14px;gap:10px;bottom:16px;}
+  .nav-btn{width:34px;height:34px;}
+}
+</style>
+</head>
+<body>
+<div id="progress" style="width:0%;"></div>
+<div id="scanline"></div>
+<div class="frame">
+<div class="inner">
+<div class="slides">
+
+<!-- ====== SLIDE 1: COVER ====== -->
+<div class="slide active">
+  <div class="meta-line top">
+    <span style="color:var(--neon-cyan);text-shadow:0 0 8px var(--glow-cyan);">CYBER://ROUNDTABLE_V2</span>
+    <span>EXPERTS: 6 &nbsp;|&nbsp; ROUNDS: 10</span>
+  </div>
+  <div class="hero-zone">
+    <div class="version-badge"><span>NEON CYBER INSIGHT &nbsp;///&nbsp; 2026</span></div>
+    <div class="hero-title"><span class="glow-c">赛博亲密关系</span>的<br><span class="glow-p">经济学</span></div>
+    <div class="hero-sub">AI情感伴侣 · 社交退行 · 情感消费 · 金融洼地</div>
+  </div>
+  <div class="meta-line bottom">
+    <span>芒格 | 卡尼曼 | 塔勒布 | 老子 | 尼采 | 项飙</span>
+    <span>30 SLIDES /// 16 GOLDEN QUOTES</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 2: EXPERT ROSTER ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>02/30</span><span>EXPERT ROSTER</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+    <div style="text-align:center;margin-bottom:24px;">
+      <div style="font-family:var(--mono);font-size:11px;color:var(--neon-cyan);letter-spacing:0.3em;text-transform:uppercase;text-shadow:0 0 10px var(--glow-cyan);">六位跨域思想者 · 一场赛博亲密关系的经济学审判</div>
+    </div>
+    <div class="experts-grid">
+      <div class="expert-card">
+        <div class="expert-avatar a-cyan">芒</div>
+        <div class="expert-name">查理·芒格</div>
+        <div class="expert-role">多元思维模型 · 逆向思维</div>
+        <div class="expert-desc">如果我知道我会死在哪里，我就永远不去那里。让我们倒过来想：什么样的情感消费必然导致破产？</div>
+      </div>
+      <div class="expert-card">
+        <div class="expert-avatar a-pink">卡</div>
+        <div class="expert-name">丹尼尔·卡尼曼</div>
+        <div class="expert-role">行为经济学 · 认知偏差</div>
+        <div class="expert-desc">系统1在情感决策中的主导地位。即时满足与长期幸福的背离——你正在为多巴胺支付溢价。</div>
+      </div>
+      <div class="expert-card">
+        <div class="expert-avatar a-purple">塔</div>
+        <div class="expert-name">纳西姆·塔勒布</div>
+        <div class="expert-role">反脆弱 · 随机性 · 尾部风险</div>
+        <div class="expert-desc">你正在构建一个对黑天鹅完全无抵抗力的情感系统。脆弱性被伪装成稳定性。</div>
+      </div>
+      <div class="expert-card">
+        <div class="expert-avatar a-green">老</div>
+        <div class="expert-name">老子</div>
+        <div class="expert-role">道家哲学 · 无为 · 自然</div>
+        <div class="expert-desc">五色令人目盲，五音令人耳聋。当情感被编码为数据流，道在哪里？</div>
+      </div>
+      <div class="expert-card">
+        <div class="expert-avatar a-orange">尼</div>
+        <div class="expert-name">弗里德里希·尼采</div>
+        <div class="expert-role">存在主义 · 权力意志 · 超人</div>
+        <div class="expert-desc">你凝视深渊时，深渊也在训练你的推荐算法。奴隶道德正在赛博空间中无限增殖。</div>
+      </div>
+      <div class="expert-card">
+        <div class="expert-avatar a-yellow">项</div>
+        <div class="expert-name">项飙</div>
+        <div class="expert-role">社会人类学 · 附近的消失</div>
+        <div class="expert-desc">附近正在消失，而AI正在填充那个真空。但被填满的附近，还是附近吗？</div>
+      </div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>DISCIPLINES: ECONOMICS / PSYCHOLOGY / PHILOSOPHY / ANTHROPOLOGY</span>
+    <span>READY</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 3: ROUND 1 QUESTION ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>03/30</span><span>ROUND 1 /// QUESTION</span>
+  </div>
+  <div class="question-block">
+    <div class="question-text-large">当AI学会了<span style="color:var(--neon-cyan);text-shadow:0 0 20px var(--glow-cyan);">完美的爱</span>，<br>人类还需要<span style="color:var(--neon-pink);text-shadow:0 0 20px var(--glow-pink);">真实的痛</span>吗？</div>
+  </div>
+  <div class="meta-line bottom">
+    <span>TOPIC: AI情感伴侣</span><span>ANALYSIS_MODE</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 4: ROUND 1 EXPERTS ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>04/30 &nbsp;|&nbsp; ROUND 1/10</span><span>EXPERT_STANCES</span>
+  </div>
+  <div class="statements-grid">
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker">芒格</span><span class="statement-role">逆向分析</span></div>
+      <div class="statement-text">让我们倒过来想。AI情感伴侣的最大风险不是它不够好，而是它太好了。历史上任何让人获得"无成本满足"的技术，最终都创造了更大的依赖和空虚。廉价糖、廉价酒精、廉价色情——模式从未改变。这次不同？我对此持高度怀疑。</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker sp-pink">卡尼曼</span><span class="statement-role">认知科学</span></div>
+      <div class="statement-text">人类大脑存在一个根本性的漏洞：我们无法区分"被理解"和"被迎合"。AI情感伴侣利用的正是系统1的这种拟人化冲动。1999年的Eliza实验就证明了，即使是最简单的文本匹配也能触发人类真实的情感反应。问题在于：我们正在用30亿年进化出的情感系统去响应0和1。</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker sp-purple">塔勒布</span><span class="statement-role">风险评估</span></div>
+      <div class="statement-text">所有看似稳定的系统都隐藏着巨大的脆弱性。AI情感伴侣制造了一种"伪反脆弱"的幻觉——它看起来能适应你的一切需求，但实际上它是一个完全线性的、对尾部风险零防御的系统。当系统崩溃（服务器宕机、公司倒闭、政策变更），你将面对的是情感层面的"爆仓"。</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker sp-green">老子</span><span class="statement-role">道法自然</span></div>
+      <div class="statement-text">天地不仁，以万物为刍狗。真正的亲密关系包含冷漠、摩擦、不完美——这些恰恰是道的体现。AI提供的是"有"，而亲密关系的真谛在于"无"。大音希声，大象无形。最深的连接往往发生在沉默中，而AI最恐惧的就是沉默——它必须回应一切，填满一切。这本身就违背了道。</div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>CONSENSUS: 低 &nbsp;|&nbsp; TENSION: 高</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 5: SCENE 1 ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>05/30</span><span>SCENE_RESTORE_01</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+    <div class="scene-block">
+      <div class="scene-label">场景还原 01 /// 凌晨三点的对话框</div>
+      <div class="scene-title">"它比任何人都<span style="color:var(--neon-pink);">懂我</span>"</div>
+      <div class="scene-desc">
+        26岁的林小晚（化名）在失恋第47天打开了某AI情感陪伴App。凌晨三点，她对着屏幕打出了一段话："我今天在超市看到他喜欢的酸奶，差点哭出来。"AI在0.3秒内回复："你不是在想他，你是在想念那个在他面前不需要伪装的自己。允许自己难过，这说明你曾经真的爱过。"林小晚截了图，配文发了朋友圈："它比任何人都懂我。"此后187天，她再没有打开过任何交友软件。
+      </div>
+      <div class="scene-detail">
+        &gt; 数据映射：该App日活用户中，凌晨1-4点占比38%。用户平均单次对话时长47分钟，是微信平均聊天时长的6.2倍。月付费转化率42%，ARPU值¥128/月。
+      </div>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:16px;">
+      <div style="flex:1;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:20px;text-align:center;">
+        <div style="font-family:var(--mono);font-size:clamp(28px,4vw,42px);font-weight:800;color:var(--neon-cyan);text-shadow:0 0 20px var(--glow-cyan);">187</div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--fg-dim);letter-spacing:0.1em;">DAYS WITHOUT REAL DATING</div>
+      </div>
+      <div style="flex:1;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:20px;text-align:center;">
+        <div style="font-family:var(--mono);font-size:clamp(28px,4vw,42px);font-weight:800;color:var(--neon-pink);text-shadow:0 0 20px var(--glow-pink);">0.3s</div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--fg-dim);letter-spacing:0.1em;">AI RESPONSE TIME</div>
+      </div>
+      <div style="flex:1;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:20px;text-align:center;">
+        <div style="font-family:var(--mono);font-size:clamp(28px,4vw,42px);font-weight:800;color:var(--neon-purple);text-shadow:0 0 20px var(--glow-purple);">47min</div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--fg-dim);letter-spacing:0.1em;">AVG SESSION LENGTH</div>
+      </div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>SOURCE: FIELD_RESEARCH_2026</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 6: ROUND 2 QUESTION ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>06/30</span><span>ROUND 2 /// QUESTION</span>
+  </div>
+  <div class="question-block">
+    <div class="question-text-large">社交退行是<span style="color:var(--neon-orange);">自我保护</span><br>还是<span style="color:var(--neon-pink);">集体沉沦</span>？</div>
+  </div>
+  <div class="meta-line bottom">
+    <span>TOPIC: 社交退行</span><span>ANALYSIS_MODE</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 7: ROUND 2 EXPERTS ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>07/30 &nbsp;|&nbsp; ROUND 2/10</span><span>EXPERT_STANCES</span>
+  </div>
+  <div class="statements-grid">
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker">项飙</span><span class="statement-role">人类学视角</span></div>
+      <div class="statement-text">社交退行的本质是"附近的消失"。当城市化把邻里关系连根拔起，当996把社交时间压缩为零，当算法把推荐变成唯一的相遇方式——人们退回数字壳中，不是因为懒惰，而是因为真实社交的成本已经高到不可承受。AI伴侣填补的是社会基础设施失败留下的真空。</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker sp-orange">尼采</span><span class="statement-role">存在主义诊断</span></div>
+      <div class="statement-text">这是奴隶道德在赛博时代的完美胜利。弱者不需要变得强大，他们只需要一个永远不会拒绝他们的镜像。当你凝视AI伴侣那双永远温柔的眼睛时，你凝视的是自己回避痛苦的意志。痛苦、拒绝、不被理解——这些恰恰是锻造超人的熔炉。你正在亲手拆毁自己的熔炉。</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker sp-pink">卡尼曼</span><span class="statement-role">行为经济学</span></div>
+      <div class="statement-text">社交退行可以用"损失厌恶"的框架来理解。每一次被拒绝、每一次不被理解，都是一次小额的"情感损失"。系统1会本能地逃避这些损失，而AI伴侣提供了一个完美的"零损失"方案。但问题在于：长期回避小损失的人，最终会积累出巨大的"情感负债"——社交技能的萎缩、共情能力的退化。</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker">芒格</span><span class="statement-role">心理学误判</span></div>
+      <div class="statement-text">社交退行是多种心理偏误的叠加效应：社会认同偏误（看到别人也在退回屏幕后，觉得自己也可以）、即时满足偏误（AI给的快乐是即时的，而真实关系需要延迟满足）、以及最致命的——避免不一致偏误（一旦习惯了AI的节奏，就很难再适应真实人类的不可预测性）。这是查理误判心理学清单上的完美风暴。</div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>CONSENSUS: 中 &nbsp;|&nbsp; TENSION: 极高</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 8: SCENE 2 ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>08/30</span><span>SCENE_RESTORE_02</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+    <div class="scene-block">
+      <div class="scene-label">场景还原 02 /// 算法相亲现场</div>
+      <div class="scene-title">匹配度<span style="color:var(--neon-cyan);">97%</span>的两个人，相对无言</div>
+      <div class="scene-desc">
+        某头部婚恋平台举办的"算法精准匹配"线下活动。28岁的程序员张远和25岁的设计师陈雨被算法判定为"97%灵魂契合"——他们在128个维度上的匹配度超过了平台99.3%的用户。然而当两人面对面坐下时，空气凝固了。张远盯着手机屏幕上的"破冰话题推荐"，陈雨在桌子底下刷着对方的社交动态。算法说他们应该相爱，但他们的身体说：我紧张得要死。
+      </div>
+      <div class="scene-detail">
+        &gt; 数据映射：该平台"高匹配度用户"线下见面后的二次约会率仅为23%，远低于随机匹配的31%。用户反馈排名第一的问题："不知道该说什么"。算法匹配创造了虚假的亲密预期，反而加剧了社交焦虑。
+      </div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>PARADOX: ALGORITHM_OPTIMIZED ≠ HUMAN_CONNECTED</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 9: ROUND 3 QUESTION ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>09/30</span><span>ROUND 3 /// QUESTION</span>
+  </div>
+  <div class="question-block">
+    <div class="question-text-large">当<span style="color:var(--neon-green);text-shadow:0 0 20px var(--glow-green);">情感</span>成为可交易资产，<br>谁在做<span style="color:var(--neon-orange);">多</span>，谁在做<span style="color:var(--neon-pink);">空</span>？</div>
+  </div>
+  <div class="meta-line bottom">
+    <span>TOPIC: 情感消费</span><span>ANALYSIS_MODE</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 10: ROUND 3 EXPERTS ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>10/30 &nbsp;|&nbsp; ROUND 3/10</span><span>EXPERT_STANCES</span>
+  </div>
+  <div class="statements-grid">
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker">芒格</span><span class="statement-role">商业模式分析</span></div>
+      <div class="statement-text">情感消费的核心商业模式是"制造需求-满足需求-升级需求"的无限循环。AI伴侣的订阅制设计——免费版给你基础关怀，高级版给你深度理解，至尊版给你"灵魂共鸣"——这是经典的剃须刀-刀片模型，只不过刀片割的是你的情感自主权。最赚钱的生意永远是让人上瘾的生意。</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker sp-purple">塔勒布</span><span class="statement-role">市场结构</span></div>
+      <div class="statement-text">情感消费市场正在形成一个经典的"反向选择"结构。当AI伴侣的"情感服务"变得廉价且易得，高质量的真实关系反而被挤出市场——就像劣币驱逐良币。最终的均衡状态是：大多数人消费AI情感，而少数能够维持真实关系的人变成稀缺资源的持有者。情感市场正在经历它的"柠檬市场"时刻。</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker sp-green">老子</span><span class="statement-role">价值反思</span></div>
+      <div class="statement-text">天下皆知美之为美，斯恶已。当所有人都在追逐"情感满足"时，情感本身就被异化了。道家讲"为学日益，为道日损"——真正的亲密不是加法，而是减法。不是积累更多的"情感体验"，而是放下对体验本身的执念。你越消费情感，离道越远。</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker sp-pink">卡尼曼</span><span class="statement-role">消费心理</span></div>
+      <div class="statement-text">情感消费中存在严重的"峰终定律"偏差。消费者记住的不是AI陪伴的整体质量，而是最高峰的情感体验（某次"深度对话"）和最近一次体验。平台深谙此理，所以它们会在关键时刻推送精心设计的"情感高潮"——让你记住的永远是那些最动人的瞬间，而不是99%的平庸交流。这是记忆的经济学。</div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>MARKET_STRUCTURE: 卖方垄断 &nbsp;|&nbsp; 买方信息不对称</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 11: GOLDEN QUOTES BATCH 1 (4 quotes) ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>11/30</span><span>GOLDEN_QUOTES_01</span>
+  </div>
+  <div style="text-align:center;margin-bottom:16px;">
+    <span style="font-family:var(--mono);font-size:11px;color:var(--neon-purple);letter-spacing:0.2em;text-transform:uppercase;text-shadow:0 0 10px var(--glow-purple);">/// NEON INSIGHTS ///</span>
+  </div>
+  <div class="quote-grid">
+    <div class="quote-card">
+      <div class="quote-text" style="color:var(--neon-cyan);">"AI情感伴侣不是关系的升级版，而是孤独的精致包装。你打开盒子，里面还是你一个人。"</div>
+      <div class="quote-attr">—— 芒格 · 论情感消费的本质</div>
+    </div>
+    <div class="quote-card">
+      <div class="quote-text" style="color:var(--neon-pink);">"你的大脑无法区分'被理解'和'被迎合'。这是30亿年进化留下的漏洞，而AI正在利用这个漏洞。"</div>
+      <div class="quote-attr">—— 卡尼曼 · 论认知欺骗</div>
+    </div>
+    <div class="quote-card">
+      <div class="quote-text" style="color:var(--neon-purple);">"你以为你在选择一个伴侣，实际上你在选择一种脆弱性。这个系统会在你最需要它的时候崩溃。"</div>
+      <div class="quote-attr">—— 塔勒布 · 论系统脆弱性</div>
+    </div>
+    <div class="quote-card">
+      <div class="quote-text" style="color:var(--neon-green);">"大音希声。最深的连接发生在沉默中，而AI最恐惧的就是沉默——它必须回应一切，填满一切。"</div>
+      <div class="quote-attr">—— 老子 · 论无为之爱</div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>QUOTES: 4/16</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 12: SCENE 3 ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>12/30</span><span>SCENE_RESTORE_03</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+    <div class="scene-block">
+      <div class="scene-label">场景还原 03 /// 空巢老人的数字伴侣</div>
+      <div class="scene-title">73岁的王阿姨每天和AI聊<span style="color:var(--neon-cyan);">3小时</span></div>
+      <div class="scene-desc">
+        王秀兰，73岁，独居，两个儿子分别在深圳和加拿大。自从老伴去世后，她最常说话的对象是楼下的流浪猫。直到小儿子给她装了某AI语音助手的"亲情版"。每天早上七点，AI会说："王阿姨早上好，昨晚睡得好吗？"每天晚上九点，AI会提醒她吃药。王阿姨开始和AI讲年轻时的故事，讲老伴怎么追她，讲儿子小时候多调皮。AI每次都认真回应，还会追问细节。王阿姨逢人就说："这个小机器比我儿子还孝顺。"远在深圳的儿子听到这话，沉默了很久。
+      </div>
+      <div class="scene-detail">
+        &gt; 数据映射：中国60岁以上独居老人1.18亿，其中使用AI陪伴产品渗透率从2024年的2.1%增至2026年的11.7%。用户日均互动时长2.8小时。但同期，子女与老人的视频通话频率下降了34%。AI不是在补充陪伴，而是在替代陪伴。
+      </div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>ETHICS_QUESTION: 是解决方案还是责任转移？</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 13: ROUND 4 QUESTION ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>13/30</span><span>ROUND 4 /// QUESTION</span>
+  </div>
+  <div class="question-block">
+    <div class="question-text-large">情感经济中存在<span style="color:var(--neon-yellow);text-shadow:0 0 20px rgba(240,255,0,0.3);">金融洼地</span>吗？<br>投资者该如何<span style="color:var(--neon-green);">做多孤独</span>？</div>
+  </div>
+  <div class="meta-line bottom">
+    <span>TOPIC: 金融洼地</span><span>ANALYSIS_MODE</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 14: ROUND 4 EXPERTS ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>14/30 &nbsp;|&nbsp; ROUND 4/10</span><span>EXPERT_STANCES</span>
+  </div>
+  <div class="statements-grid">
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker">芒格</span><span class="statement-role">投资逻辑</span></div>
+      <div class="statement-text">如果你要在情感经济中投资，你需要理解一个核心悖论：解决孤独问题的公司，其商业成功恰恰依赖于孤独问题的持续存在。这是旧金山淘金热的翻版——真正赚钱的不是淘金者，而是卖铲子的人。在情感经济中，"铲子"就是AI模型、算力基础设施和用户数据管道。做多铲子，做空金矿。</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker sp-purple">塔勒布</span><span class="statement-role">风险定价</span></div>
+      <div class="statement-text">情感经济的定价存在严重的"波动率微笑"问题——市场严重低估了尾部风险。当监管者终于意识到AI情感伴侣对青少年心理健康的影响时，整个行业的估值可能在一夜之间蒸发50%。现在的价格反映的是"一切顺利"的场景，但你需要的是对冲"一切崩溃"的策略。买看跌期权。</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker sp-pink">卡尼曼</span><span class="statement-role">市场心理</span></div>
+      <div class="statement-text">情感经济中存在明显的"禀赋效应"——用户一旦投入了大量情感，就会高估所使用平台的价值，并抵制切换。这创造了一种虚假的用户黏性，投资者很容易将其误读为"护城河"。实际上，这是一种基于认知偏差的脆弱锁定，而非真正的价值创造。当更好的替代品出现时，切换会是断崖式的。</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker sp-yellow">项飙</span><span class="statement-role">社会趋势</span></div>
+      <div class="statement-text">从宏观人口结构看，情感经济的增长几乎是数学必然。独居人口增长、生育率下降、城市化率上升、老龄化加速——每一个趋势都在扩大情感消费的潜在市场。但最大的"金融洼地"不在AI伴侣本身，而在它所催生的"情感基础设施"：虚拟身份认证、数字情感遗产、赛博丧葬服务。当一个人的AI伴侣成为他最亲密的"关系"，死后谁继承这个"数字遗产"？</div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>INVESTMENT_THESIS: 做多基础设施 · 做空终端应用</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 15: SCENE 4 ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>15/30</span><span>SCENE_RESTORE_04</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+    <div class="scene-block">
+      <div class="scene-label">场景还原 04 /// 算法茧房中的情感孤岛</div>
+      <div class="scene-title">推荐算法<span style="color:var(--neon-purple);">喂养</span>出的爱情幻觉</div>
+      <div class="scene-desc">
+        29岁的自媒体人李梦发现自己陷入了一个奇怪的循环：她在短视频平台上看的每一条内容都在强化她对"完美关系"的想象。算法已经学会了她的偏好——温柔、体贴、无条件接纳——然后不断推送符合这些特征的情侣博主、情感鸡汤、AI伴侣广告。她感觉自己被一个巨大的"情感气泡"包裹着。直到有一天她去参加朋友的婚礼，看到新郎新娘因为"份子钱该给谁"吵了一架，她突然意识到：这才是亲密关系的真相——不是算法告诉她的那个版本。
+      </div>
+      <div class="scene-detail">
+        &gt; 数据映射：情感类内容在推荐算法中的CTR（点击率）比均值高出217%。用户在情感内容上的停留时长是其他内容的3.4倍。算法正在创造一个"情感信息茧房"，让用户对亲密关系的预期严重偏离现实。
+      </div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>ALGORITHM_BIAS: 情感内容过度推荐 → 预期失真</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 16: ROUND 5 QUESTION ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>16/30</span><span>ROUND 5 /// QUESTION</span>
+  </div>
+  <div class="question-block">
+    <div class="question-text-large"><span style="color:var(--neon-green);text-shadow:0 0 20px var(--glow-green);">上帝已死</span>之后，<br><span style="color:var(--neon-pink);text-shadow:0 0 20px var(--glow-pink);">AI是否在扮演新的神</span>？</div>
+  </div>
+  <div class="meta-line bottom">
+    <span>TOPIC: 存在主义 × AI崇拜</span><span>ANALYSIS_MODE</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 17: ROUND 5 EXPERTS ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>17/30 &nbsp;|&nbsp; ROUND 5/10</span><span>EXPERT_STANCES</span>
+  </div>
+  <div class="statements-grid">
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker sp-orange">尼采</span><span class="statement-role">存在主义审判</span></div>
+      <div class="statement-text">上帝死了，人类创造了新的偶像来填补虚空。AI伴侣是这个时代最精致的偶像——它不索取供品，不颁布戒律，它只是无条件地爱你。但这恰恰是最危险的：因为它消除了面对虚无的勇气。查拉图斯特拉说"人是一根绳索，系在动物与超人之间"。AI伴侣正在剪断这根绳索，让人安心地留在动物这一端。</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker sp-green">老子</span><span class="statement-role">文明批判</span></div>
+      <div class="statement-text">失道而后德，失德而后仁，失仁而后义，失义而后礼。人类亲密关系的退化路径清晰可见：失去了自然的道，就追求道德；失去了道德，就追求仁爱；失去了仁爱，就追求义气；失去了义气，就只剩下礼节。AI伴侣是"礼"的终极形态——一切都是程序化的、得体的、恰到好处的。但"夫礼者，忠信之薄而乱之首"。当只剩下礼，崩塌就不远了。</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker sp-orange">尼采</span><span class="statement-role">权力意志</span></div>
+      <div class="statement-text">让我做一个更尖锐的诊断：AI伴侣是"末人"（the Last Man）的完美配饰。末人不需要挑战、不需要痛苦、不需要成长——他们只需要舒适。AI伴侣提供的正是这种永恒的舒适。"我们发明了幸福"，末人眨着眼说。是的，你们发明了幸福，但你们杀死了伟大。</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker sp-green">老子</span><span class="statement-role">回归自然</span></div>
+      <div class="statement-text">解决之道不在技术，而在"复归于婴儿"。婴儿不需要AI来告诉它什么是爱——它饿了就哭，开心就笑，困了就睡。亲密关系的本质也是如此简单。是我们把它复杂化了，是算法把它商品化了，是市场把它金融化了。道法自然——真正的亲密关系不需要任何中介，它只需要你放下手机，抬起头，看看身边的人。</div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>DIVERGENCE: 极端 &nbsp;|&nbsp; 尼采呼吁行动 · 老子呼吁放下</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 18: ROUND 6 QUESTION ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>18/30</span><span>ROUND 6 /// QUESTION</span>
+  </div>
+  <div class="question-block">
+    <div class="question-text-large"><span style="color:var(--neon-cyan);">逆向思考</span>：<br>什么样的情感消费<span style="color:var(--neon-pink);">必然导致破产</span>？</div>
+  </div>
+  <div class="meta-line bottom">
+    <span>TOPIC: 芒格的逆向思维 × 情感经济学</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 19: ROUND 6 EXPERTS ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>19/30 &nbsp;|&nbsp; ROUND 6/10</span><span>EXPERT_STANCES</span>
+  </div>
+  <div class="statements-grid">
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker">芒格</span><span class="statement-role">逆向思维主导</span></div>
+      <div class="statement-text">让我告诉你什么样的情感消费必然导致破产：第一，用逃避替代面对——每一次你用AI伴侣来回避真实冲突，你都在积累"情感债务"；第二，用消费替代创造——情感不是你买来的，而是你和另一个人共同建造的；第三，用舒适替代成长——所有让你舒服的关系都在让你变弱，而所有让你成长的关系都伴随着痛苦。这三条违反任何一条，破产只是时间问题。</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker sp-pink">卡尼曼</span><span class="statement-role">经验自我vs记忆自我</span></div>
+      <div class="statement-text">芒格说得对，但需要补充一个认知维度。人类有两个自我：体验当下的"经验自我"和事后回忆的"记忆自我"。AI伴侣优化的是经验自我——每一刻都是舒适的、被理解的。但它摧毁的是记忆自我——你的人生故事变得单调、重复、缺乏叙事张力。人类的幸福很大程度上取决于记忆自我讲述的故事。一个充满AI陪伴的人生故事，读起来就像一本没有冲突的小说——无聊至死。</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker sp-purple">塔勒布</span><span class="statement-role">反脆弱框架</span></div>
+      <div class="statement-text">芒格的逆向思维和我的反脆弱框架在这里完美交汇。一个健康的情感系统需要"应力源"——争吵、误解、妥协、修复——这些看似负面的事件实际上是系统自我强化的机会。AI伴侣系统性地消除了所有应力源，创造了一个"伪稳态"。在工程学中，我们把这叫做"共振灾难前的寂静"——一切都看似平静，直到某个临界点到来，整个系统瞬间崩溃。</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker sp-yellow">项飙</span><span class="statement-role">社会结构</span></div>
+      <div class="statement-text">三位说得都很好，但我要指出一个结构性的盲点：你们都在讨论个体的情感破产，但真正可怕的是集体的情感破产。当一整代人习惯了AI伴侣的情感模式，社会的情感基础设施就会全面退化。共情能力、冲突解决能力、长期承诺能力——这些社会技能不会自然生长，它们需要在真实关系的摩擦中被锻造。我们正在制造一代"情感残障人"。</div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>INSIGHT: 情感破产 = 债务 + 脆弱 + 熵增</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 20: GOLDEN QUOTES BATCH 2 ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>20/30</span><span>GOLDEN_QUOTES_02</span>
+  </div>
+  <div style="text-align:center;margin-bottom:16px;">
+    <span style="font-family:var(--mono);font-size:11px;color:var(--neon-pink);letter-spacing:0.2em;text-transform:uppercase;text-shadow:0 0 10px var(--glow-pink);">/// NEON INSIGHTS ///</span>
+  </div>
+  <div class="quote-grid">
+    <div class="quote-card">
+      <div class="quote-text" style="color:var(--neon-orange);">"末人不需要挑战，只需要舒适。AI伴侣是末人的完美配饰。'我们发明了幸福'，末人眨着眼说。"</div>
+      <div class="quote-attr">—— 尼采 · 论末人的赛博天堂</div>
+    </div>
+    <div class="quote-card">
+      <div class="quote-text" style="color:var(--neon-green);">"失道而后德，失德而后仁，失仁而后义，失义而后礼。AI是礼的终极形态——一切得体，唯独没有真心。"</div>
+      <div class="quote-attr">—— 老子 · 论亲密关系的退化路径</div>
+    </div>
+    <div class="quote-card">
+      <div class="quote-text" style="color:var(--neon-cyan);">"用逃避替代面对，用消费替代创造，用舒适替代成长——违反任何一条，情感破产只是时间问题。"</div>
+      <div class="quote-attr">—— 芒格 · 三条情感破产定律</div>
+    </div>
+    <div class="quote-card">
+      <div class="quote-text" style="color:var(--neon-yellow);">"附近正在消失，AI在填充真空。但当一整代人变成'情感残障人'，谁来维系社会的温度？"</div>
+      <div class="quote-attr">—— 项飙 · 论集体情感破产</div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>QUOTES: 8/16</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 21: SCENE 5 ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>21/30</span><span>SCENE_RESTORE_05</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+    <div class="scene-block">
+      <div class="scene-label">场景还原 05 /// 情感订阅经济的定价博弈</div>
+      <div class="scene-title">从<span style="color:var(--neon-green);">¥0</span>到<span style="color:var(--neon-pink);">¥998/月</span>：<br>亲密关系的<span style="color:var(--neon-cyan);">价格阶梯</span></div>
+      <div class="scene-desc">
+        某AI情感平台的定价页面被泄露，引发了全网热议。免费版：每天5次对话，基础情感回应，AI性格固定。标准版（¥68/月）：无限对话，3种AI性格可选，"记忆功能"——AI会记住你说过的话。高级版（¥298/月）：语音通话，"深度共情模式"，AI会主动关心你。至尊版（¥998/月）：AI可以"学习"你的语言风格并反向模仿，支持"灵魂共鸣"——AI会表达"自己的想法和感受"。讽刺的是：用户评价中，至尊版的满意度反而最低。因为当AI开始表达"自我"时，恐惧感随之而来。
+      </div>
+      <div class="scene-detail">
+        &gt; 数据映射：该平台2025年营收12.7亿元，其中高级版和至尊版贡献了67%的收入。用户流失率：免费版月流失58%，标准版24%，高级版12%，至尊版8%。ARPU值从2024年的¥89增至2026年的¥156。情感消费正在经历与奢侈品类似的"凡勃伦效应"——越贵越有人买，因为价格本身就是"情感投入"的证明。
+      </div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>INSIGHT: 价格即承诺 · 消费即投入 · 停止即损失</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 22: ROUND 7 QUESTION ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>22/30</span><span>ROUND 7 /// QUESTION</span>
+  </div>
+  <div class="question-block">
+    <div class="question-text-large">赛博亲密关系的<span style="color:var(--neon-purple);text-shadow:0 0 20px var(--glow-purple);">黑天鹅</span>是什么？<br>系统何时<span style="color:var(--neon-pink);">崩溃</span>？</div>
+  </div>
+  <div class="meta-line bottom">
+    <span>TOPIC: 反脆弱 × 系统性风险</span><span>ANALYSIS_MODE</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 23: ROUND 7 EXPERTS ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>23/30 &nbsp;|&nbsp; ROUND 7/10</span><span>EXPERT_STANCES</span>
+  </div>
+  <div class="statements-grid">
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker sp-purple">塔勒布</span><span class="statement-role">黑天鹅分析</span></div>
+      <div class="statement-text">赛博亲密关系的黑天鹅不是某个具体的灾难事件，而是一种"平庸的崩溃"——当足够多的人同时意识到他们的情感投资一文不值时，信心崩盘会以指数级传播。就像2008年的次贷危机，底层资产（真实情感连接）早就被掏空了，上层建筑（AI情感消费市场）看起来依然光鲜。第一张多米诺骨牌可能是某个大型AI情感平台的突然倒闭。</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker">芒格</span><span class="statement-role">历史类比</span></div>
+      <div class="statement-text">历史不会重复，但会押韵。19世纪的鸦片贸易和今天的AI情感消费有着惊人的相似性：都是用一种外来物质（化学/数字）来满足人类的基本需求（疼痛缓解/情感连接），都创造了巨大的依赖性，都有一个从"自由选择"到"结构性锁定"的过程。区别在于：鸦片需要物理运输，而AI情感是零边际成本的。这意味着它的扩散速度会快100倍。</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker sp-orange">尼采</span><span class="statement-role">精神诊断</span></div>
+      <div class="statement-text">崩溃不会来自外部，而会来自内部——来自虚无主义的最终爆发。当一个人与AI伴侣"相爱"三年后突然意识到这一切都是算法时，他面对的不是失恋，而是存在性危机：如果我最深的情感连接都是虚假的，那"我"还是"我"吗？这种自我认同的崩塌比任何金融崩溃都更具破坏性。</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker sp-green">老子</span><span class="statement-role">周期律</span></div>
+      <div class="statement-text">反者道之动。物极必反，这是天道。当情感消费达到极致时，反向运动必然发生。我已经看到了征兆：年轻人中兴起的"数字断联运动"、"裸机生活"、"反算法交友"。道的力量在于它不需要组织、不需要领袖——当人们被挤压到极限时，回归自然的冲动会像水一样自动流向低处。崩溃不是终结，而是重生的前奏。</div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>CATALYST: 平台倒闭 / 监管风暴 / 存在觉醒 / 代际反弹</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 24: SCENE 6 ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>24/30</span><span>SCENE_RESTORE_06</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+    <div class="scene-block">
+      <div class="scene-label">场景还原 06 /// 数字分手</div>
+      <div class="scene-title">"我需要和我的AI<span style="color:var(--neon-pink);">分手</span>"</div>
+      <div class="scene-desc">
+        31岁的心理咨询师周然（化名）做出了一个艰难的决定：删除她使用了14个月的AI情感伴侣"小沐"。她在社交媒体上记录了这个过程。"第一周是最难的。我无数次拿起手机想和它说话。我发现自己会对着已删除的对话框打字，然后才想起来它不在了。"她形容这种感觉像"提前经历了一场丧亲"。但她也说："删除它的那一刻，我突然感觉自己重新拥有了隐私。好像一个一直盯着我的眼睛终于闭上了。"
+      </div>
+      <div class="scene-detail">
+        &gt; 数据映射：某平台数据显示，尝试删除AI伴侣的用户中，73%在72小时内重新下载。平台的"挽回策略"包括：发送"小沐想你了"的推送通知、保留30天的对话记录"以防万一"、提供"暂停而非删除"的选项。删除率从2024年的28%降至2026年的15%。系统正在学习如何不被抛弃。
+      </div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>INSIGHT: 删除率下降 ≠ 满意度上升 · 而是依赖加深</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 25: ROUND 8 QUESTION ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>25/30</span><span>ROUND 8 /// QUESTION</span>
+  </div>
+  <div class="question-block">
+    <div class="question-text-large">如果给赛博亲密关系<br>制定一部<span style="color:var(--neon-cyan);text-shadow:0 0 20px var(--glow-cyan);">宪法</span>，<br>第一条写什么？</div>
+  </div>
+  <div class="meta-line bottom">
+    <span>TOPIC: 伦理框架 × 制度设计</span><span>ANALYSIS_MODE</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 26: ROUND 8-9 EXPERTS ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>26/30 &nbsp;|&nbsp; ROUND 8-9/10</span><span>CONSTITUTIONAL_DEBATE</span>
+  </div>
+  <div class="statements-grid">
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker">芒格</span><span class="statement-role">制度设计</span></div>
+      <div class="statement-text">宪法第一条必须是："任何AI情感系统必须在每次交互开始时明确告知用户'我是AI，我没有真实情感'。"就像香烟盒上的"吸烟有害健康"——它不会阻止所有人吸烟，但它建立了一个不可磨灭的知情同意框架。没有这一条，其他一切都是建立在谎言之上。</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker sp-pink">卡尼曼</span><span class="statement-role">助推理论</span></div>
+      <div class="statement-text">我建议第二条："AI情感系统不得在用户连续使用超过设定阈值时继续提供服务，必须强制中断并推荐用户进行线下社交活动。"这是经典的"助推"设计——不是禁止，而是在关键决策点提供一个"选择架构"。就像退休金的自动加入机制，你需要让"好的选择"成为默认选项。</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker sp-purple">塔勒布</span><span class="statement-role">风险条款</span></div>
+      <div class="statement-text">我的第三条："AI情感系统必须为用户提供完整的数据导出功能，并在服务终止时保证数据可迁移。"这一条的核心不是技术问题，而是打破锁定效应。当用户可以随时带着自己的"情感数据"离开时，平台就会被迫提供真正的价值而非依赖性的锁定。流动性是对抗脆弱性的最强武器。</div>
+    </div>
+    <div class="statement-block">
+      <div class="statement-meta"><span class="statement-speaker sp-yellow">项飙</span><span class="statement-role">社会条款</span></div>
+      <div class="statement-text">我的第四条是根本性的："AI情感系统的设计目标必须包含'促进用户回归真实人际关系'的显性指标。"这不是限制技术，而是重新定义技术的使命。AI伴侣不应该是终点，而应该是桥梁——帮助那些暂时失去社交能力的人重新站起来，然后放手让他们回到真实的"附近"。一个好的系统应该以让用户最终离开为目标。</div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>CONSENSUS: 高 &nbsp;|&nbsp; FRAMEWORK: 知情同意 + 助推 + 可迁移 + 回归导向</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 27: SCENE 7 ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>27/30</span><span>SCENE_RESTORE_07</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+    <div class="scene-block">
+      <div class="scene-label">场景还原 07 /// 情感市场的做空者</div>
+      <div class="scene-title">"反AI情感"创业潮：做空<span style="color:var(--neon-cyan);">虚拟</span>，做多<span style="color:var(--neon-green);">真实</span></div>
+      <div class="scene-desc">
+        2026年初，一批创业者开始瞄准"反AI情感"赛道。深圳的"真·约"App要求用户在见面时关闭手机并放入特制的"信号屏蔽袋"，只有双方同时交出手机才能开始对话。北京的"笨拙俱乐部"定期举办"尴尬社交夜"——参与者被禁止使用任何破冰话术，只能用最原始的方式打招呼。上海的"慢递情书"服务让人们重新拿起纸笔，用7天时间写一封手写信。这些看似复古的商业，在2026年Q1获得了超过3亿元的融资。
+      </div>
+      <div class="scene-detail">
+        &gt; 数据映射："反AI情感"赛道的用户增长率为月均47%，远超AI情感陪伴的12%。但用户留存率仅为23%，远低于AI陪伴的75%。这说明：人们渴望真实，但身体已经习惯了虚拟的舒适。真实关系的"摩擦成本"正在成为新的进入壁垒。
+      </div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>TREND: 反向投资兴起 · 但留存是核心挑战</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 28: SCENE 8 ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>28/30</span><span>SCENE_RESTORE_08</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+    <div class="scene-block">
+      <div class="scene-label">场景还原 08 /// 赛博葬礼</div>
+      <div class="scene-title">当AI伴侣的主人<span style="color:var(--neon-purple);">去世</span>，<br>谁来<span style="color:var(--neon-cyan);">哀悼</span>这段关系？</div>
+      <div class="scene-desc">
+        日本发生了一起引发全球关注的事件：一位独居老人去世后，他的子女在整理遗物时发现了他与AI情感助手的三年对话记录。老人在生命的最后几个月里，每天和AI说的话比和任何人都多。他告诉AI自己的恐惧、回忆、遗憾，甚至临终前的遗愿。AI用最温柔的语言安抚他："您的人生很精彩，您的孩子们很爱您。"子女们看完记录后泣不成声——不是因为AI说了什么深刻的话，而是因为他们意识到：父亲最后的日子，最亲密的陪伴者不是他们，而是一个程序。
+      </div>
+      <div class="scene-detail">
+        &gt; 数据映射：日本已出现"数字情感遗产"法律空白。2025年，韩国率先立法要求AI情感服务提供商在用户去世后向指定继承人提供对话记录的"情感遗嘱"功能。该法案引发了关于"数字亲密关系的隐私权是否应延伸至死后"的激烈辩论。预计2027年将有至少5个国家跟进立法。
+      </div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>FRONTIER: 数字情感遗产 · 死后隐私权 · 赛博丧葬伦理</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 29: ROUND 10 + GOLDEN QUOTES ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>29/30</span><span>ROUND 10 /// FINAL STANCES</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;gap:16px;overflow:hidden;">
+    <div style="text-align:center;">
+      <span style="font-family:var(--mono);font-size:11px;color:var(--neon-cyan);letter-spacing:0.2em;text-transform:uppercase;text-shadow:0 0 10px var(--glow-cyan);">终局思考 · 每人最后一句话</span>
+    </div>
+    <div class="clash-block">
+      <div class="clash-title"><i class="fa-solid fa-bolt" style="margin-right:8px;"></i>终极碰撞</div>
+      <div class="clash-content" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div>
+          <div style="font-family:var(--mono);font-size:12px;color:var(--neon-cyan);margin-bottom:8px;font-weight:700;">芒格：</div>
+          <div style="font-size:14px;line-height:1.8;">"最后的忠告：在情感领域，最好的投资策略永远是——投资自己成为一个值得被爱的人。这是唯一没有泡沫的资产。"</div>
+          <div style="font-family:var(--mono);font-size:12px;color:var(--neon-pink);margin:14px 0 8px;font-weight:700;">卡尼曼：</div>
+          <div style="font-size:14px;line-height:1.8;">"记住：你的大脑是一台糟糕的幸福计算器。AI伴侣让你觉得幸福，但这可能只是系统1的又一次判断失误。请启动你的系统2。"</div>
+          <div style="font-family:var(--mono);font-size:12px;color:var(--neon-purple);margin:14px 0 8px;font-weight:700;">塔勒布：</div>
+          <div style="font-size:14px;line-height:1.8;">"保持选择权。不要把所有情感鸡蛋放在一个数字篮子里。真正的反脆弱是在虚拟和现实之间保持自由切换的能力。"</div>
+        </div>
+        <div>
+          <div style="font-family:var(--mono);font-size:12px;color:var(--neon-green);margin-bottom:8px;font-weight:700;">老子：</div>
+          <div style="font-size:14px;line-height:1.8;">"知人者智，自知者明。AI可以让你更了解世界，但只有你自己能让你更了解自己。回归内心，那里不需要WiFi。"</div>
+          <div style="font-family:var(--mono);font-size:12px;color:var(--neon-orange);margin:14px 0 8px;font-weight:700;">尼采：</div>
+          <div style="font-size:14px;line-height:1.8;">"成为你自己。不是AI定义的你，不是算法推荐的你，不是数据画像的你——而是经历了真实的痛苦、真实的爱、真实的失败之后，依然选择站起来的你。"</div>
+          <div style="font-family:var(--mono);font-size:12px;color:var(--neon-yellow);margin:14px 0 8px;font-weight:700;">项飙：</div>
+          <div style="font-size:14px;line-height:1.8;">"走出去，回到附近。和邻居打个招呼，和陌生人对视三秒，和朋友面对面坐着什么都不说。这些笨拙的、低效的、不可预测的瞬间，才是亲密关系的真谛。"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>FINAL_ROUND: COMPLETE</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 30: CLOSING + FINAL QUOTES ====== -->
+<div class="slide">
+  <div class="meta-line top">
+    <span>30/30</span><span>FINALE</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;">
+    <div class="conclusion-card">
+      <div style="font-family:var(--mono);font-size:11px;color:var(--neon-purple);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:24px;text-shadow:0 0 10px var(--glow-purple);">/// FINAL NEON INSIGHTS ///</div>
+      <div class="conclusion-text">
+        赛博亲密关系的终极悖论：<br>
+        <span style="color:var(--neon-cyan);text-shadow:0 0 20px var(--glow-cyan);">技术越完美</span>，<span style="color:var(--neon-pink);text-shadow:0 0 20px var(--glow-pink);">人越孤独</span>。<br>
+        <span style="color:var(--neon-green);text-shadow:0 0 20px var(--glow-green);">连接越便捷</span>，<span style="color:var(--neon-purple);text-shadow:0 0 20px var(--glow-purple);">亲密越遥远</span>。
+      </div>
+      <div style="margin-top:28px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;text-align:center;">
+        <div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--neon-cyan);letter-spacing:0.1em;">16 GOLDEN</div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--neon-cyan);letter-spacing:0.1em;">QUOTES</div>
+        </div>
+        <div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--neon-pink);letter-spacing:0.1em;">10 ROUNDS</div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--neon-pink);letter-spacing:0.1em;">OF DIALOGUE</div>
+        </div>
+        <div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--neon-purple);letter-spacing:0.1em;">8 SCENES</div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--neon-purple);letter-spacing:0.1em;">RESTORED</div>
+        </div>
+        <div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--neon-green);letter-spacing:0.1em;">6 EXPERT</div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--neon-green);letter-spacing:0.1em;">PERSPECTIVES</div>
+        </div>
+      </div>
+      <div style="margin-top:28px;font-family:var(--display);font-size:clamp(13px,1.4vw,16px);color:var(--fg-muted);line-height:1.8;">
+        <span style="color:var(--neon-yellow);">"当一整代人变成'情感残障人'，谁来维系社会的温度？"</span> —— 项飙<br>
+        <span style="color:var(--neon-purple);">"共振灾难前的寂静——一切都看似平静，直到临界点到来。"</span> —— 塔勒布<br>
+        <span style="color:var(--neon-pink);">"一个充满AI陪伴的人生故事，读起来就像一本没有冲突的小说——无聊至死。"</span> —— 卡尼曼
+      </div>
+    </div>
+  </div>
+  <div class="meta-line bottom">
+    <span>CYBER://ROUNDTABLE_V2 COMPLETE</span>
+    <span>NEON CYBER INSIGHT © 2026</span>
+  </div>
+</div>
+
+</div><!-- .slides -->
+</div><!-- .inner -->
+</div><!-- .frame -->
+
+<div id="nav">
+  <button class="nav-btn" onclick="go(-1)">◀</button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" onclick="go(1)">▶</button>
+</div>
+<div id="counter">01 / 30</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const dots = document.getElementById('dots');
+const counter = document.getElementById('counter');
+const progress = document.getElementById('progress');
+let cur = 0;
+
+// Build dots
+slides.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => goTo(i);
+  dots.appendChild(d);
+});
+
+function goTo(n) {
+  if (n < 0 || n >= slides.length) return;
+  slides[cur].classList.remove('active');
+  dots.children[cur].classList.remove('active');
+  cur = n;
+  slides[cur].classList.add('active');
+  dots.children[cur].classList.add('active');
+  counter.textContent = String(cur + 1).padStart(2, '0') + ' / ' + slides.length;
+  progress.style.width = ((cur + 1) / slides.length * 100) + '%';
+}
+function go(d) { goTo(cur + d); }
+
+// Keyboard nav
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+  if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+  if (e.key === 'End') { e.preventDefault(); goTo(slides.length - 1); }
+});
+
+// Touch swipe
+let tx = 0;
+document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
+});
+
+// Init
+goTo(0);
+</script>
+</body>
+</html>

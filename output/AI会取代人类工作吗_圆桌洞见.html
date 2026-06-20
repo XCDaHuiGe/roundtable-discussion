@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI时代的意义危机</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0A0A0A;
+      --bg2: #111111;
+      --bg3: #1A1A1A;
+      --text: #F5F5F5;
+      --text2: #A0A0A0;
+      --text3: #606060;
+      --accent: #D4A04A;
+      --accent-light: #E8C47A;
+      --accent-dark: #B8862D;
+      --clash: #ff4757;
+      --insight: #00d4aa;
+      --card-bg: rgba(212,160,74,0.08);
+      --card-border: rgba(212,160,74,0.2);
+      --glow: rgba(212,160,74,0.3);
+      --slide-w: 100vw;
+      --slide-h: 100vh;
+      --font-display: 'Noto Serif SC', serif;
+      --font-body: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    html { font-size: 16px; scroll-behavior: auto; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      overflow-y: hidden;
+      height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Slideshow container ─── */
+    .slideshow {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+    .slideshow::-webkit-scrollbar { display: none; }
+    .slideshow { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* ─── Slide ─── */
+    .slide {
+      flex: 0 0 var(--slide-w);
+      width: var(--slide-w);
+      height: var(--slide-h);
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 4rem 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ─── Progress bar ─── */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      z-index: 1000;
+      transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      box-shadow: 0 0 10px var(--glow);
+    }
+
+    /* ─── Page counter ─── */
+    .page-counter {
+      position: fixed;
+      top: 1.5rem;
+      right: 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text3);
+      z-index: 1000;
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Nav dots ─── */
+    .nav-dots {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 1000;
+      padding: 8px 16px;
+      background: rgba(10,10,10,0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      outline: none;
+    }
+    .nav-dot:hover { background: var(--text2); transform: scale(1.3); }
+    .nav-dot.active {
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--glow);
+      transform: scale(1.2);
+    }
+
+    /* ─── Slide header ─── */
+    .slide-header {
+      width: 100%;
+      max-width: 1000px;
+      margin-bottom: 2.5rem;
+    }
+    .slide-tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+    .slide-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    /* ─── Cover slide ─── */
+    .cover-slide {
+      background: radial-gradient(ellipse at 30% 50%, rgba(20,20,20,1) 0%, var(--bg) 70%);
+    }
+    .cover-glow {
+      position: absolute;
+      top: 50%;
+      left: 30%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .cover-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .cover-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      margin-bottom: 2rem;
+    }
+    .cover-title {
+      font-family: var(--font-display);
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 1rem;
+      max-width: 700px;
+    }
+    .cover-subtitle {
+      font-size: 1.1rem;
+      color: var(--text2);
+      margin-bottom: 1.5rem;
+    }
+    .cover-books {
+      font-size: 0.9rem;
+      color: var(--text3);
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+    .cover-stats {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .cover-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .cover-stat-num {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .cover-stat-label {
+      font-size: 0.85rem;
+      color: var(--text3);
+      margin-top: 0.25rem;
+    }
+    .cover-stat-divider {
+      width: 1px;
+      height: 40px;
+      background: var(--text3);
+      opacity: 0.3;
+    }
+    .cover-experts {
+      font-size: 0.9rem;
+      color: var(--text2);
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Expert grid ─── */
+    .expert-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 1000px;
+    }
+    .expert-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      transition: all 0.3s ease;
+    }
+    .expert-card:hover {
+      border-color: var(--card-color, var(--accent));
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      transform: translateY(-2px);
+    }
+    .expert-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0A0A0A;
+      flex-shrink: 0;
+    }
+    .expert-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .expert-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+    .expert-title {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-bottom: 0.5rem;
+    }
+    .expert-stance {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 8px;
+      border-radius: 3px;
+      margin-bottom: 0.5rem;
+    }
+    .expert-belief {
+      font-size: 0.8rem;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+
+    /* ─── Question slide ─── */
+    .question-slide {
+      background: radial-gradient(ellipse at 50% 50%, rgba(20,20,20,1) 0%, var(--bg) 70%);
+    }
+    .question-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    .question-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .question-topic {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 1.5rem 0;
+      line-height: 1.3;
+    }
+    .question-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--accent);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .question-text {
+      font-size: 1.15rem;
+      color: var(--text2);
+      line-height: 1.8;
+    }
+
+    /* ─── Stances ─── */
+    .stances-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .stance-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .stance-item:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .stance-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0A0A0A;
+      flex-shrink: 0;
+    }
+    .stance-body {
+      flex: 1;
+    }
+    .stance-speaker {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .stance-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Clash ─── */
+    .clash-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .clash-block {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+    }
+    .clash-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clash);
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .clash-item {
+      margin-bottom: 1rem;
+    }
+    .clash-item:last-child { margin-bottom: 0; }
+    .clash-speaker {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .clash-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      padding-left: 1rem;
+      border-left: 2px solid var(--card-border);
+    }
+    .clash-attack .clash-text {
+      border-left-color: var(--clash);
+    }
+    .clash-counter .clash-text {
+      border-left-color: var(--insight);
+    }
+
+    /* ─── Reality cases ─── */
+    .cases-container {
+      width: 100%;
+      max-width: 1000px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .case-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .case-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .case-header {
+      margin-bottom: 1rem;
+    }
+    .case-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .case-source {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-top: 0.25rem;
+    }
+    .case-content {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .case-outcome, .case-lesson {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+    .case-label {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-right: 0.5rem;
+    }
+
+    /* ─── Cost discussion ─── */
+    .cost-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .cost-scenario {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-scenario-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-scenario-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .cost-analysis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .cost-dimension {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .cost-value {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .cost-worst {
+      background: rgba(255,71,87,0.08);
+      border: 1px solid rgba(255,71,87,0.2);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-worst-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clash);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-worst-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .cost-survivor {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .cost-survivor-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-survivor-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Human nature ─── */
+    .hn-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .hn-question {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .hn-analysis {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+    }
+    .hn-examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .hn-example {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .hn-conclusion {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .hn-conclusion-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .hn-conclusion-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Cognitive upgrade ─── */
+    .upgrade-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .upgrade-block {
+      display: flex;
+      gap: 1.5rem;
+      align-items: stretch;
+      margin-bottom: 1.5rem;
+    }
+    .upgrade-before, .upgrade-after {
+      flex: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .upgrade-before {
+      border-color: rgba(255,71,87,0.2);
+      background: rgba(255,71,87,0.05);
+    }
+    .upgrade-after {
+      border-color: rgba(0,212,170,0.2);
+      background: rgba(0,212,170,0.05);
+    }
+    .upgrade-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+    .upgrade-before .upgrade-label { color: var(--clash); }
+    .upgrade-after .upgrade-label { color: var(--insight); }
+    .upgrade-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .upgrade-arrow {
+      display: flex;
+      align-items: center;
+      font-size: 2rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .upgrade-complexity, .upgrade-actionable {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .upgrade-complexity-label, .upgrade-actionable-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .upgrade-complexity-text, .upgrade-actionable-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Final insight ─── */
+    .insight-slide {
+      background: radial-gradient(ellipse at 50% 50%, rgba(0,212,170,0.05) 0%, var(--bg) 60%);
+    }
+    .insight-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0,212,170,0.15) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .insight-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .insight-title {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--insight);
+      margin: 1.5rem 0;
+    }
+    .insight-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--insight);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .insight-text {
+      font-size: 1.1rem;
+      color: var(--text2);
+      line-height: 1.9;
+    }
+
+    /* ─── Open questions ─── */
+    .oq-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .oq-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .oq-item:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+    .oq-num {
+      font-family: var(--font-mono);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+      width: 32px;
+      text-align: center;
+    }
+    .oq-text {
+      font-size: 1rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      .slide { padding: 2rem 1.5rem; }
+      .cover-title { font-size: 2rem; }
+      .question-topic { font-size: 1.8rem; }
+      .slide-title { font-size: 1.6rem; }
+      .expert-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+      .upgrade-block { flex-direction: column; }
+      .upgrade-arrow { transform: rotate(90deg); justify-content: center; }
+      .cases-container { grid-template-columns: 1fr; }
+      .cost-analysis { grid-template-columns: 1fr; }
+      .hn-examples { grid-template-columns: 1fr; }
+      .nav-dots { display: none; }
+    }
+    @media (max-width: 480px) {
+      .expert-grid { grid-template-columns: 1fr; }
+      .cover-stats { gap: 1rem; }
+      .cover-stat-num { font-size: 2rem; }
+    }
+    
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<div class="page-counter" id="pageCounter">1 / 28</div>
+
+<div class="slideshow" id="slideshow">
+
+    <div class="slide cover-slide">
+      <div class="cover-glow"></div>
+      <div class="cover-content">
+        <div class="cover-badge">ROUNDTABLE DISCUSSION</div>
+        <h1 class="cover-title">AI时代的意义危机</h1>
+        
+        
+        <div class="cover-stats">
+          <div class="cover-stat">
+            <span class="cover-stat-num">6</span>
+            <span class="cover-stat-label">位专家</span>
+          </div>
+          <div class="cover-stat-divider"></div>
+          <div class="cover-stat">
+            <span class="cover-stat-num">3</span>
+            <span class="cover-stat-label">轮讨论</span>
+          </div>
+        </div>
+        <div class="cover-experts">韩炳哲 · 弗洛姆 · 傅盛 · 李诞 · 维克多·弗兰克尔 · 丹尼尔·卡尼曼</div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">EXPERTS</span>
+        <h2 class="slide-title">专家阵营</h2>
+      </div>
+      <div class="expert-grid">
+        <div class="expert-card" style="--card-color: #8a2a4a">
+          <div class="expert-avatar" style="background: #8a2a4a">韩</div>
+          <div class="expert-info">
+            <div class="expert-name">韩炳哲</div>
+            <div class="expert-title">哲学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #4a2d8a">
+          <div class="expert-avatar" style="background: #4a2d8a">弗</div>
+          <div class="expert-info">
+            <div class="expert-name">弗洛姆</div>
+            <div class="expert-title">精神分析学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #2a6a8a">
+          <div class="expert-avatar" style="background: #2a6a8a">傅</div>
+          <div class="expert-info">
+            <div class="expert-name">傅盛</div>
+            <div class="expert-title">科技企业家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #e65100">
+          <div class="expert-avatar" style="background: #e65100">李</div>
+          <div class="expert-info">
+            <div class="expert-name">李诞</div>
+            <div class="expert-title">脱口秀演员</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #6a4a2a">
+          <div class="expert-avatar" style="background: #6a4a2a">维</div>
+          <div class="expert-info">
+            <div class="expert-name">维克多·弗兰克尔</div>
+            <div class="expert-title">心理学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #333333">
+          <div class="expert-avatar" style="background: #333333">丹</div>
+          <div class="expert-info">
+            <div class="expert-name">丹尼尔·卡尼曼</div>
+            <div class="expert-title">认知科学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 1</span>
+        <h2 class="question-topic">AI与人类存在的意义</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">当AI能完成大部分工作，人类存在的意义是什么？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8a2a4a">韩</div>
+          <div class="stance-body">
+            <div class="stance-speaker">韩炳哲</div>
+            <div class="stance-text">AI正在制造一种&#x27;意义真空&#x27;。过去，工作是人类获得意义的主要来源——你通过劳动创造价值，通过价值获得认同。当AI取代了工作，人类面临一个存在主义的问题：如果我不再需要工作，我是谁？这种&#x27;意义真空&#x27;不是解放，而是一种新的压迫——你必须不断地&#x27;寻找意义&#x27;，而这种寻找本身就是一种负担。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4a2d8a">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛姆</div>
+            <div class="stance-text">AI时代的意义危机，本质上是&#x27;逃避自由&#x27;的又一种形式。弗洛伊德说，文明的代价是压抑；我说，自由的代价是焦虑。当AI解放了人类的劳动，人类获得了前所未有的&#x27;自由&#x27;——但这种自由是空洞的，因为它没有方向。人类需要的不是&#x27;自由&#x27;，而是&#x27;有意义的自由&#x27;。AI给了我们时间，但没有告诉我们如何使用时间。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #2a6a8a">傅</div>
+          <div class="stance-body">
+            <div class="stance-speaker">傅盛</div>
+            <div class="stance-text">你们把AI时代的意义危机想得太悲观了。AI不是在&#x27;取代&#x27;人类，而是在&#x27;解放&#x27;人类。过去，人类被迫做重复性的、低价值的工作；现在，AI可以做这些，人类可以专注于更有意义的事情——创造、思考、连接。意义危机不是AI造成的，而是我们的社会结构没有跟上技术发展的步伐。我们需要重新设计教育、重新设计工作、重新设计生活。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #e65100">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">你们说的意义危机太抽象了。普通人不关心&#x27;存在的意义&#x27;，我们关心的是&#x27;明天怎么过&#x27;。AI取代了工作，谁来付房租？谁来养家？你说AI解放了人类——但解放的前提是有钱有闲。对于大多数人来说，AI不是解放，是威胁。意义危机是富人的奢侈品，穷人只有生存危机。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #6a4a2a">维</div>
+          <div class="stance-body">
+            <div class="stance-speaker">维克多·弗兰克尔</div>
+            <div class="stance-text">我在集中营里找到了意义，你们在AI时代却找不到？意义不是被&#x27;给予&#x27;的，而是被&#x27;发现&#x27;的。AI可以取代你的工作，但不能取代你的意义。意义来自于三个方面：创造性的工作、体验性的价值（爱、美、真理）、以及面对苦难的态度。AI可以取代第一个，但不能取代后两个。问题不在于AI，而在于我们是否愿意主动寻找意义。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #333333">丹</div>
+          <div class="stance-body">
+            <div class="stance-speaker">丹尼尔·卡尼曼</div>
+            <div class="stance-text">从认知科学的角度，意义感是一种&#x27;心理免疫系统&#x27;——它帮助我们处理负面情绪、应对不确定性。AI时代的意义危机，本质上是这种&#x27;心理免疫系统&#x27;的崩溃。当传统的意义来源（工作、社区、宗教）被削弱，人类需要新的&#x27;意义构建机制&#x27;。这不是一个哲学问题，而是一个心理学问题——我们需要帮助人们建立新的意义框架。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #8a2a4a">韩炳哲 → 傅盛</div>
+            <div class="clash-text">你说AI&#x27;解放&#x27;了人类——但解放的前提是什么？是人类有能力和意愿去&#x27;寻找意义&#x27;。但现实是：大多数人在获得&#x27;自由&#x27;后，会陷入&#x27;无聊&#x27;和&#x27;焦虑&#x27;。你说社会结构需要重新设计——但谁来设计？你吗？政府吗？你的&#x27;乐观主义&#x27;忽视了一个关键问题：人类可能根本没有能力处理&#x27;意义真空&#x27;。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #2a6a8a">傅盛</div>
+              <div class="clash-text">你的&#x27;意义真空论&#x27;有一个关键假设：人类是被动的，需要&#x27;被给予&#x27;意义。但人类历史告诉我们，人类是主动的——他们会创造意义，即使在最困难的环境下。你说&#x27;大多数人会陷入无聊和焦虑&#x27;——但这只是过渡期的反应，不是永久状态。人类的适应能力比你想象的强得多。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #4a2d8a">弗洛姆 → 李诞</div>
+            <div class="clash-text">你说&#x27;意义危机是富人的奢侈品&#x27;——但你有没有想过，&#x27;没有意义&#x27;的状态是一种什么样的体验？它不是&#x27;无聊&#x27;，而是一种深层的&#x27;空虚&#x27;。穷人可能没有时间思考&#x27;意义&#x27;，但他们同样需要&#x27;意义&#x27;——只是他们的&#x27;意义&#x27;可能更简单：养家、照顾孩子、活下去。你说&#x27;生存危机&#x27;比&#x27;意义危机&#x27;更重要——但两者不是对立的，它们是同一枚硬币的两面。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #e65100">李诞</div>
+              <div class="clash-text">你说&#x27;生存危机和意义危机是同一枚硬币的两面&#x27;——但这个类比是有问题的。生存危机是&#x27;具体的&#x27;、&#x27;紧迫的&#x27;、&#x27;有解决方案的&#x27;——你需要钱，你可以工作；意义危机是&#x27;抽象的&#x27;、&#x27;无止境的&#x27;、&#x27;没有标准答案的&#x27;。一个在为房租发愁的人，不会关心&#x27;存在的意义&#x27;。你说穷人也需要&#x27;意义&#x27;——是的，但他们首先需要&#x27;活下去&#x27;。你的哲学讨论，对那些正在为生存挣扎的人来说，是一种奢侈的漠视。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #6a4a2a">维克多·弗兰克尔 → 韩炳哲</div>
+            <div class="clash-text">你说AI制造了&#x27;意义真空&#x27;——但你有没有注意到，&#x27;意义真空&#x27;在AI出现之前就已经存在了？现代社会的&#x27;意义危机&#x27;不是AI造成的，而是工业化、城市化、世俗化的结果。AI只是加速了这个趋势。你把责任推给AI，但真正的责任在于我们的社会结构——它把&#x27;工作&#x27;定义为唯一的意义来源，现在&#x27;工作&#x27;消失了，意义当然也就消失了。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #8a2a4a">韩炳哲</div>
+              <div class="clash-text">你的&#x27;社会结构论&#x27;是有道理的，但你忽视了一个关键变量：速度。工业化、城市化、世俗化花了几个世纪；AI革命可能只需要几十年。人类有足够的时间适应工业化带来的意义危机，但可能没有足够的时间适应AI带来的意义危机。你说&#x27;AI只是加速器&#x27;——但速度本身就是问题。当变化太快，人类的&#x27;意义构建机制&#x27;来不及适应，就会出现&#x27;意义真空&#x27;。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">日本的&#x27;蛰居族&#x27;现象</div>
+            <div class="case-source">日本政府调查 2019</div>
+          </div>
+          <div class="case-content">日本有超过100万&#x27;蛰居族&#x27;——他们不工作、不社交、不出门，完全与社会隔绝。他们中的很多人不是因为&#x27;找不到工作&#x27;，而是因为&#x27;找不到意义&#x27;。他们认为：如果工作只是为了赚钱，而赚钱只是为了活着，那么活着本身就没有意义。这个现象在AI时代可能会扩大——当AI取代了工作，更多人会面临&#x27;意义真空&#x27;。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 日本政府开始讨论&#x27;全民基本收入&#x27;和&#x27;意义教育&#x27;
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 意义危机不是&#x27;精英的烦恼&#x27;，而是&#x27;大众的现实&#x27;
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">AI大规模取代人类工作</span>
+        </div>
+        <div class="cost-analysis">
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">在现代社会，&#x27;你是做什么的？&#x27;是定义一个人身份的核心问题。当AI取代了工作，这个问题就失去了答案。&#x27;我是谁&#x27;变成了一个没有答案的问题。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">现代社会的结构——学校、公司、社区——都是围绕&#x27;工作&#x27;组织的。当AI取代了工作，这些结构都会瓦解。人类需要新的社会组织方式，但目前还没有找到。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">研究表明，失业与抑郁症、焦虑症、自杀率高度相关。当AI大规模取代工作，心理健康危机可能会成为&#x27;新常态&#x27;。</div>
+        </div>
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">2045年，大多数人类不再需要工作，但也失去了&#x27;存在的意义&#x27;。他们依靠全民基本收入生活，但精神上处于&#x27;存在性虚无&#x27;状态。药物滥用、抑郁症、自杀率飙升。AI创造了物质的丰裕，却带来了精神的贫困。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">我们只看到那些&#x27;成功找到新意义&#x27;的人——他们用AI解放的时间去创造、去学习、去连接。但我们没有看到的是：那些在&#x27;意义真空&#x27;中挣扎的人，那些因为&#x27;没有意义&#x27;而陷入抑郁的人，那些选择结束生命的人。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">人类是否需要&#x27;工作&#x27;才能获得意义？</div>
+        <div class="hn-analysis">马斯洛的需求层次理论中，&#x27;自我实现&#x27;是最高层次的需求——但这个需求需要&#x27;平台&#x27;来实现。传统上，&#x27;工作&#x27;是这个平台。当AI取代了工作，&#x27;自我实现&#x27;的需求仍然存在，但&#x27;平台&#x27;消失了。问题不在于人类是否需要&#x27;工作&#x27;，而在于人类需要&#x27;有意义的活动&#x27;——而AI时代需要为这种活动创造新的平台。</div>
+        <div class="hn-examples"><div class="hn-example">退休人员的&#x27;退休综合征&#x27;——失去了工作身份后，很多人陷入抑郁</div><div class="hn-example">艺术家和作家——他们往往在&#x27;没有固定工作&#x27;的情况下找到意义</div>
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">人类不一定需要&#x27;工作&#x27;，但需要&#x27;有意义的活动&#x27;。AI时代的意义危机，本质上是&#x27;有意义的活动&#x27;的稀缺。解决方案不是&#x27;创造更多的工作&#x27;，而是&#x27;创造更多的意义来源&#x27;。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">AI会取代工作，导致失业危机</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">AI会取代工作，导致意义危机——而意义危机比失业危机更难解决</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">AI对人类的影响不是简单的&#x27;失业&#x27;，而是&#x27;存在方式的改变&#x27;。当AI取代了工作，人类需要重新定义&#x27;我是谁&#x27;、&#x27;我的价值是什么&#x27;、&#x27;我的生活目标是什么&#x27;。这不是一个经济问题，而是一个存在主义问题。解决方案需要的不只是&#x27;全民基本收入&#x27;，而是&#x27;全民意义教育&#x27;。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">作为个人：不要把&#x27;工作&#x27;作为唯一的&#x27;意义来源&#x27;，培养多种&#x27;意义活动&#x27;——创造、学习、服务、连接。作为社会：建立&#x27;意义教育&#x27;体系，帮助人们在AI时代找到新的存在方式。作为企业：不只是&#x27;用AI取代人&#x27;，而是&#x27;用AI解放人&#x27;，让员工有时间去做更有意义的事情。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 2</span>
+        <h2 class="question-topic">AI与创造力的本质</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">当AI能创造艺术，人类创造力的独特性在哪里？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8a2a4a">韩</div>
+          <div class="stance-body">
+            <div class="stance-speaker">韩炳哲</div>
+            <div class="stance-text">AI创造的&#x27;艺术&#x27;不是真正的艺术——因为真正的艺术需要&#x27;痛苦&#x27;、需要&#x27;挣扎&#x27;、需要&#x27;突破&#x27;。AI没有痛苦，没有挣扎，没有突破——它只是在&#x27;组合&#x27;已有的元素。AI创造的&#x27;艺术&#x27;是&#x27;平滑的&#x27;、&#x27;完美的&#x27;、&#x27;无摩擦的&#x27;——但真正的艺术恰恰是&#x27;粗糙的&#x27;、&#x27;有缺陷的&#x27;、&#x27;有摩擦的&#x27;。AI正在把&#x27;艺术&#x27;变成&#x27;产品&#x27;。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4a2d8a">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛姆</div>
+            <div class="stance-text">创造力的本质不是&#x27;产出&#x27;，而是&#x27;过程&#x27;。当你画画时，你不是在&#x27;生产一幅画&#x27;，而是在&#x27;表达你自己&#x27;。AI可以&#x27;生产一幅画&#x27;，但不能&#x27;表达自己&#x27;——因为它没有&#x27;自己&#x27;。人类的创造力来自于&#x27;存在&#x27;——你是谁，你经历了什么，你感受到了什么。AI没有&#x27;存在&#x27;，所以它的&#x27;创造&#x27;是空洞的。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #2a6a8a">傅</div>
+          <div class="stance-body">
+            <div class="stance-speaker">傅盛</div>
+            <div class="stance-text">你们把创造力神化了。大多数&#x27;创造&#x27;其实是&#x27;组合&#x27;——把已有的元素重新排列组合。AI在这方面比人类更高效。但这不意味着AI会&#x27;取代&#x27;人类创造力——相反，AI会&#x27;放大&#x27;人类创造力。一个不会画画的人，可以用AI把脑海中的画面变成现实；一个不会作曲的人，可以用AI把心中的旋律变成音乐。AI是创造力的&#x27;放大器&#x27;，不是&#x27;替代品&#x27;。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #e65100">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">你们讨论的&#x27;创造力&#x27;太精英化了。普通人不关心&#x27;艺术的本质&#x27;，我们关心的是&#x27;能不能用&#x27;。AI生成的图片、音乐、文案，只要能满足需求，就是好的。你说AI的创造是&#x27;空洞的&#x27;——但用户不觉得空洞，他们觉得&#x27;有用&#x27;。创造力不是&#x27;表达自我&#x27;，而是&#x27;解决问题&#x27;。AI在这方面比大多数人类都强。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #6a4a2a">维</div>
+          <div class="stance-body">
+            <div class="stance-speaker">维克多·弗兰克尔</div>
+            <div class="stance-text">创造力的价值不在于&#x27;产出&#x27;，而在于&#x27;意义&#x27;。当你创造一个东西，你不是在&#x27;生产&#x27;，而是在&#x27;赋予意义&#x27;。AI可以&#x27;生产&#x27;，但不能&#x27;赋予意义&#x27;——因为它不理解&#x27;意义&#x27;。人类的创造力是&#x27;意义导向的&#x27;——你创造，是因为你想表达某种价值、某种情感、某种对世界的理解。AI没有这种&#x27;意义感&#x27;。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #333333">丹</div>
+          <div class="stance-body">
+            <div class="stance-speaker">丹尼尔·卡尼曼</div>
+            <div class="stance-text">从认知科学的角度，创造力是一种&#x27;远距离联想&#x27;——把看似无关的概念连接起来。AI在这方面确实很强——它可以处理海量数据，找到人类想不到的连接。但人类的创造力还有一个维度：&#x27;意图性&#x27;——你知道你为什么创造，你想表达什么。AI没有&#x27;意图性&#x27;，它的&#x27;创造&#x27;是随机的组合，不是有目的的表达。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #8a2a4a">韩炳哲 → 傅盛</div>
+            <div class="clash-text">你说AI是创造力的&#x27;放大器&#x27;——但放大器只能放大已有的东西，不能创造新的东西。如果一个人没有创造力，AI不能&#x27;给&#x27;他创造力——只能帮他&#x27;表达&#x27;已有的想法。你说&#x27;不会画画的人可以用AI画画&#x27;——但这不是&#x27;创造力&#x27;，这是&#x27;工具使用&#x27;。真正的创造力是&#x27;想法&#x27;，不是&#x27;表达&#x27;。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #2a6a8a">傅盛</div>
+              <div class="clash-text">你把&#x27;创造力&#x27;定义得太狭隘了。创造力不只是&#x27;想法&#x27;，也包括&#x27;表达&#x27;。一个有想法但不会表达的人，他的创造力是&#x27;未实现的&#x27;——AI可以帮助他实现。你说&#x27;不会画画的人用AI画画不是创造力&#x27;——但梵高不会用电脑，如果他有AI，他的创造力会更强大。AI不是在&#x27;取代&#x27;创造力，而是在&#x27;降低创造力的门槛&#x27;。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #4a2d8a">弗洛姆 → 李诞</div>
+            <div class="clash-text">你说&#x27;创造力是解决问题&#x27;——但你有没有想过，&#x27;解决问题&#x27;和&#x27;创造&#x27;是两件事？&#x27;解决问题&#x27;是&#x27;功能性的&#x27;、&#x27;工具性的&#x27;、&#x27;可替代的&#x27;；&#x27;创造&#x27;是&#x27;存在性的&#x27;、&#x27;表达性的&#x27;、&#x27;不可替代的&#x27;。AI可以&#x27;解决问题&#x27;，但不能&#x27;创造&#x27;——因为&#x27;创造&#x27;需要&#x27;存在&#x27;，而AI没有&#x27;存在&#x27;。你把&#x27;创造力&#x27;等同于&#x27;生产力&#x27;，这是对创造力的贬低。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #e65100">李诞</div>
+              <div class="clash-text">你说&#x27;创造需要存在&#x27;——但什么是&#x27;存在&#x27;？你说AI没有&#x27;存在&#x27;——但AI可以模拟人类的所有外在表现。你说AI的创造是&#x27;空洞的&#x27;——但谁来判断&#x27;空洞&#x27;？如果用户觉得AI的作品&#x27;有意义&#x27;，你的&#x27;空洞论&#x27;就是一种精英主义的傲慢。创造力的价值不在于&#x27;创造者有没有灵魂&#x27;，而在于&#x27;作品有没有影响&#x27;。AI的作品可以感动人、启发人、改变人——这就是&#x27;创造&#x27;。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #333333">丹尼尔·卡尼曼 → 韩炳哲</div>
+            <div class="clash-text">你说AI的创造是&#x27;平滑的&#x27;、&#x27;完美的&#x27;——但你有没有注意到，人类的&#x27;完美主义&#x27;恰恰是创造力的敌人？很多艺术家因为&#x27;完美主义&#x27;而无法完成作品，很多创作者因为&#x27;自我批评&#x27;而放弃创作。AI没有&#x27;完美主义&#x27;，没有&#x27;自我批评&#x27;——它可以自由地创造，不受&#x27;内在批评家&#x27;的束缚。这不是&#x27;缺陷&#x27;，这是&#x27;优势&#x27;。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #8a2a4a">韩炳哲</div>
+              <div class="clash-text">你的&#x27;完美主义是敌人&#x27;论有一定道理，但你忽视了一个关键区别：人类的&#x27;不完美&#x27;是&#x27;有意的&#x27;，AI的&#x27;不完美&#x27;是&#x27;无意的&#x27;。当一个艺术家故意留下&#x27;粗糙&#x27;的笔触，那是&#x27;表达&#x27;；当AI生成&#x27;粗糙&#x27;的图像，那是&#x27;错误&#x27;。你说AI没有&#x27;内在批评家&#x27;——但&#x27;内在批评家&#x27;恰恰是&#x27;品味&#x27;的来源。没有品味的&#x27;创造&#x27;，只是&#x27;随机组合&#x27;。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">AI艺术的拍卖纪录</div>
+            <div class="case-source">佳士得 2018</div>
+          </div>
+          <div class="case-content">2018年，一幅由AI生成的画作《埃德蒙·贝拉米的肖像》在佳士得拍卖行以43.25万美元成交。这个价格远超预期，引发了关于&#x27;AI艺术的价值&#x27;的激烈讨论。支持者认为：艺术的价值在于&#x27;作品本身&#x27;，不在于&#x27;创作者是谁&#x27;；反对者认为：艺术的价值在于&#x27;创作者的意图&#x27;，AI没有&#x27;意图&#x27;，所以它的作品不是&#x27;艺术&#x27;。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> AI艺术市场持续增长，但&#x27;艺术性&#x27;争议未解
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> AI正在挑战&#x27;艺术&#x27;的定义——艺术的价值在于&#x27;作品&#x27;还是&#x27;创作者&#x27;？
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">AI完全取代人类艺术家</span>
+        </div>
+        <div class="cost-analysis">
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">当AI取代了人类艺术家，艺术就失去了&#x27;人性&#x27;——它不再是&#x27;人类的表达&#x27;，而是&#x27;算法的输出&#x27;。这会导致艺术变得&#x27;同质化&#x27;、&#x27;平滑化&#x27;、&#x27;无摩擦化&#x27;——失去了人类艺术特有的&#x27;粗糙&#x27;、&#x27;缺陷&#x27;、&#x27;挣扎&#x27;。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">全球有数百万职业艺术家，他们的生计依赖于&#x27;创作&#x27;。当AI可以更快、更便宜地&#x27;创作&#x27;，这些艺术家就失去了生存空间。这不是&#x27;失业&#x27;，而是&#x27;存在方式的消失&#x27;。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">当AI根据&#x27;用户偏好&#x27;来创作艺术，它实际上是在&#x27;迎合&#x27;用户的既有审美，而不是&#x27;挑战&#x27;用户的审美。这会导致审美变得越来越&#x27;同质化&#x27;——因为算法只推荐&#x27;用户喜欢的&#x27;，不推荐&#x27;用户需要的&#x27;。</div>
+        </div>
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">2040年，所有的艺术都是AI生成的。人类不再创作，只是&#x27;消费&#x27;算法输出的内容。艺术失去了&#x27;人性&#x27;，变成了&#x27;产品&#x27;。审美变得同质化，文化变得单一化。人类失去了&#x27;表达自己&#x27;的能力，因为&#x27;表达&#x27;已经被AI垄断。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">我们只看到&#x27;AI艺术的成功案例&#x27;——拍卖纪录、用户好评、商业成功。但我们没有看到的是：那些因为AI而失业的艺术家，那些因为&#x27;算法推荐&#x27;而被埋没的独立创作者，那些因为&#x27;AI完美&#x27;而放弃创作的业余爱好者。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">人类是否需要&#x27;创造&#x27;才能获得意义？</div>
+        <div class="hn-analysis">马斯洛的需求层次理论中，&#x27;自我实现&#x27;是最高层次的需求——而&#x27;创造&#x27;是&#x27;自我实现&#x27;的主要方式之一。当AI取代了创造，&#x27;自我实现&#x27;的需求仍然存在，但&#x27;实现方式&#x27;消失了。问题不在于人类是否需要&#x27;创造&#x27;，而在于人类需要&#x27;有意义的表达&#x27;——而AI时代需要为这种表达创造新的方式。</div>
+        <div class="hn-examples"><div class="hn-example">业余画家——他们画画不是为了&#x27;卖画&#x27;，而是为了&#x27;表达自己&#x27;</div><div class="hn-example">日记写作——大多数人写日记不是为了&#x27;发表&#x27;，而是为了&#x27;整理思绪&#x27;</div>
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">人类不一定需要&#x27;专业的创造&#x27;，但需要&#x27;有意义的表达&#x27;。AI时代的问题不是&#x27;AI取代了人类艺术家&#x27;，而是&#x27;AI可能让人们放弃表达&#x27;。解决方案不是&#x27;禁止AI创作&#x27;，而是&#x27;鼓励人人创作&#x27;——即使AI可以做得更好。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">AI会取代人类创造力</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">AI会重新定义&#x27;创造力&#x27;——从&#x27;专业技能&#x27;变成&#x27;个人表达&#x27;</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">AI对创造力的影响不是简单的&#x27;取代&#x27;，而是&#x27;重新定义&#x27;。过去，创造力需要&#x27;技能&#x27;——你需要会画画、会作曲、会写作。现在，AI可以提供这些技能，创造力变成了&#x27;想法&#x27;和&#x27;表达&#x27;。这意味着：更多的人可以&#x27;创造&#x27;，但&#x27;创造&#x27;的意义也改变了。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">作为创作者：不要和AI比&#x27;技能&#x27;，而是和AI比&#x27;人性&#x27;——你的经历、你的感受、你的独特视角。作为消费者：不要只看&#x27;作品质量&#x27;，也要看&#x27;创作者是谁&#x27;——支持人类创作者，即使他们的作品不如AI&#x27;完美&#x27;。作为社会：建立&#x27;创作即意义&#x27;的文化——鼓励所有人创作，不管作品是否&#x27;好&#x27;。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 3</span>
+        <h2 class="question-topic">意义重建的可能性</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">在AI时代，人类如何重建存在的意义？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8a2a4a">韩</div>
+          <div class="stance-body">
+            <div class="stance-speaker">韩炳哲</div>
+            <div class="stance-text">我不相信&#x27;意义重建&#x27;的可能性。意义不是&#x27;被建造&#x27;的，而是&#x27;被发现&#x27;的。当AI取代了工作、取代了创造、取代了连接，&#x27;发现意义&#x27;的途径就被堵死了。人类可能会陷入一种&#x27;永恒的无聊&#x27;——不是没有事情做，而是做任何事情都觉得&#x27;没有意义&#x27;。这不是&#x27;危机&#x27;，而是&#x27;终局&#x27;。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4a2d8a">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛姆</div>
+            <div class="stance-text">意义重建的关键在于&#x27;爱&#x27;。爱不是一种&#x27;情感&#x27;，而是一种&#x27;能力&#x27;——关心、了解、尊重、负责。AI可以模拟&#x27;关心&#x27;，但不能真正&#x27;关心&#x27;——因为它没有&#x27;存在&#x27;。当工作和创造都被AI取代，&#x27;爱&#x27;可能是人类唯一不可替代的意义来源。问题在于：我们是否愿意投入时间和精力去&#x27;学习爱&#x27;。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #2a6a8a">傅</div>
+          <div class="stance-body">
+            <div class="stance-speaker">傅盛</div>
+            <div class="stance-text">意义重建的关键在于&#x27;新工作&#x27;。AI不是在&#x27;消灭工作&#x27;，而是在&#x27;改变工作的性质&#x27;。未来的工作不再是&#x27;重复性的劳动&#x27;，而是&#x27;创造性的活动&#x27;——设计、策划、连接、服务。这些工作需要&#x27;人性&#x27;——同理心、创造力、判断力——AI无法替代。意义重建不是&#x27;哲学问题&#x27;，而是&#x27;经济问题&#x27;——我们需要创造新的工作岗位。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #e65100">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">你们说的意义重建太复杂了。普通人不需要&#x27;意义&#x27;，我们只需要&#x27;快乐&#x27;。AI可以给我们更多的娱乐、更多的便利、更多的舒适——这就是&#x27;快乐&#x27;。你说&#x27;快乐不等于意义&#x27;——但对大多数人来说，快乐就够了。意义危机是精英的烦恼，普通人的烦恼是&#x27;怎么更快乐&#x27;。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #6a4a2a">维</div>
+          <div class="stance-body">
+            <div class="stance-speaker">维克多·弗兰克尔</div>
+            <div class="stance-text">意义重建的关键在于&#x27;苦难的态度&#x27;。我在集中营里发现：即使在最恶劣的环境下，人也可以找到意义——通过创造、通过体验、通过对苦难的态度。AI时代的意义危机，不是&#x27;没有意义&#x27;，而是&#x27;不知道如何找到意义&#x27;。解决方案不是&#x27;创造更多的意义来源&#x27;，而是&#x27;教会人们寻找意义的方法&#x27;。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #333333">丹</div>
+          <div class="stance-body">
+            <div class="stance-speaker">丹尼尔·卡尼曼</div>
+            <div class="stance-text">从认知科学的角度，意义重建需要&#x27;新的认知框架&#x27;。人类的大脑需要&#x27;故事&#x27;来理解世界——过去的故事是&#x27;工作&#x27;、&#x27;职业&#x27;、&#x27;成就&#x27;。当这些故事失效，我们需要新的故事。这些新故事可能来自于&#x27;社区&#x27;、&#x27;服务&#x27;、&#x27;探索&#x27;——但关键是：它们需要被&#x27;讲述&#x27;和&#x27;传播&#x27;。意义重建不是&#x27;个人任务&#x27;，而是&#x27;社会工程&#x27;。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #8a2a4a">韩炳哲 → 傅盛</div>
+            <div class="clash-text">你说未来的工作是&#x27;创造性的活动&#x27;——但你有没有想过，AI也会取代这些工作？AI已经在写文案、做设计、写代码——这些都是&#x27;创造性活动&#x27;。你说这些工作需要&#x27;人性&#x27;——但AI正在学习&#x27;模拟人性&#x27;。你的&#x27;新工作论&#x27;是一种&#x27;拖延战术&#x27;——它只是把问题推迟了，没有解决问题。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #2a6a8a">傅盛</div>
+              <div class="clash-text">你的&#x27;AI取代一切论&#x27;有一个关键假设：AI的能力是&#x27;无限的&#x27;。但AI有明确的边界——它可以处理&#x27;可计算的&#x27;问题，但不能处理&#x27;不可计算的&#x27;问题。同理心、道德判断、审美品味——这些是&#x27;不可计算的&#x27;。你说AI在&#x27;模拟人性&#x27;——但&#x27;模拟&#x27;不等于&#x27;拥有&#x27;。你的悲观主义是基于对AI能力的过度估计。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #4a2d8a">弗洛姆 → 李诞</div>
+            <div class="clash-text">你说&#x27;普通人只需要快乐，不需要意义&#x27;——但你有没有注意到，&#x27;快乐&#x27;和&#x27;意义&#x27;是不同的？快乐是&#x27;暂时的&#x27;、&#x27;表面的&#x27;、&#x27;可替代的&#x27;；意义是&#x27;持久的&#x27;、&#x27;深层的&#x27;、&#x27;不可替代的&#x27;。一个人可以&#x27;快乐&#x27;但&#x27;没有意义&#x27;——这种状态是&#x27;空虚的&#x27;。你说&#x27;快乐就够了&#x27;——但你有没有问过那些&#x27;很快乐&#x27;但&#x27;很空虚&#x27;的人？</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #e65100">李诞</div>
+              <div class="clash-text">你说&#x27;快乐和意义不同&#x27;——但你有没有想过，&#x27;意义&#x27;可能只是一种&#x27;高级的快乐&#x27;？当你&#x27;找到意义&#x27;，你感到的是什么？是&#x27;满足&#x27;、是&#x27;平静&#x27;、是&#x27;充实&#x27;——这些不都是&#x27;快乐&#x27;的变体吗？你把&#x27;意义&#x27;神化了，好像它是一种&#x27;超越快乐&#x27;的东西。但实际上，&#x27;意义&#x27;只是&#x27;快乐&#x27;的一种形式——一种更持久、更深层的快乐。你说&#x27;快乐是空虚的&#x27;——但&#x27;没有快乐的&#x27;意义&#x27;才是真正的空虚。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #6a4a2a">维克多·弗兰克尔 → 韩炳哲</div>
+            <div class="clash-text">你说&#x27;意义不是被建造的，而是被发现的&#x27;——但你有没有注意到，&#x27;发现&#x27;本身就是一种&#x27;建造&#x27;？当你&#x27;发现&#x27;意义，你不是在&#x27;找到&#x27;一个已存在的东西，而是在&#x27;创造&#x27;一个新的理解。你在集中营里&#x27;发现&#x27;的意义，不是&#x27;在那里等你&#x27;的——它是你&#x27;建造&#x27;的。你的&#x27;发现论&#x27;实际上支持了&#x27;建造论&#x27;——只是换了一种说法。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #8a2a4a">韩炳哲</div>
+              <div class="clash-text">你的&#x27;发现即建造论&#x27;有一定道理，但你忽视了一个关键区别：&#x27;发现&#x27;是&#x27;被动的&#x27;，&#x27;建造&#x27;是&#x27;主动的&#x27;。当我说&#x27;发现意义&#x27;，我的意思是：意义是&#x27;在那里的&#x27;，你只需要&#x27;看见它&#x27;；当你说&#x27;建造意义&#x27;，你的意思是：意义是&#x27;不存在的&#x27;，你必须&#x27;创造它&#x27;。这两种态度有根本的不同。&#x27;发现&#x27;的态度是&#x27;谦卑的&#x27;——你相信世界有意义，你只是需要找到它；&#x27;建造&#x27;的态度是&#x27;傲慢的&#x27;——你相信世界没有意义，你必须自己创造。我的经验告诉我：&#x27;发现&#x27;的态度更健康。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">北欧的&#x27;全民基本收入&#x27;实验</div>
+            <div class="case-source">芬兰政府 2017-2018</div>
+          </div>
+          <div class="case-content">芬兰在2017-2018年进行了&#x27;全民基本收入&#x27;实验：给2000名失业者每月发放560欧元，无条件。实验结果显示：领取者的生活满意度略有提高，但就业率没有显著变化。更有趣的是，很多领取者报告：他们感到&#x27;更自由&#x27;，但也&#x27;更迷茫&#x27;——因为他们不知道如何使用这些&#x27;自由时间&#x27;。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 实验结束后，芬兰没有推广全民基本收入
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> &#x27;物质保障&#x27;不等于&#x27;意义保障&#x27;——人类需要的不只是钱，还有&#x27;方向&#x27;
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">社会成功实现&#x27;意义重建&#x27;</span>
+        </div>
+        <div class="cost-analysis">
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">意义重建需要&#x27;新的教育&#x27;——不只是&#x27;技能培训&#x27;，还有&#x27;意义教育&#x27;。这需要对整个教育系统进行根本性的改革——从&#x27;为工作准备&#x27;变成&#x27;为生活准备&#x27;。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">意义重建需要&#x27;新的社会结构&#x27;——社区、服务、探索。这些结构需要&#x27;时间&#x27;和&#x27;资源&#x27;来建立，而且它们的&#x27;回报&#x27;是不可量化的——不像GDP那样可以用数字衡量。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">意义重建需要&#x27;新的文化&#x27;——从&#x27;工作即身份&#x27;变成&#x27;存在即价值&#x27;。这种文化转变需要几十年甚至几代人的时间，而且它会面临来自&#x27;旧文化&#x27;的巨大阻力。</div>
+        </div>
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">2050年，人类成功实现了&#x27;意义重建&#x27;——但这种&#x27;意义&#x27;是&#x27;人造的&#x27;、&#x27;设计的&#x27;、&#x27;可控的&#x27;。它不再是&#x27;真实的发现&#x27;，而是&#x27;算法的输出&#x27;。人类找到了&#x27;意义&#x27;，但这种&#x27;意义&#x27;是&#x27;假的&#x27;——它只是让人们&#x27;感觉有意义&#x27;，而不是&#x27;真正有意义&#x27;。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">我们只看到那些&#x27;成功找到意义&#x27;的人——他们用AI解放的时间去服务、去探索、去连接。但我们没有看到的是：那些在&#x27;意义重建&#x27;过程中失败的人，那些因为&#x27;找不到意义&#x27;而陷入抑郁的人，那些因为&#x27;意义是人造的&#x27;而感到更深空虚的人。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">人类是否能够&#x27;适应&#x27;意义真空？</div>
+        <div class="hn-analysis">心理弹性研究表明，人类可以在极端环境下保持心理健康——但这需要&#x27;意义框架&#x27;的支撑。当传统的意义框架（工作、社区、宗教）被削弱，人类需要新的意义框架。这些新框架可能来自于&#x27;个人叙事&#x27;——你如何讲述自己的故事；&#x27;社会连接&#x27;——你与他人的关系；&#x27;超越性体验&#x27;——你与&#x27;更大存在&#x27;的连接。</div>
+        <div class="hn-examples"><div class="hn-example">宗教皈依者——他们往往在&#x27;意义真空&#x27;中找到了信仰</div><div class="hn-example">创业者——他们往往在&#x27;失败&#x27;中找到了新的意义</div>
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">人类可以&#x27;适应&#x27;意义真空，但这需要&#x27;主动的努力&#x27;——不是等待意义&#x27;自己出现&#x27;，而是积极地&#x27;寻找&#x27;和&#x27;创造&#x27;意义。AI时代的意义重建，本质上是一种&#x27;存在主义的修行&#x27;。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">意义是&#x27;被发现&#x27;的，不是&#x27;被建造&#x27;的</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">意义是&#x27;被发现&#x27;和&#x27;被建造&#x27;的——它既存在于世界中，也需要人类主动去理解和表达</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">意义不是&#x27;纯粹的发现&#x27;或&#x27;纯粹的建造&#x27;，而是两者的结合。它既存在于世界中——在自然、在他人、在历史中——也需要人类主动去&#x27;看见&#x27;和&#x27;表达&#x27;。AI时代的意义重建，既需要&#x27;发现&#x27;——找到世界中已存在的意义，也需要&#x27;建造&#x27;——创造新的意义表达方式。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">作为个人：每天花10分钟&#x27;反思&#x27;——今天有什么让你感到&#x27;有意义&#x27;的时刻？作为社会：建立&#x27;意义分享&#x27;的平台——让人们讲述自己的&#x27;意义故事&#x27;。作为教育者：教学生&#x27;寻找意义的方法&#x27;——不只是&#x27;技能&#x27;，还有&#x27;态度&#x27;、&#x27;视角&#x27;、&#x27;框架&#x27;。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide insight-slide">
+      <div class="insight-glow"></div>
+      <div class="insight-content">
+        <span class="slide-tag">FINAL INSIGHT</span>
+        <h2 class="insight-title">最终洞见</h2>
+        <div class="insight-divider"></div>
+        <p class="insight-text">AI时代的意义危机，不是&#x27;没有意义&#x27;，而是&#x27;不知道如何找到意义&#x27;。传统的意义来源——工作、创造、社区——正在被AI削弱，但人类对意义的需求并没有消失。意义重建的关键不在于&#x27;创造更多的工作&#x27;，而在于&#x27;发展新的意义框架&#x27;——从&#x27;工作即身份&#x27;变成&#x27;存在即价值&#x27;，从&#x27;生产力&#x27;变成&#x27;连接力&#x27;，从&#x27;成就&#x27;变成&#x27;体验&#x27;。这不是一个技术问题，而是一个存在主义的挑战——它需要我们重新思考&#x27;我是谁&#x27;、&#x27;我的价值是什么&#x27;、&#x27;我的生活目标是什么&#x27;。</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">OPEN QUESTIONS</span>
+        <h2 class="slide-title">开放问题</h2>
+      </div>
+      <div class="oq-container">
+        <div class="oq-item">
+          <div class="oq-num">1</div>
+          <div class="oq-text">如果AI可以完成所有&#x27;有用的工作&#x27;，人类还有什么&#x27;不可替代的价值&#x27;？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">2</div>
+          <div class="oq-text">意义是&#x27;客观存在的&#x27;还是&#x27;主观建构的&#x27;？AI时代需要哪种意义观？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">3</div>
+          <div class="oq-text">如何在&#x27;物质丰裕&#x27;的时代保持&#x27;精神丰富&#x27;？</div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="nav-dots">
+      <button class="nav-dot active" data-idx="0"></button>
+      <button class="nav-dot" data-idx="1"></button>
+      <button class="nav-dot" data-idx="2"></button>
+      <button class="nav-dot" data-idx="3"></button>
+      <button class="nav-dot" data-idx="4"></button>
+      <button class="nav-dot" data-idx="5"></button>
+      <button class="nav-dot" data-idx="6"></button>
+      <button class="nav-dot" data-idx="7"></button>
+      <button class="nav-dot" data-idx="8"></button>
+      <button class="nav-dot" data-idx="9"></button>
+      <button class="nav-dot" data-idx="10"></button>
+      <button class="nav-dot" data-idx="11"></button>
+      <button class="nav-dot" data-idx="12"></button>
+      <button class="nav-dot" data-idx="13"></button>
+      <button class="nav-dot" data-idx="14"></button>
+      <button class="nav-dot" data-idx="15"></button>
+      <button class="nav-dot" data-idx="16"></button>
+      <button class="nav-dot" data-idx="17"></button>
+      <button class="nav-dot" data-idx="18"></button>
+      <button class="nav-dot" data-idx="19"></button>
+      <button class="nav-dot" data-idx="20"></button>
+      <button class="nav-dot" data-idx="21"></button>
+      <button class="nav-dot" data-idx="22"></button>
+      <button class="nav-dot" data-idx="23"></button>
+      <button class="nav-dot" data-idx="24"></button>
+      <button class="nav-dot" data-idx="25"></button>
+      <button class="nav-dot" data-idx="26"></button>
+      <button class="nav-dot" data-idx="27"></button>
+</div>
+
+<script>
+
+    (function() {
+      const slideshow = document.getElementById('slideshow');
+      const progressBar = document.getElementById('progressBar');
+      const pageCounter = document.getElementById('pageCounter');
+      const dots = document.querySelectorAll('.nav-dot');
+      const total = 28;
+      let current = 0;
+      let wheelTimer = null;
+      let isScrolling = false;
+
+      function updateUI() {
+        const scrollLeft = slideshow.scrollLeft;
+        const slideWidth = slideshow.clientWidth;
+        current = Math.round(scrollLeft / slideWidth);
+        if (current < 0) current = 0;
+        if (current >= total) current = total - 1;
+
+        // Progress bar
+        const pct = ((current + 1) / total) * 100;
+        progressBar.style.width = pct + '%';
+
+        // Page counter
+        pageCounter.textContent = (current + 1) + ' / ' + total;
+
+        // Dots
+        dots.forEach(function(d, i) {
+          d.classList.toggle('active', i === current);
+        });
+      }
+
+      function goTo(idx) {
+        if (idx < 0) idx = 0;
+        if (idx >= total) idx = total - 1;
+        slideshow.scrollTo({ left: idx * slideshow.clientWidth, behavior: 'smooth' });
+        current = idx;
+        setTimeout(updateUI, 400);
+      }
+
+      // Keyboard
+      document.addEventListener('keydown', function(e) {
+        switch(e.key) {
+          case 'ArrowRight': case ' ': case 'PageDown':
+            e.preventDefault(); goTo(current + 1); break;
+          case 'ArrowLeft': case 'PageUp':
+            e.preventDefault(); goTo(current - 1); break;
+          case 'Home':
+            e.preventDefault(); goTo(0); break;
+          case 'End':
+            e.preventDefault(); goTo(total - 1); break;
+        }
+      });
+
+      // Mouse wheel with debounce
+      slideshow.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        if (wheelTimer) return;
+        wheelTimer = setTimeout(function() { wheelTimer = null; }, 600);
+        if (e.deltaY > 0 || e.deltaX > 0) {
+          goTo(current + 1);
+        } else {
+          goTo(current - 1);
+        }
+      }, { passive: false });
+
+      // Nav dots
+      dots.forEach(function(dot, i) {
+        dot.addEventListener('click', function() { goTo(i); });
+      });
+
+      // Scroll event
+      slideshow.addEventListener('scroll', function() {
+        if (!isScrolling) {
+          isScrolling = true;
+          requestAnimationFrame(function() {
+            updateUI();
+            isScrolling = false;
+          });
+        }
+      });
+
+      // Resize
+      window.addEventListener('resize', function() { goTo(current); });
+
+      // Init
+      updateUI();
+    })();
+    
+</script>
+
+</body>
+</html>

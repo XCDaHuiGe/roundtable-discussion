@@ -1,13 +1,11 @@
-# -*- coding: utf-8 -*-
-from __future__ import annotations
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Depth Extreme Check</title>
+<style>
 
-from html import escape
-from typing import Callable
-
-from engine.html_ppt_v13 import ReadingBlock, ReadingPage
-
-
-READING_CSS = """
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap');
 
 *{box-sizing:border-box;margin:0;padding:0}
@@ -233,10 +231,59 @@ body.theme-blueprint{
   .cover-side{display:none}.nav-dots{display:none}.reading-page{max-height:820px}.focus-main h2{font-size:34px}.cover-title{font-size:40px}
 }
 @media(max-height:680px){.slide{padding:28px 54px}.reading-page{gap:12px}.reading-title{font-size:30px}.reading-block-text{font-size:12px}}
-"""
 
+</style>
+</head>
+<body class="theme-obsidian">
+<div id="progress"></div>
+<div id="navDots" class="nav-dots"></div>
+<div class="nav-ui">
+  <button id="prevBtn" class="nav-btn" type="button" aria-label="上一页">&lt;</button>
+  <span id="counter">1 / 2</span>
+  <button id="nextBtn" class="nav-btn" type="button" aria-label="下一页">&gt;</button>
+</div>
+<div id="esc-overlay"><div id="esc-grid"></div></div>
+<section class="slide visible" data-page-type="case_shock" data-layout="case_file" data-display-logic="cost" data-layout-variant="cost_blast_extreme" data-intensity="extreme">
+<div class="stage-page" data-stage-shell="true">
+  <header class="stage-title" data-anim="fade-up">
+    <div class="reading-kicker">EXTREME / COST</div>
+    <h1 class="reading-title">Every idea sends an invoice</h1>
+  </header>
+  <div class="cost-blast-extreme">
+  <section class="cost-blast-extreme-word" data-anim="fade-left">
+    <h2>Trust cost</h2>
+    <p>Every later collaboration begins with defensive interpretation.</p>
+  </section>
+  <aside class="cost-panel" data-anim="fade-right" data-stagger><article class="cost-card reading-block" data-anim="fade-up"><span class="reading-block-label">event</span>
+  <h3 class="reading-block-title">The clean theory breaks</h3>
+  <p class="reading-block-text">A beautiful explanation enters a messy system and immediately starts producing debt.</p></article><article class="cost-card reading-block" data-anim="fade-up"><span class="reading-block-label">cost</span>
+  <h3 class="reading-block-title">Trust cost</h3>
+  <p class="reading-block-text">Every later collaboration begins with defensive interpretation.</p></article><article class="cost-card reading-block" data-anim="fade-up"><span class="reading-block-label">cost</span>
+  <h3 class="reading-block-title">Time cost</h3>
+  <p class="reading-block-text">The team spends more time repairing alignment than making progress.</p></article></aside>
+</div>
+  <footer class="stage-takeaway" data-anim="fade-up"><strong>鏈€缁堟礊瑙?</strong><p>The idea sends an invoice.</p></footer>
+</div>
+</section>
+<section class="slide" data-page-type="case_shock" data-layout="case_file" data-display-logic="evidence" data-layout-variant="evidence_wall_extreme" data-intensity="extreme">
+<div class="stage-page" data-stage-shell="true">
+  <header class="stage-title" data-anim="fade-up">
+    <div class="reading-kicker">EXTREME / EVIDENCE</div>
+    <h1 class="reading-title">Evidence does not sit politely</h1>
+  </header>
+  <div class="evidence-wall-extreme" data-stagger><i class="evidence-thread" style="left:14%;top:30%;width:210px;transform:rotate(-18deg)"></i><i class="evidence-thread" style="left:27%;top:50%;width:245px;transform:rotate(-6deg)"></i><i class="evidence-thread" style="left:40%;top:30%;width:280px;transform:rotate(6deg)"></i><i class="evidence-thread" style="left:53%;top:50%;width:315px;transform:rotate(18deg)"></i><article class="evidence-pin reading-block" data-anim="scale-in"><span class="reading-block-label">source</span>
+  <h3 class="reading-block-title">Claim</h3>
+  <p class="reading-block-text">Personal effort explains the outcome.</p></article><article class="evidence-pin reading-block" data-anim="scale-in"><span class="reading-block-label">event</span>
+  <h3 class="reading-block-title">Resistance</h3>
+  <p class="reading-block-text">Resources, rules, and identity compress the available choices.</p></article><article class="evidence-pin reading-block" data-anim="scale-in"><span class="reading-block-label">outcome</span>
+  <h3 class="reading-block-title">Turn</h3>
+  <p class="reading-block-text">The event does not prove effort is useless. It proves effort needs conditions.</p></article><article class="evidence-pin reading-block" data-anim="scale-in"><span class="reading-block-label">cost</span>
+  <h3 class="reading-block-title">Verdict</h3>
+  <p class="reading-block-text">A theory without cost is only a slogan.</p></article></div>
+  <footer class="stage-takeaway" data-anim="fade-up"><strong>鏈€缁堟礊瑙?</strong><p>The wall starts talking.</p></footer>
+</div>
+</section>
 
-NAVIGATION_JS = """
 <script>
 (function(){
   const sections=[...document.querySelectorAll('.slide')];
@@ -325,417 +372,6 @@ NAVIGATION_JS = """
   go(0);
 })();
 </script>
-"""
 
-
-def render_reading_html(pages: list[ReadingPage], title: str = "圆桌洞见", theme: str = "editorial") -> str:
-    valid_themes = {"editorial", "obsidian", "blueprint"}
-    theme = theme if theme in valid_themes else "editorial"
-    slides = "\n".join(_render_slide(page, index) for index, page in enumerate(pages))
-    return f"""<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{escape(title)}</title>
-<style>
-{READING_CSS}
-</style>
-</head>
-<body class="theme-{escape(theme)}">
-<div id="progress"></div>
-<div id="navDots" class="nav-dots"></div>
-<div class="nav-ui">
-  <button id="prevBtn" class="nav-btn" type="button" aria-label="上一页">&lt;</button>
-  <span id="counter">1 / {len(pages)}</span>
-  <button id="nextBtn" class="nav-btn" type="button" aria-label="下一页">&gt;</button>
-</div>
-<div id="esc-overlay"><div id="esc-grid"></div></div>
-{slides}
-{NAVIGATION_JS}
 </body>
 </html>
-"""
-
-
-def _render_slide(page: ReadingPage, index: int) -> str:
-    visible = " visible" if index == 0 else ""
-    layout = "cover" if page.page_type == "cover" else page.layout
-    tone = f' data-tone="{escape(str(page.meta.get("tone")))}"' if page.meta.get("tone") else ""
-    renderer = _VARIANT_RENDERERS.get(page.layout_variant) or _LAYOUT_RENDERERS.get(page.layout, _render_reading_brief)
-    body = _render_cover(page) if page.page_type == "cover" else renderer(page)
-    return (
-        f'<section class="slide{visible}" data-page-type="{escape(page.page_type)}" '
-        f'data-layout="{escape(layout)}" data-display-logic="{escape(page.display_logic)}" '
-        f'data-layout-variant="{escape(page.layout_variant)}" data-intensity="{escape(page.intensity)}"{tone}>\n{body}\n</section>'
-    )
-
-
-def _render_shell(page: ReadingPage, body: str) -> str:
-    return f"""<div class="reading-page">
-  <header class="reading-header" data-anim="fade-up">
-    <div>
-      <div class="reading-kicker">{escape(_kicker(page))}</div>
-      <h1 class="reading-title">{escape(page.title)}</h1>
-    </div>
-    <p class="reading-thesis">{escape(page.thesis)}</p>
-  </header>
-  <main class="reading-body" data-stagger>{body}</main>
-  <footer class="takeaway-strip" data-anim="fade-up"><strong>最终洞见</strong><p>{escape(page.takeaway)}</p></footer>
-</div>"""
-
-
-def _render_stage(page: ReadingPage, body: str) -> str:
-    memory = page.memory_hook or page.takeaway or page.thesis
-    return f"""<div class="stage-page" data-stage-shell="true">
-  <header class="stage-title" data-anim="fade-up">
-    <div class="reading-kicker">EXTREME / {escape(page.display_logic.upper())}</div>
-    <h1 class="reading-title">{escape(page.title)}</h1>
-  </header>
-  {body}
-  <footer class="stage-takeaway" data-anim="fade-up"><strong>鏈€缁堟礊瑙?</strong><p>{escape(memory)}</p></footer>
-</div>"""
-
-
-def _render_cover(page: ReadingPage) -> str:
-    stats = "".join(
-        f'<div class="cover-stat"><b>{escape(block.text)}</b><span>{escape(block.title)}</span></div>'
-        for block in page.blocks[:3]
-    )
-    cover_meta = page.meta.get("cover_meta", "专家圆桌 / 深度蒸馏")
-    return f"""<div class="cover-page">
-  <main class="cover-main" data-anim="fade-up">
-    <div class="cover-kicker">ROUNDTABLE OS / 圆桌洞见</div>
-    <h1 class="cover-title reading-title">{escape(page.title)}</h1>
-    <p class="cover-thesis">{escape(page.thesis)}</p>
-  </main>
-  <aside class="cover-side" data-anim="fade-right">
-    <div class="cover-meta">{escape(cover_meta)}</div>
-    <div class="cover-stats">{stats}</div>
-    <div class="cover-takeaway">{escape(page.takeaway)}</div>
-  </aside>
-</div>"""
-
-
-def _render_reading_brief(page: ReadingPage) -> str:
-    zones = _split_blocks(page.blocks, 4)
-    names = ["问题定义", "结构化内容", "证据与观点", "读者带走"]
-    html = []
-    for name, blocks in zip(names, zones):
-        html.append(f'<section class="brief-zone" data-anim="fade-up"><h3>{escape(name)}</h3>{"".join(_render_block(block) for block in blocks)}</section>')
-    return _render_shell(page, f'<div class="brief-grid" data-stagger>{"".join(html)}</div>')
-
-
-def _render_magazine_focus(page: ReadingPage) -> str:
-    side = "".join(_render_block(block) for block in page.blocks[:4])
-    body = f"""<div class="focus-grid">
-  <section class="focus-main" data-anim="fade-left">
-    <div class="focus-number">{escape(page.page_type.upper())}</div>
-    <h2>{escape(page.title)}</h2>
-    <p>{escape(page.thesis)}</p>
-  </section>
-  <aside class="focus-side" data-anim="fade-right">{side}</aside>
-</div>"""
-    return _render_shell(page, body)
-
-
-def _render_stance_spectrum(page: ReadingPage) -> str:
-    stance_cards = "".join(_render_stance_card(block) for block in page.blocks)
-    body = f"""<div class="stance-spectrum">
-  <aside class="issue-tree" data-anim="fade-left">
-    <h3>命题拆解</h3>
-    <p>{escape(page.thesis)}</p>
-    <div class="reading-block"><span class="reading-block-label">判断路径</span><p class="reading-block-text">先看专家站位，再看他们背后的解释框架：规律、制度、资本、情感与行动选择。</p></div>
-  </aside>
-  <section class="spectrum-map" data-anim="fade-right">
-    <div class="spectrum-axis"></div>
-    <div class="stance-grid" data-stagger>{stance_cards}</div>
-  </section>
-</div>"""
-    return _render_shell(page, body)
-
-
-def _render_case_file(page: ReadingPage) -> str:
-    lead = page.blocks[1] if len(page.blocks) > 1 else (page.blocks[0] if page.blocks else ReadingBlock("case", "冲击事件", page.thesis))
-    panel = "".join(_render_block(block) for block in page.blocks if block is not lead)
-    body = f"""<div class="case-file">
-  <section class="case-lead" data-anim="fade-left">
-    <div class="reading-kicker">SHOCK EVENT</div>
-    <h2>{escape(lead.title)}</h2>
-    <p>{escape(_clip_text(lead.text, 260))}</p>
-  </section>
-  <section class="case-panel" data-anim="fade-right" data-stagger>{panel}</section>
-</div>"""
-    return _render_shell(page, body)
-
-
-def _render_shock_poster(page: ReadingPage) -> str:
-    lead = next((block for block in page.blocks if block.kind == "event"), page.blocks[0] if page.blocks else ReadingBlock("event", page.title, page.thesis))
-    side_blocks = [block for block in page.blocks if block is not lead][:3]
-    chips = "".join(
-        f'<article class="shock-chip" data-anim="fade-up">{_render_block_inner(block, 118)}</article>'
-        for block in side_blocks
-    )
-    body = f"""<div class="shock-poster">
-  <section class="shock-poster-main" data-anim="fade-left">
-    <div class="reading-kicker">SHOCK POSTER / {escape(page.display_logic.upper())}</div>
-    <h2>{escape(lead.title)}</h2>
-    <p>{escape(_clip_text(lead.text or page.thesis, 260))}</p>
-  </section>
-  <aside class="shock-poster-side" data-anim="fade-right" data-stagger>{chips}</aside>
-</div>"""
-    return _render_shell(page, body)
-
-
-def _render_evidence_wall(page: ReadingPage) -> str:
-    cards = "".join(
-        f'<article class="evidence-card" data-anim="fade-up">{_render_block_inner(block, 150)}</article>'
-        for block in page.blocks[:4]
-    )
-    return _render_shell(page, f'<div class="evidence-wall" data-stagger>{cards}</div>')
-
-
-def _render_cost_blast(page: ReadingPage) -> str:
-    cost_blocks = [block for block in page.blocks if block.kind == "cost"]
-    other_blocks = [block for block in page.blocks if block.kind != "cost"]
-    cards = "".join(
-        f'<article class="cost-card" data-anim="fade-up">{_render_block_inner(block, 132)}</article>'
-        for block in [*cost_blocks, *other_blocks][:4]
-    )
-    lead = cost_blocks[0] if cost_blocks else (page.blocks[0] if page.blocks else ReadingBlock("cost", "代价", page.thesis))
-    body = f"""<div class="cost-blast">
-  <section class="cost-number" data-anim="fade-left">
-    <span>COST BLAST</span>
-    <b>{escape(lead.title)}</b>
-    <p class="reading-block-text">{escape(_clip_text(lead.text, 150))}</p>
-  </section>
-  <section class="cost-panel" data-anim="fade-right" data-stagger>{cards}</section>
-</div>"""
-    return _render_shell(page, body)
-
-
-def _render_interrogation_room(page: ReadingPage) -> str:
-    by_kind = {block.kind: block for block in page.blocks}
-    attack = by_kind.get("attack", page.blocks[0] if page.blocks else ReadingBlock("attack", "质询", page.thesis))
-    defense = by_kind.get("defense", page.blocks[1] if len(page.blocks) > 1 else ReadingBlock("defense", "回应", page.takeaway))
-    center = by_kind.get("essence", ReadingBlock("essence", "核心盘问", page.thesis or page.title))
-    body = f"""<div class="interrogation-room">
-  <section class="clash-side attack" data-anim="fade-left">{_render_block(attack)}</section>
-  <section class="clash-center" data-anim="scale-in"><h3>{escape(center.title)}</h3><p class="reading-block-text">{escape(_clip_text(center.text, 150))}</p></section>
-  <section class="clash-side defense" data-anim="fade-right">{_render_block(defense)}</section>
-</div>"""
-    return _render_shell(page, body)
-
-
-def _render_xray_diagnosis(page: ReadingPage) -> str:
-    cards = "".join(
-        f'<article class="xray-card" data-anim="fade-up">{_render_block_inner(block, 130)}</article>'
-        for block in page.blocks[:4]
-    )
-    body = f"""<div class="xray-diagnosis">
-  <section class="xray-core" data-anim="fade-left">
-    <div class="reading-kicker">DIAGNOSIS</div>
-    <h2>{escape(page.title)}</h2>
-  </section>
-  <section class="xray-grid" data-anim="fade-right" data-stagger>{cards}</section>
-</div>"""
-    return _render_shell(page, body)
-
-
-def _render_shock_poster_extreme(page: ReadingPage) -> str:
-    lead = next((block for block in page.blocks if block.kind == "event"), page.blocks[0] if page.blocks else ReadingBlock("event", page.title, page.thesis))
-    side_blocks = [block for block in page.blocks if block is not lead][:3]
-    chips = "".join(
-        f'<article class="shock-chip reading-block" data-anim="fade-up">{_render_block_inner(block, 110)}</article>'
-        for block in side_blocks
-    )
-    body = f"""<div class="shock-poster-extreme">
-  <section class="shock-poster-extreme-main" data-anim="fade-left">
-    <h2>{escape(lead.title)}</h2>
-    <p>{escape(_clip_text(lead.text or page.thesis, 260))}</p>
-  </section>
-  <aside class="shock-poster-extreme-side" data-anim="fade-right" data-stagger>{chips}</aside>
-</div>"""
-    return _render_stage(page, body)
-
-
-def _render_evidence_wall_extreme(page: ReadingPage) -> str:
-    pins = []
-    for block in page.blocks[:5]:
-        pins.append(
-            f'<article class="evidence-pin reading-block" data-anim="scale-in">{_render_block_inner(block, 118)}</article>'
-        )
-    threads = "".join(
-        f'<i class="evidence-thread" style="left:{14 + index * 13}%;top:{30 + (index % 2) * 20}%;width:{210 + index * 35}px;transform:rotate({-18 + index * 12}deg)"></i>'
-        for index in range(4)
-    )
-    return _render_stage(page, f'<div class="evidence-wall-extreme" data-stagger>{threads}{"".join(pins)}</div>')
-
-
-def _render_cost_blast_extreme(page: ReadingPage) -> str:
-    cost_blocks = [block for block in page.blocks if block.kind == "cost"]
-    lead = cost_blocks[0] if cost_blocks else (page.blocks[0] if page.blocks else ReadingBlock("cost", "Cost", page.thesis))
-    cards = "".join(
-        f'<article class="cost-card reading-block" data-anim="fade-up">{_render_block_inner(block, 128)}</article>'
-        for block in page.blocks[:4]
-    )
-    body = f"""<div class="cost-blast-extreme">
-  <section class="cost-blast-extreme-word" data-anim="fade-left">
-    <h2>{escape(lead.title)}</h2>
-    <p>{escape(_clip_text(lead.text or page.thesis, 210))}</p>
-  </section>
-  <aside class="cost-panel" data-anim="fade-right" data-stagger>{cards}</aside>
-</div>"""
-    return _render_stage(page, body)
-
-
-def _render_interrogation_room_extreme(page: ReadingPage) -> str:
-    by_kind = {block.kind: block for block in page.blocks}
-    attack = by_kind.get("attack", page.blocks[0] if page.blocks else ReadingBlock("attack", "Question", page.thesis))
-    defense = by_kind.get("defense", page.blocks[1] if len(page.blocks) > 1 else ReadingBlock("defense", "Response", page.takeaway))
-    center = by_kind.get("essence", ReadingBlock("essence", page.reader_question or "Core question", page.thesis or page.title))
-    body = f"""<div class="interrogation-room-extreme">
-  <section class="clash-side attack" data-anim="fade-left">{_render_block(attack)}</section>
-  <section class="clash-center" data-anim="scale-in"><h3>{escape(center.title)}</h3><p class="reading-block-text">{escape(_clip_text(center.text, 170))}</p></section>
-  <section class="clash-side defense" data-anim="fade-right">{_render_block(defense)}</section>
-</div>"""
-    return _render_stage(page, body)
-
-
-def _render_manifesto_poster_extreme(page: ReadingPage) -> str:
-    lead = page.blocks[0] if page.blocks else ReadingBlock("insight", page.title, page.thesis)
-    body = f"""<div class="manifesto-poster-extreme" data-anim="scale-in">
-  <div>
-    <h2>{escape(lead.title or page.title)}</h2>
-    <p>{escape(_clip_text(lead.text or page.thesis, 240))}</p>
-  </div>
-</div>"""
-    return _render_stage(page, body)
-
-
-def _render_clash_courtroom(page: ReadingPage) -> str:
-    by_kind = {block.kind: block for block in page.blocks}
-    attack = by_kind.get("attack", ReadingBlock("attack", "攻击方", ""))
-    defense = by_kind.get("defense", ReadingBlock("defense", "回应方", ""))
-    essence = by_kind.get("essence", ReadingBlock("essence", "冲突本质", "观点冲突"))
-    body = f"""<div class="clash-courtroom">
-  <section class="clash-side attack" data-anim="fade-left">{_render_block(attack)}</section>
-  <section class="clash-center" data-anim="scale-in"><h3>{escape(essence.title)}</h3><p class="reading-block-text">{escape(essence.text)}</p></section>
-  <section class="clash-side defense" data-anim="fade-right">{_render_block(defense)}</section>
-</div>"""
-    return _render_shell(page, body)
-
-
-def _render_evolution_ladder(page: ReadingPage) -> str:
-    cards = []
-    for index, block in enumerate(page.blocks[:4], start=1):
-        cards.append(f"""<article class="step-card" data-anim="fade-up">
-  <div class="step-index">STEP {index:02d}</div>
-  <h3 class="reading-block-title">{escape(block.title)}</h3>
-  <p class="reading-block-text">{escape(_clip_text(block.text, 190))}</p>
-</article>""")
-    return _render_shell(page, f'<div class="evolution-ladder" data-stagger>{"".join(cards)}</div>')
-
-
-def _render_tension_bars(page: ReadingPage) -> str:
-    items = []
-    for index, block in enumerate(page.blocks[:8], start=1):
-        width = 48 + (index * 9) % 42
-        items.append(f"""<article class="tension-item" data-anim="fade-up">
-  <span class="reading-block-label">{escape(block.kind)}</span>
-  <h3 class="reading-block-title">{escape(block.title)}</h3>
-  <p class="reading-block-text">{escape(_clip_text(block.text, 125))}</p>
-  <div class="bar"><span style="width:{width}%"></span></div>
-</article>""")
-    return _render_shell(page, f'<div class="tension-bars" data-stagger>{"".join(items)}</div>')
-
-
-def _render_question_wall(page: ReadingPage) -> str:
-    cards = []
-    for block in page.blocks[:8]:
-        cards.append(f"""<article class="question-card" data-anim="fade-up">
-  <h3 class="reading-block-title">{escape(block.title)}</h3>
-  <p class="reading-block-text">{escape(_clip_text(block.text, 150))}</p>
-</article>""")
-    return _render_shell(page, f'<div class="question-wall" data-stagger>{"".join(cards)}</div>')
-
-
-def _render_block(block: ReadingBlock) -> str:
-    label = f'<span class="reading-block-label">{escape(block.label)}</span>' if block.label else ""
-    return f"""<article class="reading-block" data-kind="{escape(block.kind)}" data-anim="fade-up">
-  {label}
-  <h3 class="reading-block-title">{escape(block.title)}</h3>
-  <p class="reading-block-text">{escape(_clip_text(block.text, 150))}</p>
-</article>"""
-
-
-def _render_block_inner(block: ReadingBlock, limit: int = 150) -> str:
-    label = f'<span class="reading-block-label">{escape(block.label or block.kind)}</span>'
-    return f"""{label}
-  <h3 class="reading-block-title">{escape(block.title)}</h3>
-  <p class="reading-block-text">{escape(_clip_text(block.text, limit))}</p>"""
-
-
-def _render_stance_card(block: ReadingBlock) -> str:
-    label = f'<span class="reading-block-label">{escape(block.label)}</span>' if block.label else ""
-    return f"""<article class="reading-block stance-card" data-kind="{escape(block.kind)}" data-anim="scale-in">
-  {label}
-  <h3 class="reading-block-title">{escape(block.title)}</h3>
-  <p class="reading-block-text">{escape(_clip_text(block.text, 112))}</p>
-</article>"""
-
-
-def _split_blocks(blocks: list[ReadingBlock], count: int) -> list[list[ReadingBlock]]:
-    zones = [[] for _ in range(count)]
-    for index, block in enumerate(blocks):
-        zones[index % count].append(block)
-    return zones
-
-
-def _clip_text(text: str, limit: int) -> str:
-    clean = " ".join(str(text).split())
-    if len(clean) <= limit:
-        return clean
-    return clean[: limit - 1].rstrip("，。；、 ") + "…"
-
-
-def _kicker(page: ReadingPage) -> str:
-    return {
-        "case_shock": "现实反噬",
-        "round_opening": "回合开场",
-        "cognitive_upgrade": "认知位移",
-        "tension_map": "张力图谱",
-        "open_questions": "开放问题",
-    }.get(page.page_type, "阅读重点")
-
-
-_LAYOUT_RENDERERS: dict[str, Callable[[ReadingPage], str]] = {
-    "reading_brief_4zone": _render_reading_brief,
-    "magazine_focus": _render_magazine_focus,
-    "stance_spectrum": _render_stance_spectrum,
-    "case_file": _render_case_file,
-    "clash_courtroom": _render_clash_courtroom,
-    "evolution_ladder": _render_evolution_ladder,
-    "tension_bars": _render_tension_bars,
-    "question_wall": _render_question_wall,
-}
-
-
-_VARIANT_RENDERERS: dict[str, Callable[[ReadingPage], str]] = {
-    "shock_poster": _render_shock_poster,
-    "shock_poster_extreme": _render_shock_poster_extreme,
-    "evidence_wall": _render_evidence_wall,
-    "evidence_wall_extreme": _render_evidence_wall_extreme,
-    "cost_blast": _render_cost_blast,
-    "cost_blast_extreme": _render_cost_blast_extreme,
-    "interrogation_room": _render_interrogation_room,
-    "interrogation_room_extreme": _render_interrogation_room_extreme,
-    "xray_diagnosis": _render_xray_diagnosis,
-    "delta_map": _render_evolution_ladder,
-    "stance_radar": _render_stance_spectrum,
-    "mechanism_cutaway": _render_tension_bars,
-    "editorial_spread": _render_magazine_focus,
-    "manifesto_poster": _render_magazine_focus,
-    "manifesto_poster_extreme": _render_manifesto_poster_extreme,
-    "quiet_notes": _render_question_wall,
-}

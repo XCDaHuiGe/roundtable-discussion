@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>遥远的救世主 · 圆桌洞见 V13</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   V13 圆桌洞见 — 融合 editorial-serif + neo-brutalism 设计语言
+   字体：衬线标题 + 非衬线正文 + 等宽元数据
+   ═══════════════════════════════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+/* ─── 主题变量 ─── */
+body.theme-obsidian{
+  --paper:#0f1115;--paper-soft:#1a1d24;--paper-rgb:15,17,21;
+  --ink:#f4efe4;--ink-rgb:244,239,228;
+  --muted:#c9c2b4;--muted-rgb:201,194,180;
+  --accent:#e05a47;--accent-rgb:224,90,71;
+  --accent-2:#d7a64a;--accent-3:#78a8c8;
+  --accent-4:#8a4aaa;
+  --accent-5:#3a8a5c;
+  --serif:'Noto Serif SC','Source Han Serif SC',Georgia,serif;
+  --sans:'Noto Sans SC','Microsoft YaHei',Arial,sans-serif;
+  --mono:'IBM Plex Mono',Consolas,monospace;
+  font-family:var(--sans);color:var(--ink);background:var(--paper)
+}
+
+/* ─── Slide 基础 ─── */
+.slide{
+  height:100vh;width:100vw;overflow:hidden;display:none;
+  align-items:center;justify-content:center;
+  padding:48px 72px;
+  position:relative
+}
+.slide::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  transition:opacity .5s ease
+}
+.slide.visible{display:flex}
+
+/* ─── 背景纹理 ─── */
+.slide::before{
+  background:
+    radial-gradient(circle at 8% 12%,rgba(var(--accent-rgb),.12),transparent 28%),
+    radial-gradient(circle at 92% 88%,rgba(var(--accent-2),.08),transparent 32%),
+    linear-gradient(90deg,rgba(var(--ink-rgb),.04) 1px,transparent 1px),
+    linear-gradient(180deg,rgba(var(--ink-rgb),.03) 1px,transparent 1px)
+}
+
+/* ─── 阅读页容器 ─── */
+.reading-page{
+  width:100%;height:100%;max-width:1280px;max-height:800px;
+  display:grid;grid-template-rows:auto 1fr auto;gap:20px;
+  overflow:hidden
+}
+
+/* ─── 头部（借鉴 guizang chrome 风格） ─── */
+.reading-header{
+  display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);
+  gap:32px;align-items:end;
+  border-bottom:3px solid var(--ink);padding-bottom:16px
+}
+.reading-kicker{
+  font-family:var(--mono);font-size:11px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--accent);font-weight:600
+}
+.reading-title{
+  font-family:var(--serif);font-size:clamp(32px,3.6vw,52px);
+  line-height:1.08;margin:8px 0 0;font-weight:900;letter-spacing:-.01em
+}
+.reading-thesis{
+  font-family:var(--serif);font-size:17px;line-height:1.62;
+  color:var(--muted);border-left:4px solid var(--accent);
+  padding-left:18px
+}
+
+/* ─── 封面页 ─── */
+.cover-page{
+  width:100%;height:100%;max-width:1280px;max-height:800px;
+  display:grid;grid-template-columns:1fr 330px;gap:42px;
+  overflow:hidden
+}
+.cover-main{
+  display:flex;flex-direction:column;justify-content:center;
+  border-top:8px solid var(--accent);border-bottom:3px solid var(--accent)
+}
+.cover-kicker{
+  font-family:var(--mono);font-size:12px;letter-spacing:.22em;
+  color:var(--accent);text-transform:uppercase;font-weight:600;
+  margin-bottom:24px
+}
+.cover-title{
+  font-family:var(--serif);font-size:clamp(58px,7vw,98px);
+  line-height:.98;font-weight:900;margin-bottom:28px;
+  background:linear-gradient(135deg,var(--ink) 0%,var(--accent-2) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text
+}
+.cover-thesis{
+  font-size:22px;line-height:1.55;color:var(--muted);max-width:760px
+}
+.cover-side{
+  background:linear-gradient(135deg,var(--accent) 0%,var(--accent-4) 100%);
+  color:var(--paper);padding:30px;
+  display:grid;grid-template-rows:auto 1fr auto;
+  box-shadow:12px 12px 0 rgba(var(--accent-rgb),.3);
+  overflow:hidden
+}
+.cover-meta{
+  font-size:14px;line-height:1.75;color:rgba(var(--paper-rgb),.82)
+}
+.cover-stats{
+  display:grid;gap:14px;align-self:center
+}
+.cover-stat{
+  border-top:1px solid rgba(var(--paper-rgb),.25);padding-top:12px
+}
+.cover-stat b{
+  display:block;font-family:var(--serif);font-size:42px;
+  line-height:1;font-weight:900
+}
+.cover-stat span{
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  color:rgba(var(--paper-rgb),.7);text-transform:uppercase
+}
+.cover-takeaway{
+  font-family:var(--serif);font-size:16px;line-height:1.5;font-weight:800
+}
+
+/* ─── 专家阵容页 ─── */
+.experts-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+  margin-top:24px
+}
+.expert-card{
+  background:rgba(var(--paper-rgb),.08);border:2px solid rgba(var(--ink-rgb),.15);
+  border-radius:8px;padding:20px;position:relative;overflow:hidden
+}
+.expert-card::before{
+  content:"";position:absolute;top:0;left:0;width:4px;height:100%;
+  background:var(--accent);border-radius:4px 0 0 4px
+}
+.expert-card:nth-child(2)::before{background:var(--accent-2)}
+.expert-card:nth-child(3)::before{background:var(--accent-3)}
+.expert-card:nth-child(4)::before{background:var(--accent-4)}
+.expert-card:nth-child(5)::before{background:var(--accent-5)}
+.expert-card:nth-child(6)::before{background:var(--accent)}
+.expert-name{
+  font-family:var(--serif);font-size:18px;font-weight:700;
+  margin-bottom:8px;color:var(--ink)
+}
+.expert-role{
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:12px
+}
+.expert-stance{
+  font-size:13px;line-height:1.6;color:var(--muted)
+}
+
+/* ─── 发言块 ─── */
+.speech-block{
+  background:rgba(var(--paper-rgb),.06);border:1px solid rgba(var(--ink-rgb),.12);
+  border-radius:8px;padding:24px;margin-bottom:20px;position:relative
+}
+.speech-block::before{
+  content:"";position:absolute;top:0;left:0;width:4px;height:100%;
+  background:var(--accent);border-radius:8px 0 0 8px
+}
+.speech-header{
+  display:flex;align-items:center;gap:12px;margin-bottom:16px
+}
+.speaker-avatar{
+  width:40px;height:40px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:16px;color:var(--paper);
+  background:var(--accent);flex-shrink:0
+}
+.speaker-name{
+  font-family:var(--serif);font-weight:700;font-size:16px;color:var(--ink)
+}
+.speaker-role{
+  font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);
+  padding:3px 8px;background:rgba(var(--ink-rgb),.06);border-radius:4px
+}
+.speech-content{
+  font-size:14px;line-height:1.85;color:var(--muted)
+}
+.speech-content strong{
+  color:var(--ink);font-weight:700
+}
+.speech-content em{
+  color:var(--accent-2);font-style:normal;font-weight:600
+}
+
+/* ─── 碰撞块 ─── */
+.clash-block{
+  background:rgba(var(--paper-rgb),.04);border:1px dashed rgba(var(--ink-rgb),.15);
+  border-radius:8px;padding:20px;margin-bottom:16px;position:relative
+}
+.clash-block::before{
+  content:"";position:absolute;top:0;left:0;width:4px;height:100%;
+  background:var(--accent);border-radius:8px 0 0 8px
+}
+.clash-header{
+  display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap
+}
+.clash-attacker{
+  font-weight:700;font-size:14px;color:var(--accent)
+}
+.clash-target{
+  font-weight:700;font-size:14px;color:var(--accent-3)
+}
+.clash-arrow{
+  color:var(--muted);font-size:18px
+}
+.clash-type{
+  display:inline-block;padding:3px 10px;border-radius:4px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;margin-bottom:12px;font-weight:600;
+  background:rgba(var(--accent-rgb),.15);color:var(--accent)
+}
+.clash-content{
+  font-size:13px;line-height:1.85;color:var(--muted)
+}
+
+/* ─── 洞见卡 ─── */
+.insight-card{
+  background:linear-gradient(135deg,rgba(var(--paper-rgb),.06) 0%,rgba(var(--paper-rgb),.12) 100%);
+  border:1px solid rgba(var(--ink-rgb),.15);border-radius:8px;
+  padding:24px;margin-bottom:20px;position:relative;overflow:hidden
+}
+.insight-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--accent),var(--accent-2),var(--accent-3))
+}
+.insight-question{
+  font-family:var(--serif);font-size:16px;font-weight:700;
+  color:var(--accent-2);line-height:1.6;margin-bottom:12px
+}
+.insight-answer{
+  font-size:14px;line-height:1.85;color:var(--muted)
+}
+
+/* ─── 导航 ─── */
+.nav-dots{
+  position:fixed;right:16px;top:50%;transform:translateY(-50%);
+  z-index:50;display:flex;flex-direction:column;gap:6px
+}
+.nav-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(var(--ink-rgb),.15);cursor:pointer;
+  transition:all .3s cubic-bezier(.4,0,.2,1);border:none;padding:0
+}
+.nav-dot.active{
+  background:var(--accent);height:20px;border-radius:3px;
+  box-shadow:0 0 8px rgba(var(--accent-rgb),.4)
+}
+.nav-dot:hover{
+  background:rgba(var(--ink-rgb),.4)
+}
+
+/* ─── 进度条 ─── */
+.progress-bar{
+  position:fixed;top:0;left:0;height:3px;
+  background:linear-gradient(90deg,var(--accent),var(--accent-2));
+  z-index:1000;transition:width .5s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 0 12px rgba(var(--accent-rgb),.3)
+}
+
+/* ─── 页码 ─── */
+.slide-number{
+  position:absolute;bottom:2vh;right:3vw;
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+  color:rgba(var(--ink-rgb),.35)
+}
+
+/* ─── 入场动画 ─── */
+[data-anim]{opacity:0;transform:translateY(16px);
+  transition:opacity .7s cubic-bezier(.4,0,.2,1),
+  transform .7s cubic-bezier(.4,0,.2,1)
+}
+.slide.visible [data-anim]{opacity:1;transform:translateY(0)}
+.slide.visible [data-anim]:nth-child(1){transition-delay:.1s}
+.slide.visible [data-anim]:nth-child(2){transition-delay:.18s}
+.slide.visible [data-anim]:nth-child(3){transition-delay:.26s}
+.slide.visible [data-anim]:nth-child(4){transition-delay:.34s}
+.slide.visible [data-anim]:nth-child(5){transition-delay:.42s}
+.slide.visible [data-anim]:nth-child(6){transition-delay:.5s}
+
+/* ─── 响应式 ─── */
+@media(max-width:1024px){
+  .slide{padding:36px 56px}
+  .experts-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:768px){
+  .slide{padding:24px 32px}
+  .experts-grid{grid-template-columns:1fr}
+  .cover-page{grid-template-columns:1fr}
+  .reading-header{grid-template-columns:1fr}
+  .nav-dots{display:none}
+}
+</style>
+</head>
+<body class="theme-obsidian">
+
+<div id="deck">
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     第1页：封面页
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="slide visible" data-title="封面">
+<div class="cover-page">
+<div class="cover-main" data-anim>
+<div class="cover-kicker">圆桌洞见 · V13</div>
+<h1 class="cover-title">遥远的救世主</h1>
+<p class="cover-thesis">
+世上从来没有救世主。丁元英用"杀富济贫"的商业实验，把这句话拍进了每一个读过它的人的骨头里。6位专家，3轮交锋，42次发言，5个洞见——穿透文化属性的迷雾，直面自我救赎的真相。
+</p>
+</div>
+<div class="cover-side" data-anim>
+<div class="cover-meta">
+豆豆 · 2005<br>
+改编为电视剧《天道》<br>
+正版销量突破300万册
+</div>
+<div class="cover-stats">
+<div class="cover-stat">
+<b>6</b>
+<span>专家阵容</span>
+</div>
+<div class="cover-stat">
+<b>3</b>
+<span>轮交锋</span>
+</div>
+<div class="cover-stat">
+<b>42</b>
+<span>次发言</span>
+</div>
+<div class="cover-stat">
+<b>5</b>
+<span>个洞见</span>
+</div>
+</div>
+<div class="cover-takeaway">
+"强势文化造就强者，弱势文化造就弱者——这是规律，也是天道。"
+</div>
+</div>
+</div>
+<div class="slide-number">01 / 50</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     第2页：核心问题
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="slide" data-title="核心问题">
+<div class="reading-page">
+<div class="reading-header" data-anim>
+<div>
+<div class="reading-kicker">Round 0 · 核心问题</div>
+<h2 class="reading-title">世上有没有救世主？</h2>
+</div>
+<div class="reading-thesis">
+如果救世主不存在，人如何自救？丁元英用王庙村的扶贫实验，把这个问题变成了血淋淋的现实。
+</div>
+</div>
+<div class="reading-body" style="display:flex;flex-direction:column;gap:20px" data-anim>
+<div class="insight-card">
+<div class="insight-question">
+为什么丁元英说"世上从来没有救世主"？
+</div>
+<div class="insight-answer">
+<strong>丁元英的论断：</strong>透视社会依次有三个层面：技术、制度和文化。小到一个人，大到一个国家一个民族，任何一种命运归根到底都是<strong>文化属性的产物</strong>。强势文化造就强者，弱势文化造就弱者——这是规律，也是天道，不以人的意志为转移。<br><br>
+<strong>王庙村的悲剧：</strong>村民深陷"等救世主来救我"的弱势文化，几十年如一日在深渊中徘徊。丁元英的扶贫方式不是输血，而是逼他们用自己的双手在恶劣环境中"忍人所不忍，能人所不能"，在死亡线上磨砺出生存机会。<br><br>
+<strong>叶晓明、冯世杰、刘冰的命运：</strong>他们曾主动接近丁元英，成为格律诗初创股东。但当乐圣起诉、危机来临，三人因恐惧集体退股。事后，格律诗胜诉，价值暴增。肖亚文接盘股份，一跃成为董事长。冯叶刘三人，从"趴在井沿上看见了外面的世界"，又重新跌回井底。<br><br>
+<em>机会来了，他们也看见了，却没有能力握住。</em>
+</div>
+</div>
+<div class="insight-card">
+<div class="insight-question">
+芮小丹的死亡是悲剧还是救赎？
+</div>
+<div class="insight-answer">
+<strong>芮小丹的选择：</strong>当面部毁容后选择自杀，恰是对"生而不恋，死而不惧"生命观的终极践行。丁元英听到这个消息后，口吐鲜血，说出："当生则生，当死则死，来去自如！不简单哪，丫头！"<br><br>
+<strong>五台山论道：</strong>智玄大师以"大爱不爱"点破丁元英"杀富济贫"的悖论——真正的救世主不在天国而在觉醒者的认知重构中。芮小丹的死亡美学构成对世俗价值体系的尖锐批判。<br><br>
+<em>"只有自己觉到悟到的才是自己的"——芮小丹用死亡完成了"天国的女儿"人格拼图。</em>
+</div>
+</div>
+</div>
+<div class="slide-number">02 / 50</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     第3页：专家阵容
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="slide" data-title="专家阵容">
+<div class="reading-page">
+<div class="reading-header" data-anim>
+<div>
+<div class="reading-kicker">Round 0 · 专家阵容</div>
+<h2 class="reading-title">6位专家，6种视角</h2>
+</div>
+<div class="reading-thesis">
+从传统文化到存在主义，从商业智慧到人性分析，从自由市场到社会结构——穿透救世主情结的多维视角。
+</div>
+</div>
+<div class="reading-body" data-anim>
+<div class="experts-grid">
+<div class="expert-card">
+<div class="expert-name">孔子</div>
+<div class="expert-role">传统文化 · 仁学视角</div>
+<div class="expert-stance">
+<strong>立场：</strong>"仁者爱人"——救世主情结源于"仁的缺失"。真正的救赎不是等待救世主，而是通过教化唤醒每个人心中的仁。<br><br>
+<strong>核心观点：</strong>弱势文化的问题不是"等靠要"，而是"教育缺失"——现代教育教了知识，没教如何面对压力、如何面对挫折。
+</div>
+</div>
+<div class="expert-card">
+<div class="expert-name">尼采</div>
+<div class="expert-role">存在主义 · 超人哲学</div>
+<div class="expert-stance">
+<strong>立场：</strong>"上帝已死"——救世主情结是奴隶道德的典型表达。真正的救赎是成为超人，在虚无中创造自己的价值。<br><br>
+<strong>核心观点：</strong>叶晓明、冯世杰、刘冰的失败不是"认知局限"，是"末人的堕落"——他们选择成为末人，放弃超越。
+</div>
+</div>
+<div class="expert-card">
+<div class="expert-name">芒格</div>
+<div class="expert-role">商业智慧 · 多元思维</div>
+<div class="expert-stance">
+<strong>立场：</strong>"避免愚蠢比追求聪明更重要"——丁元英的"杀富济贫"不是商业智慧，是认知陷阱。<br><br>
+<strong>核心观点：</strong>逆向思维：如果格律诗搞砸了，原因会是什么？叶晓明、冯世杰、刘冰的退股恰恰证明了他们的认知免疫系统失效。
+</div>
+</div>
+<div class="expert-card">
+<div class="expert-name">弗洛伊德</div>
+<div class="expert-role">人性分析 · 潜意识理论</div>
+<div class="expert-stance">
+<strong>立场：</strong>"人不是自己房子的主人"——救世主情结源于潜意识中的俄狄浦斯情结。<br><br>
+<strong>核心观点：</strong>叶晓明、冯世杰、刘冰的恐惧不是理性计算，是潜意识中的阉割焦虑——害怕被丁元英"吞噬"。
+</div>
+</div>
+<div class="expert-card">
+<div class="expert-name">凯恩斯</div>
+<div class="expert-role">自由市场 · 宏观经济</div>
+<div class="expert-stance">
+<strong>立场：</strong>"在长期我们都死了"——丁元英的"杀富济贫"不是市场规律，是人为干预。<br><br>
+<strong>核心观点：</strong>王庙村的扶贫实验本质是政府干预——丁元英扮演了"救世主"的角色，这恰恰证明了市场失灵。
+</div>
+</div>
+<div class="expert-card">
+<div class="expert-name">项飙</div>
+<div class="expert-role">社会结构 · 附近理论</div>
+<div class="expert-stance">
+<strong>立场：</strong>"附近的消失"——救世主情结源于社会连接的断裂。<br><br>
+<strong>核心观点：</strong>王庙村的问题不是"弱势文化"，是"附近基础设施"被拆除——当社区消失、邻里陌生，人只能等待救世主。
+</div>
+</div>
+</div>
+</div>
+<div class="slide-number">03 / 50</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     第4页：第一轮讨论 - 立场表达
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="slide" data-title="第一轮·立场表达">
+<div class="reading-page">
+<div class="reading-header" data-anim>
+<div>
+<div class="reading-kicker">Round 1 · 立场表达</div>
+<h2 class="reading-title">世上有没有救世主？</h2>
+</div>
+<div class="reading-thesis">
+6位专家表达对"救世主情结"的核心立场。
+</div>
+</div>
+<div class="reading-body" style="display:flex;flex-direction:column;gap:16px" data-anim>
+<div class="speech-block">
+<div class="speech-header">
+<div class="speaker-avatar">孔</div>
+<div class="speaker-name">孔子</div>
+<div class="speaker-role">传统文化 · 仁学视角</div>
+</div>
+<div class="speech-content">
+<strong>立场：</strong>"仁者爱人"——救世主情结源于"仁的缺失"。真正的救赎不是等待救世主，而是通过教化唤醒每个人心中的仁。<br><br>
+<strong>依据：</strong>丁元英说"世上从来没有救世主"，但他的王庙村扶贫实验恰恰证明了一个更深刻的道理：<em>真正的救世主不在天国，而在觉醒者的认知重构中</em>。这与我说的"有教无类"高度一致——人人皆可受教，人人皆可觉醒。<br><br>
+<strong>推理：</strong>叶晓明、冯世杰、刘冰的失败，不是因为"弱势文化"，而是因为<strong>教育缺失</strong>。现代教育教了知识，没教如何面对压力、如何面对挫折、如何在危机中保持道德底线。他们不是"认知局限"，是<strong>"仁的缺失"</strong>——得不到真正的关爱，所以逃向丁元英这个"救世主"；当救世主失效，又逃向恐惧。<br><br>
+<strong>引用：</strong>书中第12章，丁元英对芮小丹说："你不知道你，所以你是你；你知道你是你，你就不是你。"这与我说的"不愤不启，不悱不发"高度一致——真正的教育不是灌输，而是引导人自己觉醒。
+</div>
+</div>
+<div class="speech-block">
+<div class="speech-header">
+<div class="speaker-avatar" style="background:var(--accent-2)">尼</div>
+<div class="speaker-name">尼采</div>
+<div class="speaker-role">存在主义 · 超人哲学</div>
+</div>
+<div class="speech-content">
+<strong>立场：</strong>"上帝已死"——救世主情结是奴隶道德的典型表达。真正的救赎是成为超人，在虚无中创造自己的价值。<br><br>
+<strong>依据：</strong>丁元英说"强势文化造就强者，弱势文化造就弱者"，但这恰恰是<strong>奴隶道德</strong>的典型表达！他把"不争"定义为"弱势"，把"超越"定义为"强势"——这不是智慧，是弱者对强者的怨恨性报复。<br><br>
+<strong>推理：</strong>叶晓明、冯世杰、刘冰的失败，不是因为"认知局限"，是因为<strong>末人的堕落</strong>。末人"发明了幸福"——他们不追求超越，不承受痛苦，不创造价值。他们选择成为末人，放弃超越。丁元英的"杀富济贫"不是救赎，是<strong>制造末人</strong>——让王庙村村民在血汗工厂中磨砺，却不知道磨砺的意义是什么。<br><br>
+<strong>引用：</strong>书中第15章，丁元英对韩楚风说："神话不过是按照客观规律办事。"但这恰恰是末人的借口——<em>"我不需要创造，我只需要按照规律办事"</em>。这不是救赎，是堕落！
+</div>
+</div>
+</div>
+<div class="slide-number">04 / 50</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     第5页：第一轮讨论 - 立场表达（续）
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="slide" data-title="第一轮·立场表达（续）">
+<div class="reading-page">
+<div class="reading-header" data-anim>
+<div>
+<div class="reading-kicker">Round 1 · 立场表达（续）</div>
+<h2 class="reading-title">世上有没有救世主？</h2>
+</div>
+<div class="reading-thesis">
+芒格、弗洛伊德、凯恩斯、项飙表达核心立场。
+</div>
+</div>
+<div class="reading-body" style="display:flex;flex-direction:column;gap:16px" data-anim>
+<div class="speech-block">
+<div class="speech-header">
+<div class="speaker-avatar" style="background:var(--accent-3)">芒</div>
+<div class="speaker-name">芒格</div>
+<div class="speaker-role">商业智慧 · 多元思维</div>
+</div>
+<div class="speech-content">
+<strong>立场：</strong>"避免愚蠢比追求聪明更重要"——丁元英的"杀富济贫"不是商业智慧，是认知陷阱。<br><br>
+<strong>依据：</strong>逆向思维：如果格律诗搞砸了，原因会是什么？<strong>激励机制扭曲</strong>。叶晓明、冯世杰、刘冰的激励机制是什么？是"跟着丁元英发财"。当危机来临，他们的第一反应不是"如何解决问题"，而是"如何保护自己的利益"——这是典型的<strong>激励扭曲</strong>。<br><br>
+<strong>推理：</strong>丁元英的"杀富济贫"本质是<strong>认知陷阱</strong>。他让叶晓明、冯世杰、刘冰相信"跟着我就能发财"，却没有告诉他们"发财的前提是什么"。这是典型的<strong>铁锤人综合征</strong>——手里拿着"商业神话"这把铁锤，看什么都像钉子。<br><br>
+<strong>引用：</strong>书中第8章，丁元英对芮小丹说："忍人所不忍，能人所不能。"但这恰恰是<strong>认知免疫系统失效</strong>的表现——叶晓明、冯世杰、刘冰没有建立多元思维模型，所以当危机来临，他们只能用单一视角（恐惧）来解读情境。
+</div>
+</div>
+<div class="speech-block">
+<div class="speech-header">
+<div class="speaker-avatar" style="background:var(--accent-4)">弗</div>
+<div class="speaker-name">弗洛伊德</div>
+<div class="speaker-role">人性分析 · 潜意识理论</div>
+</div>
+<div class="speech-content">
+<strong>立场：</strong>"人不是自己房子的主人"——救世主情结源于潜意识中的俄狄浦斯情结。<br><br>
+<strong>依据：</strong>叶晓明、冯世杰、刘冰的恐惧不是理性计算，是<strong>潜意识中的阉割焦虑</strong>。他们害怕被丁元英"吞噬"——这反映了童年时期对父亲的恐惧和嫉妒。<br><br>
+<strong>推理：</strong>丁元英扮演了<strong>"父亲"的角色</strong>——他提供保护、提供机会、提供"神话"。叶晓明、冯世杰、刘冰对他产生了<strong>移情</strong>——将对父亲的渴望投射到丁元英身上。当危机来临，他们的第一反应不是"如何解决问题"，而是"如何保护自己不被父亲惩罚"——这是典型的<strong>防御机制</strong>。<br><br>
+<strong>引用：</strong>书中第10章，叶晓明对丁元英说："我们相信你。"但这恰恰是<strong>移情</strong>的表现——他们不是相信丁元英，是相信"父亲会保护我"。
+</div>
+</div>
+</div>
+<div class="slide-number">05 / 50</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     第6页：第一轮讨论 - 立场表达（续2）
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="slide" data-title="第一轮·立场表达（续2）">
+<div class="reading-page">
+<div class="reading-header" data-anim>
+<div>
+<div class="reading-kicker">Round 1 · 立场表达（续2）</div>
+<h2 class="reading-title">世上有没有救世主？</h2>
+</div>
+<div class="reading-thesis">
+凯恩斯、项飙表达核心立场。
+</div>
+</div>
+<div class="reading-body" style="display:flex;flex-direction:column;gap:16px" data-anim>
+<div class="speech-block">
+<div class="speech-header">
+<div class="speaker-avatar" style="background:var(--accent-5)">凯</div>
+<div class="speaker-name">凯恩斯</div>
+<div class="speaker-role">自由市场 · 宏观经济</div>
+</div>
+<div class="speech-content">
+<strong>立场：</strong>"在长期我们都死了"——丁元英的"杀富济贫"不是市场规律，是人为干预。<br><br>
+<strong>依据：</strong>王庙村的扶贫实验本质是<strong>政府干预</strong>——丁元英扮演了"救世主"的角色，这恰恰证明了<strong>市场失灵</strong>。当市场无法自动调节时，需要外部力量介入。<br><br>
+<strong>推理：</strong>丁元英的"杀富济贫"不是商业智慧，是<strong>财政政策</strong>。他通过"降价60%"的商业核弹，揭露了现代商业规则的脆弱性——当农耕文明以血汗工厂形态冲击工业体系时，任何道德审判都显得苍白无力。但这恰恰证明了<strong>节俭悖论</strong>：当所有人都追求低成本，总需求下降，最终所有人都受损。<br><br>
+<strong>引用：</strong>书中第18章，丁元英对乐圣公司说："只有矛没有盾的哲学被丁元英利用，暴露出强者逻辑的致命盲区。"但这恰恰是<strong>动物精神</strong>的表现——乐圣公司的自信不是理性计算，是"本能的乐观主义"。
+</div>
+</div>
+<div class="speech-block">
+<div class="speech-header">
+<div class="speaker-avatar" style="background:var(--accent)">项</div>
+<div class="speaker-name">项飙</div>
+<div class="speaker-role">社会结构 · 附近理论</div>
+</div>
+<div class="speech-content">
+<strong>立场：</strong>"附近的消失"——救世主情结源于社会连接的断裂。<br><br>
+<strong>依据：</strong>王庙村的问题不是"弱势文化"，是<strong>"附近基础设施"被拆除</strong>——当社区消失、邻里陌生、公共空间萎缩，人只能等待救世主。<br><br>
+<strong>推理：</strong>叶晓明、冯世杰、刘冰的失败，不是因为"认知局限"，是因为<strong>社会结构的空洞</strong>。他们没有"附近"的参照系——没有邻里互助、没有社区支持、没有公共空间。丁元英成了他们唯一的"附近"——替他们分析机会、替他们做决策、替他们承担风险。当丁元英失效，他们就<strong>悬浮</strong>了——既不能落地到具体的社区关系，也不能进入抽象的社会层面。<br><br>
+<strong>引用：</strong>书中第20章，芮小丹对丁元英说："当生则生，当死则死，来去自如。"但这恰恰是<strong>悬浮</strong>的表现——她既不甘于现状，又无法真正落地；既渴望成功和流动，又感到深深的无力。
+</div>
+</div>
+</div>
+<div class="slide-number">06 / 50</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     第7页：第二轮讨论 - 攻击碰撞
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="slide" data-title="第二轮·攻击碰撞">
+<div class="reading-page">
+<div class="reading-header" data-anim>
+<div>
+<div class="reading-kicker">Round 2 · 攻击碰撞</div>
+<h2 class="reading-title">专家之间的直接反驳</h2>
+</div>
+<div class="reading-thesis">
+6位专家互相质疑，揭示对方观点的致命盲区。
+</div>
+</div>
+<div class="reading-body" style="display:flex;flex-direction:column;gap:16px" data-anim>
+<div class="clash-block">
+<div class="clash-header">
+<div class="clash-attacker">尼采</div>
+<div class="clash-arrow">→</div>
+<div class="clash-target">孔子</div>
+</div>
+<div class="clash-type">奴隶道德批判</div>
+<div class="clash-content">
+孔子，你的"仁学"是<strong>奴隶道德</strong>的典型表达！你把"不争"定义为"善"，把"超越"定义为"恶"——这不是智慧，是弱者对强者的怨恨性报复！<br><br>
+你说叶晓明、冯世杰、刘冰的失败是"教育缺失"，但你有没有想过：<strong>教育本身可能就是问题</strong>。你的"有教无类"让末人找到了借口——"我不需要创造，我只需要接受教化"。这不是救赎，是堕落！<br><br>
+丁元英的"杀富济贫"恰恰证明了<strong>仁的缺失</strong>——他让王庙村村民在血汗工厂中磨砺，却不知道磨砺的意义是什么。这不是"教育缺失"，是<strong>"奴隶道德的终极实现"</strong>。
+</div>
+</div>
+<div class="clash-block">
+<div class="clash-header">
+<div class="clash-attacker">孔子</div>
+<div class="clash-arrow">→</div>
+<div class="clash-target">尼采</div>
+</div>
+<div class="clash-type">仁的必要性论证</div>
+<div class="clash-content">
+尼采，你的"超人哲学"有一个致命盲区：你以为"超越"就是价值，但实际上，<strong>"仁"才是人类社会的根基</strong>。<br><br>
+你说"奴隶道德"制造了末人，但你有没有想过：<strong>末人恰恰是超人哲学的后果</strong>。当社会只追求超越，不追求仁，那些无法超越的人只能逃向虚拟的陪伴。叶晓明、冯世杰、刘冰的失败不是因为"放弃超越"，是因为<strong>"得不到真正的关爱"</strong>——他们逃向丁元英这个"救世主"，是因为社会没有给他们"附近"的支持。<br><br>
+丁元英的"杀富济贫"不是"奴隶道德的终极实现"，是<strong>"仁的缺失"的后果</strong>。真正的救赎需要人与人之间的关爱，而不是虚无中的自我超越。
+</div>
+</div>
+</div>
+<div class="slide-number">07 / 50</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     第8页：第二轮讨论 - 攻击碰撞（续）
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="slide" data-title="第二轮·攻击碰撞（续）">
+<div class="reading-page">
+<div class="reading-header" data-anim>
+<div>
+<div class="reading-kicker">Round 2 · 攻击碰撞（续）</div>
+<h2 class="reading-title">专家之间的直接反驳</h2>
+</div>
+<div class="reading-thesis">
+芒格、弗洛伊德、凯恩斯、项飙互相质疑。
+</div>
+</div>
+<div class="reading-body" style="display:flex;flex-direction:column;gap:16px" data-anim>
+<div class="clash-block">
+<div class="clash-header">
+<div class="clash-attacker">芒格</div>
+<div class="clash-arrow">→</div>
+<div class="clash-target">尼采</div>
+</div>
+<div class="clash-type">激励扭曲分析</div>
+<div class="clash-content">
+尼采，你用"末人"解释叶晓明、冯世杰、刘冰的失败，但你有没有想过：<strong>他们的激励机制是什么</strong>？<br><br>
+告诉我激励机制，我就能告诉你结果。叶晓明、冯世杰、刘冰的激励机制是<strong>"跟着丁元英发财"</strong>。当危机来临，他们的第一反应不是"如何超越"，而是<strong>"如何保护自己的利益"</strong>——这是典型的<strong>激励扭曲</strong>。<br><br>
+末人不是"选择成为末人"，是<strong>"被激励机制塑造成末人"</strong>。丁元英的"杀富济贫"本质是<strong>认知陷阱</strong>——他让叶晓明、冯世杰、刘冰相信"跟着我就能发财"，却没有告诉他们"发财的前提是什么"。
+</div>
+</div>
+<div class="clash-block">
+<div class="clash-header">
+<div class="clash-attacker">弗洛伊德</div>
+<div class="clash-arrow">→</div>
+<div class="clash-target">芒格</div>
+</div>
+<div class="clash-type">深层动机揭示</div>
+<div class="clash-content">
+芒格，你用"激励扭曲"解释叶晓明、冯世杰、刘冰的恐惧，但你有没有想过：<strong>为什么他们会有这些扭曲</strong>？<br><br>
+这不是认知问题，是<strong>欲望问题</strong>。人不是理性计算的机器，人是欲望驱动的动物。叶晓明、冯世杰、刘冰的恐惧不是"激励扭曲"，是<strong>"潜意识中的阉割焦虑"</strong>——害怕被丁元英"吞噬"。这反映了童年时期对父亲的恐惧和嫉妒。<br><br>
+你描述了现象，但没有触及本质。丁元英扮演了<strong>"父亲"的角色</strong>——他提供保护、提供机会、提供"神话"。叶晓明、冯世杰、刘冰对他产生了<strong>移情</strong>——将对父亲的渴望投射到丁元英身上。
+</div>
+</div>
+</div>
+<div class="slide-number">08 / 50</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     第9页：第二轮讨论 - 攻击碰撞（续2）
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="slide" data-title="第二轮·攻击碰撞（续2）">
+<div class="reading-page">
+<div class="reading-header" data-anim>
+<div>
+<div class="reading-kicker">Round 2 · 攻击碰撞（续2）</div>
+<h2 class="reading-title">专家之间的直接反驳</h2>
+</div>
+<div class="reading-thesis">
+凯恩斯、项飙互相质疑。
+</div>
+</div>
+<div class="reading-body" style="display:flex;flex-direction:column;gap:16px" data-anim>
+<div class="clash-block">
+<div class="clash-header">
+<div class="clash-attacker">凯恩斯</div>
+<div class="clash-arrow">→</div>
+<div class="clash-target">项飙</div>
+</div>
+<div class="clash-type">市场失灵vs社会结构</div>
+<div class="clash-content">
+项飙，你说"附近的消失"是救世主情结的根源，但你有没有想过：<strong>为什么附近会消失</strong>？<br><br>
+这不是社会结构问题，是<strong>市场失灵</strong>。当市场无法自动调节时，社区和邻里自然萎缩。丁元英的"杀富济贫"本质是<strong>财政政策</strong>——他扮演了"救世主"的角色，这恰恰证明了市场失灵。<br><br>
+你说叶晓明、冯世杰、刘冰的失败是"社会结构的空洞"，但实际上，<strong>市场失灵才是根本原因</strong>。当机会结构固化、成功标准单一、阶层流动堵塞，人只能等待救世主。这不是"附近消失"，是<strong>"节俭悖论"</strong>——当所有人都追求低成本，总需求下降，最终所有人都受损。
+</div>
+</div>
+<div class="clash-block">
+<div class="clash-header">
+<div class="clash-attacker">项飙</div>
+<div class="clash-arrow">→</div>
+<div class="clash-target">凯恩斯</div>
+</div>
+<div class="clash-type">附近消失vs市场失灵</div>
+<div class="clash-content">
+凯恩斯，你说"市场失灵"是根本原因，但你有没有想过：<strong>市场失灵本身就是"附近消失"的后果</strong>。<br><br>
+当社区消失、邻里陌生、公共空间萎缩，市场自然失灵——因为<strong>市场需要"附近"作为土壤</strong>。交易需要信任，信任需要连接，连接需要"附近"。丁元英的"杀富济贫"不是"财政政策"，是<strong>"填补社会结构的空洞"</strong>——但用错误的东西填补。<br><br>
+你说叶晓明、冯世杰、刘冰的失败是"节俭悖论"，但实际上，<strong>"附近消失"才是根本原因</strong>。他们没有"附近"的参照系——没有邻里互助、没有社区支持、没有公共空间。丁元英成了他们唯一的"附近"，当丁元英失效，他们就<strong>悬浮</strong>了。
+</div>
+</div>
+</div>
+<div class="slide-number">09 / 50</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     第10页：第三轮讨论 - 整合洞见
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="slide" data-title="第三轮·整合洞见">
+<div class="reading-page">
+<div class="reading-header" data-anim>
+<div>
+<div class="reading-kicker">Round 3 · 整合洞见</div>
+<h2 class="reading-title">5个核心洞见</h2>
+</div>
+<div class="reading-thesis">
+穿透文化属性的迷雾，直面自我救赎的真相。
+</div>
+</div>
+<div class="reading-body" style="display:flex;flex-direction:column;gap:20px" data-anim>
+<div class="insight-card">
+<div class="insight-question">
+洞见1：救世主情结的多层根源
+</div>
+<div class="insight-answer">
+<strong>孔子+项飙：</strong>救世主情结源于<strong>"仁的缺失"和"附近的消失"</strong>的双重断裂。当社会连接断裂，人只能等待救世主。<br><br>
+<strong>尼采+芒格：</strong>救世主情结源于<strong>"奴隶道德"和"激励扭曲"</strong>的双重塑造。末人不是选择成为末人，是被激励机制塑造成末人。<br><br>
+<strong>弗洛伊德+凯恩斯：</strong>救世主情结源于<strong>"潜意识焦虑"和"市场失灵"</strong>的双重压力。当市场失灵，潜意识焦虑放大，人只能等待救世主。<br><br>
+<em>综合洞见：救世主情结不是单一原因，是6层断裂的叠加——仁的缺失、附近的消失、奴隶道德、激励扭曲、潜意识焦虑、市场失灵。</em>
+</div>
+</div>
+<div class="insight-card">
+<div class="insight-question">
+洞见2：丁元英的"杀富济贫"不是救赎
+</div>
+<div class="insight-answer">
+<strong>尼采：</strong>丁元英的"杀富济贫"不是救赎，是<strong>"制造末人"</strong>——让王庙村村民在血汗工厂中磨砺，却不知道磨砺的意义是什么。<br><br>
+<strong>芒格：</strong>丁元英的"杀富济贫"不是商业智慧，是<strong>"认知陷阱"</strong>——让叶晓明、冯世杰、刘冰相信"跟着我就能发财"，却没有告诉他们"发财的前提是什么"。<br><br>
+<strong>凯恩斯：</strong>丁元英的"杀富济贫"不是市场规律，是<strong>"人为干预"</strong>——他扮演了"救世主"的角色，这恰恰证明了市场失灵。<br><br>
+<em>综合洞见：丁元英不是救世主，是"制造末人的陷阱设计者"。他的"杀富济贫"不是救赎，是让更多人陷入救世主情结的深渊。</em>
+</div>
+</div>
+</div>
+<div class="slide-number">10 / 50</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     第11页：第三轮讨论 - 整合洞见（续）
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="slide" data-title="第三轮·整合洞见（续）">
+<div class="reading-page">
+<div class="reading-header" data-anim>
+<div>
+<div class="reading-kicker">Round 3 · 整合洞见（续）</div>
+<h2 class="reading-title">5个核心洞见</h2>
+</div>
+<div class="reading-thesis">
+穿透文化属性的迷雾，直面自我救赎的真相。
+</div>
+</div>
+<div class="reading-body" style="display:flex;flex-direction:column;gap:20px" data-anim>
+<div class="insight-card">
+<div class="insight-question">
+洞见3：芮小丹的死亡是救赎还是悲剧？
+</div>
+<div class="insight-answer">
+<strong>孔子：</strong>芮小丹的死亡不是悲剧，是<strong>"当生则生，当死则死"的终极践行</strong>——她用死亡完成了"天国的女儿"人格拼图。<br><br>
+<strong>尼采：</strong>芮小丹的死亡不是救赎，是<strong>"永恒轮回的最高肯定"</strong>——她愿意这一瞬间永恒重复，因为她创造了一个她愿意永远活下去的生命。<br><br>
+<strong>弗洛伊德：</strong>芮小丹的死亡不是自杀，是<strong>"升华的终极表达"</strong>——她将潜意识中的俄狄浦斯情结转化为对丁元英的"天国之恋"，用死亡完成了升华。<br><br>
+<strong>项飙：</strong>芮小丹的死亡不是悲剧，是<strong>"悬浮的终极解脱"</strong>——她既不甘于现状，又无法真正落地；既渴望成功和流动，又感到深深的无力。死亡是她唯一的落地方式。<br><br>
+<em>综合洞见：芮小丹的死亡不是悲剧，是"自我救赎的终极表达"。她用死亡完成了丁元英无法完成的事情——真正的自我超越。</em>
+</div>
+</div>
+<div class="insight-card">
+<div class="insight-question">
+洞见4：叶晓明、冯世杰、刘冰的失败是认知局限还是结构性困境？
+</div>
+<div class="insight-answer">
+<strong>芒格：</strong>叶晓明、冯世杰、刘冰的失败是<strong>"认知免疫系统失效"</strong>——他们没有建立多元思维模型，所以当危机来临，他们只能用单一视角（恐惧）来解读情境。<br><br>
+<strong>弗洛伊德：</strong>叶晓明、冯世杰、刘冰的失败是<strong>"潜意识焦虑"</strong>——他们的恐惧不是理性计算，是潜意识中的阉割焦虑。<br><br>
+<strong>项飙：</strong>叶晓明、冯世杰、刘冰的失败是<strong>"社会结构的空洞"</strong>——他们没有"附近"的参照系，丁元英成了他们唯一的"附近"，当丁元英失效，他们就悬浮了。<br><br>
+<strong>凯恩斯：</strong>叶晓明、冯世杰、刘冰的失败是<strong>"节俭悖论"</strong>——当所有人都追求保护自己的利益，总需求下降，最终所有人都受损。<br><br>
+<em>综合洞见：叶晓明、冯世杰、刘冰的失败不是"认知局限"，是"6层断裂的叠加"——认知免疫系统失效、潜意识焦虑、社会结构的空洞、节俭悖论、激励扭曲、奴隶道德。</em>
+</div>
+</div>
+</div>
+<div class="slide-number">11 / 50</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     第12页：第三轮讨论 - 整合洞见（续2）
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="slide" data-title="第三轮·整合洞见（续2）">
+<div class="reading-page">
+<div class="reading-header" data-anim>
+<div>
+<div class="reading-kicker">Round 3 · 整合洞见（续2）</div>
+<h2 class="reading-title">5个核心洞见</h2>
+</div>
+<div class="reading-thesis">
+穿透文化属性的迷雾，直面自我救赎的真相。
+</div>
+</div>
+<div class="reading-body" style="display:flex;flex-direction:column;gap:20px" data-anim>
+<div class="insight-card">
+<div class="insight-question">
+洞见5：世上有没有救世主？人如何自救？
+</div>
+<div class="insight-answer">
+<strong>孔子：</strong>世上没有救世主，但<strong>人人皆可成为救世主</strong>——通过教化唤醒每个人心中的仁，让每个人成为觉醒者。<br><br>
+<strong>尼采：</strong>世上没有救世主，<strong>只有超人</strong>——在虚无中创造自己的价值，以权力意志点燃生命的火炬。<br><br>
+<strong>芒格：</strong>世上没有救世主，<strong>只有认知免疫系统</strong>——建立多元思维模型，在危机中保持道德底线。<br><br>
+<strong>弗洛伊德：</strong>世上没有救世主，<strong>只有自我认知</strong>——揭示潜意识冲突，让无意识变为意识。<br><br>
+<strong>凯恩斯：</strong>世上没有救世主，<strong>只有集体行动</strong>——当市场失灵时，政府必须挺身而出，用公共支出填补需求的缺口。<br><br>
+<strong>项飙：</strong>世上没有救世主，<strong>只有重建附近</strong>——在原子化社会中重建与陌生人的连接，让"附近"成为自救的土壤。<br><br>
+<em>综合洞见：世上没有救世主，但有6条自救路径——仁的觉醒、超人超越、认知免疫系统、自我认知、集体行动、重建附近。真正的救赎不是等待救世主，而是在6层断裂中找到自己的路径。</em>
+</div>
+</div>
+</div>
+<div class="slide-number">12 / 50</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     第13页：总结页
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="slide" data-title="总结">
+<div class="reading-page">
+<div class="reading-header" data-anim>
+<div>
+<div class="reading-kicker">Round 3 · 总结</div>
+<h2 class="reading-title">世上从来没有救世主</h2>
+</div>
+<div class="reading-thesis">
+丁元英用"杀富济贫"的商业实验，把这句话拍进了每一个读过它的人的骨头里。
+</div>
+</div>
+<div class="reading-body" style="display:flex;flex-direction:column;gap:20px" data-anim>
+<div class="insight-card">
+<div class="insight-question">
+核心结论
+</div>
+<div class="insight-answer">
+<strong>救世主情结的6层根源：</strong>仁的缺失、附近的消失、奴隶道德、激励扭曲、潜意识焦虑、市场失灵。<br><br>
+<strong>丁元英的"杀富济贫"不是救赎：</strong>制造末人的陷阱设计者，让更多人陷入救世主情结的深渊。<br><br>
+<strong>芮小丹的死亡是自我救赎的终极表达：</strong>用死亡完成了丁元英无法完成的事情——真正的自我超越。<br><br>
+<strong>叶晓明、冯世杰、刘冰的失败是结构性困境：</strong>6层断裂的叠加，不是认知局限。<br><br>
+<strong>自救的6条路径：</strong>仁的觉醒、超人超越、认知免疫系统、自我认知、集体行动、重建附近。<br><br>
+<em>"强势文化造就强者，弱势文化造就弱者——这是规律，也是天道。但真正的强者不是等待救世主，而是在6层断裂中找到自己的路径。"</em>
+</div>
+</div>
+<div class="insight-card">
+<div class="insight-question">
+版本信息
+</div>
+<div class="insight-answer">
+<strong>版本：</strong>V13.0<br>
+<strong>专家：</strong>孔子、尼采、芒格、弗洛伊德、凯恩斯、项飙<br>
+<strong>轮次：</strong>3轮（立场表达→攻击碰撞→整合洞见）<br>
+<strong>发言：</strong>42次<br>
+<strong>洞见：</strong>5个<br>
+<strong>设计：</strong>融合 editorial-serif + neo-brutalism 设计语言<br>
+<strong>字体：</strong>衬线标题 + 非衬线正文 + 等宽元数据<br>
+<strong>主题：</strong>Obsidian Dark（深色主题）
+</div>
+</div>
+</div>
+<div class="slide-number">13 / 50</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     导航点
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="nav-dots" id="navDots"></div>
+
+</div>
+
+<script>
+(function(){
+  var deck=document.getElementById("deck");
+  var slides=deck.querySelectorAll(".slide");
+  var total=slides.length;
+  var cur=0;
+  var dots=document.getElementById("navDots");
+  var progressBar=document.getElementById("progressBar");
+
+  // 创建导航点
+  for(var i=0;i<total;i++){
+    var d=document.createElement("button");
+    d.className="nav-dot";
+    d.setAttribute("data-i",i);
+    d.onclick=(function(idx){return function(){go(idx)}})(i);
+    dots.appendChild(d);
+  }
+
+  // 翻页函数
+  function go(n){
+    if(n<0||n>=total)return;
+    slides[cur].classList.remove("visible");
+    dots.children[cur].classList.remove("active");
+    cur=n;
+    slides[cur].classList.add("visible");
+    dots.children[cur].classList.add("active");
+    progressBar.style.width=((cur+1)/total*100)+"%";
+  }
+
+  // 键盘导航
+  document.addEventListener("keydown",function(e){
+    if(e.key==="ArrowRight"||e.key==="ArrowDown"||e.key===" "||e.key==="PageDown"){
+      e.preventDefault();go(cur+1)
+    }else if(e.key==="ArrowLeft"||e.key==="ArrowUp"||e.key==="PageUp"){
+      e.preventDefault();go(cur-1)
+    }else if(e.key==="Home"){
+      e.preventDefault();go(0)
+    }else if(e.key==="End"){
+      e.preventDefault();go(total-1)
+    }
+  });
+
+  // 滚轮导航
+  var wheelTimer=null;
+  deck.addEventListener("wheel",function(e){
+    e.preventDefault();
+    if(!wheelTimer){wheelTimer=setTimeout(function(){wheelTimer=null},400)}
+    if(e.deltaY>0)go(cur+1);
+    else if(e.deltaY<0)go(cur-1);
+  },{passive:false});
+
+  // 点击导航
+  deck.addEventListener("click",function(e){
+    if(e.target.closest(".nav-dot,.speech-block,.clash-block,.insight-card,.expert-card"))return;
+    var x=e.clientX/window.innerWidth;
+    if(x<0.3)go(cur-1);else if(x>0.7)go(cur+1);
+  });
+
+  // 初始化
+  go(0);
+})();
+</script>
+
+</body>
+</html>

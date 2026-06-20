@@ -109,6 +109,11 @@ class ReadingPage:
     layout: str = "reading_brief_4zone"
     display_logic: str = ""
     layout_variant: str = ""
+    beat: str = ""
+    reader_question: str = ""
+    memory_hook: str = ""
+    source_refs: list[str] = field(default_factory=list)
+    intensity: str = "editorial"
     blocks: list[ReadingBlock] = field(default_factory=list)
     meta: dict[str, Any] = field(default_factory=dict)
 
@@ -116,12 +121,18 @@ class ReadingPage:
         if self.page_type not in READING_PAGE_TYPES:
             raise ValueError(f"unknown reading page_type: {self.page_type}")
         self.layout = ensure_reading_layout(self.layout)
+        if self.intensity not in {"quiet", "editorial", "dramatic", "extreme"}:
+            raise ValueError(f"unknown intensity: {self.intensity}")
         self.display_logic = ensure_display_logic(
             self.display_logic or select_display_logic(self.page_type, self.blocks, self.thesis, self.meta)
         )
         self.layout_variant = ensure_layout_variant(
-            self.layout_variant or select_layout_variant(self.display_logic, self.page_type)
+            self.layout_variant or select_layout_variant(self.display_logic, self.page_type, self.intensity)
         )
         self.title = summarize_text(self.title, 42)
         self.thesis = summarize_text(self.thesis, 130)
         self.takeaway = summarize_text(self.takeaway, 150)
+        self.beat = summarize_text(self.beat, 120)
+        self.reader_question = summarize_text(self.reader_question, 100)
+        self.memory_hook = summarize_text(self.memory_hook, 80)
+        self.source_refs = [summarize_text(item, 80) for item in self.source_refs]

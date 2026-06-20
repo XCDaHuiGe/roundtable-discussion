@@ -10,6 +10,7 @@ import sys
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from engine.html_ppt_design_strength import validate_rendered_design_strength
 from engine.validate_html_ppt_v12 import validate_html
 
 
@@ -20,7 +21,7 @@ class ReadingValidationResult:
     warnings: list[str] = field(default_factory=list)
 
 
-def validate_reading_html(html: str) -> ReadingValidationResult:
+def validate_reading_html(html: str, showoff: bool = False) -> ReadingValidationResult:
     errors: list[str] = []
     v12_result = validate_html(html)
     errors.extend(v12_result.errors)
@@ -33,7 +34,7 @@ def validate_reading_html(html: str) -> ReadingValidationResult:
         page_type = _page_type(slide)
         if "reading-title" not in slide:
             errors.append(f"slide {index} missing title")
-        if page_type != "cover" and "最终洞见" not in slide:
+        if page_type != "cover" and "takeaway-strip" not in slide and "stage-takeaway" not in slide:
             errors.append(f"slide {index} missing takeaway")
 
         block_count = slide.count("reading-block")
@@ -45,6 +46,9 @@ def validate_reading_html(html: str) -> ReadingValidationResult:
 
     if re.search(r"假小子_乱码|lorem|ipsum", html, re.IGNORECASE):
         errors.append("decorative or fake text marker found")
+
+    if showoff:
+        errors.extend(validate_rendered_design_strength(html, showoff=True))
 
     return ReadingValidationResult(ok=not errors, errors=errors)
 
@@ -94,10 +98,11 @@ def _extract_slide_sections(html: str) -> list[str]:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate readable HTML-PPT V13 output")
     parser.add_argument("html_path", help="HTML file to validate")
+    parser.add_argument("--showoff", action="store_true", help="Require open-design stage/extreme markers")
     args = parser.parse_args()
 
     html = Path(args.html_path).read_text(encoding="utf-8")
-    result = validate_reading_html(html)
+    result = validate_reading_html(html, showoff=args.showoff)
     if result.ok:
         print("HTML-PPT V13 validation passed")
         return 0

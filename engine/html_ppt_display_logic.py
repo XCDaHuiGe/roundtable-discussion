@@ -22,15 +22,23 @@ DISPLAY_LOGICS = {
 LAYOUT_VARIANTS = {
     "standard",
     "shock_poster",
+    "shock_poster_extreme",
     "evidence_wall",
+    "evidence_wall_extreme",
     "interrogation_room",
+    "interrogation_room_extreme",
     "xray_diagnosis",
+    "xray_diagnosis_extreme",
     "cost_blast",
+    "cost_blast_extreme",
     "delta_map",
+    "delta_map_extreme",
     "stance_radar",
     "mechanism_cutaway",
+    "mechanism_cutaway_extreme",
     "editorial_spread",
     "manifesto_poster",
+    "manifesto_poster_extreme",
     "quiet_notes",
 }
 
@@ -69,7 +77,21 @@ def select_display_logic(
     return "neutral"
 
 
-def select_layout_variant(display_logic: str, page_type: str = "") -> str:
+def select_layout_variant(display_logic: str, page_type: str = "", intensity: str = "editorial") -> str:
+    if intensity == "extreme":
+        extreme = {
+            "impact": "shock_poster_extreme",
+            "evidence": "evidence_wall_extreme",
+            "cross_exam": "interrogation_room_extreme",
+            "diagnosis": "xray_diagnosis_extreme",
+            "cost": "cost_blast_extreme",
+            "delta": "delta_map_extreme",
+            "mechanism": "mechanism_cutaway_extreme",
+            "manifesto": "manifesto_poster_extreme",
+        }
+        if display_logic in extreme:
+            return extreme[display_logic]
+
     if display_logic == "impact":
         return "shock_poster"
     if display_logic == "evidence":

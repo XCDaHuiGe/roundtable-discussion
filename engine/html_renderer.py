@@ -193,7 +193,7 @@ def _build_stances_slide(stances_batch: list, round_num: int, batch_idx: int, to
     items = ''
     for s in stances_batch:
         expert_name = s.get('expert', s.get('speaker', ''))
-        text = _esc(s.get('text', s.get('stance', '')))
+        text = _esc(s.get('text', s.get('stance', s.get('speech', s.get('content', '')))))
         color = experts_map.get(expert_name, t['accent'])
         initial = _expert_initial(expert_name)
 
@@ -265,6 +265,9 @@ def _build_clash_slide(round_data: dict, experts_map: dict, t: dict) -> str:
 def _build_reality_case_slide(round_data: dict, t: dict) -> str:
     rnum = round_data.get('round_number', '?')
     cases = round_data.get('reality_cases', [])
+    # Normalize: if dict (single case), wrap in list
+    if isinstance(cases, dict):
+        cases = [cases]
     if not cases:
         return ''
 
@@ -1369,6 +1372,8 @@ def _build_js(total_slides: int) -> str:
 
 def render_html(data: dict, theme: str = 'gold') -> str:
     """Render V8 JSON to self-contained HTML string."""
+    from v8_normalizer import normalize_v8
+    data = normalize_v8(data)
     t = THEMES.get(theme, THEMES['gold'])
 
     # Build expert color map

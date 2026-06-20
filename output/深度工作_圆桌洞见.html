@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>深度工作 · 圆桌洞见</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap');
+:root{--deep:#34495e;--white:#ffffff;--light:#f8f9fa;--accent:#2c3e50;--sub:#7f8c8d}
+html,body{width:100%;height:100%;font-family:'Noto Sans SC',sans-serif;background:#fff;color:var(--deep);overflow:hidden}
+.slide{display:none;width:100vw;height:100vh;position:relative;flex-direction:column;justify-content:center;align-items:center;padding:60px 80px;background:var(--white)}
+.slide.active{display:flex}
+.slide-number{position:absolute;bottom:30px;right:40px;font-size:14px;color:var(--sub);letter-spacing:2px}
+h1{font-family:'Noto Serif SC',serif;font-size:3.2em;font-weight:700;color:var(--deep);letter-spacing:4px;margin-bottom:16px;text-align:center;line-height:1.4}
+h2{font-family:'Noto Serif SC',serif;font-size:2.4em;font-weight:700;color:var(--deep);letter-spacing:3px;margin-bottom:12px;text-align:center}
+h3{font-family:'Noto Serif SC',serif;font-size:1.6em;font-weight:700;color:var(--deep);margin-bottom:10px}
+p,.text{font-size:1.15em;line-height:1.9;color:var(--deep);text-align:center;max-width:900px}
+.subtitle{font-size:1.3em;color:var(--sub);letter-spacing:6px;margin-top:8px}
+.divider{width:60px;height:2px;background:var(--deep);margin:20px auto}
+.quote{font-family:'Noto Serif SC',serif;font-size:1.8em;font-style:italic;color:var(--accent);text-align:center;max-width:800px;line-height:1.8;position:relative;padding:0 40px}
+.quote::before{content:'"';font-size:4em;color:var(--sub);position:absolute;left:-10px;top:-30px;opacity:.3}
+.quote-attr{margin-top:16px;font-size:1em;color:var(--sub);font-style:normal;letter-spacing:2px}
+.dialog{max-width:900px;width:100%}
+.dialog-item{margin:18px 0;padding:20px 28px;border-left:3px solid var(--deep);background:var(--light)}
+.dialog-speaker{font-weight:700;font-size:1.05em;color:var(--deep);margin-bottom:6px;letter-spacing:1px}
+.dialog-text{font-size:1.05em;line-height:1.8;color:#444}
+.scene-box{max-width:900px;width:100%;background:var(--light);padding:40px 50px;border:1px solid #e0e0e0}
+.scene-title{font-family:'Noto Serif SC',serif;font-size:1.3em;font-weight:700;color:var(--deep);margin-bottom:16px;letter-spacing:2px}
+.scene-desc{font-size:1.05em;line-height:1.9;color:#555}
+.golden{font-family:'Noto Serif SC',serif;font-size:2em;text-align:center;color:var(--accent);line-height:1.7;max-width:800px}
+.golden-num{display:inline-block;width:36px;height:36px;line-height:36px;border:2px solid var(--deep);border-radius:50%;text-align:center;font-size:.7em;margin-bottom:10px;font-family:'Noto Sans SC',sans-serif}
+.topic-pills{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:20px}
+.pill{padding:10px 24px;border:1px solid var(--deep);border-radius:30px;font-size:1em;color:var(--deep);letter-spacing:1px}
+.two-col{display:flex;gap:60px;max-width:1000px;width:100%;align-items:flex-start}
+.two-col .col{flex:1}
+.list{list-style:none;padding:0}
+.list li{padding:10px 0;border-bottom:1px solid #eee;font-size:1.05em;line-height:1.7;color:#444}
+.list li::before{content:'—';color:var(--deep);margin-right:10px;font-weight:700}
+.big-num{font-size:5em;font-weight:700;color:var(--deep);font-family:'Noto Serif SC',serif;opacity:.15;position:absolute;top:40px;left:60px}
+.tag{display:inline-block;padding:4px 14px;background:var(--deep);color:#fff;font-size:.8em;border-radius:3px;margin:4px;letter-spacing:1px}
+.timeline{max-width:800px;width:100%}
+.tl-item{display:flex;align-items:flex-start;margin:14px 0;gap:20px}
+.tl-dot{width:12px;height:12px;border:2px solid var(--deep);border-radius:50%;flex-shrink:0;margin-top:6px}
+.tl-line{width:2px;background:#ddd;position:absolute;left:5px}
+.tl-content{font-size:1.05em;line-height:1.7;color:#444}
+.controls{position:fixed;bottom:30px;left:40px;display:flex;gap:10px;z-index:100}
+.controls button{width:40px;height:40px;border:1px solid var(--sub);background:#fff;color:var(--deep);cursor:pointer;font-size:1.1em;border-radius:50%;transition:.2s}
+.controls button:hover{background:var(--deep);color:#fff}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--deep);transition:width .3s;z-index:100}
+@media(max-width:768px){.slide{padding:30px}h1{font-size:2em}h2{font-size:1.6em}.quote{font-size:1.3em}.two-col{flex-direction:column;gap:20px}}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="controls"><button onclick="go(-1)">‹</button><button onclick="go(1)">›</button></div>
+
+<!-- P1 封面 -->
+<div class="slide active">
+<h1>深 度 工 作</h1>
+<div class="divider"></div>
+<p class="subtitle">圆 桌 洞 见</p>
+<div class="topic-pills" style="margin-top:40px">
+<span class="pill">心流</span><span class="pill">注意力</span><span class="pill">数字极简</span><span class="pill">工匠精神</span>
+</div>
+<p style="margin-top:50px;color:var(--sub);font-size:.9em">六位跨时空智者的50页思想碰撞</p>
+</div>
+
+<!-- P2 主题 -->
+<div class="slide">
+<h2>五个核心命题</h2>
+<div class="divider"></div>
+<div class="two-col" style="margin-top:20px">
+<div class="col"><ul class="list"><li>深度工作是21世纪的超能力</li><li>心流是最优体验的心理状态</li><li>注意力是最后的稀缺资源</li></ul></div>
+<div class="col"><ul class="list"><li>数字极简是对信息过载的解药</li><li>工匠精神是通往卓越的唯一路径</li></ul></div>
+</div>
+</div>
+
+<!-- P3 圆桌嘉宾 -->
+<div class="slide">
+<h2>圆桌嘉宾</h2>
+<div class="divider"></div>
+<div class="two-col" style="margin-top:16px">
+<div class="col">
+<div class="dialog-item"><div class="dialog-speaker">查理·芒格</div><div class="dialog-text">多元思维模型，逆向思维大师</div></div>
+<div class="dialog-item"><div class="dialog-speaker">丹尼尔·卡尼曼</div><div class="dialog-text">行为经济学之父，系统1与系统2</div></div>
+<div class="dialog-item"><div class="dialog-speaker">老子</div><div class="dialog-text">道法自然，无为而治</div></div>
+</div>
+<div class="col">
+<div class="dialog-item"><div class="dialog-speaker">弗里德里希·尼采</div><div class="dialog-text">超人哲学，权力意志</div></div>
+<div class="dialog-item"><div class="dialog-speaker">纳西姆·塔勒布</div><div class="dialog-text">反脆弱，黑天鹅理论</div></div>
+<div class="dialog-item"><div class="dialog-speaker">项飙</div><div class="dialog-text">人类学家，"附近"的消失</div></div>
+</div>
+</div>
+</div>
+
+<!-- P4 金句1 -->
+<div class="slide">
+<div class="golden-num">01</div>
+<div class="quote">深度工作的能力正在变得越来越稀缺，同时也变得越来越有价值。<div class="quote-attr">—— 卡尔·纽波特《深度工作》</div></div>
+</div>
+
+<!-- P5 对话1 -->
+<div class="slide">
+<h3>第一轮 · 什么是深度工作</h3>
+<div class="divider"></div>
+<div class="dialog">
+<div class="dialog-item"><div class="dialog-speaker">芒格</div><div class="dialog-text">深度工作就是你把全部心智集中在一个问题上，像激光一样。大多数人一辈子都在用手电筒——光线散射，什么也照不透。</div></div>
+<div class="dialog-item"><div class="dialog-speaker">卡尼曼</div><div class="dialog-text">从认知科学看，深度工作要求系统2全功率运转。系统1帮你快速反应，但真正有价值的创造只能来自慢思考。</div></div>
+<div class="dialog-item"><div class="dialog-speaker">老子</div><div class="dialog-text">致虚极，守静笃。万物并作，吾以观复。深度不是使劲抓住，而是放空之后自然浮现。</div></div>
+</div>
+</div>
+
+<!-- P6 场景1 -->
+<div class="slide">
+<h3>场景还原 · ①</h3>
+<div class="divider"></div>
+<div class="scene-box">
+<div class="scene-title">程序员的「心流区」</div>
+<div class="scene-desc">凌晨两点，一个程序员戴着降噪耳机，面前只有黑色终端和一个编辑器。他已经连续编码四小时，重构了整个支付模块。不是加班，是自愿——因为白天被打断了十七次，只有深夜才能进入真正的深度状态。当他摘下耳机，世界像是重新加载了一样。</div>
+</div>
+</div>
+
+<!-- P7 对话2 -->
+<div class="slide">
+<h3>第二轮 · 注意力的经济学</h3>
+<div class="divider"></div>
+<div class="dialog">
+<div class="dialog-item"><div class="dialog-speaker">项飙</div><div class="dialog-text">注意力被平台经济殖民了。你的每一次滑动都在为别人创造价值。这不是自由选择，是精密设计的服从。</div></div>
+<div class="dialog-item"><div class="dialog-speaker">塔勒布</div><div class="dialog-text">信息不等于知识。每天刷两小时新闻，你获得的是噪声，不是信号。真正有用的信息密度极低，需要你主动去挖掘。</div></div>
+<div class="dialog-item"><div class="dialog-speaker">尼采</div><div class="dialog-text">注意力即权力。谁控制了你的注意力，谁就控制了你的意志。放弃注意力的人，等于放弃了自我。</div></div>
+</div>
+</div>
+
+<!-- P8 金句2 -->
+<div class="slide">
+<div class="golden-num">02</div>
+<div class="quote">你的注意力是你最宝贵的财产，不要把珍珠丢给猪。<div class="quote-attr">—— 尼采（意译）</div></div>
+</div>
+
+<!-- P9 对话3 -->
+<div class="slide">
+<h3>第三轮 · 心流的条件</h3>
+<div class="divider"></div>
+<div class="dialog">
+<div class="dialog-item"><div class="dialog-speaker">卡尼曼</div><div class="dialog-text">心流发生在技能与挑战恰好匹配的区间。太简单，你无聊；太难，你焦虑。只有中间那条窄带，才能让人忘记时间。</div></div>
+<div class="dialog-item"><div class="dialog-speaker">老子</div><div class="dialog-text">为学日益，为道日损。心流不是加法，是减法。去掉多余的欲望和干扰，它自己就来了。</div></div>
+<div class="dialog-item"><div class="dialog-speaker">芒格</div><div class="dialog-text">沃伦·巴菲特一辈子都在做同一件事——阅读年报。他说这不是工作，是享受。当你的职业与兴趣完全重合，心流就是默认状态。</div></div>
+</div>
+</div>
+
+<!-- P10 场景2 -->
+<div class="slide">
+<h3>场景还原 · ②</h3>
+<div class="divider"></div>
+<div class="scene-box">
+<div class="scene-title">木匠的四十年</div>
+<div class="scene-desc">日本飞驒高山，一个72岁的木匠还在刨一块榫卯。他做了四十年，每一块木头都用手掌感受纹理。有人问他和年轻时有什么不同，他说："年轻时我在做家具，现在我在听木头说话。"工具没变，变的是注意力的纯度。</div>
+</div>
+</div>
+
+<!-- P11 金句3 -->
+<div class="slide">
+<div class="golden-num">03</div>
+<div class="quote">你不能通过更多的忙碌来获得深度。深度来自你敢于什么都不做的勇气。<div class="quote-attr">—— 卡尔·纽波特</div></div>
+</div>
+
+<!-- P12 对话4 -->
+<div class="slide">
+<h3>第四轮 · 数字极简</h3>
+<div class="divider"></div>
+<div class="dialog">
+<div class="dialog-item"><div class="dialog-speaker">项飙</div><div class="dialog-text">"附近"在消失。你对千里之外的新闻如数家珍，却不知道邻居姓什么。数字技术把你的注意力从身边抽走了。</div></div>
+<div class="dialog-item"><div class="dialog-speaker">塔勒布</div><div class="dialog-text">最脆弱的系统是那些被优化到极致的系统。你的日程表越满，一个意外就越能摧毁你。留白是反脆弱的。</div></div>
+<div class="dialog-item"><div class="dialog-speaker">芒格</div><div class="dialog-text">我认识的每一个成功者都有一个共同点：他们对"不做什么"比"做什么"更清楚。减法比加法难十倍。</div></div>
+</div>
+</div>
+
+<!-- P13 场景3 -->
+<div class="slide">
+<h3>场景还原 · ③</h3>
+<div class="divider"></div>
+<div class="scene-box">
+<div class="scene-title">断网72小时实验</div>
+<div class="scene-desc">一个产品经理决定断网三天。第一天：焦虑、手痒、每隔十分钟看手机。第二天：开始无聊，然后开始观察窗外的树。第三天：她写出了三个月来最好的产品方案。不是断网让她变聪明了，是噪音消失了。</div>
+</div>
+</div>
+
+<!-- P14 金句4 -->
+<div class="slide">
+<div class="golden-num">04</div>
+<div class="quote">不要用战术上的勤奋掩盖战略上的懒惰。<div class="quote-attr">—— 查理·芒格</div></div>
+</div>
+
+<!-- P15 对话5 -->
+<div class="slide">
+<h3>第五轮 · 工匠精神</h3>
+<div class="divider"></div>
+<div class="dialog">
+<div class="dialog-item"><div class="dialog-speaker">尼采</div><div class="dialog-text">成为你自己——这是最难的命令。工匠精神不是模仿大师，是通过一万小时的重复，发现属于自己的表达方式。</div></div>
+<div class="dialog-item"><div class="dialog-speaker">老子</div><div class="dialog-text">大巧若拙。最高明的技艺看起来毫不费力。这不是天赋，是把简单的事做到极致之后的自然状态。</div></div>
+<div class="dialog-item"><div class="dialog-speaker">卡尼曼</div><div class="dialog-text">刻意练习的本质是持续用系统2去处理系统1已经自动化的东西。大多数人一旦"会了"就停止精进，工匠永远不会说"够了"。</div></div>
+</div>
+</div>
+
+<!-- P16 场景4 -->
+<div class="slide">
+<h3>场景还原 · ④</h3>
+<div class="divider"></div>
+<div class="scene-box">
+<div class="scene-title">外科医生的八小时手术</div>
+<div class="scene-desc">凌晨四点开始的肝移植手术。主刀医生的手稳得像机器，但他不是机器——他能在毫秒间判断血管走向，能用指尖感受组织的弹性。这不是自动化的程序，是2000台手术之后依然保持的专注。每一刀都是第一次，每一刀都是最后一次。</div>
+</div>
+</div>
+
+<!-- P17 金句5 -->
+<div class="slide">
+<div class="golden-num">05</div>
+<div class="quote">一个人知道自己为什么而活，就可以忍受任何一种生活。<div class="quote-attr">—— 弗里德里希·尼采</div></div>
+</div>
+
+<!-- P18 对话6 -->
+<div class="slide">
+<h3>第六轮 · 反脆弱与深度</h3>
+<div class="divider"></div>
+<div class="dialog">
+<div class="dialog-item"><div class="dialog-speaker">塔勒布</div><div class="dialog-text">风会熄灭蜡烛，却能使火越烧越旺。深度工作者就是那团火——干扰越多，他们反而越专注。浅层工作者遇到打扰就崩溃。</div></div>
+<div class="dialog-item"><div class="dialog-speaker">项飙</div><div class="dialog-text">中国年轻人说"卷"，本质是大家都在用同一种方式竞争。深度工作不是更努力，是找到自己的不可替代性。</div></div>
+<div class="dialog-item"><div class="dialog-speaker">芒格</div><div class="dialog-text">在能力圈内行动，在能力圈外学习。你的深度不需要覆盖所有领域，只需要在少数领域比任何人都深。</div></div>
+</div>
+</div>
+
+<!-- P19 场景5 -->
+<div class="slide">
+<h3>场景还原 · ⑤</h3>
+<div class="divider"></div>
+<div class="scene-box">
+<div class="scene-title">作家的「暗室」</div>
+<div class="scene-desc">村上春树每天凌晨四点起床，写作五小时，然后跑步。没有社交媒体，没有采访，没有应酬。他的编辑说："他不是自律，他是真的喜欢那个安静的房间。"三十年，十五部长篇。秘密不是意志力，是设计了一个让深度工作成为唯一选项的环境。</div>
+</div>
+</div>
+
+<!-- P20 金句6 -->
+<div class="slide">
+<div class="golden-num">06</div>
+<div class="quote">少则得，多则惑。<div class="quote-attr">—— 老子《道德经》</div></div>
+</div>
+
+<!-- P21 对话7 -->
+<div class="slide">
+<h3>第七轮 · 系统1与系统2的战争</h3>
+<div class="divider"></div>
+<div class="dialog">
+<div class="dialog-item"><div class="dialog-speaker">卡尼曼</div><div class="dialog-text">每次你拿起手机刷短视频，你在训练系统1变得更强大——它越来越擅长分心。而你的系统2，那头需要安静的大象，正在萎缩。</div></div>
+<div class="dialog-item"><div class="dialog-speaker">尼采</div><div class="dialog-text">人是应该被超越的东西。但今天的算法在做相反的事——它把你锁在舒适区，让你不断重复你喜欢的，而不是你需要的。</div></div>
+<div class="dialog-item"><div class="dialog-speaker">老子</div><div class="dialog-text">五色令人目盲，五音令人耳聋。两千年了，人类还是没学会节制。</div></div>
+</div>
+</div>
+
+<!-- P22 金句7 -->
+<div class="slide">
+<div class="golden-num">07</div>
+<div class="quote">风会熄灭蜡烛，却能使火越烧越旺。你要成为火，而不是蜡烛。<div class="quote-attr">—— 纳西姆·塔勒布《反脆弱》</div></div>
+</div>
+
+<!-- P23 场景6 -->
+<div class="slide">
+<h3>场景还原 · ⑥</h3>
+<div class="divider"></div>
+<div class="scene-box">
+<div class="scene-title">围棋选手的八小时对弈</div>
+<div class="scene-desc">中日围棋擂台赛。中国棋手在第七个小时陷入长考，47分钟没有落子。对手以为他在想棋路，他后来回忆说："我在等。等那个感觉对的瞬间。棋盘上的变化我已经算完了，但我需要让直觉说话。"深度工作不是不停地动，是知道什么时候该停。</div>
+</div>
+</div>
+
+<!-- P24 对话8 -->
+<div class="slide">
+<h3>第八轮 · 注意力的训练</h3>
+<div class="divider"></div>
+<div class="dialog">
+<div class="dialog-item"><div class="dialog-speaker">塔勒布</div><div class="dialog-text">你不能在一个充满噪声的环境里做出好决策。交易员的第一课不是看K线图，是学会关掉屏幕。</div></div>
+<div class="dialog-item"><div class="dialog-speaker">项飙</div><div class="dialog-text">冥想被商品化了——变成了一种消费品，一个App，一个课程。但注意力训练的真正形式是：做一件需要耐心的手工活。</div></div>
+<div class="dialog-item"><div class="dialog-speaker">芒格</div><div class="dialog-text">我这辈子做得最好的投资，是年轻时决定每天阅读五小时。不是因为书里有什么秘密，而是阅读训练了我长时间集中注意力的能力。</div></div>
+</div>
+</div>
+
+<!-- P25 金句8 -->
+<div class="slide">
+<div class="golden-num">08</div>
+<div class="quote">真正的自由不是想做什么就做什么，而是不想做什么就能不做什么。<div class="quote-attr">—— 伊曼努尔·康德</div></div>
+</div>
+
+<!-- P26 场景7 -->
+<div class="slide">
+<h3>场景还原 · ⑦</h3>
+<div class="divider"></div>
+<div class="scene-box">
+<div class="scene-title">教师的「无声课堂」</div>
+<div class="scene-desc">芬兰赫尔辛基，一位数学老师让学生做一道题，沉默了整整十五分钟。没有提示，没有小组讨论，没有PPT。只有纸笔和思考。下课后一个学生说："这是我第一次觉得自己在想事情。"深度工作需要的第一个条件，是有人给你沉默的权利。</div>
+</div>
+</div>
+
+<!-- P27 对话9 -->
+<div class="slide">
+<h3>第九轮 · 无为与深度</h3>
+<div class="divider"></div>
+<div class="dialog">
+<div class="dialog-item"><div class="dialog-speaker">老子</div><div class="dialog-text">无为不是什么都不做，是不强为。水不争，故能穿石。深度工作的最高境界是让事情自然发生。</div></div>
+<div class="dialog-item"><div class="dialog-speaker">卡尼曼</div><div class="dialog-text">这很有意思。从心理学角度，当外部动机（奖惩）消失后，内在动机才能浮现。"无为"可能是古人对内在动机的直觉表达。</div></div>
+<div class="dialog-item"><div class="dialog-speaker">尼采</div><div class="dialog-text">每一个不曾起舞的日子都是对生命的辜负。但你得先学会独处，才能学会跳舞。深度工作是独处的最高形式。</div></div>
+</div>
+</div>
+
+<!-- P28 金句9 -->
+<div class="slide">
+<div class="golden-num">09</div>
+<div class="quote">致虚极，守静笃。万物并作，吾以观复。<div class="quote-attr">—— 老子《道德经》第十六章</div></div>
+</div>
+
+<!-- P29 场景8 -->
+<div class="slide">
+<h3>场景还原 · ⑧</h3>
+<div class="divider"></div>
+<div class="scene-box">
+<div class="scene-title">芯片工程师的「地下实验室」</div>
+<div class="scene-desc">台积电的一个工程师团队，在3纳米工艺攻关期间，把手机锁在实验室外面的柜子里，连续三个月每天工作12小时。不是996——他们可以随时离开，但没有人离开。因为他们知道，自己在做的事情，全世界只有200个人能做。使命感是最强的深度燃料。</div>
+</div>
+</div>
+
+<!-- P30 对话10 -->
+<div class="slide">
+<h3>第十轮 · 如何开始深度工作</h3>
+<div class="divider"></div>
+<div class="dialog">
+<div class="dialog-item"><div class="dialog-speaker">芒格</div><div class="dialog-text">第一步：识别你生活中最大的时间漏洞。第二步：堵住它。第三步：用省下的时间做一件需要深度思考的事。就这么简单。</div></div>
+<div class="dialog-item"><div class="dialog-speaker">塔勒布</div><div class="dialog-text">不要试图一次性改变所有习惯。选择一个二十分钟的深度时段，保护它像保护你的心脏一样。然后慢慢扩大。</div></div>
+<div class="dialog-item"><div class="dialog-speaker">项飙</div><div class="dialog-text">回到"附近"。关掉手机，去你常去的咖啡馆，不看屏幕，只看人。重新学会独处和观察。这是深度工作的起点。</div></div>
+</div>
+</div>
+
+<!-- P31 金句10 -->
+<div class="slide">
+<div class="golden-num">10</div>
+<div class="quote">每一个不曾起舞的日子，都是对生命的辜负。<div class="quote-attr">—— 弗里德里希·尼采</div></div>
+</div>
+
+<!-- P32 核心框架 -->
+<div class="slide">
+<h2>深度工作四象限</h2>
+<div class="divider"></div>
+<div class="two-col" style="margin-top:10px">
+<div class="col">
+<div class="dialog-item"><div class="dialog-speaker">修道院模式</div><div class="dialog-text">完全隔离干扰，长期沉浸于单一目标。适合：作家、科学家、哲学家</div></div>
+<div class="dialog-item"><div class="dialog-speaker">双模式</div><div class="dialog-text">集中几天或几周做深度工作，其余时间处理浅层事务。适合：学者、创业者</div></div>
+</div>
+<div class="col">
+<div class="dialog-item"><div class="dialog-speaker">节律模式</div><div class="dialog-text">每天固定时段进入深度，形成习惯。适合：大多数人，最易坚持</div></div>
+<div class="dialog-item"><div class="dialog-speaker">记者模式</div><div class="dialog-text">随时切入深度状态。需要极高训练，不推荐初学者</div></div>
+</div>
+</div>
+</div>
+
+<!-- P33 金句11 -->
+<div class="slide">
+<div class="golden-num">11</div>
+<div class="quote">大巧若拙，大辩若讷。<div class="quote-attr">—— 老子《道德经》第四十五章</div></div>
+</div>
+
+<!-- P34 注意力衰减数据 -->
+<div class="slide">
+<h2>注意力的衰减</h2>
+<div class="divider"></div>
+<div class="two-col" style="margin-top:10px">
+<div class="col">
+<div class="dialog-item"><div class="dialog-speaker">2000年</div><div class="dialog-text">人类平均注意力持续时间：12秒</div></div>
+<div class="dialog-item"><div class="dialog-speaker">2015年</div><div class="dialog-text">降至8.25秒（低于金鱼的9秒）</div></div>
+<div class="dialog-item"><div class="dialog-speaker">2025年</div><div class="dialog-text">预估不足6秒——还在下降</div></div>
+</div>
+<div class="col">
+<div class="quote" style="font-size:1.3em;margin-top:30px">我们正在训练一代人：<br>他们无法忍受三分钟的无聊<div class="quote-attr">—— 卡尔·纽波特</div></div>
+</div>
+</div>
+</div>
+
+<!-- P35 金句12 -->
+<div class="slide">
+<div class="golden-num">12</div>
+<div class="quote">在能力圈内行动，在能力圈外学习。<div class="quote-attr">—— 查理·芒格</div></div>
+</div>
+
+<!-- P36 深度工作清单 -->
+<div class="slide">
+<h2>深度工作清单</h2>
+<div class="divider"></div>
+<div class="two-col" style="margin-top:10px">
+<div class="col"><ul class="list">
+<li>选定一个深度工作时段（≥90分钟）</li>
+<li>关闭所有通知与社交应用</li>
+<li>使用物理隔离（降噪耳机/独立房间）</li>
+<li>设定明确的产出目标（而非时间目标）</li>
+</ul></div>
+<div class="col"><ul class="list">
+<li>工作后记录深度时长与产出</li>
+<li>定期回顾并优化你的干扰源</li>
+<li>每周安排至少一次"数字安息日"</li>
+<li>培养一个需要耐心的手工爱好</li>
+</ul></div>
+</div>
+</div>
+
+<!-- P37 金句13 -->
+<div class="slide">
+<div class="golden-num">13</div>
+<div class="quote">信息不等于知识。每天刷两小时新闻，你获得的是噪声，不是信号。<div class="quote-attr">—— 纳西姆·塔勒布</div></div>
+</div>
+
+<!-- P38 心流公式 -->
+<div class="slide">
+<h2>心流的六个条件</h2>
+<div class="divider"></div>
+<div class="two-col" style="margin-top:10px">
+<div class="col"><ul class="list">
+<li>明确的目标</li>
+<li>即时的反馈</li>
+<li>技能与挑战匹配</li>
+</ul></div>
+<div class="col"><ul class="list">
+<li>高度专注</li>
+<li>行动与意识合一</li>
+<li>对结果的内在控制感</li>
+</ul></div>
+</div>
+<p style="margin-top:30px;font-size:1.05em;color:var(--sub)">—— 米哈里·契克森米哈赖《心流》</p>
+</div>
+
+<!-- P39 金句14 -->
+<div class="slide">
+<div class="golden-num">14</div>
+<div class="quote">不是996的问题，是你在996中有没有一分钟是真正的深度工作。<div class="quote-attr">—— 项飙</div></div>
+</div>
+
+<!-- P40 反脆弱与深度 -->
+<div class="slide">
+<h2>脆弱 vs 反脆弱工作者</h2>
+<div class="divider"></div>
+<div class="two-col" style="margin-top:10px">
+<div class="col">
+<div class="dialog-item"><div class="dialog-speaker">脆弱型</div><div class="dialog-text">需要安静环境才能工作<br>一个消息打断就失去节奏<br>依赖日程表和外部激励<br>追求效率而非价值</div></div>
+</div>
+<div class="col">
+<div class="dialog-item"><div class="dialog-speaker">反脆弱型</div><div class="dialog-text">干扰越多反而越专注<br>被打断后能迅速恢复<br>由内在动机驱动<br>追求深度而非广度</div></div>
+</div>
+</div>
+</div>
+
+<!-- P41 金句15 -->
+<div class="slide">
+<div class="golden-num">15</div>
+<div class="quote">人生就像滚雪球，最重要的是发现很湿的雪和很长的坡。<div class="quote-attr">—— 沃伦·巴菲特</div></div>
+</div>
+
+<!-- P42 数字极简实践 -->
+<div class="slide">
+<h2>数字极简 · 三步法</h2>
+<div class="divider"></div>
+<div class="two-col" style="margin-top:10px">
+<div class="col">
+<div class="dialog-item"><div class="dialog-speaker">第一步：审计</div><div class="dialog-text">记录一周的屏幕时间。找到消耗最大但价值最低的三个应用。</div></div>
+</div>
+<div class="col">
+<div class="dialog-item"><div class="dialog-speaker">第二步：剥离</div><div class="dialog-text">删除或限制这三个应用。用物理手段（定时锁盒）替代意志力。</div></div>
+</div>
+</div>
+<div style="max-width:500px;margin:20px auto">
+<div class="dialog-item"><div class="dialog-speaker">第三步：替换</div><div class="dialog-text">用一个深度活动填补空白——阅读、写作、手工、散步。让大脑重新适应慢节奏。</div></div>
+</div>
+</div>
+
+<!-- P43 金句16 -->
+<div class="slide">
+<div class="golden-num">16</div>
+<div class="quote">把自己活成一束光，因为你不知道谁会借着你的光走出黑暗。<div class="quote-attr">—— 泰戈尔</div></div>
+</div>
+
+<!-- P44 工匠精神 -->
+<div class="slide">
+<h2>工匠精神的五重境界</h2>
+<div class="divider"></div>
+<div class="timeline">
+<div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><strong>学徒期</strong> —— 模仿大师，忍受枯燥的重复</div></div>
+<div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><strong>熟练期</strong> —— 技术自动化，开始感受节奏</div></div>
+<div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><strong>精进期</strong> —— 突破瓶颈，发现细节中的世界</div></div>
+<div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><strong>创造期</strong> —— 形成个人风格，技术成为语言</div></div>
+<div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><strong>合一期</strong> —— 人与作品融为一体，无为而治</div></div>
+</div>
+</div>
+
+<!-- P45 对话总结 -->
+<div class="slide">
+<h2>圆桌共识</h2>
+<div class="divider"></div>
+<div class="dialog">
+<div class="dialog-item"><div class="dialog-speaker">六人共识 · 一</div><div class="dialog-text">深度工作不是一种工作方式，是一种存在方式。它关乎你如何看待时间、注意力和自我。</div></div>
+<div class="dialog-item"><div class="dialog-speaker">六人共识 · 二</div><div class="dialog-text">注意力的稀缺性是这个时代最大的悖论——信息越多，专注越少。解决之道不在获取更多信息，在于主动屏蔽。</div></div>
+<div class="dialog-item"><div class="dialog-speaker">六人共识 · 三</div><div class="dialog-text">工匠精神的核心不是完美主义，是对过程的热爱。你不需要做到最好，你需要做到最深。</div></div>
+</div>
+</div>
+
+<!-- P46 行动框架 -->
+<div class="slide">
+<h2>从今天开始</h2>
+<div class="divider"></div>
+<div class="two-col" style="margin-top:10px">
+<div class="col">
+<div class="dialog-item"><div class="dialog-speaker">本周</div><div class="dialog-text">选一个90分钟时段<br>关闭所有通知<br>做一件需要深度思考的事</div></div>
+<div class="dialog-item"><div class="dialog-speaker">本月</div><div class="dialog-text">建立每日深度工作节律<br>记录并优化干扰源<br>启动一个手工/创意项目</div></div>
+</div>
+<div class="col">
+<div class="dialog-item"><div class="dialog-speaker">本季</div><div class="dialog-text">完成一个深度项目<br>建立数字极简习惯<br>找到你的能力圈</div></div>
+<div class="dialog-item"><div class="dialog-speaker">今年</div><div class="dialog-text">让深度工作成为身份认同<br>从"我在做深度工作"<br>变为"我是深度工作者"</div></div>
+</div>
+</div>
+</div>
+
+<!-- P47 推荐书单 -->
+<div class="slide">
+<h2>延伸阅读</h2>
+<div class="divider"></div>
+<div class="two-col" style="margin-top:10px">
+<div class="col"><ul class="list">
+<li>《深度工作》卡尔·纽波特</li>
+<li>《心流》米哈里·契克森米哈赖</li>
+<li>《思考，快与慢》丹尼尔·卡尼曼</li>
+<li>《反脆弱》纳西姆·塔勒布</li>
+</ul></div>
+<div class="col"><ul class="list">
+<li>《穷查理宝典》查理·芒格</li>
+<li>《查拉图斯特拉如是说》尼采</li>
+<li>《道德经》老子</li>
+<li>《把自己作为方法》项飙</li>
+</ul></div>
+</div>
+</div>
+
+<!-- P48 结语 -->
+<div class="slide">
+<div class="quote" style="font-size:2.2em">当你选择深度，你就选择了少数人的路。<br>但正是这条路，通往大多数人到不了的地方。<div class="quote-attr">—— 圆桌洞见</div></div>
+</div>
+
+<!-- P49 致谢 -->
+<div class="slide">
+<h2>感谢六位智者</h2>
+<div class="divider"></div>
+<div class="topic-pills" style="margin-top:20px">
+<span class="pill">芒格 · 智慧</span><span class="pill">卡尼曼 · 洞察</span><span class="pill">老子 · 无为</span>
+<span class="pill">尼采 · 意志</span><span class="pill">塔勒布 · 反脆弱</span><span class="pill">项飙 · 附近</span>
+</div>
+<p style="margin-top:40px;color:var(--sub);font-size:1em">深度工作 · 圆桌洞见 | 2026</p>
+</div>
+
+<!-- P50 尾页 -->
+<div class="slide">
+<h1 style="font-size:4em;letter-spacing:12px">深</h1>
+<div class="divider"></div>
+<p class="subtitle" style="margin-top:20px">THE END</p>
+<p style="margin-top:40px;color:var(--sub);font-size:.85em">本演示共50页 · 按 ← → 或点击按钮翻页</p>
+</div>
+
+<script>
+const slides=document.querySelectorAll('.slide');
+let cur=0;
+function show(n){slides[cur].classList.remove('active');cur=Math.max(0,Math.min(n,slides.length-1));slides[cur].classList.add('active');document.getElementById('progress').style.width=((cur+1)/slides.length*100)+'%'}
+function go(d){show(cur+d)}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')go(1);if(e.key==='ArrowLeft')go(-1);e.preventDefault()});
+document.addEventListener('click',e=>{if(e.clientX>window.innerWidth/2)go(1);else go(-1)});
+show(0);
+</script>
+</body>
+</html>

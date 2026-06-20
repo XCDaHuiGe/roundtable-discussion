@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>底层逻辑 · 圆桌洞见</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Noto+Serif+SC:wght@400;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --purple:#9b59b6;--dark:#2c1654;--light:#f5f0ff;--accent:#c39bd3;
+  --gold:#f4d03f;--text:#3a2257;--muted:#7e5795;
+}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans SC',sans-serif;background:#0d0d1a}
+/* Slide container */
+#deck{position:relative;width:100%;height:100%}
+.slide{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:60px 80px;opacity:0;visibility:hidden;
+  transition:opacity .6s ease,transform .6s ease;
+  transform:translateX(40px);
+  overflow-y:auto;
+}
+.slide.active{opacity:1;visibility:visible;transform:translateX(0)}
+.slide.prev{transform:translateX(-40px)}
+
+/* Backgrounds */
+.bg-light{background:linear-gradient(135deg,#f5f0ff 0%,#e8dff5 50%,#f5f0ff 100%)}
+.bg-dark{background:linear-gradient(135deg,#1a0a2e 0%,#2c1654 50%,#1a0a2e 100%);color:#f5f0ff}
+.bg-gradient{background:linear-gradient(135deg,#2c1654 0%,#9b59b6 100%);color:#fff}
+.bg-mesh{background:linear-gradient(135deg,#1a0a2e 0%,#3d1d6b 50%,#1a0a2e 100%);color:#f5f0ff}
+
+/* Typography */
+h1{font-size:3em;font-weight:900;line-height:1.2;text-align:center;margin-bottom:20px}
+h2{font-size:2.2em;font-weight:700;margin-bottom:16px;text-align:center}
+h3{font-size:1.6em;font-weight:500;margin-bottom:12px}
+p,.desc{font-size:1.15em;line-height:1.8;max-width:900px;text-align:center}
+.subtitle{font-size:1.3em;color:var(--accent);margin-bottom:30px;font-weight:300}
+
+/* Quote style */
+.quote{
+  font-family:'Noto Serif SC',serif;font-size:1.5em;line-height:1.8;
+  text-align:center;max-width:800px;padding:30px 40px;
+  border-left:4px solid var(--gold);background:rgba(155,89,182,.08);
+  border-radius:0 12px 12px 0;margin:20px 0;position:relative;
+}
+.quote::before{content:'"';font-size:3em;color:var(--gold);position:absolute;top:-10px;left:10px;opacity:.5}
+.quote-author{text-align:right;font-size:.9em;color:var(--muted);margin-top:10px}
+.bg-dark .quote{background:rgba(255,255,255,.06)}
+.bg-dark .quote-author{color:var(--accent)}
+
+/* Dialogue */
+.dialogue{max-width:900px;width:100%;display:flex;flex-direction:column;gap:16px}
+.msg{display:flex;gap:14px;align-items:flex-start;animation:fadeUp .5s ease both}
+.msg:nth-child(2){animation-delay:.15s}.msg:nth-child(3){animation-delay:.3s}
+.msg:nth-child(4){animation-delay:.45s}
+.avatar{
+  width:50px;height:50px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4em;font-weight:700;color:#fff;
+}
+.msg-body{background:rgba(155,89,182,.1);border-radius:16px;padding:14px 20px;max-width:75%}
+.msg-body .name{font-weight:700;font-size:.85em;color:var(--purple);margin-bottom:4px}
+.msg-body .text{font-size:1em;line-height:1.7}
+.bg-dark .msg-body{background:rgba(255,255,255,.08)}
+.bg-dark .msg-body .name{color:var(--gold)}
+
+/* Scene card */
+.scene{
+  background:rgba(155,89,182,.08);border:1px solid rgba(155,89,182,.2);
+  border-radius:16px;padding:30px;max-width:800px;width:100%;
+  box-shadow:0 8px 32px rgba(44,22,84,.15);
+}
+.scene-label{font-size:.8em;text-transform:uppercase;letter-spacing:3px;color:var(--gold);margin-bottom:8px}
+.scene h3{color:var(--purple);margin-bottom:10px}
+.bg-dark .scene{background:rgba(255,255,255,.05);border-color:rgba(155,89,182,.3)}
+
+/* Grid */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:900px;width:100%}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;max-width:950px;width:100%}
+.card{
+  background:rgba(155,89,182,.08);border:1px solid rgba(155,89,182,.15);
+  border-radius:14px;padding:24px;text-align:center;
+}
+.card .icon{font-size:2.2em;margin-bottom:10px}
+.card h4{font-size:1.1em;margin-bottom:8px;color:var(--purple)}
+.card p{font-size:.95em;line-height:1.6}
+.bg-dark .card{background:rgba(255,255,255,.05);border-color:rgba(155,89,182,.25)}
+.bg-dark .card h4{color:var(--accent)}
+
+/* Tags */
+.tags{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:16px 0}
+.tag{
+  background:rgba(155,89,182,.15);color:var(--purple);padding:6px 18px;
+  border-radius:20px;font-size:.9em;font-weight:500;
+}
+.bg-dark .tag{background:rgba(155,89,182,.25);color:var(--accent)}
+
+/* Navigation */
+.nav{
+  position:fixed;bottom:30px;left:50%;transform:translateX(-50%);
+  display:flex;gap:12px;align-items:center;z-index:100;
+  background:rgba(44,22,84,.85);backdrop-filter:blur(10px);
+  padding:10px 24px;border-radius:40px;
+}
+.nav button{
+  background:var(--purple);color:#fff;border:none;width:40px;height:40px;
+  border-radius:50%;font-size:1.1em;cursor:pointer;transition:.2s;
+}
+.nav button:hover{background:#8e44ad;transform:scale(1.1)}
+.nav .page-info{color:rgba(255,255,255,.7);font-size:.85em;min-width:60px;text-align:center}
+
+/* Dot nav */
+.dots{
+  position:fixed;right:20px;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:6px;z-index:100;
+}
+.dots .dot{
+  width:8px;height:8px;border-radius:50%;background:rgba(155,89,182,.3);
+  cursor:pointer;transition:.3s;
+}
+.dots .dot.active{background:var(--purple);transform:scale(1.4)}
+
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp .6s ease both}
+
+/* Progress bar */
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--purple);transition:width .4s;z-index:200}
+
+/* Topic badge */
+.topic-badge{
+  display:inline-block;background:linear-gradient(135deg,var(--purple),#8e44ad);
+  color:#fff;padding:4px 16px;border-radius:20px;font-size:.8em;font-weight:500;
+  margin-bottom:16px;letter-spacing:1px;
+}
+
+/* Highlight box */
+.highlight{
+  background:linear-gradient(135deg,rgba(155,89,182,.12),rgba(155,89,182,.04));
+  border-radius:12px;padding:20px 28px;margin:12px 0;max-width:800px;width:100%;
+  border:1px solid rgba(155,89,182,.15);
+}
+.highlight h4{color:var(--purple);margin-bottom:8px}
+.highlight p{text-align:left;font-size:1.05em;line-height:1.7}
+.bg-dark .highlight{background:rgba(255,255,255,.04);border-color:rgba(155,89,182,.2)}
+
+/* Divider */
+.divider{width:60px;height:3px;background:var(--gold);margin:20px auto;border-radius:2px}
+
+/* Responsive */
+@media(max-width:768px){
+  .slide{padding:30px 20px}
+  h1{font-size:2em}h2{font-size:1.5em}
+  .grid2,.grid3{grid-template-columns:1fr}
+  .quote{font-size:1.2em;padding:20px}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="dots" id="dots"></div>
+<div id="deck">
+
+<!-- ========== SLIDE 1: Cover ========== -->
+<div class="slide bg-dark active" id="s1">
+  <div class="fade-up" style="text-align:center">
+    <div style="font-size:4em;margin-bottom:10px">🔮</div>
+    <h1>底 层 逻 辑</h1>
+    <div class="subtitle">六位思想家的圆桌洞见</div>
+    <div class="divider"></div>
+    <div class="tags">
+      <span class="tag">系统思维</span><span class="tag">概率思维</span>
+      <span class="tag">博弈论</span><span class="tag">商业模式</span><span class="tag">认知偏差</span>
+    </div>
+    <p style="margin-top:30px;color:rgba(255,255,255,.5);font-size:.9em">芒格 · 卡尼曼 · 塔勒布 · 老子 · 韩非子 · 项飙</p>
+  </div>
+</div>
+
+<!-- ========== SLIDE 2: Prelude ========== -->
+<div class="slide bg-light" id="s2">
+  <div class="topic-badge">序 幕</div>
+  <h2>为什么我们需要底层逻辑？</h2>
+  <div class="divider"></div>
+  <p>表象的世界纷繁复杂，但驱动一切的底层逻辑却寥寥可数。<br>当我们穿透现象的迷雾，会发现——</p>
+  <div class="grid3" style="margin-top:30px">
+    <div class="card"><div class="icon">🌊</div><h4>系统</h4><p>万物互联，牵一发而动全身</p></div>
+    <div class="card"><div class="icon">🎲</div><h4>概率</h4><p>确定性是幻觉，概率才是真相</p></div>
+    <div class="card"><div class="icon">♟️</div><h4>博弈</h4><p>每一个选择都在与世界对弈</p></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 3: Guests ========== -->
+<div class="slide bg-dark" id="s3">
+  <div class="topic-badge">圆桌嘉宾</div>
+  <h2>六位跨时空思想者</h2>
+  <div class="divider"></div>
+  <div class="grid3">
+    <div class="card"><div class="icon">🎩</div><h4>查理·芒格</h4><p>多元思维模型，逆向思考大师</p></div>
+    <div class="card"><div class="icon">🧠</div><h4>丹尼尔·卡尼曼</h4><p>行为经济学之父，认知偏差先驱</p></div>
+    <div class="card"><div class="icon">🦢</div><h4>纳西姆·塔勒布</h4><p>黑天鹅理论，反脆弱哲学</p></div>
+    <div class="card"><div class="icon">☯️</div><h4>老子</h4><p>道法自然，无为而治</p></div>
+    <div class="card"><div class="icon">⚖️</div><h4>韩非子</h4><p>法术势，制度设计之父</p></div>
+    <div class="card"><div class="icon">🔍</div><h4>项飙</h4><p>人类学家，附近与悬浮的洞察者</p></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 4: Round 1 ========== -->
+<div class="slide bg-light" id="s4">
+  <div class="topic-badge">第一轮 · 系统思维</div>
+  <h2>什么是"底层逻辑"？</h2>
+  <div class="divider"></div>
+  <div class="dialogue">
+    <div class="msg"><div class="avatar" style="background:#8e44ad">芒</div><div class="msg-body"><div class="name">查理·芒格</div><div class="text">底层逻辑，就是那些在一百年里都不会改变的东西。你需要一个思维模型的格栅——手里拿着锤子，看什么都像钉子，那是灾难。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#2980b9">卡</div><div class="msg-body"><div class="name">丹尼尔·卡尼曼</div><div class="text">同意。人脑有两个系统——快思考和慢思考。底层逻辑要求我们用系统2去审视系统1的直觉判断，但多数人终其一生都活在系统1里。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#27ae60">老</div><div class="msg-body"><div class="name">老子</div><div class="text">道可道，非常道。底层逻辑，正是那个"常道"。它不是你能说清楚的规则，而是万物运行背后那个不可言说的规律。</div></div></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 5: Quote 1 ========== -->
+<div class="slide bg-gradient" id="s5">
+  <div class="quote">
+    在手里拿着铁锤的人看来，世界就像一颗钉子。<br>这就是为什么你需要多元思维模型。
+    <div class="quote-author">—— 查理·芒格</div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 6: Scene 1 ========== -->
+<div class="slide bg-dark" id="s6">
+  <div class="topic-badge">场景还原</div>
+  <div class="scene">
+    <div class="scene-label">场景一</div>
+    <h3>🏪 便利店选址的秘密</h3>
+    <p style="text-align:left;line-height:1.8">
+      一位创业者要开便利店。表面逻辑：人多的地方生意好。<br>
+      底层逻辑：不是"人多"，而是"停留时间×购买意愿×竞争密度"的综合博弈。<br><br>
+      <strong>芒格</strong>会说：你考虑过旁边写字楼的午餐需求吗？<br>
+      <strong>韩非子</strong>会说：制度设计比选址更重要——你的供应链才是护城河。<br>
+      <strong>项飙</strong>会说：你了解这个社区的"附近"吗？居民的信任网络才是真正的流量。
+    </p>
+  </div>
+</div>
+
+<!-- ========== SLIDE 7: Round 2 ========== -->
+<div class="slide bg-light" id="s7">
+  <div class="topic-badge">第二轮 · 概率思维</div>
+  <h2>确定性是一种幻觉</h2>
+  <div class="divider"></div>
+  <div class="dialogue">
+    <div class="msg"><div class="avatar" style="background:#c0392b">塔</div><div class="msg-body"><div class="name">纳西姆·塔勒布</div><div class="text">人类最大的认知错误，就是把"没有看到黑天鹅"等同于"黑天鹅不存在"。你所认为的稳定，不过是尚未被打破的脆弱。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#2980b9">卡</div><div class="msg-body"><div class="name">丹尼尔·卡尼曼</div><div class="text">这就是"可得性偏差"——我们只用能回忆起的案例来评估概率。飞机失事的报道让人恐惧飞行，却无视车祸才是真正的杀手。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#8e44ad">芒</div><div class="msg-body"><div class="name">查理·芒格</div><div class="text">我的做法很简单：反过来想，总是反过来想。与其问"怎样成功"，不如问"怎样必败"，然后避开那些致命的错误。</div></div></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 8: Quote 2 ========== -->
+<div class="slide bg-dark" id="s8">
+  <div class="quote">
+    风会熄灭蜡烛，却能使火越烧越旺。<br>你要做的，是成为火，而不是蜡烛。
+    <div class="quote-author">—— 纳西姆·塔勒布</div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 9: Round 3 ========== -->
+<div class="slide bg-light" id="s9">
+  <div class="topic-badge">第三轮 · 博弈论</div>
+  <h2>每一个决策都是一场博弈</h2>
+  <div class="divider"></div>
+  <div class="dialogue">
+    <div class="msg"><div class="avatar" style="background:#2c3e50">韩</div><div class="msg-body"><div class="name">韩非子</div><div class="text">博弈的底层逻辑是"势"。善弈者谋势，不善弈者谋子。你不需要赢每一手棋，你需要赢下整盘棋的格局。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#27ae60">老</div><div class="msg-body"><div class="name">老子</div><div class="text">上善若水，水善利万物而不争。最好的博弈策略，是让自己成为不可替代的——不是去争，而是让争失去意义。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#d35400">项</div><div class="msg-body"><div class="name">项飙</div><div class="text">在博弈论里我们假设参与者是理性的，但现实中多数人是在"悬浮"状态下做决定——他们甚至不清楚自己在博弈什么。</div></div></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 10: Scene 2 ========== -->
+<div class="slide bg-dark" id="s10">
+  <div class="topic-badge">场景还原</div>
+  <div class="scene">
+    <div class="scene-label">场景二</div>
+    <h3>💼 薪资谈判的博弈</h3>
+    <p style="text-align:left;line-height:1.8">
+      你收到了两份offer，正在和A公司谈薪。<br><br>
+      表面逻辑：展示自己的价值，争取最高薪资。<br>
+      底层逻辑：<br>
+      <strong>韩非子</strong>：你的BATNA（最佳替代方案）就是你的"势"。没有备选方案的人没有谈判筹码。<br>
+      <strong>卡尼曼</strong>：锚定效应——先让对方出价，否则你会锚定在自己的恐惧值上。<br>
+      <strong>塔勒布</strong>：真正的好交易是"下行有限，上行无限"——选择有期权属性的薪酬结构。
+    </p>
+  </div>
+</div>
+
+<!-- ========== SLIDE 11: Quote 3 ========== -->
+<div class="slide bg-gradient" id="s11">
+  <div class="quote">
+    道生一，一生二，二生三，三生万物。<br>万物负阴而抱阳，冲气以为和。
+    <div class="quote-author">—— 老子《道德经》</div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 12: Round 4 ========== -->
+<div class="slide bg-light" id="s12">
+  <div class="topic-badge">第四轮 · 认知偏差</div>
+  <h2>你以为你在思考，其实你在偏见</h2>
+  <div class="divider"></div>
+  <div class="dialogue">
+    <div class="msg"><div class="avatar" style="background:#2980b9">卡</div><div class="msg-body"><div class="name">丹尼尔·卡尼曼</div><div class="text">人类有超过200种认知偏差。最重要的三个：锚定效应、损失厌恶、过度自信。它们不是弱点，它们是进化留下的遗产。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#c0392b">塔</div><div class="msg-body"><div class="name">纳西姆·塔勒布</div><div class="text">最危险的偏差是"叙事谬误"——我们事后编造一个故事来解释随机事件，然后相信这个故事就是因果关系。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#8e44ad">芒</div><div class="msg-body"><div class="name">查理·芒格</div><div class="text">我有一个检查清单，上面列了25种常见的心理倾向。每次做重大决策前，我会逐一检查——"我现在是不是被某种偏见控制了？"</div></div></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 13: Scene 3 ========== -->
+<div class="slide bg-dark" id="s13">
+  <div class="topic-badge">场景还原</div>
+  <div class="scene">
+    <div class="scene-label">场景三</div>
+    <h3>📉 股市暴跌时你在想什么？</h3>
+    <p style="text-align:left;line-height:1.8">
+      大盘跌了15%，你的账户缩水20万。<br><br>
+      <strong>卡尼曼</strong>诊断：损失厌恶——亏损的痛苦是盈利快感的2.5倍，所以你要恐慌性抛售。<br>
+      <strong>塔勒布</strong>提醒：你当初的投资组合是否有"杠铃策略"？90%极度保守+10%极度冒险，中间地带最危险。<br>
+      <strong>芒格</strong>忠告：如果你不能承受50%的回撤，说明你不该进入市场。反过来想——如果此刻加仓，十年后你会感谢自己吗？
+    </p>
+  </div>
+</div>
+
+<!-- ========== SLIDE 14: Quote 4 ========== -->
+<div class="slide bg-dark" id="s14">
+  <div class="quote">
+    反过来想，总是反过来想。<br>如果你想帮助印度，不要问怎样帮助印度，<br>而要问什么会毁掉印度，然后避免那些事。
+    <div class="quote-author">—— 查理·芒格</div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 15: Round 5 ========== -->
+<div class="slide bg-light" id="s15">
+  <div class="topic-badge">第五轮 · 商业模式</div>
+  <h2>商业的底层逻辑是什么？</h2>
+  <div class="divider"></div>
+  <div class="dialogue">
+    <div class="msg"><div class="avatar" style="background:#8e44ad">芒</div><div class="msg-body"><div class="name">查理·芒格</div><div class="text">最好的商业模式是"护城河"——品牌、网络效应、转换成本、规模优势。没有护城河的利润，终将被竞争侵蚀殆尽。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#2c3e50">韩</div><div class="msg-body"><div class="name">韩非子</div><div class="text">商业即制度。好的商业模式不是依赖英雄，而是建立一套"法"——让平庸的人也能做出及格的决策。这就是麦当劳胜过无数精致餐厅的原因。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#d35400">项</div><div class="msg-body"><div class="name">项飙</div><div class="text">但别忘了，商业模式的底层是信任。互联网平台看似高效，却在侵蚀"附近"的社会资本。一旦信任崩塌，再精巧的模式也会瓦解。</div></div></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 16: Quote 5 ========== -->
+<div class="slide bg-gradient" id="s16">
+  <div class="quote">
+    事在四方，要在中央。<br>圣人执要，四方来效。
+    <div class="quote-author">—— 韩非子《韩非子·物权》</div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 17: Scene 4 ========== -->
+<div class="slide bg-dark" id="s17">
+  <div class="topic-badge">场景还原</div>
+  <div class="scene">
+    <div class="scene-label">场景四</div>
+    <h3>🚀 从0到1的创业困局</h3>
+    <p style="text-align:left;line-height:1.8">
+      三个合伙人创业，产品有了雏形，但不知道如何定价、如何分配股权。<br><br>
+      <strong>芒格</strong>：先想清楚谁是你的客户，以及为什么他们非你不可。如果答案是"没有"，其他都是空谈。<br>
+      <strong>韩非子</strong>：股权分配要用"法"而不是"情"。先定规则，再谈感情。均分股权是最大的制度陷阱。<br>
+      <strong>塔勒布</strong>：早期创业要做的是"凸性押注"——低成本试错，快速迭代，让失败可控但成功无限。
+    </p>
+  </div>
+</div>
+
+<!-- ========== SLIDE 18: Round 6 ========== -->
+<div class="slide bg-light" id="s18">
+  <div class="topic-badge">第六轮 · 系统思维</div>
+  <h2>线性思维 vs 系统思维</h2>
+  <div class="divider"></div>
+  <div class="dialogue">
+    <div class="msg"><div class="avatar" style="background:#d35400">项</div><div class="msg-body"><div class="name">项飙</div><div class="text">现代社会最危险的思维模式就是线性思维——"我努力了，所以应该成功"。但系统有延迟、有反馈回路、有涌现。你以为在推门，其实在推墙。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#27ae60">老</div><div class="msg-body"><div class="name">老子</div><div class="text">天下难事必作于易，天下大事必作于细。系统的力量在于——你不需要推动整座山，你只需要找到那个杠杆点。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#8e44ad">芒</div><div class="msg-body"><div class="name">查理·芒格</div><div class="text">Lollapalooza效应——当多个因素朝同一个方向叠加时，会产生远超预期的结果。这就是系统的非线性之美。</div></div></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 19: Quote 6 ========== -->
+<div class="slide bg-dark" id="s19">
+  <div class="quote">
+    人法地，地法天，天法道，道法自然。
+    <div class="quote-author">—— 老子《道德经》第二十五章</div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 20: Scene 5 ========== -->
+<div class="slide bg-light" id="s20">
+  <div class="topic-badge">场景还原</div>
+  <div class="scene">
+    <div class="scene-label">场景五</div>
+    <h3>🎓 教育内卷的系统分析</h3>
+    <p style="text-align:left;line-height:1.8">
+      家长疯狂鸡娃，孩子越来越累，但名校录取率没有变。<br><br>
+      <strong>卡尼曼</strong>：这是"禀赋效应"——每个家长都认为自己的孩子与众不同，忽视了基数概率。<br>
+      <strong>塔勒布</strong>：教育体制本质上是在"驯化"人适应正态分布的世界，但真实世界是幂律分布。<br>
+      <strong>项飙</strong>：内卷的本质是"悬浮"——人们不再关心学到了什么，只关心"比别人多学了什么"。这是一种集体性的意义丧失。
+    </p>
+  </div>
+</div>
+
+<!-- ========== SLIDE 21: Quote 7 ========== -->
+<div class="slide bg-gradient" id="s21">
+  <div class="quote">
+    人类并不是理性的动物，<br>而是合理化的动物。<br>我们不是先判断再感受，而是先感受再判断。
+    <div class="quote-author">—— 丹尼尔·卡尼曼</div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 22: Round 7 ========== -->
+<div class="slide bg-dark" id="s22">
+  <div class="topic-badge">第七轮 · 概率思维</div>
+  <h2>贝叶斯思维：用新证据更新旧信念</h2>
+  <div class="divider"></div>
+  <div class="dialogue">
+    <div class="msg"><div class="avatar" style="background:#c0392b">塔</div><div class="msg-body"><div class="name">纳西姆·塔勒布</div><div class="text">贝叶斯思维的核心不是数学公式，而是一种谦卑——承认自己当前的认知可能是错的，并且愿意在看到新证据时改变看法。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#2980b9">卡</div><div class="msg-body"><div class="name">丹尼尔·卡尼曼</div><div class="text">但人类天生就不擅长贝叶斯更新。我们有"确认偏差"——只关注支持自己观点的证据，忽视反对的证据。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#2c3e50">韩</div><div class="msg-body"><div class="name">韩非子</div><div class="text">所以需要"法"——用制度来对抗人性的弱点。好的决策流程，就是把贝叶斯思维制度化：定期复盘，强制引入反对意见。</div></div></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 23: Quote 8 ========== -->
+<div class="slide bg-dark" id="s23">
+  <div class="quote">
+    不要告诉我你怎么想的，<br>告诉我你持有什么仓位。<br>皮肤在游戏中，才能看到真相。
+    <div class="quote-author">—— 纳西姆·塔勒布</div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 24: Scene 6 ========== -->
+<div class="slide bg-light" id="s24">
+  <div class="topic-badge">场景还原</div>
+  <div class="scene">
+    <div class="scene-label">场景六</div>
+    <h3>🏥 医疗决策的概率迷宫</h3>
+    <p style="text-align:left;line-height:1.8">
+      体检发现某项指标异常，医生建议做进一步检查。你在网上搜索后陷入恐慌。<br><br>
+      <strong>卡尼曼</strong>：基础率忽视——即使检测呈阳性，实际患病的概率可能只有5%。你被"代表性偏差"绑架了。<br>
+      <strong>芒格</strong>：找三个独立的医生，分别诊断。如果三个人的结论一致，你再担心。<br>
+      <strong>塔勒布</strong>：医学领域的"证据"比你以为的脆弱得多。大多数研究无法复制。保持警惕，但不要恐慌。
+    </p>
+  </div>
+</div>
+
+<!-- ========== SLIDE 25: Round 8 ========== -->
+<div class="slide bg-dark" id="s25">
+  <div class="topic-badge">第八轮 · 博弈论</div>
+  <h2>重复博弈中的合作与背叛</h2>
+  <div class="divider"></div>
+  <div class="dialogue">
+    <div class="msg"><div class="avatar" style="background:#27ae60">老</div><div class="msg-body"><div class="name">老子</div><div class="text">天之道，利而不害；圣人之道，为而不争。在重复博弈中，最高明的策略不是赢，而是让合作持续下去。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#2c3e50">韩</div><div class="msg-body"><div class="name">韩非子</div><div class="text">但你不能寄望于人的善。"以利相交者，利尽则散。"好的制度让合作成为最优选择，而不是寄望于道德。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#c0392b">塔</div><div class="msg-body"><div class="name">纳西姆·塔勒布</div><div class="text">这就是"对称性"原则——你必须让决策者承担后果。没有风险的人不该做决策，没有代价的背叛必须被惩罚。</div></div></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 26: Quote 9 ========== -->
+<div class="slide bg-gradient" id="s26">
+  <div class="quote">
+    真正的发现之旅，不在于寻找新的风景，<br>而在于拥有新的眼睛。
+    <div class="quote-author">—— 马塞尔·普鲁斯特（芒格常引用）</div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 27: Scene 7 ========== -->
+<div class="slide bg-dark" id="s27">
+  <div class="topic-badge">场景还原</div>
+  <div class="scene">
+    <div class="scene-label">场景七</div>
+    <h3>🌐 平台经济的"附近"消亡</h3>
+    <p style="text-align:left;line-height:1.8">
+      外卖平台取代了街边小店，效率提升了，但社区关系消失了。<br><br>
+      <strong>项飙</strong>：我们正在经历"附近的消失"。人们与远方的陌生人建立了算法连接，却和隔壁的邻居形同陌路。<br>
+      <strong>老子</strong>：小国寡民，虽有甲兵无所陈之。技术的进步不必然带来人的幸福。<br>
+      <strong>韩非子</strong>：但你不能用道德来对抗效率。只有设计出同样高效但保留社区温度的制度，才能真正解决问题。
+    </p>
+  </div>
+</div>
+
+<!-- ========== SLIDE 28: Round 9 ========== -->
+<div class="slide bg-light" id="s28">
+  <div class="topic-badge">第九轮 · 商业模式</div>
+  <h2>网络效应与赢家通吃</h2>
+  <div class="divider"></div>
+  <div class="dialogue">
+    <div class="msg"><div class="avatar" style="background:#8e44ad">芒</div><div class="msg-body"><div class="name">查理·芒格</div><div class="text">网络效应是最强大的护城河之一。当每增加一个用户都让其他用户的体验变得更好时，你就在构建一个正反馈循环。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#d35400">项</div><div class="msg-body"><div class="name">项飙</div><div class="text">但赢家通吃也意味着"权力的极度集中"。平台变成了新的领主，用户变成了新的农奴——只是数字版本的封建制。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#2c3e50">韩</div><div class="msg-body"><div class="name">韩非子</div><div class="text">所以需要反垄断——这就是现代的"削藩"。权力太大则必反，无论是政治权力还是经济权力。历史反复证明了这一点。</div></div></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 29: Quote 10 ========== -->
+<div class="slide bg-dark" id="s29">
+  <div class="quote">
+    我们不只是在和机器竞争，<br>我们在和彼此的注意力竞争。<br>而注意力，是21世纪最稀缺的资源。
+    <div class="quote-author">—— 项飙</div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 30: Scene 8 ========== -->
+<div class="slide bg-light" id="s30">
+  <div class="topic-badge">场景还原</div>
+  <div class="scene">
+    <div class="scene-label">场景八</div>
+    <h3>🤖 AI时代的职业选择</h3>
+    <p style="text-align:left;line-height:1.8">
+      ChatGPT横空出世，你的职业还安全吗？<br><br>
+      <strong>芒格</strong>：问错了问题。应该问："我能在AI的基础上创造什么？"最有价值的能力是跨学科整合——AI目前做不到。<br>
+      <strong>卡尼曼</strong>：AI擅长系统2的计算，但缺乏系统1的直觉。人类的优势在于：在信息不完整时做出"足够好"的判断。<br>
+      <strong>塔勒布</strong>：不要优化你在当前系统中的位置，要让自己"反脆弱"——拥有多元技能，让自己在任何系统变革中都能存活。
+    </p>
+  </div>
+</div>
+
+<!-- ========== SLIDE 31: Round 10 ========== -->
+<div class="slide bg-dark" id="s31">
+  <div class="topic-badge">第十轮 · 终极对话</div>
+  <h2>什么是最值得掌握的底层逻辑？</h2>
+  <div class="divider"></div>
+  <div class="dialogue">
+    <div class="msg"><div class="avatar" style="background:#8e44ad">芒</div><div class="msg-body"><div class="name">查理·芒格</div><div class="text">如果只能选一个，我会选"逆向思维"。不要问怎样幸福，先问什么让你痛苦，然后避开它。这个方法适用于人生的一切领域。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#2980b9">卡</div><div class="msg-body"><div class="name">丹尼尔·卡尼曼</div><div class="text">我的选择是"自我怀疑"。不是自卑，而是对自己的判断保持健康的警惕。最聪明的人，是知道自己什么时候不聪明的人。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#27ae60">老</div><div class="msg-body"><div class="name">老子</div><div class="text">知人者智，自知者明。胜人者有力，自胜者强。最深的底层逻辑，是认识你自己。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#c0392b">塔</div><div class="msg-body"><div class="name">纳西姆·塔勒布</div><div class="text">我的答案：拥抱不确定性。不是容忍它，而是主动利用它。在不确定中，蕴藏着最大的机会。</div></div></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 32: Quote 11 ========== -->
+<div class="slide bg-gradient" id="s32">
+  <div class="quote">
+    知人者智，自知者明。<br>胜人者有力，自胜者强。
+    <div class="quote-author">—— 老子《道德经》第三十三章</div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 33: Quote 12 ========== -->
+<div class="slide bg-dark" id="s33">
+  <div class="quote">
+    写作之难，在于把网状的思考，<br>用树状的语法，<br>用线性的文字展开。
+    <div class="quote-author">—— 丹尼尔·卡尼曼</div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 34: Core Framework 1 ========== -->
+<div class="slide bg-light" id="s34">
+  <div class="topic-badge">框架一</div>
+  <h2>系统思维的五个层次</h2>
+  <div class="divider"></div>
+  <div style="max-width:800px;width:100%">
+    <div class="highlight"><h4>① 事件层</h4><p>只看到眼前发生的事——"今天股市跌了"</p></div>
+    <div class="highlight"><h4>② 模式层</h4><p>看到趋势——"最近三个月股市持续下跌"</p></div>
+    <div class="highlight"><h4>③ 结构层</h4><p>理解原因——"利率上升导致资金流出股市"</p></div>
+    <div class="highlight"><h4>④ 心智模型层</h4><p>识别思维陷阱——"我是否因为损失厌恶而过度悲观？"</p></div>
+    <div class="highlight"><h4>⑤ 愿景层</h4><p>回到初心——"我的长期投资目标是什么？"</p></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 35: Core Framework 2 ========== -->
+<div class="slide bg-dark" id="s35">
+  <div class="topic-badge">框架二</div>
+  <h2>概率思维的四把钥匙</h2>
+  <div class="divider"></div>
+  <div class="grid2">
+    <div class="card"><div class="icon">🔑</div><h4>基础率</h4><p>先问"通常发生率是多少？"再看个案</p></div>
+    <div class="card"><div class="icon">🔄</div><h4>贝叶斯更新</h4><p>每获得新证据，就更新你的概率估计</p></div>
+    <div class="card"><div class="icon">📊</div><h4>期望值思维</h4><p>不是"会不会发生"，而是"期望收益是多少"</p></div>
+    <div class="card"><div class="icon">🎯</div><h4>小数定律警惕</h4><p>样本太小时，任何模式都可能是噪音</p></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 36: Core Framework 3 ========== -->
+<div class="slide bg-light" id="s36">
+  <div class="topic-badge">框架三</div>
+  <h2>博弈论的三大策略</h2>
+  <div class="divider"></div>
+  <div class="grid3">
+    <div class="card"><div class="icon">🤝</div><h4>以牙还牙</h4><p>先合作，然后模仿对方上一轮的策略——简单但有效</p></div>
+    <div class="card"><div class="icon">🛡️</div><h4>可信承诺</h4><p>让威胁或承诺变得可信——烧掉退路的人更令人信服</p></div>
+    <div class="card"><div class="icon">⚖️</div><h4>激励相容</h4><p>设计机制让个人利益与集体利益一致</p></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 37: Core Framework 4 ========== -->
+<div class="slide bg-dark" id="s37">
+  <div class="topic-badge">框架四</div>
+  <h2>商业模式的四种护城河</h2>
+  <div class="divider"></div>
+  <div class="grid2">
+    <div class="card"><div class="icon">🏰</div><h4>品牌</h4><p>消费者的心智占领——可口可乐、苹果</p></div>
+    <div class="card"><div class="icon">🔗</div><h4>网络效应</h4><p>用户越多价值越大——微信、淘宝</p></div>
+    <div class="card"><div class="icon">🔒</div><h4>转换成本</h4><p>离开的代价太高——企业软件、银行账户</p></div>
+    <div class="card"><div class="icon">📈</div><h4>规模经济</h4><p>规模越大成本越低——沃尔玛、亚马逊</p></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 38: Core Framework 5 ========== -->
+<div class="slide bg-light" id="s38">
+  <div class="topic-badge">框架五</div>
+  <h2>认知偏差的六大陷阱</h2>
+  <div class="divider"></div>
+  <div class="grid2">
+    <div class="card"><div class="icon">⚓</div><h4>锚定效应</h4><p>第一个数字会"锚住"你的判断</p></div>
+    <div class="card"><div class="icon">😰</div><h4>损失厌恶</h4><p>失去100元的痛苦 > 得到100元的快乐</p></div>
+    <div class="card"><div class="icon">🎭</div><h4>确认偏差</h4><p>只看到支持自己观点的证据</p></div>
+    <div class="card"><div class="icon">🌟</div><h4>光环效应</h4><p>一个优点让你忽视所有缺点</p></div>
+    <div class="card"><div class="icon">👥</div><h4>从众效应</h4><p>别人都这么做，所以一定是对的</p></div>
+    <div class="card"><div class="icon">📖</div><h4>叙事谬误</h4><p>事后编故事，误以为是因果关系</p></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 39: Quote 13 ========== -->
+<div class="slide bg-gradient" id="s39">
+  <div class="quote">
+    只有在退潮时，你才知道谁在裸泳。
+    <div class="quote-author">—— 沃伦·巴菲特（芒格挚友）</div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 40: Quote 14 ========== -->
+<div class="slide bg-dark" id="s40">
+  <div class="quote">
+    悬浮，就是没有"附近"的生活。<br>人们知道远方发生了什么，<br>却不知道隔壁住着谁。
+    <div class="quote-author">—— 项飙</div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 41: Quote 15 ========== -->
+<div class="slide bg-gradient" id="s41">
+  <div class="quote">
+    法不阿贵，绳不挠曲。<br>法之所加，智者弗能辞，勇者弗敢争。
+    <div class="quote-author">—— 韩非子《韩非子·有度》</div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 42: Quote 16 ========== -->
+<div class="slide bg-dark" id="s42">
+  <div class="quote">
+    上士闻道，勤而行之；<br>中士闻道，若存若亡；<br>下士闻道，大笑之。<br>不笑不足以为道。
+    <div class="quote-author">—— 老子《道德经》第四十一章</div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 43: Synthesis 1 ========== -->
+<div class="slide bg-light" id="s43">
+  <div class="topic-badge">融会贯通</div>
+  <h2>底层逻辑的交叉地带</h2>
+  <div class="divider"></div>
+  <div class="grid2">
+    <div class="card"><div class="icon">🧠</div><h4>系统 × 认知</h4><p>认知偏差是系统中的"反馈延迟"——你以为在修正，其实在强化错误</p></div>
+    <div class="card"><div class="icon">🎲</div><h4>概率 × 博弈</h4><p>最优博弈策略本质上是一个概率分布——不是"做什么"，而是"以什么比例做什么"</p></div>
+    <div class="card"><div class="icon">💼</div><h4>商业 × 系统</h4><p>伟大的商业模式是自增强系统——飞轮效应、复利增长、正反馈循环</p></div>
+    <div class="card"><div class="icon">🔮</div><h4>认知 × 概率</h4><p>纠偏的核心不是更努力思考，而是建立"外部视角"——参考类别预测</p></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 44: Synthesis 2 ========== -->
+<div class="slide bg-dark" id="s44">
+  <div class="topic-badge">东方与西方</div>
+  <h2>两种智慧的交汇</h2>
+  <div class="divider"></div>
+  <div class="grid2">
+    <div class="card">
+      <h4>西方：分析式智慧</h4>
+      <p style="text-align:left">芒格的多元模型<br>卡尼曼的实证研究<br>塔勒布的概率哲学<br><br><em>特点：拆解问题，用数据说话</em></p>
+    </div>
+    <div class="card">
+      <h4>东方：整体式智慧</h4>
+      <p style="text-align:left">老子的道法自然<br>韩非子的制度理性<br>项飙的社会洞察<br><br><em>特点：系统直觉，关系网络</em></p>
+    </div>
+  </div>
+  <p style="margin-top:24px;color:var(--accent)">真正的底层逻辑，需要两种智慧的融合。</p>
+</div>
+
+<!-- ========== SLIDE 45: Practice 1 ========== -->
+<div class="slide bg-light" id="s45">
+  <div class="topic-badge">实践指南</div>
+  <h2>五个立刻可用的思维工具</h2>
+  <div class="divider"></div>
+  <div style="max-width:800px;width:100%;text-align:left">
+    <div class="highlight"><h4>🔧 1. 逆向检查清单</h4><p>做决策前，列出"什么会让这件事失败"，逐一排查</p></div>
+    <div class="highlight"><h4>🔧 2. 事前验尸法</h4><p>假设项目已经失败，倒推原因——这是卡尼曼推荐的方法</p></div>
+    <div class="highlight"><h4>🔧 3. 杠铃策略</h4><p>90%放在极安全的地方，10%放在高风险高回报的地方</p></div>
+    <div class="highlight"><h4>🔧 4. 外部视角</h4><p>不要问"我的情况如何"，先问"同类项目的成功率是多少"</p></div>
+    <div class="highlight"><h4>🔧 5. 制度先于道德</h4><p>不要指望人品，设计让普通人也能做出好决策的流程</p></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 46: Practice 2 ========== -->
+<div class="slide bg-dark" id="s46">
+  <div class="topic-badge">每日修炼</div>
+  <h2>底层逻辑的日常练习</h2>
+  <div class="divider"></div>
+  <div class="grid2">
+    <div class="card"><div class="icon">🌅</div><h4>晨间</h4><p>今天最重要的决定是什么？我可能有什么偏见？</p></div>
+    <div class="card"><div class="icon">🌆</div><h4>傍晚</h4><p>今天有什么事让我意外？我的哪个假设被推翻了？</p></div>
+    <div class="card"><div class="icon">📓</div><h4>每周</h4><p>记录本周三个最重要的决策及其理由</p></div>
+    <div class="card"><div class="icon">📆</div><h4>每月</h4><p>回顾上月决策，哪些对了？哪些错了？为什么？</p></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 47: Key Insight ========== -->
+<div class="slide bg-gradient" id="s47">
+  <h2 style="font-size:2.5em;margin-bottom:30px">🔑 核心洞见</h2>
+  <div style="max-width:700px;text-align:center">
+    <p style="font-size:1.3em;line-height:2">
+      底层逻辑不是一套固定的公式，<br>
+      而是一种<strong>持续追问的习惯</strong>：<br><br>
+      为什么？→ 再问一层 → 再问一层<br><br>
+      直到触达那些<strong>不会改变的基本原理</strong>。
+    </p>
+  </div>
+</div>
+
+<!-- ========== SLIDE 48: Closing Dialogue ========== -->
+<div class="slide bg-dark" id="s48">
+  <div class="topic-badge">尾声</div>
+  <h2>六位思想者的最后一句话</h2>
+  <div class="divider"></div>
+  <div class="dialogue">
+    <div class="msg"><div class="avatar" style="background:#8e44ad">芒</div><div class="msg-body"><div class="name">查理·芒格</div><div class="text">持续学习，持续思考，保持理性，直到最后一口气。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#2980b9">卡</div><div class="msg-body"><div class="name">丹尼尔·卡尼曼</div><div class="text">你不会消除偏见，但你可以学会与它共处，并在关键时刻按下暂停键。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#c0392b">塔</div><div class="msg-body"><div class="name">纳西姆·塔勒布</div><div class="text">不要试图预测黑天鹅——让自己变得反脆弱，然后感谢黑天鹅。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#27ae60">老</div><div class="msg-body"><div class="name">老子</div><div class="text">为学日益，为道日损。损之又损，以至于无为。无为而无不为。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#2c3e50">韩</div><div class="msg-body"><div class="name">韩非子</div><div class="text">以法治事，以术驭人，以势立威。制度的力量，大于一切个人英雄。</div></div></div>
+    <div class="msg"><div class="avatar" style="background:#d35400">项</div><div class="msg-body"><div class="name">项飙</div><div class="text">回到"附近"，重建连接。底层逻辑的终极意义，是让我们更好地生活在一起。</div></div></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 49: Summary ========== -->
+<div class="slide bg-light" id="s49">
+  <div class="topic-badge">总结</div>
+  <h2>底层逻辑 · 一句话速记</h2>
+  <div class="divider"></div>
+  <div style="max-width:800px;width:100%;text-align:left">
+    <div class="highlight"><h4>🎯 系统思维</h4><p>看到要素之间的关系，而不只是要素本身</p></div>
+    <div class="highlight"><h4>🎲 概率思维</h4><p>用概率代替确定性，用期望值代替直觉</p></div>
+    <div class="highlight"><h4>♟️ 博弈论</h4><p>考虑对手的反应，设计激励相容的机制</p></div>
+    <div class="highlight"><h4>💼 商业模式</h4><p>构建护城河，让成功变成自增强的飞轮</p></div>
+    <div class="highlight"><h4>🧠 认知偏差</h4><p>认识自己的局限，用制度对抗人性弱点</p></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 50: End ========== -->
+<div class="slide bg-dark" id="s50">
+  <div style="text-align:center">
+    <div style="font-size:5em;margin-bottom:20px">🔮</div>
+    <h1 style="font-size:3em">底层逻辑</h1>
+    <div class="subtitle" style="font-size:1.5em">看见看不见的，理解不理解的</div>
+    <div class="divider"></div>
+    <p style="color:rgba(255,255,255,.5);margin-top:20px">
+      圆桌洞见 · 六位思想者的跨时空对话<br>
+      系统思维 · 概率思维 · 博弈论 · 商业模式 · 认知偏差
+    </p>
+    <div style="margin-top:40px;color:var(--accent);font-size:.9em">按 ← → 键或点击下方按钮翻页</div>
+  </div>
+</div>
+
+</div><!-- end deck -->
+
+<!-- Navigation -->
+<div class="nav">
+  <button onclick="prev()" title="上一页">←</button>
+  <div class="page-info" id="pageInfo">1 / 50</div>
+  <button onclick="next()" title="下一页">→</button>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let current = 0;
+
+function showSlide(n) {
+  slides[current].classList.remove('active');
+  slides[current].classList.add(n > current ? 'prev' : '');
+  current = (n + total) % total;
+  slides.forEach(s => { s.classList.remove('active', 'prev'); });
+  slides[current].classList.add('active');
+  document.getElementById('pageInfo').textContent = `${current + 1} / ${total}`;
+  document.getElementById('progress').style.width = `${((current + 1) / total) * 100}%`;
+  // dots
+  document.querySelectorAll('.dots .dot').forEach((d, i) => {
+    d.classList.toggle('active', i === current);
+  });
+}
+
+function next() { showSlide(current + 1); }
+function prev() { showSlide(current - 1); }
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); next(); }
+  if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+  if (e.key === 'Home') { e.preventDefault(); showSlide(0); }
+  if (e.key === 'End') { e.preventDefault(); showSlide(total - 1); }
+});
+
+// Touch
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (dx < -50) next(); else if (dx > 50) prev();
+});
+
+// Build dots
+const dotsEl = document.getElementById('dots');
+for (let i = 0; i < total; i++) {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => showSlide(i);
+  dotsEl.appendChild(d);
+}
+
+// Init
+showSlide(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>金字塔原理 · 圆桌洞见</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+:root {
+  --red: #c0392b;
+  --red-dark: #96281b;
+  --red-light: #fdf2f2;
+  --red-mid: #f5c6cb;
+  --gold: #b8860b;
+  --text: #2c2c2c;
+  --text-light: #5a5a5a;
+  --white: #ffffff;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  background: #1a1a1a;
+  color: var(--text);
+  overflow: hidden;
+  height: 100vh;
+}
+
+.slide {
+  display: none;
+  width: 100vw;
+  height: 100vh;
+  padding: 60px 80px;
+  position: relative;
+  overflow: hidden;
+  background: var(--red-light);
+}
+
+.slide.active { display: flex; flex-direction: column; }
+
+/* Navigation */
+.nav {
+  position: fixed;
+  bottom: 30px;
+  right: 40px;
+  z-index: 1000;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.nav button {
+  width: 48px; height: 48px;
+  border: 2px solid var(--red);
+  background: rgba(255,255,255,0.95);
+  color: var(--red);
+  font-size: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 700;
+}
+.nav button:hover { background: var(--red); color: white; }
+.nav .page-num {
+  font-family: 'Noto Serif SC', serif;
+  color: var(--red);
+  font-size: 16px;
+  font-weight: 600;
+  min-width: 80px;
+  text-align: center;
+  background: rgba(255,255,255,0.9);
+  padding: 8px 16px;
+  border-radius: 24px;
+  border: 2px solid var(--red);
+}
+
+/* Slide types */
+.slide-cover {
+  background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+}
+.slide-cover h1 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 72px;
+  font-weight: 900;
+  letter-spacing: 8px;
+  margin-bottom: 20px;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.slide-cover h2 {
+  font-size: 28px;
+  font-weight: 300;
+  letter-spacing: 6px;
+  opacity: 0.9;
+}
+.slide-cover .subtitle {
+  margin-top: 40px;
+  font-size: 18px;
+  opacity: 0.7;
+  letter-spacing: 3px;
+}
+
+.slide-section {
+  background: var(--red);
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+}
+.slide-section h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 56px;
+  font-weight: 700;
+  letter-spacing: 6px;
+}
+.slide-section .sec-num {
+  font-size: 120px;
+  font-weight: 900;
+  opacity: 0.15;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  font-family: 'Noto Serif SC', serif;
+}
+
+.slide-content {
+  background: var(--white);
+}
+.slide-content::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 8px; height: 100%;
+  background: var(--red);
+}
+
+.slide-dialogue {
+  background: var(--red-light);
+}
+.slide-dialogue::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(192,57,43,0.08) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.slide-quote {
+  background: linear-gradient(135deg, #fdf2f2 0%, #fce4e4 100%);
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.slide-quote blockquote {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 36px;
+  font-weight: 600;
+  color: var(--red);
+  line-height: 1.8;
+  max-width: 800px;
+  position: relative;
+  padding: 0 40px;
+}
+.slide-quote blockquote::before {
+  content: '"';
+  font-size: 120px;
+  color: var(--red);
+  opacity: 0.2;
+  position: absolute;
+  top: -50px; left: -20px;
+  font-family: Georgia, serif;
+}
+.slide-quote .quote-author {
+  margin-top: 30px;
+  font-size: 18px;
+  color: var(--text-light);
+  font-weight: 400;
+}
+
+.slide-scene {
+  background: var(--white);
+  border-left: 8px solid var(--red);
+}
+.slide-scene .scene-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+.slide-scene .scene-badge {
+  background: var(--red);
+  color: white;
+  padding: 8px 24px;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+.slide-scene h3 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 32px;
+  color: var(--red);
+}
+
+/* Typography */
+h1, h2, h3 { font-family: 'Noto Serif SC', serif; color: var(--red); }
+h1 { font-size: 48px; margin-bottom: 24px; }
+h2 { font-size: 36px; margin-bottom: 20px; }
+h3 { font-size: 28px; margin-bottom: 16px; }
+p { font-size: 20px; line-height: 1.8; color: var(--text); }
+
+.tag {
+  display: inline-block;
+  background: var(--red);
+  color: white;
+  padding: 4px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  margin: 4px;
+  font-weight: 500;
+}
+.tag-outline {
+  display: inline-block;
+  border: 2px solid var(--red);
+  color: var(--red);
+  padding: 4px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  margin: 4px;
+  font-weight: 500;
+}
+
+/* Dialogue styling */
+.dialogue {
+  display: flex;
+  gap: 16px;
+  margin: 12px 0;
+  align-items: flex-start;
+}
+.dialogue .avatar {
+  width: 50px; height: 50px;
+  border-radius: 50%;
+  background: var(--red);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  flex-shrink: 0;
+  font-family: 'Noto Serif SC', serif;
+}
+.dialogue .avatar.munger { background: #2c3e50; }
+.dialogue .avatar.kahneman { background: #2980b9; }
+.dialogue .avatar.laozi { background: #27ae60; }
+.dialogue .avatar.hanfei { background: #8e44ad; }
+.dialogue .avatar.nietzsche { background: #d35400; }
+.dialogue .avatar.xiangbiao { background: #16a085; }
+.dialogue .bubble {
+  background: white;
+  border: 1px solid rgba(192,57,43,0.15);
+  border-radius: 0 16px 16px 16px;
+  padding: 14px 20px;
+  flex: 1;
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--text);
+}
+.dialogue .speaker {
+  font-weight: 700;
+  color: var(--red);
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+/* Lists */
+.styled-list {
+  list-style: none;
+  padding: 0;
+}
+.styled-list li {
+  font-size: 20px;
+  line-height: 1.8;
+  padding: 8px 0 8px 36px;
+  position: relative;
+  color: var(--text);
+}
+.styled-list li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 18px;
+  width: 12px; height: 12px;
+  background: var(--red);
+  border-radius: 3px;
+  transform: rotate(45deg);
+}
+
+/* Pyramid diagram */
+.pyramid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 20px 0;
+}
+.pyramid .level {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+.pyramid .block {
+  background: var(--red);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+}
+.pyramid .level:nth-child(1) .block { background: var(--red); font-size: 20px; padding: 16px 40px; }
+.pyramid .level:nth-child(2) .block { background: #e74c3c; font-size: 16px; padding: 12px 28px; }
+.pyramid .level:nth-child(3) .block { background: #f39c8f; color: var(--red-dark); font-size: 14px; padding: 10px 20px; }
+
+/* Grid layouts */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px; }
+
+.card {
+  background: white;
+  border: 1px solid rgba(192,57,43,0.12);
+  border-radius: 12px;
+  padding: 24px;
+  transition: transform 0.3s;
+}
+.card:hover { transform: translateY(-4px); }
+.card .card-icon {
+  font-size: 36px;
+  margin-bottom: 12px;
+}
+.card h4 {
+  font-family: 'Noto Serif SC', serif;
+  color: var(--red);
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+.card p { font-size: 16px; line-height: 1.7; }
+
+/* Decorative elements */
+.corner-deco {
+  position: absolute;
+  bottom: 40px; left: 40px;
+  width: 80px; height: 80px;
+  border-left: 3px solid var(--red);
+  border-bottom: 3px solid var(--red);
+  opacity: 0.3;
+}
+.corner-deco-top {
+  position: absolute;
+  top: 40px; right: 40px;
+  width: 80px; height: 80px;
+  border-right: 3px solid var(--red);
+  border-top: 3px solid var(--red);
+  opacity: 0.3;
+}
+
+.progress-bar {
+  position: absolute;
+  top: 0; left: 0;
+  height: 4px;
+  background: var(--red);
+  transition: width 0.5s;
+}
+
+.slide-content h1, .slide-dialogue h2, .slide-scene h2 {
+  position: relative;
+  padding-bottom: 12px;
+}
+.slide-content h1::after, .slide-dialogue h2::after, .slide-scene h3::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 60px; height: 4px;
+  background: var(--red);
+  border-radius: 2px;
+}
+
+.highlight-box {
+  background: var(--red);
+  color: white;
+  padding: 20px 30px;
+  border-radius: 12px;
+  margin: 16px 0;
+}
+.highlight-box h4 { color: white; margin-bottom: 8px; }
+
+.light-box {
+  background: var(--red-light);
+  border-left: 4px solid var(--red);
+  padding: 16px 24px;
+  border-radius: 0 8px 8px 0;
+  margin: 12px 0;
+}
+
+.flex-center { display: flex; justify-content: center; align-items: center; }
+.text-center { text-align: center; }
+.mt-20 { margin-top: 20px; }
+.mt-30 { margin-top: 30px; }
+.mb-20 { margin-bottom: 20px; }
+
+.fade-in { animation: fadeIn 0.6s ease-in; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<!-- Slide 1: Cover -->
+<div class="slide slide-cover active" id="s1">
+  <h1>金字塔原理</h1>
+  <h2>圆桌洞见 · 思维的建筑</h2>
+  <div class="subtitle">六位跨时空智者 · 十轮巅峰对话 · 八大场景还原</div>
+  <div class="subtitle" style="margin-top:60px;font-size:14px;opacity:0.5;">按 ← → 键翻页 ｜ 点击按钮导航</div>
+</div>
+
+<!-- Slide 2: Table of Contents -->
+<div class="slide slide-content" id="s2">
+  <h1>目 录</h1>
+  <div class="grid-2 mt-20">
+    <div>
+      <ul class="styled-list">
+        <li><strong>第一章</strong> · 结构化思维的起源</li>
+        <li><strong>第二章</strong> · 金字塔结构解剖</li>
+        <li><strong>第三章</strong> · MECE原则：穷尽与互斥</li>
+        <li><strong>第四章</strong> · 逻辑表达的艺术</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="styled-list">
+        <li><strong>第五章</strong> · 问题分析与解决</li>
+        <li><strong>第六章</strong> · 汇报技巧与说服力</li>
+        <li><strong>第七章</strong> · 圆桌总结与启示</li>
+      </ul>
+    </div>
+  </div>
+  <div class="corner-deco"></div>
+  <div class="corner-deco-top"></div>
+</div>
+
+<!-- Slide 3: Expert Introduction -->
+<div class="slide slide-content" id="s3">
+  <h1>圆桌嘉宾</h1>
+  <div class="grid-3 mt-20">
+    <div class="card text-center">
+      <div class="card-icon">🧠</div>
+      <h4>查理·芒格</h4>
+      <p style="font-size:14px;color:var(--text-light)">投资思想家 · 多元思维模型倡导者</p>
+    </div>
+    <div class="card text-center">
+      <div class="card-icon">🔬</div>
+      <h4>丹尼尔·卡尼曼</h4>
+      <p style="font-size:14px;color:var(--text-light)">诺贝尔奖得主 · 行为经济学奠基人</p>
+    </div>
+    <div class="card text-center">
+      <div class="card-icon">☯️</div>
+      <h4>老子</h4>
+      <p style="font-size:14px;color:var(--text-light)">道家创始人 · 东方哲学之源</p>
+    </div>
+    <div class="card text-center">
+      <div class="card-icon">⚔️</div>
+      <h4>韩非子</h4>
+      <p style="font-size:14px;color:var(--text-light)">法家集大成者 · 治理与逻辑大师</p>
+    </div>
+    <div class="card text-center">
+      <div class="card-icon">⚡</div>
+      <h4>尼采</h4>
+      <p style="font-size:14px;color:var(--text-light)">存在主义先驱 · 价值重估者</p>
+    </div>
+    <div class="card text-center">
+      <div class="card-icon">🌏</div>
+      <h4>项飙</h4>
+      <p style="font-size:14px;color:var(--text-light)">人类学家 · 社会洞察者</p>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 4: Section 1 -->
+<div class="slide slide-section" id="s4">
+  <div class="sec-num">01</div>
+  <h2>结构化思维的起源</h2>
+  <p style="font-size:20px;opacity:0.8;margin-top:16px;">为什么混乱的表达是思维的罪过？</p>
+</div>
+
+<!-- Slide 5: Dialogue Round 1 -->
+<div class="slide slide-dialogue" id="s5">
+  <h2>对话一 · 思维的建筑学</h2>
+  <div class="dialogue">
+    <div class="avatar munger">芒</div>
+    <div class="bubble">
+      <div class="speaker">查理·芒格</div>
+      我一直强调多元思维模型。金字塔原理的本质就是——你必须有一个顶层结论，然后用多个学科的"格栅"去支撑它。没有结构的思维就像没有骨架的身体。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar kahneman">卡</div>
+    <div class="bubble">
+      <div class="speaker">丹尼尔·卡尼曼</div>
+      从认知科学看，人类的工作记忆容量有限——大约只能同时处理4±1个信息块。金字塔结构恰好匹配了我们大脑的带宽限制，这是进化赋予的认知节俭策略。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar laozi">老</div>
+    <div class="bubble">
+      <div class="speaker">老子</div>
+      "道生一，一生二，二生三，三生万物。"天地万物本就有其层次结构，金字塔不过是顺应了自然之道。顶层即道，下层即器。
+    </div>
+  </div>
+</div>
+
+<!-- Slide 6: Dialogue Round 2 -->
+<div class="slide slide-dialogue" id="s6">
+  <h2>对话二 · 结构与自由</h2>
+  <div class="dialogue">
+    <div class="avatar nietzsche">尼</div>
+    <div class="bubble">
+      <div class="speaker">尼采</div>
+      结构？人们总是渴望结构，因为混沌让他们恐惧。但我要说——真正的创造力恰恰诞生于结构的裂缝之中。金字塔给了你秩序，但不要让它成为你的牢笼。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar hanfei">韩</div>
+    <div class="bubble">
+      <div class="speaker">韩非子</div>
+      "事在四方，要在中央。"国君治国需要清晰的层级，论说道理亦然。没有纲举目张的能力，任何说辞都不过是散沙一盘。结构即权力。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar xiangbiao">项</div>
+    <div class="bubble">
+      <div class="speaker">项飙</div>
+      我注意到一个有趣的现象：现代人习惯了碎片化信息流，反而越来越不会"从上到下"地组织自己的观点。金字塔原理在这个时代不是过时了，而是更加稀缺了。
+    </div>
+  </div>
+</div>
+
+<!-- Slide 7: Quote 1 -->
+<div class="slide slide-quote" id="s7">
+  <blockquote>
+    想清楚才能写清楚，写不清楚说明没想清楚。
+    <div class="quote-author">—— 芭芭拉·明托 《金字塔原理》</div>
+  </blockquote>
+</div>
+
+<!-- Slide 8: Scene 1 -->
+<div class="slide slide-scene" id="s8">
+  <div class="scene-header">
+    <div class="scene-badge">场景还原 一</div>
+    <h3>麦肯锡的"电梯演讲"</h3>
+  </div>
+  <div class="light-box">
+    <strong>背景：</strong>1973年，麦肯锡要求顾问能在30秒电梯时间内向CEO讲清核心结论。
+  </div>
+  <div class="dialogue mt-20">
+    <div class="avatar munger">芒</div>
+    <div class="bubble">
+      <div class="speaker">查理·芒格</div>
+      这就是我反复说的——如果你不能在一张名片背面写清你的投资逻辑，说明你还没真正理解它。30秒足够了，前提是你有清晰的金字塔。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar xiangbiao">项</div>
+    <div class="bubble">
+      <div class="speaker">项飙</div>
+      但这也暴露了一个张力：浓缩意味着选择，选择意味着取舍。谁的叙事被保留，谁的被压缩掉？金字塔顶端的选择本身就是一种权力运作。
+    </div>
+  </div>
+</div>
+
+<!-- Slide 9: Core Concept - Top Down -->
+<div class="slide slide-content" id="s9">
+  <h1>自上而下的表达结构</h1>
+  <div class="pyramid mt-20">
+    <div class="level"><div class="block">核心结论（Governing Thought）</div></div>
+    <div class="level">
+      <div class="block">关键论点 A</div>
+      <div class="block">关键论点 B</div>
+      <div class="block">关键论点 C</div>
+    </div>
+    <div class="level">
+      <div class="block">支撑数据</div>
+      <div class="block">支撑数据</div>
+      <div class="block">支撑数据</div>
+      <div class="block">支撑数据</div>
+      <div class="block">支撑数据</div>
+      <div class="block">支撑数据</div>
+    </div>
+  </div>
+  <div class="light-box mt-20">
+    <strong>核心原则：</strong>先给结论，再给理由，最后给事实。接受者的认知负担最小化。
+  </div>
+</div>
+
+<!-- Slide 10: Quote 2 -->
+<div class="slide slide-quote" id="s10">
+  <blockquote>
+    一个模型的顶端必须是一个思想，而不是一个话题。
+    <div class="quote-author">—— 芭芭拉·明托</div>
+  </blockquote>
+</div>
+
+<!-- Slide 11: Section 2 -->
+<div class="slide slide-section" id="s11">
+  <div class="sec-num">02</div>
+  <h2>金字塔结构解剖</h2>
+  <p style="font-size:20px;opacity:0.8;margin-top:16px;">纵向关系 · 横向关系 · 序言结构</p>
+</div>
+
+<!-- Slide 12: Vertical Logic -->
+<div class="slide slide-content" id="s12">
+  <h1>纵向关系：疑问—回答</h1>
+  <div class="grid-2 mt-20">
+    <div>
+      <div class="highlight-box">
+        <h4>上层提出主张</h4>
+        <p style="font-size:16px;">"我们应该进入东南亚市场。"</p>
+      </div>
+      <div class="light-box">
+        <strong>下层回答"为什么？"</strong><br>
+        原因1：市场规模年增长15%<br>
+        原因2：竞争对手尚未布局<br>
+        原因3：供应链优势可迁移
+      </div>
+    </div>
+    <div>
+      <div class="highlight-box">
+        <h4>每一层都在回答上一层的"为什么"</h4>
+        <p style="font-size:16px;">这确保了逻辑链条的完整性和可追溯性。</p>
+      </div>
+      <div class="dialogue mt-20">
+        <div class="avatar kahneman">卡</div>
+        <div class="bubble">
+          <div class="speaker">卡尼曼</div>
+          这正是"系统2"思维的体现——它强制你对每个结论进行理性检验，而不是凭直觉跳跃。
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 13: Horizontal Logic -->
+<div class="slide slide-content" id="s13">
+  <h1>横向关系：演绎与归纳</h1>
+  <div class="grid-2 mt-20">
+    <div class="card">
+      <h4>演绎推理</h4>
+      <p>大前提 → 小前提 → 结论</p>
+      <div class="light-box" style="margin-top:12px;">
+        <strong>示例：</strong><br>
+        所有高效团队都有清晰目标（大前提）<br>
+        我们团队缺乏清晰目标（小前提）<br>
+        → 因此，我们团队效率低下（结论）
+      </div>
+    </div>
+    <div class="card">
+      <h4>归纳推理</h4>
+      <p>多个事实 → 共同特征 → 结论</p>
+      <div class="light-box" style="margin-top:12px;">
+        <strong>示例：</strong><br>
+        A产品满意度下降<br>
+        B产品投诉率上升<br>
+        C产品退货增加<br>
+        → 产品质量整体出现问题
+      </div>
+    </div>
+  </div>
+  <div class="dialogue mt-20">
+    <div class="avatar hanfei">韩</div>
+    <div class="bubble">
+      <div class="speaker">韩非子</div>
+      "参验"之道：观点必须经得起事实检验。韩非主张用多个案例互相参验，这正是横向归纳的古代表达。
+    </div>
+  </div>
+</div>
+
+<!-- Slide 14: Dialogue Round 3 -->
+<div class="slide slide-dialogue" id="s14">
+  <h2>对话三 · 序言的SCQA框架</h2>
+  <div class="dialogue">
+    <div class="avatar munger">芒</div>
+    <div class="bubble">
+      <div class="speaker">查理·芒格</div>
+      明托的SCQA——情境(Situation)、冲突(Complication)、疑问(Question)、答案(Answer)——是一个极其优雅的叙事框架。好的投资备忘录无一例外遵循这个结构。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar nietzsche">尼</div>
+    <div class="bubble">
+      <div class="speaker">尼采</div>
+      冲突！这正是关键。没有冲突的叙事是死水。人类被故事驱动，而故事的核心永远是张力。SCQA的C才是灵魂所在。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar laozi">老</div>
+    <div class="bubble">
+      <div class="speaker">老子</div>
+      "有无相生，难易相成。"冲突即阴阳。没有对立面，就没有推动力。SC暗合道家辩证之理。
+    </div>
+  </div>
+</div>
+
+<!-- Slide 15: SCQA Diagram -->
+<div class="slide slide-content" id="s15">
+  <h1>SCQA 序言结构</h1>
+  <div class="grid-4 mt-20">
+    <div class="card text-center">
+      <div style="font-size:48px;margin-bottom:12px;">S</div>
+      <h4>情境</h4>
+      <p style="font-size:15px;">大家都认同的事实背景</p>
+    </div>
+    <div class="card text-center">
+      <div style="font-size:48px;margin-bottom:12px;">C</div>
+      <h4>冲突</h4>
+      <p style="font-size:15px;">打破稳定的关键变化</p>
+    </div>
+    <div class="card text-center">
+      <div style="font-size:48px;margin-bottom:12px;">Q</div>
+      <h4>疑问</h4>
+      <p style="font-size:15px;">由此自然产生的问题</p>
+    </div>
+    <div class="card text-center">
+      <div style="font-size:48px;margin-bottom:12px;">A</div>
+      <h4>答案</h4>
+      <p style="font-size:15px;">金字塔的核心结论</p>
+    </div>
+  </div>
+  <div class="highlight-box mt-30">
+    <h4>示例</h4>
+    <p style="font-size:16px;">S：公司连续三年增长 → C：今年增速骤降至2% → Q：如何恢复增长？ → A：必须开拓三个新市场</p>
+  </div>
+</div>
+
+<!-- Slide 16: Quote 3 -->
+<div class="slide slide-quote" id="s16">
+  <blockquote>
+    归纳推理是将一组思想组织在一起最有力的方式，因为它最接近人类的自然思考模式。
+    <div class="quote-author">—— 芭芭拉·明托</div>
+  </blockquote>
+</div>
+
+<!-- Slide 17: Scene 2 -->
+<div class="slide slide-scene" id="s17">
+  <div class="scene-header">
+    <div class="scene-badge">场景还原 二</div>
+    <h3>一场失败的季度汇报</h3>
+  </div>
+  <div class="light-box">
+    <strong>背景：</strong>某互联网公司产品经理向CEO汇报，从数据罗列开始，30分钟后CEO仍未听到结论。
+  </div>
+  <div class="dialogue mt-20">
+    <div class="avatar xiangbiao">项</div>
+    <div class="bubble">
+      <div class="speaker">项飙</div>
+      这在田野调查中很常见——人们习惯"叙事性展开"，从头讲到尾。但商业场景需要"结构化压缩"。这是两种完全不同的认知文化。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar munger">芒</div>
+    <div class="bubble">
+      <div class="speaker">芒格</div>
+      正确的做法应该是："用户增长停滞（结论），原因有三：获客成本上升、留存率下降、竞品分流。我的建议是……"30秒，结束。
+    </div>
+  </div>
+</div>
+
+<!-- Slide 18: Section 3 -->
+<div class="slide slide-section" id="s18">
+  <div class="sec-num">03</div>
+  <h2>MECE原则</h2>
+  <p style="font-size:20px;opacity:0.8;margin-top:16px;">Mutually Exclusive, Collectively Exhaustive</p>
+</div>
+
+<!-- Slide 19: MECE Explained -->
+<div class="slide slide-content" id="s19">
+  <h1>MECE：穷尽且互斥</h1>
+  <div class="grid-2 mt-20">
+    <div>
+      <div class="highlight-box">
+        <h4>互斥 (Mutually Exclusive)</h4>
+        <p style="font-size:16px;">分类之间没有重叠，每个元素只属于一个类别。</p>
+      </div>
+      <div class="highlight-box" style="margin-top:16px;">
+        <h4>穷尽 (Collectively Exhaustive)</h4>
+        <p style="font-size:16px;">所有类别加在一起覆盖了全部可能性，没有遗漏。</p>
+      </div>
+    </div>
+    <div class="card">
+      <h4>经典示例</h4>
+      <div class="light-box">
+        <strong>年龄分组：</strong><br>
+        ✅ 0-18 / 19-35 / 36-55 / 56+ → MECE<br>
+        ❌ 年轻人 / 中年人 / 老年人 → 非MECE（边界模糊）
+      </div>
+      <div class="light-box" style="margin-top:12px;">
+        <strong>市场划分：</strong><br>
+        ✅ 按地理：华东/华南/华北/华中/西南/西北/东北<br>
+        ❌ 按收入：高收入/中等收入（遗漏低收入？）
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 20: Dialogue Round 4 -->
+<div class="slide slide-dialogue" id="s20">
+  <h2>对话四 · MECE的哲学根基</h2>
+  <div class="dialogue">
+    <div class="avatar hanfei">韩</div>
+    <div class="bubble">
+      <div class="speaker">韩非子</div>
+      "形名参同"——名实必须相符，职分必须清晰。臣子各司其职，互不越界，这就是"互斥"；所有政务都有人管，这就是"穷尽"。MECE不过是我们法家两千年前就在做的事。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar kahneman">卡</div>
+    <div class="bubble">
+      <div class="speaker">卡尼曼</div>
+      有趣的是，人类大脑天然违反MECE。我们倾向于用"可得性"来分类——最容易想到的类别被过度使用。MECE是一种反直觉的纪律训练。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar laozi">老</div>
+    <div class="bubble">
+      <div class="speaker">老子</div>
+      "天网恢恢，疏而不失。"穷尽者，如天之覆盖万物。互斥者，如四时不相乱。MECE暗合天道。
+    </div>
+  </div>
+</div>
+
+<!-- Slide 21: MECE Methods -->
+<div class="slide slide-content" id="s21">
+  <h1>实现MECE的常用方法</h1>
+  <div class="grid-3 mt-20">
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <h4>二分法</h4>
+      <p style="font-size:15px;">内部/外部、收入/支出、线上/线下</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📋</div>
+      <h4>过程法</h4>
+      <p style="font-size:15px;">按流程阶段分类：获客→转化→留存→变现</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔬</div>
+      <h4>要素法</h4>
+      <p style="font-size:15px;">按构成要素拆分：人/财/物/信息/时间</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🌍</div>
+      <h4>地域法</h4>
+      <p style="font-size:15px;">按空间维度：国内/国际，华东/华南/华北</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">👤</div>
+      <h4>利益相关方</h4>
+      <p style="font-size:15px;">客户/员工/股东/供应商/监管方</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⏰</div>
+      <h4>时间序列</h4>
+      <p style="font-size:15px;">短期/中期/长期，或过去/现在/未来</p>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 22: Quote 4 -->
+<div class="slide slide-quote" id="s22">
+  <blockquote>
+    分类的艺术，就是思维的艺术。好的分类是解决问题的一半。
+    <div class="quote-author">—— 芭芭拉·明托</div>
+  </blockquote>
+</div>
+
+<!-- Slide 23: Dialogue Round 5 -->
+<div class="slide slide-dialogue" id="s23">
+  <h2>对话五 · 分类与权力</h2>
+  <div class="dialogue">
+    <div class="avatar xiangbiao">项</div>
+    <div class="bubble">
+      <div class="speaker">项飙</div>
+      我必须提醒：分类从来不是中性的。当你用MECE来划分市场、人群、问题时，你其实在做一种"认知切割"。被切掉的部分往往就是被忽略的群体。MECE是利器，但要警惕它遮蔽的盲区。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar nietzsche">尼</div>
+    <div class="bubble">
+      <div class="speaker">尼采</div>
+      说得精辟！"每一个概念都靠忽略差异而产生。"（《论道德的谱系》）MECE要求互斥，但现实世界中万物互渗。完美的MECE只存在于纯粹理性的王国。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar munger">芒</div>
+    <div class="bubble">
+      <div class="speaker">芒格</div>
+      所以我一再强调：MECE是起点，不是终点。你需要多个MECE分类交叉验证，就像用多张渔网捕鱼，每张网都有洞，但洞的位置不同。
+    </div>
+  </div>
+</div>
+
+<!-- Slide 24: Scene 3 -->
+<div class="slide slide-scene" id="s24">
+  <div class="scene-header">
+    <div class="scene-badge">场景还原 三</div>
+    <h3>波士顿矩阵的诞生</h3>
+  </div>
+  <div class="light-box">
+    <strong>背景：</strong>1970年，波士顿咨询公司用"市场增长率×相对份额"将业务组合分为四类，成为MECE的经典商业应用。
+  </div>
+  <div class="grid-2 mt-20">
+    <div class="card">
+      <h4>明星业务 ⭐</h4>
+      <p style="font-size:15px;">高增长 × 高份额 → 持续投入</p>
+    </div>
+    <div class="card">
+      <h4>现金牛 🐄</h4>
+      <p style="font-size:15px;">低增长 × 高份额 → 稳定收割</p>
+    </div>
+    <div class="card">
+      <h4>问号业务 ❓</h4>
+      <p style="font-size:15px;">高增长 × 低份额 → 战略抉择</p>
+    </div>
+    <div class="card">
+      <h4>瘦狗业务 🐕</h4>
+      <p style="font-size:15px;">低增长 × 低份额 → 考虑退出</p>
+    </div>
+  </div>
+  <div class="dialogue mt-20">
+    <div class="avatar hanfei">韩</div>
+    <div class="bubble">
+      <div class="speaker">韩非子</div>
+      "因任授官，循名责实。"不同业务配不同策略，正如不同臣子配不同职责。二分法交叉即成四象限，简洁而有力。
+    </div>
+  </div>
+</div>
+
+<!-- Slide 25: Section 4 -->
+<div class="slide slide-section" id="s25">
+  <div class="sec-num">04</div>
+  <h2>逻辑表达的艺术</h2>
+  <p style="font-size:20px;opacity:0.8;margin-top:16px;">如何让你的表达无可辩驳</p>
+</div>
+
+<!-- Slide 26: Logic Types -->
+<div class="slide slide-content" id="s26">
+  <h1>三种逻辑关系</h1>
+  <div class="grid-3 mt-20">
+    <div class="card text-center">
+      <div style="font-size:48px;color:var(--red);margin-bottom:16px;">→</div>
+      <h4>因果关系</h4>
+      <p style="font-size:15px;">A导致B<br>"因为价格上调10%，销量下降了15%"</p>
+    </div>
+    <div class="card text-center">
+      <div style="font-size:48px;color:var(--red);margin-bottom:16px;">∧</div>
+      <h4>并列关系</h4>
+      <p style="font-size:15px;">A和B并列支撑上层<br>"三个原因分别是：成本、竞争、政策"</p>
+    </div>
+    <div class="card text-center">
+      <div style="font-size:48px;color:var(--red);margin-bottom:16px;">∪</div>
+      <h4>选择关系</h4>
+      <p style="font-size:15px;">A或B供决策<br>"方案一：收购；方案二：自建；方案三：合作"</p>
+    </div>
+  </div>
+  <div class="dialogue mt-20">
+    <div class="avatar kahneman">卡</div>
+    <div class="bubble">
+      <div class="speaker">卡尼曼</div>
+      注意：人们最容易混淆"相关性"和"因果性"。金字塔中的每一条因果链，都需要经得起"反事实检验"——如果去掉这个原因，结论还成立吗？
+    </div>
+  </div>
+</div>
+
+<!-- Slide 27: Dialogue Round 6 -->
+<div class="slide slide-dialogue" id="s27">
+  <h2>对话六 · 说服的本质</h2>
+  <div class="dialogue">
+    <div class="avatar nietzsche">尼</div>
+    <div class="bubble">
+      <div class="speaker">尼采</div>
+      说服从来不只是逻辑。亚里士多德说说服三要素：逻辑(Logos)、情感(Pathos)、人格(Ethos)。金字塔原理侧重逻辑，但真正伟大的演讲者三者兼备。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar laozi">老</div>
+    <div class="bubble">
+      <div class="speaker">老子</div>
+      "善行无辙迹，善言无瑕谪。"最高明的说服是让人觉得结论是自己得出的。金字塔的自上而下是"有为"，但最好的表达应达到"无为"之境——水到渠成。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar munger">芒</div>
+    <div class="bubble">
+      <div class="speaker">芒格</div>
+      在伯克希尔的股东信里，巴菲特从不堆砌数据。他先说结论，再用一个故事来支撑。故事是最古老、最有效的"金字塔底座"。
+    </div>
+  </div>
+</div>
+
+<!-- Slide 28: Quote 5 -->
+<div class="slide slide-quote" id="s28">
+  <blockquote>
+    先想后写是唯一正确的写作方法。
+    <div class="quote-author">—— 芭芭拉·明托</div>
+  </blockquote>
+</div>
+
+<!-- Slide 29: Scene 4 -->
+<div class="slide slide-scene" id="s29">
+  <div class="scene-header">
+    <div class="scene-badge">场景还原 四</div>
+    <h3>乔布斯的iPhone发布会</h3>
+  </div>
+  <div class="light-box">
+    <strong>背景：</strong>2007年1月9日，乔布斯发布iPhone。他没有从技术参数开始，而是先抛出结论。
+  </div>
+  <div class="highlight-box mt-20">
+    <h4>乔布斯的金字塔</h4>
+    <p style="font-size:16px;">
+      <strong>结论：</strong>今天，我们重新发明了手机。<br>
+      <strong>论点一：</strong>它是一部iPod → 论点二：它是一部手机 → 论点三：它是一个互联网设备<br>
+      <strong>然后揭晓：</strong>这三个不是三个设备，而是一个设备！
+    </p>
+  </div>
+  <div class="dialogue mt-20">
+    <div class="avatar nietzsche">尼</div>
+    <div class="bubble">
+      <div class="speaker">尼采</div>
+      完美的戏剧张力！他用三分法铺垫，用合一来制造惊奇。这不是数据汇报，这是叙事的建筑学。
+    </div>
+  </div>
+</div>
+
+<!-- Slide 30: Key Technique -->
+<div class="slide slide-content" id="s30">
+  <h1>表达的六个层次</h1>
+  <div class="grid-3 mt-20">
+    <div class="card text-center">
+      <div style="font-size:36px;color:var(--red);">1</div>
+      <h4>确定核心结论</h4>
+      <p style="font-size:14px;">用一句话概括你想说的</p>
+    </div>
+    <div class="card text-center">
+      <div style="font-size:36px;color:var(--red);">2</div>
+      <h4>列出关键论点</h4>
+      <p style="font-size:14px;">3-5个支撑你结论的理由</p>
+    </div>
+    <div class="card text-center">
+      <div style="font-size:36px;color:var(--red);">3</div>
+      <h4>检验MECE</h4>
+      <p style="font-size:14px;">论点之间是否互斥且穷尽</p>
+    </div>
+    <div class="card text-center">
+      <div style="font-size:36px;color:var(--red);">4</div>
+      <h4>组织序言</h4>
+      <p style="font-size:14px;">用SCQA构建开场</p>
+    </div>
+    <div class="card text-center">
+      <div style="font-size:36px;color:var(--red);">5</div>
+      <h4>填充证据</h4>
+      <p style="font-size:14px;">数据、案例、类比</p>
+    </div>
+    <div class="card text-center">
+      <div style="font-size:36px;color:var(--red);">6</div>
+      <h4>检验逻辑链</h4>
+      <p style="font-size:14px;">每一步是否经得起追问</p>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 31: Section 5 -->
+<div class="slide slide-section" id="s31">
+  <div class="sec-num">05</div>
+  <h2>问题分析与解决</h2>
+  <p style="font-size:20px;opacity:0.8;margin-top:16px;">从定义问题到找到答案</p>
+</div>
+
+<!-- Slide 32: Problem Definition -->
+<div class="slide slide-content" id="s32">
+  <h1>界定问题的框架</h1>
+  <div class="grid-2 mt-20">
+    <div>
+      <div class="highlight-box">
+        <h4>问题 = 现状与期望的差距</h4>
+        <p style="font-size:16px;">清晰地定义"现在在哪里"和"应该在哪里"，差距就是问题。</p>
+      </div>
+      <ul class="styled-list mt-20">
+        <li>现状是什么？（Where are we?）</li>
+        <li>目标是什么？（Where do we want to be?）</li>
+        <li>差距有多大？（How big is the gap?）</li>
+        <li>原因是什么？（Why does it exist?）</li>
+        <li>如何弥合？（How to close it?）</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>问题界定的误区</h4>
+      <p style="font-size:15px;">❌ 把症状当问题："销售额下降"是症状</p>
+      <p style="font-size:15px;">❌ 把方案当问题："我们需要裁员"是方案</p>
+      <p style="font-size:15px;">✅ 正确定义："在成本上升20%的情况下，如何在不牺牲质量的前提下恢复利润率？"</p>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 33: Dialogue Round 7 -->
+<div class="slide slide-dialogue" id="s33">
+  <h2>对话七 · 问题的本质</h2>
+  <div class="dialogue">
+    <div class="avatar kahneman">卡</div>
+    <div class="bubble">
+      <div class="speaker">卡尼曼</div>
+      问题界定是最重要的一步，也是最容易犯错的一步。"框架效应"告诉我们：同一个问题，不同的表述方式会导致完全不同的决策。问"如何提高利润"和问"如何削减成本"指向不同的行动。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar hanfei">韩</div>
+    <div class="bubble">
+      <div class="speaker">韩非子</div>
+      "审名以定位，明分以辨类。"——韩非认为，首先要正名，名不正则言不顺。问题的定义就是"正名"的过程。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar xiangbiao">项</div>
+    <div class="bubble">
+      <div class="speaker">项飙</div>
+      在社会研究中，最棘手的往往不是回答问题，而是发现问题。很多人急于找答案，却从未认真想过：我问的问题对吗？
+    </div>
+  </div>
+</div>
+
+<!-- Slide 34: Issue Tree -->
+<div class="slide slide-content" id="s34">
+  <h1>议题树（Issue Tree）</h1>
+  <div class="text-center mt-20">
+    <div style="display:inline-block;background:var(--red);color:white;padding:16px 40px;border-radius:8px;font-size:22px;font-weight:700;">
+      核心问题：如何提升利润率？
+    </div>
+    <div style="display:flex;justify-content:center;gap:40px;margin-top:20px;">
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="background:#e74c3c;color:white;padding:12px 24px;border-radius:6px;font-size:17px;font-weight:600;">增加收入</div>
+        <div style="display:flex;gap:8px;">
+          <div style="background:#f39c8f;color:var(--red-dark);padding:8px 14px;border-radius:4px;font-size:14px;">提高单价</div>
+          <div style="background:#f39c8f;color:var(--red-dark);padding:8px 14px;border-radius:4px;font-size:14px;">扩大销量</div>
+          <div style="background:#f39c8f;color:var(--red-dark);padding:8px 14px;border-radius:4px;font-size:14px;">新品类</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="background:#e74c3c;color:white;padding:12px 24px;border-radius:6px;font-size:17px;font-weight:600;">降低成本</div>
+        <div style="display:flex;gap:8px;">
+          <div style="background:#f39c8f;color:var(--red-dark);padding:8px 14px;border-radius:4px;font-size:14px;">原材料</div>
+          <div style="background:#f39c8f;color:var(--red-dark);padding:8px 14px;border-radius:4px;font-size:14px;">人工</div>
+          <div style="background:#f39c8f;color:var(--red-dark);padding:8px 14px;border-radius:4px;font-size:14px;">运营</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="light-box mt-20">
+    <strong>关键：</strong>议题树的每一层都要遵循MECE原则，确保不遗漏、不重叠。
+  </div>
+</div>
+
+<!-- Slide 35: Quote 6 -->
+<div class="slide slide-quote" id="s35">
+  <blockquote>
+    假设是分析的起点，验证是分析的终点。
+    <div class="quote-author">—— 芭芭拉·明托</div>
+  </blockquote>
+</div>
+
+<!-- Slide 36: Scene 5 -->
+<div class="slide slide-scene" id="s36">
+  <div class="scene-header">
+    <div class="scene-badge">场景还原 五</div>
+    <h3>丰田的"五个为什么"</h3>
+  </div>
+  <div class="light-box">
+    <strong>背景：</strong>丰田生产方式创始人大野耐一提出，面对问题要连续追问五个"为什么"，直到找到根本原因。
+  </div>
+  <div class="light-box mt-20">
+    <strong>示例：</strong><br>
+    为什么机器停了？→ 因为超负荷保险丝断了<br>
+    为什么超负荷？→ 因为轴承润滑不足<br>
+    为什么润滑不足？→ 因为油泵磨损<br>
+    为什么磨损？→ 因为没有过滤器导致碎屑进入<br>
+    为什么没有过滤器？→ 因为采购流程缺少标准<br>
+    <strong>→ 根因：采购标准缺失，而非换保险丝</strong>
+  </div>
+  <div class="dialogue mt-20">
+    <div class="avatar munger">芒</div>
+    <div class="bubble">
+      <div class="speaker">芒格</div>
+      "反过来想，总是反过来想。"五个为什么本质上是在做逆向金字塔——从表面症状向下挖，直到触达根本假设。
+    </div>
+  </div>
+</div>
+
+<!-- Slide 37: Dialogue Round 8 -->
+<div class="slide slide-dialogue" id="s37">
+  <h2>对话八 · 简化与深层</h2>
+  <div class="dialogue">
+    <div class="avatar laozi">老</div>
+    <div class="bubble">
+      <div class="speaker">老子</div>
+      "为学日益，为道日损。损之又损，以至于无为。"分析问题时要做加法，解决问题时要做减法。金字塔越往上走，越需要化繁为简的智慧。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar nietzsche">尼</div>
+    <div class="bubble">
+      <div class="speaker">尼采</div>
+      简化！我曾在《快乐的科学》中写道：一切深刻的东西都爱面具。最高级的简化不是删减，而是穿透——穿过表象直达本质。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar kahneman">卡</div>
+    <div class="bubble">
+      <div class="speaker">卡尼曼</div>
+      但要警惕"过度简化"。人类有一种认知偏误叫"WYSIATI"（What You See Is All There Is）——你看到的就是全部。金字塔的顶层结论可能只是冰山一角。
+    </div>
+  </div>
+</div>
+
+<!-- Slide 38: Section 6 -->
+<div class="slide slide-section" id="s38">
+  <div class="sec-num">06</div>
+  <h2>汇报技巧与说服力</h2>
+  <p style="font-size:20px;opacity:0.8;margin-top:16px;">从信息传递到决策推动</p>
+</div>
+
+<!-- Slide 39: Reporting Framework -->
+<div class="slide slide-content" id="s39">
+  <h1>高效汇报的五步法</h1>
+  <div class="grid-3 mt-20">
+    <div class="card text-center">
+      <div style="font-size:48px;">🎯</div>
+      <h4>1. 明确目的</h4>
+      <p style="font-size:14px;">这次汇报希望达成什么决策？</p>
+    </div>
+    <div class="card text-center">
+      <div style="font-size:48px;">👤</div>
+      <h4>2. 了解受众</h4>
+      <p style="font-size:14px;">听众关心什么？决策维度是什么？</p>
+    </div>
+    <div class="card text-center">
+      <div style="font-size:48px;">🏗️</div>
+      <h4>3. 搭建金字塔</h4>
+      <p style="font-size:14px;">结论先行，论点支撑，数据佐证</p>
+    </div>
+  </div>
+  <div class="grid-2 mt-20" style="max-width:66%;margin-left:auto;margin-right:auto;">
+    <div class="card text-center">
+      <div style="font-size:48px;">📖</div>
+      <h4>4. 讲好故事</h4>
+      <p style="font-size:14px;">用SCQA铺垫，用案例加温</p>
+    </div>
+    <div class="card text-center">
+      <div style="font-size:48px;">🎬</div>
+      <h4>5. 明确行动</h4>
+      <p style="font-size:14px;">汇报结尾给出清晰的下一步</p>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 40: Scene 6 -->
+<div class="slide slide-scene" id="s40">
+  <div class="scene-header">
+    <div class="scene-badge">场景还原 六</div>
+    <h3>咨询公司的100页PPT</h3>
+  </div>
+  <div class="light-box">
+    <strong>背景：</strong>某管理咨询公司向客户提交了一份100页的报告，客户CEO只看了摘要就做了决策。
+  </div>
+  <div class="dialogue mt-20">
+    <div class="avatar munger">芒</div>
+    <div class="bubble">
+      <div class="speaker">芒格</div>
+      这恰恰证明了金字塔的威力——那1页摘要是金字塔的塔尖。后面99页不过是供验证用的"底座"。CEO看到了塔尖就够了。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar hanfei">韩</div>
+    <div class="bubble">
+      <div class="speaker">韩非子</div>
+      "明主之道，一人不兼官，一官不兼事。"同样，一份报告不应对所有人说同样的话。给CEO看塔尖，给VP看中层，给执行者看底座。分层传达是治理之道。
+    </div>
+  </div>
+</div>
+
+<!-- Slide 41: Dialogue Round 9 -->
+<div class="slide slide-dialogue" id="s41">
+  <h2>对话九 · 沉默的数据</h2>
+  <div class="dialogue">
+    <div class="avatar xiangbiao">项</div>
+    <div class="bubble">
+      <div class="speaker">项飙</div>
+      有一个被忽视的问题：汇报中未被呈现的数据往往比呈现的更重要。你选择展示什么、隐藏什么，本身就是一种叙事策略。"沉默的数据"是最大的盲区。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar kahneman">卡</div>
+    <div class="bubble">
+      <div class="speaker">卡尼曼</div>
+      完全正确。这就是"替代偏差"——你用一个容易回答的问题替代了真正重要的问题。汇报中展示的数据往往只是因为"容易获取"，而非"最重要"。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar nietzsche">尼</div>
+    <div class="bubble">
+      <div class="speaker">尼采</div>
+      "没有事实，只有诠释。"每一份汇报都是一种诠释。金字塔给了你结构，但选择在塔尖放什么，是一种价值判断，而不仅仅是逻辑判断。
+    </div>
+  </div>
+</div>
+
+<!-- Slide 42: Quote 7 -->
+<div class="slide slide-quote" id="s42">
+  <blockquote>
+    你的读者只能一个一个地理解思想。因此，你必须按照他们能够理解的顺序来呈现思想。
+    <div class="quote-author">—— 芭芭拉·明托</div>
+  </blockquote>
+</div>
+
+<!-- Slide 43: Scene 7 -->
+<div class="slide slide-scene" id="s43">
+  <div class="scene-header">
+    <div class="scene-badge">场景还原 七</div>
+    <h3>林肯的葛底斯堡演说</h3>
+  </div>
+  <div class="light-box">
+    <strong>背景：</strong>1863年，林肯在葛底斯堡发表了仅272字的演说，成为美国历史上最伟大的演讲之一。
+  </div>
+  <div class="highlight-box mt-20">
+    <h4>林肯的金字塔结构</h4>
+    <p style="font-size:16px;">
+      <strong>结论：</strong>这些死者不会白白牺牲，国家将在自由中获得新生。<br>
+      <strong>论点一：</strong>这片土地已被永远神圣化（过去）<br>
+      <strong>论点二：</strong>活着的人要继续未竟的事业（现在）<br>
+      <strong>论点三：</strong>民有、民治、民享的政府永存（未来）
+    </p>
+  </div>
+  <div class="dialogue mt-20">
+    <div class="avatar laozi">老</div>
+    <div class="bubble">
+      <div class="speaker">老子</div>
+      "大音希声，大象无形。"272个字胜过千言万语。简洁不是贫乏，而是将丰盈压缩到极致。
+    </div>
+  </div>
+</div>
+
+<!-- Slide 44: Top 10 Tips -->
+<div class="slide slide-content" id="s44">
+  <h1>汇报的十大要点</h1>
+  <div class="grid-2 mt-20">
+    <div>
+      <ul class="styled-list">
+        <li>结论先行：第一句话就是你的答案</li>
+        <li>三个为限：核心论点不超过三个</li>
+        <li>纵向对应：每层回答上层的"为什么"</li>
+        <li>横向MECE：同一层论点互不重叠</li>
+        <li>序言SCQA：用故事开场</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="styled-list">
+        <li>数据说话：每个论点有事实支撑</li>
+        <li>一页一意：每页PPT只讲一个观点</li>
+        <li>行动导向：结尾明确下一步</li>
+        <li>分层传达：不同受众看不同层级</li>
+        <li>反复精简：能删的都删掉</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 45: Quote 8 -->
+<div class="slide slide-quote" id="s45">
+  <blockquote>
+    混乱的思维不可能产出清晰的文章。清晰的思考是清晰写作的前提。
+    <div class="quote-author">—— 芭芭拉·明托</div>
+  </blockquote>
+</div>
+
+<!-- Slide 46: Scene 8 -->
+<div class="slide slide-scene" id="s46">
+  <div class="scene-header">
+    <div class="scene-badge">场景还原 八</div>
+    <h3>亚马逊的六页备忘录</h3>
+  </div>
+  <div class="light-box">
+    <strong>背景：</strong>贝佐斯禁止在亚马逊使用PPT，要求所有提案以6页叙述性备忘录呈现，开会前20分钟集体默读。
+  </div>
+  <div class="dialogue mt-20">
+    <div class="avatar munger">芒</div>
+    <div class="bubble">
+      <div class="speaker">芒格</div>
+      贝佐斯做对了一件事：强制你把思想组织成连贯的叙事。PPT太容易让人用花哨的图表掩盖思维的空洞。六页备忘录就是一张完整的金字塔。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar xiangbiao">项</div>
+    <div class="bubble">
+      <div class="speaker">项飙</div>
+      这也是一种组织文化的塑造——它传递了一个信号：我们重视深度思考，而非表面功夫。形式反塑内容。
+    </div>
+  </div>
+</div>
+
+<!-- Slide 47: Dialogue Round 10 -->
+<div class="slide slide-dialogue" id="s47">
+  <h2>对话十 · 超越金字塔</h2>
+  <div class="dialogue">
+    <div class="avatar laozi">老</div>
+    <div class="bubble">
+      <div class="speaker">老子</div>
+      "大方无隅，大器晚成，大音希声。"最好的结构是你已经忘记了结构。修炼金字塔直到不需要刻意遵循它，那就是"道"的境界。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar nietzsche">尼</div>
+    <div class="bubble">
+      <div class="speaker">尼采</div>
+      "你必须有混沌在心中，才能诞生一颗舞动的星。"金字塔是你的纪律，但不要让它杀死你的创造力。在结构之上起舞，这才是超人（Übermensch）的表达。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar hanfei">韩</div>
+    <div class="bubble">
+      <div class="speaker">韩非子</div>
+      "法、术、势"三者合一。金字塔是"法"——结构化的规则；灵活运用是"术"——因时因地制宜；而"势"则来自于你对话题的深刻理解。三者缺一不可。
+    </div>
+  </div>
+  <div class="dialogue">
+    <div class="avatar munger">芒</div>
+    <div class="bubble">
+      <div class="speaker">芒格</div>
+      最后我要说：金字塔原理是一把锤子，但不是所有问题都是钉子。真正的智慧在于知道何时用结构，何时放下结构。
+    </div>
+  </div>
+</div>
+
+<!-- Slide 48: All 16 Quotes -->
+<div class="slide slide-content" id="s48">
+  <h1>十六句金句集锦</h1>
+  <div class="grid-2 mt-20" style="font-size:15px;">
+    <div>
+      <div class="light-box" style="margin-bottom:10px;font-size:14px;">
+        <strong>①</strong> 想清楚才能写清楚，写不清楚说明没想清楚。<br><span style="opacity:0.6;">—— 明托</span>
+      </div>
+      <div class="light-box" style="margin-bottom:10px;font-size:14px;">
+        <strong>②</strong> 一个模型的顶端必须是一个思想，而不是一个话题。<br><span style="opacity:0.6;">—— 明托</span>
+      </div>
+      <div class="light-box" style="margin-bottom:10px;font-size:14px;">
+        <strong>③</strong> 归纳推理是将思想组织在一起最有力的方式。<br><span style="opacity:0.6;">—— 明托</span>
+      </div>
+      <div class="light-box" style="margin-bottom:10px;font-size:14px;">
+        <strong>④</strong> 分类的艺术，就是思维的艺术。<br><span style="opacity:0.6;">—— 明托</span>
+      </div>
+      <div class="light-box" style="margin-bottom:10px;font-size:14px;">
+        <strong>⑤</strong> 先想后写是唯一正确的写作方法。<br><span style="opacity:0.6;">—— 明托</span>
+      </div>
+      <div class="light-box" style="margin-bottom:10px;font-size:14px;">
+        <strong>⑥</strong> 假设是分析的起点，验证是分析的终点。<br><span style="opacity:0.6;">—— 明托</span>
+      </div>
+      <div class="light-box" style="margin-bottom:10px;font-size:14px;">
+        <strong>⑦</strong> 你的读者只能一个一个地理解思想。<br><span style="opacity:0.6;">—— 明托</span>
+      </div>
+      <div class="light-box" style="margin-bottom:10px;font-size:14px;">
+        <strong>⑧</strong> 混乱的思维不可能产出清晰的文章。<br><span style="opacity:0.6;">—— 明托</span>
+      </div>
+    </div>
+    <div>
+      <div class="light-box" style="margin-bottom:10px;font-size:14px;">
+        <strong>⑨</strong> 如果你不能在一张名片背面写清投资逻辑，说明你还没理解它。<br><span style="opacity:0.6;">—— 芒格</span>
+      </div>
+      <div class="light-box" style="margin-bottom:10px;font-size:14px;">
+        <strong>⑩</strong> 工作记忆容量约4±1个信息块，金字塔匹配了大脑带宽。<br><span style="opacity:0.6;">—— 卡尼曼</span>
+      </div>
+      <div class="light-box" style="margin-bottom:10px;font-size:14px;">
+        <strong>⑪</strong> 道生一，一生二，二生三，三生万物。<br><span style="opacity:0.6;">—— 老子</span>
+      </div>
+      <div class="light-box" style="margin-bottom:10px;font-size:14px;">
+        <strong>⑫</strong> 事在四方，要在中央。结构即权力。<br><span style="opacity:0.6;">—— 韩非子</span>
+      </div>
+      <div class="light-box" style="margin-bottom:10px;font-size:14px;">
+        <strong>⑬</strong> 每一个概念都靠忽略差异而产生。<br><span style="opacity:0.6;">—— 尼采</span>
+      </div>
+      <div class="light-box" style="margin-bottom:10px;font-size:14px;">
+        <strong>⑭</strong> 没有事实，只有诠释。<br><span style="opacity:0.6;">—— 尼采</span>
+      </div>
+      <div class="light-box" style="margin-bottom:10px;font-size:14px;">
+        <strong>⑮</strong> 分类从来不是中性的，它是一种认知切割。<br><span style="opacity:0.6;">—— 项飙</span>
+      </div>
+      <div class="light-box" style="margin-bottom:10px;font-size:14px;">
+        <strong>⑯</strong> 形式反塑内容，组织文化从表达方式开始。<br><span style="opacity:0.6;">—— 项飙</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 49: Summary -->
+<div class="slide slide-content" id="s49">
+  <h1>圆桌总结 · 金字塔原理的五重智慧</h1>
+  <div class="grid-3 mt-20">
+    <div class="card">
+      <h4>🏗️ 结构智慧</h4>
+      <p style="font-size:15px;">自上而下构建，自下而上思考。结构是思维的骨架。</p>
+    </div>
+    <div class="card">
+      <h4>🔍 分析智慧</h4>
+      <p style="font-size:15px;">MECE确保穷尽互斥，议题树层层分解直到根因。</p>
+    </div>
+    <div class="card">
+      <h4>💬 表达智慧</h4>
+      <p style="font-size:15px;">结论先行，SCQA叙事，分层传达给不同受众。</p>
+    </div>
+    <div class="card">
+      <h4>⚖️ 批判智慧</h4>
+      <p style="font-size:15px;">警惕框架效应、沉默数据、过度简化。结构是工具，不是牢笼。</p>
+    </div>
+    <div class="card">
+      <h4>☯️ 超越智慧</h4>
+      <p style="font-size:15px;">从有法到无法，从刻意到自然，从结构到直觉的升华。</p>
+    </div>
+  </div>
+  <div class="highlight-box mt-20 text-center">
+    <h4 style="font-size:22px;">核心一句话：想清楚才能说清楚，说清楚才能做明白。</h4>
+  </div>
+</div>
+
+<!-- Slide 50: End -->
+<div class="slide slide-cover" id="s50">
+  <h1 style="font-size:56px;">谢 谢</h1>
+  <h2 style="font-size:24px;letter-spacing:4px;">金字塔原理 · 圆桌洞见</h2>
+  <div class="subtitle" style="margin-top:40px;">
+    六位智者 · 十轮对话 · 八个场景 · 十六句金句<br>
+    <span style="opacity:0.6;font-size:14px;">愿你的思维如金字塔般清晰而有力</span>
+  </div>
+</div>
+
+<!-- Navigation -->
+<div class="nav">
+  <button onclick="prev()" title="上一页">◀</button>
+  <span class="page-num" id="pageNum">1 / 50</span>
+  <button onclick="next()" title="下一页">▶</button>
+</div>
+
+<script>
+let current = 0;
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+
+function show(n) {
+  slides[current].classList.remove('active');
+  current = (n + total) % total;
+  slides[current].classList.add('active');
+  document.getElementById('pageNum').textContent = (current+1) + ' / ' + total;
+}
+function next() { show(current + 1); }
+function prev() { show(current - 1); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+  if (e.key === 'Home') { show(0); }
+  if (e.key === 'End') { show(total - 1); }
+});
+
+// Touch support
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  const diff = touchStartX - e.changedTouches[0].clientX;
+  if (diff > 50) next();
+  if (diff < -50) prev();
+});
+</script>
+</body>
+</html>

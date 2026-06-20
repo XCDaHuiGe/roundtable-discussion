@@ -3,1296 +3,835 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>《穷查理宝典》圆桌洞见</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<title>穷查理宝典 · 圆桌洞见</title>
 <style>
-:root {
-  --bg-deep: #0A0A0A;
-  --bg: #111111;
-  --bg-card: rgba(255,255,255,0.04);
-  --bg-card-hover: rgba(255,255,255,0.08);
-  --fg: #F5F5F5;
-  --fg-muted: #A0A0A0;
-  --fg-dim: #606060;
-  --accent: #D4A04A;
-  --accent-soft: rgba(212,160,74,0.12);
-  --accent-glow: rgba(212,160,74,0.25);
-  --copper: #C07A3E;
-  --clash: #ff4757;
-  --clash-soft: rgba(255,71,87,0.12);
-  --clash-glow: rgba(255,71,87,0.35);
-  --insight: #00d4aa;
-  --insight-soft: rgba(0,212,170,0.12);
-  --insight-glow: rgba(0,212,170,0.40);
-  --border: rgba(255,255,255,0.08);
-  --border-accent: rgba(212,160,74,0.30);
-  --radius: 16px;
-  --radius-sm: 10px;
-  --font-display: 'Noto Serif SC', serif;
-  --font-body: 'Outfit', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-}
-
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-html {
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  font-size: 16px;
-  -webkit-font-smoothing: antialiased;
-}
-
-body {
-  display: flex;
-  flex-direction: row;
-  width: max-content;
-  height: 100vh;
-  background: var(--bg-deep);
-  color: var(--fg);
-  font-family: var(--font-body);
-  line-height: 1.85;
-  opacity: 0;
-  animation: fadeIn 0.8s ease forwards;
-}
-
-@keyframes fadeIn {
-  to { opacity: 1; }
-}
-
-::selection {
-  background: var(--accent);
-  color: var(--bg-deep);
-}
-
-.noise-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.03;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 128px 128px;
-}
-
-.mesh-gradient {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background: 
-    radial-gradient(ellipse 70% 50% at 10% 20%, rgba(212,160,74,0.06) 0%, transparent 50%),
-    radial-gradient(ellipse 50% 40% at 90% 80%, rgba(0,212,170,0.04) 0%, transparent 50%),
-    radial-gradient(ellipse 30% 25% at 50% 50%, rgba(255,71,87,0.03) 0%, transparent 50%);
-}
-
-.slide {
-  width: 100vw;
-  height: 100vh;
-  min-width: 100vw;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  scroll-snap-align: start;
-  opacity: 0;
-  transform: translateX(30px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-  overflow: hidden;
-}
-
-.slide.visible {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.stagger-item {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-.slide.visible .stagger-item {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.slide.visible .stagger-item:nth-child(1) { transition-delay: 0.1s; }
-.slide.visible .stagger-item:nth-child(2) { transition-delay: 0.2s; }
-.slide.visible .stagger-item:nth-child(3) { transition-delay: 0.3s; }
-.slide.visible .stagger-item:nth-child(4) { transition-delay: 0.4s; }
-.slide.visible .stagger-item:nth-child(5) { transition-delay: 0.5s; }
-.slide.visible .stagger-item:nth-child(6) { transition-delay: 0.6s; }
-.slide.visible .stagger-item:nth-child(7) { transition-delay: 0.7s; }
-.slide.visible .stagger-item:nth-child(8) { transition-delay: 0.8s; }
-
-.slide-cover {
-  background: linear-gradient(135deg, #1A1A2E 0%, #16213E 50%, #0F0F23 100%);
-  color: var(--fg);
-  padding: clamp(40px, 5vh, 80px) clamp(48px, 5vw, 100px);
-  justify-content: space-between;
-  position: relative;
-  overflow: hidden;
-}
-
-.slide-cover::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -20%;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
-  opacity: 0.5;
-  animation: cover-glow 6s ease-in-out infinite;
-}
-
-@keyframes cover-glow {
-  0%, 100% { opacity: 0.5; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.1); }
-}
-
-.slide-cover::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: 
-    repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(255,255,255,0.02) 59px, rgba(255,255,255,0.02) 60px),
-    repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(255,255,255,0.02) 59px, rgba(255,255,255,0.02) 60px);
-  pointer-events: none;
-}
-
-.cover-decor-line {
-  position: absolute;
-  top: 20%;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(212,160,74,0.2), transparent);
-}
-
-.cover-decor-line-2 {
-  position: absolute;
-  bottom: 30%;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0,212,170,0.15), transparent);
-}
-
-.cover-logo {
-  font-family: var(--font-mono);
-  font-size: clamp(18px, 2vw, 28px);
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--accent);
-  position: relative;
-  z-index: 2;
-}
-
-.cover-logo span {
-  display: block;
-  padding-left: 1em;
-  font-weight: 400;
-  color: var(--fg-muted);
-  font-size: 0.85em;
-}
-
-.cover-body {
-  max-width: 70%;
-  position: relative;
-  z-index: 2;
-}
-
-.cover-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 18px;
-  background: linear-gradient(135deg, var(--accent-soft), rgba(212,160,74,0.06));
-  border: 1px solid var(--border-accent);
-  border-radius: 100px;
-  font-family: var(--font-mono);
-  font-size: clamp(10px, 1vw, 13px);
-  font-weight: 500;
-  color: var(--accent);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-bottom: clamp(20px, 3vh, 36px);
-  position: relative;
-  overflow: hidden;
-}
-
-.cover-badge::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(212,160,74,0.2), transparent);
-  animation: shimmer 3s ease-in-out infinite;
-}
-
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-.cover-body h1 {
-  font-family: var(--font-display);
-  font-size: clamp(40px, 5vw, 72px);
-  font-weight: 800;
-  line-height: 1.1;
-  margin-bottom: clamp(16px, 2vh, 28px);
-  letter-spacing: -0.02em;
-  background: linear-gradient(135deg, var(--fg), var(--fg-muted));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.cover-body .cover-sub {
-  font-family: var(--font-display);
-  font-size: clamp(16px, 1.8vw, 26px);
-  font-weight: 400;
-  margin-bottom: clamp(8px, 1vh, 16px);
-  color: var(--fg-muted);
-  line-height: 1.6;
-}
-
-.cover-body .cover-date {
-  font-family: var(--font-mono);
-  font-size: clamp(12px, 1.2vw, 16px);
-  color: var(--fg-dim);
-  letter-spacing: 0.02em;
-}
-
-.cover-footer {
-  font-family: var(--font-mono);
-  font-size: clamp(10px, 0.9vw, 12px);
-  color: var(--fg-dim);
-  letter-spacing: 0.08em;
-  position: relative;
-  z-index: 2;
-}
-
-.slide-content {
-  background: var(--bg);
-  padding: clamp(24px, 3vh, 48px) clamp(40px, 4vw, 80px);
-  overflow: hidden;
-  position: relative;
-}
-
-.slide-content::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
-  opacity: 0.3;
-}
-
-.breadcrumb {
-  font-family: var(--font-mono);
-  font-size: clamp(11px, 1vw, 13px);
-  color: var(--fg-dim);
-  text-align: right;
-  margin-bottom: clamp(12px, 1.5vh, 20px);
-  letter-spacing: 0.02em;
-}
-
-.slide-title {
-  font-family: var(--font-display);
-  font-size: clamp(24px, 2.5vw, 36px);
-  font-weight: 800;
-  color: var(--fg);
-  line-height: 1.35;
-  margin-bottom: clamp(16px, 2vh, 28px);
-  letter-spacing: -0.01em;
-  position: relative;
-  padding-left: 28px;
-}
-
-.slide-title::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 4px;
-  bottom: 4px;
-  width: 5px;
-  background: linear-gradient(180deg, var(--accent), var(--copper));
-  border-radius: 3px;
-  box-shadow: 0 0 15px var(--accent-glow);
-}
-
-.stats-flex {
-  display: flex;
-  justify-content: center;
-  gap: 2px;
-  margin: clamp(32px, 4vh, 56px) 0;
-  flex-wrap: wrap;
-  position: relative;
-}
-
-.stat-divider {
-  width: 1px;
-  height: 80px;
-  background: linear-gradient(180deg, transparent, var(--border-accent), transparent);
-  margin: 0 20px;
-  flex-shrink: 0;
-}
-
-.stat-item {
-  text-align: center;
-  padding: clamp(20px, 2.5vh, 32px) clamp(28px, 3vw, 48px);
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.stat-item::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.stat-item:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--border-accent);
-  transform: translateY(-4px);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-}
-
-.stat-item:hover::before {
-  opacity: 1;
-}
-
-.stat-number {
-  font-family: var(--font-display);
-  font-size: clamp(36px, 4vw, 52px);
-  font-weight: 800;
-  color: var(--accent);
-  line-height: 1;
-  margin-bottom: 10px;
-  letter-spacing: -0.02em;
-}
-
-.stat-label {
-  font-family: var(--font-body);
-  font-size: clamp(12px, 1.2vw, 16px);
-  color: var(--fg-muted);
-  font-weight: 400;
-  letter-spacing: 0.04em;
-}
-
-.experts-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(18px, 2vw, 26px);
-  margin-top: clamp(24px, 3vh, 36px);
-}
-
-.expert-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: clamp(24px, 3vh, 36px);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.expert-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.expert-card:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--border-accent);
-  transform: translateY(-6px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-}
-
-.expert-card:hover::before {
-  opacity: 1;
-}
-
-.expert-avatar {
-  width: clamp(52px, 5vw, 68px);
-  height: clamp(52px, 5vw, 68px);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(18px, 2vw, 26px);
-  margin-bottom: clamp(14px, 1.8vh, 22px);
-  transition: all 0.3s ease;
-}
-
-.expert-card:hover .expert-avatar {
-  transform: translateY(-4px);
-  box-shadow: 0 0 20px var(--accent-glow);
-}
-
-.expert-avatar.role-leader {
-  background: linear-gradient(135deg, var(--accent), var(--copper));
-  color: var(--bg-deep);
-}
-
-.expert-avatar.role-challenger {
-  background: linear-gradient(135deg, var(--clash), #c44a2e);
-  color: #fff;
-}
-
-.expert-avatar.role-observer {
-  background: linear-gradient(135deg, var(--insight), #358568);
-  color: #fff;
-}
-
-.expert-name {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(14px, 1.4vw, 18px);
-  margin-bottom: 6px;
-  color: var(--fg);
-  letter-spacing: 0.01em;
-}
-
-.expert-role {
-  font-family: var(--font-mono);
-  font-size: clamp(10px, 1vw, 13px);
-  color: var(--accent);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  margin-bottom: clamp(10px, 1.2vh, 14px);
-}
-
-.expert-desc {
-  font-family: var(--font-body);
-  font-size: clamp(12px, 1.2vw, 15px);
-  color: var(--fg-muted);
-  line-height: 1.7;
-  letter-spacing: 0.01em;
-}
-
-.speech-cards {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(16px, 2vh, 22px);
-  margin-top: clamp(20px, 2.5vh, 28px);
-}
-
-.speech-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: clamp(24px, 3vh, 36px);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.speech-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--accent), var(--copper), transparent);
-  opacity: 0.6;
-}
-
-.speech-card:hover {
-  background: var(--bg-card-hover);
-  transform: translateY(-2px);
-}
-
-.speech-meta {
-  display: flex;
-  align-items: center;
-  gap: clamp(14px, 1.8vw, 18px);
-  margin-bottom: clamp(14px, 1.8vh, 20px);
-}
-
-.speaker-avatar {
-  width: clamp(44px, 4vw, 56px);
-  height: clamp(44px, 4vw, 56px);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(15px, 1.5vw, 20px);
-  transition: all 0.3s ease;
-}
-
-.speech-card:hover .speaker-avatar {
-  box-shadow: 0 0 15px var(--accent-glow);
-}
-
-.speaker-avatar.role-leader {
-  background: linear-gradient(135deg, var(--accent), var(--copper));
-  color: var(--bg-deep);
-}
-
-.speaker-avatar.role-challenger {
-  background: linear-gradient(135deg, var(--clash), #c44a2e);
-  color: #fff;
-}
-
-.speaker-avatar.role-observer {
-  background: linear-gradient(135deg, var(--insight), #358568);
-  color: #fff;
-}
-
-.speaker-name {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(14px, 1.4vw, 18px);
-  color: var(--fg);
-  letter-spacing: 0.01em;
-}
-
-.speaker-role {
-  font-family: var(--font-mono);
-  font-size: clamp(10px, 1vw, 13px);
-  color: var(--fg-muted);
-  letter-spacing: 0.04em;
-}
-
-.speech-content {
-  font-family: var(--font-body);
-  font-size: clamp(13px, 1.3vw, 16px);
-  line-height: 1.9;
-  color: var(--fg-muted);
-  letter-spacing: 0.01em;
-}
-
-.clash-block {
-  background: linear-gradient(135deg, var(--clash-soft), rgba(212,160,74,0.06));
-  border: 1px solid rgba(255,71,87,0.25);
-  border-radius: var(--radius);
-  padding: clamp(24px, 3vh, 36px);
-  margin-top: clamp(20px, 2.5vh, 28px);
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 0 40px var(--clash-glow), inset 0 0 60px rgba(255,71,87,0.05);
-}
-
-.clash-block::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 5px;
-  background: linear-gradient(180deg, var(--clash), #c44a2e);
-  border-radius: 0 5px 5px 0;
-  box-shadow: 0 0 20px var(--clash-glow);
-}
-
-.clash-block::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 5px;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--clash), transparent);
-  opacity: 0.4;
-}
-
-.clash-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--font-mono);
-  font-size: clamp(12px, 1.2vw, 14px);
-  font-weight: 700;
-  color: var(--clash);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  margin-bottom: clamp(14px, 1.8vh, 20px);
-}
-
-.clash-item {
-  margin-bottom: clamp(12px, 1.5vh, 16px);
-  padding-bottom: clamp(12px, 1.5vh, 16px);
-  border-bottom: 1px solid rgba(255,71,87,0.15);
-}
-
-.clash-item:last-child {
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: none;
-}
-
-.clash-speaker {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(13px, 1.3vw, 16px);
-  color: var(--accent);
-  margin-bottom: 8px;
-  letter-spacing: 0.01em;
-}
-
-.clash-text {
-  font-family: var(--font-body);
-  font-size: clamp(12px, 1.2vw, 15px);
-  line-height: 1.8;
-  color: var(--fg-muted);
-  letter-spacing: 0.01em;
-}
-
-.insight-block {
-  background: linear-gradient(135deg, var(--insight-soft), rgba(0,212,170,0.04));
-  border: 1px solid rgba(0,212,170,0.30);
-  border-radius: var(--radius);
-  padding: clamp(28px, 3.5vh, 40px);
-  margin-top: clamp(20px, 2.5vh, 28px);
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 0 50px var(--insight-glow), inset 0 0 80px rgba(0,212,170,0.05);
-}
-
-.insight-block::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 5px;
-  background: linear-gradient(180deg, var(--insight), #358568);
-  border-radius: 0 5px 5px 0;
-  box-shadow: 0 0 25px var(--insight-glow);
-}
-
-.insight-block::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 5px;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--insight), transparent);
-  opacity: 0.5;
-}
-
-.insight-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--font-mono);
-  font-size: clamp(12px, 1.2vw, 14px);
-  font-weight: 700;
-  color: var(--insight);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  margin-bottom: clamp(14px, 1.8vh, 20px);
-}
-
-.insight-core {
-  font-family: var(--font-display);
-  font-size: clamp(18px, 2vw, 26px);
-  font-weight: 800;
-  color: var(--fg);
-  line-height: 1.45;
-  margin-bottom: clamp(12px, 1.5vh, 16px);
-  letter-spacing: -0.01em;
-}
-
-.insight-explain {
-  font-family: var(--font-body);
-  font-size: clamp(13px, 1.3vw, 16px);
-  line-height: 1.85;
-  color: var(--fg-muted);
-  letter-spacing: 0.01em;
-}
-
-.conclusions-grid {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(16px, 2vh, 22px);
-  margin-top: clamp(20px, 2.5vh, 28px);
-}
-
-.conclusion-item {
-  display: flex;
-  gap: clamp(16px, 2vw, 22px);
-  align-items: flex-start;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: clamp(20px, 2.5vh, 28px);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.conclusion-item::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--accent), transparent);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.conclusion-item:hover {
-  background: var(--bg-card-hover);
-  transform: translateX(8px);
-  box-shadow: 0 8px 30px rgba(212,160,74,0.15);
-}
-
-.conclusion-item:hover::before {
-  opacity: 1;
-}
-
-.conclusion-num {
-  font-family: var(--font-display);
-  font-size: clamp(32px, 3.5vw, 44px);
-  font-weight: 800;
-  color: var(--accent);
-  opacity: 0.4;
-  line-height: 1;
-  flex-shrink: 0;
-}
-
-.conclusion-text {
-  font-family: var(--font-body);
-  font-size: clamp(14px, 1.4vw, 18px);
-  line-height: 1.7;
-  color: var(--fg);
-  flex: 1;
-  letter-spacing: 0.01em;
-}
-
-.question-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: clamp(22px, 2.8vh, 32px);
-  margin-bottom: clamp(14px, 1.8vh, 20px);
-  transition: all 0.3s ease;
-  cursor: pointer;
-  display: flex;
-  align-items: flex-start;
-  gap: clamp(14px, 1.8vw, 18px);
-  overflow: hidden;
-  position: relative;
-}
-
-.question-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--accent), transparent);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.question-card:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--accent);
-  transform: translateX(8px);
-  box-shadow: 0 8px 30px rgba(212,160,74,0.15);
-}
-
-.question-card:hover::before {
-  opacity: 1;
-}
-
-.question-card .question-expand {
-  display: none;
-  margin-top: 18px;
-  padding-top: 18px;
-  border-top: 1px solid var(--border);
-  font-family: var(--font-body);
-  font-size: clamp(12px, 1.2vw, 15px);
-  color: var(--fg-dim);
-  line-height: 1.7;
-  letter-spacing: 0.01em;
-}
-
-.question-card:hover .question-expand {
-  display: block;
-  animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.question-number {
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: clamp(16px, 1.6vw, 22px);
-  color: var(--accent);
-  opacity: 0.5;
-  flex-shrink: 0;
-  line-height: 1.4;
-}
-
-.question-text {
-  font-family: var(--font-body);
-  font-size: clamp(13px, 1.3vw, 16px);
-  color: var(--fg);
-  line-height: 1.75;
-  letter-spacing: 0.01em;
-}
-
-#nav {
-  position: fixed;
-  bottom: clamp(16px, 2vh, 24px);
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: clamp(10px, 1.2vw, 16px);
-  z-index: 100;
-  background: rgba(0,0,0,0.85);
-  backdrop-filter: blur(20px);
-  padding: clamp(10px, 1.2vh, 14px) clamp(18px, 2vw, 28px);
-  border-radius: 100px;
-  border: 1px solid var(--border);
-}
-
-.nav-btn {
-  width: clamp(36px, 3.5vw, 44px);
-  height: clamp(36px, 3.5vw, 44px);
-  border: none;
-  background: var(--bg-card);
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: clamp(12px, 1.2vw, 14px);
-  color: var(--fg);
-  transition: all 0.2s ease;
-}
-
-.nav-btn:hover {
-  background: var(--accent);
-  color: var(--bg-deep);
-  transform: scale(1.1);
-}
-
-.dots {
-  display: flex;
-  gap: 8px;
-}
-
-.dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.3);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.dot:hover {
-  background: rgba(255,255,255,0.5);
-  transform: scale(1.2);
-}
-
-.dot.active {
-  background: var(--accent);
-  transform: scale(1.4);
-  box-shadow: 0 0 10px var(--accent-glow);
-}
-
-#counter {
-  position: fixed;
-  top: clamp(12px, 1.5vh, 20px);
-  right: clamp(16px, 2vw, 24px);
-  font-family: var(--font-mono);
-  font-size: clamp(11px, 1.1vw, 14px);
-  color: var(--fg-muted);
-  z-index: 100;
-  background: rgba(0,0,0,0.6);
-  padding: 8px 16px;
-  border-radius: 100px;
-  backdrop-filter: blur(10px);
-  letter-spacing: 0.02em;
-}
-
-#progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  z-index: 101;
-  background: var(--border);
-}
-
-#progressBar {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, var(--accent), var(--copper));
-  transition: width 0.2s ease-out;
-  box-shadow: 0 0 10px var(--accent-glow);
-}
-
-@media (max-width: 768px) {
-  .experts-grid { grid-template-columns: repeat(2, 1fr); }
-  .cover-body { max-width: 85%; }
-  .stat-divider { display: none; }
-}
-
-@media (max-width: 480px) {
-  .experts-grid { grid-template-columns: 1fr; }
-  .stats-flex { flex-direction: column; gap: 14px; }
-  .stat-item { width: 100%; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
+*{margin:0;padding:0;box-sizing:border-box}
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+:root{--gold:#d4a574;--gold-light:#e8c9a0;--gold-dark:#b8894e;--bg:#faf5ef;--bg-dark:#f0e6d6;--text:#3a2f25;--text-light:#6b5d4f;--accent:#c7955a}
+html,body{height:100%;overflow:hidden;font-family:'Noto Sans SC',sans-serif;background:#1a1510}
+.ppt{width:100vw;height:100vh;position:relative}
+.slide{width:100%;height:100%;position:absolute;top:0;left:0;display:none;flex-direction:column;justify-content:center;align-items:center;padding:60px 80px;background:var(--bg);overflow:hidden}
+.slide.active{display:flex}
+.slide::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--gold-dark),var(--gold),var(--gold-light),var(--gold),var(--gold-dark))}
+.slide::after{content:'';position:absolute;bottom:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--gold-dark),var(--gold),var(--gold-light),var(--gold),var(--gold-dark))}
+
+/* Typography */
+h1{font-family:'Noto Serif SC',serif;font-size:3.2em;color:var(--text);text-align:center;line-height:1.3;margin-bottom:20px}
+h2{font-family:'Noto Serif SC',serif;font-size:2.4em;color:var(--gold-dark);text-align:center;margin-bottom:24px;line-height:1.3}
+h3{font-family:'Noto Serif SC',serif;font-size:1.8em;color:var(--text);margin-bottom:16px;text-align:center}
+p,.desc{font-size:1.15em;color:var(--text-light);line-height:1.8;text-align:center;max-width:900px}
+.subtitle{font-size:1.5em;color:var(--gold);font-weight:300;margin-bottom:30px;letter-spacing:4px}
+
+/* Decorative elements */
+.divider{width:120px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:24px auto}
+.quote-box{background:linear-gradient(135deg,#fff9f0,#f5ead8);border-left:4px solid var(--gold);padding:30px 40px;margin:20px 0;border-radius:0 12px 12px 0;max-width:850px;position:relative}
+.quote-box::before{content:'"';position:absolute;top:-10px;left:15px;font-size:4em;color:var(--gold-light);font-family:Georgia,serif;line-height:1}
+.quote-text{font-family:'Noto Serif SC',serif;font-size:1.3em;color:var(--text);line-height:1.8;font-style:italic;padding-left:20px}
+.quote-author{margin-top:12px;text-align:right;color:var(--gold-dark);font-size:1em;font-weight:600}
+
+/* Dialogue styles */
+.dialogue{max-width:900px;width:100%;margin:10px 0}
+.d-item{display:flex;align-items:flex-start;margin:12px 0;gap:16px}
+.d-avatar{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4em;flex-shrink:0;border:2px solid var(--gold)}
+.d-bubble{background:#fff;border-radius:16px;padding:14px 20px;flex:1;position:relative;border:1px solid var(--gold-light)}
+.d-name{font-weight:700;font-size:0.9em;margin-bottom:4px}
+.d-text{font-size:1em;line-height:1.6;color:var(--text)}
+
+.char-munger .d-avatar{background:#f5e6d0;color:#8b6914}
+.char-munger .d-name{color:#8b6914}
+.char-buffett .d-avatar{background:#d4e8d4;color:#2d6a2e}
+.char-buffett .d-name{color:#2d6a2e}
+.char-taleb .d-avatar{background:#d8dff5;color:#3a4a8a}
+.char-taleb .d-name{color:#3a4a8a}
+.char-kahneman .d-avatar{background:#f0d8d8;color:#8a3a3a}
+.char-kahneman .d-name{color:#8a3a3a}
+.char-laozi .d-avatar{background:#d8efe0;color:#2a6a3a}
+.char-laozi .d-name{color:#2a6a3a}
+.char-nietzsche .d-avatar{background:#e8d8f5;color:#5a3a8a}
+.char-nietzsche .d-name{color:#5a3a8a}
+
+/* Scene */
+.scene-box{background:linear-gradient(145deg,#fff9f0,#f0e4d0);border:2px solid var(--gold-light);border-radius:20px;padding:30px 40px;max-width:880px;width:100%;margin:16px 0;position:relative}
+.scene-box::before{content:'🎬';position:absolute;top:-15px;left:30px;background:var(--bg);padding:0 10px;font-size:1.5em}
+.scene-label{color:var(--gold-dark);font-size:0.85em;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}
+.scene-text{font-size:1.1em;color:var(--text);line-height:1.8}
+
+/* Grid */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:900px;width:100%}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;max-width:950px;width:100%}
+.grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;max-width:950px;width:100%}
+.card{background:#fff;border-radius:14px;padding:24px;border:1px solid var(--gold-light);transition:transform .2s}
+.card-icon{font-size:2em;margin-bottom:10px}
+.card h4{font-family:'Noto Serif SC',serif;font-size:1.1em;color:var(--text);margin-bottom:8px}
+.card p{font-size:0.95em;color:var(--text-light);line-height:1.6}
+
+/* Tags */
+.tag{display:inline-block;background:linear-gradient(135deg,var(--gold-light),var(--gold));color:#fff;padding:4px 14px;border-radius:20px;font-size:0.8em;margin:4px;font-weight:500}
+
+/* Number circle */
+.num-circle{width:40px;height:40px;border-radius:50%;background:var(--gold);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1em;margin:0 auto 12px}
+
+/* Cover special */
+.cover-ornament{font-size:5em;color:var(--gold-light);margin-bottom:10px;opacity:.6}
+.author-line{font-size:1.1em;color:var(--text-light);margin-top:8px}
+
+/* Progress bar */
+.progress{position:fixed;bottom:0;left:0;height:3px;background:var(--gold);transition:width .4s;z-index:100}
+
+/* Nav */
+.nav{position:fixed;bottom:20px;right:30px;z-index:100;display:flex;gap:10px}
+.nav button{width:44px;height:44px;border-radius:50%;border:2px solid var(--gold);background:rgba(255,255,255,.9);color:var(--gold-dark);font-size:1.2em;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.nav button:hover{background:var(--gold);color:#fff}
+.page-num{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);color:var(--gold-dark);font-size:.9em;z-index:100;background:rgba(255,255,255,.8);padding:4px 16px;border-radius:20px}
+
+/* Key insight box */
+.insight{background:linear-gradient(135deg,#f8efe0,#fce8d0);border:2px solid var(--gold);border-radius:16px;padding:24px 32px;max-width:850px;text-align:center;margin:16px 0}
+.insight-icon{font-size:2.5em;margin-bottom:10px}
+.insight h4{font-family:'Noto Serif SC',serif;font-size:1.2em;color:var(--gold-dark);margin-bottom:8px}
+.insight p{font-size:1.05em;color:var(--text);line-height:1.7}
+
+/* Timeline */
+.timeline{max-width:800px;width:100%;position:relative;padding-left:40px}
+.timeline::before{content:'';position:absolute;left:15px;top:0;bottom:0;width:2px;background:var(--gold-light)}
+.tl-item{margin:18px 0;position:relative}
+.tl-item::before{content:'';position:absolute;left:-31px;top:8px;width:12px;height:12px;border-radius:50%;background:var(--gold);border:2px solid #fff}
+.tl-year{font-weight:700;color:var(--gold-dark);font-size:0.9em}
+.tl-text{color:var(--text);font-size:1em;line-height:1.6}
+
+/* Highlight text */
+.hl{color:var(--gold-dark);font-weight:700}
+.hl-gold{color:var(--gold);font-weight:700}
+
+/* Responsive adjustments */
+@media(max-width:768px){
+  .slide{padding:30px 24px}
+  h1{font-size:2.2em}h2{font-size:1.8em}
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+  .d-item{flex-direction:column;align-items:flex-start}
+}
+
+/* Animated entrance */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.slide.active>*{animation:fadeInUp .6s ease-out both}
+.slide.active>.grid-2,.slide.active>.grid-3,.slide.active>.grid-4,.slide.active>.dialogue{animation-delay:.2s}
 </style>
 </head>
 <body>
-<div class="mesh-gradient"></div>
-<div class="noise-overlay"></div>
-<div id="progress">
-  <div id="progressBar"></div>
-</div>
-<div class="frame">
-  <div class="inner">
-    <div class="slides">
+<div class="ppt" id="ppt">
+<div class="progress" id="progress"></div>
+<div class="nav"><button onclick="go(-1)">◀</button><button onclick="go(1)">▶</button></div>
+<div class="page-num" id="pageNum"></div>
 
-<div class="slide slide-cover">
-  <div class="cover-logo">圆桌洞见<span>Roundtable Insight</span></div>
-  <div class="cover-body">
-    <h1>《穷查理宝典》圆桌洞见</h1>
-    <p class="cover-sub">《穷查理宝典》· 6位专家 · 3轮碰撞 · 基于互联网真实素材</p>
-    <p class="cover-date">6 位专家 · 3 轮讨论</p>
-  </div>
-  <div class="cover-footer">本报告由 AI 专家圆桌生成</div>
+<!-- ===== SLIDE 1: COVER ===== -->
+<div class="slide active">
+  <div class="cover-ornament">📖</div>
+  <h1>穷查理宝典</h1>
+  <div class="subtitle">圆桌洞见 · 六位智者的跨时空对话</div>
+  <div class="divider"></div>
+  <p style="font-size:1.05em;color:var(--text-light)">查理·芒格 × 沃伦·巴菲特 × 纳西姆·塔勒布 × 丹尼尔·卡尼曼 × 老子 × 弗里德里希·尼采</p>
+  <p style="margin-top:20px;font-size:0.9em;color:var(--gold)">多元思维模型 · 逆向思维 · 能力圈 · 误判心理学 · 投资哲学</p>
 </div>
 
-
-<div class="slide slide-white">
-  <div class="breadcrumb">专家阵容</div>
-  <h2 class="slide-title">《穷查理宝典》圆桌洞见</h2>
-  <div class="experts-grid">
-    <div class="expert-card">
-      <div class="expert-avatar">巴</div>
-      <div class="expert-name">巴菲特</div>
-      <div class="expert-role">价值投资奠基人</div>
-      <div class="expert-desc">买股票就是买公司，用合理价格买优秀企业比用便宜价格买普通企业好得多...</div>
-    </div>
-    <div class="expert-card">
-      <div class="expert-avatar">塔</div>
-      <div class="expert-name">塔勒布</div>
-      <div class="expert-role">不确定性思想家</div>
-      <div class="expert-desc">反脆弱性：有些事物能从冲击、不确定性和波动中获益...</div>
-    </div>
-    <div class="expert-card">
-      <div class="expert-avatar">丹</div>
-      <div class="expert-name">丹尼尔·卡尼曼</div>
-      <div class="expert-role">行为经济学之父</div>
-      <div class="expert-desc">待填充...</div>
-    </div>
-    <div class="expert-card">
-      <div class="expert-avatar">丹</div>
-      <div class="expert-name">丹尼尔·戈尔曼</div>
-      <div class="expert-role">情商理论专家</div>
-      <div class="expert-desc">待填充...</div>
-    </div>
-    <div class="expert-card">
-      <div class="expert-avatar">吴</div>
-      <div class="expert-name">吴军</div>
-      <div class="expert-role">科技投资观察者</div>
-      <div class="expert-desc">科技发展以浪潮形式推进，顺势者昌逆势者亡；简单即是美...</div>
-    </div>
-    <div class="expert-card">
-      <div class="expert-avatar">柯</div>
-      <div class="expert-name">柯林斯</div>
-      <div class="expert-role">实证管理学家</div>
-      <div class="expert-desc">卓越企业的共同特征是'第五级经理人'+飞轮效应+知道不做什么...</div>
-    </div>
+<!-- ===== SLIDE 2: TABLE OF CONTENTS ===== -->
+<div class="slide">
+  <h2>目录</h2>
+  <div class="divider"></div>
+  <div class="grid-2" style="max-width:800px">
+    <div class="card"><div class="card-icon">🧠</div><h4>第一章 · 多元思维模型</h4><p>对话 1-3 / 场景 1-2</p></div>
+    <div class="card"><div class="card-icon">🔄</div><h4>第二章 · 逆向思维</h4><p>对话 4-5 / 场景 3-4</p></div>
+    <div class="card"><div class="card-icon">🎯</div><h4>第三章 · 能力圈</h4><p>对话 6-7 / 场景 5-6</p></div>
+    <div class="card"><div class="card-icon">🪞</div><h4>第四章 · 误判心理学</h4><p>对话 8-9 / 场景 7-8</p></div>
+    <div class="card"><div class="card-icon">💰</div><h4>第五章 · 投资哲学</h4><p>对话 10 / 总结</p></div>
+    <div class="card"><div class="card-icon">✨</div><h4>附录 · 16句金句集</h4><p>贯穿全文精华</p></div>
   </div>
 </div>
 
-
-<div class="slide slide-white">
-  <div class="breadcrumb">Round 1 / 3</div>
-  <h2 class="slide-title">段永平投资哲学的底层逻辑是否站得住脚？</h2>
+<!-- ===== SLIDE 3: WISDOM MAP ===== -->
+<div class="slide">
+  <h2>芒格的智慧地图</h2>
+  <div class="divider"></div>
+  <div class="grid-4">
+    <div class="card" style="text-align:center"><div class="card-icon">📐</div><h4>数学</h4><p>复利、概率、排列组合</p></div>
+    <div class="card" style="text-align:center"><div class="card-icon">🧬</div><h4>生物学</h4><p>进化论、生态位</p></div>
+    <div class="card" style="text-align:center"><div class="card-icon">⚙️</div><h4>物理学</h4><p>临界质量、均衡</p></div>
+    <div class="card" style="text-align:center"><div class="card-icon">🧠</div><h4>心理学</h4><p>认知偏误、激励</p></div>
+    <div class="card" style="text-align:center"><div class="card-icon">📊</div><h4>经济学</h4><p>规模优势、比较优势</p></div>
+    <div class="card" style="text-align:center"><div class="card-icon">🏛️</div><h4>历史</h4><p>兴衰周期、因果</p></div>
+    <div class="card" style="text-align:center"><div class="card-icon">📖</div><h4>文学</h4><p>人性洞察、叙事</p></div>
+    <div class="card" style="text-align:center"><div class="card-icon">☯️</div><h4>哲学</h4><p>伦理、逻辑、存在</p></div>
+  </div>
+  <p style="margin-top:20px;font-size:1em">芒格一生跨涉 <span class="hl">100+ 学科模型</span>，形成独特的"格栅思维"</p>
 </div>
 
-
-<div class="slide slide-white">
-  <div class="breadcrumb">Round 1 发言</div>
-  <div class="speech-cards">
-        <div class="speech-card">
-          <div class="speech-meta">
-            <div class="speaker-avatar" style="background:#d4a843">巴</div>
-            <div>
-              <div class="speaker-name">巴菲特</div>
-              <div class="speaker-role">发言</div>
-            </div>
-          </div>
-          <div class="speech-content">芒格是我见过的最聪明的人，他彻底改变了伯克希尔的投资哲学。在我遇到芒格之前，我是格雷厄姆'捡烟蒂'理论的信徒——用清算价值买便宜公司。芒格对我说：'沃伦，用合理的价格买伟大的公司，比用便宜的价格买普通公司好得多。'这句话改变了我的一生。 芒格的多元思维模型不是知识的堆砌，而是穿透表象的武器。他研究心理学、经济学、物理学、生物学，不是为了炫耀，而是为了在投资决策时不犯致命的错误。他在评估喜诗糖果时，不仅看财务数据，还研究品牌忠诚度的心理学基础。他在做决策前，会用他的'检查清单'一项项核对——这个清单，正是多元思维模型的具体应用。 我常开玩笑说，芒格是'长着两条腿的书'。他每天阅读超过5小时，涉猎广泛。但他的阅读不是为了积累知识，而是为了构建一个'思维模型的格栅'——当面对复杂问题时，他能从多个角度同时思考，这就是他的竞争优势。</div>
-        </div>
-        <div class="speech-card">
-          <div class="speech-meta">
-            <div class="speaker-avatar" style="background:#d4a843">塔</div>
-            <div>
-              <div class="speaker-name">塔勒布</div>
-              <div class="speaker-role">发言</div>
-            </div>
-          </div>
-          <div class="speech-content">我必须对芒格的多元思维模型提出根本性质疑。这个体系的核心假设是：掌握足够多的思维模型，就能做出更好的决策。但现实恰恰相反——过度分析往往导致决策瘫痪，而'事后诸葛亮'式的解释让任何事后分析看起来都像是洞见。 芒格说'如果你只有一把锤子，看什么都会像钉子'。但反过来，如果你有100把锤子，你会变成什么样？你会变成一个无法行动的人。我的'反脆弱'理念告诉我：最好的决策往往来自简单原则，而不是复杂模型。你需要的是足够少的关键变量，而不是足够多的思维框架。 更严重的是'确认偏误'问题：一旦你相信多元思维模型是好的，你会倾向于只看到支持这个信念的证据。芒格的成功案例被反复引用，但那些使用多元思维模型却失败的人呢？他们的故事在哪里？任何理论，如果只展示成功案例，都值得怀疑。</div>
-        </div>
-        <div class="speech-card">
-          <div class="speech-meta">
-            <div class="speaker-avatar" style="background:#e85d3a">卡</div>
-            <div>
-              <div class="speaker-name">卡尼曼</div>
-              <div class="speaker-role">发言</div>
-            </div>
-          </div>
-          <div class="speech-content">芒格的人类误判心理学是《思考，快与慢》的先驱。他在1995年哈佛法学院的演讲，比我的诺贝尔获奖研究还要早。他在演讲中总结了25种导致人类错误判断的心理倾向——这与我研究的'认知偏误'高度重合。 但我要补充一点：芒格的框架有一个盲点。他强调'知道什么会出错'，但没有充分讨论'知道什么是对的'的困难。认知科学告诉我们，人类不仅在避免错误方面有困难，在识别正确方面也有系统性的偏差。比如'有效性幻觉'——人们倾向于高估自己预测未来的能力，即使他们的预测是基于合理的模型。 芒格说'逆向思考'是成功的关键。这在原则上是对的，但在实践中，'知道你会死在何处'并不自动告诉你'你应该去哪里'。我的研究表明，即使人们知道自己的偏误，也很难克服它们。知识≠行动。</div>
-        </div>
+<!-- ===== SLIDE 4: SCENE 1 ===== -->
+<div class="slide">
+  <h2>场景还原 · 哈佛法学院的抉择</h2>
+  <div class="divider"></div>
+  <div class="scene-box">
+    <div class="scene-label">场景一 · 1948年 · 哈佛法学院</div>
+    <div class="scene-text">年轻的芒格从哈佛法学院毕业，以优异成绩通过加州律师考试。然而他心中始终有一个声音——<span class="hl">"仅仅做一名律师，远远不够。"</span> 他开始思考：如何让每一块钱都为他工作？如何用跨学科的智慧武装自己的思维？这个时刻，播下了日后成为投资大师的种子。</div>
+  </div>
+  <div class="quote-box">
+    <div class="quote-text">我这辈子遇到的聪明人，没有不每天阅读的——没有，一个都没有。</div>
+    <div class="quote-author">—— 查理·芒格</div>
   </div>
 </div>
 
-
-<div class="slide slide-white">
-  <div class="breadcrumb">Round 2 / 3</div>
-  <h2 class="slide-title">段永平投资体系的局限在哪里？</h2>
-</div>
-
-
-<div class="slide slide-white">
-  <div class="breadcrumb">Round 2 碰撞</div>
-  <div class="clash-block">
-        <div class="clash-item">
-          <div class="clash-speaker">塔勒布</div>
-          <div class="clash-text">巴菲特你说芒格'改变了你'，但你有没有想过：如果芒格的框架如此有效，为什么你们没有预见到2008年金融危机？你们的保险公司Gen Re在CDS上的亏损，不是证明了多元思维模型也有盲点吗？芒格自己承认他在金融危机中'犯了很多错误'。这说明什么？说明他的体系并不像他说的那样完善。过度依赖'理性分析'，反而可能让人忽视真正的尾部风险。</div>
-        </div>
-        <div class="clash-item">
-          <div class="clash-speaker">巴菲特</div>
-          <div class="clash-text">塔勒布你说2008年金融危机，但你忽略了一个事实：我们活下来了。你说预见到危机才算成功，但'反脆弱'的定义是：不是预测风险，而是能够在冲击中变得更强。伯克希尔在2008年不仅没有倒下，还趁机收购了多家优质资产。这正是芒格框架的体现：'知道你会死在何处'不是预测死亡，而是确保死亡不会杀死你。</div>
-        </div>
-        <div class="clash-item">
-          <div class="clash-speaker">卡尼曼</div>
-          <div class="clash-text">戈尔曼你说芒格忽略了情绪，但我要指出：你对情绪的理解可能过于简化。芒格在人类误判心理学中提到的'喜欢/热爱倾向'和'讨厌/憎恨倾向'，本质上就是情绪倾向。他说'避免嫉妒'和'避免怨恨'，正是情绪管理的内容。你可以说他的框架不完整，但不能说他完全忽略了情绪。</div>
-        </div>
+<!-- ===== SLIDE 5: DIALOGUE 1 ===== -->
+<div class="slide">
+  <h2>对话一 · 什么是多元思维模型？</h2>
+  <div class="divider"></div>
+  <div class="dialogue">
+    <div class="d-item char-munger"><div class="d-avatar">芒</div><div class="d-bubble"><div class="d-name">查理·芒格</div><div class="d-text">你必须知道重要学科的重要理论，并且经常使用它们——要全部用上，而不是只用几个。大多数人只在一个学科里受过训练，就像拿着锤子看什么都像钉子。</div></div></div>
+    <div class="d-item char-buffett"><div class="d-avatar">巴</div><div class="d-bubble"><div class="d-name">沃伦·巴菲特</div><div class="d-text">查理让我从格雷厄姆的"烟蒂投资"里走出来。他说，光看便宜的价格不够，你得理解生意的本质——这需要多学科视角。</div></div></div>
+    <div class="d-item char-kahneman"><div class="d-avatar">卡</div><div class="d-bubble"><div class="d-name">丹尼尔·卡尼曼</div><div class="d-text">芒格说的"锤子倾向"正是我研究的认知偏误之一。当你的工具箱只有锤子时，你的判断就系统性地偏离了现实。</div></div></div>
   </div>
 </div>
 
-
-<div class="slide slide-white">
-  <div class="breadcrumb">Round 3 / 3</div>
-  <h2 class="slide-title">段永平投资哲学对普通人的启示与局限</h2>
-</div>
-
-
-<div class="slide slide-white">
-  <div class="breadcrumb">Round 3 洞见</div>
-  <div class="insight-block">
-    <div class="insight-q">段永平的方法极难复制：他用几十年实业经验建立了对特定行业的深度理解，然后在理解范围内极度专注。普通人需要找到自己的'实业经验'领域，而不是照抄持仓。</div>
-    <div class="insight-a">段永平的'简单'是几十年积累之后的返璞归真。对于刚起步的投资者，'简单'意味着先去积累实业经验、行业认知，而不是急着买股票。</div>
+<!-- ===== SLIDE 6: KEY INSIGHT 1 ===== -->
+<div class="slide">
+  <div class="insight">
+    <div class="insight-icon">🔑</div>
+    <h4>核心洞见</h4>
+    <p>"如果你手里只有一把锤子，你将会把所有问题都看成钉子。"<br>——这就是<span class="hl">铁锤人倾向</span>（Man with a Hammer Tendency）<br><br>解决方案：建立跨学科的<strong>多元思维模型</strong>格栅</p>
+  </div>
+  <div class="grid-3" style="margin-top:24px">
+    <div class="card" style="text-align:center"><div class="card-icon">📐</div><h4>数学思维</h4><p>概率、复利、排列组合</p></div>
+    <div class="card" style="text-align:center"><div class="card-icon">🔬</div><h4>科学方法</h4><p>证伪、可重复性</p></div>
+    <div class="card" style="text-align:center"><div class="card-icon">🧠</div><h4>心理学</h4><p>认知偏误、行为模式</p></div>
   </div>
 </div>
 
-
-<div class="slide slide-white">
-  <div class="breadcrumb">核心结论</div>
-  <h2 class="slide-title">圆桌洞见总结</h2>
-  <div class="conclusions-grid">
-        <div class="conclusion-item">
-          <div class="conclusion-num">1</div>
-          <div class="conclusion-text">芒格的多元思维模型本质上是'认知保险'——它不能保证你成功，但能大大降低你犯致命错误的概率。</div>
-        </div>
-        <div class="conclusion-item">
-          <div class="conclusion-num">2</div>
-          <div class="conclusion-text">段永平能在泡泡玛特上复制他的成功吗？还是说他的实业经验边界到了消费娱乐领域就失效了？</div>
-        </div>
-        <div class="conclusion-item">
-          <div class="conclusion-num">3</div>
-          <div class="conclusion-text">如果茅台的营收利润双降持续5年，段永平还会坚持'懂'茅台吗？还是说他的'懂'会变成'固执'？</div>
-        </div>
-        <div class="conclusion-item">
-          <div class="conclusion-num">4</div>
-          <div class="conclusion-text">普通人能否找到一条介于'完全模仿段永平'和'全部买指数基金'之间的中间路径？</div>
-        </div>
+<!-- ===== SLIDE 7: DIALOGUE 2 ===== -->
+<div class="slide">
+  <h2>对话二 · 芒格与老子论"道"</h2>
+  <div class="divider"></div>
+  <div class="dialogue">
+    <div class="d-item char-munger"><div class="d-avatar">芒</div><div class="d-bubble"><div class="d-name">查理·芒格</div><div class="d-text">我一直相信简单的道理。复杂的东西往往不可靠。最好的投资决策，通常用一句话就能解释清楚。</div></div></div>
+    <div class="d-item char-laozi"><div class="d-avatar">老</div><div class="d-bubble"><div class="d-name">老子</div><div class="d-text">大道至简。吾言甚易知，甚易行。天下莫能知，莫能行。你说的"简单的道理"，正合"道"之本义。世人好繁，而道在简。</div></div></div>
+    <div class="d-item char-munger"><div class="d-avatar">芒</div><div class="d-bubble"><div class="d-name">查理·芒格</div><div class="d-text">正是如此！我最推崇的品质是理性——它让我避免了许多愚蠢的错误。保持理性，其实就是不被情绪和偏见遮蔽判断。</div></div></div>
+    <div class="d-item char-laozi"><div class="d-avatar">老</div><div class="d-bubble"><div class="d-name">老子</div><div class="d-text">致虚极，守静笃。万物并作，吾以观复。你所谓的"理性"，便是"守静"——在万物纷扰中，守住清明之心。</div></div></div>
   </div>
 </div>
 
+<!-- ===== SLIDE 8: GOLDEN QUOTE 1-2 ===== -->
+<div class="slide">
+  <h2>金句集 · 第一组</h2>
+  <div class="divider"></div>
+  <div class="quote-box" style="margin-bottom:20px">
+    <div class="quote-text">凡事往简单处想，往认真处行。</div>
+    <div class="quote-author">—— 查理·芒格 · 金句 ①</div>
+  </div>
+  <div class="quote-box">
+    <div class="quote-text">在手里拿着铁锤的人看来，世界就像一颗钉子。</div>
+    <div class="quote-author">—— 查理·芒格 · 金句 ②</div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 9: SCENE 2 ===== -->
+<div class="slide">
+  <h2>场景还原 · 西科金融年会的训诫</h2>
+  <div class="divider"></div>
+  <div class="scene-box">
+    <div class="scene-label">场景二 · 1990年代 · 西科金融年会</div>
+    <div class="scene-text">芒格站在年会讲台上，台下坐满了投资者。他没有谈论任何具体的股票推荐，而是花了大量时间讲述<span class="hl">人类心理偏误</span>的清单。"你们来这里听投资建议，"他说，"但我给你们的是更宝贵的东西——如何避免犯蠢。"台下先是一片沉默，随后爆发出雷鸣般的掌声。这就是芒格式的智慧：不教你如何成功，教你如何避免失败。</div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 10: DIALOGUE 3 ===== -->
+<div class="slide">
+  <h2>对话三 · 跨学科思维的实践</h2>
+  <div class="divider"></div>
+  <div class="dialogue">
+    <div class="d-item char-taleb"><div class="d-avatar">塔</div><div class="d-bubble"><div class="d-name">纳西姆·塔勒布</div><div class="d-text">芒格理解了一件事：专家在自己的领域之外往往犯最愚蠢的错误。物理学家谈论政治，经济学家预测股市——他们的自信远超他们的能力。</div></div></div>
+    <div class="d-item char-munger"><div class="d-avatar">芒</div><div class="d-bubble"><div class="d-name">查理·芒格</div><div class="d-text">所以我主张"多元思维"——不是成为每个领域的专家，而是在每个领域都掌握最重要的几个核心模型。这样你就能看到别人看不到的联系。</div></div></div>
+    <div class="d-item char-buffett"><div class="d-avatar">巴</div><div class="d-bubble"><div class="d-name">沃伦·巴菲特</div><div class="d-text">查理能从物理学的临界质量概念里看到商业护城河的本质，能从生物进化论里理解竞争淘汰。这种能力，我是不具备的。</div></div></div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 11: MODEL GRID ===== -->
+<div class="slide">
+  <h2>芒格推荐的 25 个核心思维模型</h2>
+  <div class="divider"></div>
+  <div style="max-width:900px;display:flex;flex-wrap:wrap;justify-content:center;gap:8px">
+    <span class="tag">复利效应</span><span class="tag">概率思维</span><span class="tag">排列组合</span><span class="tag">决策树</span>
+    <span class="tag">临界质量</span><span class="tag">均衡理论</span><span class="tag">进化论</span><span class="tag">自催化</span>
+    <span class="tag">规模优势</span><span class="tag">比较优势</span><span class="tag">沉没成本</span><span class="tag">激励机制</span>
+    <span class="tag">社会认同</span><span class="tag">权威偏误</span><span class="tag">锚定效应</span><span class="tag">损失厌恶</span>
+    <span class="tag">确认偏误</span><span class="tag">边际效用</span><span class="tag">机会成本</span><span class="tag">均值回归</span>
+    <span class="tag">逆向思维</span><span class="tag">奥卡姆剃刀</span><span class="tag">安全边际</span><span class="tag">能力圈</span>
+    <span class="tag">二阶效应</span>
+  </div>
+  <p style="margin-top:24px">"你不需要成为每个领域的专家，但你需要掌握每个领域<span class="hl">最重要的模型</span>。"</p>
+</div>
+
+<!-- ===== SLIDE 12: CHAPTER 2 INTRO ===== -->
+<div class="slide">
+  <h2>第二章 · 逆向思维</h2>
+  <div class="divider"></div>
+  <div class="cover-ornament" style="font-size:3.5em">🔄</div>
+  <p style="font-size:1.3em;color:var(--text);font-family:'Noto Serif SC',serif;line-height:1.8;max-width:750px">
+    "反过来想，总是反过来想。<br>如果你想知道如何幸福，先研究什么让人痛苦。"
+  </p>
+  <div class="quote-author" style="margin-top:16px">—— 查理·芒格</div>
+</div>
+
+<!-- ===== SLIDE 13: SCENE 3 ===== -->
+<div class="slide">
+  <h2>场景还原 · 反向研究"如何毁掉人生"</h2>
+  <div class="divider"></div>
+  <div class="scene-box">
+    <div class="scene-label">场景三 · 芒格的思维实验室</div>
+    <div class="scene-text">芒格喜欢给年轻投资者出一道题：<span class="hl">"告诉我，怎样才能过上痛苦的人生？"</span> 然后他会列出配方：嫉妒、怨恨、反复无常、不从别人的成功和失败中学习、遭遇挫折就一蹶不振。"如果你能避开这些，"他微笑着说，"你就已经比大多数人活得好了。"</div>
+  </div>
+  <div class="grid-2" style="margin-top:16px">
+    <div class="card" style="text-align:center"><div class="card-icon">❌</div><h4>痛苦配方</h4><p>嫉妒 · 怨恨 · 反复无常 · 拒绝学习</p></div>
+    <div class="card" style="text-align:center"><div class="card-icon">✅</div><h4>幸福配方</h4><p>理性 · 感恩 · 持续学习 · 延迟满足</p></div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 14: DIALOGUE 4 ===== -->
+<div class="slide">
+  <h2>对话四 · 逆向思维的力量</h2>
+  <div class="divider"></div>
+  <div class="dialogue">
+    <div class="d-item char-munger"><div class="d-avatar">芒</div><div class="d-bubble"><div class="d-name">查理·芒格</div><div class="d-text">我经常使用"逆向思维"。雅各比说"反过来想"，我一直遵从这条建议。想知道怎样创造好的股市回报？先研究怎样会创造糟糕的回报。</div></div></div>
+    <div class="d-item char-taleb"><div class="d-avatar">塔</div><div class="d-bubble"><div class="d-name">纳西姆·塔勒布</div><div class="d-text">这跟我的"反脆弱"思路一致——你不应该只问"如何获利"，更应该问"如何不被毁灭"。生存是第一位的。活下来，才有未来。</div></div></div>
+    <div class="d-item char-nietzsche"><div class="d-avatar">尼</div><div class="d-bubble"><div class="d-name">弗里德里希·尼采</div><div class="d-text">"那些杀不死我的，使我更强大。"但芒格的智慧更进一步——他不等灾难来磨练自己，而是提前研究灾难的规律，主动避开。</div></div></div>
+    <div class="d-item char-munger"><div class="d-avatar">芒</div><div class="d-bubble"><div class="d-name">查理·芒格</div><div class="d-text">对。我不是英雄主义者。我不会故意让自己经历痛苦来"成长"。我宁可从别人的愚蠢中学到教训。</div></div></div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 15: GOLDEN QUOTE 3-4 ===== -->
+<div class="slide">
+  <h2>金句集 · 第二组</h2>
+  <div class="divider"></div>
+  <div class="quote-box" style="margin-bottom:20px">
+    <div class="quote-text">反过来想，总是反过来想。</div>
+    <div class="quote-author">—— 查理·芒格 · 金句 ③</div>
+  </div>
+  <div class="quote-box">
+    <div class="quote-text">如果我知道我会死在哪里，那我将永远不去那个地方。</div>
+    <div class="quote-author">—— 查理·芒格 · 金句 ④</div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 16: DIALOGUE 5 ===== -->
+<div class="slide">
+  <h2>对话五 · 如何避免愚蠢</h2>
+  <div class="divider"></div>
+  <div class="dialogue">
+    <div class="d-item char-buffett"><div class="d-avatar">巴</div><div class="d-bubble"><div class="d-name">沃伦·巴菲特</div><div class="d-text">查理常说，他和我做的事情不是比别人聪明，而是比别人少犯蠢。这听起来简单，实际上极难做到。</div></div></div>
+    <div class="d-item char-kahneman"><div class="d-avatar">卡</div><div class="d-bubble"><div class="d-name">丹尼尔·卡尼曼</div><div class="d-text">人类大脑天生容易犯系统性错误。我们的快思考系统在进化中为生存优化，但在现代投资决策中，它经常把我们带入陷阱。</div></div></div>
+    <div class="d-item char-laozi"><div class="d-avatar">老</div><div class="d-bubble"><div class="d-name">老子</div><div class="d-text">知人者智，自知者明。胜人者有力，自胜者强。能战胜自身偏见的人，比战胜对手更强大。</div></div></div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 17: SCENE 4 ===== -->
+<div class="slide">
+  <h2>场景还原 · 所罗门兄弟危机</h2>
+  <div class="divider"></div>
+  <div class="scene-box">
+    <div class="scene-label">场景四 · 1991年 · 所罗门兄弟公司</div>
+    <div class="scene-text">1991年，所罗门兄弟公司因国债交易丑闻濒临破产。巴菲特作为最大股东被推上前台，临危受命担任临时董事长。在最危急的时刻，他给芒格打了电话。芒格只说了一句话：<span class="hl">"做正确的事，做透明的事。其他的，交给时间。"</span> 巴菲特后来回忆，正是这个建议帮助他做出了正确的决策——公开一切，配合监管，绝不掩盖。</div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 18: CHAPTER 3 INTRO ===== -->
+<div class="slide">
+  <h2>第三章 · 能力圈</h2>
+  <div class="divider"></div>
+  <div class="cover-ornament" style="font-size:3.5em">🎯</div>
+  <p style="font-size:1.3em;color:var(--text);font-family:'Noto Serif SC',serif;line-height:1.8;max-width:750px">
+    "重要的不是你知道多少，<br>而是你能否诚实地面对自己不知道的。"
+  </p>
+  <div class="quote-author" style="margin-top:16px">—— 查理·芒格</div>
+</div>
+
+<!-- ===== SLIDE 19: DIALOGUE 6 ===== -->
+<div class="slide">
+  <h2>对话六 · 知道自己不知道</h2>
+  <div class="divider"></div>
+  <div class="dialogue">
+    <div class="d-item char-buffett"><div class="d-avatar">巴</div><div class="d-bubble"><div class="d-name">沃伦·巴菲特</div><div class="d-text">我们的投资有一个核心原则：只在能力圈内行事。你不需要对每家公司都有看法，你只需要对少数几家公司有正确的看法。</div></div></div>
+    <div class="d-item char-munger"><div class="d-avatar">芒</div><div class="d-bubble"><div class="d-name">查理·芒格</div><div class="d-text">能力圈的关键不是圈的大小，而是你是否知道边界在哪里。一个知道自己能力圈边界的笨蛋，比一个不知道自己能力圈边界的天才，做得更好。</div></div></div>
+    <div class="d-item char-taleb"><div class="d-avatar">塔</div><div class="d-bubble"><div class="d-name">纳西姆·塔勒布</div><div class="d-text">这就是"认识论谦逊"。你不知道的远远比你知道的更重要。黑天鹅事件来自你认知之外的领域——但如果你足够谦逊，你会为此做好准备。</div></div></div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 20: SCENE 5 ===== -->
+<div class="slide">
+  <h2>场景还原 · 伯克希尔年度股东大会</h2>
+  <div class="divider"></div>
+  <div class="scene-box">
+    <div class="scene-label">场景五 · 奥马哈 · 每年五月</div>
+    <div class="scene-text">每年的伯克希尔股东大会上，数万名股东涌向奥马哈。在长达五小时的问答环节中，当被问及对科技股的看法时，芒格坦然地说：<span class="hl">"这不是我能力圈内的事。"</span> 台下一片惊讶——一位投资大师竟然公开承认自己的无知。但芒格从不觉得承认无知有什么丢人的。相反，他认为这是最理性、最诚实的态度。</div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 21: GOLDEN QUOTE 5-6 ===== -->
+<div class="slide">
+  <h2>金句集 · 第三组</h2>
+  <div class="divider"></div>
+  <div class="quote-box" style="margin-bottom:20px">
+    <div class="quote-text">我们赚钱，靠的是记住显而易见的东西，而不是弄清楚深奥的东西。</div>
+    <div class="quote-author">—— 查理·芒格 · 金句 ⑤</div>
+  </div>
+  <div class="quote-box">
+    <div class="quote-text">承认自己的无知，就是智慧的开端。</div>
+    <div class="quote-author">—— 查理·芒格 · 金句 ⑥</div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 22: DIALOGUE 7 ===== -->
+<div class="slide">
+  <h2>对话七 · 尼采论超越与边界</h2>
+  <div class="divider"></div>
+  <div class="dialogue">
+    <div class="d-item char-nietzsche"><div class="d-avatar">尼</div><div class="d-bubble"><div class="d-name">弗里德里希·尼采</div><div class="d-text">"人是一根绳索，系于禽兽与超人之间——一根悬于深渊之上的绳索。" 芒格，你的"能力圈"是否限制了人的超越？</div></div></div>
+    <div class="d-item char-munger"><div class="d-avatar">芒</div><div class="d-bubble"><div class="d-name">查理·芒格</div><div class="d-text">恰恰相反。能力圈不是牢笼，而是跳板。只有在你真正理解的领域扎下根，你才能安全地向外扩展。超越的前提是自知。</div></div></div>
+    <div class="d-item char-nietzsche"><div class="d-avatar">尼</div><div class="d-bubble"><div class="d-name">弗里德里希·尼采</div><div class="d-text">有意思。你把谦逊变成了力量，把限制变成了自由。这和我所说的"自律带来自由"有异曲同工之妙。</div></div></div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 23: SCENE 6 ===== -->
+<div class="slide">
+  <h2>场景还原 · 错过谷歌的教训</h2>
+  <div class="divider"></div>
+  <div class="scene-box">
+    <div class="scene-label">场景六 · 芒格的反思</div>
+    <div class="scene-text">芒格曾公开承认，伯克希尔早期<span class="hl">错过了谷歌的投资机会</span>。他们看到了谷歌广告模式的威力——亲眼目睹旗下公司的广告转化率——却没有行动。"这是我们的失误，"芒格说，"我们本应该在能力圈的边缘做出判断。"但他并不后悔没有投那些他们完全不理解的公司。<span class="hl">错过机会不是错误，越出能力圈才是。</span></div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 24: CHAPTER 4 INTRO ===== -->
+<div class="slide">
+  <h2>第四章 · 误判心理学</h2>
+  <div class="divider"></div>
+  <div class="cover-ornament" style="font-size:3.5em">🪞</div>
+  <p style="font-size:1.3em;color:var(--text);font-family:'Noto Serif SC',serif;line-height:1.8;max-width:750px">
+    "人类的头脑既是巨大的优势，<br>也是巨大的陷阱——关键在于你是否了解它的缺陷。"
+  </p>
+  <div class="quote-author" style="margin-top:16px">—— 查理·芒格</div>
+</div>
+
+<!-- ===== SLIDE 25: 25 COGNITIVE BIASES ===== -->
+<div class="slide">
+  <h2>芒格的 25 种误判心理学</h2>
+  <div class="divider"></div>
+  <div class="grid-4" style="gap:10px">
+    <div class="card" style="padding:12px;text-align:center"><p style="font-size:0.85em"><strong>1</strong> 激励偏误</p></div>
+    <div class="card" style="padding:12px;text-align:center"><p style="font-size:0.85em"><strong>2</strong> 爱/恨偏误</p></div>
+    <div class="card" style="padding:12px;text-align:center"><p style="font-size:0.85em"><strong>3</strong> 否认现实</p></div>
+    <div class="card" style="padding:12px;text-align:center"><p style="font-size:0.85em"><strong>4</strong> 自我服务</p></div>
+    <div class="card" style="padding:12px;text-align:center"><p style="font-size:0.85em"><strong>5</strong> 过度自信</p></div>
+    <div class="card" style="padding:12px;text-align:center"><p style="font-size:0.85em"><strong>6</strong> 厌恶损失</p></div>
+    <div class="card" style="padding:12px;text-align:center"><p style="font-size:0.85em"><strong>7</strong> 一致性偏误</p></div>
+    <div class="card" style="padding:12px;text-align:center"><p style="font-size:0.85em"><strong>8</strong> 好奇心偏误</p></div>
+    <div class="card" style="padding:12px;text-align:center"><p style="font-size:0.85em"><strong>9</strong> 康德式公平</p></div>
+    <div class="card" style="padding:12px;text-align:center"><p style="font-size:0.85em"><strong>10</strong> 羡慕/嫉妒</p></div>
+    <div class="card" style="padding:12px;text-align:center"><p style="font-size:0.85em"><strong>11</strong> 回馈偏误</p></div>
+    <div class="card" style="padding:12px;text-align:center"><p style="font-size:0.85em"><strong>12</strong> 受简单联想影响</p></div>
+    <div class="card" style="padding:12px;text-align:center"><p style="font-size:0.85em"><strong>13</strong> 简单回避痛苦</p></div>
+    <div class="card" style="padding:12px;text-align:center"><p style="font-size:0.85em"><strong>14</strong> 社会认同</p></div>
+    <div class="card" style="padding:12px;text-align:center"><p style="font-size:0.85em"><strong>15</strong> 对标偏误</p></div>
+    <div class="card" style="padding:12px;text-align:center"><p style="font-size:0.85em"><strong>16</strong> 压力影响</p></div>
+    <div class="card" style="padding:12px;text-align:center"><p style="font-size:0.85em"><strong>17</strong> 易得性偏误</p></div>
+    <div class="card" style="padding:12px;text-align:center"><p style="font-size:0.85em"><strong>18</strong> 不用就忘</p></div>
+    <div class="card" style="padding:12px;text-align:center"><p style="font-size:0.85em"><strong>19</strong> 化学物质影响</p></div>
+    <div class="card" style="padding:12px;text-align:center"><p style="font-size:0.85em"><strong>20</strong> 衰老偏误</p></div>
+    <div class="card" style="padding:12px;text-align:center"><p style="font-size:0.85em"><strong>21</strong> 权威偏误</p></div>
+    <div class="card" style="padding:12px;text-align:center"><p style="font-size:0.85em"><strong>22</strong> 废话偏误</p></div>
+    <div class="card" style="padding:12px;text-align:center"><p style="font-size:0.85em"><strong>23</strong> 有意义工作</p></div>
+    <div class="card" style="padding:12px;text-align:center"><p style="font-size:0.85em"><strong>24</strong> lollapalooza</p></div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 26: DIALOGUE 8 ===== -->
+<div class="slide">
+  <h2>对话八 · 心理偏误与投资陷阱</h2>
+  <div class="divider"></div>
+  <div class="dialogue">
+    <div class="d-item char-kahneman"><div class="d-avatar">卡</div><div class="d-bubble"><div class="d-name">丹尼尔·卡尼曼</div><div class="d-text">我们的大脑有两套系统——系统1是快速、直觉、情绪化的；系统2是缓慢、理性、有意识的。投资中的大多数错误，来自用系统1做了应该用系统2做的决策。</div></div></div>
+    <div class="d-item char-munger"><div class="d-avatar">芒</div><div class="d-bubble"><div class="d-name">查理·芒格</div><div class="d-text">我总结了25种心理偏误，最危险的是"社会认同"——当所有人都在做同一件事时，你的大脑会告诉你这一定是对的。泡沫就是这样形成的。</div></div></div>
+    <div class="d-item char-taleb"><div class="d-avatar">塔</div><div class="d-bubble"><div class="d-name">纳西姆·塔勒布</div><div class="d-text">还有"叙事偏误"——人们喜欢好听的故事。一个好的投资故事比一个冷冰冰的概率分析更容易让人掏钱。</div></div></div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 27: SCENE 7 ===== -->
+<div class="slide">
+  <h2>场景还原 · 安然公司的崩塌</h2>
+  <div class="divider"></div>
+  <div class="scene-box">
+    <div class="scene-label">场景七 · 2001年 · 安然丑闻</div>
+    <div class="scene-text">2001年，安然公司从华尔街宠儿变成史上最大企业欺诈案之一。芒格在安然崩塌前就曾警告：<span class="hl">"当一家公司的财务报表比电话簿还复杂时，你最好远离它。"</span> 这正是能力圈原则的应用——你无法分析你看不懂的东西。那些被安然复杂结构迷惑的分析师，恰恰犯了芒格警告的"过度自信"和"权威偏误"。</div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 28: DIALOGUE 9 ===== -->
+<div class="slide">
+  <h2>对话九 · Lollapalooza效应</h2>
+  <div class="divider"></div>
+  <div class="dialogue">
+    <div class="d-item char-munger"><div class="d-avatar">芒</div><div class="d-bubble"><div class="d-name">查理·芒格</div><div class="d-text">当多种心理偏误同时叠加时，会产生"Lollapalooza效应"——结果不是线性的相加，而是指数级的放大。这就是为什么泡沫和恐慌都如此极端。</div></div></div>
+    <div class="d-item char-kahneman"><div class="d-avatar">卡</div><div class="d-bubble"><div class="d-name">丹尼尔·卡尼曼</div><div class="d-text">这解释了为什么理性在群体中几乎不存在。社会认同+权威偏误+从众压力，三者叠加足以让最聪明的人做出最愚蠢的事。</div></div></div>
+    <div class="d-item char-buffett"><div class="d-avatar">巴</div><div class="d-bubble"><div class="d-name">沃伦·巴菲特</div><div class="d-text">"在别人贪婪时恐惧，在别人恐惧时贪婪"——这句话之所以难做到，正是因为Lollapalooza效应在对抗你。</div></div></div>
+    <div class="d-item char-laozi"><div class="d-avatar">老</div><div class="d-bubble"><div class="d-name">老子</div><div class="d-text">飘风不终朝，骤雨不终日。极端之事不能持久。懂得这一点的人，便不会随波逐流。</div></div></div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 29: GOLDEN QUOTE 7-8 ===== -->
+<div class="slide">
+  <h2>金句集 · 第四组</h2>
+  <div class="divider"></div>
+  <div class="quote-box" style="margin-bottom:20px">
+    <div class="quote-text">在别人贪婪时恐惧，在别人恐惧时贪婪。</div>
+    <div class="quote-author">—— 沃伦·巴菲特 · 金句 ⑦</div>
+  </div>
+  <div class="quote-box">
+    <div class="quote-text">想要得到某样东西，最可靠的方法是让自己配得上它。</div>
+    <div class="quote-author">—— 查理·芒格 · 金句 ⑧</div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 30: SCENE 8 ===== -->
+<div class="slide">
+  <h2>场景还原 · 2008年金融危机</h2>
+  <div class="divider"></div>
+  <div class="scene-box">
+    <div class="scene-label">场景八 · 2008年 · 全球金融市场</div>
+    <div class="scene-text">2008年，次贷危机席卷全球。当华尔街陷入恐慌时，巴菲特和芒格却在<span class="hl">逆势投资</span>——向高盛注入50亿美元。芒格事后说："当潮水退去时，你才知道谁在裸泳。我们之所以能在别人恐惧时出手，是因为我们从不在别人贪婪时忘记恐惧。" 这是逆向思维、能力圈和心理偏误控制的完美结合。</div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 31: CHAPTER 5 INTRO ===== -->
+<div class="slide">
+  <h2>第五章 · 投资哲学</h2>
+  <div class="divider"></div>
+  <div class="cover-ornament" style="font-size:3.5em">💰</div>
+  <p style="font-size:1.3em;color:var(--text);font-family:'Noto Serif SC',serif;line-height:1.8;max-width:750px">
+    "投资不是一场智力竞赛，<br>而是一场理性与耐心的修行。"
+  </p>
+  <div class="quote-author" style="margin-top:16px">—— 查理·芒格</div>
+</div>
+
+<!-- ===== SLIDE 32: DIALOGUE 10 ===== -->
+<div class="slide">
+  <h2>对话十 · 六位智者论投资</h2>
+  <div class="divider"></div>
+  <div class="dialogue">
+    <div class="d-item char-munger"><div class="d-avatar">芒</div><div class="d-bubble"><div class="d-name">查理·芒格</div><div class="d-text">好的投资不需要太多。一生中找到三四个伟大的企业，集中投资，然后长期持有。这就是全部的秘密。</div></div></div>
+    <div class="d-item char-buffett"><div class="d-avatar">巴</div><div class="d-bubble"><div class="d-name">沃伦·巴菲特</div><div class="d-text">我们的持仓集中度远超大多数人想象。当你的挥球区出现一个好球时，全力挥棒。</div></div></div>
+    <div class="d-item char-taleb"><div class="d-avatar">塔</div><div class="d-bubble"><div class="d-name">纳西姆·塔勒布</div><div class="d-text">但要确保即使你错了也不会毁灭。用"杠铃策略"——90%极度保守，10%极度激进。永远不要在中间地带自以为安全。</div></div></div>
+    <div class="d-item char-nietzsche"><div class="d-avatar">尼</div><div class="d-bubble"><div class="d-name">弗里德里希·尼采</div><div class="d-text">耐心是一种高级力量。"不能服从自己的人，就会被别人命令。"在投资中，不能服从理性的投资者，就会被市场命令。</div></div></div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 33: INVESTMENT PRINCIPLES ===== -->
+<div class="slide">
+  <h2>芒格投资四原则</h2>
+  <div class="divider"></div>
+  <div class="grid-2">
+    <div class="card" style="text-align:center;padding:30px"><div class="num-circle">1</div><h4>安全边际</h4><p>永远以大幅低于内在价值的价格买入，为错误留出空间</p></div>
+    <div class="card" style="text-align:center;padding:30px"><div class="num-circle">2</div><h4>能力圈</h4><p>只投资于你真正理解的企业，不越界</p></div>
+    <div class="card" style="text-align:center;padding:30px"><div class="num-circle">3</div><h4>优质企业</h4><p>寻找具有持久竞争优势的公司——护城河比便宜的价格更重要</p></div>
+    <div class="card" style="text-align:center;padding:30px"><div class="num-circle">4</div><h4>长期持有</h4><p>时间是好企业的朋友，是坏企业的敌人</p></div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 34: GOLDEN QUOTE 9-10 ===== -->
+<div class="slide">
+  <h2>金句集 · 第五组</h2>
+  <div class="divider"></div>
+  <div class="quote-box" style="margin-bottom:20px">
+    <div class="quote-text">我们偏向于把大量的钱投放在我们不用再另外做决策的地方。</div>
+    <div class="quote-author">—— 查理·芒格 · 金句 ⑨</div>
+  </div>
+  <div class="quote-box">
+    <div class="quote-text">时间是好企业的朋友，是坏企业的敌人。</div>
+    <div class="quote-author">—— 沃伦·巴菲特 · 金句 ⑩</div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 35: MARGIN OF SAFETY ===== -->
+<div class="slide">
+  <h2>安全边际：投资的核心保护</h2>
+  <div class="divider"></div>
+  <div class="insight">
+    <div class="insight-icon">🛡️</div>
+    <h4>安全边际 (Margin of Safety)</h4>
+    <p>格雷厄姆提出的最重要概念：以远低于内在价值的价格买入。<br>这不是技术分析，而是一种<span class="hl">思维方式</span>——为你的错误留出足够大的缓冲区。</p>
+  </div>
+  <div class="grid-3" style="margin-top:20px">
+    <div class="card" style="text-align:center"><div class="card-icon">📉</div><h4>估值错误</h4><p>你对价值的判断可能是错的</p></div>
+    <div class="card" style="text-align:center"><div class="card-icon">🌊</div><h4>市场波动</h4><p>短期价格可能大幅偏离价值</p></div>
+    <div class="card" style="text-align:center"><div class="card-icon">⚡</div><h4>黑天鹅</h4><p>不可预见的风险随时可能出现</p></div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 36: COMPOUND INTEREST ===== -->
+<div class="slide">
+  <h2>复利：世界第八大奇迹</h2>
+  <div class="divider"></div>
+  <div class="insight">
+    <div class="insight-icon">📈</div>
+    <h4>复利的力量</h4>
+    <p>假设年回报率 15%：<br>
+    10年 → 4倍 · 20年 → 16倍 · 30年 → 66倍 · 40年 → 268倍 · 50年 → 1,083倍</p>
+  </div>
+  <div class="quote-box" style="margin-top:20px">
+    <div class="quote-text">理解复利的力量和获得它的困难，是理解很多事情的核心和灵魂。</div>
+    <div class="quote-author">—— 查理·芒格</div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 37: LOLLAPALOOZA ===== -->
+<div class="slide">
+  <h2>Lollapalooza 效应</h2>
+  <div class="divider"></div>
+  <p style="margin-bottom:20px">当多个力量<span class="hl">同时向同一方向</span>推动时，产生极端结果</p>
+  <div class="grid-2">
+    <div class="card">
+      <h4>🎉 好的 Lollapalooza</h4>
+      <p>可口可乐：品牌+配方+分销网络+心理依赖+规模优势 → 百年不倒</p>
+    </div>
+    <div class="card">
+      <h4>💥 坏的 Lollapalooza</h4>
+      <p>次贷危机：贪婪+杠杆+评级欺诈+监管缺失+群体狂热 → 全球崩溃</p>
     </div>
   </div>
+  <div class="quote-box" style="margin-top:20px">
+    <div class="quote-text">最好的投资就是 Lollapalooza 式的企业——多种优势叠加，竞争对手无法复制。</div>
+    <div class="quote-author">—— 查理·芒格</div>
+  </div>
 </div>
-<div id="nav">
-  <button class="nav-btn" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
-  <div class="dots" id="dots"></div>
-  <button class="nav-btn" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+
+<!-- ===== SLIDE 38: GOLDEN QUOTE 11-12 ===== -->
+<div class="slide">
+  <h2>金句集 · 第六组</h2>
+  <div class="divider"></div>
+  <div class="quote-box" style="margin-bottom:20px">
+    <div class="quote-text">你需要的不是大量的行动，而是大量的耐心。</div>
+    <div class="quote-author">—— 查理·芒格 · 金句 ⑪</div>
+  </div>
+  <div class="quote-box">
+    <div class="quote-text">宏观是我们必须接受的，微观才是我们能有所作为的。</div>
+    <div class="quote-author">—— 查理·芒格 · 金句 ⑫</div>
+  </div>
 </div>
-<div id="counter">1 / 1</div>
+
+<!-- ===== SLIDE 39: CIRCLE OF COMPETENCE DIAGRAM ===== -->
+<div class="slide">
+  <h2>能力圈的三重境界</h2>
+  <div class="divider"></div>
+  <div class="grid-3">
+    <div class="card" style="text-align:center;border-color:#c7955a;border-width:3px"><div class="card-icon">🟢</div><h4>第一层：知道</h4><p>你真正理解的领域，可以自信地做决策</p></div>
+    <div class="card" style="text-align:center;border-color:var(--gold);border-width:3px"><div class="card-icon">🟡</div><h4>第二层：知道自己不知道</h4><p>你意识到的无知，保持警惕和谦逊</p></div>
+    <div class="card" style="text-align:center;border-color:#ccc;border-width:3px"><div class="card-icon">🔴</div><h4>第三层：不知道自己不知道</h4><p>最危险的领域——盲目自信的来源</p></div>
+  </div>
+  <p style="margin-top:24px">智慧的核心：<span class="hl">不断将第三层转化为第二层</span></p>
+</div>
+
+<!-- ===== SLIDE 40: THE PSYCHOLOGY OF HUMAN MISJUDGMENT ===== -->
+<div class="slide">
+  <h2>人类误判心理学 · 核心五条</h2>
+  <div class="divider"></div>
+  <div style="max-width:800px">
+    <div class="card" style="margin:10px 0;display:flex;align-items:center;gap:20px"><div class="num-circle" style="flex-shrink:0">1</div><div><h4>激励超级反应倾向</h4><p>永远不要低估激励的力量。"给我看激励机制，我就能告诉你结果。"</p></div></div>
+    <div class="card" style="margin:10px 0;display:flex;align-items:center;gap:20px"><div class="num-circle" style="flex-shrink:0">2</div><div><h4>简单联想误导倾向</h4><p>大脑将"相关"误认为"因果"——广告业的基石</p></div></div>
+    <div class="card" style="margin:10px 0;display:flex;align-items:center;gap:20px"><div class="num-circle" style="flex-shrink:0">3</div><div><h4>被剥夺超级反应倾向</h4><p>损失的痛苦是获得快乐的两倍——损失厌恶</p></div></div>
+    <div class="card" style="margin:10px 0;display:flex;align-items:center;gap:20px"><div class="num-circle" style="flex-shrink:0">4</div><div><h4>社会认同倾向</h4><p>"别人都在做"——最强大的群体压力</p></div></div>
+    <div class="card" style="margin:10px 0;display:flex;align-items:center;gap:20px"><div class="num-circle" style="flex-shrink:0">5</div><div><h4>权威-误导倾向</h4><p>服从权威的本能——米尔格拉姆实验的启示</p></div></div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 41: GOLDEN QUOTE 13-14 ===== -->
+<div class="slide">
+  <h2>金句集 · 第七组</h2>
+  <div class="divider"></div>
+  <div class="quote-box" style="margin-bottom:20px">
+    <div class="quote-text">如果你确有能力，你就会非常清楚能力圈的边界在哪里。如果你问起自己是否超出了能力圈，那你已经在圈外了。</div>
+    <div class="quote-author">—— 查理·芒格 · 金句 ⑬</div>
+  </div>
+  <div class="quote-box">
+    <div class="quote-text">不要同一头猪摔跤，因为你会弄一身泥，而猪却会乐在其中。</div>
+    <div class="quote-author">—— 查理·芒格 · 金句 ⑭</div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 42: EAST MEETS WEST ===== -->
+<div class="slide">
+  <h2>东方智慧 × 西方理性的交融</h2>
+  <div class="divider"></div>
+  <div class="grid-2">
+    <div class="card">
+      <h4>☯️ 老子的道</h4>
+      <p>• 无为而无不为 → 耐心等待<br>
+      • 知足不辱 → 能力圈<br>
+      • 反者道之动 → 逆向思维<br>
+      • 大道至简 → 简单原则</p>
+    </div>
+    <div class="card">
+      <h4>⚡ 尼采的力</h4>
+      <p>• 超人哲学 → 持续进化<br>
+      • 永恒轮回 → 每次决策都值得反复检验<br>
+      • 权力意志 → 理性的自我主宰<br>
+      • 价值重估 → 独立思考</p>
+    </div>
+  </div>
+  <p style="margin-top:20px">芒格的智慧体系，是<span class="hl">东西方思想</span>的完美融合</p>
+</div>
+
+<!-- ===== SLIDE 43: TEN COMMANDMENTS ===== -->
+<div class="slide">
+  <h2>芒格的人生十诫</h2>
+  <div class="divider"></div>
+  <div style="max-width:850px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div class="card" style="padding:12px"><p style="font-size:0.9em">❶ 获得智慧是一种道德责任</p></div>
+    <div class="card" style="padding:12px"><p style="font-size:0.9em">❷ 每天起来时，变得比昨天更聪明一点</p></div>
+    <div class="card" style="padding:12px"><p style="font-size:0.9em">❸ 逆向思维，总是逆向思维</p></div>
+    <div class="card" style="padding:12px"><p style="font-size:0.9em">❹ 避免与不诚实的人打交道</p></div>
+    <div class="card" style="padding:12px"><p style="font-size:0.9em">❺ 保持理性，尤其在困难时期</p></div>
+    <div class="card" style="padding:12px"><p style="font-size:0.9em">❻ 避免强烈的意识形态</p></div>
+    <div class="card" style="padding:12px"><p style="font-size:0.9em">❼ 让配得上你想要的东西</p></div>
+    <div class="card" style="padding:12px"><p style="font-size:0.9em">❽ 远离自我服务偏见</p></div>
+    <div class="card" style="padding:12px"><p style="font-size:0.9em">❾ 终身学习是最大的复利</p></div>
+    <div class="card" style="padding:12px"><p style="font-size:0.9em">❿ 建立检查清单</p></div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 44: THE CHECKLIST ===== -->
+<div class="slide">
+  <h2>投资检查清单</h2>
+  <div class="divider"></div>
+  <div style="max-width:750px">
+    <div class="card" style="margin:8px 0;padding:14px 20px"><p>☐ 我是否真正理解这个生意？（能力圈）</p></div>
+    <div class="card" style="margin:8px 0;padding:14px 20px"><p>☐ 管理层是否诚实且有能力？</p></div>
+    <div class="card" style="margin:8px 0;padding:14px 20px"><p>☐ 企业是否有持久的竞争优势？（护城河）</p></div>
+    <div class="card" style="margin:8px 0;padding:14px 20px"><p>☐ 价格是否有足够的安全边际？</p></div>
+    <div class="card" style="margin:8px 0;padding:14px 20px"><p>☐ 我的心理状态是否正常？（避免偏误）</p></div>
+    <div class="card" style="margin:8px 0;padding:14px 20px"><p>☐ 有没有什么我可能遗漏的风险？（逆向思维）</p></div>
+    <div class="card" style="margin:8px 0;padding:14px 20px"><p>☐ 如果我错了，最坏的结果是什么？</p></div>
+    <div class="card" style="margin:8px 0;padding:14px 20px"><p>☐ 这个决定 10 幎后我会怎么看？</p></div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 45: MUNGER'S READING LIST ===== -->
+<div class="slide">
+  <h2>芒格推荐的阅读清单</h2>
+  <div class="divider"></div>
+  <div class="grid-2">
+    <div class="card"><h4>📖 《自私的基因》</h4><p>理查德·道金斯 — 理解人类行为的生物学基础</p></div>
+    <div class="card"><h4>📖 《影响力》</h4><p>罗伯特·西奥迪尼 — 六大说服原则与心理偏误</p></div>
+    <div class="card"><h4>📖 《思考，快与慢》</h4><p>丹尼尔·卡尼曼 — 双系统思维的完整理论</p></div>
+    <div class="card"><h4>📖 《物种起源》</h4><p>查尔斯·达尔文 — 进化论与竞争淘汰</p></div>
+    <div class="card"><h4>📖 《枪炮、病菌与钢铁》</h4><p>贾雷德·戴蒙德 — 文明兴衰的宏观视角</p></div>
+    <div class="card"><h4>📖 《深奥的简洁》</h4><p>约翰·葛瑞宾 — 复杂系统中的简单规律</p></div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 46: GOLDEN QUOTE 15-16 ===== -->
+<div class="slide">
+  <h2>金句集 · 第八组</h2>
+  <div class="divider"></div>
+  <div class="quote-box" style="margin-bottom:20px">
+    <div class="quote-text">人类社会只有发明了发明的方法之后才能发展，同样，人只有学习了学习的方法之后才能进步。</div>
+    <div class="quote-author">—— 查理·芒格 · 金句 ⑮</div>
+  </div>
+  <div class="quote-box">
+    <div class="quote-text">走到人生的某个阶段时，我决心要成为一个富有之人。这并不是因为爱钱，而是为了追求那种独立自主的感觉。</div>
+    <div class="quote-author">—— 查理·芒格 · 金句 ⑯</div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 47: WISDOM TIMELINE ===== -->
+<div class="slide">
+  <h2>芒格的智慧之路</h2>
+  <div class="divider"></div>
+  <div class="timeline">
+    <div class="tl-item"><div class="tl-year">1924</div><div class="tl-text">出生于奥马哈，与巴菲特同城</div></div>
+    <div class="tl-item"><div class="tl-year">1948</div><div class="tl-text">哈佛法学院毕业，不需本科学位直接录取</div></div>
+    <div class="tl-item"><div class="tl-year">1959</div><div class="tl-text">经人介绍认识巴菲特，命运的相遇</div></div>
+    <div class="tl-item"><div class="tl-year">1962</div><div class="tl-text">创立惠勒·芒格合伙公司</div></div>
+    <div class="tl-item"><div class="tl-year">1978</div><div class="tl-text">出任伯克希尔·哈撒韦副董事长</div></div>
+    <div class="tl-item"><div class="tl-year">1995</div><div class="tl-text">发表著名演讲"人类误判心理学"</div></div>
+    <div class="tl-item"><div class="tl-year">2023</div><div class="tl-text">以99岁高龄辞世，留下永恒智慧</div></div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 48: FINAL DIALOGUE ===== -->
+<div class="slide">
+  <h2>圆桌终论 · 智慧的终点</h2>
+  <div class="divider"></div>
+  <div class="dialogue">
+    <div class="d-item char-munger"><div class="d-avatar">芒</div><div class="d-bubble"><div class="d-name">查理·芒格</div><div class="d-text">我的人生哲学可以浓缩为一句话：每天起来的时候，试着变得比昨天的自己更聪明一点。日复一日，如果你活得够久——你终将得到你应得的东西。</div></div></div>
+    <div class="d-item char-buffett"><div class="d-avatar">巴</div><div class="d-bubble"><div class="d-name">沃伦·巴菲特</div><div class="d-text">查理让我从猩猩进化成了人类。没有他，我不会成为今天的我。</div></div></div>
+    <div class="d-item char-laozi"><div class="d-avatar">老</div><div class="d-bubble"><div class="d-name">老子</div><div class="d-text">为学日益，为道日损。损之又损，以至于无为。芒格之道，近于无为。</div></div></div>
+    <div class="d-item char-nietzsche"><div class="d-avatar">尼</div><div class="d-bubble"><div class="d-name">弗里德里希·尼采</div><div class="d-text">"对待生命，你不妨大胆冒险一点——因为你终将失去它。" 但芒格教会我们：大胆不等于鲁莽。</div></div></div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 49: TAKEAWAY ===== -->
+<div class="slide">
+  <h2>带走的智慧</h2>
+  <div class="divider"></div>
+  <div class="grid-2">
+    <div class="card" style="text-align:center"><div class="card-icon">🧠</div><h4>多元思维</h4><p>建立跨学科的思维格栅，避免锤子倾向</p></div>
+    <div class="card" style="text-align:center"><div class="card-icon">🔄</div><h4>逆向思维</h4><p>反过来想，总是反过来想——避免愚蠢比追求聪明更重要</p></div>
+    <div class="card" style="text-align:center"><div class="card-icon">🎯</div><h4>能力圈</h4><p>知道边界在哪里，比扩大边界更重要</p></div>
+    <div class="card" style="text-align:center"><div class="card-icon">🪞</div><h4>心理偏误</h4><p>了解25种误判倾向，用清单管理决策</p></div>
+    <div class="card" style="text-align:center"><div class="card-icon">💰</div><h4>投资哲学</h4><p>安全边际、优质企业、长期持有、集中投资</p></div>
+    <div class="card" style="text-align:center"><div class="card-icon">📚</div><h4>终身学习</h4><p>每天变聪明一点——这是最大的复利</p></div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 50: CLOSING ===== -->
+<div class="slide">
+  <div class="cover-ornament">✨</div>
+  <h1 style="font-size:2.8em">穷查理宝典</h1>
+  <div class="subtitle" style="font-size:1.2em">愿你每天醒来，都比昨天更聪明一点</div>
+  <div class="divider"></div>
+  <div class="quote-box" style="max-width:700px">
+    <div class="quote-text">我的剑传给能挥舞它的人。</div>
+    <div class="quote-author">—— 查理·芒格 (1924-2023)</div>
+  </div>
+  <p style="margin-top:30px;font-size:0.95em;color:var(--gold-dark)">
+    六位智者 · 十轮对话 · 八个场景 · 十六句金句<br>
+    五十年智慧浓缩 · 跨越东西方的思想盛宴
+  </p>
+  <p style="margin-top:20px;font-size:0.8em;color:var(--text-light)">
+    制作：AI 圆桌讨论系列 · 穷查理宝典 · 圆桌洞见
+  </p>
+</div>
+
+</div><!-- end .ppt -->
+
 <script>
-(function(){
-  const slides = document.querySelectorAll('.slide');
-  const total = slides.length;
-  let cur = 0;
-  const dotsContainer = document.getElementById('dots');
-  const counter = document.getElementById('counter');
-  const progress = document.getElementById('progressBar');
-
-  slides.forEach((s, i) => {
-    const dot = document.createElement('div');
-    dot.className = 'dot' + (i === 0 ? ' active' : '');
-    dot.onclick = () => go(i);
-    dotsContainer.appendChild(dot);
-  });
-
-  function go(n) {
-    if (n < 0 || n >= total) return;
-    slides[cur].classList.remove('visible');
-    dotsContainer.children[cur]?.classList.remove('active');
-    cur = n;
-    slides[cur].scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' });
-    slides[cur].classList.add('visible');
-    dotsContainer.children[cur]?.classList.add('active');
-    counter.textContent = (cur + 1) + ' / ' + total;
-    const pct = Math.min(100, ((cur + 1) / total) * 100);
-    progress.style.width = pct + '%';
-  }
-
-  document.getElementById('prevBtn').onclick = () => go(cur - 1);
-  document.getElementById('nextBtn').onclick = () => go(cur + 1);
-
-  document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
-      e.preventDefault();
-      go(cur + 1);
-    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
-      e.preventDefault();
-      go(cur - 1);
-    } else if (e.key === 'Home') {
-      e.preventDefault();
-      go(0);
-    } else if (e.key === 'End') {
-      e.preventDefault();
-      go(total - 1);
-    }
-  });
-
-  let wheelTimer = null;
-  document.addEventListener('wheel', e => {
-    e.preventDefault();
-    if (wheelTimer) return;
-    wheelTimer = setTimeout(() => wheelTimer = null, 400);
-    if (e.deltaY > 0 || e.deltaX > 0) go(cur + 1);
-    else if (e.deltaY < 0 || e.deltaX < 0) go(cur - 1);
-  }, { passive: false });
-
-  document.body.addEventListener('click', e => {
-    if (e.target.closest('.nav-dot, .dots, .nav-btn, .expert-card, .speech-card, .clash-block, .insight-block, .question-card, .conclusion-item, .stat-item')) return;
-    go(cur + 1);
-  });
-
-  go(0);
-})();
-</script>
-
-<script>
-(function(){
-  const slides=document.querySelectorAll('.slide');
-  const total=slides.length;
-  let cur=0;
-  const dotsContainer=document.getElementById('dots');
-  const counter=document.getElementById('counter');
-  const progress=document.getElementById('progressBar');
-  const isHorizontal=document.body.style.flexDirection==='row'||document.documentElement.style.scrollSnapType?.includes('x');
-
-  slides.forEach((s,i)=>{
-    const dot=document.createElement('div');
-    dot.className='dot'+(i===0?' active':'');
-    dot.onclick=()=>go(i);
-    dotsContainer.appendChild(dot);
-  });
-
-  function go(n){
-    if(n<0||n>=total)return;
-    slides[cur].classList.remove('visible');
-    dotsContainer.children[cur]?.classList.remove('active');
-    cur=n;
-    slides[cur].scrollIntoView({behavior:'smooth',block:'start',inline:'start'});
-    slides[cur].classList.add('visible');
-    dotsContainer.children[cur]?.classList.add('active');
-    if(counter)counter.textContent=(cur+1)+' / '+total;
-    if(progress){const pct=Math.min(100,((cur+1)/total)*100);progress.style.width=pct+'%';}
-  }
-
-  document.getElementById('prevBtn')?.addEventListener('click',()=>go(cur-1));
-  document.getElementById('nextBtn')?.addEventListener('click',()=>go(cur+1));
-
-  document.addEventListener('keydown',e=>{
-    if(e.key==='ArrowDown'||e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){
-      e.preventDefault();go(cur+1);
-    }else if(e.key==='ArrowUp'||e.key==='ArrowLeft'||e.key==='PageUp'){
-      e.preventDefault();go(cur-1);
-    }else if(e.key==='Home'){
-      e.preventDefault();go(0);
-    }else if(e.key==='End'){
-      e.preventDefault();go(total-1);
-    }
-  });
-
-  let wheelTimer=null;
-  document.addEventListener('wheel',e=>{
-    e.preventDefault();
-    if(wheelTimer)return;
-    wheelTimer=setTimeout(()=>wheelTimer=null,400);
-    if(e.deltaY>0)go(cur+1);
-    else if(e.deltaY<0)go(cur-1);
-  },{passive:false});
-
-  document.body.addEventListener('click',e=>{
-    if(e.target.closest('.nav-dot,.dots,.nav-btn,.expert-card,.speech-card,.clash-block,.insight-block,.question-card,.conclusion-item,.stat-item,.card'))return;
-    go(cur+1);
-  });
-
-  go(0);
-})();
+const slides=document.querySelectorAll('.slide');
+let cur=0;
+const total=slides.length;
+function show(n){
+  slides[cur].classList.remove('active');
+  cur=(n+total)%total;
+  slides[cur].classList.add('active');
+  document.getElementById('progress').style.width=((cur+1)/total*100)+'%';
+  document.getElementById('pageNum').textContent=(cur+1)+' / '+total;
+}
+function go(d){show(cur+d)}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown')go(1);
+  if(e.key==='ArrowLeft'||e.key==='PageUp')go(-1);
+  if(e.key==='Home')show(0);
+  if(e.key==='End')show(total-1);
+});
+// Touch swipe
+let tx=0;
+document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-tx;
+  if(Math.abs(dx)>50){dx<0?go(1):go(-1)}
+});
+show(0);
 </script>
 </body>
 </html>

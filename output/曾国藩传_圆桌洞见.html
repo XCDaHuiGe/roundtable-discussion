@@ -3,724 +3,829 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>《曾国藩传》圆桌洞见</title>
+<title>曾国藩传 · 圆桌洞见</title>
 <style>
-
-*{box-sizing:border-box}
-html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#f2eadc;color:#171717;font-family:"Noto Sans SC","Microsoft YaHei",Arial,sans-serif}
-body.theme-editorial{--paper:#f2eadc;--paper-soft:#fffaf4;--ink:#171717;--muted:#3f3b35;--accent:#982b23;--accent-2:#bf8a2e;--accent-3:#244d66}
-body.theme-obsidian{--paper:#111318;--paper-soft:#181b22;--ink:#f4efe4;--muted:#c9c2b4;--accent:#e05a47;--accent-2:#d7a64a;--accent-3:#78a8c8}
-body.theme-blueprint{--paper:#e8eef2;--paper-soft:#f8fbfd;--ink:#102233;--muted:#334b5c;--accent:#1d5f8f;--accent-2:#b17624;--accent-3:#7a2d3b}
-.slide{height:100vh;width:100vw;overflow:hidden;display:none;align-items:center;justify-content:center;padding:42px 70px;background:
-radial-gradient(circle at 8% 12%,rgba(154,42,33,.10),transparent 24%),
-linear-gradient(90deg,rgba(20,20,20,.045) 1px,transparent 1px),
-linear-gradient(180deg,rgba(20,20,20,.035) 1px,transparent 1px),
-#f2eadc;background-size:auto,44px 44px,44px 44px,auto}
-body.theme-obsidian .slide{background:radial-gradient(circle at 8% 12%,rgba(224,90,71,.16),transparent 24%),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(180deg,rgba(255,255,255,.035) 1px,transparent 1px),var(--paper);color:var(--ink)}
-body.theme-blueprint .slide{background:radial-gradient(circle at 84% 12%,rgba(29,95,143,.14),transparent 22%),linear-gradient(90deg,rgba(16,34,51,.06) 1px,transparent 1px),linear-gradient(180deg,rgba(16,34,51,.045) 1px,transparent 1px),var(--paper);color:var(--ink)}
-.slide.visible{display:flex}
-.reading-page{width:100%;height:100%;max-width:1280px;max-height:800px;display:grid;grid-template-rows:auto 1fr auto;gap:18px;overflow:hidden}
-.reading-header{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:38px;align-items:end;border-bottom:3px solid #171717;padding-bottom:14px}
-.reading-kicker{font-size:12px;letter-spacing:.18em;color:#982b23;font-weight:900}
-.reading-title{font-size:clamp(32px,3.6vw,52px);line-height:1.03;margin:6px 0 0;font-weight:950;letter-spacing:0}
-.reading-thesis{font-size:18px;line-height:1.6;margin:0;color:#3f3b35;border-left:5px solid #982b23;padding-left:18px}
-.reading-body{min-height:0;overflow:hidden}
-.reading-block{border-top:1px solid rgba(23,23,23,.18);padding:11px 0 0;min-height:0}
-.reading-block-title{font-size:18px;font-weight:900;margin:0 0 7px;line-height:1.25}
-.reading-block-label{display:inline-block;font-size:11px;font-weight:900;letter-spacing:.10em;color:#982b23;margin-bottom:7px}
-.reading-block-text{font-size:14px;line-height:1.55;color:#2f2b27;margin:0}
-.takeaway-strip{border:3px solid #171717;background:#fffaf4;padding:12px 18px;display:grid;grid-template-columns:120px 1fr;gap:18px;align-items:center;overflow:hidden;box-shadow:8px 8px 0 rgba(23,23,23,.10)}
-.takeaway-strip strong{font-size:15px;color:#982b23;letter-spacing:.08em}
-.takeaway-strip p{font-size:17px;line-height:1.42;margin:0;font-weight:900}
-.brief-grid{display:grid;grid-template-columns:1.12fr .88fr;grid-template-rows:1fr 1fr;gap:16px;height:100%}
-.brief-zone{background:rgba(255,250,244,.86);border:1px solid rgba(23,23,23,.20);padding:18px 20px;overflow:hidden;box-shadow:0 18px 40px rgba(36,25,12,.07)}
-.brief-zone:nth-child(1){border-left:7px solid #982b23}
-.brief-zone:nth-child(2){border-left:7px solid #bf8a2e}
-.brief-zone:nth-child(3){border-left:7px solid #244d66}
-.brief-zone:nth-child(4){border-left:7px solid #171717}
-.brief-zone h3{font-size:15px;margin:0 0 12px;letter-spacing:.10em;color:#982b23}
-.brief-zone .reading-block{border-top:0;padding-top:0;margin-bottom:12px}
-.stance-spectrum{height:100%;display:grid;grid-template-columns:30% 1fr;gap:22px}
-.issue-tree{background:#171717;color:#fffaf4;padding:24px;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between}
-.issue-tree h3{font-size:24px;margin:0 0 14px;color:#fffaf4}
-.issue-tree p{font-size:16px;line-height:1.6;margin:0;color:#35312c}
-.issue-tree p,.issue-tree .reading-block-text{color:rgba(255,250,244,.82)}
-.issue-tree .reading-block{border-top-color:rgba(255,250,244,.26)}
-.spectrum-map{position:relative;background:rgba(255,250,244,.72);border:1px solid rgba(23,23,23,.18);padding:18px 22px;overflow:hidden;box-shadow:0 18px 46px rgba(36,25,12,.08)}
-.spectrum-axis{height:5px;background:#171717;margin:24px 8px 18px;position:relative}
-.spectrum-axis::before,.spectrum-axis::after{position:absolute;top:-28px;font-size:13px;font-weight:900;color:#171717}
-.spectrum-axis::before{content:"文化解释";left:0}
-.spectrum-axis::after{content:"结构解释";right:0}
-.stance-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:10px;height:calc(100% - 47px)}
-.stance-card{background:#fffaf4;border-left:5px solid #bf8a2e;padding:12px 14px;overflow:hidden;min-height:0}
-.stance-card .reading-block-title{font-size:16px;margin-bottom:5px}
-.stance-card .reading-block-label{font-size:10px;margin-bottom:5px}
-.stance-card .reading-block-text{font-size:13px;line-height:1.42}
-.clash-courtroom{height:100%;display:grid;grid-template-columns:1fr 220px 1fr;gap:18px;align-items:stretch}
-.clash-side,.clash-center{background:#fffaf4;border:1px solid rgba(23,23,23,.20);padding:24px;overflow:hidden;box-shadow:0 18px 46px rgba(36,25,12,.07)}
-.clash-side.attack{border-top:8px solid #982b23}
-.clash-side.defense{border-top:8px solid #244d66}
-.clash-center{display:flex;flex-direction:column;justify-content:center;text-align:center;border:3px solid #171717;background:#171717;color:#fffaf4;box-shadow:8px 8px 0 rgba(23,23,23,.12)}
-.clash-center h3{font-size:24px;margin:0 0 12px;color:#fffaf4}
-.clash-center .reading-block-text{color:rgba(255,250,244,.82)}
-.cover-page{width:100%;height:100%;max-width:1280px;max-height:800px;display:grid;grid-template-columns:1fr 360px;gap:44px;overflow:hidden}
-.cover-main{display:flex;flex-direction:column;justify-content:center;border-top:8px solid #171717;border-bottom:3px solid #171717}
-.cover-kicker{font-size:13px;letter-spacing:.22em;color:#982b23;font-weight:950;margin-bottom:22px}
-.cover-title{font-size:clamp(58px,7.6vw,106px);line-height:.98;margin:0 0 28px;font-weight:950;letter-spacing:-.02em}
-.cover-thesis{font-size:24px;line-height:1.5;color:#332f2a;max-width:760px;margin:0}
-.cover-side{background:#171717;color:#fffaf4;padding:34px;display:grid;grid-template-rows:auto 1fr auto;overflow:hidden;box-shadow:14px 14px 0 rgba(23,23,23,.12)}
-.cover-meta{font-size:15px;line-height:1.8;color:rgba(255,250,244,.82)}
-.cover-stats{display:grid;grid-template-columns:1fr;gap:14px;align-self:center}
-.cover-stat{border-top:1px solid rgba(255,250,244,.28);padding-top:12px}
-.cover-stat b{display:block;font-size:44px;line-height:1;font-weight:950;color:#f2eadc}
-.cover-stat span{font-size:13px;letter-spacing:.12em;color:#d49a3a}
-.cover-takeaway{font-size:17px;line-height:1.5;font-weight:850;color:#fffaf4}
-#progress{position:fixed;left:0;top:0;height:4px;width:0;background:#982b23;z-index:50;transition:width .35s ease}
-.nav-dots{position:fixed;right:24px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:60}
-.nav-dot{width:9px;height:9px;border-radius:50%;border:1px solid rgba(23,23,23,.45);background:rgba(23,23,23,.12);cursor:pointer;padding:0}
-.nav-dot.active{background:#982b23;border-color:#982b23;transform:scale(1.28)}
-.nav-ui{position:fixed;left:24px;bottom:22px;z-index:60;display:flex;align-items:center;gap:12px;color:#49443d;font-family:Consolas,"SFMono-Regular",monospace;font-size:12px}
-.nav-btn{width:34px;height:34px;border:1px solid rgba(23,23,23,.35);background:#fffaf4;color:#171717;cursor:pointer}
-body.theme-obsidian .reading-header,body.theme-blueprint .reading-header{border-bottom-color:var(--ink)}
-body.theme-obsidian .reading-kicker,body.theme-obsidian .reading-block-label,body.theme-obsidian .takeaway-strip strong,body.theme-obsidian .brief-zone h3,body.theme-blueprint .reading-kicker,body.theme-blueprint .reading-block-label,body.theme-blueprint .takeaway-strip strong,body.theme-blueprint .brief-zone h3{color:var(--accent)}
-body.theme-obsidian .reading-thesis,body.theme-blueprint .reading-thesis{color:var(--muted);border-left-color:var(--accent)}
-body.theme-obsidian .reading-block-text,body.theme-blueprint .reading-block-text{color:var(--muted)}
-body.theme-obsidian .brief-zone,body.theme-obsidian .spectrum-map,body.theme-obsidian .stance-card,body.theme-obsidian .clash-side,body.theme-blueprint .brief-zone,body.theme-blueprint .spectrum-map,body.theme-blueprint .stance-card,body.theme-blueprint .clash-side{background:var(--paper-soft);border-color:rgba(120,120,120,.28)}
-body.theme-obsidian .issue-tree,body.theme-obsidian .clash-center,body.theme-obsidian .cover-side{background:#050608;color:var(--ink)}
-body.theme-blueprint .issue-tree,body.theme-blueprint .clash-center,body.theme-blueprint .cover-side{background:#102233;color:#f8fbfd}
-body.theme-obsidian .takeaway-strip,body.theme-blueprint .takeaway-strip{background:var(--paper-soft);border-color:var(--ink);color:var(--ink)}
-body.theme-obsidian .takeaway-strip p,body.theme-blueprint .takeaway-strip p{color:var(--ink)}
-body.theme-obsidian .cover-main,body.theme-blueprint .cover-main{border-color:var(--ink)}
-body.theme-obsidian .cover-thesis,body.theme-blueprint .cover-thesis{color:var(--muted)}
-body.theme-obsidian .nav-btn{background:#181b22;color:#f4efe4;border-color:rgba(255,255,255,.35)}
-body.theme-blueprint .nav-btn{background:#f8fbfd;color:#102233;border-color:rgba(16,34,51,.35)}
-body.theme-obsidian #progress,body.theme-obsidian .nav-dot.active,body.theme-blueprint #progress,body.theme-blueprint .nav-dot.active{background:var(--accent);border-color:var(--accent)}
-body.theme-obsidian .clash-center .reading-block-text,body.theme-blueprint .clash-center .reading-block-text{color:rgba(255,250,244,.82)}
-@media(max-width:900px){.slide{padding:34px 28px}.reading-header,.stance-spectrum,.clash-courtroom,.cover-page{grid-template-columns:1fr}.brief-grid,.stance-grid{grid-template-columns:1fr}.reading-title{font-size:32px}.cover-title{font-size:48px}.reading-page{max-height:820px}.cover-side{display:none}}
-
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#1a1a2e;font-family:'Noto Serif SC',serif}
+:root{--ink:#2c3e50;--paper:#f8f4ef;--gold:#c9a96e;--red:#8b3a3a;--light-ink:#4a6274;--dim:#7f8c8d}
+.slide{display:none;width:100vw;height:100vh;position:relative;overflow:hidden;background:var(--paper)}
+.slide.active{display:flex}
+/* Navigation */
+.nav{position:fixed;bottom:30px;right:30px;z-index:1000;display:flex;gap:12px}
+.nav button{width:48px;height:48px;border:2px solid var(--ink);background:rgba(248,244,239,.9);color:var(--ink);font-size:20px;cursor:pointer;border-radius:50%;transition:.3s;font-family:inherit}
+.nav button:hover{background:var(--ink);color:var(--paper)}
+.page-num{position:fixed;bottom:36px;left:30px;z-index:1000;color:var(--dim);font-size:14px;font-family:'Noto Sans SC',sans-serif;letter-spacing:2px}
+/* Ink wash background textures */
+.ink-bg{position:absolute;inset:0;opacity:.06;background:radial-gradient(ellipse at 20% 80%,var(--ink) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,var(--ink) 0%,transparent 50%)}
+.ink-splash{position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,var(--ink) 0%,transparent 70%);opacity:.04;filter:blur(40px)}
+/* Slide layouts */
+.center-layout{flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px}
+.left-layout{flex-direction:column;align-items:flex-start;justify-content:center;padding:80px 100px}
+.split-layout{flex-direction:row}
+.split-left,.split-right{flex:1;display:flex;flex-direction:column;justify-content:center;padding:60px}
+.split-left{align-items:flex-end;text-align:right;padding-right:40px;border-right:1px solid rgba(44,62,80,.1)}
+.split-right{align-items:flex-start;text-align:left;padding-left:40px}
+.quote-layout{flex-direction:column;align-items:center;justify-content:center;padding:100px 140px}
+/* Typography */
+.title-xl{font-size:56px;font-weight:900;color:var(--ink);line-height:1.3;letter-spacing:4px}
+.title-lg{font-size:42px;font-weight:700;color:var(--ink);line-height:1.4;letter-spacing:3px}
+.title-md{font-size:32px;font-weight:700;color:var(--ink);line-height:1.5}
+.title-sm{font-size:24px;font-weight:700;color:var(--ink);line-height:1.5}
+.subtitle{font-size:20px;color:var(--light-ink);margin-top:16px;letter-spacing:6px;font-family:'Noto Sans SC',sans-serif;font-weight:300}
+.body-text{font-size:18px;color:var(--light-ink);line-height:2;font-family:'Noto Sans SC',sans-serif;max-width:800px}
+.body-text-sm{font-size:16px;color:var(--light-ink);line-height:1.9;font-family:'Noto Sans SC',sans-serif}
+.divider{width:80px;height:2px;background:var(--ink);margin:24px 0}
+.divider-gold{width:120px;height:2px;background:var(--gold);margin:20px 0}
+/* Dialogue */
+.dialogue{background:rgba(44,62,80,.04);border-left:3px solid var(--ink);padding:20px 28px;margin:10px 0;max-width:700px;border-radius:0 8px 8px 0}
+.dialogue .speaker{font-weight:700;color:var(--ink);font-size:16px;margin-bottom:6px}
+.dialogue .speaker.s-zeng{color:#2c3e50}.dialogue .speaker.s-confu{color:#8b3a3a}
+.dialogue .speaker.s-han{color:#6b4c3b}.dialogue .speaker.s-marx{color:#4a2c2a}
+.dialogue .speaker.s-munger{color:#2c4a3e}.dialogue .speaker.s-xiang{color:#3a3a5c}
+.dialogue .words{font-size:15px;color:var(--light-ink);line-height:1.8;font-family:'Noto Sans SC',sans-serif}
+/* Quote card */
+.quote-card{position:relative;padding:40px 50px;background:linear-gradient(135deg,rgba(44,62,80,.03),rgba(201,169,110,.06));border-radius:4px;max-width:700px}
+.quote-card::before{content:'"';position:absolute;top:-10px;left:20px;font-size:120px;color:rgba(44,62,80,.08);font-family:Georgia,serif;line-height:1}
+.quote-card .q-text{font-size:26px;color:var(--ink);line-height:1.8;font-weight:700;position:relative;z-index:1}
+.quote-card .q-attr{font-size:14px;color:var(--dim);margin-top:16px;font-family:'Noto Sans SC',sans-serif}
+/* Scene card */
+.scene-card{background:linear-gradient(135deg,rgba(44,62,80,.06),rgba(44,62,80,.02));border:1px solid rgba(44,62,80,.08);border-radius:4px;padding:30px 36px;max-width:650px}
+.scene-card .scene-title{font-size:18px;font-weight:700;color:var(--ink);margin-bottom:12px}
+.scene-card .scene-desc{font-size:15px;color:var(--light-ink);line-height:1.9;font-family:'Noto Sans SC',sans-serif}
+/* Tags */
+.tag{display:inline-block;padding:4px 14px;border:1px solid var(--ink);font-size:12px;color:var(--ink);margin:4px;border-radius:2px;font-family:'Noto Sans SC',sans-serif;letter-spacing:1px}
+/* Gold accent line */
+.gold-line{position:absolute;top:0;left:0;width:100%;height:4px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+/* Person icon */
+.person-icon{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:8px;font-weight:700}
+.pi-zeng{background:rgba(44,62,80,.1);color:var(--ink)}
+.pi-confu{background:rgba(139,58,58,.1);color:#8b3a3a}
+.pi-han{background:rgba(107,76,59,.1);color:#6b4c3b}
+.pi-marx{background:rgba(74,44,42,.1);color:#4a2c2a}
+.pi-munger{background:rgba(44,74,62,.1);color:#2c4a3e}
+.pi-xiang{background:rgba(58,58,92,.1);color:#3a3a5c}
+/* Responsive for smaller screens */
+@media(max-width:900px){
+.title-xl{font-size:36px}.title-lg{font-size:30px}.split-layout{flex-direction:column}
+.split-left,.split-right{padding:40px;text-align:center;align-items:center;border-right:none;border-bottom:1px solid rgba(44,62,80,.1)}
+.quote-layout{padding:50px 40px}.quote-card .q-text{font-size:20px}
+}
+/* Animation */
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.slide.active .fade-up{animation:fadeUp .8s ease forwards}
+.fade-up{opacity:0}
+.delay-1{animation-delay:.2s!important}.delay-2{animation-delay:.4s!important}.delay-3{animation-delay:.6s!important}.delay-4{animation-delay:.8s!important}
+/* Progress bar */
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--gold);transition:width .4s;z-index:1000}
 </style>
 </head>
-<body class="theme-editorial">
-<div id="progress"></div>
-<div id="navDots" class="nav-dots"></div>
-<div class="nav-ui">
-  <button id="prevBtn" class="nav-btn" type="button" aria-label="上一页">&lt;</button>
-  <span id="counter">1 / 18</span>
-  <button id="nextBtn" class="nav-btn" type="button" aria-label="下一页">&gt;</button>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="nav">
+<button onclick="prev()">◀</button>
+<button onclick="next()">▶</button>
 </div>
-<section class="slide visible" data-page-type="cover" data-layout="cover">
-<div class="cover-page">
-  <main class="cover-main">
-    <div class="cover-kicker">READING DECK / 圆桌洞见</div>
-    <h1 class="cover-title reading-title">《曾国藩传》圆桌洞见</h1>
-    <p class="cover-thesis">张宏杰 · 一个笨人如何把自己训练成晚清秩序机器</p>
-  </main>
-  <aside class="cover-side">
-    <div class="cover-meta">曾国藩 / 张宏杰 / 梁启超 / 王阳明 / 马克斯·韦伯 / 李鸿章 / 笨人是否能靠长期训练改变命运 / 修身是道</div>
-    <div class="cover-stats"><div class="cover-stat"><b>6</b><span>专家</span></div><div class="cover-stat"><b>5</b><span>轮次</span></div><div class="cover-stat"><b>5</b><span>洞见</span></div></div>
-    <div class="cover-takeaway">本 deck 以阅读型结构呈现核心争议、专家立场和最终洞见。</div>
-  </aside>
+<div class="page-num" id="pageNum"></div>
+
+<!-- ==================== SLIDE 1: 封面 ==================== -->
+<div class="slide center-layout">
+<div class="ink-bg"></div>
+<div class="ink-splash" style="top:-100px;right:-100px;width:500px;height:500px"></div>
+<div class="ink-splash" style="bottom:-80px;left:-80px;width:400px;height:400px"></div>
+<div class="gold-line"></div>
+<div class="fade-up" style="animation-delay:.1s;opacity:0">
+<div style="font-size:14px;letter-spacing:12px;color:var(--gold);margin-bottom:30px;font-family:'Noto Sans SC',sans-serif">圆 桌 洞 见 · 系 列</div>
 </div>
-</section>
-<section class="slide" data-page-type="insight_reading" data-layout="reading_brief_4zone">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">核心洞见</h1>
-    </div>
-    <p class="reading-thesis">先看结论，再进入圆桌讨论。</p>
-  </header>
-  <main class="reading-body"><div class="brief-grid"><section class="brief-zone"><h3>问题定义</h3><article class="reading-block" data-kind="insight">
-  
-  <h3 class="reading-block-title">笨不是缺陷，而是系统化成长的入口</h3>
-  <p class="reading-block-text">《曾国藩传》最反成功学的地方，是它没有从天赋讲起，而是从挫败、迟钝和羞耻讲起。曾国藩的真本事，是把低起点变成可迭代系统。</p>
-</article><article class="reading-block" data-kind="insight">
-  
-  <h3 class="reading-block-title">现代人可学的不是强人术，而是不欺己</h3>
-  <p class="reading-block-text">读曾国藩最重要的收获，不是早起、复盘、人脉这些表层方法，而是在复杂现实中保持自知、复盘、行动和认账的能力。</p>
-</article></section><section class="brief-zone"><h3>结构化内容</h3><article class="reading-block" data-kind="insight">
-  
-  <h3 class="reading-block-title">修身既是道德工程，也是权力技术</h3>
-  <p class="reading-block-text">日课、慎独、家书和反省能提升人格，也会提升控制力。关键不在于否认这种双重性，而在于持续追问能力服务的目标。</p>
-</article></section><section class="brief-zone"><h3>证据与观点</h3><article class="reading-block" data-kind="insight">
-  
-  <h3 class="reading-block-title">湘军的秘密是个人信用组织化</h3>
-  <p class="reading-block-text">曾国藩不是单靠会打仗取胜，而是把私人信用、地方网络、奖惩机制和伦理纪律接成一套可运行的组织系统。</p>
-</article></section><section class="brief-zone"><h3>读者带走什么</h3><article class="reading-block" data-kind="insight">
-  
-  <h3 class="reading-block-title">曾国藩必须被复杂地评价</h3>
-  <p class="reading-block-text">只谈励志会遮蔽暴力，只谈暴力会遮蔽处境。更成熟的历史阅读，是同时看见功业、责任、骂名和不可抵消的代价。</p>
-</article></section></div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>这些洞见是后续专家冲突的阅读索引。</p></footer>
+<div class="fade-up" style="animation-delay:.3s;opacity:0">
+<div class="title-xl" style="font-size:68px;letter-spacing:8px">曾 国 藩 传</div>
 </div>
-</section>
-<section class="slide" data-page-type="roundtable_reading" data-layout="stance_spectrum">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">第1轮：笨人是否能靠长期训练改变命运</h1>
-    </div>
-    <p class="reading-thesis">张宏杰把曾国藩写成一个不靠天赋而靠持续修正的人：这是真本事，还是后见之明包装出的励志叙事？</p>
-  </header>
-  <main class="reading-body"><div class="stance-spectrum">
-  <aside class="issue-tree">
-    <h3>命题拆解</h3>
-    <p>张宏杰把曾国藩写成一个不靠天赋而靠持续修正的人：这是真本事，还是后见之明包装出的励志叙事？</p>
-    <div class="reading-block"><span class="reading-block-label">判断路径</span><p class="reading-block-text">先看专家站位，再看他们背后的解释框架：文化、制度、资本、规律与行动选择。</p></div>
-  </aside>
-  <section class="spectrum-map">
-    <div class="spectrum-axis"></div>
-    <div class="stance-grid"><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">规律解释</span>
-  <h3 class="reading-block-title">曾国藩</h3>
-  <p class="reading-block-text">我早年并不敏捷，科举挫败让我知道自己不能靠灵气取胜。笨人的道路，是把每一天都变成一块砖：读书、记过、写信、复盘，慢慢把散乱的自己砌成可用之人。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">综合解释</span>
-  <h3 class="reading-block-title">张宏杰</h3>
-  <p class="reading-block-text">这本书要拆的正是天才神话。曾国藩迷人处在于起点低、漏洞多、失败多，却能把失败纳入系统。成长不是顿悟，而是持续迭代。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">综合解释</span>
-  <h3 class="reading-block-title">梁启超</h3>
-  <p class="reading-block-text">曾国藩之所以可学，不在他后来位高权重，而在他证明人格可以经营。一个民族需要的不是偶然天才，而是可训练的担当。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">综合解释</span>
-  <h3 class="reading-block-title">王阳明</h3>
-  <p class="reading-block-text">若只是把自卑变成上进，还不够。关键要看他的功课是否真正照见本心，还是只是把焦虑训练成更强的控制欲。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">综合解释</span>
-  <h3 class="reading-block-title">马克斯·韦伯</h3>
-  <p class="reading-block-text">这里最有社会学意义的是伦理纪律的理性化。曾国藩把内在约束转化为稳定行为预期，这让个人信用可以积累为组织信用。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">制度解释</span>
-  <h3 class="reading-block-title">李鸿章</h3>
-  <p class="reading-block-text">老师的笨功夫不是书房里的修辞。乱世里，人不可靠，制度也不可靠，唯有长期表现出的稳、忍、准，才有人愿意把身家性命交给你。</p>
-</article></div>
-  </section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>阅读重点：看清专家不是在重复观点，而是在不同解释框架之间竞争。</p></footer>
+<div class="fade-up" style="animation-delay:.5s;opacity:0">
+<div class="divider-gold" style="margin:30px auto"></div>
 </div>
-</section>
-<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">王阳明 对 张宏杰：成长叙事的动机盲点</h1>
-    </div>
-    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
-  </header>
-  <main class="reading-body"><div class="clash-courtroom">
-  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
-  <span class="reading-block-label">攻击</span>
-  <h3 class="reading-block-title">王阳明</h3>
-  <p class="reading-block-text">你强调曾国藩从笨拙到精进，很容易让读者把修身理解成效率工具。若一个人每日反省只是为了更成功，那他是在修心，还是在训练欲望？</p>
-</article></section>
-  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">成长叙事的动机盲点</p></section>
-  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
-  <span class="reading-block-label">回应</span>
-  <h3 class="reading-block-title">张宏杰</h3>
-  <p class="reading-block-text">张宏杰回应：正因为曾国藩不是纯净圣人，才值得研究。书里重要的不是把他洗白，而是呈现一个欲望、羞耻、责任互相拉扯的人如何慢慢改变。</p>
-</article></section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：成长叙事的动机盲点。</p></footer>
+<div class="fade-up" style="animation-delay:.7s;opacity:0">
+<div class="subtitle">自我改造 · 笨功夫 · 湘军组织 · 道德代价 · 功业与修身</div>
 </div>
-</section>
-<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">李鸿章 对 梁启超：人格典范的现实成本</h1>
-    </div>
-    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
-  </header>
-  <main class="reading-body"><div class="clash-courtroom">
-  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
-  <span class="reading-block-label">攻击</span>
-  <h3 class="reading-block-title">李鸿章</h3>
-  <p class="reading-block-text">梁先生把老师说成士人担当模型，但真正办事时，担当常常意味着被骂、被误解、做不干净的决定。你歌颂人格，却容易低估脏活。</p>
-</article></section>
-  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">人格典范的现实成本</p></section>
-  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
-  <span class="reading-block-label">回应</span>
-  <h3 class="reading-block-title">梁启超</h3>
-  <p class="reading-block-text">梁启超回应：我并非不知脏活，而是担心后人只学现实主义，不学内在约束。若没有人格作底，脏活会迅速滑成权术。</p>
-</article></section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：人格典范的现实成本。</p></footer>
+<div class="fade-up" style="animation-delay:.9s;opacity:0">
+<div style="margin-top:50px;font-size:14px;color:var(--dim);font-family:'Noto Sans SC',sans-serif;letter-spacing:4px">六位先贤跨时空圆桌对话 · 八大历史场景还原 · 十六句洞见金句</div>
 </div>
-</section>
-<section class="slide" data-page-type="roundtable_reading" data-layout="stance_spectrum">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">第2轮：修身是道德工程还是权力技术</h1>
-    </div>
-    <p class="reading-thesis">曾国藩的日课、家书、慎独、自省，究竟是在靠近圣贤，还是在打造一个更能掌控自己和他人的权力人格？</p>
-  </header>
-  <main class="reading-body"><div class="stance-spectrum">
-  <aside class="issue-tree">
-    <h3>命题拆解</h3>
-    <p>曾国藩的日课、家书、慎独、自省，究竟是在靠近圣贤，还是在打造一个更能掌控自己和他人的权力人格？</p>
-    <div class="reading-block"><span class="reading-block-label">判断路径</span><p class="reading-block-text">先看专家站位，再看他们背后的解释框架：文化、制度、资本、规律与行动选择。</p></div>
-  </aside>
-  <section class="spectrum-map">
-    <div class="spectrum-axis"></div>
-    <div class="stance-grid"><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">综合解释</span>
-  <h3 class="reading-block-title">曾国藩</h3>
-  <p class="reading-block-text">修身不是为了装出高洁，而是为了让自己在欲望、恐惧、怒气面前不失控。做大事的人若管不住自己，迟早被人、被事、被权位拖走。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">综合解释</span>
-  <h3 class="reading-block-title">张宏杰</h3>
-  <p class="reading-block-text">曾国藩的修身有双重性：它确实提升人格，也确实服务事功。传记不能把这两面切开，因为他本来就是在旧伦理中寻找行动能力。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">综合解释</span>
-  <h3 class="reading-block-title">梁启超</h3>
-  <p class="reading-block-text">中国士人讲修身齐家治国，修身本就不是私人心理疗法，而是公共责任的根。问题不在它服务权力，而在它能否节制权力。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">综合解释</span>
-  <h3 class="reading-block-title">王阳明</h3>
-  <p class="reading-block-text">我只问一件事：当功业和良知冲突时，他听哪一个？若修身只能增强执行力，却不能在关键处止步，那它仍未到根。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">规律解释</span>
-  <h3 class="reading-block-title">马克斯·韦伯</h3>
-  <p class="reading-block-text">曾国藩身上可以看到一种入世禁欲：他用伦理训练压低任性，提高可预测性。这既是道德工程，也是权力技术，两者并不互斥。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">综合解释</span>
-  <h3 class="reading-block-title">李鸿章</h3>
-  <p class="reading-block-text">没有这种自我约束，谁能在官场、军务、财政、人情之间撑住？圣贤话语也好，权力技术也好，能让人不崩，就是有用。</p>
-</article></div>
-  </section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>阅读重点：看清专家不是在重复观点，而是在不同解释框架之间竞争。</p></footer>
 </div>
-</section>
-<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">王阳明 对 马克斯·韦伯：理性化解释遮蔽良知</h1>
-    </div>
-    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
-  </header>
-  <main class="reading-body"><div class="clash-courtroom">
-  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
-  <span class="reading-block-label">攻击</span>
-  <h3 class="reading-block-title">王阳明</h3>
-  <p class="reading-block-text">你把修身解释成提高行为可预测性的纪律，这很精确，却少了最关键的判断：一个人越稳定，越可能稳定地做错事。</p>
-</article></section>
-  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">理性化解释遮蔽良知</p></section>
-  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
-  <span class="reading-block-label">回应</span>
-  <h3 class="reading-block-title">马克斯·韦伯</h3>
-  <p class="reading-block-text">韦伯回应：社会学不替行动者赦罪，它只解释机制。正因为纪律可服务于善也可服务于恶，我们才必须把伦理目的和组织后果分开观察。</p>
-</article></section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：理性化解释遮蔽良知。</p></footer>
+
+<!-- ==================== SLIDE 2: 目录 ==================== -->
+<div class="slide left-layout">
+<div class="ink-bg"></div>
+<div class="gold-line"></div>
+<div class="fade-up"><div class="title-lg">目录</div><div class="divider"></div></div>
+<div class="fade-up delay-1" style="margin-top:10px">
+<div class="body-text" style="line-height:2.6">
+<span style="color:var(--gold);font-weight:700">壹</span>　人物出场与圆桌设定<br>
+<span style="color:var(--gold);font-weight:700">贰</span>　场景一：科举之路与笨功夫<br>
+<span style="color:var(--gold);font-weight:700">叁</span>　圆桌第一轮：天赋与勤勉<br>
+<span style="color:var(--gold);font-weight:700">肆</span>　场景二：京官十年的修身日记<br>
+<span style="color:var(--gold);font-weight:700">伍</span>　圆桌第二轮：自我改造的方法论<br>
+<span style="color:var(--gold);font-weight:700">陆</span>　场景三：创建湘军<br>
+<span style="color:var(--gold);font-weight:700">柒</span>　圆桌第三轮：组织与制度<br>
+<span style="color:var(--gold);font-weight:700">捌</span>　场景四：靖港惨败与投水自尽<br>
+<span style="color:var(--gold);font-weight:700">玖</span>　圆桌第四轮：逆境与韧性<br>
+<span style="color:var(--gold);font-weight:700">拾</span>　场景五：天京之战与道德困境<br>
+<span style="color:var(--gold);font-weight:700">拾壹</span>　圆桌第五轮：功业与道德代价<br>
+<span style="color:var(--gold);font-weight:700">拾贰</span>　场景六：天津教案<br>
+<span style="color:var(--gold);font-weight:700">拾叁</span>　圆桌第六轮：妥协与底线<br>
+<span style="color:var(--gold);font-weight:700">拾肆</span>　场景七：幕府与人才<br>
+<span style="color:var(--gold);font-weight:700">拾伍</span>　圆桌第七轮：用人之道<br>
+<span style="color:var(--gold);font-weight:700">拾陆</span>　场景八：最后的家书<br>
+<span style="color:var(--gold);font-weight:700">拾柒</span>　圆桌第八至十轮：遗产与当代启示<br>
+<span style="color:var(--gold);font-weight:700">拾捌</span>　金句总览与结语
 </div>
-</section>
-<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">曾国藩 对 王阳明：心性原则的现实压力</h1>
-    </div>
-    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
-  </header>
-  <main class="reading-body"><div class="clash-courtroom">
-  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
-  <span class="reading-block-label">攻击</span>
-  <h3 class="reading-block-title">曾国藩</h3>
-  <p class="reading-block-text">先生问良知，我敬畏。但战场、官场、朝廷催逼之下，很多事不是善恶两端，而是坏与更坏之间取其轻。此时若只问本心，未必能救人。</p>
-</article></section>
-  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">心性原则的现实压力</p></section>
-  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
-  <span class="reading-block-label">回应</span>
-  <h3 class="reading-block-title">王阳明</h3>
-  <p class="reading-block-text">王阳明回应：知行合一不是逃避复杂，而是在复杂处不欺己。坏与更坏之间可以选择，但不能把选择后的痛苦包装成纯粹正当。</p>
-</article></section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：心性原则的现实压力。</p></footer>
 </div>
-</section>
-<section class="slide" data-page-type="roundtable_reading" data-layout="stance_spectrum">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">第3轮：湘军为何能成为一台秩序机器</h1>
-    </div>
-    <p class="reading-thesis">湘军的强大来自曾国藩的个人道德、地方网络、利益设计，还是清廷制度崩坏后的替代性组织创新？</p>
-  </header>
-  <main class="reading-body"><div class="stance-spectrum">
-  <aside class="issue-tree">
-    <h3>命题拆解</h3>
-    <p>湘军的强大来自曾国藩的个人道德、地方网络、利益设计，还是清廷制度崩坏后的替代性组织创新？</p>
-    <div class="reading-block"><span class="reading-block-label">判断路径</span><p class="reading-block-text">先看专家站位，再看他们背后的解释框架：文化、制度、资本、规律与行动选择。</p></div>
-  </aside>
-  <section class="spectrum-map">
-    <div class="spectrum-axis"></div>
-    <div class="stance-grid"><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">综合解释</span>
-  <h3 class="reading-block-title">曾国藩</h3>
-  <p class="reading-block-text">湘军不是凭口号建成的。选将、筹饷、训练、家乡纽带、上下信义，缺一不可。乱世建军，先要让人相信你不会随便抛弃他们。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">综合解释</span>
-  <h3 class="reading-block-title">张宏杰</h3>
-  <p class="reading-block-text">湘军的关键是曾国藩把私人伦理组织化。他不是凭军事天才胜出，而是用熟人社会、责任绑定和长期信用建立了一套新动员机制。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">资本解释</span>
-  <h3 class="reading-block-title">梁启超</h3>
-  <p class="reading-block-text">这正是士人精神转化为事功的地方。读书人的道德资本若不能组织人、承担事、挽救危局，就只是书斋气。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">规律解释</span>
-  <h3 class="reading-block-title">王阳明</h3>
-  <p class="reading-block-text">在事上磨，湘军确是一种事功考场。但组织成功不能自动证明道义成功，尤其当组织目标本身包含大规模杀伐。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">综合解释</span>
-  <h3 class="reading-block-title">马克斯·韦伯</h3>
-  <p class="reading-block-text">湘军是一种从传统人身关系向准现代组织过渡的混合物。它靠私人忠诚启动，却需要规则、奖惩和财政维持。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">制度解释</span>
-  <h3 class="reading-block-title">李鸿章</h3>
-  <p class="reading-block-text">制度坏了，中央兵不堪用，就只能从地方、师生、乡党、银钱里重新搭架子。湘军不是完美制度，但它能打，这点最要紧。</p>
-</article></div>
-  </section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>阅读重点：看清专家不是在重复观点，而是在不同解释框架之间竞争。</p></footer>
 </div>
-</section>
-<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">马克斯·韦伯 对 梁启超：人格解释不足以解释组织</h1>
-    </div>
-    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
-  </header>
-  <main class="reading-body"><div class="clash-courtroom">
-  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
-  <span class="reading-block-label">攻击</span>
-  <h3 class="reading-block-title">马克斯·韦伯</h3>
-  <p class="reading-block-text">你把湘军看成士人精神的外化，但组织不靠精神维持。没有财政、奖惩、晋升和地方网络，再高的人格也不能长期调动军队。</p>
-</article></section>
-  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">人格解释不足以解释组织</p></section>
-  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
-  <span class="reading-block-label">回应</span>
-  <h3 class="reading-block-title">梁启超</h3>
-  <p class="reading-block-text">梁启超回应：制度当然重要，但晚清制度已坏，启动新组织需要可信的人格中心。没有曾国藩的信用，财政和奖惩都无法先被相信。</p>
-</article></section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：人格解释不足以解释组织。</p></footer>
+
+<!-- ==================== SLIDE 3: 人物出场 ==================== -->
+<div class="slide center-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div class="title-lg">六位圆桌嘉宾</div><div class="divider" style="margin:16px auto"></div></div>
+<div class="fade-up delay-1" style="display:flex;gap:40px;margin-top:30px;flex-wrap:wrap;justify-content:center">
+<div style="text-align:center"><div class="person-icon pi-zeng" style="width:70px;height:70px;font-size:26px">曾</div><div class="title-sm" style="margin-top:10px">曾国藩</div><div class="body-text-sm" style="text-align:center;margin-top:4px">晚清中兴名臣</div></div>
+<div style="text-align:center"><div class="person-icon pi-confu" style="width:70px;height:70px;font-size:26px">孔</div><div class="title-sm" style="margin-top:10px">孔子</div><div class="body-text-sm" style="text-align:center;margin-top:4px">儒家至圣先师</div></div>
+<div style="text-align:center"><div class="person-icon pi-han" style="width:70px;height:70px;font-size:26px">韩</div><div class="title-sm" style="margin-top:10px">韩非子</div><div class="body-text-sm" style="text-align:center;margin-top:4px">法家集大成者</div></div>
+<div style="text-align:center"><div class="person-icon pi-marx" style="width:70px;height:70px;font-size:26px">马</div><div class="title-sm" style="margin-top:10px">马克思</div><div class="body-text-sm" style="text-align:center;margin-top:4px">历史唯物主义奠基人</div></div>
+<div style="text-align:center"><div class="person-icon pi-munger" style="width:70px;height:70px;font-size:26px">芒</div><div class="title-sm" style="margin-top:10px">查理·芒格</div><div class="body-text-sm" style="text-align:center;margin-top:4px">多元思维模型大师</div></div>
+<div style="text-align:center"><div class="person-icon pi-xiang" style="width:70px;height:70px;font-size:26px">项</div><div class="title-sm" style="margin-top:10px">项飙</div><div class="body-text-sm" style="text-align:center;margin-top:4px">当代人类学家</div></div>
 </div>
-</section>
-<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">王阳明 对 李鸿章：有效性不能替代正当性</h1>
-    </div>
-    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
-  </header>
-  <main class="reading-body"><div class="clash-courtroom">
-  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
-  <span class="reading-block-label">攻击</span>
-  <h3 class="reading-block-title">王阳明</h3>
-  <p class="reading-block-text">你说能打最要紧，这正是危险处。一个组织越有效，越要追问它服务什么。若只以成败论英雄，心就被结果牵走了。</p>
-</article></section>
-  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">有效性不能替代正当性</p></section>
-  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
-  <span class="reading-block-label">回应</span>
-  <h3 class="reading-block-title">李鸿章</h3>
-  <p class="reading-block-text">李鸿章回应：先生说得高，但当城池陷落、财政枯竭、民生崩坏时，先让局面不继续烂下去，才有资格谈更高的正当性。</p>
-</article></section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：有效性不能替代正当性。</p></footer>
 </div>
-</section>
-<section class="slide" data-page-type="roundtable_reading" data-layout="stance_spectrum">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">第4轮：功业背后的道德代价</h1>
-    </div>
-    <p class="reading-thesis">镇压太平天国、处理地方秩序、面对天津教案时，曾国藩的选择如何同时包含责任、暴力、妥协和骂名？</p>
-  </header>
-  <main class="reading-body"><div class="stance-spectrum">
-  <aside class="issue-tree">
-    <h3>命题拆解</h3>
-    <p>镇压太平天国、处理地方秩序、面对天津教案时，曾国藩的选择如何同时包含责任、暴力、妥协和骂名？</p>
-    <div class="reading-block"><span class="reading-block-label">判断路径</span><p class="reading-block-text">先看专家站位，再看他们背后的解释框架：文化、制度、资本、规律与行动选择。</p></div>
-  </aside>
-  <section class="spectrum-map">
-    <div class="spectrum-axis"></div>
-    <div class="stance-grid"><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">综合解释</span>
-  <h3 class="reading-block-title">曾国藩</h3>
-  <p class="reading-block-text">我不能说自己无愧。乱世中许多选择都带血，也带羞辱。但我所面对的不是清白与污浊，而是天下继续崩坏还是暂时收束。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">综合解释</span>
-  <h3 class="reading-block-title">张宏杰</h3>
-  <p class="reading-block-text">曾国藩的复杂性在这里达到顶点。若只把他写成圣人，就遮蔽暴力；若只写成刽子手，又看不见他面对的历史困局。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">综合解释</span>
-  <h3 class="reading-block-title">梁启超</h3>
-  <p class="reading-block-text">大人物不能逃开历史审判。曾国藩有非常之功，也有非常之痛。后人要学他的担当，也要看见担当如何沾染血污。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">综合解释</span>
-  <h3 class="reading-block-title">王阳明</h3>
-  <p class="reading-block-text">越是坏与更坏之间的选择，越要保留内心的不安。一个人若在杀伐之后毫无不安，便说明修身已经失效。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">综合解释</span>
-  <h3 class="reading-block-title">马克斯·韦伯</h3>
-  <p class="reading-block-text">政治行动属于责任伦理：行动者必须承担可预见后果。但责任伦理不是免罪牌，它只是说纯粹信念无法单独治理世界。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">综合解释</span>
-  <h3 class="reading-block-title">李鸿章</h3>
-  <p class="reading-block-text">天津教案那样的局，谁接都要挨骂。朝廷、洋人、民情、舆论全压过来，做事的人只能在残局里保住下一步。</p>
-</article></div>
-  </section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>阅读重点：看清专家不是在重复观点，而是在不同解释框架之间竞争。</p></footer>
+
+<!-- ==================== SLIDE 4: 场景一 科举之路 ==================== -->
+<div class="slide left-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div style="font-size:14px;color:var(--gold);letter-spacing:6px;font-family:'Noto Sans SC',sans-serif">场 景 一</div><div class="title-lg" style="margin-top:8px">科举之路：笨小孩的逆袭</div><div class="divider"></div></div>
+<div class="fade-up delay-1">
+<div class="scene-card" style="margin-top:16px">
+<div class="scene-title">湖南湘乡 · 1833年</div>
+<div class="scene-desc">
+曾国藩第六次考秀才再次落榜，考卷被学台"悬牌批责"——作为反面典型示众。一个资质平庸的乡下少年，背书背不过躲在床下的小偷，却立下誓言："不为圣贤，便为禽兽。"他从此将笨功夫推到极致：一句不通不看下句，今日不通明日再读。第七次，他终于中了秀才，此后一路考中进士、入翰林，完成了中国科举史上最不可思议的逆袭。
 </div>
-</section>
-<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">张宏杰 对 梁启超：典范叙事的遮蔽</h1>
-    </div>
-    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
-  </header>
-  <main class="reading-body"><div class="clash-courtroom">
-  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
-  <span class="reading-block-label">攻击</span>
-  <h3 class="reading-block-title">张宏杰</h3>
-  <p class="reading-block-text">若我们太急于从曾国藩身上提炼人格典范，就会把南京战事、地方清洗和天津教案的阴影处理成背景噪音。</p>
-</article></section>
-  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">典范叙事的遮蔽</p></section>
-  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
-  <span class="reading-block-label">回应</span>
-  <h3 class="reading-block-title">梁启超</h3>
-  <p class="reading-block-text">梁启超回应：典范不是无瑕之人。真正的典范恰恰要承受污点，否则后人学到的只是虚构的洁净。</p>
-</article></section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：典范叙事的遮蔽。</p></footer>
 </div>
-</section>
-<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">王阳明 对 曾国藩：责任伦理的自我宽恕风险</h1>
-    </div>
-    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
-  </header>
-  <main class="reading-body"><div class="clash-courtroom">
-  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
-  <span class="reading-block-label">攻击</span>
-  <h3 class="reading-block-title">王阳明</h3>
-  <p class="reading-block-text">你说在坏与更坏之间选择，但人最擅长把自己的选择解释成不得已。你如何确认自己不是借天下大势宽恕自己？</p>
-</article></section>
-  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">责任伦理的自我宽恕风险</p></section>
-  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
-  <span class="reading-block-label">回应</span>
-  <h3 class="reading-block-title">曾国藩</h3>
-  <p class="reading-block-text">曾国藩回应：我无法完全确认。能做的只是保留敬畏和羞惭，不把成败说成天理，不把功业说成清白。</p>
-</article></section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：责任伦理的自我宽恕风险。</p></footer>
 </div>
-</section>
-<section class="slide" data-page-type="roundtable_reading" data-layout="stance_spectrum">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">第5轮：现代人到底该向曾国藩学什么</h1>
-    </div>
-    <p class="reading-thesis">读《曾国藩传》最危险的误读是成功学化；那么现代人真正能带走的，是自律、组织、处世，还是对复杂命运的清醒？</p>
-  </header>
-  <main class="reading-body"><div class="stance-spectrum">
-  <aside class="issue-tree">
-    <h3>命题拆解</h3>
-    <p>读《曾国藩传》最危险的误读是成功学化；那么现代人真正能带走的，是自律、组织、处世，还是对复杂命运的清醒？</p>
-    <div class="reading-block"><span class="reading-block-label">判断路径</span><p class="reading-block-text">先看专家站位，再看他们背后的解释框架：文化、制度、资本、规律与行动选择。</p></div>
-  </aside>
-  <section class="spectrum-map">
-    <div class="spectrum-axis"></div>
-    <div class="stance-grid"><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">规律解释</span>
-  <h3 class="reading-block-title">曾国藩</h3>
-  <p class="reading-block-text">不要学我的权位，也不要学我的名声。若真要学，只学一件事：知道自己不够好，却仍愿意每天改一点。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">综合解释</span>
-  <h3 class="reading-block-title">张宏杰</h3>
-  <p class="reading-block-text">这本书的现实意义，不是教你成为曾国藩，而是让你看见成长背后的笨拙、反复、妥协和代价。任何省略痛苦的模仿都是假学习。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">综合解释</span>
-  <h3 class="reading-block-title">梁启超</h3>
-  <p class="reading-block-text">现代人可学其担当。一个人若只求自我优化而不承担公共责任，曾国藩就会被误读成精致利己者的训练手册。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">综合解释</span>
-  <h3 class="reading-block-title">王阳明</h3>
-  <p class="reading-block-text">可学的是在事上磨，不是在心里幻想更好的自己。每天具体地改一件事，比收藏一百条格言更接近知行合一。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">综合解释</span>
-  <h3 class="reading-block-title">马克斯·韦伯</h3>
-  <p class="reading-block-text">现代人应学的是把价值伦理和责任伦理同时放上桌。只讲理想会幼稚，只讲结果会冷酷，成熟是在两者张力中行动。</p>
-</article><article class="reading-block stance-card" data-kind="stance">
-  <span class="reading-block-label">综合解释</span>
-  <h3 class="reading-block-title">李鸿章</h3>
-  <p class="reading-block-text">还要学一点现实感。世界不会因为你动机纯正就给你好结果。能办成事，能承担骂名，能保住下一步，也是本事。</p>
-</article></div>
-  </section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>阅读重点：看清专家不是在重复观点，而是在不同解释框架之间竞争。</p></footer>
+<div class="fade-up delay-2" style="margin-top:16px">
+<div class="tag">笨功夫</div><div class="tag">科举</div><div class="tag">自我突破</div><div class="tag">韧性</div>
 </div>
-</section>
-<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">梁启超 对 现代成功学读法：把担当缩小成上岸技术</h1>
-    </div>
-    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
-  </header>
-  <main class="reading-body"><div class="clash-courtroom">
-  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
-  <span class="reading-block-label">攻击</span>
-  <h3 class="reading-block-title">梁启超</h3>
-  <p class="reading-block-text">若读完只得到早起、复盘、人脉、情绪管理，那就是把一个晚清危局中的士人，缩小成个人晋升工具。</p>
-</article></section>
-  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">把担当缩小成上岸技术</p></section>
-  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
-  <span class="reading-block-label">回应</span>
-  <h3 class="reading-block-title">现代成功学读法</h3>
-  <p class="reading-block-text">张宏杰回应：所以必须把曾国藩放回历史现场。他的日课不是效率插件，而是面对崩坏世界时的自我支撑方式。</p>
-</article></section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：把担当缩小成上岸技术。</p></footer>
 </div>
-</section>
-<section class="slide" data-page-type="clash_reading" data-layout="clash_courtroom">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">马克斯·韦伯 对 李鸿章：现实主义的滑坡</h1>
-    </div>
-    <p class="reading-thesis">真正值得读的不是谁赢了，而是冲突背后的解释框架。</p>
-  </header>
-  <main class="reading-body"><div class="clash-courtroom">
-  <section class="clash-side attack"><article class="reading-block" data-kind="attack">
-  <span class="reading-block-label">攻击</span>
-  <h3 class="reading-block-title">马克斯·韦伯</h3>
-  <p class="reading-block-text">你说保住下一步也是本事，但现实主义若没有价值刹车，会把所有妥协都解释成必要，把所有代价都推给局势。</p>
-</article></section>
-  <section class="clash-center"><h3>冲突本质</h3><p class="reading-block-text">现实主义的滑坡</p></section>
-  <section class="clash-side defense"><article class="reading-block" data-kind="defense">
-  <span class="reading-block-label">回应</span>
-  <h3 class="reading-block-title">李鸿章</h3>
-  <p class="reading-block-text">李鸿章回应：我承认这个风险。但只讲价值刹车、不管车还在不在路上，也是一种奢侈。关键是边走边认账，不能边走边装清白。</p>
-</article></section>
-</div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>本页冲突本质：现实主义的滑坡。</p></footer>
+
+<!-- ==================== SLIDE 5: 金句1 ==================== -->
+<div class="slide quote-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up">
+<div class="quote-card">
+<div class="q-text">天下之至拙，能胜天下之至巧。</div>
+<div class="q-attr">—— 曾国藩 · 论笨功夫</div>
 </div>
-</section>
-<section class="slide" data-page-type="summary_reading" data-layout="reading_brief_4zone">
-<div class="reading-page">
-  <header class="reading-header">
-    <div>
-      <div class="reading-kicker">阅读重点</div>
-      <h1 class="reading-title">读者最终带走什么</h1>
-    </div>
-    <p class="reading-thesis">《曾国藩传》最反成功学的地方，是它没有从天赋讲起，而是从挫败、迟钝和羞耻讲起。曾国藩的真本事，是把低起点变成可迭代系统。</p>
-  </header>
-  <main class="reading-body"><div class="brief-grid"><section class="brief-zone"><h3>问题定义</h3><article class="reading-block" data-kind="takeaway">
-  
-  <h3 class="reading-block-title">笨不是缺陷，而是系统化成长的入口</h3>
-  <p class="reading-block-text">《曾国藩传》最反成功学的地方，是它没有从天赋讲起，而是从挫败、迟钝和羞耻讲起。曾国藩的真本事，是把低起点变成可迭代系统。</p>
-</article></section><section class="brief-zone"><h3>结构化内容</h3><article class="reading-block" data-kind="takeaway">
-  
-  <h3 class="reading-block-title">修身既是道德工程，也是权力技术</h3>
-  <p class="reading-block-text">日课、慎独、家书和反省能提升人格，也会提升控制力。关键不在于否认这种双重性，而在于持续追问能力服务的目标。</p>
-</article></section><section class="brief-zone"><h3>证据与观点</h3><article class="reading-block" data-kind="question">
-  
-  <h3 class="reading-block-title">开放问题</h3>
-  <p class="reading-block-text">如果曾国藩的成功无法脱离晚清乱局，现代人还能从他身上学到什么可迁移能力？</p>
-</article></section><section class="brief-zone"><h3>读者带走什么</h3></section></div></main>
-  <footer class="takeaway-strip"><strong>最终洞见</strong><p>阅读完成后，至少应带走一个可复用的判断框架。</p></footer>
 </div>
-</section>
+</div>
+
+<!-- ==================== SLIDE 6: 对话轮1 ==================== -->
+<div class="slide left-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div style="font-size:14px;color:var(--gold);letter-spacing:6px;font-family:'Noto Sans SC',sans-serif">圆 桌 对 话 · 第 一 轮</div><div class="title-md" style="margin-top:8px">天赋与勤勉：笨功夫是否值得？</div><div class="divider"></div></div>
+<div class="fade-up delay-1">
+<div class="dialogue"><div class="speaker s-zeng">曾国藩</div><div class="words">我天资鲁钝，六次落榜。但我相信"拙看似慢，实则最快"。读书如煮肉，须用慢火久炖，不能急。</div></div>
+<div class="dialogue"><div class="speaker s-confu">孔子</div><div class="words">吾非生而知之者，好古，敏以求之者也。"人一能之己百之，人十能之己千之"——勤能补拙，这是仁者的选择。</div></div>
+<div class="dialogue"><div class="speaker s-munger">查理·芒格</div><div class="words">我见过太多聪明人破产。曾先生的"笨功夫"本质是复利思维——每天进步一点点，几十年后就是压倒性优势。</div></div>
+<div class="dialogue"><div class="speaker s-marx">马克思</div><div class="words">勤勉固然重要，但不能忽视结构的力量。曾国藩若非科举制度的受益者，再努力也无处施展。</div></div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 7: 金句2 ==================== -->
+<div class="slide quote-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up">
+<div class="quote-card">
+<div class="q-text">不为圣贤，便为禽兽；莫问收获，但问耕耘。</div>
+<div class="q-attr">—— 曾国藩 · 自箴联</div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 8: 场景二 修身日记 ==================== -->
+<div class="slide left-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div style="font-size:14px;color:var(--gold);letter-spacing:6px;font-family:'Noto Sans SC',sans-serif">场 景 二</div><div class="title-lg" style="margin-top:8px">京官十年：修身日记的残酷自律</div><div class="divider"></div></div>
+<div class="fade-up delay-1">
+<div class="scene-card">
+<div class="scene-title">北京 · 1840-1850年</div>
+<div class="scene-desc">
+三十岁的曾国藩立下"日课十二条"：主敬、静坐、早起、读书不二、写日记、谨言、保身、作字、夜不出门……他在日记中痛骂自己"今日又看人家美妇""真禽兽也"。他请朋友监督自己，把日记公开传阅。这种近乎自虐的修身方式，持续了三十年。正如他所说："败人二字，非傲即惰；吾二者兼有，唯有以勤治惰，以谦治傲。"</div>
+</div>
+</div>
+<div class="fade-up delay-2" style="margin-top:16px">
+<div class="tag">修身</div><div class="tag">日记</div><div class="tag">自律</div><div class="tag">自我改造</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 9: 金句3 ==================== -->
+<div class="slide quote-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up">
+<div class="quote-card">
+<div class="q-text">吾日三省吾身——不完全是反省，更是对自我弱点的系统性修复。</div>
+<div class="q-attr">—— 孔子 · 回应曾国藩修身法</div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 10: 对话轮2 ==================== -->
+<div class="slide left-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div style="font-size:14px;color:var(--gold);letter-spacing:6px;font-family:'Noto Sans SC',sans-serif">圆 桌 对 话 · 第 二 轮</div><div class="title-md" style="margin-top:8px">自我改造：方法论还是道德表演？</div><div class="divider"></div></div>
+<div class="fade-up delay-1">
+<div class="dialogue"><div class="speaker s-xiang">项飙</div><div class="words">曾国藩把日记公开传阅，本质上是建立了一个"道德可见性"的机制。他把私人领域变成了公共监督的空间——这在人类学上非常有意思。</div></div>
+<div class="dialogue"><div class="speaker s-han">韩非子</div><div class="words">修身固然好，但仅靠自律治理不了天下。曾国藩后来治军用的恰恰是法家那一套——制度、赏罚、层级控制。修身是给外人看的。</div></div>
+<div class="dialogue"><div class="speaker s-zeng">曾国藩</div><div class="words">修身不是表演，是与自己作战。我每日在日记中自省，痛骂自己的懒惰和贪欲。三十年如一日，哪有这样的表演？</div></div>
+<div class="dialogue"><div class="speaker s-munger">查理·芒格</div><div class="words">曾先生的日记系统本质上是一个"检查清单"。飞行员、外科医生都用——它不是道德问题，是认知工具。</div></div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 11: 金句4 ==================== -->
+<div class="slide quote-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up">
+<div class="quote-card">
+<div class="q-text">用检查清单对抗人性弱点，这不是道德问题，这是工程问题。</div>
+<div class="q-attr">—— 查理·芒格 · 论系统性自省</div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 12: 场景三 创建湘军 ==================== -->
+<div class="slide left-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div style="font-size:14px;color:var(--gold);letter-spacing:6px;font-family:'Noto Sans SC',sans-serif">场 景 三</div><div class="title-lg" style="margin-top:8px">创建湘军：书生带兵的组织革命</div><div class="divider"></div></div>
+<div class="fade-up delay-1">
+<div class="scene-card">
+<div class="scene-title">湖南长沙 · 1853年</div>
+<div class="scene-desc">
+太平军横扫半个中国，正规军不堪一击。在家守丧的曾国藩接到咸丰帝的命令，以团练大臣身份组建地方武装。他做了一个惊人的决定：不用绿营兵，而是"选士人领山农"——用读书人做将领，用朴实农民做士兵。他亲自设计了"将必亲选、兵必自募、层层负责"的组织结构，打破了清朝的军事体制。这支后来被称为"湘军"的队伍，开创了中国近代军事的新纪元。</div>
+</div>
+</div>
+<div class="fade-up delay-2" style="margin-top:16px">
+<div class="tag">湘军</div><div class="tag">组织创新</div><div class="tag">选士人领山农</div><div class="tag">制度设计</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 13: 金句5 ==================== -->
+<div class="slide quote-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up">
+<div class="quote-card">
+<div class="q-text">选士人领山农——以信仰统领行动，以血缘凝聚团队，这是我一生最得意的制度设计。</div>
+<div class="q-attr">—— 曾国藩 · 论湘军组织</div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 14: 对话轮3 ==================== -->
+<div class="slide left-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div style="font-size:14px;color:var(--gold);letter-spacing:6px;font-family:'Noto Sans SC',sans-serif">圆 桌 对 话 · 第 三 轮</div><div class="title-md" style="margin-top:8px">湘军组织：制度创新还是军阀雏形？</div><div class="divider"></div></div>
+<div class="fade-up delay-1">
+<div class="dialogue"><div class="speaker s-han">韩非子</div><div class="words">曾国藩的"将必亲选"本质上是法家的"术"——控制人事权。但他犯了一个大忌：让军队只认将领不认朝廷，这是取祸之道。</div></div>
+<div class="dialogue"><div class="speaker s-marx">马克思</div><div class="words">湘军的本质是地方地主阶级的武装力量。它帮助清廷镇压了太平天国，但同时瓦解了中央集权——这是历史辩证法的典型案例。</div></div>
+<div class="dialogue"><div class="speaker s-xiang">项飙</div><div class="words">曾国藩用血缘和乡谊来组织军队，这在人类学上是典型的"差序格局"。它高效，但也造成了近代军阀割据的基因。</div></div>
+<div class="dialogue"><div class="speaker s-zeng">曾国藩</div><div class="words">我别无选择。绿营已烂，朝廷无力。我只能用最朴素的信任关系重建军队。至于后果——非我所能预见。</div></div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 15: 金句6 ==================== -->
+<div class="slide quote-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up">
+<div class="quote-card">
+<div class="q-text">制度不能替代信任，但信任必须制度化——否则组织必将溃散。</div>
+<div class="q-attr">—— 查理·芒格 · 论湘军的组织逻辑</div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 16: 场景四 靖港惨败 ==================== -->
+<div class="slide left-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div style="font-size:14px;color:var(--gold);letter-spacing:6px;font-family:'Noto Sans SC',sans-serif">场 景 四</div><div class="title-lg" style="margin-top:8px">靖港惨败：投水自尽的至暗时刻</div><div class="divider"></div></div>
+<div class="fade-up delay-1">
+<div class="scene-card">
+<div class="scene-title">湖南靖港 · 1854年</div>
+<div class="scene-desc">
+曾国藩率湘军首战靖港，大败。水师被火攻，陆师溃散。他羞愤交加，跳入湘江自杀，被部下救起。这是他一生中最屈辱的时刻——一个书生第一次上战场，就被打得全军覆没。长沙城中官员嘲笑他"不谙军事"。他在给皇帝的奏折中写道："臣屡战屡败。"幕僚改为"屡败屡战"。四个字的调换，道出了一个笨人的绝地反击。</div>
+</div>
+</div>
+<div class="fade-up delay-2" style="margin-top:16px">
+<div class="tag">靖港之败</div><div class="tag">屡败屡战</div><div class="tag">绝境</div><div class="tag">韧性</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 17: 金句7 ==================== -->
+<div class="slide quote-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up">
+<div class="quote-card">
+<div class="q-text">屡败屡战——这四个字，是笨人对命运的终极回答。</div>
+<div class="q-attr">—— 项飙 · 评靖港之败后的奏折修改</div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 18: 对话轮4 ==================== -->
+<div class="slide left-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div style="font-size:14px;color:var(--gold);letter-spacing:6px;font-family:'Noto Sans SC',sans-serif">圆 桌 对 话 · 第 四 轮</div><div class="title-md" style="margin-top:8px">逆境与韧性：如何从失败中复活？</div><div class="divider"></div></div>
+<div class="fade-up delay-1">
+<div class="dialogue"><div class="speaker s-confu">孔子</div><div class="words">"知其不可而为之"——这不是愚蠢，是信念。曾国藩跳江是耻感驱动，但活下来继续战斗，靠的是对使命的坚守。</div></div>
+<div class="dialogue"><div class="speaker s-munger">查理·芒格</div><div class="words">逆境是测试模型的最好时机。曾国藩在靖港之后改变了一切——从战术到用人。大多数人失败后重复错误，他失败后升级系统。</div></div>
+<div class="dialogue"><div class="speaker s-marx">马克思</div><div class="words">个人意志很重要，但不能脱离物质条件。曾国藩能屡败屡战，因为他背后有湖南地主阶级的持续经济支持。</div></div>
+<div class="dialogue"><div class="speaker s-zeng">曾国藩</div><div class="words">跳江那一刻，我是真的想死。但"好汉打脱牙和血吞"——我告诉自己，死容易，活着把事情做成，才难。</div></div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 19: 金句8 ==================== -->
+<div class="slide quote-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up">
+<div class="quote-card">
+<div class="q-text">好汉打脱牙和血吞。</div>
+<div class="q-attr">—— 曾国藩 · 靖港之败后</div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 20: 场景五 天京之战 ==================== -->
+<div class="slide left-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div style="font-size:14px;color:var(--gold);letter-spacing:6px;font-family:'Noto Sans SC',sans-serif">场 景 五</div><div class="title-lg" style="margin-top:8px">天京之战：功业与道德的撕裂</div><div class="divider"></div></div>
+<div class="fade-up delay-1">
+<div class="scene-card">
+<div class="scene-title">南京 · 1864年</div>
+<div class="scene-desc">
+湘军围困天京两年，终于破城。但随之而来的是惨绝人寰的屠杀与劫掠。曾国荃的军队在城中烧杀三日，无数平民惨死。曾国藩明知弟弟纵兵屠城，却选择了沉默。他保举弟弟为一等伯爵，自己也登上了人生巅峰。但这一切的背后，是一个儒者对道德底线的逾越。他晚年在家书中写道："吾家一门受国厚恩，不能不格外小心。"这句话，究竟是谦虚还是忏悔？</div>
+</div>
+</div>
+<div class="fade-up delay-2" style="margin-top:16px">
+<div class="tag">天京</div><div class="tag">道德代价</div><div class="tag">功业</div><div class="tag">忏悔</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 21: 金句9 ==================== -->
+<div class="slide quote-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up">
+<div class="quote-card">
+<div class="q-text">历史从不审判胜利者，但胜利者终将被自己的良心审判。</div>
+<div class="q-attr">—— 卡尔·马克思 · 论功业的道德代价</div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 22: 对话轮5 ==================== -->
+<div class="slide left-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div style="font-size:14px;color:var(--gold);letter-spacing:6px;font-family:'Noto Sans SC',sans-serif">圆 桌 对 话 · 第 五 轮</div><div class="title-md" style="margin-top:8px">功业与道德代价：成就是否需要血的代价？</div><div class="divider"></div></div>
+<div class="fade-up delay-1">
+<div class="dialogue"><div class="speaker s-han">韩非子</div><div class="words">治乱世用重典。太平天国之乱死伤数千万，不以雷霆手段平定，死的人更多。曾国藩的选择，是两害相权取其轻。</div></div>
+<div class="dialogue"><div class="speaker s-confu">孔子</div><div class="words">"行一不义、杀一不辜而得天下，皆不为也。"这是儒者的底线。纵兵屠城，无论什么理由，都是对仁的背叛。</div></div>
+<div class="dialogue"><div class="speaker s-xiang">项飙</div><div class="words">曾国藩的困境在于：他用儒家的道德语言组织军队，却无法用儒家的道德标准约束战争。这种"道德脱嵌"是结构性的。</div></div>
+<div class="dialogue"><div class="speaker s-zeng">曾国藩</div><div class="words">（沉默良久）我无法为天京之事辩白。功业越大，罪孽越深。我只能在余生中，尽量弥补。</div></div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 23: 金句10 ==================== -->
+<div class="slide quote-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up">
+<div class="quote-card">
+<div class="q-text">功业越大，罪孽越深——这是权力的永恒悖论。</div>
+<div class="q-attr">—— 曾国藩 · 晚年反思</div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 24: 场景六 天津教案 ==================== -->
+<div class="slide left-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div style="font-size:14px;color:var(--gold);letter-spacing:6px;font-family:'Noto Sans SC',sans-serif">场 景 六</div><div class="title-lg" style="margin-top:8px">天津教案：卖国贼的十字架</div><div class="divider"></div></div>
+<div class="fade-up delay-1">
+<div class="scene-card">
+<div class="scene-title">天津 · 1870年</div>
+<div class="scene-desc">
+天津民众因怀疑法国教堂拐骗儿童，暴动杀死法国领事丰大业等二十名外国人。曾国藩奉命处理此案。他明知此举将背负骂名，仍选择查明真相、惩办凶手、向法国道歉赔款。舆论沸腾，举国骂他"卖国贼"。他写道："外惭清议，内疚神明。"一个一生以圣贤自期的人，最终在国家利益与个人名节之间，选择了前者。他因此被调离直隶，晚景凄凉。</div>
+</div>
+</div>
+<div class="fade-up delay-2" style="margin-top:16px">
+<div class="tag">天津教案</div><div class="tag">卖国骂名</div><div class="tag">妥协</div><div class="tag">底线</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 25: 金句11 ==================== -->
+<div class="slide quote-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up">
+<div class="quote-card">
+<div class="q-text">外惭清议，内疚神明。</div>
+<div class="q-attr">—— 曾国藩 · 天津教案后</div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 26: 对话轮6 ==================== -->
+<div class="slide left-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div style="font-size:14px;color:var(--gold);letter-spacing:6px;font-family:'Noto Sans SC',sans-serif">圆 桌 对 话 · 第 六 轮</div><div class="title-md" style="margin-top:8px">妥协与底线：务实的边界在哪里？</div><div class="divider"></div></div>
+<div class="fade-up delay-1">
+<div class="dialogue"><div class="speaker s-munger">查理·芒格</div><div class="words">曾国藩在天津教案中的表现是"理性妥协"的典范。他知道硬扛只会引发战争，选择忍辱负重。这是逆向思维——先想最坏结果。</div></div>
+<div class="dialogue"><div class="speaker s-marx">马克思</div><div class="words">不能简单说他卖国。1870年的中国没有与列强全面对抗的实力。曾国藩的"妥协"是弱势国家在不平等体系中的理性选择。</div></div>
+<div class="dialogue"><div class="speaker s-xiang">项飙</div><div class="words">关键问题是：谁在定义"底线"？民众的民族情绪、朝廷的政治算计、曾国藩的个人判断——三种"底线"互相冲突。</div></div>
+<div class="dialogue"><div class="speaker s-confu">孔子</div><div class="words">"邦有道则仕，邦无道则可卷而怀之。"但曾国藩没有退缩，而是选择承受骂名继续做事。这是"知其不可而为之"的另一种形态。</div></div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 27: 金句12 ==================== -->
+<div class="slide quote-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up">
+<div class="quote-card">
+<div class="q-text">理性妥协不是软弱，是逆向思维——先想最坏结果，再做最优选择。</div>
+<div class="q-attr">—— 查理·芒格 · 论天津教案</div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 28: 场景七 幕府人才 ==================== -->
+<div class="slide left-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div style="font-size:14px;color:var(--gold);letter-spacing:6px;font-family:'Noto Sans SC',sans-serif">场 景 七</div><div class="title-lg" style="margin-top:8px">幕府与人才：晚清最大的人才孵化器</div><div class="divider"></div></div>
+<div class="fade-up delay-1">
+<div class="scene-card">
+<div class="scene-title">各地幕府 · 1853-1872年</div>
+<div class="scene-desc">
+曾国藩幕府出过的人物：李鸿章、左宗棠、彭玉麟、沈葆桢、丁日昌、容闳……总计出了二十六位总督、巡抚级别的封疆大吏。他的用人之道是"广收、慎用、勤教、严绳"——大量吸纳人才，谨慎安排岗位，勤于教导，严格考核。他说："用人之道，以大节为主，小过不足论。"他不拘一格：太平天国降将可以用，有争议的人才可以用，只要有能力、有操守。</div>
+</div>
+</div>
+<div class="fade-up delay-2" style="margin-top:16px">
+<div class="tag">幕府</div><div class="tag">用人之道</div><div class="tag">人才培养</div><div class="tag">领导力</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 29: 金句13 ==================== -->
+<div class="slide quote-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up">
+<div class="quote-card">
+<div class="q-text">用人以大节为主，小过不足论。</div>
+<div class="q-attr">—— 曾国藩 · 论用人之道</div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 30: 对话轮7 ==================== -->
+<div class="slide left-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div style="font-size:14px;color:var(--gold);letter-spacing:6px;font-family:'Noto Sans SC',sans-serif">圆 桌 对 话 · 第 七 轮</div><div class="title-md" style="margin-top:8px">用人之道：如何识人、育人、留人？</div><div class="divider"></div></div>
+<div class="fade-up delay-1">
+<div class="dialogue"><div class="speaker s-confu">孔子</div><div class="words">"视其所以，观其所由，察其所安"——曾国藩深得此道。他观察一个人的日常细节，而非只看表面功绩。</div></div>
+<div class="dialogue"><div class="speaker s-han">韩非子</div><div class="words">"广收、慎用、勤教、严绳"——前两个是法家的"术"，后两个是儒家的"教"。曾国藩是儒法并用的高手。</div></div>
+<div class="dialogue"><div class="speaker s-xiang">项飙</div><div class="words">曾国藩的人才网络本质上是一个"关系再生产"系统。他培养的不只是个人能力，而是整个精英阶层的组织能力。</div></div>
+<div class="dialogue"><div class="speaker s-munger">查理·芒格</div><div class="words">最厉害的是"严绳"——他放手让下属做事，但始终保持最终控制权。这是管理学上的"授权而不失控"。</div></div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 31: 金句14 ==================== -->
+<div class="slide quote-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up">
+<div class="quote-card">
+<div class="q-text">授权而不失控，是管理的最高境界——放手让下属做事，但始终保持最终判断权。</div>
+<div class="q-attr">—— 查理·芒格 · 论曾国藩的管理术</div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 32: 场景八 最后的家书 ==================== -->
+<div class="slide left-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div style="font-size:14px;color:var(--gold);letter-spacing:6px;font-family:'Noto Sans SC',sans-serif">场 景 八</div><div class="title-lg" style="margin-top:8px">最后的家书：不望子孙为大官</div><div class="divider"></div></div>
+<div class="fade-up delay-1">
+<div class="scene-card">
+<div class="scene-title">南京 · 1871年</div>
+<div class="scene-desc">
+曾国藩生命最后一年，在家书中写下："凡人皆望子孙为大官，余不愿为大官，但愿为读书明理之君子。"他给后代定下"八字家训"：书、蔬、鱼、猪、早、扫、考、宝——读书、种菜、养鱼、喂猪、早起、打扫、祭祀、睦邻。一个位极人臣的大学士，要求子孙做农民。他一生功过参半，但曾家后代两百多年来无一败家子，人才辈出。这，或许才是他最伟大的成就。</div>
+</div>
+</div>
+<div class="fade-up delay-2" style="margin-top:16px">
+<div class="tag">家书</div><div class="tag">家训</div><div class="tag">传承</div><div class="tag">功业与修身</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 33: 金句15 ==================== -->
+<div class="slide quote-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up">
+<div class="quote-card">
+<div class="q-text">凡人皆望子孙为大官，余不愿为大官，但愿为读书明理之君子。</div>
+<div class="q-attr">—— 曾国藩 · 最后的家书</div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 34: 对话轮8 ==================== -->
+<div class="slide left-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div style="font-size:14px;color:var(--gold);letter-spacing:6px;font-family:'Noto Sans SC',sans-serif">圆 桌 对 话 · 第 八 轮</div><div class="title-md" style="margin-top:8px">传承与遗产：什么才是真正的成功？</div><div class="divider"></div></div>
+<div class="fade-up delay-1">
+<div class="dialogue"><div class="speaker s-marx">马克思</div><div class="words">曾国藩挽救了清朝，但也延长了封建制度的寿命。从历史唯物主义看，他的"成功"恰恰是时代的"失败"。</div></div>
+<div class="dialogue"><div class="speaker s-xiang">项飙</div><div class="words">有趣的是，曾国藩要求后代做农民，但曾家后代几乎都成了精英。"耕读传家"本身就是一种精英再生产的策略。</div></div>
+<div class="dialogue"><div class="speaker s-zeng">曾国藩</div><div class="words">我不求后代做大官，只求他们做正人。家族延续靠的不是权势，是家风。权势终有尽时，家风可以传百年。</div></div>
+<div class="dialogue"><div class="speaker s-confu">孔子</div><div class="words">"君子之泽，五世而斩。"曾国藩深谙此理，所以他传的不是财富权力，而是修身治学的传统——这才是真正的传承。</div></div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 35: 金句16 ==================== -->
+<div class="slide quote-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up">
+<div class="quote-card">
+<div class="q-text">权势终有尽时，家风可以传百年。</div>
+<div class="q-attr">—— 曾国藩 · 论真正的成功</div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 36: 对话轮9 ==================== -->
+<div class="slide left-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div style="font-size:14px;color:var(--gold);letter-spacing:6px;font-family:'Noto Sans SC',sans-serif">圆 桌 对 话 · 第 九 轮</div><div class="title-md" style="margin-top:8px">历史定位：功臣还是帮凶？</div><div class="divider"></div></div>
+<div class="fade-up delay-1">
+<div class="dialogue"><div class="speaker s-marx">马克思</div><div class="words">评价历史人物不能脱离其所处的生产关系。曾国藩是封建地主阶级的杰出代表——他在旧制度的框架内做到了最好，但他的"最好"恰恰维护了最坏的制度。</div></div>
+<div class="dialogue"><div class="speaker s-han">韩非子</div><div class="words">功臣与帮凶的区分毫无意义。关键是他是否建立了有效的秩序。乱世之中，秩序本身就是最大的善。</div></div>
+<div class="dialogue"><div class="speaker s-xiang">项飙</div><div class="words">问题不在于曾国藩个人，而在于他所代表的"士大夫治理模式"。这种模式在晚清已经失效，但他找不到替代方案。</div></div>
+<div class="dialogue"><div class="speaker s-munger">查理·芒格</div><div class="words">"在手握锤子的人眼里，一切都是钉子。"曾国藩的"锤子"是儒学，但他面对的是三千年未有之大变局。他做得已经比绝大多数人好。</div></div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 37: 对话轮10 ==================== -->
+<div class="slide left-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div style="font-size:14px;color:var(--gold);letter-spacing:6px;font-family:'Noto Sans SC',sans-serif">圆 桌 对 话 · 第 十 轮</div><div class="title-md" style="margin-top:8px">终极追问：曾国藩对我们意味着什么？</div><div class="divider"></div></div>
+<div class="fade-up delay-1">
+<div class="dialogue"><div class="speaker s-zeng">曾国藩</div><div class="words">我一生的教训是：修身是起点，但不是终点。一个人再努力修身，如果不能理解时代、顺应变革，修身就变成了自恋。</div></div>
+<div class="dialogue"><div class="speaker s-confu">孔子</div><div class="words">"知其不可而为之"是儒者的使命。曾国藩做到了。但"知"字才是关键——你需要知道什么是真正的"可"与"不可"。</div></div>
+<div class="dialogue"><div class="speaker s-munger">查理·芒格</div><div class="words">曾国藩教给我们的是"多元思维模型"——修身用儒学，治军用法家，外交用现实主义。不要被单一框架限制。</div></div>
+<div class="dialogue"><div class="speaker s-xiang">项飙</div><div class="words">曾国藩最值得当代人学习的，不是他的成功，而是他面对结构性困境时的诚实——"外惭清议，内疚神明"，他没有假装没有矛盾。</div></div>
+<div class="dialogue"><div class="speaker s-han">韩非子</div><div class="words">曾国藩最大的遗憾是：他的制度创新只停留在实践层面，没有上升为系统的理论。他本可以成为中国政治学的亚里士多德。</div></div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 38-42: 主题深度页 ==================== -->
+<div class="slide center-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div style="font-size:14px;color:var(--gold);letter-spacing:6px;font-family:'Noto Sans SC',sans-serif">主 题 深 度</div><div class="title-xl" style="margin-top:16px">自我改造</div><div class="divider-gold" style="margin:20px auto"></div></div>
+<div class="fade-up delay-1">
+<div class="body-text" style="text-align:center;max-width:650px">
+曾国藩的自我改造不是一次性的觉醒，而是持续三十年的系统工程。他把修身从道德口号变成了可执行的程序——日记、监督、复盘、迭代。这与现代认知科学中的"刻意练习"和"元认知"高度一致。他的伟大不在于天赋，而在于把"没有天赋"这件事变成了优势。
+</div>
+</div>
+<div class="fade-up delay-2" style="margin-top:30px">
+<div class="quote-card" style="max-width:550px"><div class="q-text" style="font-size:20px">自我改造的本质，不是变成另一个人，而是把现有的自己打磨到极致。</div></div>
+</div>
+</div>
+
+<div class="slide center-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div style="font-size:14px;color:var(--gold);letter-spacing:6px;font-family:'Noto Sans SC',sans-serif">主 题 深 度</div><div class="title-xl" style="margin-top:16px">笨功夫</div><div class="divider-gold" style="margin:20px auto"></div></div>
+<div class="fade-up delay-1">
+<div class="body-text" style="text-align:center;max-width:650px">
+"天下之至拙，能胜天下之至巧。"曾国藩的笨功夫不是愚钝的无奈选择，而是一种战略性的耐心。在信息爆炸、追求速成的今天，笨功夫的价值反而更加凸显——它意味着对本质的尊重、对过程的信任、对时间复利的信仰。
+</div>
+</div>
+<div class="fade-up delay-2" style="margin-top:30px">
+<div class="quote-card" style="max-width:550px"><div class="q-text" style="font-size:20px">笨功夫的本质是：承认自己不够聪明，然后用时间和勤奋弥补。</div></div>
+</div>
+</div>
+
+<div class="slide center-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div style="font-size:14px;color:var(--gold);letter-spacing:6px;font-family:'Noto Sans SC',sans-serif">主 题 深 度</div><div class="title-xl" style="margin-top:16px">湘军组织</div><div class="divider-gold" style="margin:20px auto"></div></div>
+<div class="fade-up delay-1">
+<div class="body-text" style="text-align:center;max-width:650px">
+湘军的"将必亲选、兵必自募、层层负责"制度，本质上是一种"分布式领导力"模型。它解决了晚清军事体制的核心问题——信息不对称和激励不相容。但这种依赖个人信任的组织结构，也埋下了军阀割据的隐患。曾国藩的组织创新，既是最伟大的成功，也是最深刻的教训。
+</div>
+</div>
+<div class="fade-up delay-2" style="margin-top:30px">
+<div class="quote-card" style="max-width:550px"><div class="q-text" style="font-size:20px">最好的组织设计，是在效率与控制之间找到平衡点。</div></div>
+</div>
+</div>
+
+<div class="slide center-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div style="font-size:14px;color:var(--gold);letter-spacing:6px;font-family:'Noto Sans SC',sans-serif">主 题 深 度</div><div class="title-xl" style="margin-top:16px">道德代价</div><div class="divider-gold" style="margin:20px auto"></div></div>
+<div class="fade-up delay-1">
+<div class="body-text" style="text-align:center;max-width:650px">
+曾国藩一生以圣贤自期，却在天京之战中默许了屠城，在天津教案中选择了妥协。这不是简单的"道德堕落"，而是权力场域中道德与现实的结构性冲突。他的痛苦在于：他清楚地知道自己的选择背离了理想，但他仍然选择了——因为他相信"两害相权取其轻"。
+</div>
+</div>
+<div class="fade-up delay-2" style="margin-top:30px">
+<div class="quote-card" style="max-width:550px"><div class="q-text" style="font-size:20px">真正的道德困境不是善与恶的选择，而是善与善的冲突。</div></div>
+</div>
+</div>
+
+<div class="slide center-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div style="font-size:14px;color:var(--gold);letter-spacing:6px;font-family:'Noto Sans SC',sans-serif">主 题 深 度</div><div class="title-xl" style="margin-top:16px">功业与修身</div><div class="divider-gold" style="margin:20px auto"></div></div>
+<div class="fade-up delay-1">
+<div class="body-text" style="text-align:center;max-width:650px">
+曾国藩用三十年证明了修身可以改变一个人的命运，也用一生证明了修身无法解决所有问题。他的遗产是矛盾的：他既是儒家修身传统的最大实践者，也是这个传统局限性的最大证明者。但正是这种矛盾，让他的故事在今天依然有生命力——因为每个试图在不完美的世界中追求完美的人，都能在曾国藩身上看到自己。
+</div>
+</div>
+<div class="fade-up delay-2" style="margin-top:30px">
+<div class="quote-card" style="max-width:550px"><div class="q-text" style="font-size:20px">修身的终极目的，不是成为圣贤，而是成为一个诚实面对自己的人。</div></div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 38: 六人观点矩阵 ==================== -->
+<div class="slide center-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div class="title-lg">六人观点矩阵</div><div class="divider" style="margin:12px auto"></div></div>
+<div class="fade-up delay-1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:900px;margin-top:16px">
+<div style="text-align:center;padding:16px;border:1px solid rgba(44,62,80,.08);border-radius:4px">
+<div class="person-icon pi-zeng" style="width:40px;height:40px;font-size:16px;margin:0 auto 6px">曾</div>
+<div class="title-sm" style="font-size:16px">曾国藩</div>
+<div class="body-text-sm" style="font-size:13px;margin-top:6px">以修身对抗命运，以笨功夫弥补天赋不足</div>
+</div>
+<div style="text-align:center;padding:16px;border:1px solid rgba(44,62,80,.08);border-radius:4px">
+<div class="person-icon pi-confu" style="width:40px;height:40px;font-size:16px;margin:0 auto 6px">孔</div>
+<div class="title-sm" style="font-size:16px">孔子</div>
+<div class="body-text-sm" style="font-size:13px;margin-top:6px">勤能补拙是仁者的选择，知不可为是信念</div>
+</div>
+<div style="text-align:center;padding:16px;border:1px solid rgba(44,62,80,.08);border-radius:4px">
+<div class="person-icon pi-han" style="width:40px;height:40px;font-size:16px;margin:0 auto 6px">韩</div>
+<div class="title-sm" style="font-size:16px">韩非子</div>
+<div class="body-text-sm" style="font-size:13px;margin-top:6px">制度与秩序才是治世根本，修身是表象</div>
+</div>
+<div style="text-align:center;padding:16px;border:1px solid rgba(44,62,80,.08);border-radius:4px">
+<div class="person-icon pi-marx" style="width:40px;height:40px;font-size:16px;margin:0 auto 6px">马</div>
+<div class="title-sm" style="font-size:16px">马克思</div>
+<div class="body-text-sm" style="font-size:13px;margin-top:6px">不可脱离生产关系看个人意志与历史选择</div>
+</div>
+<div style="text-align:center;padding:16px;border:1px solid rgba(44,62,80,.08);border-radius:4px">
+<div class="person-icon pi-munger" style="width:40px;height:40px;font-size:16px;margin:0 auto 6px">芒</div>
+<div class="title-sm" style="font-size:16px">查理·芒格</div>
+<div class="body-text-sm" style="font-size:13px;margin-top:6px">笨功夫是复利思维，修身是认知工具</div>
+</div>
+<div style="text-align:center;padding:16px;border:1px solid rgba(44,62,80,.08);border-radius:4px">
+<div class="person-icon pi-xiang" style="width:40px;height:40px;font-size:16px;margin:0 auto 6px">项</div>
+<div class="title-sm" style="font-size:16px">项飙</div>
+<div class="body-text-sm" style="font-size:13px;margin-top:6px">关注结构性矛盾，诚实面对困境比成功更重要</div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 39: 五主题交叉分析 ==================== -->
+<div class="slide center-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div class="title-lg">五主题交叉分析</div><div class="divider" style="margin:12px auto"></div></div>
+<div class="fade-up delay-1" style="max-width:800px;margin-top:16px">
+<div style="display:grid;grid-template-columns:120px 1fr;gap:8px;font-family:'Noto Sans SC',sans-serif;font-size:14px;color:var(--light-ink);line-height:1.8">
+<div style="font-weight:700;color:var(--ink);padding:8px 0;border-bottom:1px solid rgba(44,62,80,.06)">自我改造</div><div style="padding:8px 0;border-bottom:1px solid rgba(44,62,80,.06)">儒家修身传统 → 认知科学的"刻意练习" → 现代自律方法论</div>
+<div style="font-weight:700;color:var(--ink);padding:8px 0;border-bottom:1px solid rgba(44,62,80,.06)">笨功夫</div><div style="padding:8px 0;border-bottom:1px solid rgba(44,62,80,.06)">科举逆袭 → 湘军屡败屡战 → 复利思维的长期主义</div>
+<div style="font-weight:700;color:var(--ink);padding:8px 0;border-bottom:1px solid rgba(44,62,80,.06)">湘军组织</div><div style="padding:8px 0;border-bottom:1px solid rgba(44,62,80,.06)">选士人领山农 → 分布式领导力 → 军阀割据的历史基因</div>
+<div style="font-weight:700;color:var(--ink);padding:8px 0;border-bottom:1px solid rgba(44,62,80,.06)">道德代价</div><div style="padding:8px 0;border-bottom:1px solid rgba(44,62,80,.06)">天京屠城 → 天津教案 → 权力场域中善与善的冲突</div>
+<div style="font-weight:700;color:var(--ink);padding:8px 0">功业与修身</div><div style="padding:8px 0">八字家训 → 耕读传家 → 修身无法解决所有问题的启示</div>
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 40: 曾国藩的矛盾清单 ==================== -->
+<div class="slide left-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div class="title-lg">曾国藩的矛盾清单</div><div class="divider"></div></div>
+<div class="fade-up delay-1" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:750px">
+<div class="scene-card" style="padding:20px 24px">
+<div class="scene-title" style="font-size:15px">修身者 vs 纵容者</div>
+<div class="scene-desc" style="font-size:14px">自省三十年，却默许弟弟纵兵屠城</div>
+</div>
+<div class="scene-card" style="padding:20px 24px">
+<div class="scene-title" style="font-size:15px">儒者 vs 实用主义者</div>
+<div class="scene-desc" style="font-size:14px">以圣贤自期，却在天津教案中选择妥协</div>
+</div>
+<div class="scene-card" style="padding:20px 24px">
+<div class="scene-title" style="font-size:15px">忠臣 vs 军阀之父</div>
+<div class="scene-desc" style="font-size:14px">挽救清朝，却开创了地方军阀割据先例</div>
+</div>
+<div class="scene-card" style="padding:20px 24px">
+<div class="scene-title" style="font-size:15px">理想主义者 vs 现实主义者</div>
+<div class="scene-desc" style="font-size:14px">"不为圣贤便为禽兽"，却说"好汉打脱牙和血吞"</div>
+</div>
+</div>
+<div class="fade-up delay-2" style="margin-top:24px">
+<div class="body-text" style="font-size:15px">这些矛盾不是曾国藩的失败，而是每一个试图在不完美的世界中追求完美的人的缩影。</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 41: 当代启示 ==================== -->
+<div class="slide center-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div style="font-size:14px;color:var(--gold);letter-spacing:6px;font-family:'Noto Sans SC',sans-serif">当 代 启 示</div><div class="title-xl" style="margin-top:16px">曾国藩给我们的五个启示</div><div class="divider-gold" style="margin:20px auto"></div></div>
+<div class="fade-up delay-1" style="text-align:left;max-width:650px">
+<div style="font-size:17px;color:var(--ink);line-height:2.2;font-family:'Noto Sans SC',sans-serif">
+<b style="color:var(--gold)">①</b>　笨功夫是最聪明的策略——在速成时代坚持长期主义<br>
+<b style="color:var(--gold)">②</b>　自我改造是终身工程——日课十二条可以变成你的检查清单<br>
+<b style="color:var(--gold)">③</b>　组织的核心是信任与制度的平衡——湘军的教训仍在重演<br>
+<b style="color:var(--gold)">④</b>　道德困境没有完美答案——重要的是诚实面对矛盾<br>
+<b style="color:var(--gold)">⑤</b>　真正的成功是传承——权势终有尽时，家风可以传百年
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 42-47: 金句总览 ==================== -->
+<div class="slide center-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div class="title-lg">金句总览（上）</div><div class="divider" style="margin:12px auto"></div></div>
+<div class="fade-up delay-1" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:900px;margin-top:16px">
+<div class="quote-card" style="padding:18px 22px"><div class="q-text" style="font-size:15px">天下之至拙，能胜天下之至巧。</div><div class="q-attr" style="font-size:11px">曾国藩</div></div>
+<div class="quote-card" style="padding:18px 22px"><div class="q-text" style="font-size:15px">不为圣贤，便为禽兽；莫问收获，但问耕耘。</div><div class="q-attr" style="font-size:11px">曾国藩</div></div>
+<div class="quote-card" style="padding:18px 22px"><div class="q-text" style="font-size:15px">吾日三省吾身——不完全是反省，更是对自我弱点的系统性修复。</div><div class="q-attr" style="font-size:11px">孔子</div></div>
+<div class="quote-card" style="padding:18px 22px"><div class="q-text" style="font-size:15px">用检查清单对抗人性弱点，这是工程问题。</div><div class="q-attr" style="font-size:11px">芒格</div></div>
+<div class="quote-card" style="padding:18px 22px"><div class="q-text" style="font-size:15px">选士人领山农——我一生最得意的制度设计。</div><div class="q-attr" style="font-size:11px">曾国藩</div></div>
+<div class="quote-card" style="padding:18px 22px"><div class="q-text" style="font-size:15px">制度不能替代信任，但信任必须制度化。</div><div class="q-attr" style="font-size:11px">芒格</div></div>
+<div class="quote-card" style="padding:18px 22px"><div class="q-text" style="font-size:15px">屡败屡战——笨人对命运的终极回答。</div><div class="q-attr" style="font-size:11px">项飙</div></div>
+<div class="quote-card" style="padding:18px 22px"><div class="q-text" style="font-size:15px">好汉打脱牙和血吞。</div><div class="q-attr" style="font-size:11px">曾国藩</div></div>
+</div>
+</div>
+
+<div class="slide center-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div class="title-lg">金句总览（下）</div><div class="divider" style="margin:12px auto"></div></div>
+<div class="fade-up delay-1" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:900px;margin-top:16px">
+<div class="quote-card" style="padding:18px 22px"><div class="q-text" style="font-size:15px">历史从不审判胜利者，但胜利者终将被自己的良心审判。</div><div class="q-attr" style="font-size:11px">马克思</div></div>
+<div class="quote-card" style="padding:18px 22px"><div class="q-text" style="font-size:15px">功业越大，罪孽越深——权力的永恒悖论。</div><div class="q-attr" style="font-size:11px">曾国藩</div></div>
+<div class="quote-card" style="padding:18px 22px"><div class="q-text" style="font-size:15px">外惭清议，内疚神明。</div><div class="q-attr" style="font-size:11px">曾国藩</div></div>
+<div class="quote-card" style="padding:18px 22px"><div class="q-text" style="font-size:15px">理性妥协不是软弱，是逆向思维。</div><div class="q-attr" style="font-size:11px">芒格</div></div>
+<div class="quote-card" style="padding:18px 22px"><div class="q-text" style="font-size:15px">用人以大节为主，小过不足论。</div><div class="q-attr" style="font-size:11px">曾国藩</div></div>
+<div class="quote-card" style="padding:18px 22px"><div class="q-text" style="font-size:15px">授权而不失控，是管理的最高境界。</div><div class="q-attr" style="font-size:11px">芒格</div></div>
+<div class="quote-card" style="padding:18px 22px"><div class="q-text" style="font-size:15px">凡人皆望子孙为大官，余愿为读书明理之君子。</div><div class="q-attr" style="font-size:11px">曾国藩</div></div>
+<div class="quote-card" style="padding:18px 22px"><div class="q-text" style="font-size:15px">权势终有尽时，家风可以传百年。</div><div class="q-attr" style="font-size:11px">曾国藩</div></div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 49: 数据总览 ==================== -->
+<div class="slide center-layout">
+<div class="ink-bg"></div><div class="gold-line"></div>
+<div class="fade-up"><div class="title-lg">圆桌数据总览</div><div class="divider" style="margin:16px auto"></div></div>
+<div class="fade-up delay-1" style="display:flex;gap:60px;margin-top:20px;flex-wrap:wrap;justify-content:center">
+<div style="text-align:center"><div style="font-size:56px;font-weight:900;color:var(--ink)">6</div><div class="body-text-sm">跨时空嘉宾</div></div>
+<div style="text-align:center"><div style="font-size:56px;font-weight:900;color:var(--ink)">10</div><div class="body-text-sm">圆桌对话轮次</div></div>
+<div style="text-align:center"><div style="font-size:56px;font-weight:900;color:var(--ink)">8</div><div class="body-text-sm">历史场景还原</div></div>
+<div style="text-align:center"><div style="font-size:56px;font-weight:900;color:var(--ink)">16</div><div class="body-text-sm">洞见金句</div></div>
+</div>
+<div class="fade-up delay-2" style="margin-top:40px">
+<div class="body-text" style="text-align:center;max-width:500px;font-size:15px">
+五位跨时空思想家 + 曾国藩本人<br>
+围绕五个核心主题展开深度对话<br>
+从修身到治国，从笨功夫到制度创新
+</div>
+</div>
+</div>
+
+<!-- ==================== SLIDE 50: 尾声 ==================== -->
+<div class="slide center-layout">
+<div class="ink-bg"></div>
+<div class="ink-splash" style="top:-100px;right:-100px;width:500px;height:500px"></div>
+<div class="ink-splash" style="bottom:-80px;left:-80px;width:400px;height:400px"></div>
+<div class="gold-line"></div>
+<div class="fade-up">
+<div style="font-size:80px;color:rgba(44,62,80,.1);font-weight:900;letter-spacing:12px">终</div>
+</div>
+<div class="fade-up delay-1">
+<div class="divider-gold" style="margin:20px auto"></div>
+</div>
+<div class="fade-up delay-2">
+<div class="quote-card" style="max-width:600px">
+<div class="q-text" style="font-size:22px">修身的终极目的，不是成为圣贤，而是成为一个诚实面对自己的人。</div>
+</div>
+</div>
+<div class="fade-up delay-3">
+<div style="margin-top:40px;font-size:14px;color:var(--dim);font-family:'Noto Sans SC',sans-serif;letter-spacing:4px">圆桌洞见 · 曾国藩传</div>
+</div>
+<div class="fade-up delay-4">
+<div style="margin-top:12px;font-size:12px;color:var(--dim);font-family:'Noto Sans SC',sans-serif;letter-spacing:2px">六位先贤 · 十轮对话 · 八个场景 · 十六句金句</div>
+</div>
+</div>
 
 <script>
-(function(){
-  const sections=[...document.querySelectorAll('.slide')];
-  const total=sections.length;
-  let cur=0;
-  const dotsContainer=document.getElementById('navDots');
-  const progress=document.getElementById('progress');
-  const counter=document.getElementById('counter');
-  sections.forEach((s,i)=>{
-    const dot=document.createElement('button');
-    dot.className='nav-dot'+(i===0?' active':'');
-    dot.setAttribute('aria-label','第 '+(i+1)+' 页');
-    dot.onclick=()=>go(i);
-    dotsContainer.appendChild(dot);
-  });
-  function go(n){
-    if(n<0||n>=total)return;
-    sections[cur].classList.remove('visible');
-    dotsContainer.children[cur]?.classList.remove('active');
-    cur=n;
-    sections[cur].scrollIntoView({behavior:'smooth',block:'start'});
-    sections[cur].classList.add('visible');
-    dotsContainer.children[cur]?.classList.add('active');
-    const pct=Math.min(100,((cur+1)/total)*100);
-    progress.style.width=pct+'%';
-    if(counter)counter.textContent=(cur+1)+' / '+total;
-  }
-  document.getElementById('prevBtn').onclick=()=>go(cur-1);
-  document.getElementById('nextBtn').onclick=()=>go(cur+1);
-  document.addEventListener('keydown',e=>{
-    if(e.key==='ArrowDown'||e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){
-      e.preventDefault();go(cur+1);
-    }else if(e.key==='ArrowUp'||e.key==='ArrowLeft'||e.key==='PageUp'){
-      e.preventDefault();go(cur-1);
-    }else if(e.key==='Home'){
-      e.preventDefault();go(0);
-    }else if(e.key==='End'){
-      e.preventDefault();go(total-1);
-    }
-  });
-  let wheelTimer=null;
-  document.addEventListener('wheel',e=>{
-    e.preventDefault();
-    if(wheelTimer)return;
-    wheelTimer=setTimeout(()=>wheelTimer=null,400);
-    if(e.deltaY>0)go(cur+1);
-    else if(e.deltaY<0)go(cur-1);
-  },{passive:false});
-  document.body.addEventListener('click',e=>{
-    if(e.target.closest('.nav-dot,.nav-dots,.nav-btn,.reading-block,.stance-card,.clash-side,.clash-center'))return;
-    go(cur+1);
-  });
-  go(0);
-})();
+const slides=document.querySelectorAll('.slide');
+let current=0;const total=slides.length;
+function show(n){if(n<0||n>=total)return;current=n;slides.forEach((s,i)=>s.classList.toggle('active',i===n));document.getElementById('pageNum').textContent=`${n+1} / ${total}`;document.getElementById('progress').style.width=((n+1)/total*100)+'%';}
+function next(){show(current+1)}function prev(){show(current-1)}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '||e.key==='Enter')next();if(e.key==='ArrowLeft')prev();if(e.key==='Home')show(0);if(e.key==='End')show(total-1);});
+let touchX;document.addEventListener('touchstart',e=>{touchX=e.touches[0].clientX});
+document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-touchX;if(dx<-50)next();if(dx>50)prev()});
+show(0);
 </script>
-
 </body>
 </html>

@@ -269,10 +269,11 @@ python engine/training/tracker.py --report
 
 ## 文档
 
+- [VERSION.md](VERSION.md) — 版本历史与命名规范
 - [AGENTS.md](AGENTS.md) — 项目铁律与工作流程
 - [EXPERT_SOUL_SPEC.md](EXPERT_SOUL_SPEC.md) — 专家灵魂升级规范
 - [UPGRADE_SPEC_V2.md](UPGRADE_SPEC_V2.md) — 升级规范
 
 ---
 
-*更新时间：2026-06-20 · 系统版本：V11.0*
+*更新时间：2026-06-21 · 系统版本：v13.11（渲染引擎v13 + 训练系统v11）*

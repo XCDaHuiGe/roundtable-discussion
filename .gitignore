@@ -12,3 +12,17 @@ desktop.ini
 .trae/
 .worktrees/
 training_runs/
+
+# 训练数据（本地生成，不提交）
+memory/
+*.snapshots/
+
+# 环境变量
+.env
+.env.*
+
+# 搜索缓存
+memory/search_cache/
+
+# 旧版本文件
+*.bak

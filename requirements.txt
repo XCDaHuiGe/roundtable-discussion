@@ -1,0 +1,22 @@
+# 圆桌洞见 · 依赖声明
+# 核心功能零外部依赖（纯Python标准库）
+# 以下为可选增强依赖
+
+# LLM调用（通过OpenRouter API）
+# 无额外依赖，使用标准库 urllib.request
+
+# 异步LLM调用（可选）
+# aiohttp>=3.8.0
+
+# 数据校验（schema_v8.py 使用）
+# pydantic>=2.0
+
+# 绘图（tracker.py 趋势图，可选）
+# matplotlib>=3.5.0
+
+# 搜索（anysearch_layer.py 使用外部CLI，无需pip安装）
+
+# 安装方式：
+#   pip install pydantic          # 最小安装（仅数据校验）
+#   pip install pydantic aiohttp  # 完整安装（含异步）
+#   pip install pydantic aiohttp matplotlib  # 全功能

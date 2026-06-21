@@ -2,268 +2,143 @@
 
 > **32位跨领域专家 × 深度辩论 × 自我进化训练系统**
 >
-> 给一个话题，系统自动从互联网挖掘素材，6位专家展开10轮深度交锋，榨干认知增量。每位专家有知识边界、时代约束、性格一致性——不会乱引用理论，不会时空错乱。辩论结束后，Coach Agent 审阅、门控验证、融合升级，专家档案持续进化。
-
----
-
-## 为什么做这个系统
-
-**问题**：读完一本书或看到一个话题，想要深度理解，但——
-- 一个人想不全，视角有限
-- AI 直接给答案，没有交锋过程，结论肤浅
-- 请真人讨论成本高、时间难约
-
-**思路**：让不同领域的专家「吵一架」。芒格用投资思维分析、尼采用哲学视角解构、卡尼曼用认知偏差拆解——碰撞产生单个专家想不到的洞见。
-
-**关键设计**：专家不是随意说话的 AI 角色，而是有**灵魂约束**的系统——
-- 有知识边界（老子不会谈AI，芒格不会谈量子力学）
-- 有时代约束（春秋时期的人不用现代术语）
-- 有性格一致性（说话风格、论证方式、比喻来源都固定）
-- 会自我进化（每次辩论后 Coach 审阅 → 门控验证 → 融合升级）
-
----
-
-## 系统架构
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                     圆桌洞见系统 V11.0                           │
-│                                                                 │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐       │
-│  │ 话题生成  │→│ 素材挖掘  │→│ 辩论生成  │→│ 自动评分  │       │
-│  │debate_   │  │ WebSearch│  │ Agent    │  │auto_scorer│       │
-│  │arena     │  │ +知乎MCP │  │ (LLM)   │  │6维度客观  │       │
-│  └──────────┘  └──────────┘  └──────────┘  └─────┬────┘       │
-│                                                    │            │
-│  ┌──────────────────────────────────────────────────┘           │
-│  │                                                             │
-│  ▼                                                              │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐       │
-│  │Coach审阅  │→│ 门控验证  │→│ 融合升级  │→│ 追踪记录  │       │
-│  │coach.py  │  │gate_     │  │Fusion    │  │tracker   │       │
-│  │结构化反馈 │  │upgrade   │  │Engine    │  │进化曲线  │       │
-│  └──────────┘  └──────────┘  └──────────┘  └──────────┘       │
-│                                                                 │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │              专家库 (32位 × 5领域)                        │   │
-│  │  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐       │   │
-│  │  │灵魂层   │ │策略层   │ │素材层   │ │知识边界 │       │   │
-│  │  │(不可变) │↑│(可进化) │↑│(可替换) │ │(50个md) │       │   │
-│  │  └─────────┘ └─────────┘ └─────────┘ └─────────┘       │   │
-│  │         Coach升级      Fusion融合    自动加载           │   │
-│  └─────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## 核心循环：专家怎么进化
-
-每个专家的 `.md` 档案分三层：
-
-| 层 | 内容 | 谁改 | 怎么改 |
-|:--|:--|:--|:--|
-| **灵魂层** | 核心信念、价值排序、思维底色 | 永不改变 | — |
-| **策略层** | 攻击模式、防御模式、分析框架 | Coach + FusionEngine | MERGE/ENHANCE/BRANCH |
-| **素材层** | 精选发言、核心案例、金句库 | FusionEngine | FUSE/质量判别替换 |
-
-**一次训练的完整闭环**：
-
-```
-Step1  话题生成        debate_arena 从专家信念冲突中自动生成话题
-Step2  素材构建        WebSearch + 知乎MCP 挖掘互联网真实讨论
-Step3  辩论生成        Agent 读取专家档案，生成10轮深度交锋
-Step4  自动评分        auto_scorer: 证据密度/回应链/逻辑词/跨域引用/边界合规
-Step4b Coach审阅      Coach Agent 结构化反馈：哪里好、哪里差、具体怎么改
-Step5  门控+快照+升级  新分 > 历史平均才允许升级，升级前快照，失败回退
-Step6  追踪记录        training_history.jsonl + expert_evolution/*.json
-```
-
-**6个维度自动评分**（零LLM依赖，纯Python启发式）：
-
-| 维度 | 权重 | 信号来源 |
-|:--|:--|:--|
-| reality_grounding | 25% | 证据数量 × 类型多样性 × 引用密度 |
-| contradiction_handling | 20% | 回应链完整性 × 碰撞轮次 × 反驳深度 |
-| strategic_depth | 20% | 发言长度 × 逻辑连接词 × 论证层次 |
-| cross_domain_transfer | 15% | 跨域引用数 × 类比使用 |
-| novelty | 10% | 与专家已有素材的差异度 |
-| personality_consistency | 10% | 知识边界合规 × 高频词使用 |
-
----
-
-## 专家灵魂系统
-
-### 知识边界（37位专家，从 `_知识边界.md` 自动加载）
-
-每位专家有一个知识边界定义文件，包含：
-
-- **时代背景**：活跃时期、认知范围、技术背景
-- **知识图谱**：核心知识 → 关联知识 → 边缘知识 → 禁区知识
-- **表达词汇库**：高频词、比喻来源、金句风格、禁用词
-- **反驳规则**：可以/不应该反驳的角度
-- **辩论配对建议**：最佳对手/可以辩论/不建议辩论
-- **跨时代翻译表**：现代概念 → 古代类比
-
-**示例**：
-```
-❌ 老子说 "AI是道的自我展开"     → 禁用词命中: [AI]
-✅ 老子说 "巧器虽精，不如拙朴"   → 通过（用了跨时代翻译）
-❌ 尼采说 "量子力学证明了永恒轮回" → 禁用词命中: [量子]
-✅ 尼采说 "重估一切价值"          → 通过（核心知识）
-```
-
-### Prompt V3（Bloom Level 5-6）
-
-专家发言不是随意输出，而是有严格的认知层次要求：
-- **反直觉开场**：第一句必须挑战读者默认假设
-- **知识体系分析**：用自己领域的方法论分析
-- **判断性结论**：不是"各有道理"，而是给出明确判断
-- **可截图金句**：每段必须有一句值得截图保存的话
-- **追问对手**：必须向对手提出一个尖锐问题
-
-### 交锋约束
-
-反驳不是随便攻击，必须基于自己的知识体系：
-- 芒格反驳尼采 → 必须用投资/心理学角度，不能用哲学概念
-- 老子反驳卡尼曼 → 必须用道家概念，不能用认知科学术语
-- 每条攻击必须关联目标的具体发言，禁止空泛反驳
-
----
-
-## 已有成果
-
-### 圆桌洞见（35+ 篇 HTML-PPT）
-
-| 类型 | 数量 | 示例 |
-|:--|:--|:--|
-| **书籍深度分析** | 8篇 | 《遥远的救世主》50页、《穷查理宝典》50页、《深度工作》50页 |
-| **前沿话题** | 12篇 | AI情感代理人、赛博亲密关系、算法多巴胺、数字永生 |
-| **原创话题** | 15篇 | 儒释道批判性分析、黑天鹅量化博弈、人机协同投研重构 |
-
-每篇包含：6位专家 × 10轮对话 × 8个场景还原 × 16句金句 × 5个核心洞见
-
-### 专家训练数据
-
-| 指标 | 数值 |
-|:--|:--|
-| 专家总数 | 32位（5大领域） |
-| 知识边界覆盖 | 37位（含 md 文件自动加载） |
-| 最强专家 | 项飙(V78/94次)、李诞(V76/94次)、冯唐(V75/81次) |
-| 训练JSON | 330+ 文件 |
-| 圆桌洞见HTML | 35+ 篇 |
-
-### 专家库
-
-| 领域 | 专家 |
-|:--|:--|
-| **哲学** | 孔子、老子、韩非子、尼采、苏格拉底、萨特、叔本华、卡缪、阿伦特、波伏娃、尼克·博斯特罗姆 |
-| **经济** | 巴菲特、芒格、塔勒布、达利欧、凯恩斯、亚当斯密、吴军、刘润、柯林斯、吴晓波 |
-| **心理** | 卡尼曼、弗洛伊德、弗洛姆、津巴多、戈尔曼 |
-| **科技** | 凯文·凯利、赫拉利、阿西莫夫 |
-| **文学** | 李诞、冯唐、万维钢、许知远、罗翔、丁元英、芮小丹、项飙 |
-
----
-
-## 目录结构
-
-```
-roundtable-discussion/
-├── index.html                    # 项目首页（GitHub Pages）
-├── engine/                       # 核心引擎
-│   ├── auto_train.py             # 训练管线 V11（Coach + 门控 + 追踪）
-│   ├── auto_scorer.py            # 自动评分器（6维度，零LLM依赖）
-│   ├── scorer.py                 # 加权评分计算器
-│   ├── knowledge_boundary_checker.py  # 知识边界检查器（自动加载md）
-│   ├── knowledge_boundary_integration.py  # 集成模块
-│   ├── attack_constraint.py      # 交锋约束
-│   ├── content_injector.py       # 内容注入器
-│   ├── evidence_validator.py     # 证据引用验证器
-│   ├── training/                 # 训练模块
-│   │   ├── coach.py              # Coach Agent 审阅模块
-│   │   ├── fusion_engine.py      # 融合增强引擎 V5.0
-│   │   ├── debate_arena.py       # 对抗自训练竞技场
-│   │   ├── tracker.py            # 训练效果追踪系统
-│   │   ├── llm_extractor.py      # LLM策略提取器
-│   │   ├── bootstrapper.py       # 专家初始化器
-│   │   ├── reflection_schema.py  # 反思模板 + 门控 + 快照/回退
-│   │   ├── upgrader.py           # ⚠️ DEPRECATED
-│   │   ├── evolution_engine.py   # ⚠️ DEPRECATED
-│   │   └── deep_train.py         # ⚠️ DEPRECATED
-│   ├── scoring/                  # 评分模块
-│   │   ├── influence_scorer.py   # 影响力评分
-│   │   ├── logic_chain_checker.py # 逻辑链检查
-│   │   ├── objective_scorer.py   # 客观评分
-│   │   └── win_rate_scorer.py    # 辩论胜率
-│   ├── quality_gates/            # 质量门
-│   │   ├── cognitive_quality.py  # 认知质量门
-│   │   ├── roundtable_quality.py # 圆桌质量门
-│   │   └── validate_html_output.py # HTML输出质量门
-│   ├── roundtable_engine/        # 圆桌引擎
-│   │   ├── moderator.py          # 主持人摘要
-│   │   ├── response_graph.py     # 回应关系图
-│   │   └── tension.py            # 张力轴分配
-│   └── prompts/                  # Prompt模板
-│       ├── expert_speak_v3.py    # V3 (Bloom 5-6)
-│       └── expert_speak_v2.py    # V2 (旧版)
-├── expert-library/               # 专家库
-│   └── experts/
-│       ├── philosophy/           # 哲学（11位）
-│       ├── economics/            # 经济（10位）
-│       ├── psychology/           # 心理（5位）
-│       ├── sociology/            # 社会（1位）
-│       └── literature/           # 文学（8位）
-├── content/                      # 辩论JSON + 素材
-├── output/                       # 圆桌洞见HTML
-├── memory/                       # 训练日志 + 进化数据
-└── docs/                         # 文档
-```
+> 给一个话题，系统自动匹配专家、生成深度辩论、渲染为HTML-PPT。
 
 ---
 
 ## 快速开始
 
 ```bash
-# 查看项目首页
-open index.html
+# 1. 克隆
+git clone https://github.com/XCDaHuiGe/roundtable-discussion.git
+cd roundtable-discussion
 
-# 检查专家库同质化
-python engine/auto_train.py --check
+# 2. 安装依赖（核心功能零外部依赖）
+pip install pydantic
 
-# 生成话题
-python engine/auto_train.py --step1 --rounds 5
+# 3. 直接运行（用已有JSON渲染HTML）
+python run.py "AI会取代人类工作吗" --skip-debate --json content/AI时代的意义危机_v8.json
 
-# 生成辩论模板
-python engine/auto_train.py --template
-
-# 查看训练效果报告
-python engine/training/tracker.py --report
+# 4. 完整管线（需要OPENROUTER_API_KEY）
+export OPENROUTER_API_KEY=your_key
+python run.py "你的问题"
 ```
 
-### 一次完整训练（Agent驱动）
+**没有API key也能用**：系统自带47个已生成的圆桌洞见，直接打开 `output/` 下的HTML文件即可阅读。
+
+---
+
+## 这是什么
+
+一个AI圆桌讨论系统。输入一个问题，6位跨领域专家展开3轮深度交锋，每轮包含立场表达、碰撞反驳、现实案例、代价分析、人性剖析、认知升级6个层次。最终输出一个自包含的HTML幻灯片。
+
+**专家不是随意说话的AI角色**——每位专家有知识边界（老子不会谈AI，芒格不会谈量子力学）、时代约束、性格一致性。
+
+---
+
+## 两种使用方式
+
+### 方式一：直接看成品
+
+`output/` 目录下有47个HTML文件，直接双击打开，键盘翻页。
+
+### 方式二：生成新话题
+
+```bash
+python run.py "你的话题" --theme gold --rounds 3
+```
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `--experts` | 指定专家（逗号分隔） | 自动匹配 |
+| `--rounds` | 辩论轮数 | 3 |
+| `--theme` | 主题色（gold/acid/warm） | gold |
+| `--skip-debate` | 跳过LLM，用已有JSON | 否 |
+| `--json` | 已有V8 JSON路径 | 无 |
+| `--explain` | 只显示专家匹配理由 | 否 |
+
+---
+
+## 项目结构
 
 ```
-1. 调用 step1_generate_topics()     → 获取话题列表
-2. WebSearch/知乎MCP 搜索素材       → 采集互联网讨论
-3. 读取专家档案 + 知识边界          → 理解专家风格
-4. 生成辩论JSON（10轮深度交锋）     → Agent填充内容
-5. 调用 step4_score_and_extract()   → 自动评分 + 策略提取
-6. 生成 coach_review.json           → Coach审阅
-7. 调用 step5_upgrade_experts()     → 门控 + 快照 + 升级/回退
-8. 调用 step6_record_tracking()     → 记录追踪数据
-9. 调用 save_training_result()      → 保存训练结果
+roundtable-discussion/
+├── run.py                    # 唯一入口：端到端管线
+├── engine/                   # 核心引擎
+│   ├── topic_router.py       # 话题→专家自动匹配
+│   ├── material_collector.py # 多源素材聚合
+│   ├── debate_generator.py   # LLM辩论生成
+│   ├── html_renderer.py      # V8 JSON→HTML-PPT
+│   ├── v8_normalizer.py      # JSON格式标准化
+│   ├── auto_scorer.py        # 6维度自动评分
+│   ├── auto_train.py         # V11训练管线
+│   ├── scorer.py             # 加权评分计算
+│   ├── llm_generate.py       # OpenRouter API调用
+│   ├── schema_v8.py          # V8数据模型
+│   ├── knowledge_boundary_checker.py  # 知识边界检查
+│   ├── attack_constraint.py  # 交锋约束
+│   ├── content_injector.py   # 话题→书单映射
+│   ├── prompts/              # Prompt模板
+│   ├── training/             # 训练模块
+│   │   ├── coach.py          # Coach Agent审阅
+│   │   ├── fusion_engine.py  # 融合增强引擎
+│   │   ├── debate_arena.py   # 对抗竞技场
+│   │   ├── tracker.py        # 进化追踪
+│   │   └── ...
+│   ├── scoring/              # 评分模块
+│   ├── quality_gates/        # 质量门
+│   └── roundtable_engine/    # 圆桌引擎辅助
+├── expert-library/           # 专家库（32位×5领域）
+│   └── experts/
+│       ├── philosophy/       # 哲学（老子、尼采、苏格拉底...）
+│       ├── economics/        # 经济（芒格、巴菲特、塔勒布...）
+│       ├── psychology/       # 心理（卡尼曼、弗洛伊德、弗洛姆...）
+│       ├── sociology/        # 社会（项飙、赫拉利、阿伦特）
+│       └── literature/       # 文学（李诞、冯唐、罗翔...）
+├── content/                  # V8 JSON辩论数据
+├── output/                   # HTML-PPT成品
+├── index.html                # 项目首页（GitHub Pages）
+├── VERSION.md                # 版本历史
+└── AGENTS.md                 # 项目铁律
 ```
 
 ---
 
-## 系统演进
+## 核心模块
 
-| 版本 | 核心升级 |
-|:--|:--|
-| V1-V5 | 基础辩论生成 + 替换式升级 |
-| V6-V8 | 融合增强引擎 + 能力图谱 + 对抗自训练 |
-| V9-V10 | 知识边界 + Prompt V3 + 金句页 + 交锋约束 |
-| **V11** | **Coach审阅 + 门控验证 + 自动评分 + 快照/回退 + 追踪系统** |
+| 模块 | 职责 | 依赖 |
+|------|------|------|
+| `run.py` | 端到端管线编排 | 标准库 |
+| `topic_router.py` | 话题→专家匹配 | 标准库 |
+| `html_renderer.py` | JSON→HTML渲染 | 标准库 |
+| `auto_scorer.py` | 6维度自动评分 | 标准库 |
+| `debate_generator.py` | LLM辩论生成 | urllib + OpenRouter |
+| `coach.py` | Coach审阅 | 标准库 |
+| `knowledge_boundary_checker.py` | 知识边界检查 | 标准库 |
+
+**零外部框架**：核心功能全部基于Python标准库。LLM调用通过OpenRouter HTTP API（`urllib.request`），不依赖任何AI框架。
+
+---
+
+## 专家系统
+
+32位专家，5大领域，每位专家有三层档案：
+
+| 层 | 内容 | 可变性 |
+|----|------|--------|
+| **灵魂层** | 核心信念、价值排序、思维底色 | 永不改变 |
+| **策略层** | 攻击模式、防御模式、分析框架 | Coach升级 |
+| **素材层** | 精选发言、核心案例、金句库 | 融合替换 |
+
+37个知识边界文件（`_知识边界.md`）自动加载，确保专家不乱引用理论、不时空错乱。
+
+---
+
+## 版本
+
+当前版本：**v13.11**（渲染引擎v13 + 训练系统v11）
+
+详见 [VERSION.md](VERSION.md)
 
 ---
 
@@ -272,8 +147,7 @@ python engine/training/tracker.py --report
 - [VERSION.md](VERSION.md) — 版本历史与命名规范
 - [AGENTS.md](AGENTS.md) — 项目铁律与工作流程
 - [EXPERT_SOUL_SPEC.md](EXPERT_SOUL_SPEC.md) — 专家灵魂升级规范
-- [UPGRADE_SPEC_V2.md](UPGRADE_SPEC_V2.md) — 升级规范
 
 ---
 
-*更新时间：2026-06-21 · 系统版本：v13.11（渲染引擎v13 + 训练系统v11）*
+*更新时间：2026-06-21 · v13.11*

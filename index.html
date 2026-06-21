@@ -795,6 +795,101 @@ footer {
   width: 80px; height: 3px; transform: translateX(-50%);
   background: var(--gradient-1); border-radius: 2px;
 }
+/* ===== EVOLUTION TIMELINE ===== */
+.evolution { padding: 120px 0; position: relative; }
+.timeline {
+  margin-top: 56px; position: relative;
+  padding-left: 40px;
+}
+.timeline::before {
+  content: ''; position: absolute; left: 15px; top: 0; bottom: 0;
+  width: 2px; background: linear-gradient(to bottom, var(--accent), var(--accent-secondary), var(--accent-warm));
+  opacity: 0.4;
+}
+.timeline-item {
+  position: relative; margin-bottom: 32px; padding: 24px 28px;
+  background: var(--bg-secondary); border-radius: 14px;
+  border: 1px solid var(--border); transition: all 0.3s;
+}
+.timeline-item:hover {
+  border-color: var(--border-hover); transform: translateX(4px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+.timeline-item::before {
+  content: ''; position: absolute; left: -33px; top: 30px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--accent); border: 3px solid var(--bg-primary);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+.timeline-item:nth-child(3n+2)::before { background: var(--accent-secondary); box-shadow: 0 0 12px var(--accent-secondary-glow); }
+.timeline-item:nth-child(3n)::before { background: var(--accent-warm); box-shadow: 0 0 12px rgba(253,121,168,0.3); }
+.timeline-header {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
+}
+.timeline-version {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; font-weight: 700; padding: 3px 10px;
+  border-radius: 6px; letter-spacing: 0.05em;
+  background: rgba(108,92,231,0.15); color: var(--accent-light);
+}
+.timeline-item:nth-child(3n+2) .timeline-version { background: rgba(0,206,201,0.15); color: var(--accent-secondary); }
+.timeline-item:nth-child(3n) .timeline-version { background: rgba(253,121,168,0.15); color: var(--accent-warm); }
+.timeline-title { font-size: 16px; font-weight: 700; }
+.timeline-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-top: 4px; }
+.timeline-tags {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px;
+}
+.timeline-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; padding: 2px 8px; border-radius: 4px;
+  background: rgba(255,255,255,0.04); color: var(--text-tertiary);
+  border: 1px solid var(--border); font-weight: 500;
+}
+.timeline-commits {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--text-tertiary); margin-left: auto;
+}
+
+/* ===== TECH STACK ===== */
+.techstack { padding: 120px 0; position: relative; }
+.tech-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px; margin-top: 56px;
+}
+.tech-card {
+  background: var(--bg-secondary); border-radius: 14px;
+  padding: 24px; border: 1px solid var(--border);
+  transition: all 0.3s;
+}
+.tech-card:hover {
+  border-color: var(--border-hover); transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+.tech-card-header {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+}
+.tech-card-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.tech-card:nth-child(3n+1) .tech-card-icon { background: rgba(108,92,231,0.12); color: var(--accent-light); }
+.tech-card:nth-child(3n+2) .tech-card-icon { background: rgba(0,206,201,0.12); color: var(--accent-secondary); }
+.tech-card:nth-child(3n) .tech-card-icon { background: rgba(253,121,168,0.12); color: var(--accent-warm); }
+.tech-card-title { font-size: 15px; font-weight: 700; }
+.tech-list {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.tech-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: var(--text-secondary);
+}
+.tech-item-dot {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--text-tertiary); flex-shrink: 0;
+}
+.tech-item strong { color: var(--text-primary); font-weight: 600; }
+
 
 /* ===== RESPONSIVE ===== */
 @media(max-width:640px){
@@ -824,12 +919,13 @@ footer {
   </div>
   <div class="nav-links">
     <a href="#capabilities">核心能力</a>
-    <a href="#architecture">系统架构</a>
-    <a href="#boundary">知识边界</a>
+    <a href="#architecture">架构</a>
+    <a href="#evolution">演进</a>
+    <a href="#techstack">技术栈</a>
+    <a href="#boundary">边界</a>
     <a href="#results">成果</a>
     <a href="#topics">话题库</a>
-    <a href="#experts">专家库</a>
-    <a href="#process">流程</a>
+    <a href="#experts">专家</a>
   </div>
   <div class="nav-badge">ROUND OS v13.11</div>
 </nav>
@@ -981,6 +1077,247 @@ footer {
         <div class="arch-label"><span class="arch-label-dot soul"></span> 灵魂层</div>
         <div class="arch-label"><span class="arch-label-dot strategy"></span> 策略层</div>
         <div class="arch-label"><span class="arch-label-dot material"></span> 素材层</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EVOLUTION TIMELINE -->
+<section class="evolution" id="evolution">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Evolution</div>
+      <h2 class="section-title">项目演进</h2>
+      <p class="section-desc">145 commits · 2个月 · 从手动写HTML到端到端管线</p>
+    </div>
+
+    <div class="timeline reveal">
+      <div class="timeline-item">
+        <div class="timeline-header">
+          <span class="timeline-version">v2.4</span>
+          <span class="timeline-title">HTML基础搭建</span>
+          <span class="timeline-commits">13 commits</span>
+        </div>
+        <div class="timeline-desc">弹性多页布局、翻页导航、目录TOC、模板化HTML生成、风格预设系统。</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag">多页布局</span>
+          <span class="timeline-tag">翻页导航</span>
+          <span class="timeline-tag">模板系统</span>
+          <span class="timeline-tag">风格预设</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-header">
+          <span class="timeline-version">v3.0</span>
+          <span class="timeline-title">工程化架构</span>
+          <span class="timeline-commits">5 commits</span>
+        </div>
+        <div class="timeline-desc">核心突破——AI只负责内容(JSON)，程序负责渲染(Engine)。内容与渲染彻底解耦。</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag">JSON驱动</span>
+          <span class="timeline-tag">渲染引擎</span>
+          <span class="timeline-tag">内容/渲染解耦</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-header">
+          <span class="timeline-version">v5-v6</span>
+          <span class="timeline-title">互联网学习 + 32专家库</span>
+          <span class="timeline-commits">4 commits</span>
+        </div>
+        <div class="timeline-desc">互联网自主学习能力、10位中文知识分子专家、深度训练引擎、32专家库建立。</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag">WebSearch</span>
+          <span class="timeline-tag">知乎MCP</span>
+          <span class="timeline-tag">32专家</span>
+          <span class="timeline-tag">深度训练</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-header">
+          <span class="timeline-version">v7.0</span>
+          <span class="timeline-title">认知演化 + 评分系统</span>
+          <span class="timeline-commits">9 commits</span>
+        </div>
+        <div class="timeline-desc">客观评分系统（不再是玄学）、Karpathy式验证闭环、逻辑牵引验证（发现平均牵引度仅6.1%）、深度训练30轮。</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag">客观评分</span>
+          <span class="timeline-tag">逻辑牵引</span>
+          <span class="timeline-tag">Karpathy式</span>
+          <span class="timeline-tag">30轮训练</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-header">
+          <span class="timeline-version">v9.0</span>
+          <span class="timeline-title">零LLM依赖重构</span>
+          <span class="timeline-commits">4 commits</span>
+        </div>
+        <div class="timeline-desc">scorer改为纯计算函数、Agent=LLM模式确立、进化闭环+Persona完善。</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag">零LLM</span>
+          <span class="timeline-tag">纯计算评分</span>
+          <span class="timeline-tag">Agent=LLM</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-header">
+          <span class="timeline-version">v12-v13</span>
+          <span class="timeline-title">渲染引擎稳定化</span>
+          <span class="timeline-commits">24 commits</span>
+        </div>
+        <div class="timeline-desc">HTML-PPT稳定版（防止溢出、固定翻页）、阅读型PPT（从内容生长设计，多主题支持）。</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag">防溢出</span>
+          <span class="timeline-tag">阅读型</span>
+          <span class="timeline-tag">多主题</span>
+          <span class="timeline-tag">50页深度分析</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-header">
+          <span class="timeline-version">v11</span>
+          <span class="timeline-title">端到端管线</span>
+          <span class="timeline-commits">5 commits</span>
+        </div>
+        <div class="timeline-desc">话题→专家匹配→素材收集→辩论生成→自动评分→Coach审阅→门控升级→HTML渲染。一条命令出成品。</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag">run.py</span>
+          <span class="timeline-tag">topic_router</span>
+          <span class="timeline-tag">auto_scorer</span>
+          <span class="timeline-tag">Coach</span>
+          <span class="timeline-tag">门控验证</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-header">
+          <span class="timeline-version">v13.11</span>
+          <span class="timeline-title">当前版本 · 批量生产</span>
+          <span class="timeline-commits">145 total</span>
+        </div>
+        <div class="timeline-desc">47个圆桌洞见、37位专家知识边界、C1-C6深度分析方法论、批量话题生成、三种主题色。</div>
+        <div class="timeline-tags">
+          <span class="timeline-tag">47话题</span>
+          <span class="timeline-tag">37知识边界</span>
+          <span class="timeline-tag">C1-C6方法论</span>
+          <span class="timeline-tag">批量生成</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section class="techstack" id="techstack">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Tech Stack</div>
+      <h2 class="section-title">技术栈</h2>
+      <p class="section-desc">Python为主，纯标准库依赖，零外部框架。</p>
+    </div>
+
+    <div class="tech-grid reveal">
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <div class="tech-card-icon">
+            <span class="iconify" data-icon="lucide:brain-circuit" data-width="18"></span>
+          </div>
+          <div class="tech-card-title">训练引擎</div>
+        </div>
+        <div class="tech-list">
+          <div class="tech-item"><span class="tech-item-dot"></span><strong>auto_train.py</strong> — V11训练管线</div>
+          <div class="tech-item"><span class="tech-item-dot"></span><strong>fusion_engine.py</strong> — MERGE/ENHANCE/BRANCH/FUSE融合</div>
+          <div class="tech-item"><span class="tech-item-dot"></span><strong>debate_arena.py</strong> — 信念冲突自动生成话题</div>
+          <div class="tech-item"><span class="tech-item-dot"></span><strong>coach.py</strong> — Coach Agent结构化审阅</div>
+          <div class="tech-item"><span class="tech-item-dot"></span><strong>tracker.py</strong> — 进化曲线+瓶颈诊断</div>
+        </div>
+      </div>
+
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <div class="tech-card-icon">
+            <span class="iconify" data-icon="lucide:shield-check" data-width="18"></span>
+          </div>
+          <div class="tech-card-title">质量保障</div>
+        </div>
+        <div class="tech-list">
+          <div class="tech-item"><span class="tech-item-dot"></span><strong>auto_scorer.py</strong> — 6维度自动评分（零LLM）</div>
+          <div class="tech-item"><span class="tech-item-dot"></span><strong>knowledge_boundary_checker.py</strong> — 37位md自动加载</div>
+          <div class="tech-item"><span class="tech-item-dot"></span><strong>attack_constraint.py</strong> — 交锋约束</div>
+          <div class="tech-item"><span class="tech-item-dot"></span><strong>evidence_validator.py</strong> — 证据引用验证</div>
+          <div class="tech-item"><span class="tech-item-dot"></span><strong>reflection_schema.py</strong> — 门控+快照+回退</div>
+        </div>
+      </div>
+
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <div class="tech-card-icon">
+            <span class="iconify" data-icon="lucide:monitor" data-width="18"></span>
+          </div>
+          <div class="tech-card-title">渲染系统</div>
+        </div>
+        <div class="tech-list">
+          <div class="tech-item"><span class="tech-item-dot"></span><strong>html_renderer.py</strong> — V8 JSON→HTML-PPT</div>
+          <div class="tech-item"><span class="tech-item-dot"></span><strong>v8_normalizer.py</strong> — 格式标准化（3种变体）</div>
+          <div class="tech-item"><span class="tech-item-dot"></span><strong>schema_v8.py</strong> — Pydantic V8数据模型</div>
+          <div class="tech-item"><span class="tech-item-dot"></span>3种主题：gold / acid / warm</div>
+          <div class="tech-item"><span class="tech-item-dot"></span>键盘+滚轮+触摸+导航点</div>
+        </div>
+      </div>
+
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <div class="tech-card-icon">
+            <span class="iconify" data-icon="lucide:globe" data-width="18"></span>
+          </div>
+          <div class="tech-card-title">内容采集</div>
+        </div>
+        <div class="tech-list">
+          <div class="tech-item"><span class="tech-item-dot"></span><strong>material_collector.py</strong> — 多源素材聚合</div>
+          <div class="tech-item"><span class="tech-item-dot"></span><strong>anysearch_layer.py</strong> — 搜索抽象层+缓存</div>
+          <div class="tech-item"><span class="tech-item-dot"></span><strong>zhihu_miner.py</strong> — 知乎MCP采风</div>
+          <div class="tech-item"><span class="tech-item-dot"></span><strong>content_injector.py</strong> — 话题→书单映射</div>
+          <div class="tech-item"><span class="tech-item-dot"></span><strong>llm_generate.py</strong> — OpenRouter API（DeepSeek免费）</div>
+        </div>
+      </div>
+
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <div class="tech-card-icon">
+            <span class="iconify" data-icon="lucide:users" data-width="18"></span>
+          </div>
+          <div class="tech-card-title">专家系统</div>
+        </div>
+        <div class="tech-list">
+          <div class="tech-item"><span class="tech-item-dot"></span><strong>topic_router.py</strong> — 话题→专家自动匹配</div>
+          <div class="tech-item"><span class="tech-item-dot"></span><strong>expert_speak_v3.py</strong> — Prompt V3 (Bloom 5-6)</div>
+          <div class="tech-item"><span class="tech-item-dot"></span>32位专家 × 5领域 × 三层架构</div>
+          <div class="tech-item"><span class="tech-item-dot"></span>37个知识边界md文件</div>
+          <div class="tech-item"><span class="tech-item-dot"></span>灵魂层(不可变) / 策略层(进化) / 素材层(替换)</div>
+        </div>
+      </div>
+
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <div class="tech-card-icon">
+            <span class="iconify" data-icon="lucide:flask-conical" data-width="18"></span>
+          </div>
+          <div class="tech-card-title">分析方法论</div>
+        </div>
+        <div class="tech-list">
+          <div class="tech-item"><span class="tech-item-dot"></span><strong>C1-C6并行分析</strong> — 解剖/质疑/连接/极端/历史/实践</div>
+          <div class="tech-item"><span class="tech-item-dot"></span><strong>能量评分</strong> — 反直觉/可争议/可验证/可传播</div>
+          <div class="tech-item"><span class="tech-item-dot"></span><strong>讨论单元拆解</strong> — 每单元一个核心问题</div>
+          <div class="tech-item"><span class="tech-item-dot"></span><strong>D1-D4综合</strong> — 综合/金句/张力/洞见</div>
+          <div class="tech-item"><span class="tech-item-dot"></span>能量≥25才进入最终产出</div>
+        </div>
       </div>
     </div>
   </div>

@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>如果不工作也能拿钱活下去，人类会迎来天堂还是毁灭</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0A0A0A;
+      --bg2: #111111;
+      --bg3: #1A1A1A;
+      --text: #F5F5F5;
+      --text2: #A0A0A0;
+      --text3: #606060;
+      --accent: #FF6B9D;
+      --accent-light: #FF8AB5;
+      --accent-dark: #E5537A;
+      --clash: #FF4081;
+      --insight: #FF80AB;
+      --card-bg: rgba(255,107,157,0.08);
+      --card-border: rgba(255,107,157,0.2);
+      --glow: rgba(255,107,157,0.3);
+      --slide-w: 100vw;
+      --slide-h: 100vh;
+      --font-display: 'Noto Serif SC', serif;
+      --font-body: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    html { font-size: 16px; scroll-behavior: auto; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      overflow-y: hidden;
+      height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Slideshow container ─── */
+    .slideshow {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+    .slideshow::-webkit-scrollbar { display: none; }
+    .slideshow { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* ─── Slide ─── */
+    .slide {
+      flex: 0 0 var(--slide-w);
+      width: var(--slide-w);
+      height: var(--slide-h);
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 4rem 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ─── Progress bar ─── */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      z-index: 1000;
+      transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      box-shadow: 0 0 10px var(--glow);
+    }
+
+    /* ─── Page counter ─── */
+    .page-counter {
+      position: fixed;
+      top: 1.5rem;
+      right: 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text3);
+      z-index: 1000;
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Nav dots ─── */
+    .nav-dots {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 1000;
+      padding: 8px 16px;
+      background: rgba(10,10,10,0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      outline: none;
+    }
+    .nav-dot:hover { background: var(--text2); transform: scale(1.3); }
+    .nav-dot.active {
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--glow);
+      transform: scale(1.2);
+    }
+
+    /* ─── Slide header ─── */
+    .slide-header {
+      width: 100%;
+      max-width: 1000px;
+      margin-bottom: 2.5rem;
+    }
+    .slide-tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+    .slide-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    /* ─── Cover slide ─── */
+    .cover-slide {
+      background: radial-gradient(ellipse at 30% 50%, rgba(20,20,20,1) 0%, var(--bg) 70%);
+    }
+    .cover-glow {
+      position: absolute;
+      top: 50%;
+      left: 30%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .cover-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .cover-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      margin-bottom: 2rem;
+    }
+    .cover-title {
+      font-family: var(--font-display);
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 1rem;
+      max-width: 700px;
+    }
+    .cover-subtitle {
+      font-size: 1.1rem;
+      color: var(--text2);
+      margin-bottom: 1.5rem;
+    }
+    .cover-books {
+      font-size: 0.9rem;
+      color: var(--text3);
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+    .cover-stats {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .cover-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .cover-stat-num {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .cover-stat-label {
+      font-size: 0.85rem;
+      color: var(--text3);
+      margin-top: 0.25rem;
+    }
+    .cover-stat-divider {
+      width: 1px;
+      height: 40px;
+      background: var(--text3);
+      opacity: 0.3;
+    }
+    .cover-experts {
+      font-size: 0.9rem;
+      color: var(--text2);
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Expert grid ─── */
+    .expert-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 1000px;
+    }
+    .expert-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      transition: all 0.3s ease;
+    }
+    .expert-card:hover {
+      border-color: var(--card-color, var(--accent));
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      transform: translateY(-2px);
+    }
+    .expert-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0A0A0A;
+      flex-shrink: 0;
+    }
+    .expert-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .expert-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+    .expert-title {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-bottom: 0.5rem;
+    }
+    .expert-stance {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 8px;
+      border-radius: 3px;
+      margin-bottom: 0.5rem;
+    }
+    .expert-belief {
+      font-size: 0.8rem;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+
+    /* ─── Question slide ─── */
+    .question-slide {
+      background: radial-gradient(ellipse at 50% 50%, rgba(20,20,20,1) 0%, var(--bg) 70%);
+    }
+    .question-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    .question-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .question-topic {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 1.5rem 0;
+      line-height: 1.3;
+    }
+    .question-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--accent);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .question-text {
+      font-size: 1.15rem;
+      color: var(--text2);
+      line-height: 1.8;
+    }
+
+    /* ─── Stances ─── */
+    .stances-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .stance-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .stance-item:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .stance-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0A0A0A;
+      flex-shrink: 0;
+    }
+    .stance-body {
+      flex: 1;
+    }
+    .stance-speaker {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .stance-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Clash ─── */
+    .clash-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .clash-block {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+    }
+    .clash-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clash);
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .clash-item {
+      margin-bottom: 1rem;
+    }
+    .clash-item:last-child { margin-bottom: 0; }
+    .clash-speaker {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .clash-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      padding-left: 1rem;
+      border-left: 2px solid var(--card-border);
+    }
+    .clash-attack .clash-text {
+      border-left-color: var(--clash);
+    }
+    .clash-counter .clash-text {
+      border-left-color: var(--insight);
+    }
+
+    /* ─── Reality cases ─── */
+    .cases-container {
+      width: 100%;
+      max-width: 1000px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .case-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .case-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .case-header {
+      margin-bottom: 1rem;
+    }
+    .case-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .case-source {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-top: 0.25rem;
+    }
+    .case-content {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .case-outcome, .case-lesson {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+    .case-label {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-right: 0.5rem;
+    }
+
+    /* ─── Cost discussion ─── */
+    .cost-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .cost-scenario {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-scenario-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-scenario-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .cost-analysis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .cost-dimension {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .cost-value {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .cost-worst {
+      background: rgba(255,71,87,0.08);
+      border: 1px solid rgba(255,71,87,0.2);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-worst-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clash);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-worst-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .cost-survivor {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .cost-survivor-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-survivor-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Human nature ─── */
+    .hn-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .hn-question {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .hn-analysis {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+    }
+    .hn-examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .hn-example {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .hn-conclusion {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .hn-conclusion-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .hn-conclusion-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Cognitive upgrade ─── */
+    .upgrade-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .upgrade-block {
+      display: flex;
+      gap: 1.5rem;
+      align-items: stretch;
+      margin-bottom: 1.5rem;
+    }
+    .upgrade-before, .upgrade-after {
+      flex: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .upgrade-before {
+      border-color: rgba(255,71,87,0.2);
+      background: rgba(255,71,87,0.05);
+    }
+    .upgrade-after {
+      border-color: rgba(0,212,170,0.2);
+      background: rgba(0,212,170,0.05);
+    }
+    .upgrade-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+    .upgrade-before .upgrade-label { color: var(--clash); }
+    .upgrade-after .upgrade-label { color: var(--insight); }
+    .upgrade-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .upgrade-arrow {
+      display: flex;
+      align-items: center;
+      font-size: 2rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .upgrade-complexity, .upgrade-actionable {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .upgrade-complexity-label, .upgrade-actionable-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .upgrade-complexity-text, .upgrade-actionable-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Final insight ─── */
+    .insight-slide {
+      background: radial-gradient(ellipse at 50% 50%, rgba(0,212,170,0.05) 0%, var(--bg) 60%);
+    }
+    .insight-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0,212,170,0.15) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .insight-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .insight-title {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--insight);
+      margin: 1.5rem 0;
+    }
+    .insight-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--insight);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .insight-text {
+      font-size: 1.1rem;
+      color: var(--text2);
+      line-height: 1.9;
+    }
+
+    /* ─── Open questions ─── */
+    .oq-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .oq-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .oq-item:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+    .oq-num {
+      font-family: var(--font-mono);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+      width: 32px;
+      text-align: center;
+    }
+    .oq-text {
+      font-size: 1rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      .slide { padding: 2rem 1.5rem; }
+      .cover-title { font-size: 2rem; }
+      .question-topic { font-size: 1.8rem; }
+      .slide-title { font-size: 1.6rem; }
+      .expert-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+      .upgrade-block { flex-direction: column; }
+      .upgrade-arrow { transform: rotate(90deg); justify-content: center; }
+      .cases-container { grid-template-columns: 1fr; }
+      .cost-analysis { grid-template-columns: 1fr; }
+      .hn-examples { grid-template-columns: 1fr; }
+      .nav-dots { display: none; }
+    }
+    @media (max-width: 480px) {
+      .expert-grid { grid-template-columns: 1fr; }
+      .cover-stats { gap: 1rem; }
+      .cover-stat-num { font-size: 2rem; }
+    }
+    
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<div class="page-counter" id="pageCounter">1 / 28</div>
+
+<div class="slideshow" id="slideshow">
+
+    <div class="slide cover-slide">
+      <div class="cover-glow"></div>
+      <div class="cover-content">
+        <div class="cover-badge">ROUNDTABLE DISCUSSION</div>
+        <h1 class="cover-title">如果不工作也能拿钱活下去，人类会迎来天堂还是毁灭</h1>
+        
+        
+        <div class="cover-stats">
+          <div class="cover-stat">
+            <span class="cover-stat-num">6</span>
+            <span class="cover-stat-label">位专家</span>
+          </div>
+          <div class="cover-stat-divider"></div>
+          <div class="cover-stat">
+            <span class="cover-stat-num">3</span>
+            <span class="cover-stat-label">轮讨论</span>
+          </div>
+        </div>
+        <div class="cover-experts">韩炳哲 · 弗洛姆 · 赫拉利 · 项飙 · 芒格 · 李诞</div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">EXPERTS</span>
+        <h2 class="slide-title">专家阵营</h2>
+      </div>
+      <div class="expert-grid">
+        <div class="expert-card" style="--card-color: #4A90D9">
+          <div class="expert-avatar" style="background: #4A90D9">韩</div>
+          <div class="expert-info">
+            <div class="expert-name">韩炳哲</div>
+            <div class="expert-title">哲学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #E8A87C">
+          <div class="expert-avatar" style="background: #E8A87C">弗</div>
+          <div class="expert-info">
+            <div class="expert-name">弗洛姆</div>
+            <div class="expert-title">心理学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #85C1E9">
+          <div class="expert-avatar" style="background: #85C1E9">赫</div>
+          <div class="expert-info">
+            <div class="expert-name">赫拉利</div>
+            <div class="expert-title">历史学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #7DCEA0">
+          <div class="expert-avatar" style="background: #7DCEA0">项</div>
+          <div class="expert-info">
+            <div class="expert-name">项飙</div>
+            <div class="expert-title">人类学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #F1948A">
+          <div class="expert-avatar" style="background: #F1948A">芒</div>
+          <div class="expert-info">
+            <div class="expert-name">芒格</div>
+            <div class="expert-title">投资家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #BB8FCE">
+          <div class="expert-avatar" style="background: #BB8FCE">李</div>
+          <div class="expert-info">
+            <div class="expert-name">李诞</div>
+            <div class="expert-title">脱口秀演员</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 1</span>
+        <h2 class="question-topic">UBI的真相：是解放还是陷阱？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">全民基本收入究竟是让人自由的钥匙，还是让人沉沦的糖衣？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4A90D9">韩</div>
+          <div class="stance-body">
+            <div class="stance-speaker">韩炳哲</div>
+            <div class="stance-text">UBI的诱惑在于它承诺了不工作的自由，但这种自由恰恰是功绩社会最精致的陷阱。当外部强制消失了，自我剥削就会以更隐蔽的形式出现。你以为不上班就自由了？不，你会开始疯狂优化自己的生活——健身打卡、读书清单、冥想计划，把每一天都变成KPI。功绩社会的主体不需要老板，他自己就是最严厉的监工。真正的解放不是取消工作，而是打破人必须产出才有价值的底层逻辑。否则UBI只是把工厂搬进了你的大脑。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #E8A87C">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛姆</div>
+            <div class="stance-text">从存在主义心理学看，UBI解决的是占有层面的焦虑，但无法回应回应存在层面的危机。人类需要的不仅是活着，而是有意义地活着。生产性取向是人的基本需求——不是为了钱，而是为了通过创造来确认自己的存在。如果UBI让人从被动劳动中解脱，同时打开了主动创造的通道，那就是解放。但如果人拿到钱后只剩下消费和娱乐，那就是一种更精致的异化——从被物奴役，变成了被快感奴役。关键不是给不给钱，而是社会是否为人的生产性取向提供了出口。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #85C1E9">赫</div>
+          <div class="stance-body">
+            <div class="stance-speaker">赫拉利</div>
+            <div class="stance-text">UBI是人类世最危险的幻觉之一。问题不是钱够不够，而是当算法和AI接管了大部分工作，人类在数据主义的框架下还有什么存在价值？UBI可能创造一个庞大的无用阶级——不是他们不努力，而是整个经济体系不再需要他们。更可怕的是，UBI可能成为精英阶层的安抚工具：给你钱，别闹，别问为什么你对这个世界的运转毫无影响力。历史反复证明，当一个群体失去经济功能，他们失去的不仅是收入，更是政治话语权。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #7DCEA0">项</div>
+          <div class="stance-body">
+            <div class="stance-speaker">项飙</div>
+            <div class="stance-text">UBI在中国语境下有一个特别值得警惕的问题：它可能加速附近的消失。现在年轻人已经悬浮了——既不扎根于社区，也不投入于具体的人际关系。如果有了UBI，这种悬浮可能变成一种新的常态。劳动的一个被忽视的功能是它把人嵌入具体的时空和关系中，你去上班、去市场、去和同事吵架，这些琐碎的互动构成了附近。UBI如果让人彻底脱离这些，我们可能看到的不是解放，而是大规模的社会性孤独。不工作之后，人去哪里？去屏幕里。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #F1948A">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">从激励机制的角度，UBI的致命缺陷是它违反了一个基本原理：人们会做你激励他们做的事。如果你给每个人发钱而不要求任何条件，你就是在激励不工作。不要跟我说什么人会自动追求更高目标——我见过太多继承财产的富二代，大多数不是成了艺术家，而是成了废物。人类误判心理学告诉我们，人会系统性地高估自己的自律能力。UBI的实验结果其实已经很清楚了：短期效果不错，长期来看，人们的劳动参与率下降，而心理健康改善远不如预期。给钱容易，收走坏习惯几乎不可能。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #BB8FCE">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">说实话，我每天都在想不上班会怎样。然后我真不上班了一段时间——就是写段子没人看、在家躺着刷手机、凌晨三点看吃播的那种不上班。你们知道最恐怖的是什么吗？不是无聊，是那种我已经自由了但我不知道自由要干嘛的恐慌。UBI就是社会版的你中了五百万但你不知道怎么花。人的痛苦来源很奇妙，上班的时候觉得是班的错，不上班了才发现是自己的错。但话说回来，如果UBI能让所有人都体验一下这种恐慌，也许我们终于能诚实面对一个问题：我们不是讨厌工作，我们是讨厌没有意义的工作。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #F1948A">芒格 → 韩炳哲</div>
+            <div class="clash-text">韩教授，你的分析很美，但它建立在一个未经证实的假设上——即人会在没有外部压力时自动转向自我优化。现实数据告诉我，芬兰的UBI实验中，受试者的幸福感只提高了很小的幅度，而就业率没有显著提升。你的理论解释了精英阶层的行为，但大多数人不是精英。大多数人拿到不需要工作的钱之后，会做什么？刷短视频、打游戏、点外卖。这不是哲学问题，是概率问题。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #4A90D9">韩炳哲</div>
+              <div class="clash-text">芒格先生，你犯了一个典型的经济学错误——用短期实验的表面数据来否定深层结构性变化。芬兰实验只持续了两年，你用两年的观察来判断一种可能需要二十年才能显现影响的社会制度？更重要的是，你把刷短视频定义为失败，这恰恰暴露了你的功绩主义偏见。一个在流水线上站了十二个小时的人，回家刷两小时短视频，和一个不上班的人刷两小时短视频，你要告诉我前者比后者更幸福？UBI真正要回答的问题不是人会不会偷懒，而是我们是否有勇气承认：很多工作本身就是对人的折磨。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #85C1E9">赫拉利 → 项飙</div>
+            <div class="clash-text">项飙教授，你对附近的消失的担忧我理解，但你可能忽略了一个更大的图景。工业革命时，人们也说工人离开土地会失去社区和意义，结果呢？新的城市社区形成了。人类的适应能力远超你的担忧。真正的问题不是附近的消失，而是整个劳动有价值这个前提的崩溃。你关心的是人们不上班后去哪里，我关心的是当AI能做所有人类能做的事情之后，人类还能去哪里。附近的消失是症状，无用阶级的诞生才是疾病。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #7DCEA0">项飙</div>
+              <div class="clash-text">赫拉利，你的历史类比恰恰忽略了关键差异。工业革命时期，人从土地转移到工厂，劳动形态变了但劳动本身没有消失。但现在你说的是劳动本身的消亡，这是质的不同。而且你假设了一个全面自动化的未来，但现实是：护理、教育、创意、人际关系这些领域，AI短期内根本无法替代。你的无用阶级叙事本身可能就是一种危险——它让人在被真正淘汰之前就放弃了抵抗。与其预言人类的无用，不如讨论什么样的劳动是真正不可替代的。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">芬兰UBI实验</div>
+            <div class="case-source">2017-2018年芬兰政府</div>
+          </div>
+          <div class="case-content">芬兰随机选择2000名失业者，每月发放560欧元无条件基本收入，持续两年。实验旨在测试UBI是否能提高就业率和幸福感。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 实验组的幸福感略高于对照组，但就业率没有显著提升。参与者报告的主要改善是压力减少和对未来的信心增强。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> UBI可能改善心理健康，但无法单独解决就业问题。它更像是止痛药而非治病药——有用，但不能指望它治愈结构性问题。
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">阿拉斯加永久基金</div>
+            <div class="case-source">1982年至今，美国阿拉斯加州</div>
+          </div>
+          <div class="case-content">阿拉斯加州将石油收入的一部分作为年度分红发给所有居民，每人每年获得1000-2000美元。这是目前运行时间最长的类UBI制度。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 该州的兼职工作略有增加，全职工作没有显著减少。贫困率有所下降，尤其在原住民社区效果明显。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 适度的无条件收入不会摧毁工作意愿，但金额太低也不足以改变生活结构。关键在于它是否足够让人真正做出不同的选择。
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">肯尼亚GiveDirectly实验</div>
+            <div class="case-source">2016年至今，慈善组织GiveDirectly</div>
+          </div>
+          <div class="case-content">在肯尼亚农村，数百户家庭每天获得约0.75美元的无条件现金转移，计划持续12年。这是发展中国家最大规模的长期UBI实验。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 受助者将大部分资金用于食物、教育和小生意。创业率提高，儿童营养改善，心理健康显著提升。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 在极端贫困中，UBI的效果最为显著。当基本生存都不安全时，无条件收入是真正的解放。但这也暗示了一个悖论：UBI最有效的场景，恰恰是人们最需要工作的场景。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">全面实施UBI的社会代价与收益分析</span>
+        </div>
+        <div class="cost-analysis">
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">UBI维持在极低水平，不足以让人真正自由，却足以让人失去找工作的动力。社会出现大规模的半吊子自由人——既不能像过去那样通过工作获得尊严，也不能像真正的自由人那样追求意义。他们被卡在中间，用最低限度的生存换取最低限度的存在。国家通过UBI控制系统获得了前所未有的社会管控能力。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">支持UBI的人往往引用成功的小规模实验，但这些实验的参与者知道自己在被观察，且实验是临时的。大规模永久实施的效果可能完全不同——就像你知道考试和真正的创业是两回事一样。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">人类真的能在不工作的状态下找到意义吗？</div>
+        <div class="hn-analysis">人类对意义的需求是根深蒂固的，但意义本身是一个高度可塑的概念。在不同的文化、时代和个体中，意义的来源差异巨大。心理学研究表明，人类需要三种基本心理需求：自主性、胜任感和归属感。工作往往同时满足这三者，但并非唯一途径。问题在于：当工作这个默认选项消失后，大多数人是否有能力自己构建意义系统？历史数据不乐观——大多数退休者在离开工作后会经历显著的意义危机。</div>
+        <div class="hn-examples">
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">人类不是不能在不工作的状态下找到意义，但大多数人需要帮助才能做到这一点。工作提供了一个现成的意义框架——即使这个框架经常令人痛苦。UBI如果要成功，必须伴随着大规模的社会支持系统，帮助人们在没有工作的情况下构建新的意义来源。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">UBI要么是天堂（解放人类），要么是地狱（让人堕落）。</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">UBI本身不是答案，它是一个催化剂——会放大一个社会已有的特质。一个有强大社区、丰富文化和完善公共空间的社会，UBI会让人们更自由地创造；一个原子化、消费主义和意义匮乏的社会，UBI会加速这些病态的蔓延。</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">UBI的效果不取决于钱本身，而取决于它所嵌入的社会生态系统。同样一笔钱，在不同的社会土壤中会长出完全不同的果实。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">在讨论UBI之前，先问一个更根本的问题：我们的社会是否为人们提供了足够的非工作意义来源？如果答案是否定的，那么在修好这个基础设施之前，UBI可能弊大于利。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 2</span>
+        <h2 class="question-topic">工作的意义：人类需要工作，还是被工作需要？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">工作对人类来说是内在需求，还是被社会建构出来的幻觉？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4A90D9">韩</div>
+          <div class="stance-body">
+            <div class="stance-speaker">韩炳哲</div>
+            <div class="stance-text">当代社会最大的谎言之一就是人天生需要工作。人天生需要的是活动、创造和表达——这些被偷换成了工作。功绩社会的天才之处在于，它让人相信工作就是自我实现，而实际上大多数工作只是自我消耗。我在《倦怠社会》里写过：当能够代替了应当，压迫就从外部转移到了内部。人们不再说我必须工作，而是说我想要工作——这听起来像自由，实际上是更深层的奴役。真正的问题不是人类需不需要工作，而是我们能否想象一种不被工作定义的人类生活。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #E8A87C">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛姆</div>
+            <div class="stance-text">区分两种工作至关重要：一种是生产性的——通过创造来表达自己的能力，实现与世界的连接；另一种是异化的——为了生存而出卖时间和精力。人类需要的是前者，但大多数人从事的是后者。《爱的艺术》中我强调过，爱和工作是人类存在的两大支柱，但两者都必须是主动的、创造性的。一个人如果只是为了工资而工作，那和机器有什么区别？问题在于，现代社会把90%的工作变成了异化劳动，然后反过来质问：人怎么可以不工作？这就像把人关进监狱，然后问他为什么不想出去。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #85C1E9">赫</div>
+          <div class="stance-body">
+            <div class="stance-speaker">赫拉利</div>
+            <div class="stance-text">从进化角度看，工作是一个极其晚近的概念。采集狩猎者每天工作大约4-6小时，而且他们的工作和生活没有明确界限。农业革命把人类绑在了土地上，工业革命把人绑在了工厂里，信息革命把人绑在了屏幕上。每一次，我们都被告知这是进步，但实际上，人类的工作时间越来越长，工作内容越来越单调。现在AI来了，它终于有可能把人类从这条单行道上拽出来。问题是：人类已经在这条路上走了几千年，我们还记得路的另一边是什么样子吗？</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #7DCEA0">项</div>
+          <div class="stance-body">
+            <div class="stance-speaker">项飙</div>
+            <div class="stance-text">在中国的语境里，工作的意义特别复杂。一方面，它承载着巨大的社会功能——你的工作决定了你的社会地位、婚恋市场价值、甚至你说话的分量。另一方面，年轻人越来越意识到，很多工作本质上是内卷——你付出巨大努力，但产出的社会价值微乎其微。我最近关注的悬浮现象就是指这种状态：人不是不想努力，而是努力了也没有着陆点。劳动的意义不在于劳动本身，而在于它是否能让你与真实的世界产生有质量的连接。如果工作只是让你和KPI、绩效考核产生连接，那这种劳动本身就失去了意义。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #F1948A">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">我活了快一百年，见过太多人因为不工作而废掉。我的合伙人巴菲特九十多岁了还在工作，不是因为他需要钱，而是因为他理解一个基本事实：工作是最好的认知训练。你停止工作，你的大脑就开始退化。从投资的角度看，人类最大的资产是自己的判断力和技能，而这些资产只有在使用中才能保值。不工作就是让自己的核心资产贬值。当然，我说的工作不一定是在公司上班——任何有目的、有挑战、有反馈的活动都可以算。但什么都不做从来不是一个好选项。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #BB8FCE">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">我觉得最虚伪的一句话就是人要找到自己热爱的工作。你热爱交房租吗？你热爱早上七点挤地铁吗？大多数人工作不是因为热爱，是因为怕饿死。这没什么不好意思承认的。但有意思的是，当你真的不怕饿死了——比如有了UBI——你会发现一个更残酷的事实：你不仅不知道自己热爱什么，你甚至不知道自己喜欢什么。我们整个教育系统教的是怎么找到一份好工作，从来不教怎么在没有工作的情况下过好一天。所以问题不是人类需不需要工作，是我们被培养成了只能通过工作认识自己的怪物。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #E8A87C">弗洛姆 → 芒格</div>
+            <div class="clash-text">芒格先生，你把工作定义为有目的、有挑战、有反馈的活动，这其实是在偷换概念。你说的不是工作，是活动或创造。用你自己的定义，打牌、下棋、甚至教育孙辈都算工作。但社会上99%的工作不符合你的定义——它们没有内在目的，没有真正的挑战，唯一的反馈就是工资。你用工作最好的样本来为整个工作体系辩护，这是一种幸存者偏差。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #F1948A">芒格</div>
+              <div class="clash-text">弗洛姆教授，你说得有道理，但你忽略了一个关键变量：大多数人在没有外部约束的情况下，不会自发地从事你说的生产性活动。你的理论假设了一个理想化的、自驱力很强的人类，但我观察到的现实是：大多数人需要结构、需要截止日期、需要老板催。这不是因为他们不好，是因为人性如此。好的工作环境可以让异化劳动变得不那么痛苦，但你不能指望所有人都能自发地成为艺术家或哲学家。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #BB8FCE">李诞 → 韩炳哲</div>
+            <div class="clash-text">韩老师，我特别喜欢你的书，但我觉得你说的人被工作定义这个问题在现实中的表现比你想的更荒诞。我见过一个朋友，辞职去追求自由，三个月后他每天的日程比上班还满——早上六点起来冥想，七点跑步，八点读书，下午画画，晚上写日记。他说这是自我实现，但我看着觉得他比上班还累。你批判功绩社会的自我剥削，但你自己推崇的纯粹的创造，会不会只是自我剥削的另一种包装？</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #4A90D9">韩炳哲</div>
+              <div class="clash-text">李诞，你观察得很准。这确实是我理论中的一个张力——从自我剥削到自我创造，中间的界限比想象的模糊。但区别在于：前者的目标是产出，后者的目标是过程。你说的那个朋友，如果他享受每一个当下，哪怕日程再满也不是自我剥削。但如果他是在完成一个自由人生的KPI，那你说得对，他只是换了个更精致的牢笼。这恰恰说明了问题的复杂性——不是每个人都能区分内在驱动和内在压迫。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">日本的过劳死现象</div>
+            <div class="case-source">日本劳动政策研究机构</div>
+          </div>
+          <div class="case-content">日本每年有数百人因工作过度而死亡，被称为过劳死（Karoshi）。许多受害者每周工作超过80小时，直到身体崩溃。更令人震惊的是，许多人即使知道健康风险也不愿减少工作——不是因为经济压力，而是因为工作已经成为他们身份认同的核心。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 日本政府在2019年通过了《工作方式改革法案》，限制加班时间。但实际执行效果有限，许多企业通过自愿加班等方式规避法律。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 当工作成为身份认同的核心，人就会为了维护这个身份而牺牲健康甚至生命。这不是热爱工作，是对不工作就什么都不是的恐惧。
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">荷兰的兼职文化</div>
+            <div class="case-source">OECD就业数据</div>
+          </div>
+          <div class="case-content">荷兰是全球兼职工作比例最高的国家，约50%的劳动力从事兼职工作。荷兰人平均每周工作29小时，但人均GDP和生活质量在全球名列前茅。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 荷兰人报告的工作满意度和生活满意度都高于大多数发达国家。他们有更多时间陪伴家人、参与社区活动和追求个人兴趣。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 减少工作时间不一定导致生活质量下降。关键在于社会是否提供了足够的支持系统，让人们可以在更少的工作时间里维持体面的生活。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">重新定义工作的社会代价</span>
+        </div>
+        <div class="cost-analysis">
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">社会分裂为两个阶层：一小部分创造者掌握AI和资本，从事高价值的创造性工作；一大部分消费者依赖UBI生活，时间被算法驱动的娱乐填满。这不是科幻，这已经是硅谷的一部分现实了。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">我们看到的成功案例（荷兰、北欧）都建立在极高的教育水平、完善的社会保障和强大的工会传统上。把这些结果直接套用到其他社会环境中，是一种危险的类比。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">人类是天生的工作动物，还是被迫的工作机器？</div>
+        <div class="hn-analysis">人类的大脑是为了解决问题而进化的——寻找食物、建造庇护所、维护社会关系。这些活动在广义上都可以称为工作。但现代工作的问题在于，它把这些本应多样的活动压缩成了单一的、重复的、以经济产出为目标的行为。人不是天生需要工作，但人天生需要有意义的活动。当有意义的活动被垄断为工作，不工作就变成了没有意义。这是一个历史性的骗局。</div>
+        <div class="hn-examples">
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">人类不是需要工作，而是需要有意义的活动、社会连接和自我表达。工作只是这些需求的一种满足方式——而且往往不是最好的一种。问题在于，我们还没有找到大规模替代工作的方式来满足这些需求。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">工作是人类存在的必要组成部分，没有工作人就会堕落。</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">工作是人类满足有意义的活动需求的一种历史特定方式，而非唯一方式。人类真正需要的是目的感、胜任感和归属感——这些可以通过无数种方式获得，工作只是其中之一。</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">当我们说人需要工作时，我们其实是在说人需要一个在社会中获得认可和自我价值的方式。工作碰巧是目前最主要的方式，但它不一定是最好的，更不是唯一的。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">与其问人要不要工作，不如问什么活动能让人感到有意义、有能力、有连接？——然后设计社会系统来支持这些活动，无论它们是否能产生经济价值。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 3</span>
+        <h2 class="question-topic">后工作时代：如果不上班，你会做什么？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">当工作不再是必需品，人类会如何度过自己的时间？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4A90D9">韩</div>
+          <div class="stance-body">
+            <div class="stance-speaker">韩炳哲</div>
+            <div class="stance-text">如果明天所有人都不用上班了，我预测的第一波浪潮不是创造，是崩溃。没有了工作的节奏感，没有了必须起床的理由，很多人会陷入一种存在性眩晕——不是因为自由太少了，而是因为自由太多了。但这种崩溃是必要的。就像戒毒会先经历戒断反应一样，人类需要先经历工作戒断，才能重新发现什么是真正的活动。那些挺过这一关的人，可能会发展出一种全新的存在方式：不是为了产出而活动，而是为了体验而存在。这才是真正沉思的生活——古希腊人梦寐以求的生活方式。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #E8A87C">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛姆</div>
+            <div class="stance-text">后工作时代最需要的是爱的教育。不是爱情，是爱的能力——与世界建立生产性连接的能力。大多数人一辈子都在功能性地生活：起床是为了不迟到，吃饭是为了有力气工作，社交是为了人脉。当这些功能性的理由消失后，他们需要重新学习存在性的生活：起床是因为想看日出，吃饭是因为享受味道，社交是因为真正关心另一个人。这需要一套全新的社会教育体系——不是教技能，而是教如何生活。如果社会能在UBI之外提供这种教育，后工作时代可能成为人类的文艺复兴。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #85C1E9">赫</div>
+          <div class="stance-body">
+            <div class="stance-speaker">赫拉利</div>
+            <div class="stance-text">后工作时代的真实图景可能比大多数人想象的更黑暗。当大多数人不再工作，他们的注意力就会成为最稀缺的资源。科技公司会疯狂争夺这些自由的眼球——不是帮你找到意义，而是让你沉迷于算法设计的虚拟世界。想象一下：你不用上班了，但你每天花16个小时在元宇宙里，你的数据被提取，你的注意力被卖给出价最高的广告商。这不是解放，这是升级版的奴役——从出卖体力变成了出卖注意力。后工作时代的核心问题不是你做什么，而是谁控制你的注意力。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #7DCEA0">项</div>
+          <div class="stance-body">
+            <div class="stance-speaker">项飙</div>
+            <div class="stance-text">我最担心的是后工作时代的附近会彻底消失。当人们不再需要去办公室、去工厂、去市场，人与人之间的物理接触会大幅减少。我们已经看到疫情居家办公期间，很多人连邻居都不认识了。后工作时代如果不做干预，可能会出现一种新型的数字游牧民——他们住在任何地方，和任何人在线连接，但和身边的世界没有任何真实的关系。我觉得最重要的事情不是告诉人们不上班了去做什么，而是重建一个让人们愿意出门、愿意和陌生人说话、愿意参与社区的物理环境。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #F1948A">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">如果我是一个年轻人，不上班了，我会做三件事。第一，持续学习——不是因为有用，是因为认知衰退是不可逆的，你不用大脑，大脑就废了。第二，做有挑战性的项目——不管是什么，种菜、造房子、写代码，只要它有明确的目标和可衡量的进展。第三，建立深度的人际关系——不是社交媒体上的500个朋友，是5个你愿意在凌晨三点打电话的人。这三件事加在一起，就足以让一个人过上充实的生活。但大多数人在没有外部压力的情况下，不会做这三件事中的任何一件。这就是人性。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #BB8FCE">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">如果明天不用上班了，我估计中国会瞬间多出一亿个生活博主。你知道那种每天发九宫格、配文又是被阳光叫醒的一天的人吗？对，就是那种。然后三个月后，他们会发现自己其实很无聊，阳光也没那么好，生活也没什么好拍的。再然后，最有趣的部分来了——他们会开始怀念上班。不是怀念工作本身，是怀念那种有人需要我的感觉。所以我的预测是：后工作时代最大的产业不是娱乐，是假装有人需要你的服务业。比如你可以花钱雇人每天早上打电话叫你起床、问你今天计划做什么、然后晚上检查你有没有完成。对，我刚才描述的就是上班。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #85C1E9">赫拉利 → 韩炳哲</div>
+            <div class="clash-text">韩教授，你描述的沉思的生活很美好，但你忽略了一个关键问题：谁来维护这个让所有人都能沉思的基础设施？电力系统、供水系统、垃圾处理、医疗保障——这些都需要人来工作。如果最有能力的人都去沉思了，谁来修水管？后工作时代要么需要高度自动化（那意味着更多人更无用），要么需要一部分人继续工作（那意味着新的不平等）。你不能只谈哲学，不谈工程。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #4A90D9">韩炳哲</div>
+              <div class="clash-text">赫拉利，你提出了一个好问题，但你的框架本身有问题。你假设沉思和修水管是对立的。为什么修水管不能是一种沉思？禅宗说劈柴担水皆是修行，这不是鸡汤，是一种深刻的生存智慧。后工作时代真正需要的，是让所有形式的劳动都被尊重和回报——不是通过市场，而是通过社会认可。修水管的人和写诗的人应该得到同等的尊重，这才是后工作时代的真正挑战。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #7DCEA0">项飙 → 赫拉利</div>
+            <div class="clash-text">赫拉利，你总是用最黑暗的场景来预测未来，但你的预测基于一个假设：人类是被动的，会被科技公司操控。但历史表明，人类也有强烈的抵抗本能。当电视刚出现时，人们也说它会毁灭人类的精神生活，结果呢？人们找到了和电视共处的方式。你对元宇宙和注意力经济的担忧可能被夸大了——至少，你不能用最坏的场景来代表必然的未来。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #85C1E9">赫拉利</div>
+              <div class="clash-text">项飙，你的乐观主义建立在人类适应能力上，但适应不等于抵抗。人类适应了工业革命，代价是几代人的悲惨生活。人类适应了社交媒体，代价是青少年心理健康的大规模危机。是的，人类最终会适应后工作时代，但代价是什么？如果代价是几代人活在算法控制的虚拟世界里，即使他们最终适应了，这能算成功吗？我不是悲观，我是认为我们应该在灾难发生之前就采取行动。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">硅谷精英的后工作生活</div>
+            <div class="case-source">科技行业观察</div>
+          </div>
+          <div class="case-content">硅谷的许多科技创业者在实现财务自由后，面临一个共同的困境：接下来做什么？有些人投身慈善（如盖茨基金会），有些人追求太空旅行（如马斯克、贝索斯），但更多人陷入了无目的的生活——不断尝试新项目，但缺乏持久的动力。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 大量案例表明，实现财务自由的人中，约60%在两年内回到了某种形式的工作——不是因为缺钱，而是因为需要结构和目的。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 即使在最理想的情况下——有足够的钱、有高教育水平、有丰富的资源——人类仍然很难在不工作的情况下找到持久的意义。这不是个人失败，是人类心理的基本结构。
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">游戏成瘾现象</div>
+            <div class="case-source">世界卫生组织(WHO)</div>
+          </div>
+          <div class="case-content">WHO在2018年将游戏障碍列为一种精神健康状况。全球约有3-4%的游戏玩家满足成瘾标准。许多成瘾者是年轻人，他们不是没有工作能力，而是游戏提供的即时反馈和成就感比现实生活更有吸引力。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 游戏成瘾者的社会功能严重受损，包括学业、工作、人际关系。治疗需要专业的心理干预和家庭支持。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 当现实世界无法提供足够的意义和成就感时，人类会转向虚拟世界。后工作时代如果不解决意义危机，虚拟世界成瘾可能成为新的流行病。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">后工作时代的社会转型成本</span>
+        </div>
+        <div class="cost-analysis">
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">大规模的社会退缩：人们不再出门，不再社交，不再参与公共生活。每个人都在自己的屏幕前，被算法喂养，被广告包围，被数据收割。社会在物理层面仍然存在，但在精神层面已经解体。这不是科幻，这是当前趋势的逻辑延伸。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">那些在不工作后仍然生活充实的人（艺术家、学者、退休精英）往往拥有特殊的社会资本、教育背景和个人特质。把他们的经验推广到所有人，是一种危险的乐观主义。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">如果不上班，人类最可能做什么？</div>
+        <div class="hn-analysis">根据自我决定理论，人类有三种基本心理需求：自主性（感到自己的行为是自我决定的）、胜任感（感到自己有能力完成任务）和归属感（感到与他人有连接）。工作通常同时满足这三者。当工作消失后，人类会本能地寻找其他途径来满足这些需求。但问题是，大多数替代品（社交媒体、游戏、消费）只能提供这些需求的幻觉，而不是真正的满足。真正的满足需要努力、挑战和不确定性——而这些恰恰是人们想通过UBI逃避的东西。</div>
+        <div class="hn-examples">
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">如果不上班，大多数人会做什么？答案是：他们会在3-6个月的蜜月期后，开始寻找新的结构、目的和挑战。这些需求不会因为有钱而消失，它们是人类心理的基本构成。后工作时代的关键问题是：社会能否为这些需求提供健康的满足渠道？</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">不上班就是自由，自由就是幸福。</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">自由不是没有约束，而是有能力选择有意义的约束。不上班提供的只是消极自由（免于工作），但人类需要的是积极自由（去做值得做的事）。没有后者的前者，只是另一种形式的监狱。</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">后工作时代的核心矛盾是：人类渴望自由，但人类也需要结构；人类想要摆脱工作，但人类也需要目的感。这两组需求看似矛盾，实际上是同一枚硬币的两面。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">与其问不上班了做什么，不如先问什么样的活动能让我感到有意义、有能力、有连接？然后从这些活动开始，逐步构建一个不依赖工作的生活系统。这个过程本身，就是后工作时代最重要的技能。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide insight-slide">
+      <div class="insight-glow"></div>
+      <div class="insight-content">
+        <span class="slide-tag">FINAL INSIGHT</span>
+        <h2 class="insight-title">最终洞见</h2>
+        <div class="insight-divider"></div>
+        <p class="insight-text">这场讨论的真正结论是：问题不在于工作还是不工作，而在于我们是否有能力想象一种超越工作与不工作二元对立的人类生活方式。UBI不是天堂的钥匙，也不是毁灭的按钮——它是一面镜子，照出我们社会的真实面貌：一个有强大社区和丰富文化的社会，UBI会让人们更自由；一个原子化和意义匮乏的社会，UBI会加速病态蔓延。人类真正需要的不是不工作的自由，而是选择做什么的自由——而后者需要的不仅是钱，更是强大的心理基础设施、深厚的社会连接和清晰的自我认知。在建设这些之前，盲目推行UBI可能弊大于利。但如果我们能同时建设这些，后工作时代可能成为人类历史上最伟大的文艺复兴。关键在于：我们是否愿意把UBI当作一个起点，而不是终点。</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">OPEN QUESTIONS</span>
+        <h2 class="slide-title">开放问题</h2>
+      </div>
+      <div class="oq-container">
+        <div class="oq-item">
+          <div class="oq-num">1</div>
+          <div class="oq-text">如果UBI让人人都能自由选择，那么谁来从事那些不愉快但必要的工作（如垃圾处理、养老护理）？这些工作是否应该获得更高的UBI作为补偿？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">2</div>
+          <div class="oq-text">在一个后工作社会中，成功应该如何定义？当GDP和就业率不再适用，我们用什么来衡量社会进步？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">3</div>
+          <div class="oq-text">如果注意力成为后工作时代最稀缺的资源，政府是否应该像保护环境一样保护公民的注意力？具体应该怎么保护？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">4</div>
+          <div class="oq-text">教育系统需要如何改革，才能为后工作时代做好准备？我们是否应该从小教孩子如何在没有外部压力的情况下自我驱动？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">5</div>
+          <div class="oq-text">后工作时代是否会加剧全球不平等？发达国家可以靠UBI维持稳定，但发展中国家在全球化退潮中如何自处？</div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="nav-dots">
+      <button class="nav-dot active" data-idx="0"></button>
+      <button class="nav-dot" data-idx="1"></button>
+      <button class="nav-dot" data-idx="2"></button>
+      <button class="nav-dot" data-idx="3"></button>
+      <button class="nav-dot" data-idx="4"></button>
+      <button class="nav-dot" data-idx="5"></button>
+      <button class="nav-dot" data-idx="6"></button>
+      <button class="nav-dot" data-idx="7"></button>
+      <button class="nav-dot" data-idx="8"></button>
+      <button class="nav-dot" data-idx="9"></button>
+      <button class="nav-dot" data-idx="10"></button>
+      <button class="nav-dot" data-idx="11"></button>
+      <button class="nav-dot" data-idx="12"></button>
+      <button class="nav-dot" data-idx="13"></button>
+      <button class="nav-dot" data-idx="14"></button>
+      <button class="nav-dot" data-idx="15"></button>
+      <button class="nav-dot" data-idx="16"></button>
+      <button class="nav-dot" data-idx="17"></button>
+      <button class="nav-dot" data-idx="18"></button>
+      <button class="nav-dot" data-idx="19"></button>
+      <button class="nav-dot" data-idx="20"></button>
+      <button class="nav-dot" data-idx="21"></button>
+      <button class="nav-dot" data-idx="22"></button>
+      <button class="nav-dot" data-idx="23"></button>
+      <button class="nav-dot" data-idx="24"></button>
+      <button class="nav-dot" data-idx="25"></button>
+      <button class="nav-dot" data-idx="26"></button>
+      <button class="nav-dot" data-idx="27"></button>
+</div>
+
+<script>
+
+    (function() {
+      const slideshow = document.getElementById('slideshow');
+      const progressBar = document.getElementById('progressBar');
+      const pageCounter = document.getElementById('pageCounter');
+      const dots = document.querySelectorAll('.nav-dot');
+      const total = 28;
+      let current = 0;
+      let wheelTimer = null;
+      let isScrolling = false;
+
+      function updateUI() {
+        const scrollLeft = slideshow.scrollLeft;
+        const slideWidth = slideshow.clientWidth;
+        current = Math.round(scrollLeft / slideWidth);
+        if (current < 0) current = 0;
+        if (current >= total) current = total - 1;
+
+        // Progress bar
+        const pct = ((current + 1) / total) * 100;
+        progressBar.style.width = pct + '%';
+
+        // Page counter
+        pageCounter.textContent = (current + 1) + ' / ' + total;
+
+        // Dots
+        dots.forEach(function(d, i) {
+          d.classList.toggle('active', i === current);
+        });
+      }
+
+      function goTo(idx) {
+        if (idx < 0) idx = 0;
+        if (idx >= total) idx = total - 1;
+        slideshow.scrollTo({ left: idx * slideshow.clientWidth, behavior: 'smooth' });
+        current = idx;
+        setTimeout(updateUI, 400);
+      }
+
+      // Keyboard
+      document.addEventListener('keydown', function(e) {
+        switch(e.key) {
+          case 'ArrowRight': case ' ': case 'PageDown':
+            e.preventDefault(); goTo(current + 1); break;
+          case 'ArrowLeft': case 'PageUp':
+            e.preventDefault(); goTo(current - 1); break;
+          case 'Home':
+            e.preventDefault(); goTo(0); break;
+          case 'End':
+            e.preventDefault(); goTo(total - 1); break;
+        }
+      });
+
+      // Mouse wheel with debounce
+      slideshow.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        if (wheelTimer) return;
+        wheelTimer = setTimeout(function() { wheelTimer = null; }, 600);
+        if (e.deltaY > 0 || e.deltaX > 0) {
+          goTo(current + 1);
+        } else {
+          goTo(current - 1);
+        }
+      }, { passive: false });
+
+      // Nav dots
+      dots.forEach(function(dot, i) {
+        dot.addEventListener('click', function() { goTo(i); });
+      });
+
+      // Scroll event
+      slideshow.addEventListener('scroll', function() {
+        if (!isScrolling) {
+          isScrolling = true;
+          requestAnimationFrame(function() {
+            updateUI();
+            isScrolling = false;
+          });
+        }
+      });
+
+      // Resize
+      window.addEventListener('resize', function() { goTo(current); });
+
+      // Init
+      updateUI();
+    })();
+    
+</script>
+
+</body>
+</html>

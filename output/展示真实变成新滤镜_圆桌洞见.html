@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>圆桌讨论</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0A0A0A;
+      --bg2: #111111;
+      --bg3: #1A1A1A;
+      --text: #F5F5F5;
+      --text2: #A0A0A0;
+      --text3: #606060;
+      --accent: #FF6B9D;
+      --accent-light: #FF8AB5;
+      --accent-dark: #E5537A;
+      --clash: #FF4081;
+      --insight: #FF80AB;
+      --card-bg: rgba(255,107,157,0.08);
+      --card-border: rgba(255,107,157,0.2);
+      --glow: rgba(255,107,157,0.3);
+      --slide-w: 100vw;
+      --slide-h: 100vh;
+      --font-display: 'Noto Serif SC', serif;
+      --font-body: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    html { font-size: 16px; scroll-behavior: auto; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      overflow-y: hidden;
+      height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Slideshow container ─── */
+    .slideshow {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+    .slideshow::-webkit-scrollbar { display: none; }
+    .slideshow { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* ─── Slide ─── */
+    .slide {
+      flex: 0 0 var(--slide-w);
+      width: var(--slide-w);
+      height: var(--slide-h);
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 4rem 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ─── Progress bar ─── */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      z-index: 1000;
+      transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      box-shadow: 0 0 10px var(--glow);
+    }
+
+    /* ─── Page counter ─── */
+    .page-counter {
+      position: fixed;
+      top: 1.5rem;
+      right: 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text3);
+      z-index: 1000;
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Nav dots ─── */
+    .nav-dots {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 1000;
+      padding: 8px 16px;
+      background: rgba(10,10,10,0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      outline: none;
+    }
+    .nav-dot:hover { background: var(--text2); transform: scale(1.3); }
+    .nav-dot.active {
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--glow);
+      transform: scale(1.2);
+    }
+
+    /* ─── Slide header ─── */
+    .slide-header {
+      width: 100%;
+      max-width: 1000px;
+      margin-bottom: 2.5rem;
+    }
+    .slide-tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+    .slide-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    /* ─── Cover slide ─── */
+    .cover-slide {
+      background: radial-gradient(ellipse at 30% 50%, rgba(20,20,20,1) 0%, var(--bg) 70%);
+    }
+    .cover-glow {
+      position: absolute;
+      top: 50%;
+      left: 30%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .cover-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .cover-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      margin-bottom: 2rem;
+    }
+    .cover-title {
+      font-family: var(--font-display);
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 1rem;
+      max-width: 700px;
+    }
+    .cover-subtitle {
+      font-size: 1.1rem;
+      color: var(--text2);
+      margin-bottom: 1.5rem;
+    }
+    .cover-books {
+      font-size: 0.9rem;
+      color: var(--text3);
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+    .cover-stats {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .cover-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .cover-stat-num {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .cover-stat-label {
+      font-size: 0.85rem;
+      color: var(--text3);
+      margin-top: 0.25rem;
+    }
+    .cover-stat-divider {
+      width: 1px;
+      height: 40px;
+      background: var(--text3);
+      opacity: 0.3;
+    }
+    .cover-experts {
+      font-size: 0.9rem;
+      color: var(--text2);
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Expert grid ─── */
+    .expert-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 1000px;
+    }
+    .expert-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      transition: all 0.3s ease;
+    }
+    .expert-card:hover {
+      border-color: var(--card-color, var(--accent));
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      transform: translateY(-2px);
+    }
+    .expert-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0A0A0A;
+      flex-shrink: 0;
+    }
+    .expert-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .expert-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+    .expert-title {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-bottom: 0.5rem;
+    }
+    .expert-stance {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 8px;
+      border-radius: 3px;
+      margin-bottom: 0.5rem;
+    }
+    .expert-belief {
+      font-size: 0.8rem;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+
+    /* ─── Question slide ─── */
+    .question-slide {
+      background: radial-gradient(ellipse at 50% 50%, rgba(20,20,20,1) 0%, var(--bg) 70%);
+    }
+    .question-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    .question-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .question-topic {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 1.5rem 0;
+      line-height: 1.3;
+    }
+    .question-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--accent);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .question-text {
+      font-size: 1.15rem;
+      color: var(--text2);
+      line-height: 1.8;
+    }
+
+    /* ─── Stances ─── */
+    .stances-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .stance-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .stance-item:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .stance-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0A0A0A;
+      flex-shrink: 0;
+    }
+    .stance-body {
+      flex: 1;
+    }
+    .stance-speaker {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .stance-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Clash ─── */
+    .clash-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .clash-block {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+    }
+    .clash-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clash);
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .clash-item {
+      margin-bottom: 1rem;
+    }
+    .clash-item:last-child { margin-bottom: 0; }
+    .clash-speaker {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .clash-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      padding-left: 1rem;
+      border-left: 2px solid var(--card-border);
+    }
+    .clash-attack .clash-text {
+      border-left-color: var(--clash);
+    }
+    .clash-counter .clash-text {
+      border-left-color: var(--insight);
+    }
+
+    /* ─── Reality cases ─── */
+    .cases-container {
+      width: 100%;
+      max-width: 1000px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .case-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .case-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .case-header {
+      margin-bottom: 1rem;
+    }
+    .case-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .case-source {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-top: 0.25rem;
+    }
+    .case-content {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .case-outcome, .case-lesson {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+    .case-label {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-right: 0.5rem;
+    }
+
+    /* ─── Cost discussion ─── */
+    .cost-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .cost-scenario {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-scenario-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-scenario-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .cost-analysis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .cost-dimension {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .cost-value {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .cost-worst {
+      background: rgba(255,71,87,0.08);
+      border: 1px solid rgba(255,71,87,0.2);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-worst-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clash);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-worst-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .cost-survivor {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .cost-survivor-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-survivor-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Human nature ─── */
+    .hn-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .hn-question {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .hn-analysis {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+    }
+    .hn-examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .hn-example {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .hn-conclusion {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .hn-conclusion-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .hn-conclusion-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Cognitive upgrade ─── */
+    .upgrade-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .upgrade-block {
+      display: flex;
+      gap: 1.5rem;
+      align-items: stretch;
+      margin-bottom: 1.5rem;
+    }
+    .upgrade-before, .upgrade-after {
+      flex: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .upgrade-before {
+      border-color: rgba(255,71,87,0.2);
+      background: rgba(255,71,87,0.05);
+    }
+    .upgrade-after {
+      border-color: rgba(0,212,170,0.2);
+      background: rgba(0,212,170,0.05);
+    }
+    .upgrade-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+    .upgrade-before .upgrade-label { color: var(--clash); }
+    .upgrade-after .upgrade-label { color: var(--insight); }
+    .upgrade-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .upgrade-arrow {
+      display: flex;
+      align-items: center;
+      font-size: 2rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .upgrade-complexity, .upgrade-actionable {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .upgrade-complexity-label, .upgrade-actionable-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .upgrade-complexity-text, .upgrade-actionable-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Final insight ─── */
+    .insight-slide {
+      background: radial-gradient(ellipse at 50% 50%, rgba(0,212,170,0.05) 0%, var(--bg) 60%);
+    }
+    .insight-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0,212,170,0.15) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .insight-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .insight-title {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--insight);
+      margin: 1.5rem 0;
+    }
+    .insight-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--insight);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .insight-text {
+      font-size: 1.1rem;
+      color: var(--text2);
+      line-height: 1.9;
+    }
+
+    /* ─── Open questions ─── */
+    .oq-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .oq-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .oq-item:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+    .oq-num {
+      font-family: var(--font-mono);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+      width: 32px;
+      text-align: center;
+    }
+    .oq-text {
+      font-size: 1rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      .slide { padding: 2rem 1.5rem; }
+      .cover-title { font-size: 2rem; }
+      .question-topic { font-size: 1.8rem; }
+      .slide-title { font-size: 1.6rem; }
+      .expert-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+      .upgrade-block { flex-direction: column; }
+      .upgrade-arrow { transform: rotate(90deg); justify-content: center; }
+      .cases-container { grid-template-columns: 1fr; }
+      .cost-analysis { grid-template-columns: 1fr; }
+      .hn-examples { grid-template-columns: 1fr; }
+      .nav-dots { display: none; }
+    }
+    @media (max-width: 480px) {
+      .expert-grid { grid-template-columns: 1fr; }
+      .cover-stats { gap: 1rem; }
+      .cover-stat-num { font-size: 2rem; }
+    }
+    
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<div class="page-counter" id="pageCounter">1 / 13</div>
+
+<div class="slideshow" id="slideshow">
+
+    <div class="slide cover-slide">
+      <div class="cover-glow"></div>
+      <div class="cover-content">
+        <div class="cover-badge">ROUNDTABLE DISCUSSION</div>
+        <h1 class="cover-title">圆桌讨论</h1>
+        
+        
+        <div class="cover-stats">
+          <div class="cover-stat">
+            <span class="cover-stat-num">6</span>
+            <span class="cover-stat-label">位专家</span>
+          </div>
+          <div class="cover-stat-divider"></div>
+          <div class="cover-stat">
+            <span class="cover-stat-num">3</span>
+            <span class="cover-stat-label">轮讨论</span>
+          </div>
+        </div>
+        <div class="cover-experts">韩炳哲 · 弗洛姆 · 项飙 · 卡尼曼 · 赫拉利 · 李诞</div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">EXPERTS</span>
+        <h2 class="slide-title">专家阵营</h2>
+      </div>
+      <div class="expert-grid">
+        <div class="expert-card" style="--card-color: #8B4513">
+          <div class="expert-avatar" style="background: #8B4513">韩</div>
+          <div class="expert-info">
+            <div class="expert-name">韩炳哲</div>
+            <div class="expert-title">哲学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #2E8B57">
+          <div class="expert-avatar" style="background: #2E8B57">弗</div>
+          <div class="expert-info">
+            <div class="expert-name">弗洛姆</div>
+            <div class="expert-title">心理学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #4169E1">
+          <div class="expert-avatar" style="background: #4169E1">项</div>
+          <div class="expert-info">
+            <div class="expert-name">项飙</div>
+            <div class="expert-title">人类学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #8B008B">
+          <div class="expert-avatar" style="background: #8B008B">卡</div>
+          <div class="expert-info">
+            <div class="expert-name">卡尼曼</div>
+            <div class="expert-title">认知心理学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #DAA520">
+          <div class="expert-avatar" style="background: #DAA520">赫</div>
+          <div class="expert-info">
+            <div class="expert-name">赫拉利</div>
+            <div class="expert-title">历史学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #CD5C5C">
+          <div class="expert-avatar" style="background: #CD5C5C">李</div>
+          <div class="expert-info">
+            <div class="expert-name">李诞</div>
+            <div class="expert-title">脱口秀演员</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 1</span>
+        <h2 class="question-topic"></h2>
+        <div class="question-divider"></div>
+        <p class="question-text"></p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6B9D">?</div>
+          <div class="stance-body">
+            <div class="stance-speaker"></div>
+            <div class="stance-text">我们正在经历一场「真实性的暴政」。在功绩社会中，主体不再被外部力量压迫，而是自我剥削。「展示真实」恰恰是这种自我剥削的最新形态——你必须把自己的一切都摊开，你的脆弱、你的不完美、你的焦虑，都成了你必须展示的「绩效」。社交媒体上的「无滤镜自拍」、「素颜直播」，看似是对虚假的反抗，实际上是透明社会的又一轮规训。海德格尔说的「本真性」（Eigentlichkeit）是一种向死而生的决断，而不是一种可以被观看、点赞和消费的商品。当真实被展示出来，它就已经不是真实了——它是真实的照片，而不是真实本身。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6B9D">?</div>
+          <div class="stance-body">
+            <div class="stance-speaker"></div>
+            <div class="stance-text">这个问题的核心在于「市场化人格」的深化。我在《占有还是存在》中区分了两种生存方式：占有式存在和存在式存在。「展示真实」属于占有式逻辑——你不是在「是」真实的，你是在「拥有」一种真实的形象。现代人把自己当作一件商品在市场上推销，「真实」不过是这件商品最新的卖点。一个人在朋友圈发「今天状态很差，素颜出镜」，这不是勇气，这是另一种形式的自我包装。真正的自我实现发生在不被观看的时刻——当你独自散步、当你在爱中忘记自我的时候。存在不需要观众。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6B9D">?</div>
+          <div class="stance-body">
+            <div class="stance-speaker"></div>
+            <div class="stance-text">我想从「附近的消失」这个角度来谈。现代人的生活越来越两极化：要么极度关注自我（自拍、自我叙事），要么极度关注远方（全球新闻、宏大叙事），而「附近」——也就是你身边真实的人际关系、社区互动——正在消失。「展示真实」之所以变成滤镜，是因为它发生在没有「附近」的真空里。你在网上展示「真实」，但没有人真的认识你，没有人能验证你的真实。这是一种「悬浮的真实」。我在田野调查中发现，那些真正有丰富社会关系的人，反而不太需要在网上展示什么——因为他们的「真实」活在关系里，而不是活在屏幕上。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6B9D">?</div>
+          <div class="stance-body">
+            <div class="stance-speaker"></div>
+            <div class="stance-text">从认知科学的角度，人类并不具备直接访问「真实自我」的能力。我们的「体验自我」（experiencing self）和「叙事自我」（narrating self）之间存在根本性的断裂。叙事自我不断地对体验进行编辑、重组和美化——这不是有意欺骗，而是大脑的基本运作方式。所以，当人们「展示真实」时，他们展示的是叙事自我编造的「真实故事」。框架效应在这里起关键作用：同样是说「我今天很焦虑」，你可以把它框架为「我很脆弱」，也可以框架为「我在成长」。选择哪种框架本身就是一种滤镜。我们永远无法绕过认知的加工直接触摸原始的自我。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6B9D">?</div>
+          <div class="stance-body">
+            <div class="stance-speaker"></div>
+            <div class="stance-text">从历史的长河来看，「自我」本身就是一个虚构的故事。在农业革命之前，人类不需要「真实的自我」这个概念。是后来的宗教、哲学和自由主义意识形态创造了「内在自我」的叙事，让我们相信自己有一个需要被发现和表达的「真我」。现在，算法正在接管这个叙事的功能。当你说「展示真实」时，实际上是算法在决定什么是值得被展示的「真实」——它根据你的点击、停留时间、互动模式来构建你的「真实画像」。数据主义的可怕之处在于：算法可能比你更了解你的「真实自我」。当那一天到来，「真实的自我」还有意义吗？</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6B9D">?</div>
+          <div class="stance-body">
+            <div class="stance-speaker"></div>
+            <div class="stance-text">我觉得这事儿特有意思。你知道脱口秀演员最擅长什么吗？就是把真实包装成段子，再把段子包装成真实。观众觉得你特别「真」，特别「敢说」，但其实你说的每一个「真心话」都经过了精心设计。这就是现在社交媒体上的「真实经济」。大家都在比赛谁更「真实」，谁更「敢晒素颜」，谁更「敢承认自己不行」。但你想想，如果你真的不在意别人的看法，你为什么要发出来呢？真正不在意的人，根本不会发。所以社交媒体上的「真实」，本质上是一种行为艺术——它表演的是「我不在表演」。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 2</span>
+        <h2 class="question-topic"></h2>
+        <div class="question-divider"></div>
+        <p class="question-text"></p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6B9D">?</div>
+          <div class="stance-body">
+            <div class="stance-speaker"></div>
+            <div class="stance-text">真实性标准的建构是一种「温柔的暴力」。传统社会的规训是说「你不许做这个」，而今天的规训是说「做你自己」。福柯式的规训权力并没有消失，而是变得更加隐蔽。平台算法奖励「真实」的内容——素颜比精修获得更多流量，脆弱比强大更容易传播。这不是算法的善意，而是注意力经济的策略。真实的情感——焦虑、抑郁、自我怀疑——是最好的内容燃料，因为它们能引发共鸣和互动。于是，「做你自己」变成了「把你最脆弱的部分交出来，让我们消费」。这是一种新形式的「自白技术」（confession technology），只不过告解的对象从上帝变成了算法。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6B9D">?</div>
+          <div class="stance-body">
+            <div class="stance-speaker"></div>
+            <div class="stance-text">消费文化对「真实」的收编是一个经典的心理操控过程。资本主义最擅长的就是把反叛变成商品。六十年代的「做你自己」是反文化运动的口号，现在它是苹果公司的广告语。「真实」被包装成一种生活方式品牌：你需要买特定的衣服才能看起来「不经意」，需要去特定的地方才能拍出「真实」的照片，需要使用特定的App才能展示「不加滤镜」的自己。这创造了一种新型的「营销人格」（marketing character）——一个人不是根据自己的内在需求来行动，而是根据市场对「真实」的定义来塑造自己。最讽刺的是，你甚至需要花钱才能变得「真实」。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6B9D">?</div>
+          <div class="stance-body">
+            <div class="stance-speaker"></div>
+            <div class="stance-text">我认为「真实」的定义权正在经历一场从地方性知识到平台性知识的转移。在传统社区中，什么是「真实的人」，是由你身边的人——邻居、同事、家人——通过长期互动来判断的。这种判断是缓慢的、多维的、有上下文的。但在社交媒体上，「真实」的判断变成了快速的、单维的、去语境化的。一个在小红书上「展示真实」的人，可能在现实生活中是一个完全不同的人，但没有人能验证。这就是我说的「附近的消失」的深层含义：我们失去了检验真实性的社会基础设施。当「真实」只能在屏幕上被展示，而不能在生活中被验证，它就必然变成一种表演。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6B9D">?</div>
+          <div class="stance-body">
+            <div class="stance-speaker"></div>
+            <div class="stance-text">从认知偏见的角度，人们对「真实」的判断充满了系统性错误。首先是「真实性偏见」（authenticity bias）：我们倾向于认为看起来「不完美」的信息更可信，但这种判断本身就可以被利用。营销人员早就发现了这一点——「不完美」的广告往往比精致的广告更有说服力。其次是「光环效应」（halo effect）：如果一个人在某一方面表现得「真实」，我们会倾向于认为他们在所有方面都是真实的。这就是为什么网红只需要在一两个方面「展示真实」，就能获得全面的信任。最后是「可得性启发」（availability heuristic）：我们更容易记住那些「真实」的戏剧性时刻，而忽略那些平淡但同样真实的日常。这些认知偏见共同构成了一个完美的操控框架。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6B9D">?</div>
+          <div class="stance-body">
+            <div class="stance-speaker"></div>
+            <div class="stance-text">历史上，「真实」的定义权经历了三次重大转移。第一次是从宗教到科学：真实不再由神启定义，而由实验证据定义。第二次是从科学到市场：真实不再由专家定义，而由消费者的选择定义——「真实」就是「卖得出去的」。第三次是从市场到算法：真实不再由人类判断定义，而由数据模式定义——「真实」就是「能引发互动的」。我们现在正处于第三次转移的过程中。抖音的推荐算法不关心什么是「真正的真实」，它只关心什么内容能让用户停留更长时间。如果「虚假的真实」比「真正的虚假」更能留住用户，算法就会选择前者。这不是阴谋论，这是算法的逻辑必然。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6B9D">?</div>
+          <div class="stance-body">
+            <div class="stance-speaker"></div>
+            <div class="stance-text">我觉得最搞笑的是，现在「真实」已经成了一种可以量化的KPI。你有多少粉丝是因为你「真实」而关注你的？你的「真实度」转化率是多少？你看，连「真实」都可以被优化了。我做脱口秀的时候发现一个规律：观众最喜欢的是「看起来没准备的表演」。你知道这种表演最难准备吗？你得花好几个小时练习怎么看起来没练习。这就是「真实」的现状——它变成了一种需要精心准备的即兴表演。而且最妙的是，一旦你揭穿这个逻辑，你反而显得更「真实」了。所以我现在说「一切都是表演」，观众觉得「哇，好真实」。你品品，这事儿是不是特荒诞？</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 3</span>
+        <h2 class="question-topic"></h2>
+        <div class="question-divider"></div>
+        <p class="question-text"></p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6B9D">?</div>
+          <div class="stance-body">
+            <div class="stance-speaker"></div>
+            <div class="stance-text">我的建议是「重新学会沉默」。不是逃避社交媒体的沉默，而是一种积极的、创造性的沉默——一种拒绝把一切都转化为可见内容的姿态。庄子说「大辩不言」，真正的智慧不需要被展示。我们需要重新发现「无聊」的价值——在无聊中，自我不是被表演的，而是被体验的。我最近在思考「倦怠社会」的出路：也许不是更努力地「做自己」，而是允许自己「不做自己」。不是展示真实，而是允许自己不被展示。这不是逃避，而是一种「否定性的自由」——从「必须真实」的义务中解放出来。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6B9D">?</div>
+          <div class="stance-body">
+            <div class="stance-speaker"></div>
+            <div class="stance-text">出路在于从「存在」（being）而非「拥有」（having）的角度重新理解自我。你不需要「拥有」一个真实的自我，你只需要「是」你自己。这两者的区别是：拥有意味着可以被展示、被评估、被比较；而存在只意味着活在当下。我建议三种实践：第一，「专注的爱」——全心全意地关注另一个人，而不是在关注的同时想着如何展示这种关注。第二，「无目的的创造」——写作、绘画、种花，不为了分享，只为了创造本身。第三，「主动的独处」——不是刷手机的独处，而是真正与自己相处的独处。在这些时刻，真实性不需要被展示，因为它就在那里。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6B9D">?</div>
+          <div class="stance-body">
+            <div class="stance-speaker"></div>
+            <div class="stance-text">我的建议是「重建附近」。不要在网上展示真实，而是在你身边的社区中实践真实。去认识你的邻居，去你常去的咖啡馆和老板聊天，去参加你所在社区的活动。在这些真实的互动中，你不需要展示什么——你的存在本身就是一种交流。「附近」的价值在于它提供了一种「被看见但不需要表演」的空间。你每天遛狗遇到的那个人，他看到的是真实的你——不是你精心策划的「真实」，而是你的疲惫、你的匆忙、你的无聊。这种「不被筛选的真实」才是我们应该追求的。不是在网上展示「不加滤镜的自拍」，而是在生活中接受「不加滤镜的自己」。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6B9D">?</div>
+          <div class="stance-body">
+            <div class="stance-speaker"></div>
+            <div class="stance-text">从认知科学的角度，我建议我们对「真实自我」这个概念本身保持怀疑。与其追求一个固定的「真实自我」，不如接受自我的流动性和多元性。你在不同的情境中表现出不同的面向，这不是虚伪，这是人类认知的正常运作。关键是区分两种「不一致」：一种是适应性的——你在工作中和在朋友面前表现不同，这是社会智能；另一种是病理性的——你完全失去了内在的一致性，不知道自己想要什么。对于前者，我们需要接受它；对于后者，我们需要反思它。但无论如何，追求一个「单一的真实自我」是一个认知幻觉。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6B9D">?</div>
+          <div class="stance-body">
+            <div class="stance-speaker"></div>
+            <div class="stance-text">面对算法时代，我建议两种策略：第一，「数据斋戒」——定期从数字世界中退出，重新体验没有被记录的生活。不是为了「找回真实」，而是为了提醒自己：你的存在不需要被数据化才有意义。第二，「元认知」——培养对自己思维过程的觉察。当你想要「展示真实」时，问问自己：这个冲动是从哪里来的？是算法在塑造你的欲望吗？是社交比较在驱动你的行为吗？这种反思本身就是一种自由。最后，我想说的是：也许「真正的自我」这个问题本身就是一个过时的概念。在21世纪，更有意义的问题可能是：「我想成为什么样的存在？」——这是一个面向未来的问题，而不是面向过去的问题。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #FF6B9D">?</div>
+          <div class="stance-body">
+            <div class="stance-speaker"></div>
+            <div class="stance-text">我的建议特简单：别太把自己当回事。你看，所有的焦虑都来自于「我要找到真实的自己」这件事。但你想想，你小时候在乎过「真实的自己」吗？你就是玩，就是笑，就是哭，没人问你这真不真实。所以我的建议是：少看点教你如何「做自己」的文章，多做点不需要展示给任何人看的事。比如我就喜欢在家发呆，什么都不干，也不发朋友圈说「我今天学会了享受无聊」。你知道最真实的时刻是什么吗？是你忘了自己在哪儿、忘了自己是谁的那些时刻。比如你看到一个特别好笑的笑话，你笑了，那一秒钟你不需要「做自己」，因为你已经是了。然后你就忘了，继续活着。这就是真实。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide insight-slide">
+      <div class="insight-glow"></div>
+      <div class="insight-content">
+        <span class="slide-tag">FINAL INSIGHT</span>
+        <h2 class="insight-title">最终洞见</h2>
+        <div class="insight-divider"></div>
+        <p class="insight-text"></p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">OPEN QUESTIONS</span>
+        <h2 class="slide-title">开放问题</h2>
+      </div>
+      <div class="oq-container">
+      </div>
+    </div>
+</div>
+
+<div class="nav-dots">
+      <button class="nav-dot active" data-idx="0"></button>
+      <button class="nav-dot" data-idx="1"></button>
+      <button class="nav-dot" data-idx="2"></button>
+      <button class="nav-dot" data-idx="3"></button>
+      <button class="nav-dot" data-idx="4"></button>
+      <button class="nav-dot" data-idx="5"></button>
+      <button class="nav-dot" data-idx="6"></button>
+      <button class="nav-dot" data-idx="7"></button>
+      <button class="nav-dot" data-idx="8"></button>
+      <button class="nav-dot" data-idx="9"></button>
+      <button class="nav-dot" data-idx="10"></button>
+      <button class="nav-dot" data-idx="11"></button>
+      <button class="nav-dot" data-idx="12"></button>
+</div>
+
+<script>
+
+    (function() {
+      const slideshow = document.getElementById('slideshow');
+      const progressBar = document.getElementById('progressBar');
+      const pageCounter = document.getElementById('pageCounter');
+      const dots = document.querySelectorAll('.nav-dot');
+      const total = 13;
+      let current = 0;
+      let wheelTimer = null;
+      let isScrolling = false;
+
+      function updateUI() {
+        const scrollLeft = slideshow.scrollLeft;
+        const slideWidth = slideshow.clientWidth;
+        current = Math.round(scrollLeft / slideWidth);
+        if (current < 0) current = 0;
+        if (current >= total) current = total - 1;
+
+        // Progress bar
+        const pct = ((current + 1) / total) * 100;
+        progressBar.style.width = pct + '%';
+
+        // Page counter
+        pageCounter.textContent = (current + 1) + ' / ' + total;
+
+        // Dots
+        dots.forEach(function(d, i) {
+          d.classList.toggle('active', i === current);
+        });
+      }
+
+      function goTo(idx) {
+        if (idx < 0) idx = 0;
+        if (idx >= total) idx = total - 1;
+        slideshow.scrollTo({ left: idx * slideshow.clientWidth, behavior: 'smooth' });
+        current = idx;
+        setTimeout(updateUI, 400);
+      }
+
+      // Keyboard
+      document.addEventListener('keydown', function(e) {
+        switch(e.key) {
+          case 'ArrowRight': case ' ': case 'PageDown':
+            e.preventDefault(); goTo(current + 1); break;
+          case 'ArrowLeft': case 'PageUp':
+            e.preventDefault(); goTo(current - 1); break;
+          case 'Home':
+            e.preventDefault(); goTo(0); break;
+          case 'End':
+            e.preventDefault(); goTo(total - 1); break;
+        }
+      });
+
+      // Mouse wheel with debounce
+      slideshow.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        if (wheelTimer) return;
+        wheelTimer = setTimeout(function() { wheelTimer = null; }, 600);
+        if (e.deltaY > 0 || e.deltaX > 0) {
+          goTo(current + 1);
+        } else {
+          goTo(current - 1);
+        }
+      }, { passive: false });
+
+      // Nav dots
+      dots.forEach(function(dot, i) {
+        dot.addEventListener('click', function() { goTo(i); });
+      });
+
+      // Scroll event
+      slideshow.addEventListener('scroll', function() {
+        if (!isScrolling) {
+          isScrolling = true;
+          requestAnimationFrame(function() {
+            updateUI();
+            isScrolling = false;
+          });
+        }
+      });
+
+      // Resize
+      window.addEventListener('resize', function() { goTo(current); });
+
+      // Init
+      updateUI();
+    })();
+    
+</script>
+
+</body>
+</html>

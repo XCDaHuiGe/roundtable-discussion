@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>如果「努力就能成功」是个谎言，普通人的价值在哪</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0A0A0A;
+      --bg2: #111111;
+      --bg3: #1A1A1A;
+      --text: #F5F5F5;
+      --text2: #A0A0A0;
+      --text3: #606060;
+      --accent: #00E676;
+      --accent-light: #69F0AE;
+      --accent-dark: #00C853;
+      --clash: #FF5252;
+      --insight: #00BFA5;
+      --card-bg: rgba(0,230,118,0.08);
+      --card-border: rgba(0,230,118,0.2);
+      --glow: rgba(0,230,118,0.3);
+      --slide-w: 100vw;
+      --slide-h: 100vh;
+      --font-display: 'Noto Serif SC', serif;
+      --font-body: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    html { font-size: 16px; scroll-behavior: auto; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      overflow-y: hidden;
+      height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Slideshow container ─── */
+    .slideshow {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+    .slideshow::-webkit-scrollbar { display: none; }
+    .slideshow { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* ─── Slide ─── */
+    .slide {
+      flex: 0 0 var(--slide-w);
+      width: var(--slide-w);
+      height: var(--slide-h);
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 4rem 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ─── Progress bar ─── */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      z-index: 1000;
+      transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      box-shadow: 0 0 10px var(--glow);
+    }
+
+    /* ─── Page counter ─── */
+    .page-counter {
+      position: fixed;
+      top: 1.5rem;
+      right: 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text3);
+      z-index: 1000;
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Nav dots ─── */
+    .nav-dots {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 1000;
+      padding: 8px 16px;
+      background: rgba(10,10,10,0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      outline: none;
+    }
+    .nav-dot:hover { background: var(--text2); transform: scale(1.3); }
+    .nav-dot.active {
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--glow);
+      transform: scale(1.2);
+    }
+
+    /* ─── Slide header ─── */
+    .slide-header {
+      width: 100%;
+      max-width: 1000px;
+      margin-bottom: 2.5rem;
+    }
+    .slide-tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+    .slide-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    /* ─── Cover slide ─── */
+    .cover-slide {
+      background: radial-gradient(ellipse at 30% 50%, rgba(20,20,20,1) 0%, var(--bg) 70%);
+    }
+    .cover-glow {
+      position: absolute;
+      top: 50%;
+      left: 30%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .cover-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .cover-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      margin-bottom: 2rem;
+    }
+    .cover-title {
+      font-family: var(--font-display);
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 1rem;
+      max-width: 700px;
+    }
+    .cover-subtitle {
+      font-size: 1.1rem;
+      color: var(--text2);
+      margin-bottom: 1.5rem;
+    }
+    .cover-books {
+      font-size: 0.9rem;
+      color: var(--text3);
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+    .cover-stats {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .cover-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .cover-stat-num {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .cover-stat-label {
+      font-size: 0.85rem;
+      color: var(--text3);
+      margin-top: 0.25rem;
+    }
+    .cover-stat-divider {
+      width: 1px;
+      height: 40px;
+      background: var(--text3);
+      opacity: 0.3;
+    }
+    .cover-experts {
+      font-size: 0.9rem;
+      color: var(--text2);
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Expert grid ─── */
+    .expert-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 1000px;
+    }
+    .expert-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      transition: all 0.3s ease;
+    }
+    .expert-card:hover {
+      border-color: var(--card-color, var(--accent));
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      transform: translateY(-2px);
+    }
+    .expert-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0A0A0A;
+      flex-shrink: 0;
+    }
+    .expert-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .expert-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+    .expert-title {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-bottom: 0.5rem;
+    }
+    .expert-stance {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 8px;
+      border-radius: 3px;
+      margin-bottom: 0.5rem;
+    }
+    .expert-belief {
+      font-size: 0.8rem;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+
+    /* ─── Question slide ─── */
+    .question-slide {
+      background: radial-gradient(ellipse at 50% 50%, rgba(20,20,20,1) 0%, var(--bg) 70%);
+    }
+    .question-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    .question-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .question-topic {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 1.5rem 0;
+      line-height: 1.3;
+    }
+    .question-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--accent);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .question-text {
+      font-size: 1.15rem;
+      color: var(--text2);
+      line-height: 1.8;
+    }
+
+    /* ─── Stances ─── */
+    .stances-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .stance-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .stance-item:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .stance-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0A0A0A;
+      flex-shrink: 0;
+    }
+    .stance-body {
+      flex: 1;
+    }
+    .stance-speaker {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .stance-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Clash ─── */
+    .clash-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .clash-block {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+    }
+    .clash-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clash);
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .clash-item {
+      margin-bottom: 1rem;
+    }
+    .clash-item:last-child { margin-bottom: 0; }
+    .clash-speaker {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .clash-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      padding-left: 1rem;
+      border-left: 2px solid var(--card-border);
+    }
+    .clash-attack .clash-text {
+      border-left-color: var(--clash);
+    }
+    .clash-counter .clash-text {
+      border-left-color: var(--insight);
+    }
+
+    /* ─── Reality cases ─── */
+    .cases-container {
+      width: 100%;
+      max-width: 1000px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .case-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .case-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .case-header {
+      margin-bottom: 1rem;
+    }
+    .case-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .case-source {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-top: 0.25rem;
+    }
+    .case-content {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .case-outcome, .case-lesson {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+    .case-label {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-right: 0.5rem;
+    }
+
+    /* ─── Cost discussion ─── */
+    .cost-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .cost-scenario {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-scenario-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-scenario-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .cost-analysis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .cost-dimension {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .cost-value {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .cost-worst {
+      background: rgba(255,71,87,0.08);
+      border: 1px solid rgba(255,71,87,0.2);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-worst-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clash);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-worst-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .cost-survivor {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .cost-survivor-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-survivor-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Human nature ─── */
+    .hn-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .hn-question {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .hn-analysis {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+    }
+    .hn-examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .hn-example {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .hn-conclusion {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .hn-conclusion-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .hn-conclusion-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Cognitive upgrade ─── */
+    .upgrade-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .upgrade-block {
+      display: flex;
+      gap: 1.5rem;
+      align-items: stretch;
+      margin-bottom: 1.5rem;
+    }
+    .upgrade-before, .upgrade-after {
+      flex: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .upgrade-before {
+      border-color: rgba(255,71,87,0.2);
+      background: rgba(255,71,87,0.05);
+    }
+    .upgrade-after {
+      border-color: rgba(0,212,170,0.2);
+      background: rgba(0,212,170,0.05);
+    }
+    .upgrade-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+    .upgrade-before .upgrade-label { color: var(--clash); }
+    .upgrade-after .upgrade-label { color: var(--insight); }
+    .upgrade-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .upgrade-arrow {
+      display: flex;
+      align-items: center;
+      font-size: 2rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .upgrade-complexity, .upgrade-actionable {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .upgrade-complexity-label, .upgrade-actionable-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .upgrade-complexity-text, .upgrade-actionable-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Final insight ─── */
+    .insight-slide {
+      background: radial-gradient(ellipse at 50% 50%, rgba(0,212,170,0.05) 0%, var(--bg) 60%);
+    }
+    .insight-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0,212,170,0.15) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .insight-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .insight-title {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--insight);
+      margin: 1.5rem 0;
+    }
+    .insight-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--insight);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .insight-text {
+      font-size: 1.1rem;
+      color: var(--text2);
+      line-height: 1.9;
+    }
+
+    /* ─── Open questions ─── */
+    .oq-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .oq-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .oq-item:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+    .oq-num {
+      font-family: var(--font-mono);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+      width: 32px;
+      text-align: center;
+    }
+    .oq-text {
+      font-size: 1rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      .slide { padding: 2rem 1.5rem; }
+      .cover-title { font-size: 2rem; }
+      .question-topic { font-size: 1.8rem; }
+      .slide-title { font-size: 1.6rem; }
+      .expert-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+      .upgrade-block { flex-direction: column; }
+      .upgrade-arrow { transform: rotate(90deg); justify-content: center; }
+      .cases-container { grid-template-columns: 1fr; }
+      .cost-analysis { grid-template-columns: 1fr; }
+      .hn-examples { grid-template-columns: 1fr; }
+      .nav-dots { display: none; }
+    }
+    @media (max-width: 480px) {
+      .expert-grid { grid-template-columns: 1fr; }
+      .cover-stats { gap: 1rem; }
+      .cover-stat-num { font-size: 2rem; }
+    }
+    
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<div class="page-counter" id="pageCounter">1 / 28</div>
+
+<div class="slideshow" id="slideshow">
+
+    <div class="slide cover-slide">
+      <div class="cover-glow"></div>
+      <div class="cover-content">
+        <div class="cover-badge">ROUNDTABLE DISCUSSION</div>
+        <h1 class="cover-title">如果「努力就能成功」是个谎言，普通人的价值在哪</h1>
+        
+        
+        <div class="cover-stats">
+          <div class="cover-stat">
+            <span class="cover-stat-num">6</span>
+            <span class="cover-stat-label">位专家</span>
+          </div>
+          <div class="cover-stat-divider"></div>
+          <div class="cover-stat">
+            <span class="cover-stat-num">3</span>
+            <span class="cover-stat-label">轮讨论</span>
+          </div>
+        </div>
+        <div class="cover-experts">项飙 · 韩炳哲 · 芒格 · 尼采 · 老子 · 李诞</div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">EXPERTS</span>
+        <h2 class="slide-title">专家阵营</h2>
+      </div>
+      <div class="expert-grid">
+        <div class="expert-card" style="--card-color: #4A90D9">
+          <div class="expert-avatar" style="background: #4A90D9">项</div>
+          <div class="expert-info">
+            <div class="expert-name">项飙</div>
+            <div class="expert-title">人类学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #8B5CF6">
+          <div class="expert-avatar" style="background: #8B5CF6">韩</div>
+          <div class="expert-info">
+            <div class="expert-name">韩炳哲</div>
+            <div class="expert-title">哲学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #059669">
+          <div class="expert-avatar" style="background: #059669">芒</div>
+          <div class="expert-info">
+            <div class="expert-name">芒格</div>
+            <div class="expert-title">投资家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #DC2626">
+          <div class="expert-avatar" style="background: #DC2626">尼</div>
+          <div class="expert-info">
+            <div class="expert-name">尼采</div>
+            <div class="expert-title">哲学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #D97706">
+          <div class="expert-avatar" style="background: #D97706">老</div>
+          <div class="expert-info">
+            <div class="expert-name">老子</div>
+            <div class="expert-title">道家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #F59E0B">
+          <div class="expert-avatar" style="background: #F59E0B">李</div>
+          <div class="expert-info">
+            <div class="expert-name">李诞</div>
+            <div class="expert-title">脱口秀演员</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 1</span>
+        <h2 class="question-topic">&#x27;努力就能成功&#x27;的真相：是激励还是欺骗？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">当努力不再保证成功，这句话的本质是什么——善意的激励，还是系统性的谎言？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4A90D9">项</div>
+          <div class="stance-body">
+            <div class="stance-speaker">项飙</div>
+            <div class="stance-text">这句话的真正问题在于它制造了一种&#x27;悬浮&#x27;状态。人们被悬在永远不够努力的焦虑中，既不能回到过去，也无法抵达承诺的未来。我观察到的现象是：越是社会流动性降低的时代，&#x27;努力叙事&#x27;就越响亮。这不是巧合。当&#x27;附近&#x27;消失——你不再了解邻居、不再关心社区、不再感知脚下的土地——你就只剩下一条向上的抽象阶梯。问题是，这条阶梯的大多数台阶是看不见的，但人们被告知只要爬得够快就一定能到顶。这是一种结构性的欺骗：把系统性的不平等包装成个体性的道德问题。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8B5CF6">韩</div>
+          <div class="stance-body">
+            <div class="stance-speaker">韩炳哲</div>
+            <div class="stance-text">&#x27;努力就能成功&#x27;是一个完美的功绩社会话术。它让剥削者变得隐形——你不再是被资本家剥削，你是在&#x27;投资自己&#x27;。功绩社会最精妙的地方在于：它不需要外在的压迫者，因为每个人都在进行自我剥削。你不是在为老板加班，你是在&#x27;提升竞争力&#x27;。倦怠不是系统的失败，而是你不够努力的证据。这比福柯说的规训社会高明得多——你不需要监狱，因为每个人都是自己的狱卒。当失败者开始自责而非质疑系统时，这个谎言就已经完成了它的使命。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #059669">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">让我从逆向思维来看这个问题。如果&#x27;努力就能成功&#x27;是真的，那么世界上最努力的人应该是最成功的。但现实是：煤矿工人、快递员、流水线工人——他们的工作强度可能超过大多数CEO。为什么他们没有成为首富？因为这个说法忽略了几个关键变量：起点、时机、资本、信息不对称、和纯粹的运气。我见过太多在错误方向上拼命努力的人，也见过在正确时机做了正确事的&#x27;懒人&#x27;。真正的智慧不是更努力，而是知道在什么地方努力，以及什么时候停止努力。能力圈的核心不是扩张，是知道自己边界在哪。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #DC2626">尼</div>
+          <div class="stance-body">
+            <div class="stance-speaker">尼采</div>
+            <div class="stance-text">此言为弱者之安慰，亦为强者之枷锁。若努力即成功，则失败者必为懒惰之徒——这是何等残忍的道德审判！真正的强者从不依循他人所设之&#x27;成功&#x27;阶梯而行。权力意志不在于攀登他人之山，而在于创造自己的山峰。那些被告知&#x27;只要努力就能成功&#x27;的人，实则被剥夺了最根本的自由——定义何为成功、何为有价值之人生的自由。重估一切价值的第一步，便是抛弃这套由怯懦之人为怯懦之人编织的道德体系。超人不是更努力的人，而是敢于否定既有价值、为自身立法的人。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #D97706">老</div>
+          <div class="stance-body">
+            <div class="stance-speaker">老子</div>
+            <div class="stance-text">天下皆知成功之为成功，斯已失败矣。故有无相生，难易相成，长短相形，高下相倾。世人汲汲于功名，如水之就下，不知上善若水，水善利万物而不争。夫唯不争，故天下莫能与之争。努力求成者，日出而作，日入而息，不知天地自有其序。揠苗助长，苗反枯槁。功成而弗居，夫唯弗居，是以不去。道法自然，非人力所能强也。执着于成功者，犹握沙愈紧而失愈多。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #F59E0B">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">我特别喜欢这句话，因为它给了我们普通人一个特别好的甩锅机会——不是我不努力，是这个系统有问题。但你仔细想想，谁最喜欢说&#x27;努力就能成功&#x27;？是已经成功的人。这就特别有意思了，就像中了彩票的人跟你说&#x27;买彩票就能发财&#x27;。努力当然有用，但它的作用可能跟我们想象的不太一样。努力大概率能让你从三分到六分，但从六分到九分，那靠的是投胎、运气和时代的风口。我做过最诚实的一件事就是承认：我能站在这里讲脱口秀，百分之四十是努力，百分之六十是我碰巧在一个还没有太多人讲脱口秀的时间点入场。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #8B5CF6">韩炳哲 → 项飙</div>
+            <div class="clash-text">项飙先生用&#x27;附近&#x27;来解释现代人的困境很精彩，但我想追问更深层的结构：附近为什么消失？不是因为人们不想关心，而是功绩社会要求你把每一分钟都投入到&#x27;自我优化&#x27;中。关心邻居、参与社区？那是&#x27;低效&#x27;的时间分配。附近的消失不是空间问题，是时间的殖民化——你的时间被效率逻辑全面占领了，根本没有余裕去建立无用的、不生产的关系。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #4A90D9">项飙</div>
+              <div class="clash-text">项飙回应道：韩炳哲说得对，但我想补充一个被忽视的维度——附近消失的另一个原因是&#x27;跳板心态&#x27;。人们不再把自己看作社区的一部分，而是看作&#x27;路过的人&#x27;。每个地方都是跳板，每个人都是工具。这种心态不是功绩社会单独造成的，它跟全球化、城市化、以及&#x27;流动性崇拜&#x27;有关。人们不是没有时间关心附近，而是觉得关心附近&#x27;不值得&#x27;——因为你的未来在&#x27;远方&#x27;。这才是最可怕的地方。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #059669">芒格 → 李诞</div>
+            <div class="clash-text">李诞先生说百分之四十是努力、百分之六十是运气，这个比例本身就是一个典型的幸存者偏差。你是在成功之后回头看的。但对于那些同样在时间点入场、同样努力、却没有成功的人来说，他们的比例可能是百分之九十是运气不好、百分之十是不够努力。你用个人经验来概括普遍规律，这正是我最警惕的思维陷阱。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #F59E0B">李诞</div>
+              <div class="clash-text">李诞笑着说：芒格先生说得对，我承认这个。但我没有用个人经验来概括普遍规律啊，我是在说我的个人经验就是个人经验——恰恰是&#x27;努力就能成功&#x27;这句话在用个人经验概括普遍规律。我只是提供了一个反例，而且是一个自嘲的反例。您说的幸存者偏差我同意，但我想问的是：那些没能幸存的人，他们的故事谁来讲？他们的努力算什么？这可能才是我们今天讨论的核心。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">日本&#x27;失去的一代&#x27;</div>
+            <div class="case-source">日本社会经济学研究</div>
+          </div>
+          <div class="case-content">1990年代日本泡沫经济崩溃后，大量年轻人面临终身雇佣制瓦解、就业冰河期的困境。这一代人从小被教育&#x27;只要努力学习、进入好大学、进入好公司，就能过上好生活&#x27;。但当他们毕业时，这个路径本身已经不存在了。大量高学历年轻人沦为派遣工、自由职业者，收入仅为正式员工的60-70%。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 超过200万人长期处于非正规就业状态，部分人至今未能翻身。&#x27;努力就能成功&#x27;这句话在他们口中变成了最讽刺的谎言。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 个人努力在系统性经济危机面前极其脆弱。制度环境才是决定努力回报率的关键变量。
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">外卖骑手的算法困境</div>
+            <div class="case-source">《人物》杂志调查报道</div>
+          </div>
+          <div class="case-content">外卖平台通过算法不断压缩配送时间，骑手为了完成订单不得不逆行、闯红灯、超速。平台告诉骑手：&#x27;多劳多得，努力就能赚更多。&#x27;但实际上，当所有人都更努力时，单价会被进一步压低。骑手陷入了一个&#x27;越努力越疲惫，越疲惫越危险，越危险越焦虑，越焦虑越努力&#x27;的恶性循环。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 骑手伤亡率居高不下，收入不升反降。&#x27;努力&#x27;变成了系统压榨的燃料。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 当&#x27;努力&#x27;被系统性地工具化时，它不再是通往成功的路径，而是自我剥削的陷阱。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">当一个普通人把&#x27;努力就能成功&#x27;作为人生信条，并全力投入时</span>
+        </div>
+        <div class="cost-analysis">
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">一个人用二十年的青春追逐一个被包装过的谎言，身心俱疲，关系尽毁，最终不仅没有&#x27;成功&#x27;，还失去了定义&#x27;成功&#x27;的能力。他站在人生中途回望，发现自己既没有到达目的地，也回不了出发点——他成了项飙所说的&#x27;悬浮的人&#x27;。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">我们看到的&#x27;努力成功&#x27;案例，都是幸存者在讲述他们的故事。那些同样努力却没有成功的人，沉默在统计数字里。正如芒格所说：&#x27;你不能通过观察跳蚤马戏团里跳得最高的跳蚤来研究跳蚤的跳跃能力——你需要看所有跳蚤。&#x27;成功者的故事是一个被精心筛选过的样本，不具有普遍参考价值。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">为什么即使知道&#x27;努力就能成功&#x27;可能是谎言，人们仍然愿意相信它？</div>
+        <div class="hn-analysis">这涉及心理学中的&#x27;公正世界假设&#x27;（Just-World Hypothesis）：人类有一种深层需求，相信世界是公正的，好人有好报，努力有回报。承认世界可能不公正，意味着承认自己的命运可能不由自己掌控——这对大多数人来说是不可承受的存在性焦虑。&#x27;努力就能成功&#x27;提供了一个简单的因果叙事，让世界变得可理解、可预测、可控制。放弃这个叙事，就像松开悬崖边的最后一根绳索。</div>
+        <div class="hn-examples">
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">人们不是不知道这个信条可能是假的，而是不敢知道。&#x27;努力就能成功&#x27;不仅是一个认知框架，更是一个心理安全网。放弃它，不是变得更聪明那么简单——而是需要极大的勇气去面对一个不确定的、可能不公正的世界。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">成功 = 努力 × 时间。如果没成功，一定是还不够努力或者时间还不够长。失败是个人的问题。</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">成功 = f(起点, 时代, 资源, 信息, 关系, 运气, 努力)。努力是变量之一，但可能不是权重最大的那个。失败往往是系统性的，不是个人的。更重要的是：&#x27;成功&#x27;本身的定义就是被建构的，它不是客观存在，而是特定时代的特定叙事。</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">从单变量线性思维升级到多变量非线性思维，并进一步质疑变量本身的合法性——不是&#x27;如何更好地努力&#x27;，而是&#x27;为什么我的人生必须用努力来证明价值&#x27;。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">1) 重新定义你自己的&#x27;成功&#x27;，不使用任何社会现成的模板；2) 把精力分配从&#x27;拼命向前冲&#x27;调整为&#x27;构建支持系统&#x27;——包括关系、健康、心理韧性；3) 学会区分&#x27;有意义的努力&#x27;和&#x27;被系统裹挟的努力&#x27;；4) 接受不确定性，把人生看作探索而非竞赛。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 2</span>
+        <h2 class="question-topic">普通人的价值：如果不出人头地，人生还有意义吗？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">在一个崇尚&#x27;赢家通吃&#x27;的社会里，一个注定不会&#x27;成功&#x27;的普通人，如何确认自己存在的价值？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4A90D9">项</div>
+          <div class="stance-body">
+            <div class="stance-speaker">项飙</div>
+            <div class="stance-text">我认为当代最大的精神危机之一，就是&#x27;附近的消失&#x27;导致的价值锚定丧失。过去，一个人的价值是嵌入在具体的社会关系中的——你是张木匠、李裁缝、王家的大儿子。你的价值来自你在一个具体的社区里扮演的具体角色。但现在，人们被从这些具体关系中连根拔起，扔进一个抽象的、全国性的、甚至全球性的竞争场域。在这个场域里，你不再是一个具体的人，你是一个&#x27;月入五千的普通人&#x27;。当你的价值被简化为一个收入数字时，你当然会觉得自己的人生没有意义。问题不在你，在于你被迫进入了一个错误的评价体系。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8B5CF6">韩</div>
+          <div class="stance-body">
+            <div class="stance-speaker">韩炳哲</div>
+            <div class="stance-text">功绩社会最残酷的地方在于：它让你相信&#x27;不出人头地&#x27;等同于&#x27;不够好&#x27;。这不是外在的审判，而是内化的自我审判。古代社会有等级制度，但至少人们知道自己的位置，不会因此自责。功绩社会告诉你&#x27;人人平等&#x27;、&#x27;你什么都可以成为&#x27;，然后当你没有成为任何人的时候，你只能怪自己。这种&#x27;可能性的暴力&#x27;比等级制度更可怕——它把结构性的限制转化成了个人的失败。普通人不是没有价值，而是被一个扭曲的评价系统剥夺了看到自身价值的能力。倦怠，不是因为太累，而是因为太绝望。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #059669">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">让我讲一个投资的道理。在股市里，90%的散户跑不赢指数基金。但很少有人因此觉得自己&#x27;没有价值&#x27;——他们知道自己只是普通人，做好自己的本职工作，过好自己的生活。为什么一到人生这个话题上，普通人就觉得自己必须&#x27;跑赢大盘&#x27;才有价值？因为我们被灌输了一种错误的预期管理。一个明智的投资者知道自己的能力圈在哪，不会去追自己不懂的东西。一个明智的人生策略也是如此：在你能控制的范围内做到最好，而不是去和别人比那些你根本无法控制的东西。幸福的关键不是成为最好的，而是在自己的能力圈内找到确定性。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #DC2626">尼</div>
+          <div class="stance-body">
+            <div class="stance-speaker">尼采</div>
+            <div class="stance-text">世间最大的悲剧，非失败本身，乃以他人之尺量己之短长。众人追逐所谓&#x27;成功&#x27;，犹如飞蛾扑火——得到的不是光明，而是焚身之痛。人生之价值不在登顶，在于攀登本身；不在征服，在于创造。苏格拉底饮鸩而死，世人谓之失败；然其思想之火，燃至今而不灭。超人之超，非超越他人，乃超越昨日之己。一人若能忠实于己，活出独一无二之生命形态，纵使世人不识，亦胜于千万庸碌之辈。价值从不由他人判定——若如此，你便永远是他人的奴隶。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #D97706">老</div>
+          <div class="stance-body">
+            <div class="stance-speaker">老子</div>
+            <div class="stance-text">天地不仁，以万物为刍狗。天地不偏爱任何人，故万物各有其位、各得其所。人之所苦，在于以人为之高低贵贱，强分天地自然之物。江河不与山峰争高，山峰不与江河争远。大鹏一飞九万里，蜩与学鸠笑之——然蜩与学鸠各适其性，何辱之有？五色令人目盲，五音令人耳聋。驰骋畋猎令人心发狂。世人以外物定义价值，如以镜中之影为己。真正的价值，不在于你拥有什么、成为什么，而在于你是否回到了自己的本真。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #F59E0B">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">我特别理解这个问题，因为我就是个普通人啊。我经常跟自己说：&#x27;你就是一个会讲段子的人，别把自己当什么意见领袖。&#x27;但说实话，当我看到别人年入千万、住别墅、开豪车的时候，我也会焦虑。这是人之常情，你没法用一句&#x27;不要比&#x27;来解决。但后来我想明白一件事：人生的意义不是一个排名问题。你不会因为吃了一顿好吃的饭就问&#x27;这顿饭在所有饭里排第几&#x27;，你只会说&#x27;好吃&#x27;。那为什么人生非要排名呢？也许普通人的价值就在于——你可以不参加排名。这听起来像躺平，但其实是一种很奢侈的自由。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #8B5CF6">韩炳哲 → 老子</div>
+            <div class="clash-text">老子的智慧深邃，但有一个前提可能不再成立：古代社会有明确的&#x27;位&#x27;——你是农夫、是工匠、是士人，你的社会角色是确定的。但现代社会打破了所有固定的位置。你被要求在没有任何确定性的情况下&#x27;自然&#x27;地活着，这几乎是不可能的任务。现代人的焦虑不是因为他们不想&#x27;归真返璞&#x27;，而是因为他们根本不知道自己的&#x27;真&#x27;是什么——因为所有的社会参照系都已经被摧毁了。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #D97706">老子</div>
+              <div class="clash-text">老子答曰：汝言甚是，然亦非是。古人不知&#x27;真&#x27;，非因无参照，乃因参照太多。五色令人目盲，非色之过，乃追逐色者之过。社会之变如四季之更替，春去秋来，花开花落，此乃常道。&#x27;真&#x27;不在于社会给你什么位置，而在于你是否被位置所困。水无常形，随器而变，然水之性不变。人亦如是——身份可变，角色可变，但守住内心那份清明，便是归真。知其不可奈何而安之若命，此非消极，乃大智慧也。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #4A90D9">项飙 → 芒格</div>
+            <div class="clash-text">芒格先生的&#x27;能力圈&#x27;理论有一个隐含前提：你有一个可以自主选择的能力圈。但对于很多普通人来说，他们根本没有什么&#x27;能力圈&#x27;——他们只有一个不得不接受的生存空间。快递员没有&#x27;选择&#x27;成为快递员，他是在特定的社会结构、教育机会、家庭条件下，&#x27;被成为&#x27;了快递员。用投资的逻辑来类比人生，忽略了人和股票的根本区别：股票可以选择不买，但人不能选择不出生。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #059669">芒格</div>
+              <div class="clash-text">芒格回应道：项飙先生说得有道理，我确实经常用投资的框架来思考问题，有时候会忽略人的处境的复杂性。但我想指出的是：即使是快递员，也有他的能力圈——他的体力、他的路线规划能力、他与客户的关系。我从来不说能力圈就是事业上的能力圈，它是一个更广泛的概念：你知道什么是你能影响的，什么是你不能影响的，然后把精力集中在你能影响的范围里。这不是在为不平等辩护，而是在说：即使在不公平的环境里，人依然有选择的余地——虽然这个余地可能很小。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">日本低欲望社会的启示</div>
+            <div class="case-source">大前研一《低欲望社会》</div>
+          </div>
+          <div class="case-content">日本年轻一代中，越来越多的人选择不买房、不买车、不结婚、不消费。外界批评他们&#x27;没有上进心&#x27;，但深入了解后发现，这代人并不是懒惰，而是在经历了经济泡沫破裂、终身雇佣制瓦解后，选择了一种不同的生活方式。他们不再追求&#x27;出人头地&#x27;，而是追求&#x27;刚好够用&#x27;的生活质量。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 部分人的幸福感反而高于上一代拼命工作的&#x27;社畜&#x27;。日本社会对&#x27;普通人&#x27;的包容度也在逐渐提高。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 当社会不再用单一的&#x27;成功&#x27;标准来衡量所有人时，普通人反而有可能过上更有质量的生活。问题不在于&#x27;普通人没有价值&#x27;，而在于社会没有给普通人留出有价值的生活空间。
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">北欧的&#x27;詹代法则&#x27;</div>
+            <div class="case-source">北欧社会文化研究</div>
+          </div>
+          <div class="case-content">北欧国家有一种名为&#x27;詹代法则&#x27;（Janteloven）的社会规范：不要以为你比别人特别，不要以为你比别人优秀。这套法则虽然有压抑个性的负面效果，但也创造了一种社会氛围：普通人的生活被尊重，&#x27;不出人头地&#x27;不是耻辱，而是正常。北欧国家的幸福指数常年位居全球前列。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 社会整体幸福感高，贫富差距小，普通人的生活质量远高于&#x27;赢家通吃&#x27;社会。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 普通人是否有价值，很大程度上取决于社会的文化叙事。在尊重平凡的文化中，普通人能活得更好。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">当一个普通人被社会不断告知&#x27;你不够好&#x27;时</span>
+        </div>
+        <div class="cost-analysis">
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">一个人终其一生都在追逐一个他永远达不到的&#x27;成功&#x27;标准，直到临终才发现，他从未真正为自己活过一天。他的一生，是别人期望的倒影，不是自己的故事。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">我们看到的&#x27;普通人逆袭&#x27;故事，都是被精心筛选的极少数。那些沉默的大多数——既没有逆袭，也没有彻底沉沦，只是平凡地活着的人——他们的故事不被讲述，因为&#x27;没有卖点&#x27;。但正是这些沉默的大多数，构成了社会的底座。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">人类为什么如此害怕&#x27;普通&#x27;？</div>
+        <div class="hn-analysis">这涉及存在主义心理学的核心问题：人需要感觉自己是&#x27;特别的&#x27;，才能对抗存在的虚无感。欧文·亚隆称之为&#x27;独特性需求&#x27;——每个人都需要感觉自己是独一无二的、不可替代的。当社会告诉你&#x27;你是普通的、可替代的&#x27;时，它实际上是在触碰你最深层的存在恐惧。人们追逐&#x27;成功&#x27;，本质上不是为了金钱或地位，而是为了证明&#x27;我是特别的，我活这一世是有意义的&#x27;。</div>
+        <div class="hn-examples">
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">害怕普通，本质上是害怕不存在。但悖论在于：当你能接受自己的普通时，你反而获得了一种深刻的自由——你不再需要通过&#x27;特别&#x27;来证明自己的存在。这种自由，可能比任何&#x27;成功&#x27;都更接近真正的幸福。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">普通 = 平庸 = 没有价值。人生的意义在于超越普通人，成为&#x27;不普通&#x27;的人。</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">普通 = 大多数人的真实状态。价值不在于是否&#x27;出人头地&#x27;，而在于是否活出了属于自己的生活。&#x27;普通&#x27;不是贬义词，它是一种客观描述，就像&#x27;大多数人都是两只眼睛&#x27;一样中性。</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">从二元对立（普通 vs 不普通）升级到多元光谱：人可以在不同维度上有不同的表现，&#x27;普通&#x27;在某个维度上可能意味着&#x27;不普通&#x27;在另一个维度上。更重要的是：质疑&#x27;普通/不普通&#x27;这个分类本身的合理性。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">1) 建立自己的价值坐标系，而非借用社会的排名系统；2) 重新发现&#x27;附近&#x27;的价值——你的家人、邻居、社区需要你，这本身就是意义；3) 做一些&#x27;无用&#x27;的事——不为成功，只为享受；4) 接受&#x27;普通&#x27;不是失败，是解放。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 3</span>
+        <h2 class="question-topic">重新定义成功：不靠排名的人生怎么过？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">如果我们放弃用&#x27;排名&#x27;来定义人生，什么样的生活方式是值得过的？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4A90D9">项</div>
+          <div class="stance-body">
+            <div class="stance-speaker">项飙</div>
+            <div class="stance-text">我觉得&#x27;重新定义成功&#x27;的起点，是重建&#x27;附近&#x27;。不要想什么宏大叙事，先从最基本的事情开始：认识你的邻居，了解你住的这条街，关心你所在社区正在发生的事。这些听起来很小的事，其实是在重建人与人之间的具体联系。当你的价值感来自具体的关系——&#x27;我是那个每天给独居老人送饭的人&#x27;、&#x27;我是那个修好了社区长椅的人&#x27;——你就不需要来自抽象排名的确认。成功不是一个终点，是一种状态：你和周围的人、和你所在的地方，有一种真实而深入的连接。流动的现代人最缺的，就是这种扎根感。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8B5CF6">韩</div>
+          <div class="stance-body">
+            <div class="stance-speaker">韩炳哲</div>
+            <div class="stance-text">功绩社会的问题在于它把所有的行为都变成了&#x27;生产&#x27;——你要么在生产价值，要么在浪费时间。但人类最珍贵的体验往往是&#x27;非生产性&#x27;的：发呆、散步、无所事事地聊天、看一场不为了学到任何东西的电影。我提出过&#x27;沉思的生活&#x27;这个概念——不是冥想那种有目标的&#x27;正念&#x27;，而是真正意义上的无所事事。当你能够什么都不做而不感到焦虑时，你就已经从功绩社会的逻辑中解脱了一半。真正的自由不是&#x27;我可以做任何事&#x27;，而是&#x27;我可以不做任何事&#x27;。成功的反面不是失败，是倦怠；成功的替代不是躺平，是&#x27;深度的无聊&#x27;——那种让你重新感受到时间本来面目的状态。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #059669">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">从实用主义的角度来说，我建议用&#x27;反面清单&#x27;来重新定义成功：不要列出你想要什么，先列出你绝对不想要什么——不想要负债累累、不想要众叛亲离、不想要身心健康崩溃。然后，避免这些情况的发生，你就已经比大多数人活得好了。这听起来很&#x27;低标准&#x27;，但你去看看那些真正幸福的人，他们的共同点不是拥有多少，而是避开了多少灾难。成功不是一个你要去争取的东西，而是一个你要避免失去的东西。保持财务健康、维护核心关系、保持身体健康——做到这三件事，你已经打败了80%的人。只不过没有人会因为&#x27;没破产&#x27;而上新闻。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #DC2626">尼</div>
+          <div class="stance-body">
+            <div class="stance-speaker">尼采</div>
+            <div class="stance-text">重估一切价值！你们所谓的&#x27;成功&#x27;，不过是商人的账簿——收入、地位、房产、名望。这些是价值吗？不，这些只是价格。真正的价值，是一个人能够承受多少痛苦而不屈服，能够创造多少意义而不依赖外界的认可。你们看那些伟大的灵魂——苏格拉底、耶稣、释迦牟尼——世人谓之失败者，他们被毒死、被钉死、被遗忘。然而千百年后，那些&#x27;成功者&#x27;的名字早已湮灭，这些&#x27;失败者&#x27;的思想却永存。人生的意义不在于赢，而在于你是否敢于活出自己的命运——amor fati，爱你的命运，无论它是光荣还是卑微。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #D97706">老</div>
+          <div class="stance-body">
+            <div class="stance-speaker">老子</div>
+            <div class="stance-text">上善若水。水善利万物而不争，处众人之所恶，故几于道。居善地，心善渊，与善仁，言善信，政善治，事善能，动善时。夫唯不争，故无尤。功遂身退，天之道也。持而盈之，不如其已；揣而锐之，不可长保。金玉满堂，莫之能守；富贵而骄，自遗其咎。知足不辱，知止不殆，可以长久。人之所教，我亦教之：强梁者不得其死。吾将以为教父。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #F59E0B">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">我觉得重新定义成功这个事吧，说得容易做起来难。因为你在社会里活着，你不可能完全不在乎别人的看法。你说你要&#x27;活出自己&#x27;，但房东不会因为你&#x27;活出了自己&#x27;就免你房租。所以我的想法是：别搞那么宏大，先保住底线。有一份能养活自己的工作，有几个能说真话的朋友，有一个能让你放松的爱好，身体健康，脑子没坏。这些听起来特别平庸，但你仔细想想，同时满足这五条的人其实不多。我现在的&#x27;成功标准&#x27;就是：每天能笑出来，不讨厌明天的到来。就这么简单。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #F59E0B">李诞 → 韩炳哲</div>
+            <div class="clash-text">韩炳哲老师说的&#x27;深度的无聊&#x27;特别美好，但我想问一个很实际的问题：当你每天要工作十二个小时来维持基本生活的时候，你哪来的时间去&#x27;无聊&#x27;？&#x27;无所事事的自由&#x27;听起来很美，但它首先需要你有一定的经济基础。让一个月入三千的人去&#x27;享受无聊&#x27;，这不是解放，这是另一种形式的残忍。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #8B5CF6">韩炳哲</div>
+              <div class="clash-text">韩炳哲回应道：李诞的质疑切中要害，我不否认经济基础的重要性。但我想指出的是：&#x27;无聊&#x27;不一定要在辞职之后才能实现。它可以在通勤的地铁上，在午休的十五分钟里，在睡前放下的那十分钟手机里。我批判的不是工作本身，而是&#x27;效率至上&#x27;的心智模式——即使你有五分钟的空闲，你也会觉得应该&#x27;利用&#x27;这五分钟。真正的敌人不是忙碌，而是连休息都被生产逻辑殖民了。哪怕一天只有十分钟的&#x27;真正无聊&#x27;，也是一种抵抗。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #DC2626">尼采 → 老子</div>
+            <div class="clash-text">老子倡导无为、不争，然此非怯懦乎？人生如战场，岂能以不争应万变？水虽柔弱，亦有洪流滔天之时。真正的力量不在于退让，在于直面痛苦、拥抱命运。无为是逃避，超人才是担当。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #D97706">老子</div>
+              <div class="clash-text">老子回应道：天下莫柔弱于水，而攻坚强者莫之能胜，以其无以易之。弱之胜强，柔之胜刚，天下莫不知，莫能行。汝之超人，亦需天地养之、万物育之。若无大地之厚德，何来超人之高飞？无为非不为，乃不妄为。江海之所以能为百谷王者，以其善下之，故能为百谷王。汝之争，吾观之已久——争者未必强，不争者未必弱。反者道之动，弱者道之用。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">冰岛的&#x27;维京精神&#x27;与幸福感</div>
+            <div class="case-source">北欧幸福指数研究</div>
+          </div>
+          <div class="case-content">冰岛人口仅37万，GDP排名并不突出，但常年位居全球最幸福国家前列。冰岛人的&#x27;成功观&#x27;与主流社会截然不同：他们重视家庭时间、社区参与、与自然的连接，而非收入排名或职业地位。冰岛人有一个传统概念叫&#x27;Þetta reddast&#x27;（一切都会好起来的），反映了他们对不确定性的从容态度。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 冰岛在全球金融危机中受到重创，但社会韧性极强，恢复速度远超预期。社会凝聚力和社区支持网络在危机中发挥了关键作用。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 不依赖&#x27;排名&#x27;的社会可能更具韧性。当人们的价值感来自社区、家庭和自然，而非来自竞争和比较时，他们不仅更幸福，也更能应对危机。
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">中国&#x27;小镇做题家&#x27;的困境与出路</div>
+            <div class="case-source">中国社会流动研究</div>
+          </div>
+          <div class="case-content">大量来自小城镇的年轻人通过高考进入大城市，发现自己虽然&#x27;做题&#x27;能力一流，但在见识、资源、社交能力等方面与城市中产家庭的孩子差距巨大。他们中的许多人经历了严重的身份认同危机：既无法回到小镇（因为回去意味着&#x27;失败&#x27;），也无法在大城市扎根（因为缺乏社会资本）。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 部分人选择回到家乡或去往二三线城市，重新定义自己的&#x27;成功&#x27;。他们发现，在竞争压力较小的环境中，反而能够过上更有质量的生活。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 有时候，&#x27;退出竞争&#x27;不是失败，而是一种策略性的智慧。正如芒格所说：知道什么时候该离开牌桌，和知道什么时候该下注一样重要。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">当一个人决定放弃&#x27;排名式成功&#x27;，选择一种不依赖社会比较的生活方式时</span>
+        </div>
+        <div class="cost-analysis">
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">一个人放弃了社会定义的&#x27;成功&#x27;，却没有建立起自己的价值体系，陷入了虚无主义。他不是自由的，他只是从一种束缚换到了另一种束缚——从&#x27;必须成功&#x27;的焦虑换到了&#x27;什么都没意义&#x27;的空虚。这是从一个极端走向了另一个极端。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">我们听到的&#x27;退出竞争后过上幸福生活&#x27;的故事，往往是那些有一定经济基础、社会资源、或心理韧性的人。那些没有这些条件而&#x27;退出&#x27;的人，可能陷入了更深的困境——但他们的故事同样不被讲述。&#x27;退出&#x27;不是万能药，它需要前提条件。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">人真的能完全不在乎别人的看法吗？</div>
+        <div class="hn-analysis">人类是社会性动物，我们的大脑在进化过程中被设计为在意群体评价。神经科学研究表明，社会排斥激活的脑区与身体疼痛相同——被忽视、被轻视，对大脑来说真的&#x27;疼&#x27;。所以，完全不在乎别人的看法，不仅不现实，可能也不是健康的目标。关键不是&#x27;不在乎&#x27;，而是在乎谁的看法——在乎你在乎的人的看法，而不是在乎所有人的看法。</div>
+        <div class="hn-examples">
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">重新定义成功不是要你成为一个不在乎任何人看法的&#x27;超人&#x27;，而是要你有意识地选择你的&#x27;评价圈子&#x27;。你在乎谁的看法，决定了你活在谁的世界里。选择一个更小、更真实、更在乎你这个人而非你这个&#x27;成就&#x27;的圈子，可能就是通往自由的路径。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">成功 = 超越大多数人。人生是一场比赛，名次决定价值。不出人头地就是失败。</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">成功 = 活出属于自己的生活。人生不是比赛，是体验。价值来自深度而非高度——你是否深入地活过、爱过、思考过、创造过，而不是你比多少人&#x27;高&#x27;。</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">从竞争逻辑升级到存在逻辑：不是&#x27;我比你好&#x27;，而是&#x27;我是我&#x27;。从排名思维升级到叙事思维：不是你的分数，而是你的故事。从外部评价升级到内部确认：不是别人觉得你成功，而是你觉得自己的人生值得过。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">1) 列出你自己的&#x27;成功清单&#x27;——不参考任何社会标准，只写你真正在乎的事；2) 选择你的&#x27;评价圈子&#x27;——5个你真正在乎他们看法的人；3) 每天做一件&#x27;无用&#x27;的事——不为任何目的，只为享受过程；4) 重建&#x27;附近&#x27;——认识邻居、参与社区、关心脚下这片土地；5) 定期&#x27;退一步&#x27;——从竞争中抽离出来，看看自己是否还在自己想走的路上。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide insight-slide">
+      <div class="insight-glow"></div>
+      <div class="insight-content">
+        <span class="slide-tag">FINAL INSIGHT</span>
+        <h2 class="insight-title">最终洞见</h2>
+        <div class="insight-divider"></div>
+        <p class="insight-text">这场讨论的真正主题不是&#x27;努力是否有用&#x27;，而是&#x27;谁有权定义你的价值&#x27;。当我们追问&#x27;努力就能成功是不是谎言&#x27;时，我们实际上在追问一个更根本的问题：我是否必须通过某种社会认可的方式来证明自己存在的正当性？项飙告诉我们，附近的消失让我们失去了扎根的土壤；韩炳哲告诉我们，功绩社会让我们成为了自己的狱卒；芒格告诉我们，智慧在于知道自己的边界；尼采告诉我们，真正的强者是为自己立法的人；老子告诉我们，最高的智慧是顺应自然；李诞告诉我们，有时候承认自己的普通需要比追求伟大更大的勇气。这些声音汇聚成一个核心洞见：普通人的价值不需要被&#x27;证明&#x27;——它先于一切证明而存在。你活着、你爱过、你受过苦、你笑过——这些具体而微的生命体验，本身就是价值。社会的排名系统只是人造的尺子，用它量不了生命的重量。</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">OPEN QUESTIONS</span>
+        <h2 class="slide-title">开放问题</h2>
+      </div>
+      <div class="oq-container">
+        <div class="oq-item">
+          <div class="oq-num">1</div>
+          <div class="oq-text">如果一个人完全退出竞争体系，他在多大程度上能避免被社会边缘化？&#x27;退出&#x27;的代价是什么？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">2</div>
+          <div class="oq-text">有没有可能存在一种社会制度，既保持活力和创新，又不要求每个人都在排名中证明自己？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">3</div>
+          <div class="oq-text">当AI和自动化进一步取代人类劳动时，&#x27;努力&#x27;和&#x27;价值&#x27;的关系会发生什么根本性的变化？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">4</div>
+          <div class="oq-text">老子的&#x27;无为&#x27;和尼采的&#x27;超人&#x27;看似矛盾，但它们是否指向同一个方向——超越人为的价值体系？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">5</div>
+          <div class="oq-text">我们能否创造一种新的文化叙事，让&#x27;普通人&#x27;这个身份变得有尊严、有吸引力，而不仅仅是一个需要被&#x27;超越&#x27;的起点？</div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="nav-dots">
+      <button class="nav-dot active" data-idx="0"></button>
+      <button class="nav-dot" data-idx="1"></button>
+      <button class="nav-dot" data-idx="2"></button>
+      <button class="nav-dot" data-idx="3"></button>
+      <button class="nav-dot" data-idx="4"></button>
+      <button class="nav-dot" data-idx="5"></button>
+      <button class="nav-dot" data-idx="6"></button>
+      <button class="nav-dot" data-idx="7"></button>
+      <button class="nav-dot" data-idx="8"></button>
+      <button class="nav-dot" data-idx="9"></button>
+      <button class="nav-dot" data-idx="10"></button>
+      <button class="nav-dot" data-idx="11"></button>
+      <button class="nav-dot" data-idx="12"></button>
+      <button class="nav-dot" data-idx="13"></button>
+      <button class="nav-dot" data-idx="14"></button>
+      <button class="nav-dot" data-idx="15"></button>
+      <button class="nav-dot" data-idx="16"></button>
+      <button class="nav-dot" data-idx="17"></button>
+      <button class="nav-dot" data-idx="18"></button>
+      <button class="nav-dot" data-idx="19"></button>
+      <button class="nav-dot" data-idx="20"></button>
+      <button class="nav-dot" data-idx="21"></button>
+      <button class="nav-dot" data-idx="22"></button>
+      <button class="nav-dot" data-idx="23"></button>
+      <button class="nav-dot" data-idx="24"></button>
+      <button class="nav-dot" data-idx="25"></button>
+      <button class="nav-dot" data-idx="26"></button>
+      <button class="nav-dot" data-idx="27"></button>
+</div>
+
+<script>
+
+    (function() {
+      const slideshow = document.getElementById('slideshow');
+      const progressBar = document.getElementById('progressBar');
+      const pageCounter = document.getElementById('pageCounter');
+      const dots = document.querySelectorAll('.nav-dot');
+      const total = 28;
+      let current = 0;
+      let wheelTimer = null;
+      let isScrolling = false;
+
+      function updateUI() {
+        const scrollLeft = slideshow.scrollLeft;
+        const slideWidth = slideshow.clientWidth;
+        current = Math.round(scrollLeft / slideWidth);
+        if (current < 0) current = 0;
+        if (current >= total) current = total - 1;
+
+        // Progress bar
+        const pct = ((current + 1) / total) * 100;
+        progressBar.style.width = pct + '%';
+
+        // Page counter
+        pageCounter.textContent = (current + 1) + ' / ' + total;
+
+        // Dots
+        dots.forEach(function(d, i) {
+          d.classList.toggle('active', i === current);
+        });
+      }
+
+      function goTo(idx) {
+        if (idx < 0) idx = 0;
+        if (idx >= total) idx = total - 1;
+        slideshow.scrollTo({ left: idx * slideshow.clientWidth, behavior: 'smooth' });
+        current = idx;
+        setTimeout(updateUI, 400);
+      }
+
+      // Keyboard
+      document.addEventListener('keydown', function(e) {
+        switch(e.key) {
+          case 'ArrowRight': case ' ': case 'PageDown':
+            e.preventDefault(); goTo(current + 1); break;
+          case 'ArrowLeft': case 'PageUp':
+            e.preventDefault(); goTo(current - 1); break;
+          case 'Home':
+            e.preventDefault(); goTo(0); break;
+          case 'End':
+            e.preventDefault(); goTo(total - 1); break;
+        }
+      });
+
+      // Mouse wheel with debounce
+      slideshow.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        if (wheelTimer) return;
+        wheelTimer = setTimeout(function() { wheelTimer = null; }, 600);
+        if (e.deltaY > 0 || e.deltaX > 0) {
+          goTo(current + 1);
+        } else {
+          goTo(current - 1);
+        }
+      }, { passive: false });
+
+      // Nav dots
+      dots.forEach(function(dot, i) {
+        dot.addEventListener('click', function() { goTo(i); });
+      });
+
+      // Scroll event
+      slideshow.addEventListener('scroll', function() {
+        if (!isScrolling) {
+          isScrolling = true;
+          requestAnimationFrame(function() {
+            updateUI();
+            isScrolling = false;
+          });
+        }
+      });
+
+      // Resize
+      window.addEventListener('resize', function() { goTo(current); });
+
+      // Init
+      updateUI();
+    })();
+    
+</script>
+
+</body>
+</html>

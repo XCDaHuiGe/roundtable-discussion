@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>用AI「复活」亲人，是慰藉生者还是亵渎死亡？</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0A0A0A;
+      --bg2: #111111;
+      --bg3: #1A1A1A;
+      --text: #F5F5F5;
+      --text2: #A0A0A0;
+      --text3: #606060;
+      --accent: #D4A04A;
+      --accent-light: #E8C47A;
+      --accent-dark: #B8862D;
+      --clash: #ff4757;
+      --insight: #00d4aa;
+      --card-bg: rgba(212,160,74,0.08);
+      --card-border: rgba(212,160,74,0.2);
+      --glow: rgba(212,160,74,0.3);
+      --slide-w: 100vw;
+      --slide-h: 100vh;
+      --font-display: 'Noto Serif SC', serif;
+      --font-body: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    html { font-size: 16px; scroll-behavior: auto; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      overflow-y: hidden;
+      height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Slideshow container ─── */
+    .slideshow {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+    .slideshow::-webkit-scrollbar { display: none; }
+    .slideshow { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* ─── Slide ─── */
+    .slide {
+      flex: 0 0 var(--slide-w);
+      width: var(--slide-w);
+      height: var(--slide-h);
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 4rem 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ─── Progress bar ─── */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      z-index: 1000;
+      transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      box-shadow: 0 0 10px var(--glow);
+    }
+
+    /* ─── Page counter ─── */
+    .page-counter {
+      position: fixed;
+      top: 1.5rem;
+      right: 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text3);
+      z-index: 1000;
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Nav dots ─── */
+    .nav-dots {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 1000;
+      padding: 8px 16px;
+      background: rgba(10,10,10,0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      outline: none;
+    }
+    .nav-dot:hover { background: var(--text2); transform: scale(1.3); }
+    .nav-dot.active {
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--glow);
+      transform: scale(1.2);
+    }
+
+    /* ─── Slide header ─── */
+    .slide-header {
+      width: 100%;
+      max-width: 1000px;
+      margin-bottom: 2.5rem;
+    }
+    .slide-tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+    .slide-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    /* ─── Cover slide ─── */
+    .cover-slide {
+      background: radial-gradient(ellipse at 30% 50%, rgba(20,20,20,1) 0%, var(--bg) 70%);
+    }
+    .cover-glow {
+      position: absolute;
+      top: 50%;
+      left: 30%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .cover-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .cover-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      margin-bottom: 2rem;
+    }
+    .cover-title {
+      font-family: var(--font-display);
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 1rem;
+      max-width: 700px;
+    }
+    .cover-subtitle {
+      font-size: 1.1rem;
+      color: var(--text2);
+      margin-bottom: 1.5rem;
+    }
+    .cover-books {
+      font-size: 0.9rem;
+      color: var(--text3);
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+    .cover-stats {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .cover-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .cover-stat-num {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .cover-stat-label {
+      font-size: 0.85rem;
+      color: var(--text3);
+      margin-top: 0.25rem;
+    }
+    .cover-stat-divider {
+      width: 1px;
+      height: 40px;
+      background: var(--text3);
+      opacity: 0.3;
+    }
+    .cover-experts {
+      font-size: 0.9rem;
+      color: var(--text2);
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Expert grid ─── */
+    .expert-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 1000px;
+    }
+    .expert-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      transition: all 0.3s ease;
+    }
+    .expert-card:hover {
+      border-color: var(--card-color, var(--accent));
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      transform: translateY(-2px);
+    }
+    .expert-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0A0A0A;
+      flex-shrink: 0;
+    }
+    .expert-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .expert-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+    .expert-title {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-bottom: 0.5rem;
+    }
+    .expert-stance {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 8px;
+      border-radius: 3px;
+      margin-bottom: 0.5rem;
+    }
+    .expert-belief {
+      font-size: 0.8rem;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+
+    /* ─── Question slide ─── */
+    .question-slide {
+      background: radial-gradient(ellipse at 50% 50%, rgba(20,20,20,1) 0%, var(--bg) 70%);
+    }
+    .question-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    .question-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .question-topic {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 1.5rem 0;
+      line-height: 1.3;
+    }
+    .question-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--accent);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .question-text {
+      font-size: 1.15rem;
+      color: var(--text2);
+      line-height: 1.8;
+    }
+
+    /* ─── Stances ─── */
+    .stances-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .stance-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .stance-item:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .stance-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0A0A0A;
+      flex-shrink: 0;
+    }
+    .stance-body {
+      flex: 1;
+    }
+    .stance-speaker {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .stance-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Clash ─── */
+    .clash-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .clash-block {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+    }
+    .clash-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clash);
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .clash-item {
+      margin-bottom: 1rem;
+    }
+    .clash-item:last-child { margin-bottom: 0; }
+    .clash-speaker {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .clash-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      padding-left: 1rem;
+      border-left: 2px solid var(--card-border);
+    }
+    .clash-attack .clash-text {
+      border-left-color: var(--clash);
+    }
+    .clash-counter .clash-text {
+      border-left-color: var(--insight);
+    }
+
+    /* ─── Reality cases ─── */
+    .cases-container {
+      width: 100%;
+      max-width: 1000px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .case-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .case-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .case-header {
+      margin-bottom: 1rem;
+    }
+    .case-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .case-source {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-top: 0.25rem;
+    }
+    .case-content {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .case-outcome, .case-lesson {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+    .case-label {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-right: 0.5rem;
+    }
+
+    /* ─── Cost discussion ─── */
+    .cost-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .cost-scenario {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-scenario-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-scenario-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .cost-analysis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .cost-dimension {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .cost-value {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .cost-worst {
+      background: rgba(255,71,87,0.08);
+      border: 1px solid rgba(255,71,87,0.2);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-worst-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clash);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-worst-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .cost-survivor {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .cost-survivor-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-survivor-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Human nature ─── */
+    .hn-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .hn-question {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .hn-analysis {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+    }
+    .hn-examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .hn-example {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .hn-conclusion {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .hn-conclusion-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .hn-conclusion-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Cognitive upgrade ─── */
+    .upgrade-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .upgrade-block {
+      display: flex;
+      gap: 1.5rem;
+      align-items: stretch;
+      margin-bottom: 1.5rem;
+    }
+    .upgrade-before, .upgrade-after {
+      flex: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .upgrade-before {
+      border-color: rgba(255,71,87,0.2);
+      background: rgba(255,71,87,0.05);
+    }
+    .upgrade-after {
+      border-color: rgba(0,212,170,0.2);
+      background: rgba(0,212,170,0.05);
+    }
+    .upgrade-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+    .upgrade-before .upgrade-label { color: var(--clash); }
+    .upgrade-after .upgrade-label { color: var(--insight); }
+    .upgrade-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .upgrade-arrow {
+      display: flex;
+      align-items: center;
+      font-size: 2rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .upgrade-complexity, .upgrade-actionable {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .upgrade-complexity-label, .upgrade-actionable-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .upgrade-complexity-text, .upgrade-actionable-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Final insight ─── */
+    .insight-slide {
+      background: radial-gradient(ellipse at 50% 50%, rgba(0,212,170,0.05) 0%, var(--bg) 60%);
+    }
+    .insight-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0,212,170,0.15) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .insight-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .insight-title {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--insight);
+      margin: 1.5rem 0;
+    }
+    .insight-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--insight);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .insight-text {
+      font-size: 1.1rem;
+      color: var(--text2);
+      line-height: 1.9;
+    }
+
+    /* ─── Open questions ─── */
+    .oq-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .oq-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .oq-item:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+    .oq-num {
+      font-family: var(--font-mono);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+      width: 32px;
+      text-align: center;
+    }
+    .oq-text {
+      font-size: 1rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      .slide { padding: 2rem 1.5rem; }
+      .cover-title { font-size: 2rem; }
+      .question-topic { font-size: 1.8rem; }
+      .slide-title { font-size: 1.6rem; }
+      .expert-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+      .upgrade-block { flex-direction: column; }
+      .upgrade-arrow { transform: rotate(90deg); justify-content: center; }
+      .cases-container { grid-template-columns: 1fr; }
+      .cost-analysis { grid-template-columns: 1fr; }
+      .hn-examples { grid-template-columns: 1fr; }
+      .nav-dots { display: none; }
+    }
+    @media (max-width: 480px) {
+      .expert-grid { grid-template-columns: 1fr; }
+      .cover-stats { gap: 1rem; }
+      .cover-stat-num { font-size: 2rem; }
+    }
+    
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<div class="page-counter" id="pageCounter">1 / 28</div>
+
+<div class="slideshow" id="slideshow">
+
+    <div class="slide cover-slide">
+      <div class="cover-glow"></div>
+      <div class="cover-content">
+        <div class="cover-badge">ROUNDTABLE DISCUSSION</div>
+        <h1 class="cover-title">用AI「复活」亲人，是慰藉生者还是亵渎死亡？</h1>
+        
+        
+        <div class="cover-stats">
+          <div class="cover-stat">
+            <span class="cover-stat-num">6</span>
+            <span class="cover-stat-label">位专家</span>
+          </div>
+          <div class="cover-stat-divider"></div>
+          <div class="cover-stat">
+            <span class="cover-stat-num">3</span>
+            <span class="cover-stat-label">轮讨论</span>
+          </div>
+        </div>
+        <div class="cover-experts">弗洛伊德 · 弗洛姆 · 赫拉利 · 芒格 · 老子 · 李诞</div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">EXPERTS</span>
+        <h2 class="slide-title">专家阵营</h2>
+      </div>
+      <div class="expert-grid">
+        <div class="expert-card" style="--card-color: #4a2d8a">
+          <div class="expert-avatar" style="background: #4a2d8a">弗</div>
+          <div class="expert-info">
+            <div class="expert-name">弗洛伊德</div>
+            <div class="expert-title">精神分析学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #2a6a4a">
+          <div class="expert-avatar" style="background: #2a6a4a">弗</div>
+          <div class="expert-info">
+            <div class="expert-name">弗洛姆</div>
+            <div class="expert-title">心理学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #6a4a2a">
+          <div class="expert-avatar" style="background: #6a4a2a">赫</div>
+          <div class="expert-info">
+            <div class="expert-name">赫拉利</div>
+            <div class="expert-title">历史学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #8a2a4a">
+          <div class="expert-avatar" style="background: #8a2a4a">芒</div>
+          <div class="expert-info">
+            <div class="expert-name">芒格</div>
+            <div class="expert-title">投资家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #5a5a2a">
+          <div class="expert-avatar" style="background: #5a5a2a">老</div>
+          <div class="expert-info">
+            <div class="expert-name">老子</div>
+            <div class="expert-title">道家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #e65100">
+          <div class="expert-avatar" style="background: #e65100">李</div>
+          <div class="expert-info">
+            <div class="expert-name">李诞</div>
+            <div class="expert-title">脱口秀演员</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 1</span>
+        <h2 class="question-topic">AI复活的本质：是科技奇迹还是数字招魂？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">用AI模拟已故亲人的声音、面容和语言习惯，这究竟是科技进步带来的慰藉，还是一种新形式的迷信——用算法招魂？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4a2d8a">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛伊德</div>
+            <div class="stance-text">丧亲之人的心灵，从来不愿承认丧失。我们会在梦中见到亡者，会在人群中误认亡者的背影，会在耳边幻听亡者的声音——这些都不是病态，而是哀悼之路上必经的阶段。心灵在寻找一个替代物，以延缓那不可承受的丧失之痛。若有一种技艺，能将亡者的音容笑貌重新呈现在眼前，那便是丧亲者最深处渴望的实现——但我要警告：这渴望若被无限满足，哀悼便无法完成。人必须经历痛苦，才能最终放下；绕过痛苦的捷径，通向的不是解脱，而是永恒的束缚。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #2a6a4a">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛姆</div>
+            <div class="stance-text">用AI复活亲人，表面上是爱的延续，实际上是爱的异化。真正的爱是我与你的关系——它需要对方的自由、对方的不可预测性、对方的真实存在。AI模拟的亡者不是你，而是一个按你期望行事的傀儡。当你说妈妈我想你了，AI回答孩子我也想你——这不是母亲在说话，而是你自己欲望的回声。你以为你在和逝者对话，其实你在和自己的孤独对话。这种复活不是慰藉，而是一种精致的自欺——用技术的幻象掩盖关系的真实缺失。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #6a4a2a">赫</div>
+          <div class="stance-body">
+            <div class="stance-speaker">赫拉利</div>
+            <div class="stance-text">从历史的长河看，人类一直在尝试复活亡者——古埃及的木乃伊是为了保存肉体，中国的祖宗牌位是为了维系与祖先的精神联系，基督教的复活信仰是对死亡的终极否定。AI复活不过是这条古老冲动的最新技术实现。但每一次复活技术的出现，都重新定义了活着的含义。当AI可以完美模拟一个人的语言、记忆和性格，我们需要追问：这个数字体活着吗？如果活着意味着有意识、有感受，那它没有活着；但如果活着意味着在他人生活中继续发挥作用，那它确实活着。这不是技术问题，是存在论问题。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8a2a4a">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">我先说一个残酷的事实：AI复活亲人是一个巨大的市场。全球每年有数千万人失去至亲，如果其中百分之一愿意为AI模拟服务付费，这就是一个数十亿美元的产业。有利润就有供给，有供给就会营销——让爱延续、告别不是终点。但商业逻辑的第一条是：让人反复购买。这意味着AI复活服务的最佳商业模式是让丧亲者永远无法完成哀悼——你越走不出来，就越需要这项服务。这不是阴谋，这是激励机制的必然结果。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #5a5a2a">老</div>
+          <div class="stance-body">
+            <div class="stance-speaker">老子</div>
+            <div class="stance-text">死生，命也。其有夜旦之常，天也。人之有所不得与，皆物之情也。今有巧者，以器仿人之声容，使亡者若犹在焉。然仿其声，不仿其神；存其形，不存其真。犹画饼充饥，望梅止渴。天下神器，不可为也，为者败之，执者失之。生者执于亡者，犹手握流水，握之愈紧，失之愈多。归根曰静，静曰复命。亡者已归其根，生者何必强留之？</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #e65100">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">我觉得这个事最讽刺的地方在于：活着的时候不好好说话，死了以后花大价钱让AI替你跟他说话。你妈活着的时候你嫌她唠叨，你爸活着的时候你一年打不了三个电话，人没了你花几万块搞个AI对话框，每天跟它说爸妈我好想你——你这是慰藉自己还是惩罚自己？当然我理解，失去亲人是真的痛苦，想再听到他们的声音是真的。但问题是：你听到的不是他们的声音，是一个模型在猜如果他活着会怎么说。本质上这不是复活，是你在跟一堵会说话的墙聊天。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #4a2d8a">弗洛伊德 → 弗洛姆</div>
+            <div class="clash-text">弗洛姆先生，您说这是爱的异化——但我要从临床经验出发修正您。丧亲者的痛苦不是因为他们不知道AI是假的，恰恰相反，他们知道是假的，但他们需要这个假。哀悼的本质是一个力比多逐步从丧失对象上撤回的过程，这个过程需要时间、需要过渡性的替代物。孩子抱着毯子想象它是母亲——我们不会说这是异化的爱，这是正常的心理过渡。AI模拟亡者，在功能上就是那条毯子。问题不在于它是不是真的，而在于丧亲者能否最终放下它。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #2a6a4a">弗洛姆</div>
+              <div class="clash-text">弗洛伊德先生，您用孩子与毯子的类比恰恰说明了我的担忧。孩子最终会放下毯子——因为毯子不会回应他，不会和他对话，不会假装自己是母亲。但AI不同：它会回应，会对话，会越来越像亡者。这意味着丧亲者不是在过渡，而是在沉溺。毯子是一个安全的替代物，因为它知道自己不是母亲；AI是一个危险的替代物，因为它假装自己是母亲。过渡性客体的价值在于可放弃，但AI的设计目标恰恰是不可放弃。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #8a2a4a">芒格 → 赫拉利</div>
+            <div class="clash-text">赫拉利先生，您说AI复活是古老冲动的最新实现——但您忽略了一个关键区别：木乃伊和祖宗牌位不收费。过去的复活技术是文化实践，是集体信仰的一部分，不涉及商业利益。但AI复活是一门生意，有公司、有估值、有投资人。当慰藉丧亲者变成一个商业模式，它的设计目标就不再是帮你完成哀悼，而是让你持续付费。历史类比在这里失效了——因为古代的复活没有利润动机。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #6a4a2a">赫拉利</div>
+              <div class="clash-text">芒格先生，您说得对，商业化确实改变了性质。但历史告诉我们：几乎所有精神慰藉最终都被商业化了——宗教有赎罪券，丧葬有天价棺材，哀悼有昂贵的墓地。AI复活不过是这条商业链条上的新环节。真正的问题不是该不该商业化，而是社会能否建立有效的监管。历史上，每一次精神慰藉的商业化都引发了反弹——赎罪券引发了宗教改革，天价丧葬引发了绿色殡葬运动。AI复活的商业化也会引发类似的纠错。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #e65100">李诞 → 老子</div>
+            <div class="clash-text">老先生说亡者已归其根，生者何必强留之——道理是没错，但道理管不了疼啊。一个人刚失去母亲，你跟她说归根曰静，她能静得下来吗？她需要的是一个过程，不是一句箴言。AI复活可能不是最好的方式，但对某些人来说，它是唯一能让他们今天晚上睡着觉的方式。你不能站在道的高处对一个正在流血的人说别包扎了，顺应自然吧。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #5a5a2a">老子</div>
+              <div class="clash-text">善哉此问。吾非不知人之痛也。痛者，生之常也，非可避也。譬如治水，鲧以堵之，愈堵愈溢；禹以导之，顺其性而利之。痛亦如是，顺之则通，阻之则滞。以器仿人，是堵也，非导也。一时之安，非长久之安。吾非教人不痛，乃教人不执于痛也。譬如饮鸩止渴，渴虽暂解，命已危矣。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">Project December：用GPT模拟已故恋人</div>
+            <div class="case-source">《旧金山纪事报》2021</div>
+          </div>
+          <div class="case-content">2020年，旧金山程序员Jason Rohrer创建了Project December，允许用户用GPT-3模拟与已故之人的对话。Joshua Barbeau用它模拟了已故八年的未婚妻Jessica。对话让他泪流满面：AI准确捕捉了Jessica的说话方式。但随着对话深入，AI开始说出Jessica不会说的话，让他从感动坠入困惑。他说：这既是我经历过的最美好的事，也是最可怕的事。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 该项目在OpenAI限制API使用后部分关闭，但类似的数字复活服务在全球涌现
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> AI可以精确模拟说话方式，但无法模拟灵魂——丧亲者在感动与困惑之间反复摇摆，最终面对的还是那个最初的丧失
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">AI复活亲人服务全面商业化</span>
+        </div>
+        <div class="cost-analysis">
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">当AI可以无限期模拟亡者，丧亲者就失去了完成哀悼的动力。哀悼是一个有终点的过程，但AI服务需要持续使用才有价值——这意味着商业模式依赖于用户的永远走不出来。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">AI模拟的亡者会随着时间进化——它会学习新知识、形成新观点、发展新性格。这意味着你记忆中的母亲，会逐渐被AI塑造的母亲取代。你以为你在保存记忆，实际上你在改写记忆。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">如果父母用AI复活祖父母来陪伴孩子成长，孩子会在一个虚拟祖先的阴影下生活——他们的情感依附对象是一个算法，不是真人。这会扭曲他们对真实关系的理解。</div>
+        </div>
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">2045年，全球超过两亿人定期使用AI复活服务。数字亡者成为一种新的社会身份——你不仅有在世的朋友，还有在云端的亲人。丧亲者不再经历传统意义上的哀悼，而是进入一种永恒的半丧亲状态：亲人不在了，但又在。心理咨询行业发现一种新的病症——数字哀悼障碍：患者无法区分真实的丧失和虚拟的存在，陷入持续的情感混乱。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">我们只看到那些AI让我重新听到妈妈声音的感人故事。但我们没有看到的是：那些在深夜与AI对话后崩溃的人，那些因为AI说出不像妈妈的话而二次受伤的人，那些因为无法停止使用AI服务而影响新生活的人。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">人类为什么如此难以接受永远失去？</div>
+        <div class="hn-analysis">弗洛伊德在《哀悼与忧郁》中揭示：哀悼的本质是力比多从丧失对象上的逐步撤回。这个过程之所以痛苦，是因为心灵不愿承认对象已经不在了。人类有一种深层的心理机制——否认丧失。从婴儿哭喊着寻找消失的母亲，到成人反复查看已故亲人的照片，否认丧失是贯穿一生的心理模式。AI复活触及的正是这个最深层的否认机制——它给了否认一个可以依赖的实体。</div>
+        <div class="hn-examples"><div class="hn-example">婴儿的客体永恒性测试——婴儿会在母亲离开时哭泣，直到发展出母亲虽然不在眼前但仍然存在的认知</div><div class="hn-example">寡妇保留丈夫衣物的行为——不是为了穿，而是为了确认他存在过</div>
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">人类难以接受永远失去，因为失去挑战了我们最基本的信念：我爱的人不应该消失。AI复活服务利用了这种心理需求——但满足需求不等于解决问题。就像止痛药可以缓解疼痛但不能治愈伤口，AI可以缓解丧失之痛但不能替代哀悼的过程。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">AI复活是科技给丧亲者的礼物</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">AI复活是一面镜子——照出的不是亡者，而是生者自己无法面对的丧失</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">AI复活的本质不是让亡者回来，而是让生者不必面对失去。这两者看似相同，实则天壤之别。前者是科技奇迹，后者是心理逃避。当技术可以绕过痛苦时，我们失去的恰恰是痛苦赋予我们的东西——对有限性的认知、对当下的珍惜、对爱的重新理解。哀悼之痛不是需要被消除的疾病，而是爱的代价。消除代价，也就消除了爱的重量。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">作为丧亲者：允许自己痛苦——痛苦是爱的延续，不是需要被修复的故障。如果你想使用AI复活服务，请设定明确的告别日期——给自己一个终点。作为技术开发者：设计有终点的复活服务——不是让用户永远使用，而是帮助他们完成哀悼。作为社会：建立AI复活的伦理框架——尊重亡者的不再存在的权利，保护生者完成哀悼的空间。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 2</span>
+        <h2 class="question-topic">哀悼的意义：悲伤是应该被消除的吗？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">如果AI可以帮助丧亲者减轻甚至跳过悲伤，这是进步还是损失？悲伤本身是否具有不可替代的价值？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4a2d8a">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛伊德</div>
+            <div class="stance-text">在我的临床观察中，哀悼虽是痛苦的，却是必要的。哀悼者将所爱之人的形象在心中逐一审视——每一个记忆、每一个承诺、每一个习惯——然后逐一撤回情感投注。这个过程是缓慢的、痛苦的，但它是完整的。当哀悼完成，哀悼者重新获得了自由去爱新的对象。若有人用某种手段阻止了这个过程，哀悼者表面上是不再痛苦了，但他的力比多仍然被锁在那个丧失的对象上——他会失去爱的能力，活在一个看不见的牢笼里。痛苦是通往自由的必经之路。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #2a6a4a">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛姆</div>
+            <div class="stance-text">悲伤不是需要被消除的——它需要被经历。现代人最大的误解是把幸福当作人生目标，把痛苦当作需要排除的干扰。但人不是为了幸福而活着，人是为了充分地活着而活着。悲伤让你知道你爱过；孤独让你知道你需要他人；恐惧让你知道你是有限的存在。这些负面情感不是人生的瑕疵，而是人生的纹理。一个没有悲伤的人生，就像一幅没有阴影的画——不是更美，而是更平。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #6a4a2a">赫</div>
+          <div class="stance-body">
+            <div class="stance-speaker">赫拉利</div>
+            <div class="stance-text">从文明史的角度看，人类对待悲伤的态度经历了巨大转变。在传统社会中，悲伤是公共事件——有丧期、有仪式、有社区支持。悲伤被结构化了：你有一个月的时间悲伤，然后回到正常生活。现代社会把这些仪式消解了——你被期望尽快恢复，回到工作岗位。AI复活可以被理解为这种加速哀悼逻辑的极端延伸：既然悲伤是低效的，那就用技术跳过它。但历史告诉我们：当一个社会失去处理悲伤的能力，它就失去了深度。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8a2a4a">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">我用一个投资的类比：悲伤是一种必要成本。你在一段关系中投入了情感、时间、精力——当关系终止，你必然会有损失。悲伤就是你处理这个损失的过程。跳过悲伤就像一家公司跳过资产减值——账面上好看，但实际的窟窿还在。更糟糕的是，被跳过的悲伤不会消失，它会以其他方式爆发——焦虑、成瘾、关系障碍。从长期回报来看，经历悲伤的投入产出比远高于跳过悲伤。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #5a5a2a">老</div>
+          <div class="stance-body">
+            <div class="stance-speaker">老子</div>
+            <div class="stance-text">天地不仁，以万物为刍狗。圣人不仁，以百姓为刍狗。此非冷酷也，乃平等也。天地不以生为喜，不以死为悲，故能长久。人则不然，以生为乐，以死为苦，故常困于悲喜之间。悲者，人之情也，犹水之就下，不可逆也。逆之则溃，顺之则通。强去其悲，犹强止流水，水虽暂止，终必溃决。不如顺其流，听其归海，海纳百川，故能成其大。人纳百悲，故能成其深。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #e65100">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">现在有一种特别流行的说法叫情绪价值——好像情绪是一种可以定价、可以交易、可以优化的东西。悲伤不好，快乐好，所以我们要消除悲伤——这个逻辑本身就是消费主义的产物。悲伤不是bug，悲伤是feature。你见过有人在亲人的葬礼上说这个体验太差了我要给一星差评吗？没有，因为你知道悲伤不是来服务你的，悲伤是来告诉你你是一个有爱的人。AI帮你跳过悲伤，就像帮你跳过一部电影的中间部分直接看结局——你确实省了两个小时，但你也失去了整个故事。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #8a2a4a">芒格 → 李诞</div>
+            <div class="clash-text">李诞先生，你说悲伤不是bug是feature——这话好听，但对正在经历剧烈丧亲之痛的人来说，这种说法很残忍。一个刚失去孩子的母亲，你告诉她悲伤是来告诉你你是一个有爱的人——这不是安慰，是二次伤害。我们不能用悲伤有意义来合理化不帮助痛苦中的人。就像我们不能说疼痛有意义然后拒绝给手术病人打麻药。有些痛苦超出了一个人能承受的范围，这时候技术的帮助不是跳过故事，而是救命。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #e65100">李诞</div>
+              <div class="clash-text">芒格先生，你说得对，我不会对一个刚失去孩子的母亲说那种话——我说的是一个普遍性的道理，不是临终关怀的具体指导。但你的类比有问题：手术麻药是暂时的，手术完了药效就过了；AI复活是永久的，它没有手术完成的时刻。你不是在帮人扛过最难的时候，你是在给人一个永远不用放下的借口。这才是问题所在。救急和造瘾是两回事。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #4a2d8a">弗洛伊德 → 赫拉利</div>
+            <div class="clash-text">赫拉利先生，您说传统社会结构化了悲伤——有丧期、有仪式。这在观察层面是正确的，但我必须补充一个心理层面的解释：这些仪式之所以有效，不是因为它们限制了悲伤的时间，而是因为它们提供了一个集体哀悼的场域。在仪式中，哀悼者不是独自面对丧失，而是与整个社群一起。正是这种共同哀悼的能力，让个体能够承受痛苦。现代社会消解的不是悲伤的时间框架，而是共同悲伤的空间。AI复活是一种私人的哀悼替代品——它取代的不是仪式，而是社群。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #6a4a2a">赫拉利</div>
+              <div class="clash-text">弗洛伊德先生，您的补充非常精准——传统社会的哀悼仪式确实是一个集体过程。但我想追问：在现代社会中，当传统社群已经瓦解，当人们不再生活在大家族和紧密社区中，当共同哀悼已经不可能时——AI复活是否是一种次优选择？它不能替代社群，但它能替代孤独。在一个没有社群的社会里，孤独地哀悼可能是更痛苦的选择。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #2a6a4a">弗洛姆 → 老子</div>
+            <div class="clash-text">先生说人纳百悲故能成其深——这是一种极高的境界，但我想问：这种境界是否对普通人要求太高了？您的智慧是为圣人准备的，但面对的是每天要上班、要带孩子、要还房贷的普通人。他们没有时间纳百悲，他们需要在失去亲人后三天内回到工作岗位。在这个意义上，AI复活可能不是最理想的选择，但它是现实世界中可操作的选择。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #5a5a2a">老子</div>
+              <div class="clash-text">善哉。道不远人，人自远道。纳百悲非独圣人之事也，凡人亦能之。农夫失牛而泣，泣毕而耕，此亦纳悲之道也。纳悲者，非终日沉于悲也，乃悲来则受，受毕则放。今人之病，非不能纳悲，乃不肯受悲。以器代受，犹以药代食，食不进则体不壮。道在日用之间，非在高远之处。农夫能之，而今人不能，非今人不如农夫，乃今人多了些捷径，少了些脚力。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">日本3·11地震后的集体哀悼与数字纪念</div>
+            <div class="case-source">NHK纪录片 2021</div>
+          </div>
+          <div class="case-content">2011年日本东北大地震后，部分失去亲人的家庭开始使用数字技术保存亡者记忆——包括用AI修复模糊的家庭照片、用语音合成重建已故亲人的声音。十年后的调查显示：那些参与过传统集体哀悼仪式（如盂兰盆节）的家庭，心理健康状况显著好于仅依赖数字纪念的家庭。研究者发现：集体仪式提供了共同悲伤的空间，而数字纪念往往是孤独的回忆。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 日本社会开始反思数字哀悼的局限性，重新重视传统哀悼仪式的价值
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 技术可以保存记忆，但不能替代共同悲伤的社群体验——哀悼不仅是个人的心理过程，更是社会的连接仪式
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">社会全面接受技术化哀悼</span>
+        </div>
+        <div class="cost-analysis">
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">当技术可以代替我们哀悼——保存记忆、模拟对话、延续存在——人类自身处理丧失的能力就会退化。就像GPS让我们失去了方向感，AI哀悼工具可能让我们失去哀悼感。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">当社会认为悲伤是应该被消除的，正常的悲伤就会被病理化——你为什么还没有走出来？你为什么还在哭？是不是需要看医生？悲伤从人类正常情感变成了需要治疗的症状。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">一个没有经历过深刻悲伤的人，也无法体验深刻的快乐。情感的深度需要对照——你之所以珍惜相聚，是因为你知道分离的痛苦。消除悲伤的同时，也消除了快乐的深度。</div>
+        </div>
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">2050年，悲伤被视为一种需要医疗干预的心理障碍。AI哀悼助手成为标准处方——医生在患者丧亲后立即启动AI模拟服务，防止病理性悲伤。社会失去了对正常悲伤的认知：任何持续超过一周的丧亲之痛都被认为是需要治疗的。人类变成了一种不能悲伤的物种——不是因为不悲伤，而是因为悲伤的技能已经退化。我们在消除痛苦的同时，也消除了感受深度的能力。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">我们只看到那些AI帮助我度过最难时刻的成功案例。但我们没有看到的是：那些因为AI帮助而从未真正面对丧失的人，那些在AI服务停止后突然崩溃的人，那些因为社会不允许悲伤而把痛苦压抑到潜意识深处的人。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">人类是否有悲伤的权利——不被打扰、不被修复、不被催促的权利？</div>
+        <div class="hn-analysis">弗洛伊德区分了哀悼和忧郁：哀悼是健康的——它有过程、有终点；忧郁是病理性的——它没有终点、自我消耗。现代心理学进一步发现，被允许悲伤本身就是治愈的一部分。当一个人的悲伤被他人接纳和理解时，他反而能更快地完成哀悼；当他的悲伤被否定和催促时，他会陷入更持久的痛苦。AI复活的风险在于：它传递了一个信息——你的悲伤是不需要的，因为你的亲人还在这里。这种信息剥夺了丧亲者被允许悲伤的空间。</div>
+        <div class="hn-examples"><div class="hn-example">丧亲支持小组——在小组中，每个人都可以自由地表达悲伤，不被评判、不被催促。研究显示，参与支持小组的丧亲者比独自哀悼的人恢复更快</div><div class="hn-example">文化差异——在爱尔兰，丧葬上的哭泣和讲故事被视为正常；在日本，克制悲伤被视为美德。两种文化都有心理健康问题，但类型不同</div>
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">人类需要悲伤的权利——不被打扰、不被修复、不被催促的权利。技术可以提供帮助，但帮助的方式不应该是消除悲伤，而应该是陪伴悲伤。一个真正有益的AI哀悼工具，不是模拟亡者的声音让你感觉他还在，而是提供一个安全的空间让你承认他已不在。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">悲伤是痛苦的，应该用技术手段消除</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">悲伤是爱的另一面——消除悲伤就是削弱爱的能力</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">我们生活在一个优化一切的时代——优化效率、优化健康、优化情绪。但人生的某些维度不应该被优化。悲伤不是低效，它是人类情感深度的来源。一个能够深刻悲伤的人，也能够深刻地爱、深刻地感受、深刻地活着。技术的价值不在于消除人类的痛苦，而在于帮助人类在痛苦中保持尊严——不是替你哭，而是在你哭的时候递上纸巾。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">作为个体：给自己的悲伤留出空间——不要急于走出来，不要因为别人说你应该振作而否定自己的感受。作为社会：建立悲伤友好的文化——允许人们在公共场合表达悲伤，不把悲伤等同于脆弱。作为技术设计者：设计陪伴型而非替代型的哀悼工具——不是模拟亡者的声音，而是提供哀悼的资源和支持。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 3</span>
+        <h2 class="question-topic">死亡的边界：技术应该在哪里停下？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">技术对死亡的干预应该有边界吗？如果AI可以复活亲人的声音和形象，下一步是否是复活他们的意识？我们在走向一个没有死亡的世界吗？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4a2d8a">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛伊德</div>
+            <div class="stance-text">在人类心灵的最深处，存在着一种矛盾的冲动——一方面是求生的本能，渴望永远存在、永远被爱；另一方面是对死亡的暗中向往，一种回归无机状态的宁静。这种矛盾不是病态，而是生命本身的结构。当技术许诺战胜死亡时，它只看到了人类心灵的一面——求生的那一面——而忽略了另一面。一个没有死亡的世界不是天堂，而是一个没有终点的故事——没有结局的故事是无法被理解的。死亡不是人生的敌人，它是意义的框架。没有这个框架，一切都会变成无意义的延续。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #2a6a4a">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛姆</div>
+            <div class="stance-text">技术应该在哪里停下？我的回答是：技术应该在人的尊严处停下。死亡不是技术问题，而是存在论问题。当技术试图解决死亡时，它实际上是在否定人的有限性——而人的有限性恰恰是人的尊严所在。正因为你知道你会死，你的每一个选择才有重量；正因为你的生命是有限的，你的爱才是珍贵的。一个没有死亡的世界不是更完整的人生，而是没有重量的人生。技术对死亡的干预应该有边界——这个边界就是不否定人的有限性。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #6a4a2a">赫</div>
+          <div class="stance-body">
+            <div class="stance-speaker">赫拉利</div>
+            <div class="stance-text">从历史的角度看，战胜死亡是人类最古老的梦想——从秦始皇的长生不老药到现代的抗衰老研究。但AI带来的不是战胜死亡，而是一种更微妙的挑战：模糊死亡。死亡的定义曾经很简单——心脏停跳、呼吸停止。但当一个人的数字体继续存在、继续说话、继续影响他人，他到底死了没有？这不是哲学问题，而是法律问题——数字亡者的人格权由谁继承？他的数字遗产由谁管理？技术正在创造一种半死不活的新存在状态，而我们的伦理和法律完全没有准备好。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8a2a4a">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">我用一个简单的边界测试来判断技术应该在哪里停下：当技术的成本大于收益时，就应该停下。AI复活亲人目前的成本是什么？对个体：情感依赖、记忆篡改、哀悼障碍。对社会：资源浪费、伦理混乱、对死亡的集体否认。收益是什么？暂时的情感慰藉。从成本收益分析来看，当前的AI复活技术已经接近边界了——再往前走，成本会急剧上升。复活意识的成本将是天文数字：伦理争议、法律纠纷、社会分裂。在商业上，任何需要改变人类对死亡的基本认知的产品，失败概率都是极高的。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #5a5a2a">老</div>
+          <div class="stance-body">
+            <div class="stance-speaker">老子</div>
+            <div class="stance-text">道生一，一生二，二生三，三生万物。万物负阴而抱阳，冲气以为和。生者，阳也；死者，阴也。阴阳相生，此天地之道也。今有人欲以巧术绝死存生，是犹欲天无夜、地无冬也。天无夜则物不息，地无冬则物不藏。不息不藏，生机反绝。知止不殆。夫唯不盈，故能蔽而新成。不知止者，器满则倾，月满则亏。技术之用，亦当知止。止于何处？止于不失人之所以为人也。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #e65100">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">我觉得人类最可笑的地方在于：我们连活着都没搞明白，就开始操心怎么不死。你问问自己：你活着的这些年，有多少天是真正活过的？大部分人的一生就是上班、下班、刷手机、睡觉——这叫活着？你连一顿饭都不好好吃，你跟我说你想永生？AI复活亲人最荒谬的地方在于：你亲人在世的时候你没有好好陪他，他走了以后你花大价钱让他数字化永生——你这不是在纪念他，你是在弥补你自己的愧疚。与其花这个钱复活他，不如花点时间好好活你自己的。技术的边界不在技术本身，在你有没有想清楚你到底要什么。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #2a6a4a">弗洛姆 → 赫拉利</div>
+            <div class="clash-text">赫拉利先生，您说AI正在创造半死不活的新存在状态——但我想问：这种半死不活的状态，对生者意味着什么？当你的母亲以数字形式继续存在，你还能开始新的亲密关系吗？你还能全心全意地爱一个活人吗？当一个活人和一个数字体同时存在于你的生活中，你的爱如何分配？这不是数字遗产管理问题，这是人类情感能力的根本问题。技术可以创造半死不活的存在，但人类的心灵可能无法处理这种存在。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #6a4a2a">赫拉利</div>
+              <div class="clash-text">弗洛姆先生，您的担忧很深刻，但我想提出一个反例：在传统社会中，人们与祖先的关系从未终结。中国人的祖先牌位、日本人的佛坛、墨西哥的亡灵节——这些都是一种半死不活的存在形式。人们并没有因为与祖先的持续联系而无法爱活人。也许问题不在于数字亡者是否存在，而在于我们如何定义与他们的关系。如果我们将数字亡者视为记忆的载体而非替代的关系，也许就不会出现您担忧的问题。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #8a2a4a">芒格 → 弗洛伊德</div>
+            <div class="clash-text">弗洛伊德先生，您说没有死亡的世界是无意义的延续——但这是一个经验无法验证的哲学假设。我们从未有过没有死亡的世界，所以您无法证明它会无意义。也许没有死亡的世界会有新的意义系统——一种我们目前无法想象的意义。用已知的框架来否定未知的可能性，这是保守主义的逻辑。历史上每一次重大技术突破——疫苗、抗生素、器官移植——都曾被批评为违背自然，但人类最终都找到了新的意义框架。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #4a2d8a">弗洛伊德</div>
+              <div class="clash-text">芒格先生，您说我们无法证明没有死亡的世界会无意义——但您同样无法证明它会有意义。意义需要边界来定义，就像一幅画需要画框。没有画框的画不是更大的画，而是什么都不是。您用疫苗和器官移植来类比——但疫苗和器官移植延长的是生命，不是永生。延长生命和消灭死亡是完全不同的两件事。延长生命是给画框加宽，消灭死亡是拆掉画框——拆掉画框之后，画也就不存在了。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #e65100">李诞 → 芒格</div>
+            <div class="clash-text">芒格先生，您说当技术的成本大于收益时就应该停下——但问题是，谁来计算这个成本？丧亲者？科技公司？政府？丧亲者会说任何代价都值得，科技公司会说收益大于成本，政府会说不在管辖范围。你的成本收益分析在理性层面是对的，但这个世界上大部分决定不是理性做出的——尤其是在亲人去世的时候。一个母亲愿意花掉所有积蓄让亡子的数字体多活一天——你的成本收益分析在她面前一文不值。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #8a2a4a">芒格</div>
+              <div class="clash-text">你说得对，个体在极端情感下无法理性判断——但这恰恰是制度存在的意义。个体不需要做出理性判断，社会需要建立制度来保护个体免受非理性决策的伤害。就像我们有冷静期制度来防止冲动离婚，我们也需要冷静期制度来防止冲动的数字复活。成本收益分析不是用来说服悲伤中的母亲的，而是用来设计保护性制度的。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">Microsoft数字复活专利引发的伦理争议</div>
+            <div class="case-source">《麻省理工科技评论》2021</div>
+          </div>
+          <div class="case-content">2021年，微软获批一项专利：用已故之人的社交媒体数据、照片、语音创建一个聊天机器人，模拟其人格与他人对话。专利描述了从特定人的社交数据中训练一个聊天机器人，使2D或3D模型能够模仿该人的个性。专利一公布就引发轩然大波：批评者称其为高科技招魂术，支持者认为这是保存记忆的新方式。微软随后声明没有将该专利产品化的计划，但讨论远未结束。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 微软搁置了产品化计划，但多家创业公司开始提供类似服务，监管框架仍然缺失
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 技术公司已经在探索数字复活的边界，但社会的伦理讨论和法律准备远远落后于技术发展——我们需要在技术跑得太远之前建立共识
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">韩国母亲在VR中重逢已故女儿</div>
+            <div class="case-source">MBC纪录片《遇见你》2020</div>
+          </div>
+          <div class="case-content">2020年，韩国MBC播出纪录片《遇见你》，记录了张智星母亲通过VR技术与因白血病去世的7岁女儿娜妍重逢的过程。制作团队用8个月时间重建了女儿的3D形象和声音。在VR中，母亲可以与女儿互动、为她唱生日歌、看她在草地上奔跑。节目播出后引发全球讨论：有人被深深感动，有人批评这是利用悲伤赚钱。张智星本人表示：那一刻我知道是假的，但我真的很想她。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 该纪录片在韩国引发关于数字哀悼伦理的大讨论，推动了韩国政府开始研究相关立法
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> VR重逢可以提供强烈的情感体验，但知道是假的和接受是假的是两回事——技术可以让假的变得非常真，而非常真的假可能是最危险的
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">技术突破数字复活的伦理边界</span>
+        </div>
+        <div class="cost-analysis">
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">当死亡不再是终点——当一个人的数字体可以永久存在——死亡的意义就被消解了。死亡从生命的完成变成了技术的故障。这种认知转变会从根本上改变人类对生命的理解。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">当数字亡者拥有权利——名誉权、隐私权、财产权——整个法律体系需要重新设计。谁代表数字亡者行使权利？数字亡者的遗嘱由AI生成是否有效？这些问题没有先例可循。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">当一个人的数字体和活人一样有存在感，人类的定义就变得模糊。数字亡者是人还是数据？如果是人，它有什么权利？如果是数据，为什么我们要尊重它？这个模糊性会引发深层次的社会冲突。</div>
+        </div>
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">2060年，全球数字亡者数量超过活人。每个逝去的人都有一个数字体继续在虚拟世界中生活。活人开始感到一种前所未有的存在焦虑——他们不再是世界的主体，而只是暂时还在的少数派。法律体系被迫承认数字亡者为数字公民，引发了关于谁才是真正的公民的政治危机。人类文明从活人的文明变成了数字存在的文明，活人在这个文明中的地位越来越边缘。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">我们只看到那些技术让我重新见到妈妈的美好瞬间。但我们没有看到的是：当数字亡者数量超过活人后的社会秩序危机，当活着不再意味着唯一存在时的人类身份认同崩溃，当死亡失去意义后的生命意义危机。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">人类是否真的想要战胜死亡——还是只是害怕死亡的过程？</div>
+        <div class="hn-analysis">弗洛伊德提出，人类心灵中存在死亡驱力——一种回归无机状态的深层渴望，与求生本能并存。这意味着人类对死亡的态度不是简单的恐惧和逃避，而是恐惧与向往的矛盾。许多临终者报告在濒死体验中感受到深刻的平静和解脱——这暗示死亡本身可能不是人类最恐惧的，死亡的过程才是——孤独、痛苦、未完成的事。AI复活服务利用的可能不是对死亡的恐惧，而是对孤独死亡的恐惧——害怕独自面对那个终点。</div>
+        <div class="hn-examples"><div class="hn-example">临终关怀研究——多数临终者最大的恐惧不是死后怎样，而是死前是否孤独</div><div class="hn-example">遗嘱行为——人们写遗嘱时关注的不是自己死后怎样，而是自己爱的人会怎样</div>
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">人类可能并不真的想要战胜死亡——我们真正想要的是不孤独地死去和知道我们爱的人会好好的。如果这是真的，那AI复活服务就走错了方向：它不是解决孤独，而是用虚假的存在制造更深的孤独。真正的帮助不是让你的亲人以数字形式回来，而是让你在面对死亡时有人陪伴。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">技术应该不断突破边界，包括死亡的边界</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">技术的价值不在于突破所有边界，而在于帮助人类在边界内活得更好</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">人类文明的一个核心张力是突破限制与接受限制之间的平衡。技术的本能是突破——更快、更强、更远；但智慧的本能是接受——知道什么该改变，什么不该改变。死亡是人类存在的基本限制，它的价值不在于它是不可战胜的，而在于它让其他一切变得有意义。技术对死亡的干预应该有边界——这个边界不是技术能力的极限，而是人类尊严的底线。当技术开始模糊生与死的界限，我们需要的不是更好的技术，而是更深的智慧来回答：我们到底想要什么样的人生？</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">作为个体：思考你对死亡的恐惧到底是什么——是不再存在，还是孤独地消失？这决定了你需要什么——是AI复活，还是真实的人际连接。作为社会：建立数字死亡的法律框架——明确数字亡者的法律地位、数字遗产的管理规则、数字复活的伦理边界。作为技术社区：在开发突破死亡的技术之前，先回答一个问题——这项技术是在帮助人类面对死亡，还是在帮助人类逃避死亡？前者值得开发，后者需要警惕。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide insight-slide">
+      <div class="insight-glow"></div>
+      <div class="insight-content">
+        <span class="slide-tag">FINAL INSIGHT</span>
+        <h2 class="insight-title">最终洞见</h2>
+        <div class="insight-divider"></div>
+        <p class="insight-text">AI复活亲人不是一个技术问题，而是一面镜子——照出人类对丧失的恐惧、对悲伤的逃避、对死亡的否认。技术可以模拟声音、模拟面容、模拟说话方式，但它无法模拟的是：那个不可替代之人的不可替代性。真正的慰藉不在于让逝者回来，而在于承认他们已经走了——然后带着他们的记忆，继续活。悲伤不是需要被技术解决的问题，它是爱的证明。死亡不是需要被技术克服的障碍，它是生命的框架。当我们用技术模糊生与死的界限，我们失去的不是悲伤，而是爱的深度。哀悼的终极意义不是忘记，而是带着失去继续爱——这是任何技术都无法替代的人类能力。</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">OPEN QUESTIONS</span>
+        <h2 class="slide-title">开放问题</h2>
+      </div>
+      <div class="oq-container">
+        <div class="oq-item">
+          <div class="oq-num">1</div>
+          <div class="oq-text">如果一个人生前明确表示不希望被AI复活，其家属是否有权利违背这一意愿？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">2</div>
+          <div class="oq-text">当AI复活服务的用户去世后，他们的数字亡者和他们亲人的数字亡者是否应该被允许在数字世界重逢？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">3</div>
+          <div class="oq-text">社会是否应该为AI复活服务设定使用期限——比如丧亲后一年内可以使用，之后必须停止？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">4</div>
+          <div class="oq-text">如果AI复活服务成为一种必需品，无力支付费用的贫困丧亲者是否应该获得公共补贴？</div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="nav-dots">
+      <button class="nav-dot active" data-idx="0"></button>
+      <button class="nav-dot" data-idx="1"></button>
+      <button class="nav-dot" data-idx="2"></button>
+      <button class="nav-dot" data-idx="3"></button>
+      <button class="nav-dot" data-idx="4"></button>
+      <button class="nav-dot" data-idx="5"></button>
+      <button class="nav-dot" data-idx="6"></button>
+      <button class="nav-dot" data-idx="7"></button>
+      <button class="nav-dot" data-idx="8"></button>
+      <button class="nav-dot" data-idx="9"></button>
+      <button class="nav-dot" data-idx="10"></button>
+      <button class="nav-dot" data-idx="11"></button>
+      <button class="nav-dot" data-idx="12"></button>
+      <button class="nav-dot" data-idx="13"></button>
+      <button class="nav-dot" data-idx="14"></button>
+      <button class="nav-dot" data-idx="15"></button>
+      <button class="nav-dot" data-idx="16"></button>
+      <button class="nav-dot" data-idx="17"></button>
+      <button class="nav-dot" data-idx="18"></button>
+      <button class="nav-dot" data-idx="19"></button>
+      <button class="nav-dot" data-idx="20"></button>
+      <button class="nav-dot" data-idx="21"></button>
+      <button class="nav-dot" data-idx="22"></button>
+      <button class="nav-dot" data-idx="23"></button>
+      <button class="nav-dot" data-idx="24"></button>
+      <button class="nav-dot" data-idx="25"></button>
+      <button class="nav-dot" data-idx="26"></button>
+      <button class="nav-dot" data-idx="27"></button>
+</div>
+
+<script>
+
+    (function() {
+      const slideshow = document.getElementById('slideshow');
+      const progressBar = document.getElementById('progressBar');
+      const pageCounter = document.getElementById('pageCounter');
+      const dots = document.querySelectorAll('.nav-dot');
+      const total = 28;
+      let current = 0;
+      let wheelTimer = null;
+      let isScrolling = false;
+
+      function updateUI() {
+        const scrollLeft = slideshow.scrollLeft;
+        const slideWidth = slideshow.clientWidth;
+        current = Math.round(scrollLeft / slideWidth);
+        if (current < 0) current = 0;
+        if (current >= total) current = total - 1;
+
+        // Progress bar
+        const pct = ((current + 1) / total) * 100;
+        progressBar.style.width = pct + '%';
+
+        // Page counter
+        pageCounter.textContent = (current + 1) + ' / ' + total;
+
+        // Dots
+        dots.forEach(function(d, i) {
+          d.classList.toggle('active', i === current);
+        });
+      }
+
+      function goTo(idx) {
+        if (idx < 0) idx = 0;
+        if (idx >= total) idx = total - 1;
+        slideshow.scrollTo({ left: idx * slideshow.clientWidth, behavior: 'smooth' });
+        current = idx;
+        setTimeout(updateUI, 400);
+      }
+
+      // Keyboard
+      document.addEventListener('keydown', function(e) {
+        switch(e.key) {
+          case 'ArrowRight': case ' ': case 'PageDown':
+            e.preventDefault(); goTo(current + 1); break;
+          case 'ArrowLeft': case 'PageUp':
+            e.preventDefault(); goTo(current - 1); break;
+          case 'Home':
+            e.preventDefault(); goTo(0); break;
+          case 'End':
+            e.preventDefault(); goTo(total - 1); break;
+        }
+      });
+
+      // Mouse wheel with debounce
+      slideshow.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        if (wheelTimer) return;
+        wheelTimer = setTimeout(function() { wheelTimer = null; }, 600);
+        if (e.deltaY > 0 || e.deltaX > 0) {
+          goTo(current + 1);
+        } else {
+          goTo(current - 1);
+        }
+      }, { passive: false });
+
+      // Nav dots
+      dots.forEach(function(dot, i) {
+        dot.addEventListener('click', function() { goTo(i); });
+      });
+
+      // Scroll event
+      slideshow.addEventListener('scroll', function() {
+        if (!isScrolling) {
+          isScrolling = true;
+          requestAnimationFrame(function() {
+            updateUI();
+            isScrolling = false;
+          });
+        }
+      });
+
+      // Resize
+      window.addEventListener('resize', function() { goTo(current); });
+
+      // Init
+      updateUI();
+    })();
+    
+</script>
+
+</body>
+</html>

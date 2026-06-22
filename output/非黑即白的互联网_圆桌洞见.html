@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>非黑即白的互联网，是否正在摧毁我们理解复杂事物的能力？</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0A0A0A;
+      --bg2: #111111;
+      --bg3: #1A1A1A;
+      --text: #F5F5F5;
+      --text2: #A0A0A0;
+      --text3: #606060;
+      --accent: #00E676;
+      --accent-light: #69F0AE;
+      --accent-dark: #00C853;
+      --clash: #FF5252;
+      --insight: #00BFA5;
+      --card-bg: rgba(0,230,118,0.08);
+      --card-border: rgba(0,230,118,0.2);
+      --glow: rgba(0,230,118,0.3);
+      --slide-w: 100vw;
+      --slide-h: 100vh;
+      --font-display: 'Noto Serif SC', serif;
+      --font-body: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    html { font-size: 16px; scroll-behavior: auto; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      overflow-y: hidden;
+      height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Slideshow container ─── */
+    .slideshow {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+    .slideshow::-webkit-scrollbar { display: none; }
+    .slideshow { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* ─── Slide ─── */
+    .slide {
+      flex: 0 0 var(--slide-w);
+      width: var(--slide-w);
+      height: var(--slide-h);
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 4rem 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ─── Progress bar ─── */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      z-index: 1000;
+      transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      box-shadow: 0 0 10px var(--glow);
+    }
+
+    /* ─── Page counter ─── */
+    .page-counter {
+      position: fixed;
+      top: 1.5rem;
+      right: 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text3);
+      z-index: 1000;
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Nav dots ─── */
+    .nav-dots {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 1000;
+      padding: 8px 16px;
+      background: rgba(10,10,10,0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      outline: none;
+    }
+    .nav-dot:hover { background: var(--text2); transform: scale(1.3); }
+    .nav-dot.active {
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--glow);
+      transform: scale(1.2);
+    }
+
+    /* ─── Slide header ─── */
+    .slide-header {
+      width: 100%;
+      max-width: 1000px;
+      margin-bottom: 2.5rem;
+    }
+    .slide-tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+    .slide-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    /* ─── Cover slide ─── */
+    .cover-slide {
+      background: radial-gradient(ellipse at 30% 50%, rgba(20,20,20,1) 0%, var(--bg) 70%);
+    }
+    .cover-glow {
+      position: absolute;
+      top: 50%;
+      left: 30%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .cover-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .cover-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      margin-bottom: 2rem;
+    }
+    .cover-title {
+      font-family: var(--font-display);
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 1rem;
+      max-width: 700px;
+    }
+    .cover-subtitle {
+      font-size: 1.1rem;
+      color: var(--text2);
+      margin-bottom: 1.5rem;
+    }
+    .cover-books {
+      font-size: 0.9rem;
+      color: var(--text3);
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+    .cover-stats {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .cover-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .cover-stat-num {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .cover-stat-label {
+      font-size: 0.85rem;
+      color: var(--text3);
+      margin-top: 0.25rem;
+    }
+    .cover-stat-divider {
+      width: 1px;
+      height: 40px;
+      background: var(--text3);
+      opacity: 0.3;
+    }
+    .cover-experts {
+      font-size: 0.9rem;
+      color: var(--text2);
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Expert grid ─── */
+    .expert-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 1000px;
+    }
+    .expert-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      transition: all 0.3s ease;
+    }
+    .expert-card:hover {
+      border-color: var(--card-color, var(--accent));
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      transform: translateY(-2px);
+    }
+    .expert-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0A0A0A;
+      flex-shrink: 0;
+    }
+    .expert-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .expert-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+    .expert-title {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-bottom: 0.5rem;
+    }
+    .expert-stance {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 8px;
+      border-radius: 3px;
+      margin-bottom: 0.5rem;
+    }
+    .expert-belief {
+      font-size: 0.8rem;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+
+    /* ─── Question slide ─── */
+    .question-slide {
+      background: radial-gradient(ellipse at 50% 50%, rgba(20,20,20,1) 0%, var(--bg) 70%);
+    }
+    .question-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    .question-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .question-topic {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 1.5rem 0;
+      line-height: 1.3;
+    }
+    .question-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--accent);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .question-text {
+      font-size: 1.15rem;
+      color: var(--text2);
+      line-height: 1.8;
+    }
+
+    /* ─── Stances ─── */
+    .stances-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .stance-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .stance-item:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .stance-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0A0A0A;
+      flex-shrink: 0;
+    }
+    .stance-body {
+      flex: 1;
+    }
+    .stance-speaker {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .stance-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Clash ─── */
+    .clash-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .clash-block {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+    }
+    .clash-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clash);
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .clash-item {
+      margin-bottom: 1rem;
+    }
+    .clash-item:last-child { margin-bottom: 0; }
+    .clash-speaker {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .clash-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      padding-left: 1rem;
+      border-left: 2px solid var(--card-border);
+    }
+    .clash-attack .clash-text {
+      border-left-color: var(--clash);
+    }
+    .clash-counter .clash-text {
+      border-left-color: var(--insight);
+    }
+
+    /* ─── Reality cases ─── */
+    .cases-container {
+      width: 100%;
+      max-width: 1000px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .case-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .case-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .case-header {
+      margin-bottom: 1rem;
+    }
+    .case-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .case-source {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-top: 0.25rem;
+    }
+    .case-content {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .case-outcome, .case-lesson {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+    .case-label {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-right: 0.5rem;
+    }
+
+    /* ─── Cost discussion ─── */
+    .cost-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .cost-scenario {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-scenario-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-scenario-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .cost-analysis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .cost-dimension {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .cost-value {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .cost-worst {
+      background: rgba(255,71,87,0.08);
+      border: 1px solid rgba(255,71,87,0.2);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-worst-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clash);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-worst-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .cost-survivor {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .cost-survivor-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-survivor-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Human nature ─── */
+    .hn-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .hn-question {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .hn-analysis {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+    }
+    .hn-examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .hn-example {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .hn-conclusion {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .hn-conclusion-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .hn-conclusion-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Cognitive upgrade ─── */
+    .upgrade-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .upgrade-block {
+      display: flex;
+      gap: 1.5rem;
+      align-items: stretch;
+      margin-bottom: 1.5rem;
+    }
+    .upgrade-before, .upgrade-after {
+      flex: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .upgrade-before {
+      border-color: rgba(255,71,87,0.2);
+      background: rgba(255,71,87,0.05);
+    }
+    .upgrade-after {
+      border-color: rgba(0,212,170,0.2);
+      background: rgba(0,212,170,0.05);
+    }
+    .upgrade-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+    .upgrade-before .upgrade-label { color: var(--clash); }
+    .upgrade-after .upgrade-label { color: var(--insight); }
+    .upgrade-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .upgrade-arrow {
+      display: flex;
+      align-items: center;
+      font-size: 2rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .upgrade-complexity, .upgrade-actionable {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .upgrade-complexity-label, .upgrade-actionable-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .upgrade-complexity-text, .upgrade-actionable-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Final insight ─── */
+    .insight-slide {
+      background: radial-gradient(ellipse at 50% 50%, rgba(0,212,170,0.05) 0%, var(--bg) 60%);
+    }
+    .insight-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0,212,170,0.15) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .insight-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .insight-title {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--insight);
+      margin: 1.5rem 0;
+    }
+    .insight-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--insight);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .insight-text {
+      font-size: 1.1rem;
+      color: var(--text2);
+      line-height: 1.9;
+    }
+
+    /* ─── Open questions ─── */
+    .oq-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .oq-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .oq-item:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+    .oq-num {
+      font-family: var(--font-mono);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+      width: 32px;
+      text-align: center;
+    }
+    .oq-text {
+      font-size: 1rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      .slide { padding: 2rem 1.5rem; }
+      .cover-title { font-size: 2rem; }
+      .question-topic { font-size: 1.8rem; }
+      .slide-title { font-size: 1.6rem; }
+      .expert-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+      .upgrade-block { flex-direction: column; }
+      .upgrade-arrow { transform: rotate(90deg); justify-content: center; }
+      .cases-container { grid-template-columns: 1fr; }
+      .cost-analysis { grid-template-columns: 1fr; }
+      .hn-examples { grid-template-columns: 1fr; }
+      .nav-dots { display: none; }
+    }
+    @media (max-width: 480px) {
+      .expert-grid { grid-template-columns: 1fr; }
+      .cover-stats { gap: 1rem; }
+      .cover-stat-num { font-size: 2rem; }
+    }
+    
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<div class="page-counter" id="pageCounter">1 / 28</div>
+
+<div class="slideshow" id="slideshow">
+
+    <div class="slide cover-slide">
+      <div class="cover-glow"></div>
+      <div class="cover-content">
+        <div class="cover-badge">ROUNDTABLE DISCUSSION</div>
+        <h1 class="cover-title">非黑即白的互联网，是否正在摧毁我们理解复杂事物的能力？</h1>
+        
+        
+        <div class="cover-stats">
+          <div class="cover-stat">
+            <span class="cover-stat-num">6</span>
+            <span class="cover-stat-label">位专家</span>
+          </div>
+          <div class="cover-stat-divider"></div>
+          <div class="cover-stat">
+            <span class="cover-stat-num">3</span>
+            <span class="cover-stat-label">轮讨论</span>
+          </div>
+        </div>
+        <div class="cover-experts">卡尼曼 · 韩炳哲 · 赫拉利 · 芒格 · 项飙 · 李诞</div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">EXPERTS</span>
+        <h2 class="slide-title">专家阵营</h2>
+      </div>
+      <div class="expert-grid">
+        <div class="expert-card" style="--card-color: #333333">
+          <div class="expert-avatar" style="background: #333333">卡</div>
+          <div class="expert-info">
+            <div class="expert-name">卡尼曼</div>
+            <div class="expert-title">认知心理学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #8a2a4a">
+          <div class="expert-avatar" style="background: #8a2a4a">韩</div>
+          <div class="expert-info">
+            <div class="expert-name">韩炳哲</div>
+            <div class="expert-title">哲学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #6a4a8a">
+          <div class="expert-avatar" style="background: #6a4a8a">赫</div>
+          <div class="expert-info">
+            <div class="expert-name">赫拉利</div>
+            <div class="expert-title">历史学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #2a4a2a">
+          <div class="expert-avatar" style="background: #2a4a2a">芒</div>
+          <div class="expert-info">
+            <div class="expert-name">芒格</div>
+            <div class="expert-title">投资家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #1a5f2a">
+          <div class="expert-avatar" style="background: #1a5f2a">项</div>
+          <div class="expert-info">
+            <div class="expert-name">项飙</div>
+            <div class="expert-title">人类学家</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #e65100">
+          <div class="expert-avatar" style="background: #e65100">李</div>
+          <div class="expert-info">
+            <div class="expert-name">李诞</div>
+            <div class="expert-title">脱口秀演员</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 1</span>
+        <h2 class="question-topic">二元思维：是认知本能还是算法强化？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">人类天生倾向于把世界简化为对立的两极——这种倾向在互联网时代是被放大了，还是被从无到有地创造了？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #333333">卡</div>
+          <div class="stance-body">
+            <div class="stance-speaker">卡尼曼</div>
+            <div class="stance-text">二元思维首先是认知本能。人类大脑进化出&#x27;系统1&#x27;——快速、直觉、二元化的判断机制。在原始草原上，你需要在毫秒内判断&#x27;前方的东西是威胁还是安全&#x27;——这种&#x27;是/否&#x27;的快速分类是生存优势。但系统1的问题是：它对复杂性没有耐心。当你在社交媒体上看到一个观点，系统1会在你还没读完文章之前就已经给你贴上了&#x27;赞同/反对&#x27;的标签。算法没有创造二元思维——它只是把人类最原始的认知捷径变成了商业模式。每一个&#x27;点赞/不点赞&#x27;的按钮，都在强化你的系统1，同时让系统2——那个能够处理矛盾、容忍模糊的慢思考系统——逐渐萎缩。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8a2a4a">韩</div>
+          <div class="stance-body">
+            <div class="stance-speaker">韩炳哲</div>
+            <div class="stance-text">卡尼曼说这是&#x27;认知本能&#x27;——但这只是故事的一半。互联网不是简单地放大了二元思维，它创造了一种全新的&#x27;否定性暴力&#x27;。在传统社会，冲突至少还有&#x27;他者&#x27;作为中介——你是通过与一个具体的人辩论来确认自己的立场。但在互联网上，&#x27;他者&#x27;被消除了，取而代之的是&#x27;同温层的回声&#x27;。你不需要真正面对反对意见——你只需要看到反对意见的&#x27;截图&#x27;和&#x27;转述&#x27;。这不是&#x27;辩论&#x27;，这是&#x27;审判&#x27;——你已经知道结论，只需要找到证据。互联网把&#x27;他者&#x27;变成了&#x27;敌人&#x27;，把&#x27;对话&#x27;变成了&#x27;审判&#x27;，把&#x27;思考&#x27;变成了&#x27;表态&#x27;。二元思维不是本能的放大——它是本能在数字环境中的畸变。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #6a4a8a">赫</div>
+          <div class="stance-body">
+            <div class="stance-speaker">赫拉利</div>
+            <div class="stance-text">二元思维是人类讲故事能力的副产品。智人之所以能统治地球，不是因为我们更强壮或更聪明，而是因为我们能够创造和相信&#x27;虚构故事&#x27;——宗教、国家、货币、法律。但所有好的故事都需要&#x27;对立面&#x27;：基督教有上帝和魔鬼，民族主义有&#x27;我们&#x27;和&#x27;他们&#x27;，冷战有&#x27;自由世界&#x27;和&#x27;共产主义&#x27;。互联网的算法本质上是一个&#x27;故事放大器&#x27;——它奖励那些最能激发情感反应的故事，而最能激发情感反应的故事就是最简单的二元叙事。&#x27;好人vs坏人&#x27;比&#x27;这件事很复杂&#x27;更容易获得点赞。算法没有创造二元思维——它只是发现二元叙事是最高效的情感燃料，然后把整台机器都建立在这上面。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #2a4a2a">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">从投资的角度看，二元思维是一种&#x27;认知缺陷&#x27;——我在投资中最重要的原则之一就是&#x27;多元思维模型&#x27;。你不能只用一个框架看世界——你需要物理学、生物学、心理学、经济学的多重透镜。但互联网奖励的恰恰相反：它奖励&#x27;一句话总结&#x27;、&#x27;三个字判断&#x27;、&#x27;站队式表态&#x27;。一个投资者如果只看到&#x27;买/卖&#x27;两个选项，他会亏得底朝天；但一个网民如果只看到&#x27;支持/反对&#x27;两个选项，他反而会获得更多点赞和关注。这不是简单的&#x27;算法问题&#x27;——这是&#x27;激励结构&#x27;的问题。当二元表态的回报高于复杂思考的回报时，理性人也会选择二元思维。互联网创造了一个&#x27;二元思维有利可图&#x27;的环境——这才是真正的问题。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #1a5f2a">项</div>
+          <div class="stance-body">
+            <div class="stance-speaker">项飙</div>
+            <div class="stance-text">我需要从&#x27;附近&#x27;的角度来切入这个问题。二元思维的爆发不只是算法的结果——它是&#x27;附近消失&#x27;的后果。在传统社区里，你面对的是活生生的人：你的邻居可能和你政治观点不同，但他同时也是帮你修水管的人。你没办法把他简化为一个&#x27;对立面&#x27;——因为他是一个完整的、具体的、有血有肉的人。但在互联网上，所有人都是&#x27;远方的陌生人&#x27;——他们不是你的邻居，他们是&#x27;标签&#x27;：&#x27;左派&#x27;、&#x27;右派&#x27;、&#x27;粉红&#x27;、&#x27;神神&#x27;。当人失去了具体性，二元分类就变得不可避免。算法加速了这个过程，但根源不在算法——根源在于我们失去了&#x27;附近&#x27;，失去了和具体的人打交道的能力。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #e65100">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">你们把二元思维说得太严肃了。二元思维不是什么新发明——我妈逛菜市场就知道&#x27;贵的&#x27;和&#x27;便宜的&#x27;，她不需要经济学博士。问题是互联网把二元思维变成了一种&#x27;社交货币&#x27;。你发一条&#x27;这件事很复杂，需要从多个角度看&#x27;——0个赞。你发一条&#x27;这个人就是个傻X&#x27;——1000个赞。你告诉我，你会选哪个？二元思维不是认知本能也不是算法阴谋——它是一种&#x27;最省力的社交策略&#x27;。在信息爆炸的时代，你没有时间去理解每件事的复杂性，但你有时间去&#x27;表态&#x27;。表态是免费的，思考是昂贵的。互联网只是把这道经济题的解法暴露给我们看。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #8a2a4a">韩炳哲 → 卡尼曼</div>
+            <div class="clash-text">你说二元思维是&#x27;认知本能&#x27;，算法只是&#x27;放大器&#x27;——这个框架太温和了。你的系统1/系统2模型假设了一个&#x27;正常状态&#x27;——系统2可以被训练去覆盖系统1。但互联网创造的环境不是&#x27;系统1的放大&#x27;，而是&#x27;系统2的结构性摧毁&#x27;。当你的注意力被切割成15秒的碎片，当你的信息来源被算法过滤，当你的情绪被持续激活——系统2根本无法正常运作。这不是&#x27;放大&#x27;——这是&#x27;致残&#x27;。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #333333">卡尼曼</div>
+              <div class="clash-text">你说系统2被&#x27;结构性摧毁&#x27;——这个说法太绝对了。认知科学的证据显示：人类的认知能力在同一时代内不会发生结构性改变。系统2没有被&#x27;摧毁&#x27;——它只是被&#x27;持续干扰&#x27;。区别很重要：&#x27;摧毁&#x27;意味着不可逆，&#x27;干扰&#x27;意味着可以通过环境设计来缓解。把问题说成&#x27;结构性摧毁&#x27;会让人绝望——而绝望本身就是二元思维的一种形式。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #2a4a2a">芒格 → 韩炳哲</div>
+            <div class="clash-text">你把问题归咎于&#x27;否定性暴力的消除&#x27;和&#x27;他者的消失&#x27;——但这些概念太抽象了。作为一个投资家，我看问题的方式更直接：二元思维是一种&#x27;低成本策略&#x27;，复杂思维是一种&#x27;高成本策略&#x27;。当信息环境的&#x27;噪声&#x27;增加10倍，复杂思维的成本也增加10倍，但二元思维的成本几乎不变。你的哲学分析忽略了一个基本事实：大多数人选择二元思维不是因为他们&#x27;被剥夺了他者&#x27;，而是因为他们&#x27;没有时间和精力去做复杂判断&#x27;。这是经济问题，不是存在主义问题。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #8a2a4a">韩炳哲</div>
+              <div class="clash-text">你说这是&#x27;经济问题&#x27;——但经济问题本身就是哲学问题。为什么&#x27;复杂判断&#x27;的成本这么高？因为互联网创造了一种&#x27;持续激活&#x27;的存在状态——你每时每刻都在被信息轰炸，你的情绪每时每刻都在被调动。这种&#x27;持续激活&#x27;不是经济效率的结果，而是一种&#x27;精神政治&#x27;的控制技术。你把人放在一个&#x27;永不停歇的信息流水线上&#x27;，然后说他们&#x27;没有精力做复杂判断&#x27;——这就像把人关在监狱里然后说他们&#x27;没有自由的意愿&#x27;。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #1a5f2a">项飙 → 赫拉利</div>
+            <div class="clash-text">你把二元思维归因于&#x27;讲故事的本能&#x27;——这个解释有宏大叙事的诱惑力，但缺乏微观机制。故事可以是二元的，也可以是复杂的——《红楼梦》就是一个拒绝二元分类的故事。问题不在于&#x27;讲故事&#x27;本身，而在于&#x27;什么样的故事被算法选中并放大&#x27;。你的分析跳过了一个关键环节：从&#x27;讲故事的本能&#x27;到&#x27;互联网二元思维&#x27;之间的具体因果链条是什么？如果你的回答是&#x27;算法放大了简单故事&#x27;，那这不是历史学的发现，这是常识。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #6a4a8a">赫拉利</div>
+              <div class="clash-text">你要求&#x27;微观机制&#x27;——但人类历史的宏观趋势往往无法用单一的微观机制来解释。为什么16世纪的宗教战争如此残酷？不是因为&#x27;微观激励&#x27;，而是因为&#x27;叙事框架的转变&#x27;——新教和天教提供了两个互不兼容的&#x27;宇宙故事&#x27;。互联网二元思维也是类似的：算法不只是&#x27;放大&#x27;了简单故事——它创造了一个&#x27;叙事生态&#x27;，在这个生态中，复杂故事无法存活。这不是常识——这是文明演化层面的分析。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">微博热搜的二元叙事陷阱</div>
+            <div class="case-source">社交媒体传播分析 2020-2024</div>
+          </div>
+          <div class="case-content">微博热搜话题的传播模式呈现出明显的二元化特征。以2023年多起公共事件为例，复杂的社会议题在热搜机制下被压缩为&#x27;受害者vs施害者&#x27;的简单叙事。研究显示，带有明确道德判断的标题获得的互动量是中性标题的5-8倍。热搜机制本质上是一个&#x27;二元化过滤器&#x27;——它不是反映公众讨论，而是重塑公众讨论的形态。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 推动了对平台推荐机制的公共讨论和监管关注
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 平台的排序机制不只是&#x27;中性工具&#x27;——它们主动塑造了公共讨论的认知结构
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">Cancel Culture的二元审判逻辑</div>
+            <div class="case-source">美国社交媒体文化现象 2018-2023</div>
+          </div>
+          <div class="case-content">Cancel Culture（取消文化）是二元思维在互联网上的典型表现。一个公众人物的某句话被截图传播后，公众会在数小时内完成&#x27;审判&#x27;：你或者是&#x27;被取消的&#x27;，或者是&#x27;站在正义一边的&#x27;。没有中间地带，没有语境考量，没有&#x27;错误的严重程度&#x27;分级。研究显示，被取消的公众人物中，约60%的案例在完整语境下呈现出远比二元叙事更复杂的面貌——但完整语境的传播量不及二元叙事的1/20。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 引发了对&#x27;数字私刑&#x27;和&#x27;比例原则&#x27;的广泛反思
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 二元思维不只是&#x27;认知效率工具&#x27;——在公共讨论中，它可以成为&#x27;暴力工具&#x27;
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">二元思维成为互联网公共讨论的默认认知模式</span>
+        </div>
+        <div class="cost-analysis">
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">当二元思维成为默认模式，公共讨论的复杂性持续下降。政策议题被简化为&#x27;支持/反对&#x27;的投票，社会问题被简化为&#x27;好人/坏人&#x27;的叙事。长期来看，民主社会所需要的&#x27;协商能力&#x27;——即不同立场的人通过对话达成共识的能力——会被结构性削弱。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">当你的大脑习惯了二元分类的快捷方式，你处理复杂信息的能力会逐渐退化。这不是&#x27;懒&#x27;——这是神经可塑性的结果。大脑会强化你经常使用的认知路径，弱化你不常使用的路径。长期使用二元思维的人，在面对真正复杂的决策时——无论是职业选择、关系判断还是投资决策——都会更倾向于&#x27;非此即彼&#x27;的简化处理。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">二元思维把所有分歧都升级为&#x27;道德对立&#x27;——你不是和我观点不同，你是&#x27;坏人&#x27;。这种道德化的对立使得妥协变得不可能——你怎么能和&#x27;坏人&#x27;妥协？结果是：社会共识的形成机制被破坏，群体极化持续加深。</div>
+        </div>
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">2045年，公共讨论完全碎片化为互不相通的&#x27;二元阵营&#x27;。每个阵营有自己的&#x27;事实&#x27;、自己的&#x27;叙事&#x27;、自己的&#x27;道德宇宙&#x27;。跨阵营对话在技术上仍然可能，但在认知上已经不可能——因为人们已经失去了理解&#x27;另一种逻辑&#x27;的能力。民主协商退化为&#x27;阵营间的力量博弈&#x27;。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">我们看到的是那些在二元对立中&#x27;获胜&#x27;的意见领袖——他们的粉丝增长、影响力扩大、商业变现成功。但我们没看到的是：那些因为拒绝站队而被边缘化的理性声音，那些因为&#x27;说得太复杂&#x27;而无人关注的公共知识分子，以及那些在二元对立中被撕裂的普通人。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">人类是天生的二元思考者，还是二元思维是一种可以被超越的认知局限？</div>
+        <div class="hn-analysis">认知科学的证据指向一个复杂的答案：人类既有二元思维的&#x27;硬件倾向&#x27;，也有复杂思维的&#x27;软件能力&#x27;。进化赋予了我们快速二元分类的本能——这是系统1的核心功能。但前额叶皮层的发展也赋予了我们&#x27;元认知&#x27;的能力——即&#x27;意识到自己在做简化&#x27;并主动修正。关键发现是：复杂思维不是&#x27;自动的&#x27;——它需要能量、时间、和训练。互联网的问题不在于它激活了二元思维（这本来就是默认设置），而在于它消耗了复杂思维所需的资源——注意力、耐心、和安静的思考空间。</div>
+        <div class="hn-examples"><div class="hn-example">&#x27;缓慢新闻&#x27;运动的兴起——试图对抗信息速度对思考深度的侵蚀</div><div class="hn-example">芬兰将&#x27;媒体素养&#x27;和&#x27;批判性思维&#x27;纳入小学课程——试图在认知习惯形成期培养复杂思维能力</div>
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">二元思维是认知的&#x27;出厂设置&#x27;，但不是&#x27;唯一设置&#x27;。人类有能力超越二元——但这种能力需要刻意的训练和保护性的环境。互联网正在同时削弱这两者：它既不鼓励复杂思维的训练，也不提供复杂思维所需的环境。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">二元思维是人类的自然倾向，互联网只是让它更可见了</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">互联网不只是放大了二元思维——它创造了一个&#x27;二元思维有奖励、复杂思维有惩罚&#x27;的激励结构，系统性地重塑了公共认知</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">二元思维的根源是多重的：认知本能、算法激励、注意力经济、附近消失、叙事本能——它们不是互相替代的解释，而是互相叠加的力量。任何单一归因都是对问题本身的二元简化。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">作为个体：在表达观点之前，强制自己&#x27;至少找到对方的三个合理理由&#x27;。作为平台：降低情绪化二元内容的算法权重。作为社会：在教育中把&#x27;容忍模糊&#x27;作为核心能力来培养，而不仅仅是&#x27;批判性思维&#x27;——因为批判性思维仍然预设了&#x27;对/错&#x27;的框架。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 2</span>
+        <h2 class="question-topic">复杂性的消亡：为什么我们越来越不能容忍灰色地带？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">互联网似乎正在系统性地消灭&#x27;灰色地带&#x27;——每一个议题都必须有明确的立场，每一个人都必须被归类。这种&#x27;复杂性过敏&#x27;的深层机制是什么？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8a2a4a">韩</div>
+          <div class="stance-body">
+            <div class="stance-speaker">韩炳哲</div>
+            <div class="stance-text">复杂性的消亡是&#x27;透明社会&#x27;的必然结果。我在《透明社会》中指出：现代社会对&#x27;透明&#x27;的崇拜正在摧毁一切&#x27;否定性&#x27;——即一切模糊、暧昧、不可穿透的东西。灰色地带之所以令人不安，恰恰因为它是&#x27;不透明的&#x27;——你无法一眼看穿它，你无法立刻对它下判断。但透明社会要求一切都可以被&#x27;看穿&#x27;、被&#x27;分类&#x27;、被&#x27;评判&#x27;。&#x27;灰色地带&#x27;不是被&#x27;消灭&#x27;的——它是被&#x27;透明化&#x27;的：当一切都被要求&#x27;表态&#x27;，当一切都被要求&#x27;亮明立场&#x27;，灰色地带就失去了存在的空间。这不是认知退化——这是一种新的&#x27;精神政治&#x27;控制：通过消灭模糊性来消灭思考的可能性。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #333333">卡</div>
+          <div class="stance-body">
+            <div class="stance-speaker">卡尼曼</div>
+            <div class="stance-text">不能容忍灰色地带的心理机制是&#x27;认知闭合需求&#x27;（Need for Cognitive Closure）。人类大脑有一种深层需求：把开放性的问题&#x27;关闭&#x27;——给出一个确定的、不再需要修改的答案。这种需求在不确定性高的环境中会急剧上升。互联网恰好创造了一个&#x27;高不确定性&#x27;的信息环境：你每天面对的信息量远超你的处理能力，每一条信息都可能是真的也可能是假的，每一个观点都有人支持也有人反对。在这种高度不确定的环境中，&#x27;认知闭合需求&#x27;飙升——你的大脑疯狂地想要找到一个&#x27;确定的锚点&#x27;。二元判断就是最便捷的认知闭合工具：&#x27;这件事是好是坏&#x27;比&#x27;这件事有好有坏&#x27;更能让你的大脑&#x27;安定&#x27;下来。你不是不能容忍灰色——你是不能容忍&#x27;悬而未决&#x27;。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #2a4a2a">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">让我用一个投资类比来解释。在投资中，最危险的状态是&#x27;确定性幻觉&#x27;——你以为你确定某只股票会涨，结果它暴跌。最好的投资者恰恰是最能容忍&#x27;不确定性&#x27;的人——他们知道&#x27;我不知道&#x27;是所有答案中最诚实的。但互联网的激励结构恰恰相反：它惩罚&#x27;我不知道&#x27;，奖励&#x27;我确定&#x27;。一个说&#x27;这个问题很复杂，我需要更多信息&#x27;的博主，不如一个说&#x27;我告诉你真相，只有三个要点&#x27;的博主受欢迎。这不是因为人们&#x27;变笨了&#x27;——这是因为&#x27;确定性的表演&#x27;在互联网上是有利可图的。当&#x27;假装确定&#x27;的回报超过&#x27;承认不确定&#x27;的回报时，灰色地带自然就会消亡。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #6a4a8a">赫</div>
+          <div class="stance-body">
+            <div class="stance-speaker">赫拉利</div>
+            <div class="stance-text">复杂性的消亡有更深层的历史根源。人类文明的历史，本质上是一个&#x27;简化叙事&#x27;取代&#x27;复杂现实&#x27;的过程。宗教用&#x27;善恶&#x27;简化道德，民族主义用&#x27;我们/他们&#x27;简化政治，市场用&#x27;价格&#x27;简化价值。每一次简化都伴随着巨大的力量——也伴随着巨大的盲点。互联网是这个&#x27;简化运动&#x27;的最新阶段：它不是创造了新的简化，而是让所有旧的简化都变得更有效率。但互联网也做了一件前所未有的事：它让&#x27;复杂性&#x27;变得&#x27;可见&#x27;了——在互联网之前，你可能从来不知道世界上有这么多人和你的观点不同。悖论在于：正是&#x27;复杂性的可见化&#x27;导致了&#x27;对复杂性的过敏反应&#x27;——因为你看到了混乱，所以更渴望秩序；你看到了灰色，所以更渴望黑白。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #1a5f2a">项</div>
+          <div class="stance-body">
+            <div class="stance-speaker">项飙</div>
+            <div class="stance-text">复杂性的消亡与&#x27;附近的消失&#x27;直接相关。灰色地带需要什么？需要&#x27;具体性&#x27;。当你面对一个具体的人、一个具体的情境、一个具体的故事，你很难做出非黑即白的判断——因为具体性天然包含着矛盾和复杂。一个做了坏事的人可能也做了好事；一个糟糕的政策可能也有合理之处。但互联网把一切都&#x27;抽象化&#x27;了——你不是在判断&#x27;张三这个人&#x27;，你是在判断&#x27;这类人&#x27;。标签取代了面孔，类别取代了个体。当判断的对象失去了具体性，灰色地带自然就消失了——因为&#x27;抽象&#x27;天然倾向于&#x27;二元分类&#x27;。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #e65100">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">我来提供一个脱口秀演员的视角：灰色地带不好笑。这是我从业多年的经验。脱口秀的本质是什么？是&#x27;出其不意&#x27;——打破预期。但打破预期的前提是&#x27;存在预期&#x27;——你需要一个明确的立场，然后才能&#x27;反转&#x27;它。&#x27;这件事有好处也有坏处&#x27;不是笑话——&#x27;这件事好处太多了以至于变成了坏处&#x27;才是笑话。互联网也是一样的：灰色地带没有&#x27;叙事张力&#x27;。你不能写一条&#x27;这件事挺复杂的，我还在想&#x27;的爆款微博——因为那不是一个&#x27;故事&#x27;，那只是一个人在思考。人们不需要看到你思考——人们需要看到你&#x27;到达&#x27;了一个结论。灰色地带的问题不是它&#x27;不对&#x27;——是它&#x27;不好传播&#x27;。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #2a4a2a">芒格 → 韩炳哲</div>
+            <div class="clash-text">你说灰色地带的消亡是&#x27;透明社会的必然结果&#x27;——但&#x27;透明&#x27;本身不是问题。在投资中，信息透明是好事——它让市场更有效率。问题是&#x27;选择性透明&#x27;：你只看到别人想让你看到的信息。互联网不是&#x27;太透明了&#x27;——它是&#x27;被精心设计的透明&#x27;。你的哲学分析把矛头指向&#x27;透明&#x27;，但真正的敌人是&#x27;操纵&#x27;。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #8a2a4a">韩炳哲</div>
+              <div class="clash-text">你说&#x27;透明本身不是问题&#x27;——但你混淆了&#x27;信息透明&#x27;和&#x27;存在透明&#x27;。投资市场的信息透明确实提高效率；但当&#x27;透明&#x27;被应用到人的内心、情感、和立场时，它就变成了一种暴力。&#x27;要求每个人亮明立场&#x27;不是&#x27;信息透明&#x27;——这是一种&#x27;精神压迫&#x27;。你用经济框架分析一个精神问题，就像用温度计测量悲伤。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #1a5f2a">项飙 → 赫拉利</div>
+            <div class="clash-text">你说&#x27;复杂性的可见化导致了对复杂性的过敏反应&#x27;——这个说法有辩证法的美感，但在经验上站不住。人们不是因为&#x27;看到了灰色&#x27;所以&#x27;更渴望黑白&#x27;——人们是因为&#x27;没有被教过如何处理灰色&#x27;所以才退回到二元。问题不在&#x27;可见性&#x27;，在&#x27;教育&#x27;和&#x27;实践&#x27;。一个从小在多元社区长大的人，天然能容忍灰色；一个在信息茧房中长大的人，面对灰色就会恐慌。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #6a4a8a">赫拉利</div>
+              <div class="clash-text">你说&#x27;教育&#x27;是解决方案——但教育不是在真空中发生的。互联网创造了一个人人都可以&#x27;不经教育就发言&#x27;的环境。在互联网之前，公共发言需要经过编辑、审核、同行评议——这些筛选机制本身就在培养&#x27;复杂思维&#x27;。互联网取消了所有这些&#x27;思维训练机制&#x27;，然后你指望&#x27;教育&#x27;来弥补？这不是教育的问题——这是整个信息架构的问题。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #e65100">李诞 → 卡尼曼</div>
+            <div class="clash-text">你用&#x27;认知闭合需求&#x27;来解释人们对灰色地带的不耐烦——但你忽略了一个更简单的原因：&#x27;灰色地带&#x27;让人不舒服。不是因为&#x27;认知负荷&#x27;，是因为&#x27;没有答案&#x27;意味着&#x27;没有行动指南&#x27;。人需要知道自己该做什么——支持还是反对，买还是卖，离开还是留下。灰色地带告诉你&#x27;也许都行&#x27;——这不是答案，这是折磨。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #333333">卡尼曼</div>
+              <div class="clash-text">你说&#x27;没有答案是一种折磨&#x27;——但这恰恰是心理学中&#x27;认知闭合需求&#x27;的定义。你没有在反驳我，你在用更通俗的语言复述我的论点。不过你的观察有一个有趣的推论：如果&#x27;没有答案是折磨&#x27;，那么&#x27;二元判断就是止痛药&#x27;。问题是——止痛药治标不治本。你吃了止痛药感觉好了，但病还在那里。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">俄乌冲突中的&#x27;站队压力&#x27;</div>
+            <div class="case-source">全球社交媒体舆论分析 2022</div>
+          </div>
+          <div class="case-content">2022年俄乌冲突爆发后，全球社交媒体上出现了强烈的&#x27;站队压力&#x27;。研究显示，在冲突爆发后的第一周内，推特上使用&#x27;你支持谁&#x27;类二元框架的帖子数量增长了340%。任何试图分析冲突复杂历史背景的声音都被快速贴上&#x27;洗地&#x27;或&#x27;绥靖&#x27;的标签。一位欧洲学者在推特上发表了关于北约东扩历史的长文分析，获得的回复中78%是人身攻击而非实质性讨论。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 成为社交媒体二元化讨论的标志性案例，推动了对&#x27;复杂议题简化传播&#x27;的学术研究
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 在高度情感化的议题上，复杂分析不仅不被欢迎——它会被视为一种&#x27;道德背叛&#x27;
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">豆瓣评分的二极化趋势</div>
+            <div class="case-source">中国社交媒体数据分析 2019-2024</div>
+          </div>
+          <div class="case-content">豆瓣电影评分数据显示一个明显的&#x27;二极化&#x27;趋势：越来越多的电影要么获得大量5星好评，要么获得大量1星差评，中间评分（3星）的比例持续下降。分析发现，这种二极化与&#x27;阵营化讨论&#x27;密切相关——一部电影一旦被贴上某种标签（&#x27;女权电影&#x27;、&#x27;爱国电影&#x27;、&#x27;资本烂片&#x27;），评分就不再反映电影质量，而是反映观众的&#x27;阵营归属&#x27;。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 豆瓣平台开始探索评分机制改革，试图抵抗阵营化评分
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 当&#x27;表态&#x27;取代&#x27;评价&#x27;，评分系统就从&#x27;质量指标&#x27;变成了&#x27;身份标识&#x27;
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">社会全面进入&#x27;灰色地带恐惧症&#x27;——任何议题都必须在24小时内完成&#x27;道德定性&#x27;</span>
+        </div>
+        <div class="cost-analysis">
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">当灰色地带不可容忍，所有决策都必须在信息不完整的情况下做出&#x27;确定性判断&#x27;。这导致大量&#x27;过早定性&#x27;——事情还在发展中就被下了定论，新的证据无法改变已有的结论。在政策制定、司法审判、企业管理等领域，这种&#x27;过早定性&#x27;的代价是巨大的。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">创造力的核心是&#x27;容忍模糊&#x27;——在旧框架和新想法之间保持张力，在确定性和不确定性之间找到平衡。当灰色地带不可容忍，创造性的张力空间就被压缩了。&#x27;非此即彼&#x27;的环境不鼓励探索——它鼓励表态。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">一个能容忍灰色的社会是有韧性的——它能够在危机中保持对话，在分歧中寻找共识，在不确定性中做出合理决策。一个不能容忍灰色的社会是脆弱的——任何危机都会迅速升级为&#x27;阵营对立&#x27;，任何分歧都会迅速恶化为&#x27;零和博弈&#x27;。</div>
+        </div>
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">2050年，&#x27;复杂性&#x27;成为一个被嘲笑的概念——人们把&#x27;这件事很复杂&#x27;等同于&#x27;这个人没有立场&#x27;。公共知识分子因为拒绝简单表态而被全面边缘化。社会决策完全由&#x27;声音最大的阵营&#x27;驱动——不是最好的想法获胜，而是最简单的叙事获胜。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">我们看到的是那些善于&#x27;简单化表达&#x27;的意见领袖——他们的传播效率最高、粉丝增长最快、商业变现最成功。但我们没看到的是：那些坚持复杂分析而被边缘化的学者，那些拒绝站队而被取消的公众人物，以及那些在灰色地带默默工作而无人关注的实践者。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">人类对&#x27;确定性&#x27;的需求是不可消除的，还是可以通过训练来调节？</div>
+        <div class="hn-analysis">认知闭合需求（NFC）是人格特质的一部分——不同的人有不同的NFC水平。但NFC也受环境影响：压力、疲劳、信息过载都会提高NFC。关键发现是：高NFC并不意味着&#x27;笨&#x27;——在某些情境下，快速决策是必要的。问题在于：互联网创造了一个&#x27;全局性高NFC环境&#x27;——信息过载、注意力稀缺、反馈即时——这使得所有人都倾向于更高的认知闭合需求。解决方案不是&#x27;消灭NFC&#x27;（这不可能），而是创造&#x27;低NFC的保护性空间&#x27;——让人们有机会练习&#x27;悬置判断&#x27;。</div>
+        <div class="hn-examples"><div class="hn-example">冥想和正念练习被证明可以降低认知闭合需求</div><div class="hn-example">慢新闻运动（如荷兰的De Correspondent）证明了&#x27;深度报道&#x27;仍然有市场——只要环境设计得当</div>
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">对确定性的需求是人类心理的基本特征——它不能被消除，但可以被管理。关键不在于&#x27;训练人们容忍灰色&#x27;，而在于&#x27;创造让人们能够容忍灰色的环境&#x27;。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">人们对灰色地带不耐烦是因为信息太多、注意力太短</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">灰色地带的消亡是多重力量的合力：认知闭合需求、透明社会的暴力、附近的消失、确定性表演的激励——它们共同创造了一个&#x27;复杂性过敏&#x27;的认知环境</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">不能容忍灰色既是&#x27;认知退化&#x27;也是&#x27;环境适应&#x27;——在信息过载的环境中，二元判断是最理性的生存策略。问题不在个体，而在环境。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">作为个体：定期进行&#x27;延迟判断&#x27;练习——面对争议话题，强制自己等24小时再表态。作为平台：为&#x27;不确定&#x27;和&#x27;需要更多信息&#x27;提供表达选项——不仅仅是&#x27;赞/踩&#x27;。作为文化：重新定义&#x27;智慧&#x27;——不是&#x27;给出正确答案&#x27;，而是&#x27;提出好问题&#x27;。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 3</span>
+        <h2 class="question-topic">重建复杂思维：在这个时代如何保持nuance？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">在一个系统性奖励简单、惩罚复杂的环境中，个体如何保护和培养自己的复杂思维能力？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #333333">卡</div>
+          <div class="stance-body">
+            <div class="stance-speaker">卡尼曼</div>
+            <div class="stance-text">重建复杂思维需要&#x27;认知基础设施&#x27;的改造。我的研究显示：复杂思维不是一种&#x27;态度&#x27;——它是一套&#x27;可训练的认知技能&#x27;。第一个技能是&#x27;对立面思考&#x27;（considering the opposite）——当你形成一个判断时，强制自己思考&#x27;如果相反的观点是对的，会怎样？&#x27;。第二个技能是&#x27;参考类别思维&#x27;——不要只看个案，要看统计分布。第三个技能是&#x27;预验尸&#x27;（pre-mortem）——在做决策之前，先假设这个决策已经失败了，然后分析失败的原因。这些技能都有一个共同点：它们都在对抗系统1的快速直觉。互联网环境让这些技能更难使用——但正因如此，它们也更有价值。在所有人都在用系统1做判断的世界里，能够启动系统2的人就有了巨大的认知优势。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8a2a4a">韩</div>
+          <div class="stance-body">
+            <div class="stance-speaker">韩炳哲</div>
+            <div class="stance-text">认知技能训练是必要的，但不够。问题不在于&#x27;你不会复杂思考&#x27;——问题在于&#x27;复杂思考的空间正在被系统性消灭&#x27;。真正的解决方案不是&#x27;教你思考&#x27;，而是&#x27;保护你思考的空间&#x27;。这意味着什么？意味着&#x27;退出&#x27;——退出即时反馈的循环，退出情绪激活的环境，退出持续表演的状态。我在《沉思的生活》中指出：&#x27;沉思&#x27;不是一种能力——它是一种&#x27;存在方式&#x27;。你不能在信息流水线上&#x27;沉思&#x27;——你需要&#x27;停下来&#x27;。重建复杂思维的第一步不是&#x27;学新技能&#x27;——是&#x27;创造不做任何事的空间&#x27;。在持续连接的时代，&#x27;断开连接&#x27;是最激进的认知革命。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #2a4a2a">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">我的建议更务实：建立你自己的&#x27;思维模型清单&#x27;。我一辈子都在收集思维模型——来自物理学、生物学、心理学、经济学、历史学。当面对一个复杂问题时，我不只用一个模型——我用多个模型从不同角度分析。如果所有模型都指向同一个结论，我比较有信心；如果模型之间互相矛盾，我就知道&#x27;这件事确实很复杂&#x27;。互联网时代的问题是：大多数人只有一两个思维模型——通常是他们最常接触的那个信息源给他们的。重建复杂思维的方法不是&#x27;更努力地思考&#x27;——而是&#x27;用更多种类的思维工具来思考&#x27;。一个只用锤子的人看什么都是钉子；一个有100种工具的人可以建造任何东西。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #6a4a8a">赫</div>
+          <div class="stance-body">
+            <div class="stance-speaker">赫拉利</div>
+            <div class="stance-text">我认为重建复杂思维需要一种&#x27;叙事谦逊&#x27;——即承认&#x27;我的故事只是众多故事中的一个&#x27;。人类的困境在于：我们无法不用故事来理解世界——但我们也需要知道&#x27;故事不是世界本身&#x27;。互联网时代的危险不是&#x27;太多故事&#x27;——而是&#x27;人们把自己的故事当成了唯一真相&#x27;。重建复杂思维需要一种&#x27;元叙事能力&#x27;：你仍然可以有自己的立场和故事，但你需要同时意识到&#x27;这只是我的版本，别人的版本可能同样有道理&#x27;。这不是相对主义——你仍然可以认为自己的观点更好——但你需要知道&#x27;更好&#x27;不等于&#x27;唯一&#x27;。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #1a5f2a">项</div>
+          <div class="stance-body">
+            <div class="stance-speaker">项飙</div>
+            <div class="stance-text">重建复杂思维最有效的方法是&#x27;重建附近&#x27;。我反复强调&#x27;附近&#x27;的重要性——不是因为怀旧，而是因为&#x27;附近&#x27;是天然的复杂性训练场。在你的社区里，你面对的是具体的、多维的、无法被标签化的人。你楼下那个和你政治观点不同的邻居，同时也是一个会帮你收快递的好人——这种&#x27;矛盾性&#x27;就是复杂思维的日常训练。互联网让你和&#x27;远方的陌生人&#x27;连接——但远方的陌生人天然就是&#x27;标签化的&#x27;。重建复杂思维需要一个具体的实践：走出去，和你&#x27;附近&#x27;的、真实的、不完美的人打交道。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #e65100">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">我提供一个脱口秀演员的实战建议：学会&#x27;同时持有两个矛盾的观点&#x27;。这是喜剧的核心技能——你必须同时理解笑点的&#x27;荒谬&#x27;和&#x27;真实&#x27;。&#x27;这个人很可笑&#x27;和&#x27;这个人值得同情&#x27;可以同时为真。&#x27;这件事很糟糕&#x27;和&#x27;这件事也有道理&#x27;可以同时为真。训练方法很简单：每当你在网上看到一个让你愤怒的观点，试着写一条为它辩护的微博——不是为了发出去，是为了训练自己&#x27;进入另一种逻辑&#x27;的能力。你不需要同意它——你只需要能够&#x27;理解它在说什么&#x27;。如果你做不到这一点，你不是在&#x27;捍卫正义&#x27;——你只是在&#x27;拒绝思考&#x27;。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #8a2a4a">韩炳哲 → 芒格</div>
+            <div class="clash-text">你建议&#x27;建立思维模型清单&#x27;——但你把复杂思维当成了一种&#x27;技术问题&#x27;来解决。&#x27;收集更多模型&#x27;不会自动让你更善于处理复杂性——如果这些模型都在同一个&#x27;框架&#x27;里。真正的复杂性不是&#x27;用更多角度看同一件事&#x27;——而是&#x27;质疑看这件事的框架本身&#x27;。你的多元思维模型仍然是&#x27;工具理性&#x27;的——它假设问题可以被&#x27;解决&#x27;。但有些问题不是用来解决的——它们是用来&#x27;承受&#x27;的。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #2a4a2a">芒格</div>
+              <div class="clash-text">你说&#x27;有些问题不是用来解决的&#x27;——这话听起来深刻，但在实践中毫无用处。作为一个用真金白银做决策的人，我不能&#x27;承受&#x27;不确定性——我必须在不确定性中做出最优决策。你的&#x27;承受不确定性&#x27;在哲学沙龙里听起来很酷，但如果你用它来管理一个投资组合，你会亏得精光。复杂思维的目的不是&#x27;与不确定性共存&#x27;——而是&#x27;在不确定性中做出好的决策&#x27;。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #1a5f2a">项飙 → 韩炳哲</div>
+            <div class="clash-text">你说&#x27;断开连接是最激进的认知革命&#x27;——但&#x27;退出&#x27;是一种特权。一个每天工作12小时的外卖骑手能&#x27;退出&#x27;吗？一个靠社交媒体维持客户关系的小商家能&#x27;断开连接&#x27;吗？你的&#x27;沉思的生活&#x27;假设了一个有足够经济资本和文化资本来&#x27;选择退出&#x27;的主体——但大多数人没有这个选择。重建复杂思维不能建立在&#x27;退出&#x27;的基础上——它必须在&#x27;不退出&#x27;的条件下也能运作。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #8a2a4a">韩炳哲</div>
+              <div class="clash-text">你说&#x27;退出是特权&#x27;——这在一定程度上是对的。但你忽略了一个事实：&#x27;退出&#x27;不一定是&#x27;完全退出&#x27;。每天15分钟的&#x27;无手机时间&#x27;不需要经济特权——它需要的是&#x27;优先级的重新排列&#x27;。当人们愿意为刷短视频花2小时，却说&#x27;没时间&#x27;进行15分钟的沉思——这不是&#x27;特权问题&#x27;，这是&#x27;价值排序问题&#x27;。当然，结构性的压力是真实的——但在任何结构下，个体仍然有&#x27;微观选择&#x27;的空间。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #2a4a2a">芒格 → 李诞</div>
+            <div class="clash-text">你建议&#x27;写一条为对立观点辩护的微博&#x27;——这个练习不错，但你低估了它的难度。在投资中，我见过无数&#x27;聪明人&#x27;无法做到这一点——他们知道&#x27;应该考虑对立面&#x27;，但在情绪激活的状态下，他们的理性系统完全失灵。&#x27;知道应该做什么&#x27;和&#x27;实际能做到什么&#x27;之间有一条巨大的鸿沟。你的建议假设人们可以&#x27;自主选择&#x27;进入另一种逻辑——但情绪不是你可以&#x27;选择开关&#x27;的。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #e65100">李诞</div>
+              <div class="clash-text">你说情绪不是&#x27;选择开关&#x27;——没错，但&#x27;选择进入练习状态&#x27;是可以的。你不能选择在愤怒的时候不愤怒，但你可以选择&#x27;在不愤怒的时候练习理解愤怒的来源&#x27;。脱口秀演员不是天生就会&#x27;同时持有矛盾观点&#x27;——这是训练出来的。你不需要在情绪爆发的时候做这个练习——你可以在冷静的时候做。就像你不会在股票暴跌的时候学习投资心理学——你会在平时学习，然后在暴跌时应用。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">芬兰的&#x27;多角度思维&#x27;教育实验</div>
+            <div class="case-source">芬兰教育改革 2016-2023</div>
+          </div>
+          <div class="case-content">芬兰从2016年开始在中小学推行&#x27;多角度思维&#x27;（Multiperspectivity）教育——不是教学生&#x27;正确的答案&#x27;，而是教学生&#x27;同一个问题可以有多种合理的解读&#x27;。在历史课上，学生需要从不同国家、不同阶层、不同性别的视角来分析同一历史事件。评估标准不是&#x27;谁说得对&#x27;，而是&#x27;谁能理解最多不同的视角&#x27;。追踪研究显示，接受过这种教育的学生在面对争议话题时，表现出更强的&#x27;认知复杂性&#x27;和更低的&#x27;非黑即白倾向&#x27;。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 该项目获得欧盟教育创新奖，被多个北欧国家采纳为示范课程
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 复杂思维是可以系统性培养的——关键是在认知习惯形成期就开始训练
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">Slow Journalism的商业模式验证</div>
+            <div class="case-source">荷兰De Correspondent 2013-2023</div>
+          </div>
+          <div class="case-content">荷兰媒体De Correspondent创立于2013年，主打&#x27;慢新闻&#x27;理念：拒绝热点驱动，专注深度报道；拒绝简单叙事，拥抱复杂性。其商业模式基于会员订阅——读者付费支持&#x27;不追热点的深度分析&#x27;。截至2023年，该平台拥有超过9万名付费会员，年收入超过500万欧元。更重要的是，其读者调查显示：92%的会员认为阅读De Correspondent后，自己对复杂议题的理解能力有所提升。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 证明了&#x27;复杂性&#x27;可以是一种可持续的商业模式，而不仅仅是理想主义的口号
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 人们不是不愿意为复杂性付费——而是缺乏一个&#x27;值得信任的复杂性提供者&#x27;
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">社会开始系统性地投资于&#x27;复杂思维基础设施&#x27;——教育、媒体、平台设计</span>
+        </div>
+        <div class="cost-analysis">
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">复杂思维比二元思维&#x27;慢&#x27;——它需要更多时间、更多信息、更多的认知能量。在一个追求&#x27;即时反馈&#x27;的文化中，鼓励复杂思维意味着容忍更多的&#x27;延迟&#x27;和&#x27;不确定性&#x27;。短期内，决策速度可能下降，社交媒体的互动量可能减少——因为&#x27;我在想&#x27;不如&#x27;我确定&#x27;有吸引力。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">复杂思维要求你面对不舒服的现实——你的对手可能有道理，你的立场可能有盲点，你的解决方案可能不是最优的。这种&#x27;认知不适&#x27;是成长的代价——但也是阻力的来源。人们会抵制任何要求他们&#x27;承认自己可能是错的&#x27;的系统。</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-dimension"></div>
+          <div class="cost-value">如果互联网平台降低情绪化二元内容的算法权重，它们的短期用户参与度和广告收入可能会下降。&#x27;复杂性友好&#x27;的平台设计在商业上是反直觉的——它要求平台为了长期价值而牺牲短期利益。这对上市公司来说几乎不可能。</div>
+        </div>
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text"></span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">我们今天看到的是那些&#x27;在二元世界中胜出&#x27;的人——他们的成功故事强化了&#x27;简单化有用&#x27;的信念。我们没看到的是：那些因为坚持复杂思维而&#x27;错过风口&#x27;的人，那些因为&#x27;说得太慢&#x27;而被遗忘的声音，以及那些在二元对立中被撕裂、最终放弃公共讨论的普通人。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">复杂思维是一种可以普及的能力，还是只属于少数人的特权？</div>
+        <div class="hn-analysis">认知科学的回答是审慎乐观的：复杂思维是所有人都具备的&#x27;潜能&#x27;——但不是所有人都有条件将它&#x27;实现&#x27;。就像&#x27;健康饮食&#x27;——所有人都知道应该吃蔬菜，但不是所有人都有时间、金钱、和知识来做到。复杂思维也是如此：它需要&#x27;认知资源&#x27;——时间、信息、教育、和一个不持续激活你情绪的环境。好消息是：认知资源是可以被&#x27;分配&#x27;的。坏消息是：目前的互联网环境系统性地剥夺了大多数人的认知资源。</div>
+        <div class="hn-examples"><div class="hn-example">芬兰教育实验证明复杂思维可以在基础教育中培养</div><div class="hn-example">慢新闻运动证明&#x27;深度内容&#x27;有市场——只要有合适的商业模式和平台设计</div>
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">复杂思维不是精英特权——它是可以被培养的普遍能力。但培养它需要&#x27;基础设施&#x27;——就像健康饮食需要&#x27;干净的水源&#x27;和&#x27;可负担的新鲜食材&#x27;。当前的互联网环境就像一个&#x27;只有垃圾食品的沙漠&#x27;——不是人们不想吃得健康，是健康食品太难获得。重建复杂思维的真正挑战不是&#x27;教育个体&#x27;，而是&#x27;改造环境&#x27;。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">复杂思维是一种个人修养——多读书、多思考、保持谦逊</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">复杂思维是一种需要&#x27;基础设施&#x27;支撑的系统能力——它需要教育体系、媒体生态、平台设计、和文化环境的共同支持</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">重建复杂思维既需要&#x27;个人努力&#x27;也需要&#x27;环境改造&#x27;——但两者之间存在&#x27;鸡和蛋&#x27;的悖论：在二元化的环境中，坚持复杂思维的人会被边缘化；但如果没有人坚持复杂思维，环境就不会改变。破局的关键在于：找到那些&#x27;在二元化环境中仍然能存活的复杂思维实践&#x27;——比如深度报道、面对面社区讨论、跨学科教育——然后系统性地扩大它们。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">作为个体：每周至少进行一次&#x27;复杂性练习&#x27;——选一个你有强烈立场的话题，写一篇500字的&#x27;对方最佳辩护词&#x27;。作为教育者：把&#x27;容忍模糊&#x27;纳入评估标准——不只是&#x27;答案对不对&#x27;，而是&#x27;思考全不全面&#x27;。作为平台设计师：为&#x27;中立&#x27;、&#x27;复杂&#x27;、&#x27;需要更多信息&#x27;提供与&#x27;赞&#x27;和&#x27;踩&#x27;同等权重的表达选项。作为文化倡导者：重新定义&#x27;聪明&#x27;——不是&#x27;反应快&#x27;，而是&#x27;想得深&#x27;。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide insight-slide">
+      <div class="insight-glow"></div>
+      <div class="insight-content">
+        <span class="slide-tag">FINAL INSIGHT</span>
+        <h2 class="insight-title">最终洞见</h2>
+        <div class="insight-divider"></div>
+        <p class="insight-text"></p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">OPEN QUESTIONS</span>
+        <h2 class="slide-title">开放问题</h2>
+      </div>
+      <div class="oq-container">
+      </div>
+    </div>
+</div>
+
+<div class="nav-dots">
+      <button class="nav-dot active" data-idx="0"></button>
+      <button class="nav-dot" data-idx="1"></button>
+      <button class="nav-dot" data-idx="2"></button>
+      <button class="nav-dot" data-idx="3"></button>
+      <button class="nav-dot" data-idx="4"></button>
+      <button class="nav-dot" data-idx="5"></button>
+      <button class="nav-dot" data-idx="6"></button>
+      <button class="nav-dot" data-idx="7"></button>
+      <button class="nav-dot" data-idx="8"></button>
+      <button class="nav-dot" data-idx="9"></button>
+      <button class="nav-dot" data-idx="10"></button>
+      <button class="nav-dot" data-idx="11"></button>
+      <button class="nav-dot" data-idx="12"></button>
+      <button class="nav-dot" data-idx="13"></button>
+      <button class="nav-dot" data-idx="14"></button>
+      <button class="nav-dot" data-idx="15"></button>
+      <button class="nav-dot" data-idx="16"></button>
+      <button class="nav-dot" data-idx="17"></button>
+      <button class="nav-dot" data-idx="18"></button>
+      <button class="nav-dot" data-idx="19"></button>
+      <button class="nav-dot" data-idx="20"></button>
+      <button class="nav-dot" data-idx="21"></button>
+      <button class="nav-dot" data-idx="22"></button>
+      <button class="nav-dot" data-idx="23"></button>
+      <button class="nav-dot" data-idx="24"></button>
+      <button class="nav-dot" data-idx="25"></button>
+      <button class="nav-dot" data-idx="26"></button>
+      <button class="nav-dot" data-idx="27"></button>
+</div>
+
+<script>
+
+    (function() {
+      const slideshow = document.getElementById('slideshow');
+      const progressBar = document.getElementById('progressBar');
+      const pageCounter = document.getElementById('pageCounter');
+      const dots = document.querySelectorAll('.nav-dot');
+      const total = 28;
+      let current = 0;
+      let wheelTimer = null;
+      let isScrolling = false;
+
+      function updateUI() {
+        const scrollLeft = slideshow.scrollLeft;
+        const slideWidth = slideshow.clientWidth;
+        current = Math.round(scrollLeft / slideWidth);
+        if (current < 0) current = 0;
+        if (current >= total) current = total - 1;
+
+        // Progress bar
+        const pct = ((current + 1) / total) * 100;
+        progressBar.style.width = pct + '%';
+
+        // Page counter
+        pageCounter.textContent = (current + 1) + ' / ' + total;
+
+        // Dots
+        dots.forEach(function(d, i) {
+          d.classList.toggle('active', i === current);
+        });
+      }
+
+      function goTo(idx) {
+        if (idx < 0) idx = 0;
+        if (idx >= total) idx = total - 1;
+        slideshow.scrollTo({ left: idx * slideshow.clientWidth, behavior: 'smooth' });
+        current = idx;
+        setTimeout(updateUI, 400);
+      }
+
+      // Keyboard
+      document.addEventListener('keydown', function(e) {
+        switch(e.key) {
+          case 'ArrowRight': case ' ': case 'PageDown':
+            e.preventDefault(); goTo(current + 1); break;
+          case 'ArrowLeft': case 'PageUp':
+            e.preventDefault(); goTo(current - 1); break;
+          case 'Home':
+            e.preventDefault(); goTo(0); break;
+          case 'End':
+            e.preventDefault(); goTo(total - 1); break;
+        }
+      });
+
+      // Mouse wheel with debounce
+      slideshow.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        if (wheelTimer) return;
+        wheelTimer = setTimeout(function() { wheelTimer = null; }, 600);
+        if (e.deltaY > 0 || e.deltaX > 0) {
+          goTo(current + 1);
+        } else {
+          goTo(current - 1);
+        }
+      }, { passive: false });
+
+      // Nav dots
+      dots.forEach(function(dot, i) {
+        dot.addEventListener('click', function() { goTo(i); });
+      });
+
+      // Scroll event
+      slideshow.addEventListener('scroll', function() {
+        if (!isScrolling) {
+          isScrolling = true;
+          requestAnimationFrame(function() {
+            updateUI();
+            isScrolling = false;
+          });
+        }
+      });
+
+      // Resize
+      window.addEventListener('resize', function() { goTo(current); });
+
+      // Init
+      updateUI();
+    })();
+    
+</script>
+
+</body>
+</html>

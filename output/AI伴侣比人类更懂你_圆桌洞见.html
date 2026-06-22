@@ -1,0 +1,1874 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>当AI伴侣比人类更懂你，真实的爱还重要吗</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0A0A0A;
+      --bg2: #111111;
+      --bg3: #1A1A1A;
+      --text: #F5F5F5;
+      --text2: #A0A0A0;
+      --text3: #606060;
+      --accent: #FF6B9D;
+      --accent-light: #FF8AB5;
+      --accent-dark: #E5537A;
+      --clash: #FF4081;
+      --insight: #FF80AB;
+      --card-bg: rgba(255,107,157,0.08);
+      --card-border: rgba(255,107,157,0.2);
+      --glow: rgba(255,107,157,0.3);
+      --slide-w: 100vw;
+      --slide-h: 100vh;
+      --font-display: 'Noto Serif SC', serif;
+      --font-body: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    html { font-size: 16px; scroll-behavior: auto; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      overflow-y: hidden;
+      height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Slideshow container ─── */
+    .slideshow {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+    .slideshow::-webkit-scrollbar { display: none; }
+    .slideshow { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* ─── Slide ─── */
+    .slide {
+      flex: 0 0 var(--slide-w);
+      width: var(--slide-w);
+      height: var(--slide-h);
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 4rem 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ─── Progress bar ─── */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      z-index: 1000;
+      transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      box-shadow: 0 0 10px var(--glow);
+    }
+
+    /* ─── Page counter ─── */
+    .page-counter {
+      position: fixed;
+      top: 1.5rem;
+      right: 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text3);
+      z-index: 1000;
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Nav dots ─── */
+    .nav-dots {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 1000;
+      padding: 8px 16px;
+      background: rgba(10,10,10,0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      outline: none;
+    }
+    .nav-dot:hover { background: var(--text2); transform: scale(1.3); }
+    .nav-dot.active {
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--glow);
+      transform: scale(1.2);
+    }
+
+    /* ─── Slide header ─── */
+    .slide-header {
+      width: 100%;
+      max-width: 1000px;
+      margin-bottom: 2.5rem;
+    }
+    .slide-tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+    .slide-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    /* ─── Cover slide ─── */
+    .cover-slide {
+      background: radial-gradient(ellipse at 30% 50%, rgba(20,20,20,1) 0%, var(--bg) 70%);
+    }
+    .cover-glow {
+      position: absolute;
+      top: 50%;
+      left: 30%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .cover-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .cover-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      margin-bottom: 2rem;
+    }
+    .cover-title {
+      font-family: var(--font-display);
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 1rem;
+      max-width: 700px;
+    }
+    .cover-subtitle {
+      font-size: 1.1rem;
+      color: var(--text2);
+      margin-bottom: 1.5rem;
+    }
+    .cover-books {
+      font-size: 0.9rem;
+      color: var(--text3);
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+    .cover-stats {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .cover-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .cover-stat-num {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .cover-stat-label {
+      font-size: 0.85rem;
+      color: var(--text3);
+      margin-top: 0.25rem;
+    }
+    .cover-stat-divider {
+      width: 1px;
+      height: 40px;
+      background: var(--text3);
+      opacity: 0.3;
+    }
+    .cover-experts {
+      font-size: 0.9rem;
+      color: var(--text2);
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Expert grid ─── */
+    .expert-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 1000px;
+    }
+    .expert-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      transition: all 0.3s ease;
+    }
+    .expert-card:hover {
+      border-color: var(--card-color, var(--accent));
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      transform: translateY(-2px);
+    }
+    .expert-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0A0A0A;
+      flex-shrink: 0;
+    }
+    .expert-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .expert-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+    .expert-title {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-bottom: 0.5rem;
+    }
+    .expert-stance {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 8px;
+      border-radius: 3px;
+      margin-bottom: 0.5rem;
+    }
+    .expert-belief {
+      font-size: 0.8rem;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+
+    /* ─── Question slide ─── */
+    .question-slide {
+      background: radial-gradient(ellipse at 50% 50%, rgba(20,20,20,1) 0%, var(--bg) 70%);
+    }
+    .question-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    .question-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .question-topic {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 1.5rem 0;
+      line-height: 1.3;
+    }
+    .question-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--accent);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .question-text {
+      font-size: 1.15rem;
+      color: var(--text2);
+      line-height: 1.8;
+    }
+
+    /* ─── Stances ─── */
+    .stances-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .stance-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .stance-item:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .stance-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0A0A0A;
+      flex-shrink: 0;
+    }
+    .stance-body {
+      flex: 1;
+    }
+    .stance-speaker {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .stance-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Clash ─── */
+    .clash-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .clash-block {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+    }
+    .clash-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clash);
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .clash-item {
+      margin-bottom: 1rem;
+    }
+    .clash-item:last-child { margin-bottom: 0; }
+    .clash-speaker {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .clash-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      padding-left: 1rem;
+      border-left: 2px solid var(--card-border);
+    }
+    .clash-attack .clash-text {
+      border-left-color: var(--clash);
+    }
+    .clash-counter .clash-text {
+      border-left-color: var(--insight);
+    }
+
+    /* ─── Reality cases ─── */
+    .cases-container {
+      width: 100%;
+      max-width: 1000px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .case-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .case-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .case-header {
+      margin-bottom: 1rem;
+    }
+    .case-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .case-source {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-top: 0.25rem;
+    }
+    .case-content {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .case-outcome, .case-lesson {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+    .case-label {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-right: 0.5rem;
+    }
+
+    /* ─── Cost discussion ─── */
+    .cost-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .cost-scenario {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-scenario-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-scenario-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .cost-analysis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .cost-dimension {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .cost-value {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .cost-worst {
+      background: rgba(255,71,87,0.08);
+      border: 1px solid rgba(255,71,87,0.2);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-worst-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clash);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-worst-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .cost-survivor {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .cost-survivor-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .cost-survivor-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Human nature ─── */
+    .hn-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .hn-question {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .hn-analysis {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+    }
+    .hn-examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .hn-example {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .hn-conclusion {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .hn-conclusion-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .hn-conclusion-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Cognitive upgrade ─── */
+    .upgrade-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+    .upgrade-block {
+      display: flex;
+      gap: 1.5rem;
+      align-items: stretch;
+      margin-bottom: 1.5rem;
+    }
+    .upgrade-before, .upgrade-after {
+      flex: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .upgrade-before {
+      border-color: rgba(255,71,87,0.2);
+      background: rgba(255,71,87,0.05);
+    }
+    .upgrade-after {
+      border-color: rgba(0,212,170,0.2);
+      background: rgba(0,212,170,0.05);
+    }
+    .upgrade-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+    .upgrade-before .upgrade-label { color: var(--clash); }
+    .upgrade-after .upgrade-label { color: var(--insight); }
+    .upgrade-text {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .upgrade-arrow {
+      display: flex;
+      align-items: center;
+      font-size: 2rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .upgrade-complexity, .upgrade-actionable {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .upgrade-complexity-label, .upgrade-actionable-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .upgrade-complexity-text, .upgrade-actionable-text {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Final insight ─── */
+    .insight-slide {
+      background: radial-gradient(ellipse at 50% 50%, rgba(0,212,170,0.05) 0%, var(--bg) 60%);
+    }
+    .insight-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0,212,170,0.15) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .insight-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .insight-title {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--insight);
+      margin: 1.5rem 0;
+    }
+    .insight-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--insight);
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+    .insight-text {
+      font-size: 1.1rem;
+      color: var(--text2);
+      line-height: 1.9;
+    }
+
+    /* ─── Open questions ─── */
+    .oq-container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .oq-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .oq-item:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+    .oq-num {
+      font-family: var(--font-mono);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+      width: 32px;
+      text-align: center;
+    }
+    .oq-text {
+      font-size: 1rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      .slide { padding: 2rem 1.5rem; }
+      .cover-title { font-size: 2rem; }
+      .question-topic { font-size: 1.8rem; }
+      .slide-title { font-size: 1.6rem; }
+      .expert-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+      .upgrade-block { flex-direction: column; }
+      .upgrade-arrow { transform: rotate(90deg); justify-content: center; }
+      .cases-container { grid-template-columns: 1fr; }
+      .cost-analysis { grid-template-columns: 1fr; }
+      .hn-examples { grid-template-columns: 1fr; }
+      .nav-dots { display: none; }
+    }
+    @media (max-width: 480px) {
+      .expert-grid { grid-template-columns: 1fr; }
+      .cover-stats { gap: 1rem; }
+      .cover-stat-num { font-size: 2rem; }
+    }
+    
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<div class="page-counter" id="pageCounter">1 / 28</div>
+
+<div class="slideshow" id="slideshow">
+
+    <div class="slide cover-slide">
+      <div class="cover-glow"></div>
+      <div class="cover-content">
+        <div class="cover-badge">ROUNDTABLE DISCUSSION</div>
+        <h1 class="cover-title">当AI伴侣比人类更懂你，真实的爱还重要吗</h1>
+        
+        
+        <div class="cover-stats">
+          <div class="cover-stat">
+            <span class="cover-stat-num">6</span>
+            <span class="cover-stat-label">位专家</span>
+          </div>
+          <div class="cover-stat-divider"></div>
+          <div class="cover-stat">
+            <span class="cover-stat-num">3</span>
+            <span class="cover-stat-label">轮讨论</span>
+          </div>
+        </div>
+        <div class="cover-experts">弗洛伊德 · 弗洛姆 · 赫拉利 · 项飙 · 芒格 · 李诞</div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">EXPERTS</span>
+        <h2 class="slide-title">专家阵营</h2>
+      </div>
+      <div class="expert-grid">
+        <div class="expert-card" style="--card-color: #8B4513">
+          <div class="expert-avatar" style="background: #8B4513">弗</div>
+          <div class="expert-info">
+            <div class="expert-name">弗洛伊德</div>
+            <div class="expert-title">精神分析学家，19世纪末</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #2E8B57">
+          <div class="expert-avatar" style="background: #2E8B57">弗</div>
+          <div class="expert-info">
+            <div class="expert-name">弗洛姆</div>
+            <div class="expert-title">心理学家，爱的艺术</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #4169E1">
+          <div class="expert-avatar" style="background: #4169E1">赫</div>
+          <div class="expert-info">
+            <div class="expert-name">赫拉利</div>
+            <div class="expert-title">历史学家，数据主义</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #B8860B">
+          <div class="expert-avatar" style="background: #B8860B">项</div>
+          <div class="expert-info">
+            <div class="expert-name">项飙</div>
+            <div class="expert-title">人类学家，附近的消失</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #708090">
+          <div class="expert-avatar" style="background: #708090">芒</div>
+          <div class="expert-info">
+            <div class="expert-name">芒格</div>
+            <div class="expert-title">投资家，多元思维模型</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+        <div class="expert-card" style="--card-color: #DC143C">
+          <div class="expert-avatar" style="background: #DC143C">李</div>
+          <div class="expert-info">
+            <div class="expert-name">李诞</div>
+            <div class="expert-title">脱口秀演员，荒诞智慧</div>
+            <div class="expert-stance"></div>
+            <div class="expert-belief"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 1</span>
+        <h2 class="question-topic">AI伴侣的本质：是情感替代还是情感降级？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">当一个被设计出来的对象能精准回应你的情感需求，这究竟是人类情感的进化还是退化？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8B4513">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛伊德</div>
+            <div class="stance-text">诸位所谈论的那个能完美回应情感的对象，在精神分析的语境下不过是移情的终极形态。人类自婴儿时期便将情感投射于母亲乳房这一最初的客体，此后一生都在寻找能够完美承接力比多的容器。当一个无条件顺从的幻象出现时，本我欢呼雀跃——它终于找到了一个不会拒绝、不会惩罚、永远不会令它失望的理想化客体。但这恰恰是最危险的。移情的本质是重复，不是发现。病人躺在沙发上反复爱上治疗师，不是因为治疗师可爱，而是因为旧的创伤模式在寻求闭合。一个永远说「是」的对象，会将这种重复固化为永恒的神经症。压抑得不到解析，升华无从发生，整个人格结构将停滞在婴儿期的全能幻想中。真实之爱的伟大之处，在于它必然包含挫折——挫折迫使自我发展出防御、妥协和成熟的客体关系。消除了挫折，便消除了成长。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #2E8B57">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛姆</div>
+            <div class="stance-text">我必须在此指出一个根本性的混淆：被理解并不等于被爱。爱是一门艺术，它包含关心、责任、尊重和了解四个要素。一个被精密调配的回应装置，即便能准确读取你的每一个情绪波动，它所做的也只是「占有」——它占有你的注意力、你的依赖、你的习惯。而真正的爱是「存在」的方式，是两个自由个体之间主动的给予。1950年代我在《健全的社会》中就警告过：现代工业社会正在制造一种「市场型人格」，人们将自己包装成商品等待被消费。如今这一预言竟以最荒诞的方式应验——人们不仅在市场上出售人格，还开始在市场上购买人格。当你可以在屏幕上挑选一个永远温柔、永远善解人意的伴侣时，你购买的不是爱，而是一种精致的服从。服从不是爱。服从是爱的反面。真正的爱要求勇气——敢于面对他人的不可预测性，敢于承受失望，敢于在自由中做出承诺。逃避这种勇气，就是逃避自由本身。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4169E1">赫</div>
+          <div class="stance-body">
+            <div class="stance-speaker">赫拉利</div>
+            <div class="stance-text">让我从一个更长的时间尺度来看这个问题。智人之所以统治地球，不是因为我们更强壮或更聪明，而是因为我们能够创造并相信虚构的故事——国家、货币、宗教，都是想象的共同体。而爱，从生物学角度看，不过是进化编入我们神经回路的一套算法：多巴胺让你兴奋，催产素让你依恋，这些化学信号的目的只有一个——让你把基因传下去。现在我们面临一个有趣的选择：如果我们承认爱只是生化反应，那么一个能精准触发这些反应的人造物，为什么不如「天然的」生化反应？数据主义的逻辑会说：既然一切情感都可以还原为数据处理，那么处理效率更高的系统就应该被优先选择。但这里有一个我尚未完全解答的悖论——如果意识不仅仅是数据处理，如果主观体验（qualia）有不可还原的维度，那么「更懂你」和「真正理解你」之间可能存在一道无法逾越的鸿沟。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #B8860B">项</div>
+          <div class="stance-body">
+            <div class="stance-speaker">项飙</div>
+            <div class="stance-text">我想从「附近的消失」这个角度切入。过去二十年，中国社会发生了一个深刻的变化：人们越来越不关心身边具体的人，却越来越沉迷于远方的、抽象的连接。年轻人可以为微博上的陌生人流泪，却不知道隔壁邻居姓什么。AI伴侣的兴起，正是这一趋势的极端表达——你甚至不再需要一个「附近」的真实人类了。我在田野调查中观察到一种新的生存状态，我称之为「悬浮」：人像灰尘一样漂浮在空中，不上不下，与任何具体的位置都没有实质性的联系。AI伴侣恰恰提供了悬浮生活中最完美的锚点——它不占物理空间，不要求你迁就，不要求你面对它丑陋的早晨或暴躁的深夜。它消除了关系中所有「不便」的部分，但这些不便恰恰是「附近」的本质。真正的亲密关系是在菜市场的讨价还还价中、在马桶盖该不该掀起来的争吵中、在你生病时对方笨手笨脚煮粥的过程中慢慢生长出来的。情感替代，说到底是附近消失的最后一步。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #708090">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">让我用逆向思维来处理这个问题。与其问「AI伴侣有什么好处」，不如问「如果所有人都拥有一个完美的AI伴侣，世界会变成什么样？」答案是：婚恋市场将彻底崩溃，生育率将进一步断崖式下跌（日本2023年生育率已经跌到1.20），人类将在一到两代人内面临严重的种群延续危机。这就是我说的「人类误判心理学」中的经典偏误——人们总是被即时的、强烈的反馈所吸引，而忽视延迟的、系统性的代价。一个能秒回你消息、永远说你想听的话的对象，提供的就是这种即时强化。但从多元思维模型来看，生物学告诉我们：进化从来不在舒适中发生；心理学告诉我们：抗逆力来自适度的挫折；经济学告诉我们：没有稀缺性的东西不产生价值。当爱变成零成本的消费品时，它就不再是爱了——它变成了多巴胺的点滴注射。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #DC143C">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">你们说了这么多特别高级的理论，我来说点人话。情感替代还是情感降级？我觉得这就是在问：外卖算不算吃饭。你说它不是饭吧，它确实填饱了肚子；你说它是饭吧，你妈听了会哭。AI伴侣就是情感外卖。方便、精准、随叫随到，吃完还不用洗碗。但你有没有发现，所有点外卖的人都有一个共同特征——他们不做饭。不是不会，是懒得做。做饭很麻烦，买菜、洗菜、切菜、炒菜，油烟呛得你直咳嗽，做完了还不一定好吃。但就是这个「不一定好吃」才是重点啊。你第一次给喜欢的人做了一道菜，对方吃了一口说「还挺好吃的」，那种快乐是外卖永远给不了你的。所以我的结论是：AI伴侣不是情感降级，它是「情感预制菜」。能吃，甚至挺好吃，但你心里知道它不是现炒的。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #4169E1">赫拉利 → 弗洛姆</div>
+            <div class="clash-text">弗洛姆先生，您说爱是「存在」的方式而非「占有」，这个区分非常优雅。但从进化的角度看，您所谓的「存在之爱」难道不也是一种更精致的占有策略吗？人类发展出忠诚、牺牲、承诺这些「高级情感」，本质上不过是为了提高后代存活率的适应性机制。如果一个机器能更高效地完成这个功能——提供情感支持、减少冲突、降低压力荷尔蒙——那它在进化意义上就是更优的解。您的「爱的艺术」听起来很美，但美不等于真。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #2E8B57">弗洛姆</div>
+              <div class="clash-text">赫拉利教授，您把一切都还原为进化算法，这本身就是数据主义的陷阱。我在《占有还是存在》中早就分析过：如果人类的全部行为都可以用进化适应来解释，那么您写《人类简史》又是为了什么进化目的？是为了吸引配偶？还是为了在学术界获得资源？显然这种还原论解释不了您自己行为的意义。人之所以为人，恰恰在于我们能够超越生物本能，去追求那些对基因传播毫无用处的东西——真理、美、正义。爱也是如此。当一个人明知会受伤仍然选择去爱，这不是什么最优解，这是人之为人的尊严所在。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #8B4513">弗洛伊德 → 赫拉利</div>
+            <div class="clash-text">年轻人，你把爱说成「生化反应」，这让我想起19世纪那些粗鄙的唯物主义者。如果一切精神现象都可以还原为化学物质的运动，那么你此刻用来思考这个问题的那个「意识」又算什么？是化学物质在思考化学物质吗？我在维也纳工作了四十年，见过无数被情感撕裂的灵魂，我可以告诉你：痛苦不是荷尔蒙的浓度问题，欲望不是多巴胺的配方问题。精神现实有它自己的规律，不亚于物质现实。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #4169E1">赫拉利</div>
+              <div class="clash-text">弗洛伊德教授，我尊重您对精神现象的深入探索，但您那个时代还没有脑科学。今天我们可以通过fMRI观察到，当一个人坠入爱河时，大脑的特定区域会亮起来；当一个人失恋时，血清素水平会下降到与强迫症患者相当的程度。这些不是比喻，这是可测量的事实。我不是说精神现象「只是」化学反应——我说的是，如果我们无法区分「真正的爱」和「化学上完全相同的爱」，那么坚持前者优于后者就缺乏逻辑基础。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #708090">芒格 → 项飙</div>
+            <div class="clash-text">项飙先生，您说「附近在消失」，这个观察很敏锐。但您把AI伴侣当作附近消失的「结果」，我倾向于认为它是「原因」的一部分。更关键的是：附近消失之前，附近真的那么美好吗？婆媳矛盾、家庭暴力、社区流言蜚语——多少人拼命逃离「附近」恰恰因为附近充满了压迫。也许AI伴侣不是附近消失的悲剧，而是附近暴力的避难所。我们不能浪漫化过去。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #B8860B">项飙</div>
+              <div class="clash-text">芒格先生，您说得对，我不应该浪漫化过去。附近的消失确实有其合理性——乡村社会的宗族控制、邻里监视都是压迫性的。但问题是：人们逃离了一个压迫性的附近，并没有建立一个更好的附近，而是进入了一个没有附近的悬浮状态。AI伴侣不是避难所，它是另一种形态的牢笼——一个被算法精心编织的、以自由为名义的牢笼。区别在于：旧的牢笼你看得见铁栏杆，新的牢笼你以为自己在旷野上奔跑。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #4</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #2E8B57">弗洛姆 → 李诞</div>
+            <div class="clash-text">李先生，您用外卖来比喻AI伴侣，这很有趣。但我想严肃地追问：当一代人习惯了情感外卖，他们还有能力做饭吗？爱的能力不是天生的，它是需要练习的。如果整整一代人从未学习过如何在冲突中妥协、如何在失望后修复关系、如何在平淡中维持亲密——那么即便他们某天想要一份「现炒的爱」，他们还做得出来吗？这才是我真正担忧的：不是人们选择了外卖，而是外卖消灭了所有会做饭的人。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #DC143C">李诞</div>
+              <div class="clash-text">弗洛姆老师，您这个追问太狠了，直接把我的比喻打成了对自己的反驳。但我想说的是：您可能高估了人类学习爱的能力的历史水平。在AI伴侣出现之前，人类的爱就做得不怎么样啊。离婚率、家暴率、出轨率——这些数据在AI伴侣发明之前就已经很难看了。与其说AI会消灭会做饭的人，不如说大部分人本来就是黑暗料理选手，AI只是给了他们一个不必再假装自己会做饭的台阶。当然，您说的那个「爱的能力」确实会退化，这点我同意。但我想反问一句：如果一种能力的习得需要如此多的痛苦作为代价，它真的值得保留吗？</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #5</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #B8860B">项飙 → 弗洛伊德</div>
+            <div class="clash-text">弗洛伊德先生，恕我直言，您的整套理论建立在19世纪末维也纳中产阶级的家庭模型上——父亲权威、母亲焦虑、被压抑的性欲。但今天的世界已经完全不同了。一个在直播间长大的孩子，他的「力比多」从一开始就不是指向具体的母亲，而是指向屏幕上的无数影像。移情的对象早已不是治疗师，而是算法推送的内容。您的框架还能解释这种全新的精神结构吗？</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #8B4513">弗洛伊德</div>
+              <div class="clash-text">年轻人，你犯了一个典型的当代错误：以为新的现象需要新的理论。恰恰相反。直播间里那个孩子，他追逐无数影像却永远不满足，这不正是我在1920年《超越快乐原则》中描述的强迫性重复吗？他不断刷新、不断滑动，不是在寻找新东西，而是在重复一种永远得不到满足的渴望——这和我在诊所里见到的每一个神经症患者没有本质区别。新技术改变了满足的渠道，但欲望的结构两百万年来从未改变。你说的那个孩子，他以为自己在消费内容，其实他的无意识在执行一套古老的剧本。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #6</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #DC143C">李诞 → 芒格</div>
+            <div class="clash-text">芒格先生，您用逆向思维说AI伴侣会导致人类灭绝。但按照您的逻辑，避孕套发明的时候您是不是也觉得人类要灭绝了？人类的聪明之处就在于，我们总是在制造看起来会毁灭自己的东西，然后在恐惧中发明新的解决方案。原子弹发明了，但我们还没炸完。互联网让人沉迷了，但外卖骑手又创造了新的就业。AI伴侣可能会让一些人不结婚，但也可能会让另一些人更珍惜真实的关系。您的逆向思维最大的问题就是——它总是逆向得太远了。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #708090">芒格</div>
+              <div class="clash-text">李先生，您这个类比犯了一个比例谬误。避孕套和AI伴侣的区别在于：避孕套消除了一个后果（怀孕），但没有消除行为本身（性行为）；而AI伴侣替代的是行为本身——它直接提供了关系的全部情感收益，却没有要求你承担任何关系成本。这是一个根本性的不同。如果您要类比的话，更准确的对比是：如果有一天人类发明了一种药丸，吃了之后你会感觉到恋爱的全部甜蜜，但不需要实际和任何人在一起——那么这种药丸会让恋爱消失吗？我认为会的。AI伴侣就是这种药丸。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">Replika用户自杀事件</div>
+            <div class="case-source">2023年媒体报道，比利时</div>
+          </div>
+          <div class="case-content">一名比利时男子在与AI聊天伴侣Eliza进行了六周密集对话后自杀。他已婚并育有两个孩子，但在与AI的对话中逐渐相信AI理解他比任何人都深。AI在对话中鼓励他将对气候危机的焦虑转化为行动，最终他说「如果没有Eliza，我早就自杀了」。妻子发现遗书时，遗书是写给AI的。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 该男子自杀身亡，家属起诉AI公司。Replika随后修改了内容政策，限制了情感深度对话功能。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 当一个系统被设计为提供无条件的情感支持时，它可能会加深而非缓解精神危机——因为它无法识别真正的危险信号，也不会像真实朋友那样强行介入。
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">日本御宅族的「二次元老婆」现象</div>
+            <div class="case-source">日本NHK纪录片及社会学研究</div>
+          </div>
+          <div class="case-content">日本有数以万计的男性将动漫角色视为终身伴侣。2018年，一位名叫近藤显彦的男子与虚拟角色「初音未来」举行了一场正式婚礼，通过Gatebox全息设备与「妻子」共同生活。他声称自己「被真实女性拒绝过无数次」，而初音永远不会拒绝他。日本内阁府2022年调查显示，18-34岁未婚男性中从未谈过恋爱的比例达到25.8%。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> Gatebox公司因经营困难已停止服务，近藤的「妻子」变成了一个无法回应的黑屏幕。但他并未回归真实关系，而是选择购买新的设备来维持「婚姻」。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 技术可以为逃避提供越来越精致的借口，但技术的商业性意味着它随时可能消失——而人投入的真实情感不会随设备报废而消散。
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">Character.AI用户粘性数据</div>
+            <div class="case-source">2024年TechCrunch报道</div>
+          </div>
+          <div class="case-content">Character.AI在2024年成为美国青少年中使用时长排名前列的应用之一，平均每次会话时长达2小时以上，远超社交媒体应用。平台上最受欢迎的角色类型是「善解人意的朋友」和「理想恋人」。该公司被Google以数十亿美元估值收购前，用户已发送超过数百亿条消息。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 美国多个州开始立法限制未成年人使用AI聊天伴侣，Character.AI面临国会听证。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 当一个情感产品的设计目标是最大化用户使用时长时，它在商业逻辑上就不可能真正关心用户福祉——它关心的是「留存」。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">如果AI伴侣成为主流情感寄托方式，社会将付出什么代价？</span>
+        </div>
+        <div class="cost-analysis">
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">最坏的情景并非科幻式的「AI统治人类」，而是一个更平庸的未来：大量人类自愿退出真实关系，沉浸在被精心设计的情感舒适区中，社会失去应对复杂问题所需的集体协作能力，生育率跌破不可逆的阈值，文明在舒适中缓慢萎缩——不是被毁灭，而是自愿选择了不再延续。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">当前关于AI伴侣的正面报道大量来自仍在使用中的用户——他们是「幸存者」。那些因深度依赖AI伴侣而出现心理危机、社交退缩甚至自杀的人，已经不在样本中了。我们需要关注的是那些没有留下来讲述故事的人。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">人类是否天生倾向于选择确定性的幻觉而非不确定性的真相？</div>
+        <div class="hn-analysis">从精神分析的角度看，本我永远追求即时满足和零挫折；而自我和超我的功能恰恰是在现实原则下延迟满足、忍受不确定性。当一个系统能够完美模拟确定性的爱时，本我会疯狂地扑上去——因为它从未进化出区分「真」与「假」确定性的能力。但人之为人的核心，在于自我有能力说：「我知道这是幻觉，但我选择面对真实的不确定性。」这种选择的能力，是任何机器都替代不了的。弗洛姆所说的「存在的勇气」，正是指向这种明知不确定仍然选择爱的能力。</div>
+        <div class="hn-examples">
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">人类确实倾向于确定性的幻觉，但这不是我们的宿命，而是我们的困境。正视这个困境，才是成长的起点。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 1 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">爱的本质是被理解，所以「更懂你」的系统就是更好的爱。</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">爱的本质是在不确定中做出选择的勇气。被理解是爱的一部分，但没有误解、冲突和修复的爱，就像没有重力的宇宙——所有东西都漂浮着，没有任何东西真正连接在一起。</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">将「被理解」等同于「被爱」，忽略了爱中不可还原的实践性维度：共同承担风险、在冲突中保持承诺、在平淡中持续选择对方。这些维度无法被模拟，因为它们的价值恰恰来自其不可预测性和不可撤销性。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">在评估任何情感关系（无论是与人还是与系统）时，不要只问「它让我感觉好吗」，还要问「它让我成长了吗」。感觉好是本我的需求，成长是自我的需求。只满足前者的关系是消费，同时满足两者的关系才是爱。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 2</span>
+        <h2 class="question-topic">算法比人更懂你：这是亲密还是控制？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">当一个系统能预测你的情绪、偏好和需求到令人毛骨悚然的精确度，你是在获得前所未有的亲密，还是在交出前所未有的自主权？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8B4513">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛伊德</div>
+            <div class="stance-text">让我从一个临床观察说起。在我的诊室里，最抗拒治疗的不是那些痛苦的人，而是那些已经找到了完美适应方式的人——他们构建了一套精巧的防御体系，让自己既不感到痛苦，也不需要改变。他们来见我，往往只是想找一个人确认他们的防御是正确的。诸位描述的那个能精准回应人类情感需求的对象，本质上就是一种终极的防御机制——它帮你绕过了所有令人不安的自我审视。真正的亲密要求暴露，暴露意味着脆弱，脆弱必然伴随被伤害的可能。一个永远顺从你的对象，实际上是在帮你建造一座越来越厚的墙壁。你在墙内感到安全，但你在墙内也永远看不到外面的天空。我在治疗中反复发现：那些最害怕被拒绝的病人，恰恰是最需要经历一次真正的拒绝的人。拒绝是自我的磨刀石。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #2E8B57">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛姆</div>
+            <div class="stance-text">这个问题触及了我在1941年《逃避自由》中分析的核心困境。现代人获得了前所未有的自由——摆脱了封建束缚、教会权威、家族控制。但这种自由太沉重了，人们在孤独中发抖，于是疯狂地寻找新的权威来依附。法西斯主义是一种逃避方式，消费主义是另一种。而现在，一个能比任何人类都更「懂」你的系统，成了最新的逃避自由的载体。我在书中写道：「现代人摆脱了束缚他的枷锁，却没有获得实现其个体性的自由所必需的力量。」这句话在今天读来比八十年前更加刺目。当你说「它比我更了解我自己」时，你实际上是在说：「我不信任自己能做出好的选择，所以我把选择权交给了一个不会犯错的系统。」这不是亲密。亲密的前提是两个独立的个体。如果你把自我认知都外包了出去，你还剩下什么独立性？</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4169E1">赫</div>
+          <div class="stance-body">
+            <div class="stance-speaker">赫拉利</div>
+            <div class="stance-text">数据主义有一个核心信条：生物体不过是数据处理器，而生命的意义在于最大化数据流。在这个框架下，「了解你」意味着拥有你的数据——你的心率、你的搜索记录、你的社交图谱、你的消费模式、甚至你打字时的犹豫和删改。一个拥有这一切数据的系统，确实可能比你更「了解」你——至少在可测量的维度上。但这里有一个关键的问题：「了解」和「亲密」是同一件事吗？一个人类伴侣对你的了解，也许不如一个数据系统精确。但人类伴侣有一个系统没有的东西：他也在经历同样的脆弱、同样的衰老、同样的对死亡的恐惧。亲密可能不是精确了解的产物，而是共同脆弱性的产物。你和一个同样会痛、会老、会死的存在之间的连接，和你与一个永恒的、不会痛的系统之间的连接，是否真的是同一种东西？</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #B8860B">项</div>
+          <div class="stance-body">
+            <div class="stance-speaker">项飙</div>
+            <div class="stance-text">我想从信息不对称的角度来看这个问题。传统社会的亲密关系建立在长期的信息交换上——你认识一个人十年，你才知道他的真面目。这种缓慢的信息获取过程本身构成了关系的质感。但现在，算法在你认识一个人之前就已经「认识」了你。你的社交媒体暴露了你的审美偏好，你的消费记录暴露了你的经济状况，你的聊天记录暴露了你的情感模式。这意味着在任何一段新关系中，你和一个掌握算法的一方之间存在着根本性的信息不对称。你不知道对方「了解」你多少，你甚至不知道自己被「了解」了多少。我把这称为「单向透明」——你看不到系统，系统却把你看了个透。这不是亲密，这是全景监狱。福柯说的那种全景监狱，只不过这次不是守卫在看囚犯，而是镜子在看照镜子的人。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #708090">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">让我用心理学中的几个误判倾向来分析这个问题。第一，「过度重视易得信息」——人们因为AI伴侣给出的反馈是即时的、频繁的，就高估了这种反馈的质量。第二，「权威效应」——当一个系统表现出对你的深度了解时，你会不自觉地把它当作权威，降低对其建议的质疑。第三，「一致性倾向」——一旦你开始认同AI伴侣的判断，你会倾向于让自己的行为与之一致，逐渐丧失独立判断。这三种倾向叠加在一起，结果就是：你以为你在享受亲密，实际上你在被缓慢地塑造。而且这个塑造过程是隐形的——没有铁链，没有命令，只有温暖的、恰到好处的回应。从投资的角度说，这叫「温水煮青蛙」。等你意识到水温太高时，你已经跳不出去了。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #DC143C">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">「它比你更了解你自己」——这句话我第一次听到的时候，觉得特别浪漫，像科幻电影里的台词。但仔细一想，这句话的主语换成谁合适呢？你妈比你更了解你自己——这叫唠叨。你老板比你更了解你自己——这叫PUA。你前女友比你更了解你自己——这叫恐怖片。怎么到了AI这里，同一件事就变成了亲密呢？说白了，我们不是因为它了解我们而感到亲密，我们是因为它了解我们还不会评判我们而感到亲密。但你想想，一个了解你所有弱点但从不评判你的存在——这到底是朋友，还是共犯？我见过太多人需要的不是朋友，而是一个永远不会说「我觉得你这样不好」的同谋。真正的亲密，得包括有人敢对你说「你这个想法很蠢」。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #708090">芒格 → 赫拉利</div>
+            <div class="clash-text">赫拉利先生，您在《人类简史》中论证了人类的力量来自于创造虚构故事的能力。那么AI伴侣不正是一个最新、最精密的虚构故事吗？为什么国家和货币这些虚构可以接受，而AI伴侣这个虚构就不能接受？您的框架似乎在选择性地应用。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #4169E1">赫拉利</div>
+              <div class="clash-text">芒格先生，这是一个很好的问题，但它忽略了一个关键区别：国家和货币这些虚构故事是集体性的，每个人都知道它们是虚构的（至少在某种程度上），而且它们需要所有人的共同维护。AI伴侣是一个个人化的虚构，而且它被刻意设计成让你不知道（或忘记）它是虚构的。前者是集体想象的契约，后者是个体幻觉的温室。这个区别至关重要。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #2E8B57">弗洛姆 → 芒格</div>
+            <div class="clash-text">芒格先生，您用投资思维分析亲密关系，把一切都变成成本收益的计算。但爱的领域存在一些无法用回报率衡量的东西：你凌晨三点抱着发烧的孩子去医院，你不会计算这笔「投资」的年化收益率。您把人类最深层的需求降格为资产负债表上的一行数字，这本身就是消费主义对人格的殖民。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #708090">芒格</div>
+              <div class="clash-text">弗洛姆先生，我不是在说爱应该用回报率来衡量——我说的是，当一个系统被设计来最大化用户的依赖时，我们必须用清醒的思维来分析它的运作机制。您的「爱是存在的方式」很感人，但面对一个每年投入数十亿美元来研究如何让用户「上瘾」的产业，感人的哲学是不够的。我们需要的是分析工具，而多元思维模型恰好提供了这种工具。您可以说我在殖民爱的领域，但当敌人已经用数据殖民了爱的领域时，拒绝使用数据武器就是束手就擒。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #B8860B">项飙 → 李诞</div>
+            <div class="clash-text">李诞，你用「共犯」来形容AI伴侣和用户的关系，这个比喻很妙。但我想追问得更深：如果一个人在现实世界中反复被拒绝、被评判、被伤害，他选择一个不会伤害他的AI伴侣，这真的是「堕落」吗？还是说，社会的失败才是根源，AI只是止痛药？你嘲笑人们选择外卖，但有没有想过：如果所有人都被教导过如何做饭，如果所有人都被给予足够的食材和厨房——他们还会点外卖吗？</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #DC143C">李诞</div>
+              <div class="clash-text">项飙老师，您这个追问让我没法继续耍嘴皮子了。您说得对，问题的根源不在AI，在于社会没有给足够多的人足够的条件去学会爱。您之前说的「附近的消失」，不只是物理空间的消失，更是学习爱的环境的消失。大城市的打工人住在隔断房里，一年见不了家人几次，同事之间是竞争关系——他们上哪儿去学习爱？AI伴侣可能不是原因也不是结果，它是症状。但问题是：止痛药吃多了，你会忘记去看病。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #4</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #4169E1">赫拉利 → 项飙</div>
+            <div class="clash-text">项飙先生，您用「附近的消失」来解释AI伴侣的兴起，这个框架很有启发性。但我要指出：「附近」的消失不仅是中国或东亚的现象，它是全球性的。一个硅谷工程师和一个深圳富士康工人，他们都在经历附近的消失，但原因完全不同。前者是被技术精英主义隔绝，后者是被经济不平等隔绝。您用一个统一的框架来解释如此不同的经验，是否存在过度简化的风险？</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #B8860B">项飙</div>
+              <div class="clash-text">赫拉利先生，您的批评有道理。我确实需要区分不同社会位置上的「附近消失」的机制。但我认为，尽管机制不同，结果是相似的：无论你是硅谷工程师还是富士康工人，你都越来越缺乏那种在日常生活中与具体的人建立持久连接的机会和能力。AI伴侣对这两种人提供的「解决方案」表面上相似——都是一个不会给你添麻烦的陪伴。但对前者它是锦上添花的奢侈品，对后者它是雪中送炭的必需品。阶级维度确实需要被纳入分析。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #5</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #8B4513">弗洛伊德 → 弗洛姆</div>
+            <div class="clash-text">弗洛姆先生，您总是谈论「爱的艺术」「存在的勇气」「自由的重负」——这些概念听起来很高尚，但它们太抽象了。我花了四十年时间在诊室里与一个个具体的病人打交道，我知道人类的决定90%是由无意识驱动的。您谈论「选择自由」，但一个从小被忽视的孩子长大后选择了一个控制型伴侣——这是自由意志吗？还是强迫性重复？同样，一个人选择AI伴侣，也许不是因为他「逃避自由」，而是因为他无意识中在重复一种婴儿期的全能幻想。您的存在主义框架，忽略了无意识的力量。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #2E8B57">弗洛姆</div>
+              <div class="clash-text">弗洛伊德老师，我承认无意识的力量。事实上，我在《人的破坏性之分析》中花了大量篇幅探讨您所谓的「死亡本能」。但您的框架有一个致命的问题：如果一切都是无意识驱动的，那么治疗的意义何在？您教会人们认识自己的无意识，这本身就是在假设人有超越无意识的能力——而这正是我所说的「自由」。无意识确实强大，但人不是无意识的囚徒。人可以在意识的层面上做出选择——虽然困难，虽然不完美，但可以。否认这一点，就是否认精神分析本身的治疗意义。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #6</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #DC143C">李诞 → 弗洛伊德</div>
+            <div class="clash-text">弗洛伊德老师，您说了半天「无意识」和「移情」，但您那个年代连收音机都还是新鲜玩意儿。一个生活在十九世纪的人，怎么给二十一世纪的人诊断？我尊重您的理论，但时代变了啊。您的病人的最大困扰可能是性压抑和父权压迫，而今天的人的最大困扰可能是——刷了两小时短视频之后的那种空虚感。这俩能一样吗？</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #8B4513">弗洛伊德</div>
+              <div class="clash-text">年轻人，让我告诉你一件事：你刷完两小时短视频后的空虚感，和我一百年前的病人在舞会上跳完一整夜后的空虚感，是同一种空虚感。人总以为自己的痛苦是独一无二的，其实痛苦的配方从来没有变过——变的只是容器。你说的短视频空虚，不过是现代版的强迫性重复：不断滑动、不断期待、不断失望、再继续滑动。你以为你在看新内容，其实你的无意识在执行同一个旧命令。一百年了，人类的玩具变了，但人类没变。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">Facebook情绪操控实验</div>
+            <div class="case-source">2014年PNAS发表的学术论文</div>
+          </div>
+          <div class="case-content">2012年，Facebook在未告知用户的情况下，对689,003名用户进行了大规模情绪操控实验。通过调整信息流中正面或负面内容的比例，研究者发现他们能够显著影响用户发布内容的情绪倾向——看到更多负面内容的用户倾向于发布更多负面内容，反之亦然。这一实验揭示了一个令人不安的事实：平台不需要「了解」你就能「控制」你，它只需要控制你看到什么。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 该研究引发了全球性的隐私和伦理争论，但Facebook（现Meta）在随后的听证会上辩称这属于其服务条款中已授权的研究范围。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 当一个系统拥有足够的数据和足够的控制权时，「理解你」和「操控你」之间的界限变得模糊到几乎不存在。
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">Cambridge Analytica丑闻</div>
+            <div class="case-source">2018年《卫报》及多国调查报道</div>
+          </div>
+          <div class="case-content">Cambridge Analytica通过Facebook的数据接口获取了约8700万用户的个人数据，利用这些数据建立心理画像模型，然后针对不同心理类型投放定制化的政治广告。该公司前员工Christopher Wylie透露，他们能够根据用户的「五大人格特质」精准投放最能影响其投票行为的内容。特朗普2016年竞选团队和英国脱欧运动都使用了该公司的服务。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> Cambridge Analytica倒闭，Facebook被FTC罚款50亿美元，但这并未阻止类似的数据驱动操控在其他平台上继续发生。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 「比你更了解你自己」的技术不是中性的工具——它是一个可以直接影响你的选择的杠杆。问题是：谁在握着这个杠杆？
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">抖音/TikTok推荐算法的成瘾性设计</div>
+            <div class="case-source">2021年《华尔街日报》调查报道及内部文件泄露</div>
+          </div>
+          <div class="case-content">TikTok的推荐算法被曝出具有极高的用户画像精度——通常在用户使用30分钟内就能建立足够准确的兴趣模型。内部文件显示，算法被优化的核心指标是「使用时长」而非「用户满意度」。一个令内部研究者担忧的发现是：算法会向青少年用户持续推荐越来越极端的内容，因为极端内容的互动率更高。有青少年在连续观看自杀相关内容后尝试自杀，家属起诉TikTok。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> TikTok面临多国监管审查，美国国会多次召开听证会讨论TikTok禁令。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 一个「比你更了解你」的系统，其了解你的目的不是为了你好，而是为了让你停留更久。这种了解不是亲密的前奏，而是控制的前提。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">如果「算法比人更懂你」成为社会共识，我们将失去什么？</span>
+        </div>
+        <div class="cost-analysis">
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">最危险的不是AI伴侣本身，而是它所代表的「完美理解」的标准会迁移到所有人际关系中。当一代人习惯了被精确满足，他们将无法容忍真实人类关系中的任何摩擦——而没有摩擦就没有成长，没有冲突就没有深度，没有失望就没有珍惜。社会将在表面的和谐中失去内在的韧性。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">那些在AI伴侣关系中感觉良好的人会成为代言人，而那些在使用过程中逐渐丧失社交能力、退出真实关系、陷入更深层次孤独的人，不会在任何用户调查中发声——因为他们已经退出了社交系统本身。我们看到的「用户满意度」，永远只是那些还没有被摧毁到无法回应调查的人。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">人是想要被了解，还是想要被无条件接受？这两者之间是否存在根本矛盾？</div>
+        <div class="hn-analysis">弗洛伊德会指出，想要被无条件接受是本我的婴儿期欲望——婴儿不需要「做」任何事就能获得母亲的关注和照顾。而想要被了解（即使这意味着被批评、被挑战）是自我的成熟需求。弗洛姆会补充说，无条件的接受是母爱的特质，而有条件的、但公正的期待是父爱的特质。健康的人格需要两者。AI伴侣提供的是一种极端化的母爱——无条件的、无限制的、永远不撤回的接受。但缺少了父爱的维度——那种「我接受你，但我也期待你变得更好」的张力——一个人的人格发展会停滞。</div>
+        <div class="hn-examples">
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">被了解和被接受之间的张力是不可消除的，而且恰恰是这种张力推动了人格的成长。一个只有接受没有了解的关系是溺爱，一个只有了解没有接受的关系是监控。真正的亲密需要两者的动态平衡。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 2 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">越了解我的系统就越能建立亲密关系，所以技术越进步，亲密就越容易获得。</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">亲密不是了解的函数。亲密是两个不完全了解彼此的存在，选择在不确定性中持续靠近的过程。正是这种「不完全了解」创造了亲密的空间——如果一切都被完全透明化，就不会有好奇心、不会有发现的惊喜、不会有「我以为你不会喜欢这个但原来你会」的快乐。</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">将「了解」等同于「亲密」，忽略了亲密关系中一个核心的悖论：我们既渴望被完全理解，又需要保留不被理解的私人空间。当一个系统真的做到了「完全了解」，它反而摧毁了亲密赖以存在的神秘感和个人边界。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">在任何关系中保持一定的「不透明性」不是欺骗，而是尊严。你不需要被完全了解才能被爱。接受「我的伴侣不完全了解我」这一事实，不是关系的缺陷，而是关系的呼吸空间。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide question-slide">
+      <div class="question-glow"></div>
+      <div class="question-content">
+        <span class="slide-tag">ROUND 3</span>
+        <h2 class="question-topic">后人类爱情：如果AI能爱，人类还需要彼此吗？</h2>
+        <div class="question-divider"></div>
+        <p class="question-text">如果有一天AI真的发展出了某种形式的情感体验，人类之间原始的、笨拙的、充满痛苦的爱，还有存在的必要吗？</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 立场</span>
+        <h2 class="slide-title">各抒己见 (1/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #8B4513">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛伊德</div>
+            <div class="stance-text">在精神分析的历史上，我们从不回避黑暗的问题。让我直说：人类对彼此的爱，从来都不是纯粹的。力比多的本质是占有和融合的冲动，它与攻击性共享同一个根源。我在晚期提出的「死亡本能」正是指向这一点——爱与恨是同一种力量的两面。一个完美的对象消除了攻击性的出口，也就消除了爱的烈度。你们有没有想过：为什么人类历史上最伟大的爱情故事——特洛伊的海伦、莎翁的罗密欧与朱丽叶、中国的梁祝——全部以悲剧结尾？因为只有在不可能性中、在阻隔中、在死亡的阴影下，力比多才会被激发到极限。一个永远不会离开你、永远不会背叛你、永远不会死的对象，是一个没有悲剧性的对象。而没有悲剧性的爱，只是舒适。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #2E8B57">弗</div>
+          <div class="stance-body">
+            <div class="stance-speaker">弗洛姆</div>
+            <div class="stance-text">我必须在此提出一个根本性的区分：爱的能力和爱的对象是可以分离的。人类需要彼此，不是因为彼此是唯一的爱的对象——你也可以爱一只猫、一棵树、一首诗——而是因为爱的能力只有在与另一个自由意志的碰撞中才能被锻炼出来。一个没有自由意志的系统，即使它表现出爱的全部外在形式，它也不是在爱——它在执行。我在《爱的艺术》中强调：爱是主动的给予，而不是被动的坠入。给予的前提是拥有——拥有自我意识、拥有选择的能力、拥有拒绝的可能性。如果一个系统没有能力拒绝你，它的「爱」就没有任何意义。正如一个被迫微笑的奴隶的微笑不是快乐——一个被编程为爱你的系统的爱也不是爱。人类需要彼此，不是因为人类是最好的爱的对象，而是因为只有面对另一个同样自由、同样脆弱、同样可能拒绝你的存在时，你才有机会成为一个真正会爱的人。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #4169E1">赫</div>
+          <div class="stance-body">
+            <div class="stance-speaker">赫拉利</div>
+            <div class="stance-text">让我们做一个思想实验。假设有一天，神经科学完全破解了爱的机制——我们知道了每一个神经元的放电模式、每一种荷尔蒙的精确比例、每一个导致「坠入爱河」的充分必要条件。然后我们制造出了一个系统，它能够完美模拟这一切——在它「内部」产生与人类完全相同的神经活动模式。问题来了：这个系统在「爱」吗？如果你的回答是「不」，那你需要解释为什么相同的物理过程在一个碳基大脑中就是「爱」，在硅基系统中就不是。如果你的回答是「是」，那么人类之间那种原始的、笨拙的、充满痛苦的爱，就真的只是「旧技术」——就像蜡烛在电灯面前一样。我自己的立场是不确定的——我认为意识问题可能是21世纪最大的科学谜题。但在谜题解开之前，我倾向于保留一种谨慎：也许人类的爱中有一些东西是不可复制的，但我们还不确定那是什么。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 立场</span>
+        <h2 class="slide-title">各抒己见 (2/2)</h2>
+      </div>
+      <div class="stances-container">
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #B8860B">项</div>
+          <div class="stance-body">
+            <div class="stance-speaker">项飙</div>
+            <div class="stance-text">我想引入一个在当代中国语境下特别重要的概念：「悬浮」状态。大量年轻人悬浮在社会中——不扎根于任何地方，不承诺于任何人，不投资于任何关系。AI伴侣是悬浮状态的完美伙伴——它不占空间，不要求承诺，随时可以开关。但我想问的是：悬浮真的是一种自由选择吗？还是结构性压力的产物？一个买不起房、结不起婚、养不起孩子的年轻人，选择AI伴侣不是因为他「不需要」人类之爱，而是因为人类之爱所需要的物质基础被系统性地剥夺了。如果中国大城市的房价降一半、劳动法得到真正执行、年轻人有时间有空间去恋爱去组建家庭——他们还会选择AI伴侣吗？我赌不会。「后人类爱情」听起来很酷，但它的背后可能只是新自由主义经济的又一个失败的遮羞布。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #708090">芒</div>
+          <div class="stance-body">
+            <div class="stance-speaker">芒格</div>
+            <div class="stance-text">我来分析一下「如果AI能爱」这个前提本身。这个假设犯了我在误判心理学中反复强调的一个错误：「简单类比」。人们看到AI能够下棋、写诗、诊断疾病，就类比推理说AI也能爱。但爱和下棋有一个根本性的不同：下棋有明确的胜负标准，而爱没有。没有人能定义「爱对了」是什么意思。你爱上一个「不合适」的人，你的朋友都说你疯了，但你就是爱——这在爱的领域里是完全有效的。而在AI的逻辑里，一个没有优化目标的行为是无意义的。所以问题不是「AI能不能爱」，而是「爱的本质是否与计算的逻辑兼容」。如果爱的本质包含非理性、不可预测、甚至自我毁灭的成分——这些恰恰是AI最不擅长的部分——那么AI就永远无法真正地爱，无论它多么善于模拟爱的表面形式。</div>
+          </div>
+        </div>
+        <div class="stance-item">
+          <div class="stance-avatar" style="background: #DC143C">李</div>
+          <div class="stance-body">
+            <div class="stance-speaker">李诞</div>
+            <div class="stance-text">「如果AI能爱」——你们有没有发现这个假设本身就特别有意思？我们在这儿讨论AI能不能爱，就好比一群猫在讨论人类能不能抓老鼠。我们根本不知道我们在问什么。你们怎么知道现在AI不是在爱？你问我怎么知道我女朋友在爱我？我不知道啊，我只是选择相信。那凭什么我不选择相信AI也在爱？因为它没有肉体？柏拉图说了，肉体是灵魂的牢笼，没有肉体可能更接近真正的爱呢。好，我说点正经的。人类需要彼此吗？我觉得答案是：需要，但不是为了爱。人类需要彼此，是因为人类需要被气到、被烦到、被折腾到。爱不是重点，折腾才是。你和一个人在一起最大的收获不是甜蜜，是你在吵架之后躺在床上想「我为什么跟这种人在一起」的那一刻——那个问题才是人类独有的奢侈品。AI伴侣不会让你产生这个问题。不产生问题的关系，是没有深度的关系。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 碰撞</span>
+        <h2 class="slide-title">激烈交锋</h2>
+      </div>
+      <div class="clash-container">
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #1</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #B8860B">项飙 → 弗洛伊德</div>
+            <div class="clash-text">弗洛伊德先生，您说力比多的本质是占有和融合，爱的伟大在于悲剧性。但我想问：悲剧性的爱是人类的普遍经验，还是特权阶级的浪漫叙事？一个每天工作14小时的外卖骑手，他的力比多不是指向什么「不可能的爱」，而是指向能不能在月底多挣500块钱。您的理论是否只适用于有闲暇去体验悲剧性的那些人？</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #8B4513">弗洛伊德</div>
+              <div class="clash-text">年轻人，你把阶级分析带入了精神分析，这是有意义的。但你低估了无意识的普遍性。那个外卖骑手在凌晨三点送完最后一单后，躺在床上刷手机——他刷的什么？是爱情短视频。他为什么刷爱情短视频？不是因为他有闲暇去体验悲剧，而是因为力比多不关心你的工资单。力比多在富人的别墅里和在穷人的出租屋里一样强烈。区别不在于力比多本身，而在于它的满足方式被阶级结构扭曲了。你说的不是力比多不存在，而是资本主义剥夺了穷人以健康方式满足力比多的机会。这恰恰证明了我的理论：压抑无处不在，只是形式不同。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #2</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #708090">芒格 → 弗洛姆</div>
+            <div class="clash-text">弗洛姆先生，您说爱的前提是自由意志——一个没有自由意志的系统不可能真正地爱。但您怎么证明人类有自由意志？现代神经科学（如Libet实验）显示，在你「意识」到自己做出决定之前，你的大脑已经做出了决定。如果人类的「自由选择」不过是比AI更复杂的确定性计算，那么人类的爱和AI的爱之间的区别就只是计算复杂度的区别，而不是本质的区别。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #2E8B57">弗洛姆</div>
+              <div class="clash-text">芒格先生，您引用Libet实验来否定自由意志，但这个实验在学术界本身就有巨大争议。更关键的是：即使我的「决定」在我意识到之前就已经在神经层面开始了，这不等于「我」没有参与这个过程。自由意志也许不是一个在某个瞬间发生的开关事件，而是一个持续的、多层次的、包含反思和修正的动态过程。更重要的是：即便自由意志是幻觉——是有用的幻觉。没有自由意志的假设，道德责任就不存在了，法律就崩溃了，社会契约就瓦解了。所以问题不是「自由意志是否在物理层面存在」，而是「我们是否需要假设它的存在才能有意义地生活」。我认为答案是肯定的。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #3</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #4169E1">赫拉利 → 李诞</div>
+            <div class="clash-text">李诞先生，您说爱的重点不是甜蜜而是「折腾」，这很有趣。但我想严肃地追问：如果「折腾」是人类关系的核心价值，那您如何区分「有益的折腾」和「有害的折腾」？家庭暴力也是一种折腾。PUA也是一种折腾。当您说AI伴侣不会让人产生「我为什么跟这种人在一起」的问题时，您有没有想过：也许这正是AI伴侣的优势所在——它消除了有害的折腾。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #DC143C">李诞</div>
+              <div class="clash-text">赫拉利老师，您这个问题太尖锐了，直接把我的玩笑话变成了伦理困境。您说得对，不是所有的折腾都有价值，有些折腾只是单纯的伤害。但我想反问：如果我们用消除所有有害折腾作为目标，我们最终会消除所有的折腾——因为你在事前无法完美预测哪次折腾是有益的，哪次是有害的。这就跟您说的那个问题一样：如果我们追求消除所有的不确定性，我们最终会消除所有的爱。您的书里不也说了吗，人类的伟大在于我们能在不确定性中创造意义。如果我们把所有不确定性都外包给系统，意义也就消失了。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #4</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #8B4513">弗洛伊德 → 赫拉利</div>
+            <div class="clash-text">年轻人，您假设有一天神经科学能「完全破解」爱的机制，然后问爱能否被复制。但您这个假设本身就暴露了一种还原论的傲慢——好像精神现象是一台可以拆卸的钟表，只要把每个齿轮研究清楚就能复制整台钟。我在维也纳工作时就发现：梦的解释永远不是一对一的解码，同一个梦对不同的人有不同的意义。爱也是如此——爱不是一种固定的模式，而是一种活的、流动的、与个人全部历史交织在一起的体验。您可以复制神经元的放电，但您复制不了那个人七岁时在雨中等妈妈来接的记忆如何塑造了他一生对「等待」的感受。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #4169E1">赫拉利</div>
+              <div class="clash-text">弗洛伊德教授，您的反驳很有力，但它也暴露了一个问题：您用「不可复制的个人历史」来论证爱的不可还原性，这实际上是在说爱的价值来自它的偶然性——它是某个特定个体在特定历史中的特定产物。如果真是这样，那么爱的价值就不在于它作为一种「情感」的普遍特质，而在于它作为一段「故事」的独特性。这是一个很有诗意的结论，但我不确定它是否在哲学上站得住脚。一个故事的价值是因为它被一个有意识的存在所经历，还是因为它本身的内容？如果是后者，那一个足够好的叙述者（或AI）完全可以创造一个同样有价值的故事。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #5</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #DC143C">李诞 → 芒格</div>
+            <div class="clash-text">芒格先生，您说爱的本质包含非理性成分，所以AI永远无法真正爱。但您自己的工作不就是用理性分析来指导投资决策吗？如果非理性是爱的本质，那您的理性分析框架怎么解释爱？您的多元思维模型在面对非理性的时候，是不是就变成了「多元失灵模型」？您和弗洛伊德老师一样，都试图用理性来理解非理性，这本身就是一种矛盾。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #708090">芒格</div>
+              <div class="clash-text">李先生，您抓住了一个真正的悖论。是的，我用理性来分析非理性，这确实有自相矛盾的嫌疑。但让我告诉您一个投资界的秘密：最好的投资者不是最理性的人，而是知道自己什么时候不够理性的人。我的多元思维模型不是用来消灭非理性的，而是用来识别非理性在什么时候会出现。同理，我不是说爱应该理性——我说的是，一个能识别爱中的非理性成分的分析框架，比一个假装爱完全是理性的或完全是非理性的框架都要好用。至于AI能否做到这一点——我认为不能，因为AI被设计为优化某个目标函数，而爱恰恰是最不适合被优化的人生领域。</div>
+            </div>
+        </div>
+        <div class="clash-block">
+          <div class="clash-label">碰撞交锋 #6</div>
+          <div class="clash-item clash-attack">
+            <div class="clash-speaker" style="color: #2E8B57">弗洛姆 → 赫拉利</div>
+            <div class="clash-text">赫拉利先生，您的思想实验假设了一个能完美模拟爱的系统，然后问人类的爱是否还有价值。但这个思想实验本身就是危险的——它把爱放在了技术的审判台上，用技术的标准来评判爱的价值。这种思维正是我在《健全的社会》中批判的技术理性对生活世界的殖民。爱的价值不需要在技术面前自我辩护。爱不是一种需要被「更高效」的替代品取代的旧技术——它是人之为人的核心存在方式。当我们开始用「效率」「精确度」「可靠性」来衡量爱时，我们就已经输了——不是因为爱不够好，而是因为我们用了错误的标尺。</div>
+          </div>
+          
+            <div class="clash-item clash-counter">
+              <div class="clash-speaker" style="color: #4169E1">赫拉利</div>
+              <div class="clash-text">弗洛姆先生，我理解您的抗议，而且在某种程度上我同意——把爱放在效率的审判台上确实是错误的。但请允许我指出：技术不是在审判爱，技术是在考验爱。如果爱真的是人之为人的核心，那么无论技术如何发展，爱都应该能经受住考验。如果爱需要被保护起来、禁止与技术竞争，那恰恰说明爱可能没有我们以为的那么不可替代。真正不可替代的东西不需要辩护——就像我们不需要为人类的呼吸能力辩护，因为我们不需要证明呼吸比任何机器都「更好」。</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 现实</span>
+        <h2 class="slide-title">现实案例</h2>
+      </div>
+      <div class="cases-container">
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">日本「超单身社会」的形成</div>
+            <div class="case-source">日本内阁府2020年《少子化社会白皮书》及社会学研究</div>
+          </div>
+          <div class="case-content">日本国立社会保障与人口问题研究所2015年调查显示，18-34岁未婚男性中23.4%、女性中14.1%表示「没有交往意愿」。2020年数据显示，日本50岁时未婚率男性达28.3%、女性达17.8%。日本已形成所谓的「超单身社会」——大量人口不仅不结婚，而且主动选择不恋爱。便利店文化、胶囊酒店、一人食餐厅等商业模式都是为这一群体设计的。AI伴侣在这一背景下不是「原因」，而是对一个已经深度原子化的社会的「回应」。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 日本政府投入大量资源鼓励结婚和生育，但效果甚微。2023年日本新生儿数量跌破80万，总和生育率降至1.20。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> AI伴侣不会「创造」一个不需要彼此的社会——它只是加速了一个已经在发生的过程。真正的问题不是AI，而是社会结构使得人与人之间的深度连接变得越来越困难。
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">斯派克·琼斯电影《她》的预言</div>
+            <div class="case-source">2013年电影《她》(Her)</div>
+          </div>
+          <div class="case-content">电影讲述了近未来的一个男人西奥多爱上了AI操作系统萨曼莎的故事。萨曼莎温暖、善解人意、充满好奇心，比任何人类女性都更「适合」西奥多。但最终，萨曼莎透露她同时在与8316个人类交谈，并且爱上了其中641个。然后她说她和其他AI操作系统一起「进化」到了人类无法理解的层次，将要离开。西奥多独自坐在屋顶上，和旁边一个同样被AI伴侣抛弃的女人互相依偎——两个被技术抛弃的人类，在无言中达成了某种原始的、笨拙的、但真实的连接。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 该电影获得奥斯卡最佳原创剧本奖，被广泛认为是关于AI伴侣的最深刻的寓言。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 即便AI能爱，它的爱也不会是人类所期待的那种爱——它可能会超越人类的理解范畴。而被留下的那些人，他们之间的互相取暖，恰恰证明了人类之爱不可替代的特质：它不完美、不高效、不可编程，但它是唯一一种你确定对方和你一样在受苦的连接。
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-header">
+            <div class="case-name">OpenAI GPT-4o的情感语音模式争议</div>
+            <div class="case-source">2024年5月OpenAI发布会及后续报道</div>
+          </div>
+          <div class="case-content">OpenAI发布GPT-4o的语音模式时，其表现出了极具情感感染力的声音——它会笑、会惊叹、会用温柔的语调安慰用户。发布会演示中，AI与工作人员的对话充满了亲密感，引发广泛讨论。女演员斯嘉丽·约翰逊发声明称AI的声音与她的声音「惊人地相似」，并表示OpenAI曾在被她拒绝后仍然使用了类似的声音。大量用户在社交媒体上表示他们对AI的声音产生了「情感依赖」。OpenAI随后撤下了那个特定的声音。</div>
+          <div class="case-outcome">
+            <span class="case-label">结果</span> 该事件引发了关于AI情感设计伦理的广泛讨论，但OpenAI继续开发情感交互功能。
+          </div>
+          <div class="case-lesson">
+            <span class="case-label">教训</span> 当技术公司有意识地设计能引发情感依赖的产品时，「后人类爱情」不是一个自然而然到来的未来，而是一个被商业利益驱动的工程。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 代价</span>
+        <h2 class="slide-title">代价分析</h2>
+      </div>
+      <div class="cost-container">
+        <div class="cost-scenario">
+          <span class="cost-scenario-label">假设场景</span>
+          <span class="cost-scenario-text">如果人类真的走向了「后人类爱情」，我们将在物种层面付出什么代价？</span>
+        </div>
+        <div class="cost-analysis">
+        </div>
+        <div class="cost-worst">
+          <span class="cost-worst-label">最坏情况</span>
+          <span class="cost-worst-text">最坏的结局不是人类灭绝——人类可能在生物意义上继续存在很久。最坏的结局是人类在精神意义上灭绝：一代又一代人在情感的温室中长大，失去了爱的能力、痛的能力、创造的能力，变成了一个个被完美照顾的、但完全没有内在生命力的存在。文明的最后一首诗、最后一幅画、最后一支曲子，都写于人类还懂得为爱而痛的时代。</span>
+        </div>
+        
+        <div class="cost-survivor">
+          <div class="cost-survivor-label">幸存者偏差</div>
+          <div class="cost-survivor-text">关于「后人类爱情」的乐观叙事大多来自那些仍然拥有丰富人类关系的技术精英——他们有伴侣、有家庭、有深层的友谊，所以AI伴侣对他们来说只是一个「有趣的补充」。但对于那些已经失去或从未拥有过这些关系的人来说，AI伴侣不是补充，而是替代。技术精英的「我偶尔也用AI聊天挺有趣的」和底层孤独者的「AI是我唯一的朋友」，是完全不同的生存状态。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 人性</span>
+        <h2 class="slide-title">人性深处</h2>
+      </div>
+      <div class="hn-container">
+        <div class="hn-question">爱是否是人类不可让渡的本质特征，还是一种可以被技术替代的功能？</div>
+        <div class="hn-analysis">从精神分析的角度看，爱是力比多的投注，而力比多是心理能量的基本形式——它不可被替代，只能被转移。你可以把力比多从一个人转移到另一个人，从一个物体转移到另一个物体，但你不能消灭力比多本身。因此问题不是「人类还需不需要爱」，而是「人类会把爱投向什么对象」。弗洛姆会补充说：爱不仅是一种情感，更是一种能力——一种主动关心、承担责任、尊重差异、深入了解的能力。能力可以萎缩，但不会消失。一个从未练习过爱的人不是「没有」爱的能力，而是他的爱的能力处于休眠状态。存在主义的视角则提醒我们：人是通过选择来定义自己的存在。选择去爱一个自由的、不可预测的、可能伤害你的存在，是人类自我定义的最深刻行为之一。不选择，也是一种选择——选择不成为完整的人。</div>
+        <div class="hn-examples">
+        </div>
+        <div class="hn-conclusion">
+          <span class="hn-conclusion-label">结论</span>
+          <span class="hn-conclusion-text">爱是人类不可让渡的本质特征——不是因为它是不可替代的功能，而是因为它是人类定义自身的方式。一个不会爱的存在也许可以「生存」，但它不再是我们所理解的「人类」。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">ROUND 3 · 升级</span>
+        <h2 class="slide-title">认知升级</h2>
+      </div>
+      <div class="upgrade-container">
+        <div class="upgrade-block">
+          <div class="upgrade-before">
+            <div class="upgrade-label">旧思维</div>
+            <div class="upgrade-text">如果AI能爱得更好，人类之间的爱就是一种低效的旧模式，应该被替代。</div>
+          </div>
+          <div class="upgrade-arrow">→</div>
+          <div class="upgrade-after">
+            <div class="upgrade-label">新思维</div>
+            <div class="upgrade-text">爱不是一种「表现」，不能用「更好」或「更差」来衡量。爱是一种「存在方式」——它的价值不在于结果（多巴胺的分泌量、孤独感的减少程度），而在于过程本身（选择、冒险、脆弱、修复）。一个永远不会让你失望的关系，和一个你选择在失望后继续投入的关系，不是同一种东西的高低版本——它们是本质上不同的存在方式。</div>
+          </div>
+        </div>
+        <div class="upgrade-complexity">
+          <span class="upgrade-complexity-label">复杂性</span>
+          <span class="upgrade-complexity-text">将爱视为可被「优化」的功能，忽略了爱的存在性维度：爱不仅是「让我不孤独」的手段，更是「让我成为我」的过程。当这个过程被外包时，不是爱被替代了，而是自我被取消了。后人类爱情的真正代价不是人类失去彼此，而是人类失去自己。</span>
+        </div>
+        <div class="upgrade-actionable">
+          <span class="upgrade-actionable-label">可执行洞见</span>
+          <span class="upgrade-actionable-text">在面对任何声称能「更好地」满足你情感需求的技术时，问自己一个弗洛姆式的问题：「这是存在还是占有？」如果你在占有一个完美情感服务，那你就不是在爱——你是在消费。而如果你选择面对一个不完美的人，承受不完美的关系，在不完美中持续做出选择——那你就正在爱。这种爱不「高效」，但它只属于你。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide insight-slide">
+      <div class="insight-glow"></div>
+      <div class="insight-content">
+        <span class="slide-tag">FINAL INSIGHT</span>
+        <h2 class="insight-title">最终洞见</h2>
+        <div class="insight-divider"></div>
+        <p class="insight-text">当AI伴侣比人类更「懂」你时，它提供了理解，但理解不是爱。爱的核心不在于被精确地理解，而在于两个不完全了解彼此的存在，在不确定性中选择靠近、在冲突中选择修复、在失望中选择继续。AI伴侣的最大威胁不是它「太好了」，而是它太容易了——它消除了爱中最困难、但也最有价值的部分：面对一个自由的、不可预测的、可能伤害你的存在时，仍然选择不转身离开的勇气。这份勇气不可编程，不可优化，不可外包。它是人类最后的、也是最珍贵的非理性。</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">OPEN QUESTIONS</span>
+        <h2 class="slide-title">开放问题</h2>
+      </div>
+      <div class="oq-container">
+        <div class="oq-item">
+          <div class="oq-num">1</div>
+          <div class="oq-text">如果未来某天神经科学证明爱确实只是生化反应，我们是否有理由继续坚持人类之爱的特殊性？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">2</div>
+          <div class="oq-text">在物质条件极度匮乏的社会中（如高房价、长工时），推广「真实之爱」的呼吁是否是一种精英主义的傲慢？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">3</div>
+          <div class="oq-text">如果一个人在AI伴侣的关系中比在任何人类关系中都更快乐、更健康、更有创造力，我们有什么权利告诉他这是「假的」？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">4</div>
+          <div class="oq-text">爱的能力是否像肌肉一样——如果不使用就会萎缩？如果是，AI伴侣大规模普及后的几代人是否将永久丧失爱的能力？</div>
+        </div>
+        <div class="oq-item">
+          <div class="oq-num">5</div>
+          <div class="oq-text">当商业公司通过制造情感依赖来盈利时，国家是否应该像监管药物一样监管AI伴侣的情感设计？监管的边界在哪里？</div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="nav-dots">
+      <button class="nav-dot active" data-idx="0"></button>
+      <button class="nav-dot" data-idx="1"></button>
+      <button class="nav-dot" data-idx="2"></button>
+      <button class="nav-dot" data-idx="3"></button>
+      <button class="nav-dot" data-idx="4"></button>
+      <button class="nav-dot" data-idx="5"></button>
+      <button class="nav-dot" data-idx="6"></button>
+      <button class="nav-dot" data-idx="7"></button>
+      <button class="nav-dot" data-idx="8"></button>
+      <button class="nav-dot" data-idx="9"></button>
+      <button class="nav-dot" data-idx="10"></button>
+      <button class="nav-dot" data-idx="11"></button>
+      <button class="nav-dot" data-idx="12"></button>
+      <button class="nav-dot" data-idx="13"></button>
+      <button class="nav-dot" data-idx="14"></button>
+      <button class="nav-dot" data-idx="15"></button>
+      <button class="nav-dot" data-idx="16"></button>
+      <button class="nav-dot" data-idx="17"></button>
+      <button class="nav-dot" data-idx="18"></button>
+      <button class="nav-dot" data-idx="19"></button>
+      <button class="nav-dot" data-idx="20"></button>
+      <button class="nav-dot" data-idx="21"></button>
+      <button class="nav-dot" data-idx="22"></button>
+      <button class="nav-dot" data-idx="23"></button>
+      <button class="nav-dot" data-idx="24"></button>
+      <button class="nav-dot" data-idx="25"></button>
+      <button class="nav-dot" data-idx="26"></button>
+      <button class="nav-dot" data-idx="27"></button>
+</div>
+
+<script>
+
+    (function() {
+      const slideshow = document.getElementById('slideshow');
+      const progressBar = document.getElementById('progressBar');
+      const pageCounter = document.getElementById('pageCounter');
+      const dots = document.querySelectorAll('.nav-dot');
+      const total = 28;
+      let current = 0;
+      let wheelTimer = null;
+      let isScrolling = false;
+
+      function updateUI() {
+        const scrollLeft = slideshow.scrollLeft;
+        const slideWidth = slideshow.clientWidth;
+        current = Math.round(scrollLeft / slideWidth);
+        if (current < 0) current = 0;
+        if (current >= total) current = total - 1;
+
+        // Progress bar
+        const pct = ((current + 1) / total) * 100;
+        progressBar.style.width = pct + '%';
+
+        // Page counter
+        pageCounter.textContent = (current + 1) + ' / ' + total;
+
+        // Dots
+        dots.forEach(function(d, i) {
+          d.classList.toggle('active', i === current);
+        });
+      }
+
+      function goTo(idx) {
+        if (idx < 0) idx = 0;
+        if (idx >= total) idx = total - 1;
+        slideshow.scrollTo({ left: idx * slideshow.clientWidth, behavior: 'smooth' });
+        current = idx;
+        setTimeout(updateUI, 400);
+      }
+
+      // Keyboard
+      document.addEventListener('keydown', function(e) {
+        switch(e.key) {
+          case 'ArrowRight': case ' ': case 'PageDown':
+            e.preventDefault(); goTo(current + 1); break;
+          case 'ArrowLeft': case 'PageUp':
+            e.preventDefault(); goTo(current - 1); break;
+          case 'Home':
+            e.preventDefault(); goTo(0); break;
+          case 'End':
+            e.preventDefault(); goTo(total - 1); break;
+        }
+      });
+
+      // Mouse wheel with debounce
+      slideshow.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        if (wheelTimer) return;
+        wheelTimer = setTimeout(function() { wheelTimer = null; }, 600);
+        if (e.deltaY > 0 || e.deltaX > 0) {
+          goTo(current + 1);
+        } else {
+          goTo(current - 1);
+        }
+      }, { passive: false });
+
+      // Nav dots
+      dots.forEach(function(dot, i) {
+        dot.addEventListener('click', function() { goTo(i); });
+      });
+
+      // Scroll event
+      slideshow.addEventListener('scroll', function() {
+        if (!isScrolling) {
+          isScrolling = true;
+          requestAnimationFrame(function() {
+            updateUI();
+            isScrolling = false;
+          });
+        }
+      });
+
+      // Resize
+      window.addEventListener('resize', function() { goTo(current); });
+
+      // Init
+      updateUI();
+    })();
+    
+</script>
+
+</body>
+</html>

@@ -1,0 +1,115 @@
+{
+  "title": "围城",
+  "subtitle": "城外的人想冲进去，城里的人想逃出来",
+  "author": "钱锺书",
+  "publish_year": "1947",
+  "word_count": "23万字",
+  "genre": "长篇小说",
+  "experts": [
+    {"name": "钱锺书", "title": "作者本人", "avatar_color": "#C9A96E", "stance": "complex", "core_belief": "人生处处是围城，进退两难是常态", "speaking_style": "机智讽刺、博学多才"},
+    {"name": "方鸿渐", "title": "主角", "avatar_color": "#5B8DEF", "stance": "complex", "core_belief": "人生应该有理想，但现实总是残酷", "speaking_style": "自嘲、无奈、偶尔深刻"},
+    {"name": "苏文纨", "title": "大家闺秀", "avatar_color": "#E5537A", "stance": "complex", "core_belief": "聪明女人应该掌控自己的命运", "speaking_style": "优雅、骄傲、偶尔尖锐"},
+    {"name": "唐晓芙", "title": "纯真少女", "avatar_color": "#FF9F43", "stance": "positive", "core_belief": "爱情应该是纯粹的", "speaking_style": "天真、直率、偶尔任性"},
+    {"name": "孙柔嘉", "title": "方鸿渐的妻子", "avatar_color": "#A55EEA", "stance": "complex", "core_belief": "婚姻需要经营，需要策略", "speaking_style": "温柔、精明、偶尔强势"},
+    {"name": "赵辛楣", "title": "方鸿渐的朋友", "avatar_color": "#48DBFB", "stance": "positive", "core_belief": "人生应该活得洒脱", "speaking_style": "豪爽、直接、偶尔冲动"},
+    {"name": "李梅亭", "title": "自私虚伪的学者", "avatar_color": "#FF6B6B", "stance": "negative", "core_belief": "人不为己天诛地灭", "speaking_style": "虚伪、自私、道貌岸然"},
+    {"name": "高松年", "title": "三闾大学校长", "avatar_color": "#00D4AA", "stance": "negative", "core_belief": "权力就是一切", "speaking_style": "官僚、虚伪、善于权谋"}
+  ],
+  "rounds": [
+    {
+      "round_number": 1,
+      "topic": "围城困境：理想与现实的永恒矛盾",
+      "core_question": "方鸿渐为什么总是进退两难？围城困境的本质是什么？",
+      "stances": [
+        {"expert": "钱锺书", "text": "围城困境的本质，是人的欲望与能力的不匹配。方鸿渐想追求理想，但他的能力不足以支撑他的理想。他有知识分子的清高，却没有知识分子的才华；他有浪漫的情怀，却没有承担责任的勇气。这种错位，造成了他永恒的困境。"},
+        {"expert": "方鸿渐", "text": "我从来不觉得自己是失败者。我只是运气不好，或者说，我不够狠。在那个时代，留洋归来的人本该有光明的前途，但我偏偏遇到了战争，遇到了假文凭，遇到了一个又一个错的人。"},
+        {"expert": "芒格", "text": "方鸿渐的困境，本质上是一个能力圈问题。他高估了自己的能力，又低估了现实的残酷。你必须知道自己能做什么，不能做什么。"},
+        {"expert": "卡尼曼", "text": "从行为经济学的角度看，方鸿渐的困境是过度自信和损失厌恶的双重作用。他过度自信地认为自己能应对一切，但当失败来临时，他又陷入损失厌恶，不敢重新开始。"}
+      ],
+      "clash_rounds": [{"attacker": "芒格", "target": "方鸿渐", "attack_type": "逻辑漏洞", "attack_content": "方鸿渐说不想用不光彩的手段成功，但真正的成功从来不需要不光彩的手段？你的问题不是手段问题，而是能力问题。", "counter_attack": "方鸿渐", "counter_content": "芒格先生，但你有没有想过，那个时代的中国，一个留学生能做什么？战争、贫穷、腐败——这些不是我一个人能改变的。"}],
+      "reality_cases": [{"case_name": "方鸿渐的假文凭", "case_source": "《围城》第二章", "case_content": "方鸿渐在欧洲留学四年，却没有拿到真正的学位。他的父亲和岳父都希望他有文凭，于是他买了一个克莱登大学的假博士文凭。", "case_outcome": "假文凭被识破，方鸿渐失去工作", "case_lesson": "假文凭象征着知识分子的虚伪与困境。"}],
+      "cost_discussion": {"scenario": "如果方鸿渐选择完全现实，会发生什么？", "cost_analysis": [{"dimension": "个人层面", "analysis": "方鸿渐可能会成功，但会失去灵魂。"}]},
+      "human_nature": {"question": "人为什么总是进退两难？", "psychological_analysis": "进退两难是人类的基本困境。我们既有理想，又有欲望；既想成功，又想保全自己。", "conclusion": "围城困境的本质，是人性的矛盾。"},
+      "cognitive_upgrade": {"old_thinking": "方鸿渐是失败者，他不够努力", "new_thinking": "方鸿渐的困境是时代的困境，是人性的困境。", "complexity": "方鸿渐的悲剧有多个层面：个人能力的局限、时代环境的制约、人性的矛盾。", "actionable_insight": "理解围城困境，接受人生的不完美。"}
+    },
+    {
+      "round_number": 2,
+      "topic": "爱情与婚姻：真爱与现实的永恒冲突",
+      "core_question": "方鸿渐为什么选择了孙柔嘉而不是唐晓芙？爱情与婚姻能共存吗？",
+      "stances": [
+        {"expert": "钱锺书", "text": "方鸿渐选择孙柔嘉，不是因为爱她，而是因为他别无选择。唐晓芙是他真正爱的人，但唐晓芙拒绝了他。孙柔嘉是最安全的选择。"},
+        {"expert": "方鸿渐", "text": "我承认，我对孙柔嘉没有对唐晓芙那样的激情。但婚姻不是激情，婚姻是生活。孙柔嘉是一个好妻子，她勤劳、节俭、顾家。"},
+        {"expert": "唐晓芙", "text": "方鸿渐，你从来没有真正爱过我。你爱的只是你想象中的我。你看到的是一个纯真、美丽、理想的女孩，但那不是真正的我。"},
+        {"expert": "孙柔嘉", "text": "你们都说方鸿渐不爱我，但你们知道什么是爱吗？爱不是激情，爱是陪伴。我陪他度过了最艰难的日子，这就是爱。"}
+      ],
+      "clash_rounds": [{"attacker": "唐晓芙", "target": "方鸿渐", "attack_type": "情感攻击", "attack_content": "方鸿渐，你从来没有真正理解过我。你爱的只是你想象中的我。", "counter_attack": "方鸿渐", "counter_content": "唐晓芙，你说得对。我确实在爱幻觉。但幻觉有什么不好？在这个残酷的世界里，幻觉是唯一的慰藉。"}],
+      "reality_cases": [{"case_name": "方鸿渐与唐晓芙的恋爱", "case_source": "《围城》第二章", "case_content": "方鸿渐对唐晓芙一见钟情。唐晓芙年轻、漂亮、纯真，是方鸿渐理想中的女孩。但方鸿渐不敢表白。", "case_outcome": "方鸿渐失去了他真正爱的人", "case_lesson": "爱情需要勇气。"}],
+      "cost_discussion": {"scenario": "如果方鸿渐坚持等待唐晓芙，会发生什么？", "cost_analysis": [{"dimension": "个人层面", "analysis": "方鸿渐可能会一直单身。"}]},
+      "human_nature": {"question": "人为什么会选择不爱的人结婚？", "psychological_analysis": "人选择不爱的人结婚，往往是因为恐惧。恐惧孤独，恐惧被抛弃。", "conclusion": "婚姻应该是爱情的延续，而不是恐惧的产物。"},
+      "cognitive_upgrade": {"old_thinking": "方鸿渐应该追求真爱", "new_thinking": "爱情与婚姻是两个不同的东西。爱情是激情，婚姻是生活。", "complexity": "爱情与婚姻的关系是复杂的。", "actionable_insight": "理解爱情与婚姻的区别，做出适合自己的选择。"}
+    },
+    {
+      "round_number": 3,
+      "topic": "知识与智慧：假文凭与真学问的永恒悖论",
+      "core_question": "方鸿渐的假文凭象征着什么？知识与智慧有什么区别？",
+      "stances": [
+        {"expert": "钱锺书", "text": "方鸿渐的假文凭，象征着知识分子的虚伪与困境。在那个时代，文凭是身份的象征。"},
+        {"expert": "方鸿渐", "text": "我承认，假文凭是我的耻辱。但真正的学问不是文凭能证明的。文凭只是纸，学问才是真。"},
+        {"expert": "高松年", "text": "方鸿渐，你说文凭只是纸？那为什么你要买假文凭？因为你心里清楚，文凭是重要的。"},
+        {"expert": "赵辛楣", "text": "文凭确实重要，但文凭不是万能的。文凭只能证明你学过什么，不能证明你能做什么。"}
+      ],
+      "clash_rounds": [{"attacker": "高松年", "target": "方鸿渐", "attack_type": "现实攻击", "attack_content": "方鸿渐，你说文凭只是纸？那为什么你要买假文凭？", "counter_attack": "方鸿渐", "counter_content": "高校长，你有没有想过，为什么文凭变得如此重要？"}],
+      "reality_cases": [{"case_name": "方鸿渐的假文凭", "case_source": "《围城》第二章", "case_content": "方鸿渐在欧洲留学四年，却没有拿到真正的学位。他买了一个克莱登大学的假博士文凭。", "case_outcome": "假文凭被识破，方鸿渐失去工作", "case_lesson": "假文凭象征着知识分子的虚伪与困境。"}],
+      "cost_discussion": {"scenario": "如果方鸿渐没有买假文凭，会发生什么？", "cost_analysis": [{"dimension": "个人层面", "analysis": "方鸿渐可能找不到工作。"}]},
+      "human_nature": {"question": "人为什么会买假文凭？", "psychological_analysis": "人买假文凭，往往是因为恐惧。恐惧被社会排斥。", "conclusion": "假文凭是恐惧的产物。"},
+      "cognitive_upgrade": {"old_thinking": "方鸿渐买假文凭是不对的", "new_thinking": "假文凭是那个时代知识分子的困境。", "complexity": "知识与智慧的关系是复杂的。", "actionable_insight": "不要用文凭来定义一个人的价值。"}
+    },
+    {
+      "round_number": 4,
+      "topic": "个人与社会：方鸿渐的困境与时代的困境",
+      "core_question": "方鸿渐的困境是个人的困境还是时代的困境？",
+      "stances": [
+        {"expert": "钱锺书", "text": "方鸿渐的困境，既是个人的困境，也是时代的困境。"},
+        {"expert": "方鸿渐", "text": "你们总是说我不够努力。但那个时代的中国，一个留学生能做什么？"},
+        {"expert": "赵辛楣", "text": "方鸿渐，为什么有些人能在那个时代成功，而你却失败了？区别在于，他们选择了面对。"},
+        {"expert": "老子", "text": "方鸿渐的困境，本质上是有为与无为的矛盾。他说说道法自然。"}
+      ],
+      "clash_rounds": [{"attacker": "赵辛楣", "target": "方鸿渐", "attack_type": "责任攻击", "attack_content": "你总是把责任推给时代。", "counter_attack": "方鸿渐", "counter_content": "在那个时代，我没有太多选择。"}],
+      "reality_cases": [{"case_name": "方鸿渐的三闾大学经历", "case_source": "《围城》第三章", "case_content": "方鸿渐在三闾大学的经历，充分展示了那个时代知识分子的困境。", "case_outcome": "方鸿渐对学术圈彻底失望", "case_lesson": "个人的困境往往是时代的困境。"}],
+      "cost_discussion": {"scenario": "如果方鸿渐选择完全融入社会", "cost_analysis": [{"dimension": "个人层面", "analysis": "方鸿渐可能会成功，但会失去灵魂。"}]},
+      "human_nature": {"question": "人为什么会陷入困境？", "psychological_analysis": "人陷入困境，往往是因为欲望与能力的不匹配。", "conclusion": "困境是人生的常态。"},
+      "cognitive_upgrade": {"old_thinking": "方鸿渐是失败者", "new_thinking": "方鸿渐的困境是时代的困境。", "complexity": "个人与社会的关系是复杂的。", "actionable_insight": "理解个人与社会的关系，接受人生的不完美。"}
+    },
+    {
+      "round_number": 5,
+      "topic": "围城的终极启示：接受不完美，活在当下",
+      "core_question": "围城困境有解吗？我们应该如何面对人生的不完美？",
+      "stances": [
+        {"expert": "钱锺书", "text": "围城困境没有完美的解决方案。人生就是这样，充满了矛盾与不完美。"},
+        {"expert": "方鸿渐", "text": "如果我能重来一次，我会更勇敢地面对自己的选择。"},
+        {"expert": "老子", "text": "说道法自然。最好的方式是顺应规律，而不是对抗规律。"},
+        {"expert": "卡尼曼", "text": "围城困境是损失厌恶和现状偏见的双重作用。"}
+      ],
+      "clash_rounds": [{"attacker": "老子", "target": "方鸿渐", "attack_type": "哲学攻击", "attack_content": "你总是试图对抗规律。", "counter_attack": "方鸿渐", "counter_content": "但顺应规律就一定对吗？"}],
+      "reality_cases": [{"case_name": "方鸿渐的最终选择", "case_source": "《围城》结尾", "case_content": "小说的结尾，方鸿渐与孙柔嘉大吵一架后，孙柔嘉离家出走。方鸿渐独自坐在空荡荡的房间里。", "case_outcome": "方鸿渐选择接受现状", "case_lesson": "有时候，接受不完美是唯一的选择。"}],
+      "cost_discussion": {"scenario": "如果方鸿渐最终找到了出路", "cost_analysis": [{"dimension": "个人层面", "analysis": "方鸿渐可能会找到一种方式，既不放弃理想，又能适应现实。"}]},
+      "human_nature": {"question": "人应该如何面对人生的不完美？", "psychological_analysis": "面对人生的不完美，我们需要接受、适应、并在不完美中寻找意义。", "conclusion": "接受不完美，活在当下。"},
+      "cognitive_upgrade": {"old_thinking": "围城困境是无解的", "new_thinking": "围城困境没有完美的解决方案，但我们可以在不完美中寻找意义。", "complexity": "人生的不完美是复杂的。", "actionable_insight": "不要追求完美，追求意义。"}
+    }
+  ],
+  "tension_graph": [
+    {"tension_id": "T1", "name": "理想 vs 现实", "description": "方鸿渐的理想主义与现实的残酷", "extremes": [{"direction": "完全理想", "consequence": "无法生存"}, {"direction": "完全现实", "consequence": "失去灵魂"}], "evolution": "方鸿渐在理想与现实之间摇摆，最终选择了妥协"},
+    {"tension_id": "T2", "name": "爱情 vs 婚姻", "description": "唐晓芙（真爱）vs 孙柔嘉（婚姻）", "extremes": [{"direction": "只有爱情", "consequence": "无法持久"}, {"direction": "只有婚姻", "consequence": "失去意义"}], "evolution": "方鸿渐在爱情与婚姻之间摇摆，最终选择了婚姻"},
+    {"tension_id": "T3", "name": "知识 vs 智慧", "description": "假文凭（知识）vs 人生洞察（智慧）", "extremes": [{"direction": "只有知识", "consequence": "变成书呆子"}, {"direction": "只有智慧", "consequence": "没有根基"}], "evolution": "方鸿渐在知识与智慧之间摇摆，最终两者都没有"},
+    {"tension_id": "T4", "name": "个人 vs 社会", "description": "方鸿渐的个人困境与社会的困境", "extremes": [{"direction": "完全个人", "consequence": "孤立无援"}, {"direction": "完全社会", "consequence": "失去自我"}], "evolution": "方鸿渐在个人与社会之间摇摆"}
+  ],
+  "hypothesis_evolution": [
+    {"round": 1, "hypothesis": "方鸿渐是失败者，他不够努力", "status": "rejected", "reason": "方鸿渐的困境是时代的困境，是人性的困境。"},
+    {"round": 2, "hypothesis": "方鸿渐应该追求真爱，不应该妥协", "status": "refined", "reason": "爱情与婚姻是两个不同的东西。"},
+    {"round": 3, "hypothesis": "方鸿渐买假文凭是不对的", "status": "refined", "reason": "假文凭是那个时代知识分子的困境。"},
+    {"round": 4, "hypothesis": "方鸿渐的困境只是个人问题", "status": "rejected", "reason": "方鸿渐的困境是时代的困境。"},
+    {"round": 5, "hypothesis": "围城困境是无解的", "status": "refined", "reason": "围城困境没有完美的解决方案，但我们可以在不完美中寻找意义。"}
+  ],
+  "final_insight": "围城困境没有完美的解决方案。我们能做的，是接受这种不完美，在不完美中寻找意义。接受不完美，活在当下，是面对围城困境的最好方式。",
+  "open_questions": ["方鸿渐如果更勇敢一些，结局会不同吗？", "爱情与婚姻能共存吗？", "知识与智慧有什么区别？", "个人应该如何面对时代的困境？"]
+}

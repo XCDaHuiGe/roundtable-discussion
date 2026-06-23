@@ -13,49 +13,49 @@ body{background:var(--ink);color:var(--paper);font-family:'Noto Serif SC',serif;
 .pageNum{position:fixed;bottom:2rem;right:3rem;font-family:'Inter',sans-serif;font-size:.8rem;color:var(--gold-dark);z-index:1000;letter-spacing:.2em}
 .deck{display:flex;width:100vw;height:100vh;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
 .deck::-webkit-scrollbar{display:none}
-.page{flex:0 0 100vw;width:100vw;height:100vh;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:6rem 8rem;position:relative;overflow:hidden}
+.page{flex:0 0 100vw;width:100vw;height:100vh;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:3rem 6rem;position:relative;overflow:hidden}
 .page::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background-size:cover;background-position:center;opacity:.15;z-index:0}
 .page>*{position:relative;z-index:1}
 .cover{text-align:center}
 .cover::before{background:linear-gradient(135deg,rgba(10,10,10,.3),rgba(10,10,10,.5)),url('../assets/opening.png') center/cover}
-.cover-label{font-size:.75rem;letter-spacing:1em;color:var(--gold);margin-bottom:3rem;text-transform:uppercase}
-.cover-title{font-size:8rem;font-weight:900;color:var(--paper);line-height:1;margin-bottom:2rem;text-shadow:0 0 100px rgba(201,169,110,.3)}
-.cover-subtitle{font-family:'Inter',sans-serif;font-size:1.2rem;font-weight:300;color:var(--gold);margin-bottom:4rem;letter-spacing:.5em}
+.cover-label{font-size:.75rem;letter-spacing:1em;color:var(--gold);margin-bottom:1rem;text-transform:uppercase}
+.cover-title{font-size:8rem;font-weight:900;color:var(--paper);line-height:1;margin-bottom:1rem;text-shadow:0 0 100px rgba(201,169,110,.3)}
+.cover-subtitle{font-family:'Inter',sans-serif;font-size:1.2rem;font-weight:300;color:var(--gold);margin-bottom:1rem;letter-spacing:.5em}
 .cover-line{width:80px;height:1px;background:var(--gold);margin:0 auto 2rem}
 .cover-author{font-size:.9rem;color:var(--gold-dark);letter-spacing:.3em}
 .chapter{text-align:center}
 .chapter-num{font-size:12rem;font-weight:200;color:rgba(201,169,110,.08);line-height:1;margin-bottom:-4rem}
-.chapter-title{font-size:3.5rem;font-weight:700;color:var(--paper);margin-bottom:1.5rem}
+.chapter-title{font-size:3.5rem;font-weight:700;color:var(--paper);margin-bottom:1rem}
 .chapter-subtitle{font-size:1.1rem;color:var(--gold);max-width:500px;line-height:1.8}
-.debate{align-items:flex-start;padding:4rem 10rem}
+.debate{align-items:flex-start;padding:2.5rem 6rem}
 .debate::before{background:linear-gradient(135deg,rgba(10,10,10,.4),rgba(10,10,10,.6)),url('../assets/value.png') center/cover}
-.debate-header{display:flex;align-items:center;gap:1.5rem;margin-bottom:3rem;width:100%}
+.debate-header{display:flex;align-items:center;gap:1.5rem;margin-bottom:1rem;width:100%}
 .debate-line{flex:1;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
 .debate-round{font-family:'Inter',sans-serif;font-size:.75rem;color:var(--gold);letter-spacing:.5em;text-transform:uppercase}
-.speech{width:100%;padding:2.5rem 3rem;background:rgba(10,10,10,.6);backdrop-filter:blur(10px);border-left:2px solid var(--gold);margin-bottom:1.5rem}
+.speech{width:100%;padding:1.5rem 2rem;background:rgba(10,10,10,.6);backdrop-filter:blur(10px);border-left:2px solid var(--gold);margin-bottom:1rem}
 .speech-speaker{font-size:1.1rem;font-weight:700;color:var(--gold);margin-bottom:1rem;display:flex;align-items:center;gap:.8rem}
 .speech-speaker::before{content:'';width:8px;height:8px;background:var(--gold);border-radius:50%}
-.speech-text{font-size:1rem;line-height:2;color:var(--paper);opacity:.9}
+.speech-text{font-size:1rem;line-height:1.6;color:var(--paper);opacity:.9}
 .insight{text-align:center}
 .insight::before{background:linear-gradient(135deg,rgba(10,10,10,.3),rgba(10,10,10,.5)),url('../assets/truth.png') center/cover}
-.insight-title{font-size:2.5rem;font-weight:700;color:var(--gold);margin-bottom:2rem}
-.insight-text{font-size:1.3rem;line-height:2;color:var(--paper);max-width:600px;font-style:italic}
+.insight-title{font-size:2.5rem;font-weight:700;color:var(--gold);margin-bottom:1rem}
+.insight-text{font-size:1.3rem;line-height:2;color:var(--paper);max-width:500px;font-style:italic}
 .quote-page{text-align:center}
 .quote-page::before{background:linear-gradient(135deg,rgba(10,10,10,.3),rgba(10,10,10,.5)),url('../assets/emotion.png') center/cover}
 .quote-mark{font-size:8rem;color:var(--gold);opacity:.2;line-height:1;margin-bottom:-2rem}
-.quote-text{font-size:1.8rem;line-height:2;color:var(--paper);max-width:700px;margin-bottom:2rem}
+.quote-text{font-size:1.4rem;line-height:1.6;color:var(--paper);max-width:550px;margin-bottom:1rem}
 .quote-author{font-size:.9rem;color:var(--gold);letter-spacing:.3em}
 .ending{text-align:center}
 .ending::before{background:linear-gradient(135deg,rgba(10,10,10,.3),rgba(10,10,10,.5)),url('../assets/bloom.png') center/cover}
-.ending-text{font-size:2rem;line-height:2.2;color:var(--paper);max-width:600px}
+.ending-text{font-size:1.6rem;line-height:1.6;color:var(--paper);max-width:500px}
 .ending-highlight{color:var(--gold);font-weight:700;position:relative}
 .ending-highlight::after{content:'';position:absolute;bottom:-4px;left:0;width:100%;height:2px;background:var(--gold)}
 .ending-author{font-size:.9rem;color:var(--gold-dark);margin-top:3rem;letter-spacing:.3em}
 .formula{text-align:center}
 .formula::before{background:linear-gradient(135deg,rgba(10,10,10,.3),rgba(10,10,10,.5)),url('../assets/flow.png') center/cover}
-.formula-label{font-family:'Inter',sans-serif;font-size:.75rem;color:var(--gold);letter-spacing:.3em;text-transform:uppercase;margin-bottom:2rem}
-.formula-text{font-size:2.5rem;font-weight:700;color:var(--gold);margin-bottom:2rem}
-.formula-desc{font-size:1rem;line-height:2;color:var(--paper);max-width:600px;opacity:.8}
+.formula-label{font-family:'Inter',sans-serif;font-size:.75rem;color:var(--gold);letter-spacing:.3em;text-transform:uppercase;margin-bottom:1rem}
+.formula-text{font-size:2.5rem;font-weight:700;color:var(--gold);margin-bottom:1rem}
+.formula-desc{font-size:1rem;line-height:1.6;color:var(--paper);max-width:500px;opacity:.8}
 </style>
 </head>
 <body>

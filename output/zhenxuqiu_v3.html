@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>真需求 - 深度拆解 v3</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+:root{--ink:#0A0A0A;--paper:#F5F0E8;--gold:#C9A96E;--gold-light:#E8D5A8;--gold-dark:#8B7355;--red:#8B0000}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--ink);color:var(--paper);font-family:'Noto Serif SC',serif;overflow:hidden;height:100vh}
+.progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-light),var(--gold));z-index:1000;transition:width .4s}
+.pageNum{position:fixed;bottom:2rem;right:3rem;font-family:'Inter',sans-serif;font-size:.8rem;color:var(--gold-dark);z-index:1000;letter-spacing:.2em}
+.deck{display:flex;width:100vw;height:100vh;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.deck::-webkit-scrollbar{display:none}
+.page{flex:0 0 100vw;width:100vw;height:100vh;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:3rem 6rem;position:relative;overflow:hidden}
+.page::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background-size:cover;background-position:center;opacity:.12;z-index:0}
+.page>*{position:relative;z-index:1}
+
+/* 封面 */
+.cover{text-align:center}
+.cover::before{background:linear-gradient(135deg,rgba(10,10,10,.3),rgba(10,10,10,.5)),url('../assets/opening.png') center/cover}
+.cover-title{font-size:6rem;font-weight:900;color:var(--paper);line-height:1;margin-bottom:1rem}
+.cover-subtitle{font-family:'Inter',sans-serif;font-size:1.1rem;font-weight:300;color:var(--gold);margin-bottom:2rem;letter-spacing:.4em}
+.cover-author{font-size:.85rem;color:var(--gold-dark);letter-spacing:.2em}
+
+/* 章节 */
+.chapter{text-align:center}
+.chapter-num{font-size:8rem;font-weight:200;color:rgba(201,169,110,.08);line-height:1;margin-bottom:-2rem}
+.chapter-title{font-size:2.5rem;font-weight:700;color:var(--paper);margin-bottom:.8rem}
+.chapter-subtitle{font-size:.9rem;color:var(--gold);max-width:400px;line-height:1.5}
+
+/* 原文引用 */
+.source{text-align:center;padding:2rem 8rem}
+.source::before{background:linear-gradient(135deg,rgba(10,10,10,.2),rgba(10,10,10,.4)),url('../assets/truth.png') center/cover}
+.source-label{font-family:'Inter',sans-serif;font-size:.65rem;color:var(--gold);letter-spacing:.3em;text-transform:uppercase;margin-bottom:1.5rem}
+.source-quote{font-size:1.5rem;line-height:1.8;color:var(--paper);max-width:550px;font-style:italic;border-left:2px solid var(--gold);padding-left:1.5rem;text-align:left;margin:0 auto}
+.source-page{font-size:.75rem;color:var(--gold-dark);margin-top:1rem;letter-spacing:.1em}
+
+/* 拆解 */
+.analysis{align-items:flex-start;padding:2rem 6rem}
+.analysis::before{background:linear-gradient(135deg,rgba(10,10,10,.3),rgba(10,10,10,.5)),url('../assets/value.png') center/cover}
+.analysis-label{font-family:'Inter',sans-serif;font-size:.65rem;color:var(--gold);letter-spacing:.3em;text-transform:uppercase;margin-bottom:1rem}
+.analysis-title{font-size:1.8rem;font-weight:700;color:var(--paper);margin-bottom:1.5rem}
+.analysis-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;width:100%;max-width:800px}
+.analysis-item{padding:1.2rem;background:rgba(10,10,10,.5);border-left:2px solid var(--gold)}
+.analysis-item-title{font-size:.9rem;font-weight:700;color:var(--gold);margin-bottom:.5rem}
+.analysis-item-text{font-size:.8rem;line-height:1.5;color:var(--paper);opacity:.85}
+
+/* 对话 */
+.dialogue{align-items:flex-start;padding:1.5rem 5rem;width:100%}
+.dialogue-header{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;width:100%}
+.dialogue-line{flex:1;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+.dialogue-round{font-family:'Inter',sans-serif;font-size:.65rem;color:var(--gold);letter-spacing:.3em;text-transform:uppercase}
+.speech{width:100%;padding:.8rem 1.2rem;background:rgba(10,10,10,.5);border-left:2px solid var(--gold);margin-bottom:.6rem}
+.speech-speaker{font-size:.8rem;font-weight:700;color:var(--gold);margin-bottom:.3rem}
+.speech-text{font-size:.78rem;line-height:1.5;color:var(--paper);opacity:.9}
+
+/* 案例 */
+.case{align-items:flex-start;padding:2rem 6rem}
+.case::before{background:linear-gradient(135deg,rgba(10,10,10,.3),rgba(10,10,10,.5)),url('../assets/model.png') center/cover}
+.case-label{font-family:'Inter',sans-serif;font-size:.65rem;color:var(--gold);letter-spacing:.3em;text-transform:uppercase;margin-bottom:1rem}
+.case-title{font-size:1.5rem;font-weight:700;color:var(--paper);margin-bottom:1rem}
+.case-content{font-size:.85rem;line-height:1.6;color:var(--paper);max-width:600px;opacity:.85}
+.case-lesson{font-size:.85rem;line-height:1.6;color:var(--gold);margin-top:1rem;font-style:italic}
+
+/* 小结 */
+.insight{text-align:center}
+.insight::before{background:linear-gradient(135deg,rgba(10,10,10,.3),rgba(10,10,10,.5)),url('../assets/emotion.png') center/cover}
+.insight-title{font-size:1.8rem;font-weight:700;color:var(--gold);margin-bottom:1rem}
+.insight-text{font-size:1rem;line-height:1.6;color:var(--paper);max-width:450px;font-style:italic}
+
+/* 公式 */
+.formula{text-align:center}
+.formula::before{background:linear-gradient(135deg,rgba(10,10,10,.3),rgba(10,10,10,.5)),url('../assets/flow.png') center/cover}
+.formula-label{font-family:'Inter',sans-serif;font-size:.65rem;color:var(--gold);letter-spacing:.3em;text-transform:uppercase;margin-bottom:1rem}
+.formula-text{font-size:1.8rem;font-weight:700;color:var(--gold);margin-bottom:1rem}
+.formula-desc{font-size:.85rem;line-height:1.5;color:var(--paper);max-width:400px;opacity:.8}
+
+/* 金句 */
+.quote-page{text-align:center}
+.quote-page::before{background:linear-gradient(135deg,rgba(10,10,10,.3),rgba(10,10,10,.5)),url('../assets/emotion.png') center/cover}
+.quote-mark{font-size:5rem;color:var(--gold);opacity:.2;line-height:1;margin-bottom:-1rem}
+.quote-text{font-size:1.3rem;line-height:1.6;color:var(--paper);max-width:450px;margin-bottom:1rem}
+.quote-author{font-size:.75rem;color:var(--gold);letter-spacing:.2em}
+
+/* 结尾 */
+.ending{text-align:center}
+.ending::before{background:linear-gradient(135deg,rgba(10,10,10,.3),rgba(10,10,10,.5)),url('../assets/bloom.png') center/cover}
+.ending-text{font-size:1.3rem;line-height:1.6;color:var(--paper);max-width:450px}
+.ending-highlight{color:var(--gold);font-weight:700}
+.ending-author{font-size:.75rem;color:var(--gold-dark);margin-top:1.5rem;letter-spacing:.2em}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="pageNum" id="pageNum"></div>
+<div class="deck" id="deck">
+<div class="page cover"><div class="cover-title">真需求</div><div class="cover-subtitle">商业世界的本质是什么？</div><div class="cover-author">梁宁 著</div></div>
+<div class="page insight"><div class="insight-title">核心框架</div><div class="insight-text">价值 → 共识 → 模式<br>让生命绽放，让资源流动</div></div>
+<div class="page chapter"><div class="chapter-num">壹</div><div class="chapter-title">价值的本质</div></div>
+<div class="page source"><div class="source-label">原文引用</div><div class="source-quote">产品价值 = 功能价值 + 情绪价值 + 资产价值</div><div class="source-page">—— 梁宁《真需求》</div></div>
+<div class="page analysis"><div class="analysis-label">内容拆解</div><div class="analysis-title">三维价值模型</div><div class="analysis-grid"><div class="analysis-item"><div class="analysis-item-title">功能价值</div><div class="analysis-item-text">效率需求 4种护城河</div></div><div class="analysis-item"><div class="analysis-item-title">情绪价值</div><div class="analysis-item-text">心理需求 主观感受</div></div></div></div>
+<div class="page dialogue"><div class="dialogue-header"><div class="dialogue-line"></div><div class="dialogue-round">专家讨论</div><div class="dialogue-line"></div></div><div class="speech"><div class="speech-speaker">刘润</div><div class="speech-text">功能价值的本质是效率需求。但当效率都提升时，效率本身就不值钱了。</div></div><div class="speech"><div class="speech-speaker">芒格</div><div class="speech-text">功能价值的四个模型代表了四种不同的护城河。</div></div><div class="speech"><div class="speech-speaker">卡尼曼</div><div class="speech-text">情绪价值=生理唤起+认知标记+心理账户。</div></div><div class="speech"><div class="speech-speaker">老子</div><div class="speech-text">有无相生，功能价值和情绪价值相互依存。</div></div></div>
+<div class="page case"><div class="case-label">案例</div><div class="case-title">苹果的护城河</div><div class="case-content">苹果同时拥有专利/IP和品牌护城河。</div></div>
+<div class="page insight"><div class="insight-title">第一轮小结</div><div class="insight-text">价值不是客观存在的，而是主观感知的。</div></div>
+<div class="page chapter"><div class="chapter-num">贰</div><div class="chapter-title">共识的形成</div></div>
+<div class="page source"><div class="source-label">原文引用</div><div class="source-quote">分歧分为四种：感知、想象、场景、利益</div><div class="source-page">—— 梁宁《真需求》</div></div>
+<div class="page dialogue"><div class="dialogue-header"><div class="dialogue-line"></div><div class="dialogue-round">专家讨论</div><div class="dialogue-line"></div></div><div class="speech"><div class="speech-speaker">卡尼曼</div><div class="speech-text">四种分歧本质上都是认知偏差的体现。</div></div><div class="speech"><div class="speech-speaker">芒格</div><div class="speech-text">共识的本质不是同意，而是理解。</div></div><div class="speech"><div class="speech-speaker">老子</div><div class="speech-text">最好的商业模式是顺应自然规律的。</div></div></div>
+<div class="page chapter"><div class="chapter-num">叁</div><div class="chapter-title">模式的构建</div></div>
+<div class="page source"><div class="source-label">原文引用</div><div class="source-quote">能力系统、变现逻辑、分配机制</div><div class="source-page">—— 梁宁《真需求》</div></div>
+<div class="page dialogue"><div class="dialogue-header"><div class="dialogue-line"></div><div class="dialogue-round">专家讨论</div><div class="dialogue-line"></div></div><div class="speech"><div class="speech-speaker">刘润</div><div class="speech-text">能力系统是降低内部交易成本的能力。</div></div><div class="speech"><div class="speech-speaker">芒格</div><div class="speech-text">用错误的方式解决正确的问题，企业就会死掉。</div></div><div class="speech"><div class="speech-speaker">老子</div><div class="speech-text">商业模式是演化出来的，不是设计出来的。</div></div></div>
+<div class="page case"><div class="case-label">案例</div><div class="case-title">SHEIN的供应链革命</div><div class="case-content">小单快反模式，日均上新6000款。</div></div>
+<div class="page insight"><div class="insight-title">第三轮小结</div><div class="insight-text">商业模式不是设计出来的，而是演化出来的。</div></div>
+<div class="page chapter"><div class="chapter-num">肆</div><div class="chapter-title">需求的真相</div></div>
+<div class="page source"><div class="source-label">原文引用</div><div class="source-quote">真需求是那些不会消失的需求</div><div class="source-page">—— 梁宁《真需求》</div></div>
+<div class="page dialogue"><div class="dialogue-header"><div class="dialogue-line"></div><div class="dialogue-round">专家讨论</div><div class="dialogue-line"></div></div><div class="speech"><div class="speech-speaker">芒格</div><div class="speech-text">真需求是那些不会消失的需求。</div></div><div class="speech"><div class="speech-speaker">卡尼曼</div><div class="speech-text">真需求是系统2的产物。</div></div><div class="speech"><div class="speech-speaker">老子</div><div class="speech-text">真需求既是被发现的，也是被创造的。</div></div></div>
+<div class="page insight"><div class="insight-title">第四轮小结</div><div class="insight-text">真需求既是被发现的，也是被创造的。</div></div>
+<div class="page chapter"><div class="chapter-num">伍</div><div class="chapter-title">商业的终极追问</div></div>
+<div class="page quote-page"><div class="quote-mark">"</div><div class="quote-text">让生命绽放，让资源流动。</div><div class="quote-author">—— 梁宁《真需求》</div></div>
+<div class="page ending"><div class="ending-text">商业的终极价值，是让<span class="ending-highlight">生命绽放</span>，让<span class="ending-highlight">资源流动</span>。</div><div class="ending-author">—— 梁宁《真需求》</div></div>
+</div>
+<script>
+const deck=document.getElementById('deck'),progress=document.getElementById('progress'),pageNum=document.getElementById('pageNum');
+const pages=document.querySelectorAll('.page'),total=pages.length;
+let currentIdx=0;
+function updateProgress(){const idx=Math.round(deck.scrollLeft/window.innerWidth);if(idx!==currentIdx){currentIdx=idx;progress.style.width=((idx+1)/total*100)+'%';pageNum.textContent=String(idx+1).padStart(2,'0')+' / '+String(total).padStart(2,'0')}}
+function scrollToPage(idx){if(idx<0||idx>=total)return;deck.scrollTo({left:idx*window.innerWidth,behavior:'smooth'})}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')scrollToPage(currentIdx+1);if(e.key==='ArrowLeft')scrollToPage(currentIdx-1)});
+let wheelTimer;deck.addEventListener('wheel',e=>{e.preventDefault();clearTimeout(wheelTimer);wheelTimer=setTimeout(()=>{e.deltaY>0?scrollToPage(currentIdx+1):scrollToPage(currentIdx-1)},80)},{passive:false});
+deck.addEventListener('scroll',updateProgress);updateProgress();
+</script>
+</body>
+</html>

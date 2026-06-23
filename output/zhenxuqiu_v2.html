@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>真需求 - 深度拆解 v2</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+:root{--ink:#0A0A0A;--paper:#F5F0E8;--gold:#C9A96E;--gold-light:#E8D5A8;--gold-dark:#8B7355;--red:#8B0000}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--ink);color:var(--paper);font-family:'Noto Serif SC',serif;overflow:hidden;height:100vh}
+.progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-light),var(--gold));z-index:1000;transition:width .4s}
+.pageNum{position:fixed;bottom:2rem;right:3rem;font-family:'Inter',sans-serif;font-size:.8rem;color:var(--gold-dark);z-index:1000;letter-spacing:.2em}
+.deck{display:flex;width:100vw;height:100vh;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.deck::-webkit-scrollbar{display:none}
+.page{flex:0 0 100vw;width:100vw;height:100vh;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:3rem 6rem;position:relative;overflow:hidden}
+.page::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background-size:cover;background-position:center;opacity:.15;z-index:0}
+.page>*{position:relative;z-index:1}
+
+/* 封面 */
+.cover{text-align:center}
+.cover::before{background:linear-gradient(135deg,rgba(10,10,10,.3),rgba(10,10,10,.5)),url('../assets/opening.png') center/cover}
+.cover-title{font-size:7rem;font-weight:900;color:var(--paper);line-height:1;margin-bottom:1.5rem}
+.cover-subtitle{font-family:'Inter',sans-serif;font-size:1.2rem;font-weight:300;color:var(--gold);margin-bottom:3rem;letter-spacing:.5em}
+.cover-author{font-size:.9rem;color:var(--gold-dark);letter-spacing:.3em}
+
+/* 章节 */
+.chapter{text-align:center}
+.chapter-num{font-size:10rem;font-weight:200;color:rgba(201,169,110,.08);line-height:1;margin-bottom:-3rem}
+.chapter-title{font-size:3rem;font-weight:700;color:var(--paper);margin-bottom:1rem}
+.chapter-subtitle{font-size:1rem;color:var(--gold);max-width:450px;line-height:1.6}
+
+/* 对话页 - 高密度 */
+.dialogue{align-items:flex-start;padding:2rem 5rem;width:100%}
+.dialogue-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;width:100%}
+.dialogue-line{flex:1;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+.dialogue-round{font-family:'Inter',sans-serif;font-size:.7rem;color:var(--gold);letter-spacing:.3em;text-transform:uppercase}
+.speech{width:100%;padding:1rem 1.5rem;background:rgba(10,10,10,.5);border-left:2px solid var(--gold);margin-bottom:.8rem}
+.speech-speaker{font-size:.9rem;font-weight:700;color:var(--gold);margin-bottom:.5rem}
+.speech-text{font-size:.85rem;line-height:1.5;color:var(--paper);opacity:.9}
+
+/* 金句页 */
+.quote-page{text-align:center}
+.quote-page::before{background:linear-gradient(135deg,rgba(10,10,10,.3),rgba(10,10,10,.5)),url('../assets/emotion.png') center/cover}
+.quote-mark{font-size:6rem;color:var(--gold);opacity:.2;line-height:1;margin-bottom:-1.5rem}
+.quote-text{font-size:1.4rem;line-height:1.6;color:var(--paper);max-width:500px;margin-bottom:1.5rem}
+.quote-author{font-size:.8rem;color:var(--gold);letter-spacing:.2em}
+
+/* 结论页 */
+.insight{text-align:center}
+.insight::before{background:linear-gradient(135deg,rgba(10,10,10,.3),rgba(10,10,10,.5)),url('../assets/truth.png') center/cover}
+.insight-title{font-size:2rem;font-weight:700;color:var(--gold);margin-bottom:1.5rem}
+.insight-text{font-size:1.1rem;line-height:1.6;color:var(--paper);max-width:450px;font-style:italic}
+
+/* 公式页 */
+.formula{text-align:center}
+.formula::before{background:linear-gradient(135deg,rgba(10,10,10,.3),rgba(10,10,10,.5)),url('../assets/flow.png') center/cover}
+.formula-label{font-family:'Inter',sans-serif;font-size:.7rem;color:var(--gold);letter-spacing:.3em;text-transform:uppercase;margin-bottom:1.5rem}
+.formula-text{font-size:2rem;font-weight:700;color:var(--gold);margin-bottom:1.5rem}
+.formula-desc{font-size:.9rem;line-height:1.6;color:var(--paper);max-width:450px;opacity:.8}
+
+/* 结尾 */
+.ending{text-align:center}
+.ending::before{background:linear-gradient(135deg,rgba(10,10,10,.3),rgba(10,10,10,.5)),url('../assets/bloom.png') center/cover}
+.ending-text{font-size:1.4rem;line-height:1.6;color:var(--paper);max-width:450px}
+.ending-highlight{color:var(--gold);font-weight:700}
+.ending-author{font-size:.8rem;color:var(--gold-dark);margin-top:2rem;letter-spacing:.2em}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="pageNum" id="pageNum"></div>
+<div class="deck" id="deck">
+<div class="page cover"><div class="cover-title">真需求</div><div class="cover-subtitle">商业世界的本质是什么？</div><div class="cover-author">梁宁 著 · 圆桌洞见</div></div>
+<div class="page insight"><div class="insight-title">核心命题</div><div class="insight-text">市场中的万物现出本相，无非世人的需求</div></div>
+<div class="page formula"><div class="formula-label">商业闭环模型</div><div class="formula-text">价值 → 共识 → 模式</div><div class="formula-desc">价值源自需求<br>共识来自对分歧的超越<br>模式是自己如何生存与发展</div></div>
+<div class="page formula"><div class="formula-label">产品价值公式</div><div class="formula-text" style="font-size:1.6rem;">产品价值 = 功能价值 + 情绪价值 + 资产价值</div><div class="formula-desc">功能价值：解决具体问题<br>情绪价值：满足心理需求<br>资产价值：产生投资回报</div></div>
+<div class="page chapter"><div class="chapter-num">壹</div><div class="chapter-title">价值的本质</div><div class="chapter-subtitle">功能价值的4种护城河<br>情绪价值的心理机制<br>资产价值的形成逻辑</div></div>
+<div class="page dialogue">
+<div class="dialogue-header"><div class="dialogue-line"></div><div class="dialogue-round">第一轮 · 价值的本质</div><div class="dialogue-line"></div></div>
+<div class="speech"><div class="speech-speaker">刘润</div><div class="speech-text">功能价值的本质是效率需求。但这里有个悖论：当所有人的效率都提升时，效率本身就不值钱了。值钱的是效率之外的东西——判断力、关系、信任。</div></div>
+<div class="speech"><div class="speech-speaker">芒格</div><div class="speech-text">功能价值的四个模型：原材料/劳动力、专利/IP、平台/供应链、基础设施。原材料模型最脆弱，专利模型最强。我投资苹果，就是因为它同时拥有专利/IP和品牌护城河。</div></div>
+<div class="speech"><div class="speech-speaker">卡尼曼</div><div class="speech-text">情绪价值=生理唤起+认知标记+心理账户。情绪价值是主观的。品牌本质上是在用户心中建立特定的认知标记。</div></div>
+<div class="speech"><div class="speech-speaker">老子</div><div class="speech-text">功能价值是有，情绪价值是无。有无相生——两者相互依存。梁宁的公式忽略了一个更重要的东西：关系价值。</div></div>
+</div>
+<div class="page insight"><div class="insight-title">第一轮小结</div><div class="insight-text">价值不是客观存在的，而是主观感知的。理解这一点，才能真正理解商业。</div></div>
+<div class="page chapter"><div class="chapter-num">贰</div><div class="chapter-title">共识的形成</div><div class="chapter-subtitle">4种分歧的认知偏差<br>共识的本质是理解<br>顺应规律而非强行共识</div></div>
+<div class="page dialogue">
+<div class="dialogue-header"><div class="dialogue-line"></div><div class="dialogue-round">第二轮 · 共识的形成</div><div class="dialogue-line"></div></div>
+<div class="speech"><div class="speech-speaker">卡尼曼</div><div class="speech-text">感知分歧是框架效应，想象分歧是过度自信，场景分歧是可得性启发，利益分歧是损失厌恶。共识永远是局部的、暂时的。</div></div>
+<div class="speech"><div class="speech-speaker">芒格</div><div class="speech-text">共识的本质不是同意，而是理解。我投资苹果，不是因为财报好看，而是因为我理解乔布斯的思维模型。这种深层共识，才是真正的护城河。</div></div>
+<div class="speech"><div class="speech-speaker">刘润</div><div class="speech-text">共识的形成是降低交易成本的过程。但当交易成本降低时，共识反而可能变得更脆弱。今天的关系比过去更脆弱，不是因为人们不重视关系，而是因为达成共识的成本降低了。</div></div>
+<div class="speech"><div class="speech-speaker">老子</div><div class="speech-text">自然界的规律，不是通过共识形成的，而是自然演化的。最好的商业模式，不是通过共识形成的，而是顺应自然规律的。</div></div>
+</div>
+<div class="page insight"><div class="insight-title">第二轮小结</div><div class="insight-text">共识不是目的，而是手段。真正的目的是顺应规律。不要为了共识而共识。</div></div>
+<div class="page chapter"><div class="chapter-num">叁</div><div class="chapter-title">模式的构建</div><div class="chapter-subtitle">能力系统=降低内部交易成本<br>变现逻辑=降低外部交易成本<br>公司寿命=问题持久性×壁垒÷交易成本</div></div>
+<div class="page dialogue">
+<div class="dialogue-header"><div class="dialogue-line"></div><div class="dialogue-round">第三轮 · 模式的构建</div><div class="dialogue-line"></div></div>
+<div class="speech"><div class="speech-speaker">刘润</div><div class="speech-text">能力系统是降低内部交易成本的能力。变现逻辑是降低外部交易成本的能力。公司寿命=问题持久性×壁垒高度÷交易成本。</div></div>
+<div class="speech"><div class="speech-speaker">芒格</div><div class="speech-text">如何让企业死掉？解决一个不存在的问题，或者用错误的方式解决正确的问题。瑞幸用补贴换增长，而不是用价值换增长，这种模式注定不可持续。</div></div>
+<div class="speech"><div class="speech-speaker">卡尼曼</div><div class="speech-text">商业模式的选择是决策过程。系统1是快速直觉，系统2是慢速理性。大多数商业模式都是系统1的产物——凭感觉选择，而不是理性分析。</div></div>
+<div class="speech"><div class="speech-speaker">老子</div><div class="speech-text">SHEIN的小单快反模式，不是设计出来的，而是顺应了互联网时代的效率规律。你只需要顺应规律，商业模式自然会浮现。</div></div>
+</div>
+<div class="page insight"><div class="insight-title">第三轮小结</div><div class="insight-text">商业模式不是设计出来的，而是演化出来的。顺应规律，模式自然浮现。</div></div>
+<div class="page chapter"><div class="chapter-num">肆</div><div class="chapter-title">需求的真相</div><div class="chapter-subtitle">真需求=不会消失的需求<br>真需求=系统2的产物<br>真需求既是被发现的，也是被创造的</div></div>
+<div class="page dialogue">
+<div class="dialogue-header"><div class="dialogue-line"></div><div class="dialogue-round">第四轮 · 需求的真相</div><div class="dialogue-line"></div></div>
+<div class="speech"><div class="speech-speaker">芒格</div><div class="speech-text">真需求是那些不会消失的需求。人需要吃饭、穿衣、住所——这些永远不会消失。识别真需求的关键，是看这个需求是否会消失。</div></div>
+<div class="speech"><div class="speech-speaker">卡尼曼</div><div class="speech-text">真需求是系统2的产物——经过深思熟虑后形成的需求。伪需求是系统1的产物——凭感觉形成的需求。人需要健康是真需求，人需要最新款iPhone可能是伪需求。</div></div>
+<div class="speech"><div class="speech-speaker">刘润</div><div class="speech-text">真需求是那些交易成本足够低的需求。技术进步的本质是降低交易成本，让潜在需求变成真需求。飞机发明后，飞行才从伪需求变成真需求。</div></div>
+<div class="speech"><div class="speech-speaker">老子</div><div class="speech-text">真需求是被发现的，还是被创造的？有些需求是被发现的——比如吃饭。有些需求是被创造的——比如智能手机。真需求既是被发现的，也是被创造的。</div></div>
+</div>
+<div class="page insight"><div class="insight-title">第四轮小结</div><div class="insight-text">真需求既是被发现的，也是被创造的。关键在于顺应规律，而不是强行创造需求。</div></div>
+<div class="page chapter"><div class="chapter-num">伍</div><div class="chapter-title">商业的终极追问</div><div class="chapter-subtitle">商业的终极价值不是利润<br>而是让生命绽放<br>让资源流动</div></div>
+<div class="page dialogue">
+<div class="dialogue-header"><div class="dialogue-line"></div><div class="dialogue-round">第五轮 · 商业的终极追问</div><div class="dialogue-line"></div></div>
+<div class="speech"><div class="speech-speaker">老子</div><div class="speech-text">让生命绽放，让资源流动。这是商业的终极价值。当商业顺应规律时，生命就会绽放，资源就会流动。</div></div>
+<div class="speech"><div class="speech-speaker">芒格</div><div class="speech-text">商业的终极价值是创造长期价值。苹果创造了长期价值，它的产品改变了人们的生活方式，它的生态系统改变了整个行业。</div></div>
+<div class="speech"><div class="speech-speaker">卡尼曼</div><div class="speech-text">商业的终极价值是满足人的真实需求。但人往往不知道自己的真实需求是什么。商业应该帮助人们从系统1转向系统2。</div></div>
+<div class="speech"><div class="speech-speaker">刘润</div><div class="speech-text">商业的终极价值是降低交易成本，让资源更高效地配置。当交易成本降低时，资源就会流向最需要它的地方。</div></div>
+</div>
+<div class="page quote-page"><div class="quote-mark">"</div><div class="quote-text">一件事能成，是因为它本来就该成。</div><div class="quote-author">—— 梁宁《真需求》</div></div>
+<div class="page ending"><div class="ending-text">这个世界不是由生意构成的，<br>而是由<span class="ending-highlight">生命</span>构成的。<br><br>商业的终极价值，不是利润，<br>而是让<span class="ending-highlight">生命绽放</span>，<br>让<span class="ending-highlight">资源流动</span>。</div><div class="ending-author">—— 梁宁《真需求》</div></div>
+</div>
+<script>
+const deck=document.getElementById('deck'),progress=document.getElementById('progress'),pageNum=document.getElementById('pageNum');
+const pages=document.querySelectorAll('.page'),total=pages.length;
+let currentIdx=0;
+function updateProgress(){const idx=Math.round(deck.scrollLeft/window.innerWidth);if(idx!==currentIdx){currentIdx=idx;progress.style.width=((idx+1)/total*100)+'%';pageNum.textContent=String(idx+1).padStart(2,'0')+' / '+String(total).padStart(2,'0')}}
+function scrollToPage(idx){if(idx<0||idx>=total)return;deck.scrollTo({left:idx*window.innerWidth,behavior:'smooth'})}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')scrollToPage(currentIdx+1);if(e.key==='ArrowLeft')scrollToPage(currentIdx-1)});
+let wheelTimer;deck.addEventListener('wheel',e=>{e.preventDefault();clearTimeout(wheelTimer);wheelTimer=setTimeout(()=>{e.deltaY>0?scrollToPage(currentIdx+1):scrollToPage(currentIdx-1)},80)},{passive:false});
+deck.addEventListener('scroll',updateProgress);updateProgress();
+</script>
+</body>
+</html>

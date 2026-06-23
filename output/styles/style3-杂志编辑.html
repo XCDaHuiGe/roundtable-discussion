@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>真需求 - 杂志风</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#fafafa;--ink:#111;--accent:#e63946;--muted:#666;--border:#e5e5e5}
+body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;overflow:hidden;height:100vh}
+.progress{position:fixed;top:0;left:0;height:2px;background:var(--ink);z-index:1000;transition:width .3s}
+.pageNum{position:fixed;bottom:2rem;right:3rem;font-family:'Playfair Display',serif;font-size:1rem;color:var(--muted);z-index:1000}
+.deck{display:flex;width:100vw;height:100vh;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.deck::-webkit-scrollbar{display:none}
+.page{flex:0 0 100vw;width:100vw;height:100vh;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:4rem 6rem;position:relative}
+.cover{align-items:flex-start;padding-left:10rem}
+.cover-label{font-size:0.7rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:2rem;font-weight:600}
+.cover-title{font-family:'Playfair Display',serif;font-size:7rem;font-weight:900;line-height:0.95;margin-bottom:2rem;color:var(--ink);max-width:600px}
+.cover-title em{font-style:italic;color:var(--accent)}
+.cover-sub{font-size:1.1rem;color:var(--muted);max-width:400px;line-height:1.6;margin-bottom:3rem}
+.cover-meta{display:flex;gap:3rem;font-size:0.8rem;color:var(--muted)}
+.cover-meta span{display:flex;align-items:center;gap:0.5rem}
+.cover-meta span::before{content:'';width:20px;height:1px;background:var(--accent)}
+.chapter{align-items:flex-start;padding-left:8rem}
+.chapter-label{font-size:0.7rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:1.5rem;font-weight:600}
+.chapter-num{font-family:'Playfair Display',serif;font-size:10rem;font-weight:900;color:var(--ink);opacity:0.08;line-height:1;margin-bottom:-2rem}
+.chapter-title{font-family:'Playfair Display',serif;font-size:4rem;font-weight:700;line-height:1.1;margin-bottom:1.5rem;max-width:500px}
+.debate{align-items:flex-start;padding:4rem 8rem}
+.debate-top{display:flex;justify-content:space-between;align-items:center;width:100%;margin-bottom:3rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.debate-label{font-size:0.7rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.debate-num{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--ink);opacity:0.2}
+.speech{width:100%;padding:2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:120px 1fr;gap:2rem}
+.speech:last-child{border-bottom:none}
+.speech-speaker{font-size:0.8rem;font-weight:600;color:var(--ink);text-transform:uppercase;letter-spacing:0.05em;padding-top:0.2rem}
+.speech-text{font-size:0.95rem;line-height:1.8;color:var(--ink)}
+.summary{align-items:flex-start;padding-left:8rem}
+.summary-title{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:700;margin-bottom:2rem;line-height:1.1}
+.summary-content{max-width:550px;font-size:0.95rem;line-height:2;color:var(--ink)}
+.highlight{color:var(--accent);font-weight:600}
+.ending{align-items:center;text-align:center}
+.ending-text{font-family:'Playfair Display',serif;font-size:2rem;line-height:1.8;max-width:500px;font-weight:400}
+.ending-hl{font-weight:700;color:var(--accent);font-style:italic}
+.ending-author{font-size:0.8rem;color:var(--muted);margin-top:3rem;letter-spacing:0.2em}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="pageNum" id="pageNum"></div>
+<div class="deck" id="deck">
+<div class="page cover"><div class="cover-label">Roundtable Insight</div><div class="cover-title"><em>真</em>需求</div><div class="cover-sub">商业世界的本质是什么？梁宁用27万字拆解了一个商业闭环的极简模型。</div><div class="cover-meta"><span>梁宁 著</span><span>圆桌洞见 深度拆解</span></div></div>
+<div class="page chapter"><div class="chapter-label">Chapter One</div><div class="chapter-num">01</div><div class="chapter-title">核心命题</div></div>
+<div class="page summary"><div class="summary-title">商业闭环<br>模型</div><div class="summary-content"><span class="highlight">价值 → 共识 → 模式</span><br><br>价值源自需求，因为被需求，所以有价值。</div></div>
+<div class="page chapter"><div class="chapter-label">Chapter Two</div><div class="chapter-num">02</div><div class="chapter-title">价值的本质</div></div>
+<div class="page debate"><div class="debate-top"><div class="debate-label">Round 01</div><div class="debate-num">01</div></div><div class="speech"><div class="speech-speaker">刘润</div><div class="speech-text">功能价值的本质是效率需求。</div></div><div class="speech"><div class="speech-speaker">芒格</div><div class="speech-text">功能价值的四个模型代表了四种不同的护城河。</div></div></div>
+<div class="page ending"><div class="ending-text">这个世界不是由生意构成的，<br>而是由<span class="ending-hl">生命</span>构成的。</div><div class="ending-author">—— 梁宁《真需求》</div></div>
+</div>
+<script>
+const d=document.getElementById('deck'),p=document.getElementById('progress'),n=document.getElementById('pageNum'),pages=document.querySelectorAll('.page'),t=pages.length;let ci=0;
+function up(){const i=Math.round(d.scrollLeft/window.innerWidth);if(i!==ci){ci=i;p.style.width=((i+1)/t*100)+'%';n.textContent=String(i+1).padStart(2,'0')+'/'+String(t).padStart(2,'0')}}
+function sp(i){if(i<0||i>=t)return;d.scrollTo({left:i*window.innerWidth,behavior:'smooth'})}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')sp(ci+1);if(e.key==='ArrowLeft')sp(ci-1)});
+let wt;d.addEventListener('wheel',e=>{e.preventDefault();clearTimeout(wt);wt=setTimeout(()=>{e.deltaY>0?sp(ci+1):sp(ci-1)},80)},{passive:false});
+d.addEventListener('scroll',up);up();
+</script>
+</body>
+</html>

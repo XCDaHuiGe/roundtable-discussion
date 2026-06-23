@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>真需求 - 赛博朋克</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--cyan:#00f5ff;--pink:#ff0080;--purple:#b829dd;--green:#39ff14}
+body{background:var(--bg);color:#e0e0e0;font-family:'Share Tech Mono',monospace;overflow:hidden;height:100vh}
+#matrix{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:0.15}
+.progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--pink),var(--purple));z-index:1000;transition:width .3s;box-shadow:0 0 20px var(--cyan)}
+.pageNum{position:fixed;bottom:2rem;right:3rem;font-family:'Orbitron',sans-serif;font-size:.8rem;color:var(--cyan);z-index:1000;text-shadow:0 0 10px var(--cyan)}
+.deck{display:flex;width:100vw;height:100vh;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;position:relative;z-index:2}
+.deck::-webkit-scrollbar{display:none}
+.page{flex:0 0 100vw;width:100vw;height:100vh;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:4rem 6rem;position:relative}
+.cover{text-align:center}
+.cover-title{font-family:'Orbitron',sans-serif;font-size:7rem;font-weight:900;color:var(--cyan);text-transform:uppercase;letter-spacing:.1em;text-shadow:0 0 20px var(--cyan),0 0 40px var(--cyan),0 0 80px var(--cyan);animation:glitch 3s infinite}
+@keyframes glitch{0%,90%,100%{text-shadow:2px 0 var(--pink),-2px 0 var(--green)}92%{text-shadow:-2px 0 var(--pink),2px 0 var(--green)}94%{text-shadow:2px 2px var(--pink),-2px -2px var(--green)}}
+.cover-sub{font-size:1.2rem;color:var(--pink);margin-top:2rem;letter-spacing:.3em;text-shadow:0 0 10px var(--pink)}
+.cover-line{width:200px;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),var(--pink),transparent);margin:2rem auto;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:.5;transform:scaleX(.8)}50%{opacity:1;transform:scaleX(1.2)}}
+.chapter{text-align:center}
+.chapter-num{font-family:'Orbitron',sans-serif;font-size:12rem;font-weight:900;color:transparent;-webkit-text-stroke:2px var(--purple);opacity:.3;line-height:1;margin-bottom:-3rem}
+.chapter-title{font-family:'Orbitron',sans-serif;font-size:3rem;font-weight:700;color:var(--cyan);text-shadow:0 0 20px var(--cyan);margin-bottom:1rem}
+.debate{align-items:flex-start;padding:4rem 8rem}
+.debate-header{display:flex;align-items:center;gap:1rem;margin-bottom:3rem;width:100%}
+.debate-line{flex:1;height:1px;background:linear-gradient(90deg,var(--cyan),transparent)}
+.debate-round{font-family:'Orbitron',sans-serif;font-size:.8rem;color:var(--pink);letter-spacing:.3em}
+.speech{width:100%;padding:2rem;margin-bottom:1.5rem;background:rgba(0,245,255,.03);border:1px solid rgba(0,245,255,.1);position:relative}
+.speech::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--cyan),var(--pink))}
+.speech-speaker{font-family:'Orbitron',sans-serif;font-size:.9rem;font-weight:600;color:var(--green);margin-bottom:1rem}
+.speech-text{font-size:.95rem;line-height:1.8}
+.summary{text-align:center}
+.summary-title{font-family:'Orbitron',sans-serif;font-size:2rem;font-weight:700;color:var(--cyan);text-shadow:0 0 20px var(--cyan);margin-bottom:2rem}
+.summary-content{max-width:600px;font-size:1rem;line-height:2}
+.highlight{color:var(--pink);font-weight:600}
+.ending{text-align:center}
+.ending-text{font-family:'Orbitron',sans-serif;font-size:1.5rem;line-height:2;max-width:600px}
+.ending-hl{color:var(--cyan);text-shadow:0 0 20px var(--cyan)}
+</style>
+</head>
+<body>
+<canvas id="matrix"></canvas>
+<div class="progress" id="progress"></div>
+<div class="pageNum" id="pageNum"></div>
+<div class="deck" id="deck">
+<div class="page cover"><div class="cover-title">真需求</div><div class="cover-sub">商业世界的本质是什么？</div><div class="cover-line"></div></div>
+<div class="page chapter"><div class="chapter-num">01</div><div class="chapter-title">核心命题</div></div>
+<div class="page summary"><div class="summary-title">// 商业闭环模型</div><div class="summary-content"><span class="highlight">价值 - 共识 - 模式</span><br><br>价值源自需求，因为被需求，所以有价值。</div></div>
+<div class="page chapter"><div class="chapter-num">02</div><div class="chapter-title">价值的本质</div></div>
+<div class="page debate"><div class="debate-header"><div class="debate-line"></div><div class="debate-round">ROUND.01</div><div class="debate-line"></div></div><div class="speech"><div class="speech-speaker">刘润</div><div class="speech-text">功能价值的本质是效率需求。</div></div><div class="speech"><div class="speech-speaker">芒格</div><div class="speech-text">功能价值的四个模型代表了四种不同的护城河。</div></div></div>
+<div class="page ending"><div class="ending-text">这个世界不是由生意构成的，<br>而是由<span class="ending-hl">生命</span>构成的。</div></div>
+</div>
+<script>
+const canvas=document.getElementById('matrix'),ctx=canvas.getContext('2d');
+canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+const chars='01真需求商业价值共识模式';
+const fontSize=14,columns=Math.floor(canvas.width/fontSize),drops=Array(columns).fill(1);
+function draw(){ctx.fillStyle='rgba(10,10,15,0.05)';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#00f5ff';ctx.font=fontSize+'px monospace';for(let i=0;i<drops.length;i++){const text=chars[Math.floor(Math.random()*chars.length)];ctx.fillText(text,i*fontSize,drops[i]*fontSize);if(drops[i]*fontSize>canvas.height&&Math.random()>0.975)drops[i]=0;drops[i]++}}
+setInterval(draw,50);
+const d=document.getElementById('deck'),p=document.getElementById('progress'),n=document.getElementById('pageNum'),pages=document.querySelectorAll('.page'),t=pages.length;let ci=0;
+function up(){const i=Math.round(d.scrollLeft/window.innerWidth);if(i!==ci){ci=i;p.style.width=((i+1)/t*100)+'%';n.textContent='['+String(i+1).padStart(2,'0')+'/'+String(t).padStart(2,'0')+']'}}
+function sp(i){if(i<0||i>=t)return;d.scrollTo({left:i*window.innerWidth,behavior:'smooth'})}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')sp(ci+1);if(e.key==='ArrowLeft')sp(ci-1)});
+let wt;d.addEventListener('wheel',e=>{e.preventDefault();clearTimeout(wt);wt=setTimeout(()=>{e.deltaY>0?sp(ci+1):sp(ci-1)},60)},{passive:false});
+d.addEventListener('scroll',up);up();
+</script>
+</body>
+</html>

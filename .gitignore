@@ -26,3 +26,4 @@ memory/search_cache/
 
 # 旧版本文件
 *.bak
+.sf_key

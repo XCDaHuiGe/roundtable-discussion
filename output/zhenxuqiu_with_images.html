@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>真需求 - 水墨意境</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;300;400;500;600;700;900&family=Ma+Shan+Zheng&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--ink:#1a1a1a;--paper:#f5f0e8;--gold:#c9a96e;--red:#8b0000}
+body{background:var(--paper);color:var(--ink);font-family:'Noto Serif SC',serif;overflow:hidden;height:100vh}
+.ink-wash{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:0.08}
+.ink-blob{position:absolute;border-radius:50%;filter:blur(60px);animation:float 20s ease-in-out infinite}
+.ink-blob:nth-child(1){width:400px;height:400px;background:var(--ink);top:20%;left:10%}
+.ink-blob:nth-child(2){width:300px;height:300px;background:var(--gold);top:60%;right:15%;animation-delay:-5s}
+.ink-blob:nth-child(3){width:250px;height:250px;background:var(--red);bottom:10%;left:40%;animation-delay:-10s}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(30px,-20px) scale(1.1)}50%{transform:translate(-20px,30px) scale(0.9)}75%{transform:translate(20px,10px) scale(1.05)}}
+.progress{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,transparent,var(--ink),transparent);z-index:1000;transition:width .5s ease}
+.pageNum{position:fixed;bottom:3rem;right:4rem;font-family:'Ma Shan Zheng',cursive;font-size:1.2rem;color:var(--gold);z-index:1000;opacity:0.6}
+.deck{display:flex;width:100vw;height:100vh;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;position:relative;z-index:1}
+.deck::-webkit-scrollbar{display:none}
+.page{flex:0 0 100vw;width:100vw;height:100vh;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:6rem 10rem;position:relative}
+.cover{text-align:center;position:relative}
+.cover::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;height:300px;border:1px solid rgba(26,26,26,0.1);border-radius:50%;animation:breathe 6s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:0.2}50%{transform:translate(-50%,-50%) scale(1.05);opacity:0.4}}
+.cover-title{font-family:'Ma Shan Zheng',cursive;font-size:8rem;font-weight:400;color:var(--ink);line-height:1.1;margin-bottom:2rem}
+.cover-title::after{content:'';display:block;width:60px;height:3px;background:var(--gold);margin:1rem auto;opacity:0.6}
+.cover-sub{font-size:1.1rem;color:var(--gold);margin-top:2rem;letter-spacing:0.5em;opacity:0.7}
+.chapter{text-align:center}
+.chapter-num{font-family:'Ma Shan Zheng',cursive;font-size:10rem;color:var(--ink);opacity:0.06;line-height:1;margin-bottom:-2rem}
+.chapter-title{font-family:'Ma Shan Zheng',cursive;font-size:4rem;color:var(--ink);margin-bottom:1.5rem}
+.chapter-title::after{content:'';display:block;width:40px;height:2px;background:var(--gold);margin:1rem auto 0}
+.debate{align-items:flex-start;padding:5rem 12rem}
+.debate-label{font-family:'Ma Shan Zheng',cursive;font-size:0.9rem;color:var(--gold);letter-spacing:0.3em;margin-bottom:3rem;opacity:0.6}
+.speech{width:100%;padding:2.5rem 3rem;margin-bottom:2rem;border-left:2px solid var(--gold)}
+.speech-speaker{font-family:'Ma Shan Zheng',cursive;font-size:1.3rem;color:var(--ink);margin-bottom:1rem;display:flex;align-items:center;gap:0.8rem}
+.speech-dot{width:6px;height:6px;background:var(--gold);border-radius:50%}
+.speech-text{font-size:1rem;line-height:2;color:var(--ink);opacity:0.85}
+.summary{text-align:center}
+.summary-title{font-family:'Ma Shan Zheng',cursive;font-size:2.5rem;color:var(--ink);margin-bottom:2rem}
+.summary-content{max-width:550px;font-size:1.05rem;line-height:2.2;color:var(--ink);opacity:0.8}
+.highlight{color:var(--gold);font-weight:600}
+.ending{text-align:center}
+.ending-text{font-family:'Ma Shan Zheng',cursive;font-size:1.8rem;line-height:2.2;color:var(--ink);max-width:500px}
+.ending-hl{color:var(--gold)}
+.ending-author{font-size:0.9rem;color:var(--gold);margin-top:3rem;opacity:0.5;letter-spacing:0.3em}
+</style>
+<style>
+.page:nth-child(1){background:linear-gradient(rgba(26,26,26,0.75),rgba(26,26,26,0.85)),url("../assets/cover.png") center/cover no-repeat !important}
+.page:nth-child(2){background:linear-gradient(rgba(26,26,26,0.75),rgba(26,26,26,0.85)),url("../assets/chapter1.png") center/cover no-repeat !important}
+.page:nth-child(3){background:linear-gradient(rgba(26,26,26,0.75),rgba(26,26,26,0.85)),url("../assets/value.png") center/cover no-repeat !important}
+.page:nth-child(4){background:linear-gradient(rgba(26,26,26,0.75),rgba(26,26,26,0.85)),url("../assets/chapter2.png") center/cover no-repeat !important}
+.page:nth-child(5){background:linear-gradient(rgba(26,26,26,0.75),rgba(26,26,26,0.85)),url("../assets/experts.png") center/cover no-repeat !important}
+.page:nth-child(6){background:linear-gradient(rgba(26,26,26,0.75),rgba(26,26,26,0.85)),url("../assets/experts.png") center/cover no-repeat !important}
+.page:nth-child(7){background:linear-gradient(rgba(26,26,26,0.75),rgba(26,26,26,0.85)),url("../assets/consensus.png") center/cover no-repeat !important}
+.page:nth-child(8){background:linear-gradient(rgba(26,26,26,0.75),rgba(26,26,26,0.85)),url("../assets/consensus.png") center/cover no-repeat !important}
+.page:nth-child(9){background:linear-gradient(rgba(26,26,26,0.75),rgba(26,26,26,0.85)),url("../assets/model.png") center/cover no-repeat !important}
+.page:nth-child(10){background:linear-gradient(rgba(26,26,26,0.75),rgba(26,26,26,0.85)),url("../assets/model.png") center/cover no-repeat !important}
+.page:nth-child(11){background:linear-gradient(rgba(26,26,26,0.75),rgba(26,26,26,0.85)),url("../assets/quote.png") center/cover no-repeat !important}
+</style>
+</head>
+<body>
+<div class="ink-wash"><div class="ink-blob"></div><div class="ink-blob"></div><div class="ink-blob"></div></div>
+<div class="progress" id="progress"></div>
+<div class="pageNum" id="pageNum"></div>
+<div class="deck" id="deck">
+<div class="page cover"><div class="cover-title">真需求</div><div class="cover-sub">商业世界的本质是什么？</div></div>
+<div class="page chapter"><div class="chapter-num">壹</div><div class="chapter-title">核心命题</div></div>
+<div class="page summary"><div class="summary-title">商业闭环</div><div class="summary-content"><span class="highlight">价值 → 共识 → 模式</span><br><br>价值源自需求，因为被需求，所以有价值。</div></div>
+<div class="page chapter"><div class="chapter-num">贰</div><div class="chapter-title">价值的本质</div></div>
+<div class="page debate"><div class="debate-label">第一轮 · 价值</div><div class="speech"><div class="speech-speaker"><span class="speech-dot"></span>刘润</div><div class="speech-text">功能价值的本质是效率需求。</div></div><div class="speech"><div class="speech-speaker"><span class="speech-dot"></span>芒格</div><div class="speech-text">功能价值的四个模型代表了四种不同的护城河。</div></div></div>
+<div class="page ending"><div class="ending-text">这个世界不是由生意构成的，<br>而是由<span class="ending-hl">生命</span>构成的。</div><div class="ending-author">—— 梁宁《真需求》</div></div>
+</div>
+<script>
+const d=document.getElementById('deck'),p=document.getElementById('progress'),n=document.getElementById('pageNum'),pages=document.querySelectorAll('.page'),t=pages.length;let ci=0;
+function up(){const i=Math.round(d.scrollLeft/window.innerWidth);if(i!==ci){ci=i;p.style.width=((i+1)/t*100)+'%';n.textContent=['壹','贰','叁','肆','伍','陆'][i]||''}}
+function sp(i){if(i<0||i>=t)return;d.scrollTo({left:i*window.innerWidth,behavior:'smooth'})}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')sp(ci+1);if(e.key==='ArrowLeft')sp(ci-1)});
+let wt;d.addEventListener('wheel',e=>{e.preventDefault();clearTimeout(wt);wt=setTimeout(()=>{e.deltaY>0?sp(ci+1):sp(ci-1)},100)},{passive:false});
+d.addEventListener('scroll',up);up();
+</script>
+</body>
+</html>

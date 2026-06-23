@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>真需求 · 圆桌洞见</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --gold: #C9A96E;
+    --gold-light: #E8D5A8;
+    --gold-dark: #8B7355;
+    --ink: #1A1A1A;
+    --paper: #F5F0E8;
+  }
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Noto Sans SC', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+  }
+  .deck {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .deck::-webkit-scrollbar { display: none; }
+  .page {
+    flex: 0 0 100vw;
+    width: 100vw;
+    height: 100vh;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem 8rem;
+    position: relative;
+  }
+  .progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    z-index: 100;
+    transition: width 0.3s ease;
+  }
+  .pageNum {
+    position: fixed;
+    bottom: 2rem;
+    right: 3rem;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.9rem;
+    color: var(--gold-dark);
+    z-index: 100;
+  }
+  .cover {
+    background: radial-gradient(ellipse at 50% 30%, rgba(201,169,110,0.15) 0%, transparent 60%), var(--ink);
+    text-align: center;
+  }
+  .cover-label {
+    font-size: 0.85rem;
+    letter-spacing: 0.5em;
+    color: var(--gold);
+    margin-bottom: 2rem;
+  }
+  .cover-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 5rem;
+    font-weight: 900;
+    color: var(--paper);
+    margin-bottom: 1rem;
+  }
+  .cover-subtitle {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.5rem;
+    color: var(--gold);
+    margin-bottom: 3rem;
+  }
+  .chapter {
+    background: linear-gradient(135deg, var(--ink) 0%, #1E1E1E 100%);
+    text-align: center;
+  }
+  .chapter-num {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 8rem;
+    font-weight: 900;
+    color: rgba(201,169,110,0.1);
+    margin-bottom: -2rem;
+  }
+  .chapter-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--paper);
+    margin-bottom: 1rem;
+  }
+  .chapter-subtitle {
+    font-size: 1.2rem;
+    color: var(--gold);
+    max-width: 600px;
+  }
+  .debate {
+    background: var(--ink);
+    align-items: flex-start;
+    padding: 4rem 6rem;
+  }
+  .debate-round {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.9rem;
+    color: var(--gold);
+    letter-spacing: 0.3em;
+    margin-bottom: 2rem;
+  }
+  .speech {
+    width: 100%;
+    padding: 2rem;
+    background: rgba(201,169,110,0.03);
+    border-left: 3px solid var(--gold);
+  }
+  .speech-speaker {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+  .speech-text {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--paper);
+  }
+  .summary {
+    background: linear-gradient(135deg, var(--ink) 0%, #1E1E1E 100%);
+    text-align: center;
+  }
+  .summary-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 2rem;
+  }
+  .summary-content {
+    max-width: 700px;
+    font-size: 1.1rem;
+    line-height: 2;
+    color: var(--paper);
+  }
+  .ending {
+    background: radial-gradient(ellipse at 50% 50%, rgba(201,169,110,0.1) 0%, transparent 60%), var(--ink);
+    text-align: center;
+  }
+  .ending-text {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.5rem;
+    line-height: 2;
+    color: var(--paper);
+    max-width: 700px;
+  }
+  .ending-highlight {
+    color: var(--gold);
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="pageNum" id="pageNum"></div>
+<div class="deck" id="deck">
+  <div class="page cover">
+    <div class="cover-label">圆桌洞见 · 深度拆解</div>
+    <div class="cover-title">真需求</div>
+    <div class="cover-subtitle">商业世界的本质是什么？</div>
+  </div>
+  <div class="page chapter">
+    <div class="chapter-num">01</div>
+    <div class="chapter-title">核心命题</div>
+    <div class="chapter-subtitle">市场中的万物现出本相，无非世人的需求</div>
+  </div>
+  <div class="page summary">
+    <div class="summary-title">商业闭环模型</div>
+    <div class="summary-content">
+      <strong style="color:var(--gold);font-size:1.3rem;">价值 → 共识 → 模式</strong><br><br>
+      价值源自需求，因为被需求，所以有价值。<br>
+      共识来自对分歧的超越，共识的成果是成交与关系。<br>
+      模式是自己如何生存与发展。<br><br>
+      <em style="color:var(--gold);">产品价值 = 功能价值 + 情绪价值 + 资产价值</em>
+    </div>
+  </div>
+  <div class="page chapter">
+    <div class="chapter-num">02</div>
+    <div class="chapter-title">价值的本质</div>
+    <div class="chapter-subtitle">什么是真正的价值？</div>
+  </div>
+  <div class="page debate">
+    <div class="debate-round">第一轮 · 价值的本质</div>
+    <div class="speech">
+      <div class="speech-speaker">刘润</div>
+      <div class="speech-text">梁宁的产品价值公式很精炼。但我想用交易成本框架来重新解读。功能价值的本质是什么？是效率需求。用户为效率付费，是因为效率降低了交易成本。但这里有个悖论：当所有人的效率都提升时，效率本身就不值钱了。</div>
+    </div>
+  </div>
+  <div class="page debate">
+    <div class="debate-round">第一轮 · 价值的本质</div>
+    <div class="speech">
+      <div class="speech-speaker">芒格</div>
+      <div class="speech-text">刘润说得对，但他的框架还不够完整。让我用多元思维模型来分析。功能价值的四个模型代表了四种不同的护城河。我投资苹果，就是因为苹果同时拥有专利/IP和品牌护城河。</div>
+    </div>
+  </div>
+  <div class="page debate">
+    <div class="debate-round">第一轮 · 价值的本质</div>
+    <div class="speech">
+      <div class="speech-speaker">卡尼曼</div>
+      <div class="speech-text">情绪价值=生理唤起+认知标记+心理账户。这个公式揭示了一个关键点：情绪价值是主观的。品牌本质上是在用户心中建立特定的认知标记。</div>
+    </div>
+  </div>
+  <div class="page debate">
+    <div class="debate-round">第一轮 · 价值的本质</div>
+    <div class="speech">
+      <div class="speech-speaker">老子</div>
+      <div class="speech-text">你们都在说如何创造价值，但我想问一个更根本的问题：价值是什么？我说道生一，一生二，二生三，三生万物。价值也是万物之一，是道的自我展开。</div>
+    </div>
+  </div>
+  <div class="page summary">
+    <div class="summary-title">第一轮小结</div>
+    <div class="summary-content">
+      <strong>价值的本质</strong><br><br>
+      功能价值：效率需求，降低交易成本<br>
+      情绪价值：主观感受，受认知标记影响<br>
+      资产价值：投资需求，基于稀缺性和预期<br><br>
+      <em style="color:var(--gold);">核心洞见：价值不是客观存在的，而是主观感知的。</em>
+    </div>
+  </div>
+  <div class="page chapter">
+    <div class="chapter-num">03</div>
+    <div class="chapter-title">共识的形成</div>
+    <div class="chapter-subtitle">从分歧到共识，需要经历什么？</div>
+  </div>
+  <div class="page debate">
+    <div class="debate-round">第二轮 · 共识的形成</div>
+    <div class="speech">
+      <div class="speech-speaker">卡尼曼</div>
+      <div class="speech-text">梁宁把分歧分为四种：感知的分歧、想象的分歧、场景的分歧、利益的分歧。这四种分歧，本质上都是认知偏差的体现。</div>
+    </div>
+  </div>
+  <div class="page debate">
+    <div class="debate-round">第二轮 · 共识的形成</div>
+    <div class="speech">
+      <div class="speech-speaker">芒格</div>
+      <div class="speech-text">共识的形成，不只是克服认知偏差，更是建立共同的思维模型。我投资苹果，不是因为财报好看，而是因为我理解乔布斯的思维模型。</div>
+    </div>
+  </div>
+  <div class="page debate">
+    <div class="debate-round">第二轮 · 共识的形成</div>
+    <div class="speech">
+      <div class="speech-speaker">老子</div>
+      <div class="speech-text">你们都在说如何达成共识，但我想问：共识一定是好的吗？我说道法自然。最好的商业模式，是顺应自然规律的。</div>
+    </div>
+  </div>
+  <div class="page summary">
+    <div class="summary-title">第二轮小结</div>
+    <div class="summary-content">
+      <strong>共识的本质</strong><br><br>
+      共识是克服认知偏差的过程（卡尼曼）<br>
+      共识是建立共同思维模型的过程（芒格）<br>
+      共识是顺应自然规律的过程（老子）<br><br>
+      <em style="color:var(--gold);">核心洞见：共识不是目的，而是手段。真正的目的是顺应规律。</em>
+    </div>
+  </div>
+  <div class="page chapter">
+    <div class="chapter-num">04</div>
+    <div class="chapter-title">模式的构建</div>
+    <div class="chapter-subtitle">企业如何生存与发展？</div>
+  </div>
+  <div class="page debate">
+    <div class="debate-round">第三轮 · 模式的构建</div>
+    <div class="speech">
+      <div class="speech-speaker">刘润</div>
+      <div class="speech-text">梁宁把模式分为三个部分：能力系统、变现逻辑、分配机制。能力系统的本质是降低内部交易成本的能力。</div>
+    </div>
+  </div>
+  <div class="page debate">
+    <div class="debate-round">第三轮 · 模式的构建</div>
+    <div class="speech">
+      <div class="speech-speaker">芒格</div>
+      <div class="speech-text">如何才能让一个企业死掉？很简单：解决一个不存在的问题，或者用错误的方式解决正确的问题。瑞幸的变现逻辑是错误的。</div>
+    </div>
+  </div>
+  <div class="page debate">
+    <div class="debate-round">第三轮 · 模式的构建</div>
+    <div class="speech">
+      <div class="speech-speaker">老子</div>
+      <div class="speech-text">商业模式是设计出来的，还是演化出来的？我说道法自然。最好的商业模式，不是设计出来的，而是顺应自然规律的。</div>
+    </div>
+  </div>
+  <div class="page summary">
+    <div class="summary-title">第三轮小结</div>
+    <div class="summary-content">
+      <strong>模式的本质</strong><br><br>
+      能力系统：降低内部交易成本<br>
+      变现逻辑：降低外部交易成本<br>
+      自然演化：商业模式是演化出来的<br><br>
+      <em style="color:var(--gold);">核心洞见：商业模式不是设计出来的，而是顺应自然规律的产物。</em>
+    </div>
+  </div>
+  <div class="page chapter">
+    <div class="chapter-num">05</div>
+    <div class="chapter-title">需求的真相</div>
+    <div class="chapter-subtitle">什么是"真需求"？</div>
+  </div>
+  <div class="page debate">
+    <div class="debate-round">第四轮 · 需求的真相</div>
+    <div class="speech">
+      <div class="speech-speaker">芒格</div>
+      <div class="speech-text">什么是真需求？真需求是那些不会消失的需求。人需要吃饭、穿衣、住所——这些是基础需求，永远不会消失。</div>
+    </div>
+  </div>
+  <div class="page debate">
+    <div class="debate-round">第四轮 · 需求的真相</div>
+    <div class="speech">
+      <div class="speech-speaker">卡尼曼</div>
+      <div class="speech-text">真需求是系统2的产物——经过深思熟虑后形成的需求。伪需求是系统1的产物——凭感觉形成的需求。</div>
+    </div>
+  </div>
+  <div class="page debate">
+    <div class="debate-round">第四轮 · 需求的真相</div>
+    <div class="speech">
+      <div class="speech-speaker">老子</div>
+      <div class="speech-text">真需求是被发现的，还是被创造的？我说道生一，一生二，二生三，三生万物。真需求既是被发现的，也是被创造的。</div>
+    </div>
+  </div>
+  <div class="page summary">
+    <div class="summary-title">第四轮小结</div>
+    <div class="summary-content">
+      <strong>需求的真相</strong><br><br>
+      真需求是那些不会消失的需求（芒格）<br>
+      真需求是系统2的产物（卡尼曼）<br>
+      真需求既是被发现的，也是被创造的（老子）<br><br>
+      <em style="color:var(--gold);">核心洞见：真需求不是固定的，而是动态的。</em>
+    </div>
+  </div>
+  <div class="page chapter">
+    <div class="chapter-num">06</div>
+    <div class="chapter-title">商业的终极追问</div>
+    <div class="chapter-subtitle">商业的终极价值是什么？</div>
+  </div>
+  <div class="page debate">
+    <div class="debate-round">第五轮 · 商业的终极追问</div>
+    <div class="speech">
+      <div class="speech-speaker">老子</div>
+      <div class="speech-text">梁宁在书的最后说：让生命绽放，让资源流动。这是商业的终极价值。当商业顺应规律时，生命就会绽放，资源就会流动。</div>
+    </div>
+  </div>
+  <div class="page debate">
+    <div class="debate-round">第五轮 · 商业的终极追问</div>
+    <div class="speech">
+      <div class="speech-speaker">芒格</div>
+      <div class="speech-text">商业的终极价值，是创造长期价值。我投资苹果，不是因为苹果短期利润高，而是因为苹果创造了长期价值。</div>
+    </div>
+  </div>
+  <div class="page debate">
+    <div class="debate-round">第五轮 · 商业的终极追问</div>
+    <div class="speech">
+      <div class="speech-speaker">刘润</div>
+      <div class="speech-text">商业的终极价值，是降低交易成本，让资源更高效地配置。当交易成本降低时，资源就会流向最需要它的地方，生命就会绽放。</div>
+    </div>
+  </div>
+  <div class="page ending">
+    <div class="ending-text">
+      这个世界不是由生意构成的，<br>
+      而是由<span class="ending-highlight">生命</span>构成的。<br><br>
+      商业的终极价值，不是利润，<br>
+      而是让<span class="ending-highlight">生命绽放</span>，<br>
+      让<span class="ending-highlight">资源流动</span>。<br><br>
+      <em style="font-size:1.2rem;">这才是最美好的东西。</em>
+    </div>
+  </div>
+</div>
+<script>
+const deck = document.getElementById('deck');
+const progress = document.getElementById('progress');
+const pageNum = document.getElementById('pageNum');
+const total = document.querySelectorAll('.page').length;
+function updateProgress() {
+  const idx = Math.round(deck.scrollLeft / window.innerWidth);
+  progress.style.width = ((idx + 1) / total * 100) + '%';
+  pageNum.textContent = (idx + 1) + ' / ' + total;
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') deck.scrollBy({ left: window.innerWidth, behavior: 'smooth' });
+  if (e.key === 'ArrowLeft') deck.scrollBy({ left: -window.innerWidth, behavior: 'smooth' });
+});
+deck.addEventListener('scroll', updateProgress);
+updateProgress();
+</script>
+</body>
+</html>

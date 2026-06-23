@@ -1,1 +1,59 @@
-<html><body><h1>风格1: 中式水墨风</h1></body></html>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>真需求 · 中式水墨风</title>
+<script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+:root{--ink:#1A1A1A;--paper:#F5F0E8;--gold:#C9A96E;--gold-light:#E8D5A8;--gold-dark:#8B7355}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--ink);color:var(--paper);font-family:'Noto Sans SC',sans-serif;overflow:hidden;height:100vh}
+.deck{display:flex;width:100vw;height:100vh;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.deck::-webkit-scrollbar{display:none}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--gold);z-index:1000;transition:width .3s ease}
+.pageNum{position:fixed;bottom:2rem;right:3rem;font-family:'Noto Serif SC',serif;color:var(--gold);z-index:1000}
+.page{flex:0 0 100vw;width:100vw;height:100vh;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:6rem 8rem;position:relative}
+.cover{text-align:center}
+.cover-title{font-family:'Noto Serif SC',serif;font-size:6rem;font-weight:900;color:var(--paper);margin-bottom:1rem}
+.cover-subtitle{font-family:'Noto Serif SC',serif;font-size:1.5rem;color:var(--gold);margin-bottom:3rem}
+.chapter{text-align:center}
+.chapter-num{font-family:'Noto Serif SC',serif;font-size:10rem;font-weight:900;color:rgba(201,169,110,.1);margin-bottom:-3rem}
+.chapter-title{font-family:'Noto Serif SC',serif;font-size:3.5rem;font-weight:700;color:var(--paper);margin-bottom:1rem}
+.chapter-subtitle{font-size:1.1rem;color:var(--gold);max-width:500px;line-height:1.8}
+.debate{align-items:flex-start;padding:5rem 10rem}
+.debate-round{font-family:'Noto Serif SC',serif;font-size:.85rem;color:var(--gold);letter-spacing:.5em;margin-bottom:2rem}
+.speech{width:100%;padding:2rem 3rem;background:rgba(201,169,110,.03);border-left:2px solid var(--gold);margin-bottom:1.5rem}
+.speech-speaker{font-family:'Noto Serif SC',serif;font-size:1.2rem;font-weight:700;color:var(--gold);margin-bottom:.8rem}
+.speech-text{font-size:1.05rem;line-height:2;color:var(--paper)}
+.summary{text-align:center}
+.summary-title{font-family:'Noto Serif SC',serif;font-size:2.5rem;font-weight:700;color:var(--gold);margin-bottom:2rem}
+.summary-content{max-width:600px;font-size:1.1rem;line-height:2.2;color:var(--paper)}
+.ending{text-align:center}
+.ending-text{font-family:'Noto Serif SC',serif;font-size:1.6rem;line-height:2.2;color:var(--paper);max-width:600px}
+.ending-highlight{color:var(--gold);font-weight:700}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="pageNum" id="pageNum"></div>
+<div class="deck" id="deck">
+<div class="page cover"><div class="cover-title">真需求</div><div class="cover-subtitle">商业世界的本质是什么？</div></div>
+<div class="page chapter"><div class="chapter-num">01</div><div class="chapter-title">核心命题</div><div class="chapter-subtitle">市场中的万物现出本相，无非世人的需求</div></div>
+<div class="page summary"><div class="summary-title">商业闭环模型</div><div class="summary-content"><strong style="color:var(--gold);font-size:1.3rem">价值 → 共识 → 模式</strong><br><br>价值源自需求，因为被需求，所以有价值。<br>共识来自对分歧的超越。<br>模式是自己如何生存与发展。</div></div>
+<div class="page chapter"><div class="chapter-num">02</div><div class="chapter-title">价值的本质</div></div>
+<div class="page debate"><div class="debate-round">第一轮</div><div class="speech"><div class="speech-speaker">刘润</div><div class="speech-text">功能价值的本质是效率需求。用户为效率付费，是因为效率降低了交易成本。</div></div><div class="speech"><div class="speech-speaker">芒格</div><div class="speech-text">功能价值的四个模型代表了四种不同的护城河。</div></div></div>
+<div class="page debate"><div class="debate-round">第一轮</div><div class="speech"><div class="speech-speaker">卡尼曼</div><div class="speech-text">情绪价值=生理唤起+认知标记+心理账户。情绪价值是主观的。</div></div><div class="speech"><div class="speech-speaker">老子</div><div class="speech-text">价值是什么？道生一，一生二，二生三，三生万物。</div></div></div>
+<div class="page ending"><div class="ending-text">这个世界不是由生意构成的，<br>而是由<span class="ending-highlight">生命</span>构成的。<br><br>商业的终极价值，是让<span class="ending-highlight">生命绽放</span>。</div></div>
+</div>
+<script>
+const d=document.getElementById('deck'),p=document.getElementById('progress'),n=document.getElementById('pageNum'),pages=document.querySelectorAll('.page'),t=pages.length;let ci=0;
+function up(){const i=Math.round(d.scrollLeft/window.innerWidth);if(i!==ci){ci=i;p.style.width=((i+1)/t*100)+'%';n.textContent=(i+1)+'/'+t}}
+function sp(i){if(i<0||i>=t)return;d.scrollTo({left:i*window.innerWidth,behavior:'smooth'})}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')sp(ci+1);if(e.key==='ArrowLeft')sp(ci-1)});
+let wt;d.addEventListener('wheel',e=>{e.preventDefault();clearTimeout(wt);wt=setTimeout(()=>{e.deltaY>0?sp(ci+1):sp(ci-1)},80)},{passive:false});
+d.addEventListener('scroll',up);up();
+</script>
+</body>
+</html>

@@ -151,3 +151,88 @@ roundtable-discussion/
 ---
 
 *更新时间：2026-06-21 · v13.11*
+
+---
+
+## V14 图片压缩经验（2026-06-24）
+
+### 问题
+1. PNG图片太大（1024x1024，每张约2.5MB）
+2. 10张图片导致HTML文件87MB
+3. GitHub推送警告文件过大
+
+### 解决方案
+1. **压缩PNG图片**：1024x1024 → 512x512，每张从2.5MB → 400KB
+2. **使用PIL优化**：`img.save(output_path, 'PNG', optimize=True)`
+3. **保持PNG格式**：不转JPEG，保留RGBA透明通道
+
+### 压缩效果
+- 单张图片：2.5MB → 400KB（减少84%）
+- HTML文件：87MB → 21MB（减少75%）
+- GitHub推送：正常通过
+
+### 关键代码
+```python
+from PIL import Image
+img = Image.open(input_path)
+img_resized = img.resize((512, 512), Image.LANCZOS)
+img_resized.save(output_path, 'PNG', optimize=True)
+```
+
+### 注意事项
+1. **不要转JPEG**：PNG有alpha通道，JPEG没有
+2. **不要用quantize**：会丢失颜色，浏览器不显示
+3. **保持RGBA格式**：确保浏览器兼容性
+
+---
+
+## V14 流程升级（2026-06-24）
+
+### 升级后的流程
+```
+1. 理解书籍（深度阅读）
+2. 设计HTML-PPT（结构+布局+组件）
+3. 审核设计（用户确认）
+4. 渲染HTML（实现设计）
+5. 验证功能（翻页/动画等）
+6. 提交GitHub
+```
+
+### 核心改进
+- ✅ 新增"理解书籍"步骤（深度阅读，理解精髓）
+- ✅ 新增"设计HTML-PPT"步骤（结构+布局+组件）
+- ✅ 新增"审核设计"步骤（用户确认）
+- ✅ 新增"验证功能"步骤（翻页/动画等）
+- ✅ 保留"多agent并行生成"和"JSON汇总"
+- ✅ 保留"提交GitHub"
+
+---
+
+## 《围城》V14 项目
+
+### 项目信息
+- **标题**：围城 · 深度拆解
+- **作者**：钱锺书
+- **页数**：73页
+- **文件**：`output/weicheng_v14.html`（21MB）
+
+### 设计特点
+- **主题**：水墨风 + 琥珀色
+- **背景**：每页独立背景图（512x512 PNG）
+- **动画**：data-anim淡入效果
+- **翻页**：scroll-snap + 键盘/滚轮/触摸
+
+### 语义组件
+- expert-speech（不同专家不同颜色左边框）
+- speaker-label（专家名字+角色标签）
+- stance-evo（立场演化标记）
+- shock-flash（认知突破）
+- warning-box（警告框）
+- mutation-box（观点变异）
+- tension-card（张力图谱）
+- hypo-card（假设演化）
+
+### 浏览方式
+- 本地：打开 `output/weicheng_v14.html`
+- GitHub Pages：`https://XCDaHuiGe.github.io/roundtable-discussion/output/weicheng_v14.html`
+

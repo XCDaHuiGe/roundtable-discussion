@@ -13,6 +13,7 @@ from typing import Dict, List, Optional
 from engine.llm_generate import call_llm_json
 from engine.schema_v8 import validate_v8
 from engine.knowledge_boundary_checker import get_boundary
+from engine.cognitive_functions import CognitiveAnalyzer, CognitiveType
 
 logger = logging.getLogger(__name__)
 
@@ -271,6 +272,8 @@ def generate_debate(
     experts: list,
     material: str = '',
     rounds: int = 3,
+    enable_cognitive: bool = True,
+    cognitive_types: Optional[List[CognitiveType]] = None,
 ) -> dict:
     """
     生成一个完整的 V8 JSON 辩论。
@@ -281,6 +284,8 @@ def generate_debate(
                  每个元素可以是 str（专家名）或 dict（含 name 等字段）
         material: 来自 web search 的参考素材
         rounds: 辩论轮数（默认 3）
+        enable_cognitive: 是否启用8认知函数分析（默认 True）
+        cognitive_types: 要执行的认知函数类型（默认全部8个）
 
     Returns:
         V8 JSON dict，可直接传给 html_renderer
@@ -291,7 +296,30 @@ def generate_debate(
     logger.info("开始生成辩论 | 话题=%s | 专家数=%d | 轮数=%d", topic, len(experts), rounds)
 
     system_prompt = _build_system_prompt()
+
+    # ── 执行8认知函数分析 ──
+    cognitive_injection = ""
+    if enable_cognitive:
+        logger.info("执行8认知函数分析...")
+        analyzer = CognitiveAnalyzer(cognitive_types)
+        try:
+            expert_names = []
+            for exp in experts:
+                name = exp if isinstance(exp, str) else exp.get("name", str(exp))
+                expert_names.append(name)
+            cognitive_report = analyzer.analyze_all(topic, expert_names)
+            cognitive_injection = cognitive_report.get_prompt_injection()
+            logger.info("8认知函数分析完成 | 高置信度洞见: %d个",
+                       len(cognitive_report.get_high_confidence_insights()))
+        except Exception as e:
+            logger.warning("8认知函数分析失败，跳过: %s", e)
+            cognitive_injection = ""
+
     user_prompt = _build_user_prompt(topic, experts, material, rounds)
+
+    # ── 注入认知分析结果到prompt ──
+    if cognitive_injection:
+        user_prompt = user_prompt + "\n\n" + cognitive_injection + "\n"
 
     # ── 第一次尝试 ──
     result = call_llm_json(user_prompt, system_prompt, max_tokens=8000)

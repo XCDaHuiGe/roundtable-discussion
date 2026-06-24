@@ -124,3 +124,38 @@ V14 = 渲染引擎V14 + 训练系统V12
 
 *更新时间：2026-06-24*
 *当前版本：v14.12（开发中）*
+
+## V14.2 图片压缩经验（2026-06-24）
+
+### 问题
+1. PNG图片太大（1024x1024，每张约2.5MB）
+2. 10张图片导致HTML文件87MB
+3. GitHub推送警告文件过大
+
+### 解决方案
+1. **压缩PNG图片**：1024x1024 → 512x512，每张从2.5MB → 400KB
+2. **使用PIL优化**：`img.save(output_path, 'PNG', optimize=True)`
+3. **保持PNG格式**：不转JPEG，保留RGBA透明通道
+
+### 压缩效果
+- 单张图片：2.5MB → 400KB（减少84%）
+- HTML文件：87MB → 21MB（减少75%）
+- GitHub推送：正常通过
+
+### 关键代码
+```python
+from PIL import Image
+img = Image.open(input_path)
+img_resized = img.resize((512, 512), Image.LANCZOS)
+img_resized.save(output_path, 'PNG', optimize=True)
+```
+
+### 注意事项
+1. **不要转JPEG**：PNG有alpha通道，JPEG没有
+2. **不要用quantize**：会丢失颜色，浏览器不显示
+3. **保持RGBA格式**：确保浏览器兼容性
+
+---
+
+*更新时间：2026-06-24*
+*当前版本：v14.13（图片压缩优化）*

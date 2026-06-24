@@ -1,1 +1,376 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>AI时代，人类的价值在哪里？</title><style>@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Inter:wght@400;500;600;700&display=swap');:root{--ink:#0A0A0A;--paper:#F5F0E8;--gold:#C9A96E;--gold-light:#E8D5A8;--gold-dark:#8B7355}*{margin:0;padding:0;box-sizing:border-box}body{background:#0A0A0A;color:#F5F0E8;font-family:'Noto Serif SC',serif;overflow:hidden;height:100vh}.progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#C9A96E,#E8D5A8,#C9A96E);z-index:1000;transition:width .4s}.pageNum{position:fixed;bottom:2rem;right:3rem;font-family:'Inter',sans-serif;font-size:.9rem;color:#8B7355;z-index:1000;letter-spacing:.2em}.deck{display:flex;width:100vw;height:100vh;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}.deck::-webkit-scrollbar{display:none}.page{flex:0 0 100vw;width:100vw;height:100vh;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:3rem 15vw;position:relative;overflow:hidden}.page::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(10,10,10,0.8);background-size:cover;background-position:center;opacity:0.15;z-index:0}.page>*{position:relative;z-index:2}.cover{text-align:center}.cover-title{font-size:5rem;font-weight:900;color:#F5F0E8;line-height:1.2;margin-bottom:1.5rem;text-shadow:0 0 40px rgba(201,169,110,.4)}.cover-sub{font-family:'Inter',sans-serif;font-size:1.2rem;font-weight:400;color:#C9A96E;margin-bottom:2rem;letter-spacing:.4em}.cover-author{font-size:.9rem;color:#8B7355;letter-spacing:.2em}.grid{text-align:center;padding:2rem 15vw}.grid-title{font-size:2rem;font-weight:700;color:#C9A96E;margin-bottom:2.5rem}.grid-items{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;max-width:900px;margin:0 auto}.grid-item{padding:1.5rem;background:rgba(10,10,10,.85);border:1px solid rgba(201,169,110,.3);border-radius:4px}.grid-item-name{font-size:1.1rem;font-weight:700;color:#C9A96E;margin-bottom:.4rem}.grid-item-title{font-size:.85rem;color:#F5F0E8;opacity:.95}.chapter{text-align:center}.chapter-num{font-size:7rem;font-weight:200;color:rgba(201,169,110,.1);line-height:1;margin-bottom:-2rem}.chapter-title{font-size:2.8rem;font-weight:700;color:#F5F0E8;margin-bottom:1rem}.chapter-sub{font-size:1rem;color:#C9A96E;max-width:500px;line-height:1.6}.dialogue{align-items:flex-start;padding:2rem 15vw;width:100%}.dh{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;width:100%}.dl{flex:1;height:1px;background:linear-gradient(90deg,#C9A96E,transparent)}.dr{font-family:'Inter',sans-serif;font-size:.7rem;color:#C9A96E;letter-spacing:.3em;text-transform:uppercase}.sp{width:100%;padding:1rem 1.5rem;background:rgba(10,10,10,.88);border-left:3px solid #C9A96E;margin-bottom:.8rem}.ss{font-size:.9rem;font-weight:700;color:#C9A96E;margin-bottom:.4rem;display:flex;align-items:center;gap:.5rem}.ss::before{content:'';width:8px;height:8px;background:#C9A96E;border-radius:50%}.st{font-size:.85rem;line-height:1.7;color:#F5F0E8;opacity:.98}.case{align-items:flex-start;padding:2rem 15vw}.cl{font-family:'Inter',sans-serif;font-size:.7rem;color:#C9A96E;letter-spacing:.3em;text-transform:uppercase;margin-bottom:1rem}.ct{font-size:1.6rem;font-weight:700;color:#F5F0E8;margin-bottom:1rem}.cc{font-size:.9rem;line-height:1.8;color:#F5F0E8;max-width:650px;opacity:.98}.cl2{font-size:.9rem;line-height:1.8;color:#C9A96E;margin-top:1rem;font-style:italic;border-top:1px solid rgba(201,169,110,.2);padding-top:1rem}.ins{text-align:center}.it{font-size:2rem;font-weight:700;color:#C9A96E;margin-bottom:1.5rem}.ix{font-size:1.1rem;line-height:1.8;color:#F5F0E8;max-width:550px;font-style:italic;opacity:.98}.qi{text-align:center}.qm{font-size:6rem;color:#C9A96E;opacity:.2;line-height:1;margin-bottom:-1rem}.qt{font-size:1.5rem;line-height:1.8;color:#F5F0E8;max-width:550px;margin-bottom:1.5rem}.qa{font-size:.85rem;color:#C9A96E;letter-spacing:.2em}.end{text-align:center}.et{font-size:1.5rem;line-height:1.8;color:#F5F0E8;max-width:550px}.eh{color:#C9A96E;font-weight:700}.ea{font-size:.85rem;color:#8B7355;margin-top:2rem;letter-spacing:.2em}</style></head><body><div class="progress" id="progress"></div><div class="pageNum" id="pageNum"></div><div class="deck" id="deck"><div class="page cover" style="background-image:url(assets/ai_human_value_bg1.png);"><div class="cover-title">AI时代，人类的价值在哪里？</div><div class="cover-sub">当机器能做一切，人类还能做什么？</div><div class="cover-author">圆桌洞见 · 9位思想家深度对话</div></div><div class="page grid"><div class="grid-title">圆桌嘉宾</div><div class="grid-items"><div class="grid-item"><div class="grid-item-name">芒格</div><div class="grid-item-title">多元思维模型家</div></div><div class="grid-item"><div class="grid-item-name">老子</div><div class="grid-item-title">道家思想创始人</div></div><div class="grid-item"><div class="grid-item-name">卡尼曼</div><div class="grid-item-title">行为经济学之父</div></div><div class="grid-item"><div class="grid-item-name">梁宁</div><div class="grid-item-title">产品思维专家</div></div><div class="grid-item"><div class="grid-item-name">德鲁克</div><div class="grid-item-title">现代管理学之父</div></div><div class="grid-item"><div class="grid-item-name">克里斯坦森</div><div class="grid-item-title">颠覆式创新理论创始人</div></div><div class="grid-item"><div class="grid-item-name">稻盛和夫</div><div class="grid-item-title">经营之圣</div></div><div class="grid-item"><div class="grid-item-name">任正非</div><div class="grid-item-title">华为创始人</div></div><div class="grid-item"><div class="grid-item-name">刘润</div><div class="grid-item-title">商业顾问</div></div></div></div><div class="page chapter" style="background-image:url(assets/ai_human_value_bg2.png);"><div class="chapter-num">1</div><div class="chapter-title">AI取代人类工作：威胁还是解放？</div><div class="chapter-sub">当AI能写代码、画画、做决策，人类工作者的价值还剩什么？</div></div><div class="page dialogue" style="background-image:url(assets/ai_human_value_bg3.png);"><div class="dh"><div class="dl"></div><div class="dr">Round 1</div><div class="dl"></div></div><div class="sp"><div class="ss">芒格</div><div class="st">AI的出现让我想起了一个基本原理：比较优势。即使AI在所有领域都比人类强，人类仍然有比较优势——因为我们活着本身就是目的。问题是：我们要学会与AI协作，而不是与AI竞争。就像汽车出现后，人类没有被取代，而是获得了更快的移动能力。AI是工具，不是替代品。关键在于：你是否理解AI的能力边界，以及如何利用它放大你的独特价值。</div></div><div class="sp"><div class="ss">卡尼曼</div><div class="st">从行为经济学角度看，人类对AI的恐惧很大程度上来自损失厌恶——我们对失去工作的恐惧，远大于对获得新能力的兴奋。但数据告诉我们：每一次技术革命都创造了更多工作。问题不是AI会不会取代人类，而是我们能否快速学习新技能。人类的适应能力是我们最大的资产，但我们往往低估了自己。</div></div><div class="sp"><div class="ss">老子</div><div class="st">道德经云：有之以为利，无之以为用。AI是有——有形之物提供具体之用。但人类的价值在于无——那些无法被量化、无法被编程的东西：爱、慈悲、创造力、对意义的追问。AI可以写诗，但它不懂诗中的痛苦；AI可以作曲，但它不懂音乐带来的眼泪。人类的价值，恰恰在于那些无用的东西。</div></div></div><div class="page dialogue" style="background-image:url(assets/ai_human_value_bg3.png);"><div class="dh"><div class="dl"></div><div class="dr">Round 1</div><div class="dl"></div></div><div class="sp"><div class="ss">梁宁</div><div class="st">AI时代，人类的价值在于不可替代性。什么是不可替代的？情感连接、意义赋予、价值判断。AI可以帮你写代码，但它不能告诉你为什么要做这个产品；AI可以分析数据，但它不能决定什么是对用户真正重要的。产品经理的价值不是写PRD，而是理解人性。AI越强大，人性洞察越稀缺。</div></div></div><div class="page case"><div class="cl">案例分析</div><div class="ct">GitHub Copilot：程序员的助手还是替代者？</div><div class="cc">GitHub Copilot已经能自动完成50%的代码编写。程序员的反应两极分化：有人恐慌AI要抢饭碗，有人兴奋效率提升10倍。关键区别在于：前者把编程当工作，后者把编程当创造。</div><div class="cl2">AI取代的是任务，不是职业。理解这一点，就能从被替代的恐惧中解放出来。</div></div><div class="page ins"><div class="it">认知升级</div><div class="ix">AI取代的是任务，不是职业。人类的价值在于那些无法被编程的东西：情感、意义、价值判断。</div></div><div class="page chapter" style="background-image:url(assets/ai_human_value_bg2.png);"><div class="chapter-num">2</div><div class="chapter-title">教育的重塑：AI时代学什么？</div><div class="chapter-sub">当AI能记住一切知识，人类还需要学习吗？学什么？</div></div><div class="page dialogue" style="background-image:url(assets/ai_human_value_bg3.png);"><div class="dh"><div class="dl"></div><div class="dr">Round 2</div><div class="dl"></div></div><div class="sp"><div class="ss">德鲁克</div><div class="st">教育的本质不是灌输知识，而是培养学习能力。AI时代，知识本身贬值了——因为AI能随时获取任何知识。真正稀缺的是：批判性思维、创造性解决问题的能力、与人协作的能力。</div></div><div class="sp"><div class="ss">克里斯坦森</div><div class="st">颠覆式创新理论告诉我们：真正的创新往往来自非消费者。AI时代的教育也是一样：我们不应该教学生与AI竞争，而应该教他们做AI做不到的事。</div></div><div class="sp"><div class="ss">稻盛和夫</div><div class="st">教育的核心是心性的培养。AI能教知识，但不能教做人。我创立京瓷时，第一条原则就是敬天爱人。技术再先进，如果人心坏了，一切都没有意义。</div></div></div><div class="page dialogue" style="background-image:url(assets/ai_human_value_bg3.png);"><div class="dh"><div class="dl"></div><div class="dr">Round 2</div><div class="dl"></div></div><div class="sp"><div class="ss">刘润</div><div class="st">AI时代的教育需要重新定义能力。过去的能力是：记忆、计算、分析。未来的能力是：提问、创造、连接。</div></div></div><div class="page case"><div class="cl">案例分析</div><div class="ct">芬兰教育改革</div><div class="cc">芬兰在2016年取消了传统学科划分，改为现象教学——围绕真实问题组织学习。</div><div class="cl2">教育的目标不是培养行走的百科全书，而是培养能解决问题的人。</div></div><div class="page ins"><div class="it">认知升级</div><div class="ix">AI时代更需要学习，但学习的重点变了：从记忆知识转向培养能力。</div></div><div class="page chapter" style="background-image:url(assets/ai_human_value_bg2.png);"><div class="chapter-num">3</div><div class="chapter-title">工作的意义：当生存不再是问题</div><div class="chapter-sub">如果AI能满足所有物质需求，人类还需要工作吗？</div></div><div class="page dialogue" style="background-image:url(assets/ai_human_value_bg3.png);"><div class="dh"><div class="dl"></div><div class="dr">Round 3</div><div class="dl"></div></div><div class="sp"><div class="ss">卡尼曼</div><div class="st">工作给人的不仅是收入，更是身份认同、社会归属感和成就感。研究表明：失业带来的痛苦，远超收入损失本身。</div></div><div class="sp"><div class="ss">芒格</div><div class="st">工作的意义在于学习和成长。我90多岁了还在学习，因为学习本身就是最大的乐趣。</div></div><div class="sp"><div class="ss">老子</div><div class="st">道德经云：无为而无不为。最好的工作状态是无为——不是不做事，而是顺应自然规律做事。</div></div></div><div class="page dialogue" style="background-image:url(assets/ai_human_value_bg3.png);"><div class="dh"><div class="dl"></div><div class="dr">Round 3</div><div class="dl"></div></div><div class="sp"><div class="ss">梁宁</div><div class="st">AI时代的工作应该是创造价值而非出卖时间。过去，我们用时间换钱；未来，我们用创造力换意义。</div></div></div><div class="page case"><div class="cl">案例分析</div><div class="ct">荷兰的无条件基本收入实验</div><div class="cc">荷兰多个城市试行无条件基本收入——每人每月无条件获得1000欧元。结果出人意料：大多数人没有躺平，反而开始从事更有意义的工作。</div><div class="cl2">当生存压力消失，人类不会懒惰，而是会寻找更有意义的活动。</div></div><div class="page ins"><div class="it">认知升级</div><div class="ix">工作的意义不在于就业，而在于创造和实现。</div></div><div class="page qi"><div class="qm">"</div><div class="qt">AI时代，人类的价值不在于做什么工作，而在于为什么而活。当机器能做一切，人类才能真正思考：什么值得做？什么让生命有意义？</div><div class="qa">—— 圆桌共识</div></div><div class="page end"><div class="et">AI时代，人类的价值不在于做什么工作，而在于为什么而活。当机器能做一切，人类才能真正思考：什么值得做？什么让生命有意义？</div><div class="ea">圆桌洞见 · 9位思想家 · 3轮深度对话</div></div></div><script>const deck=document.getElementById('deck'),progress=document.getElementById('progress'),pageNum=document.getElementById('pageNum');const pages=document.querySelectorAll('.page'),total=pages.length;let currentIdx=0;function updateProgress(){const idx=Math.round(deck.scrollLeft/window.innerWidth);if(idx!==currentIdx){currentIdx=idx;progress.style.width=((idx+1)/total*100)+'%';pageNum.textContent=String(idx+1).padStart(2,'0')+' / '+String(total).padStart(2,'0')}}function scrollToPage(idx){if(idx<0||idx>=total)return;deck.scrollTo({left:idx*window.innerWidth,behavior:'smooth'})}document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')scrollToPage(currentIdx+1);if(e.key==='ArrowLeft')scrollToPage(currentIdx-1)});let wheelTimer;deck.addEventListener('wheel',e=>{e.preventDefault();clearTimeout(wheelTimer);wheelTimer=setTimeout(()=>{e.deltaY>0?scrollToPage(currentIdx+1):scrollToPage(currentIdx-1)},80)},{passive:false});deck.addEventListener('scroll',updateProgress);updateProgress();</script></body></html>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920">
+<title>AI时代，人类的价值在哪里？</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0A0A0A;
+  --paper: #F5F0E8;
+  --gold: #C9A96E;
+  --gold-dim: rgba(201,169,110,0.3);
+  --overlay-dark: rgba(10,10,10,0.80);
+  --overlay-med: rgba(10,10,10,0.72);
+  --overlay-light: rgba(10,10,10,0.65);
+  --serif: 'Noto Serif SC', 'Georgia', serif;
+  --sans: 'Inter', 'Helvetica Neue', sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-snap-type: y mandatory; overflow-y: scroll; scroll-behavior: smooth; }
+body { background: var(--ink); color: var(--paper); font-family: var(--sans); }
+.stage { width:100vw; height:1080px; position:relative; overflow:hidden; scroll-snap-align: start; }
+.page-inner { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; padding: 0 15vw; z-index:2; }
+.bg { position:absolute; inset:0; background-size:cover; background-position:center; z-index:0; }
+.bg::after { content:''; position:absolute; inset:0; z-index:1; }
+.overlay-dark .bg::after { background: var(--overlay-dark); }
+.overlay-med .bg::after { background: var(--overlay-med); }
+.overlay-light .bg::after { background: var(--overlay-light); }
+
+/* ===== PROGRESS BAR ===== */
+#progress { position:fixed; top:0; left:0; height:3px; background:var(--gold); z-index:9999; transition:width .3s; width:0; }
+#page-num { position:fixed; bottom:30px; right:40px; font:500 14px var(--sans); color:var(--gold); z-index:9999; letter-spacing:1px; }
+
+/* ===== COVER ===== */
+.cover-title { font:900 6rem/1.05 var(--serif); color:var(--paper); letter-spacing:-2px; }
+.cover-subtitle { font:300 1.5rem/1.6 var(--sans); color:var(--gold); margin-top:1.2rem; letter-spacing:2px; }
+.cover-meta { font:400 .9rem var(--sans); color:rgba(245,240,232,0.45); margin-top:3rem; letter-spacing:3px; text-transform:uppercase; }
+.cover-line { width:80px; height:2px; background:var(--gold); margin-top:1.5rem; }
+
+/* ===== CHAPTER ===== */
+.chapter-num { font:900 7rem/1 var(--serif); color:var(--gold); opacity:0.15; position:absolute; top:50%; left:15vw; transform:translateY(-50%); }
+.chapter-title { font:700 3.2rem/1.2 var(--serif); color:var(--paper); }
+.chapter-subtitle { font:300 1.2rem/1.7 var(--sans); color:var(--gold); margin-top:1rem; letter-spacing:1px; }
+.chapter-line { width:60px; height:2px; background:var(--gold); margin:1.5rem 0; }
+
+/* ===== DIALOGUE ===== */
+.dialogue-header { font:600 1.1rem var(--sans); color:var(--gold); letter-spacing:2px; text-transform:uppercase; margin-bottom:2rem; }
+.dialogue-expert { margin-bottom:1.8rem; padding-left:24px; border-left:2px solid var(--gold); position:relative; }
+.dialogue-expert::before { content:''; position:absolute; left:-6px; top:6px; width:10px; height:10px; border-radius:50%; background:var(--gold); }
+.expert-name { font:600 1rem var(--serif); color:var(--gold); }
+.expert-title-text { font:400 .75rem var(--sans); color:rgba(245,240,232,0.4); margin-left:8px; }
+.expert-text { font:400 1rem/1.8 var(--serif); color:rgba(245,240,232,0.88); margin-top:.5rem; }
+
+/* ===== QUOTE ===== */
+.quote-mark { font:900 10rem/1 var(--serif); color:var(--gold); opacity:0.25; position:absolute; top:60px; left:15vw; }
+.quote-text { font:700 2rem/1.7 var(--serif); color:var(--paper); position:relative; z-index:1; }
+.quote-source { font:400 .9rem var(--sans); color:var(--gold); margin-top:2rem; letter-spacing:1px; }
+
+/* ===== CASE ===== */
+.case-label { font:600 .8rem var(--sans); color:var(--gold); letter-spacing:3px; text-transform:uppercase; margin-bottom:1rem; }
+.case-title { font:700 1.8rem/1.3 var(--serif); color:var(--paper); }
+.case-content { font:400 1rem/1.8 var(--sans); color:rgba(245,240,232,0.8); margin-top:1.2rem; }
+.case-divider { width:40px; height:1px; background:var(--gold); margin:1.5rem 0; }
+.case-lesson { font:600 1.05rem/1.7 var(--serif); color:var(--gold); }
+
+/* ===== COGNITIVE ===== */
+.cog-label { font:600 .8rem var(--sans); color:var(--gold); letter-spacing:3px; text-transform:uppercase; margin-bottom:1.5rem; }
+.cog-old { font:400 1.2rem/1.6 var(--sans); color:rgba(245,240,232,0.4); text-decoration:line-through; margin-bottom:1.5rem; }
+.cog-arrow { font:700 2rem var(--sans); color:var(--gold); margin:0.5rem 0; }
+.cog-new { font:700 1.5rem/1.6 var(--serif); color:var(--paper); }
+.cog-new em { color:var(--gold); font-style:normal; border-bottom:2px solid var(--gold); }
+
+/* ===== FINALE ===== */
+.finale-title { font:900 3rem/1.2 var(--serif); color:var(--paper); }
+.finale-insight { font:400 1.2rem/2 var(--sans); color:rgba(245,240,232,0.8); margin-top:1.5rem; }
+.finale-question { font:400 1rem/1.8 var(--sans); color:var(--gold); margin-top:1rem; padding-left:16px; border-left:2px solid var(--gold-dim); }
+
+/* ===== LAYOUT VARIANTS ===== */
+.text-right { text-align:right; align-items:flex-end; }
+.text-right .dialogue-expert { border-left:none; border-right:2px solid var(--gold); padding-left:0; padding-right:24px; text-align:right; }
+.text-right .dialogue-expert::before { left:auto; right:-6px; }
+.text-right .case-label, .text-right .case-title { text-align:right; }
+.text-center { text-align:center; align-items:center; }
+.split-layout { flex-direction:row !important; align-items:center; }
+.split-left { width:50%; padding-right:3vw; display:flex; flex-direction:column; justify-content:center; }
+.split-right { width:50%; padding-left:3vw; display:flex; flex-direction:column; justify-content:center; }
+.insight-box { background:rgba(201,169,110,0.08); border:1px solid var(--gold-dim); border-radius:4px; padding:2rem 2.5rem; margin-top:1.5rem; }
+.insight-box .core-q { font:600 1.1rem/1.6 var(--serif); color:var(--gold); }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div id="page-num"></div>
+
+<!-- P0: COVER -->
+<section class="stage overlay-dark">
+  <div class="bg" style="background-image:url('assets/ai_human_value_bg1.png')"></div>
+  <div class="page-inner" style="justify-content:flex-end; padding-bottom:12vh;">
+    <div class="cover-title">AI时代<br>人类的价值在哪里？</div>
+    <div class="cover-subtitle">当机器能做一切，人类还能做什么？</div>
+    <div class="cover-line"></div>
+    <div class="cover-meta">圆桌讨论 · 9位思想家 · 3轮深度对话</div>
+  </div>
+</section>
+
+<!-- P1: CHAPTER 1 -->
+<section class="stage overlay-med">
+  <div class="bg" style="background-image:url('assets/ai_human_value_bg1.png')"></div>
+  <div class="page-inner">
+    <div class="chapter-num">01</div>
+    <div class="chapter-line"></div>
+    <div class="chapter-title">AI取代人类工作：<br>威胁还是解放？</div>
+    <div class="chapter-subtitle">当AI能写代码、画画、做决策，人类工作者的价值还剩什么？</div>
+  </div>
+</section>
+
+<!-- P2: DIALOGUE A (left-aligned) -->
+<section class="stage overlay-dark">
+  <div class="bg" style="background-image:url('assets/ai_human_value_bg1.png')"></div>
+  <div class="page-inner" style="overflow-y:auto;">
+    <div class="dialogue-header">Round 1 · 观点交锋</div>
+    <div class="dialogue-expert">
+      <div><span class="expert-name">芒格</span><span class="expert-title-text">多元思维模型家</span></div>
+      <div class="expert-text">AI的出现让我想起了一个基本原理：比较优势。即使AI在所有领域都比人类强，人类仍然有比较优势——因为我们活着本身就是目的。问题是：我们要学会与AI协作，而不是与AI竞争。AI是工具，不是替代品。</div>
+    </div>
+    <div class="dialogue-expert">
+      <div><span class="expert-name">卡尼曼</span><span class="expert-title-text">行为经济学之父</span></div>
+      <div class="expert-text">从行为经济学角度看，人类对AI的恐惧很大程度上来自损失厌恶——我们对失去工作的恐惧，远大于对获得新能力的兴奋。但数据告诉我们：每一次技术革命都创造了更多工作。</div>
+    </div>
+    <div class="dialogue-expert">
+      <div><span class="expert-name">老子</span><span class="expert-title-text">道家思想创始人</span></div>
+      <div class="expert-text">道德经云：有之以为利，无之以为用。AI是有——有形之物提供具体之用。但人类的价值在于无——那些无法被量化、无法被编程的东西：爱、慈悲、创造力、对意义的追问。</div>
+    </div>
+  </div>
+</section>
+
+<!-- P3: DIALOGUE B (right-aligned) -->
+<section class="stage overlay-light">
+  <div class="bg" style="background-image:url('assets/ai_human_value_bg2.png')"></div>
+  <div class="page-inner text-right" style="overflow-y:auto;">
+    <div class="dialogue-header">Round 1 · 延伸讨论</div>
+    <div class="dialogue-expert">
+      <div><span class="expert-name">梁宁</span><span class="expert-title-text">产品思维专家</span></div>
+      <div class="expert-text">AI时代，人类的价值在于不可替代性。什么是不可替代的？情感连接、意义赋予、价值判断。AI可以帮你写代码，但它不能告诉你为什么要做这个产品。</div>
+    </div>
+    <div class="insight-box" style="text-align:right;">
+      <div class="core-q">核心问题：当AI能写代码、画画、做决策，<br>人类工作者的价值还剩什么？</div>
+    </div>
+  </div>
+</section>
+
+<!-- P4: CASE -->
+<section class="stage overlay-dark">
+  <div class="bg" style="background-image:url('assets/ai_human_value_bg2.png')"></div>
+  <div class="page-inner">
+    <div class="case-label">现实案例</div>
+    <div class="case-title">GitHub Copilot：<br>程序员的助手还是替代者？</div>
+    <div class="case-content">GitHub Copilot已经能自动完成50%的代码编写。程序员的反应两极分化：有人恐慌AI要抢饭碗，有人兴奋效率提升10倍。关键区别在于：前者把编程当工作，后者把编程当创造。</div>
+    <div class="case-divider"></div>
+    <div class="case-lesson">AI取代的是任务，不是职业。理解这一点，就能从被替代的恐惧中解放出来。</div>
+  </div>
+</section>
+
+<!-- P5: COGNITIVE UPGRADE 1 -->
+<section class="stage overlay-med">
+  <div class="bg" style="background-image:url('assets/ai_human_value_bg2.png')"></div>
+  <div class="page-inner text-center">
+    <div class="cog-label">认知升级</div>
+    <div class="cog-old">AI会取代人类工作，我们要么抵抗，要么被淘汰</div>
+    <div class="cog-arrow">↓</div>
+    <div class="cog-new">AI取代的是<em>任务</em>，不是<em>职业</em>。<br>人类的价值在于那些无法被编程的东西：<br>情感、意义、价值判断。</div>
+  </div>
+</section>
+
+<!-- P6: CHAPTER 2 -->
+<section class="stage overlay-dark">
+  <div class="bg" style="background-image:url('assets/ai_human_value_bg2.png')"></div>
+  <div class="page-inner">
+    <div class="chapter-num">02</div>
+    <div class="chapter-line"></div>
+    <div class="chapter-title">教育的重塑：<br>AI时代学什么？</div>
+    <div class="chapter-subtitle">当AI能记住一切知识，人类还需要学习吗？学什么？</div>
+  </div>
+</section>
+
+<!-- P7: DIALOGUE C (split layout) -->
+<section class="stage overlay-light">
+  <div class="bg" style="background-image:url('assets/ai_human_value_bg2.png')"></div>
+  <div class="page-inner split-layout">
+    <div class="split-left">
+      <div class="dialogue-header">Round 2 · 观点交锋</div>
+      <div class="dialogue-expert">
+        <div><span class="expert-name">德鲁克</span><span class="expert-title-text">现代管理学之父</span></div>
+        <div class="expert-text">教育的本质不是灌输知识，而是培养学习能力。AI时代，知识本身贬值了——因为AI能随时获取任何知识。真正稀缺的是：批判性思维、创造性解决问题的能力。</div>
+      </div>
+      <div class="dialogue-expert">
+        <div><span class="expert-name">克里斯坦森</span><span class="expert-title-text">颠覆式创新理论创始人</span></div>
+        <div class="expert-text">颠覆式创新理论告诉我们：真正的创新往往来自非消费者。AI时代的教育也是一样：我们不应该教学生与AI竞争，而应该教他们做AI做不到的事。</div>
+      </div>
+    </div>
+    <div class="split-right">
+      <div class="dialogue-expert">
+        <div><span class="expert-name">稻盛和夫</span><span class="expert-title-text">经营之圣</span></div>
+        <div class="expert-text">教育的核心是心性的培养。AI能教知识，但不能教做人。我创立京瓷时，第一条原则就是敬天爱人。技术再先进，如果人心坏了，一切都没有意义。</div>
+      </div>
+      <div class="dialogue-expert">
+        <div><span class="expert-name">刘润</span><span class="expert-title-text">商业顾问</span></div>
+        <div class="expert-text">AI时代的教育需要重新定义能力。过去的能力是：记忆、计算、分析。未来的能力是：提问、创造、连接。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- P8: QUOTE -->
+<section class="stage overlay-dark">
+  <div class="bg" style="background-image:url('assets/ai_human_value_bg3.png')"></div>
+  <div class="page-inner text-center" style="justify-content:center;">
+    <div class="quote-mark">&ldquo;</div>
+    <div class="quote-text" style="position:relative; z-index:1;">教育的本质不是灌输知识，<br>而是培养学习能力。</div>
+    <div class="quote-source">—— 德鲁克</div>
+  </div>
+</section>
+
+<!-- P9: CASE 2 -->
+<section class="stage overlay-med">
+  <div class="bg" style="background-image:url('assets/ai_human_value_bg3.png')"></div>
+  <div class="page-inner">
+    <div class="case-label">现实案例</div>
+    <div class="case-title">芬兰教育改革</div>
+    <div class="case-content">芬兰在2016年取消了传统学科划分，改为现象教学——围绕真实问题组织学习。</div>
+    <div class="case-divider"></div>
+    <div class="case-lesson">教育的目标不是培养行走的百科全书，而是培养能解决问题的人。</div>
+  </div>
+</section>
+
+<!-- P10: COGNITIVE UPGRADE 2 -->
+<section class="stage overlay-dark">
+  <div class="bg" style="background-image:url('assets/ai_human_value_bg3.png')"></div>
+  <div class="page-inner text-center">
+    <div class="cog-label">认知升级</div>
+    <div class="cog-old">AI时代不需要学习了</div>
+    <div class="cog-arrow">↓</div>
+    <div class="cog-new">AI时代更需要学习，但学习的重点变了：<br>从记忆知识转向<em>培养能力</em>。</div>
+  </div>
+</section>
+
+<!-- P11: CHAPTER 3 -->
+<section class="stage overlay-light">
+  <div class="bg" style="background-image:url('assets/ai_human_value_bg3.png')"></div>
+  <div class="page-inner">
+    <div class="chapter-num">03</div>
+    <div class="chapter-line"></div>
+    <div class="chapter-title">工作的意义：<br>当生存不再是问题</div>
+    <div class="chapter-subtitle">如果AI能满足所有物质需求，人类还需要工作吗？</div>
+  </div>
+</section>
+
+<!-- P12: DIALOGUE D (left) -->
+<section class="stage overlay-dark">
+  <div class="bg" style="background-image:url('assets/ai_human_value_bg1.png')"></div>
+  <div class="page-inner" style="overflow-y:auto;">
+    <div class="dialogue-header">Round 3 · 观点交锋</div>
+    <div class="dialogue-expert">
+      <div><span class="expert-name">卡尼曼</span><span class="expert-title-text">行为经济学之父</span></div>
+      <div class="expert-text">工作给人的不仅是收入，更是身份认同、社会归属感和成就感。研究表明：失业带来的痛苦，远超收入损失本身。</div>
+    </div>
+    <div class="dialogue-expert">
+      <div><span class="expert-name">芒格</span><span class="expert-title-text">多元思维模型家</span></div>
+      <div class="expert-text">工作的意义在于学习和成长。我90多岁了还在学习，因为学习本身就是最大的乐趣。</div>
+    </div>
+    <div class="dialogue-expert">
+      <div><span class="expert-name">老子</span><span class="expert-title-text">道家思想创始人</span></div>
+      <div class="expert-text">道德经云：无为而无不为。最好的工作状态是无为——不是不做事，而是顺应自然规律做事。</div>
+    </div>
+  </div>
+</section>
+
+<!-- P13: DIALOGUE E (right) -->
+<section class="stage overlay-med">
+  <div class="bg" style="background-image:url('assets/ai_human_value_bg1.png')"></div>
+  <div class="page-inner text-right" style="overflow-y:auto;">
+    <div class="dialogue-header">Round 3 · 延伸讨论</div>
+    <div class="dialogue-expert">
+      <div><span class="expert-name">梁宁</span><span class="expert-title-text">产品思维专家</span></div>
+      <div class="expert-text">AI时代的工作应该是创造价值而非出卖时间。过去，我们用时间换钱；未来，我们用创造力换意义。</div>
+    </div>
+  </div>
+</section>
+
+<!-- P14: QUOTE 2 -->
+<section class="stage overlay-dark">
+  <div class="bg" style="background-image:url('assets/ai_human_value_bg1.png')"></div>
+  <div class="page-inner text-center">
+    <div class="quote-mark">&ldquo;</div>
+    <div class="quote-text">无为而无不为。<br>最好的工作状态是顺应自然规律做事。</div>
+    <div class="quote-source">—— 老子</div>
+  </div>
+</section>
+
+<!-- P15: CASE 3 -->
+<section class="stage overlay-light">
+  <div class="bg" style="background-image:url('assets/ai_human_value_bg2.png')"></div>
+  <div class="page-inner">
+    <div class="case-label">现实案例</div>
+    <div class="case-title">荷兰的无条件基本收入实验</div>
+    <div class="case-content">荷兰多个城市试行无条件基本收入——每人每月无条件获得1000欧元。结果出人意料：大多数人没有躺平，反而开始从事更有意义的工作。</div>
+    <div class="case-divider"></div>
+    <div class="case-lesson">当生存压力消失，人类不会懒惰，而是会寻找更有意义的活动。</div>
+  </div>
+</section>
+
+<!-- P16: COGNITIVE UPGRADE 3 -->
+<section class="stage overlay-dark">
+  <div class="bg" style="background-image:url('assets/ai_human_value_bg2.png')"></div>
+  <div class="page-inner text-center">
+    <div class="cog-label">认知升级</div>
+    <div class="cog-old">没有工作，人生就没有意义</div>
+    <div class="cog-arrow">↓</div>
+    <div class="cog-new">工作的意义不在于就业，<br>而在于<em>创造</em>和<em>实现</em>。</div>
+  </div>
+</section>
+
+<!-- P17: FINALE -->
+<section class="stage overlay-dark">
+  <div class="bg" style="background-image:url('assets/ai_human_value_bg3.png')"></div>
+  <div class="page-inner text-center" style="justify-content:center;">
+    <div class="finale-title">结语</div>
+    <div class="cover-line" style="margin:1.5rem auto;"></div>
+    <div class="finale-insight" style="max-width:700px; margin:0 auto;">
+      AI时代，人类的价值不在于做什么工作，而在于为什么而活。当机器能做一切，人类才能真正思考：什么值得做？什么让生命有意义？
+    </div>
+    <div class="finale-question" style="margin:2rem auto 0; max-width:600px;">如果AI能创造所有物质财富，人类如何分配？</div>
+    <div class="finale-question" style="margin:1rem auto 0; max-width:600px;">当工作消失，社会结构会如何改变？</div>
+  </div>
+</section>
+
+<script>
+const stages = document.querySelectorAll('.stage');
+const progress = document.getElementById('progress');
+const pageNum = document.getElementById('page-num');
+const total = stages.length;
+
+function updateProgress() {
+  const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+  const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+  progress.style.width = pct + '%';
+  const currentPage = Math.round(pct / 100 * (total - 1)) + 1;
+  pageNum.textContent = currentPage + ' / ' + total;
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
+    e.preventDefault();
+    const next = Math.min(getCurrentIndex() + 1, total - 1);
+    stages[next].scrollIntoView({ behavior: 'smooth' });
+  }
+  if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+    e.preventDefault();
+    const prev = Math.max(getCurrentIndex() - 1, 0);
+    stages[prev].scrollIntoView({ behavior: 'smooth' });
+  }
+});
+
+function getCurrentIndex() {
+  const scrollTop = window.scrollY;
+  const h = window.innerHeight;
+  return Math.round(scrollTop / h);
+}
+
+window.addEventListener('scroll', updateProgress);
+updateProgress();
+</script>
+</body>
+</html>
